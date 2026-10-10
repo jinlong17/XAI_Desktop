@@ -1,0 +1,37 @@
+{
+  "id": "TT-08/RECONCILE",
+  "workflow": "D",
+  "module": "web",
+  "actor": "sole root controller, serial recurring resource",
+  "fixed_input": "9ff5df698458611104a217b172b71aa3efd9cc82",
+  "acceptance_source": "c5874e5f6e803aa391ef2e5fb677e4bab592f4ef",
+  "acceptance_sha256": "1c2d4b8ec5cf22d8a97c2519adba4cb4078b4500a9be2d94ee2889c3c46a68ca",
+  "allow_files": [
+    "docs/reviews/20260908-full-product-audit/ALL-TODO-CURRENT.md",
+    "docs/reviews/20260908-full-product-audit/EXECUTION.md",
+    "docs/reviews/20260908-full-product-audit/EXECUTION.json",
+    "docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/execution-state.json"
+  ],
+  "input_ledger_sha256": {
+    "ALL-TODO-CURRENT.md": "06ec0bb128e81dac8e993936c7d3eea67f8a98c20f5d76532eb573866eb13291",
+    "EXECUTION.md": "3e1c52ab6d3166d1a5422950ac93134e88544d9be0ba3b0b2509f028755995e1",
+    "EXECUTION.json": "bc1f38bf5f5119bbf02fb880bb7311560150f424def73660466f0da0bf111e12"
+  },
+  "acceptance": [
+    "Append accepted TT08 evidence only; two Markdown ledgers whole previous bytes retained as prefix; JSON original312IDs/order/status/topmetadata and every nonTT08 record preserved, TT08 evidence appended retaining prefix",
+    "Recount13/3/3/293 and299unclosed; do not markTT08/GOV04/GOV05 completed orverify_pending, no release readiness",
+    "Read and validate ALL inputs and construct complete outputs before ANY write; exactstage and commit/push/source+integration ancestor check+normal sync; fresh inventory task follows accepted ledger"
+  ],
+  "budget": {
+    "controller_reconcile_pass": 1,
+    "runtime": 0,
+    "tests": 0
+  },
+  "stop": [
+    "accepted scope/hash mismatch",
+    "any formalstate/census/history change",
+    "other actor dirty orglobal lock conflict",
+    "product or release boundary"
+  ]
+}

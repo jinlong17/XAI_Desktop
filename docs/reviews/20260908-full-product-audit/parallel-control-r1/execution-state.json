@@ -583,10 +583,15 @@
       "provider_attested": false,
       "fixed_parent": "c086837e2c4030aa2a9cf631f504b0d1248939be",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-final-accept-20261010/XAI_Desktop",
-      "state": "running_fullchain_documentary_acceptance",
+      "state": "ACCEPTED_full_original_TT08_documentary_caller",
       "acceptance_iteration": 1,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "source_commit": "c5874e5f6e803aa391ef2e5fb677e4bab592f4ef",
+      "integration_commit": "9ff5df698458611104a217b172b71aa3efd9cc82",
+      "archive_ref": "codex/archive/parallel-tt08-final-acceptance-r1-20261010",
+      "input_hashes_checked": 539,
+      "acceptance_sha256": "1c2d4b8ec5cf22d8a97c2519adba4cb4078b4500a9be2d94ee2889c3c46a68ca"
     },
     {
       "id": "MET-05/CONTRACT-REVIEW",
@@ -605,8 +610,8 @@
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 2,
+    "total": 3,
     "capacity": 4
   },
   "cost": {
@@ -617,17 +622,17 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 24,
+    "static_passes": 25,
     "rework_findings": 11,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 27,
+    "completed_source_receipts": 28,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "27 source deliveries minus3 actual vendor launches; retention3 synthetic validations separately retained"
+    "static_passes_basis": "28 source deliveries minus3 actual vendor launches; retention3 separately counted"
   },
   "events": [
     {
@@ -773,6 +778,11 @@
       "at": "2026-10-10T11:18:52.078317+00:00",
       "event": "Fresh MET05 reviewer actuallylaunched, TTfullacceptance andTASKsource remainactive3workers+root; normal after6archives0FAIL1WARN",
       "registration": "921d44ae10d7b9c9065b5817790b30179b365456"
+    },
+    {
+      "at": "2026-10-10T11:20:55.462117+00:00",
+      "event": "Fresh full TT08 documentary acceptance received539identities/exactpatch; sole-root evidence-only reconcile registered before ledger writes",
+      "input": "9ff5df698458611104a217b172b71aa3efd9cc82"
     }
   ],
   "wave_P2_tasks": [
@@ -820,5 +830,14 @@
     "state": "receivedfull312/299staticcollection; rootqueueonly; no businessacceptance",
     "next_discovery": "TASK-06",
     "ranked_source_not_authority_for_new_product_choices": true
-  }
+  },
+  "accepted_documentary_callers": [
+    {
+      "id": "TT-08",
+      "acceptance_source": "c5874e5f6e803aa391ef2e5fb677e4bab592f4ef",
+      "integration": "9ff5df698458611104a217b172b71aa3efd9cc82",
+      "scope": "complete original documentary obligation D1-D7 plus authorized postPASS statusdelta; runtime/release/GOV/312 closure excluded",
+      "formal_status": "pending"
+    }
+  ]
 }
