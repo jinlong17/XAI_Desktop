@@ -71,9 +71,9 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-clock-retention-20261010/XAI_Desktop",
       "fixed_parent": "fb95dd39117ca98a9b5a038a29b40d015936fe85",
       "parent_graph_node": "CLOCK/CORRECT",
-      "state": "finalizing_validation3_of3_exhausted",
-      "source_commit": null,
-      "integration_commit": null,
+      "state": "received_UNQUALIFIED_await_fresh_source_review",
+      "source_commit": "a6a78097120094464701bf833a51bf0014d1d8d0",
+      "integration_commit": "f4cc65291aa5d0b97ec30a6654e30dfd3136474c",
       "formal_invocations": 0,
       "new_development_probes": 0,
       "cumulative_review_family": "schema review1 consumed; next fresh2/3; TTcontractreview1/3; Clockoriginalseven inherited",
@@ -86,7 +86,11 @@
         "last_cases": "14/14",
         "method_qualified": false
       },
-      "additional_blocker": "unstable-capture metadata absent in immutable helper; fresh scope impact required"
+      "additional_blocker": "unstable-capture metadata absent in immutable helper; fresh scope impact required",
+      "input_hashes_checked": 291,
+      "output_hashes_checked": 18,
+      "byte_identical_copies": 6,
+      "archive_ref": "codex/archive/parallel-clock-retention-r2-20261010"
     },
     {
       "id": "PARALLEL/LOCK-CORRECT",
@@ -154,8 +158,8 @@
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 2,
+    "total": 3,
     "capacity": 4
   },
   "cost": {
@@ -207,6 +211,10 @@
       "at": "2026-10-10T09:50:19.545483+00:00",
       "event": "P3 fresh mapreview2 and TT08before dispatched",
       "fixed_parent": "3eb262b3e45a0ae4658ed86a523473fdef75858a"
+    },
+    {
+      "at": "2026-10-10T09:51:49.607308+00:00",
+      "event": "Clock retention correction received unqualified; fresh actual-source review registered"
     }
   ],
   "wave_P2_tasks": [
@@ -217,7 +225,8 @@
   "sync_checkpoint": {
     "normal": "0FAIL/1WARN after P2 registration",
     "deep_before_owned_cleanup": "1FAIL/0WARN, same5unreachable retained,23stash remote reachable",
-    "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved"
+    "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
+    "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result"
   },
   "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization"
 }
