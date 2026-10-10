@@ -1021,7 +1021,7 @@
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_full_original_preparation_explicit_metadata_amendment_delivered",
+      "state": "received_PROPOSED_UNADOPTED_needs_fresh_full_review",
       "fixed_input": "e5caddc1abb1b12afb8802960d6e2b993c0c365a",
       "preparation_iteration": 1,
       "family_cap": 3,
@@ -1030,14 +1030,20 @@
       "fixed_parent": "535ba372116f6be333e529bfd6f8b9ca725ec3be",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-med03-preparation-20261010/XAI_Desktop",
       "metadata_amendment": "7eb8280736e0c30a908120704ea081d43cd12f16",
-      "amended_card_sha256": "2cc625a2034431da7b44215468d52090cbf8f7973d425fea0ae9c100de82b2ff"
+      "amended_card_sha256": "2cc625a2034431da7b44215468d52090cbf8f7973d425fea0ae9c100de82b2ff",
+      "source_commit": "23bd8545b317e2d5565ad069aaabd0e65061737b",
+      "integration_commit": "bf85a6b7677293d3c725e47edec6f6f9ee26bf40",
+      "archive_ref": "codex/archive/parallel-med03-prep-r1-20261010",
+      "input_hashes_checked": 649,
+      "static_pass": 1,
+      "static_result": "FAILED_before_assertions_encoding_no_rerun"
     },
     {
       "id": "CD-03/PREPARE",
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_full_original_preparation_correct_metadata_at_parent",
+      "state": "received_PROPOSED_UNADOPTED_needs_fresh_full_review",
       "fixed_input": "e5caddc1abb1b12afb8802960d6e2b993c0c365a",
       "preparation_iteration": 1,
       "family_cap": 3,
@@ -1046,7 +1052,13 @@
       "fixed_parent": "7eb8280736e0c30a908120704ea081d43cd12f16",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-cd03-preparation-20261010/XAI_Desktop",
       "metadata_amendment": "7eb8280736e0c30a908120704ea081d43cd12f16",
-      "amended_card_sha256": "c9afdcb0f8b29b0851b9426eb27ffc5f1b456734622e1839d641026d8a59e1da"
+      "amended_card_sha256": "c9afdcb0f8b29b0851b9426eb27ffc5f1b456734622e1839d641026d8a59e1da",
+      "source_commit": "2a35488361bfbad596473fc355bd18d8feb5b164",
+      "integration_commit": "a489adcb1205c56623738a8fa54696e40f22d17a",
+      "archive_ref": "codex/archive/parallel-cd03-prep-r1-20261010",
+      "input_hashes_checked": 3326,
+      "static_pass": 1,
+      "static_result": "PASS"
     },
     {
       "id": "TASK-06/NATIVE-HOST-PREREQUISITE-IMPACT1",
@@ -1082,22 +1094,28 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_full_prerequisite_or_bounded_correction",
+      "state": "running_fresh_bounded_document_task",
       "fixed_input": "d39d8a9a32bf9e66310535c8622355daefb6b280",
       "family_iteration": 1,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "actor": "/root/parallel_a_brd12_writer_lifecycle_impact_r1",
+      "fixed_parent": "53a961aaa4ae87e1453f27d91af3c8edd6ddaeeb",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-writer-lifecycle-impact-20261010/XAI_Desktop"
     },
     {
       "id": "POMO-04/PREPARE-CORRECT2",
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_full_prerequisite_or_bounded_correction",
+      "state": "running_fresh_bounded_document_task",
       "fixed_input": "d39d8a9a32bf9e66310535c8622355daefb6b280",
       "family_iteration": 2,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "actor": "/root/parallel_c_pomo04_correct2",
+      "fixed_parent": "53a961aaa4ae87e1453f27d91af3c8edd6ddaeeb",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-pomo04-correct2-20261010/XAI_Desktop"
     },
     {
       "id": "DASH-06/SOURCE-AVAILABILITY-CONTRACT1",
@@ -1107,6 +1125,28 @@
       "state": "queued_fresh_finite_availability_contract_afterolder_ready_tasks",
       "fixed_input": "ccf2ee5b4980393e5b506eb6ebaeede9604fbd48",
       "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "MED-03/CONTRACT-REVIEW1",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_full_original_contract_review1_afterolder_ready_tasks",
+      "fixed_input": "a489adcb1205c56623738a8fa54696e40f22d17a",
+      "review_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "CD-03/CONTRACT-REVIEW1",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_full_original_contract_review1_afterolder_ready_tasks",
+      "fixed_input": "a489adcb1205c56623738a8fa54696e40f22d17a",
+      "review_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0
     }
@@ -1126,19 +1166,19 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 47,
+    "static_passes": 49,
     "rework_findings": 53,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 50,
+    "completed_source_receipts": 52,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "50deliveries minus3actualvendor includes1FAILEDstatic consumed; retention3separate",
+    "static_passes_basis": "52 deliveries minus3 actualvendor includes2FAILED consumed statics METsource2 andMEDprep1; retention3separate; rootidentityreceipt neverreplaces authorfailedstatic",
     "postaccept_AST_scanner_invocations": 1,
-    "documented_failed_static_passes": 1,
+    "documented_failed_static_passes": 2,
     "rework_findings_basis": "Accumulated review blocking groups, includes sixTASKreview2 R3-R8 and eleven METreview2 R1-R11; repeated groups retain original iterations, not unique defects or new runtime attempts"
   },
   "events": [
@@ -1407,6 +1447,11 @@
       "at": "2026-10-10T12:58:33.317057+00:00",
       "event": "DASHavailabilityimpactreview1 APPROVED full649 received; rootacceptstechnicalbasis onlyA16, fresh contract1queued. ActualsharedA design+MED/CD preparersroot+3=4/4. Cycle40 POMOreview+impactreview2receipts;50deliveries47staticconsumed1FAILED/vendor3/rework53. No runtime/scopegrant/formalclosure.",
       "input": "ccf2ee5b4980393e5b506eb6ebaeede9604fbd48"
+    },
+    {
+      "at": "2026-10-10T13:07:40.907882+00:00",
+      "event": "FullMED649 andCD3326 inputidentities/exact2ADD/cleanparents checked; originals remote preserved thenreceived. MEDauthorfailedstatic1 neverrerun/notPASS; two fresh fullreview1 queued. ActualsharedA+BRDimpactA+POMOcorrectorC root+3=4/4. Cycle40 complete POMOreview/availabilityimpactreview/MEDprep;cycle41 CDprep first. 52deliveries49consumedstatics2FAILED/vendor3/rework53. Ledgers13/3/3/293/939 unchanged.",
+      "input": "a489adcb1205c56623738a8fa54696e40f22d17a"
     }
   ],
   "wave_P2_tasks": [
@@ -1438,7 +1483,9 @@
     "P14_before_owned_cleanup": "44originalrefs exactremote/44integration ancestors origin9262f5f; six completed own worktrees clean exactoriginalheads verified. Deep literal1FAIL0WARN fiveunreachable retained; refs/reflog/stashPASS. Sixrecoverablearchivequeued, confirmationpending.",
     "P14_owned_completed_worktrees": "Six exactclean completed originalheads/remote identities/ancestor checks anddeep receipt then recoverablearchivesconfirmed viaapp list; active3 reviewers and5 unrelatedwts untouched.",
     "normal_intermediate_P15": "2FAIL1WARN at11d1d67 scan raced newlycompletedTASKreview2 original local refs/reflog; exactsource cd7be14 nowremote preserved beforeintegration, repeatafterpush; no unknowndirty or deletion.",
-    "normal_intermediate_P16": "2FAIL1WARN after46source-ref/ancestorPASS at535ba37; raced newlycompleted METreview2 original local refs/reflog beforepreservation. Source21519e7 nowremote preserved, BRDreview2also preserved; repeataftercontrolpush. No recovery deleted."
+    "normal_intermediate_P16": "2FAIL1WARN after46source-ref/ancestorPASS at535ba37; raced newlycompleted METreview2 original local refs/reflog beforepreservation. Source21519e7 nowremote preserved, BRDreview2also preserved; repeataftercontrolpush. No recovery deleted.",
+    "P17_before_owned_cleanup": "All50originalremote refs exactidentity/50integrationancestors origin53a961 PASS; six completed clean reviewer heads and one neverlaunched clean idle535wt verified. Deep literal1FAIL0WARN fiveknown unreachable; all23stashesremote, no recovery deleted.",
+    "P17_owned_completed_worktrees": "Six completed reviewers plus superseded TASK-only idleworktree archivedrecoverable confirmedviaapp list. Active sharedA andnewBRD/POMO wts and5unrelated untouched; unlaunchedsupersededstatic0 preserved."
   },
   "workflow_C": "Full ready preparation advances; POMO04 r1, DASH06 r2, BRD12 r2 received UNADOPTED and fresh reviews queued/running; next MED03/CD03 discovery after older ready reviews. No runtime or product authority from proposals.",
   "active_scheduler": {
