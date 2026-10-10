@@ -1,0 +1,168 @@
+{
+  "id": "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT-REVIEW3",
+  "parent": "8e3bad2985f9818f23c4df1c0fb4007b16921ef9",
+  "fixed_input": "8c2e5e8b2490df303eda91d7c1adc08d4a8c6811",
+  "source": "037d71c69e14567d5bbb54f32e7b3ede332d59f6",
+  "family_iteration": 3,
+  "family_cap": 3,
+  "concluding_invocations": 1,
+  "result": "FAILED_STATIC_NO_VALID_WHOLE_REVIEW_EXHAUSTED",
+  "pid": 41397,
+  "numeric_exit": 1,
+  "elapsed_seconds": 0.075,
+  "stdout_bytes": 0,
+  "stderr_bytes": 885,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "drained": true,
+  "drain_seconds": 0.001,
+  "tool_session": "UNKNOWN",
+  "tool_chunk": "UNKNOWN",
+  "checker_body": "UNRUN Pythonparse error line120 missingclosingdictionarybrace",
+  "handled_stdin_error": "write EPIPE childalreadyexited kernelalive",
+  "receipt_saved_before_printer": true,
+  "checker_source_sha256": "f1d350a45a758807788251fcdddf3ff0b345204d753d5bfa88a5324576b650e8",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "ccc3a290a08f1ff5757021a3593d5f40fae81a104841a8e9f42248cd3b3d1f9f",
+  "immutable_identities_acquired": 851,
+  "corpus_bytes": 289713045,
+  "acquisition_not_verdict": true,
+  "unvalidated_buffers": [
+    {
+      "path": "review.md",
+      "bytes": 70535,
+      "sha256": "34acee21bfc72e4f13396f619472f4a4bce5781ffc42e5cc9f61bd08fa63bc2e"
+    },
+    {
+      "path": "inputs.sha256",
+      "bytes": 156685,
+      "sha256": "02633a097a13833bb048b4a295ce587868ba6a5cfae85b654a6991d59b4b58d1"
+    }
+  ],
+  "draft_APPROVED": "UNVALIDATED_NOTVERDICT_NOTMATERIALIZE",
+  "final_read_PIDs": [
+    41479,
+    41491,
+    41503
+  ],
+  "final_read_exits": [
+    0,
+    0,
+    0
+  ],
+  "clean_unchanged": true,
+  "all_allowed_outputs_absent": true,
+  "filesystem_writes": 0,
+  "retries": 0,
+  "commits": 0,
+  "instrumented_wall_seconds": 422.474,
+  "earlier_uninstrumented_wall": "UNKNOWN",
+  "all_runtime_tests_vendor_network_children": 0,
+  "oldsevenpendinggroups_unchanged": true,
+  "new_E6_E7_E8_decision_or_dispatch_grant": [],
+  "original_raw_tool_provenance": {
+    "log_path": "/Users/lijinlong/.codex/sessions/2026/10/10/rollout-2026-10-10T12-26-38-01a12748-1707-7aa0-b08e-06046875b4c2.jsonl",
+    "log_sha256": "95b365a8832a7a0171c5b18704888a16cc4a623de5a7afb7ded785946fe08fff",
+    "original_actor_path": "/root/parallel_d_exhausted_documentary_whole_impact_review_r3",
+    "business_execution": 0,
+    "selected_failed_process_raw_records": [
+      {
+        "row": 184,
+        "call": {
+          "timestamp": "2026-10-10T19:33:40.113Z",
+          "ordinal": 180,
+          "type": "response_item",
+          "payload": {
+            "type": "custom_tool_call",
+            "id": "ctc_084ee13e517a1b51016aca92eb13888197ae9942af7321af9f",
+            "status": "completed",
+            "call_id": "call_a352ea2d2eb34dffb0bbce9e2a3aabac",
+            "name": "exec",
+            "input": "// @exec: {\"max_output_tokens\": 5000}\ntext(await tools.mcp__node_repl__js({code:\"var checker=String.raw`import sys,json,hashlib,subprocess,os,time,re,collections\\np=json.load(sys.stdin)\\nt0=time.monotonic()\\nreceipts=[]\\ndef short(args):\\n    c=subprocess.Popen(['git']+args,cwd=p['wt'],stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=dict(os.environ,GIT_OPTIONAL_LOCKS='0'))\\n    t=time.monotonic()\\n    out,err=c.communicate(timeout=20)\\n    receipts.append({'pid':c.pid,'args':args,'exit':c.returncode,'stdout_EOF':True,'stderr_EOF':True,'drained':True,'elapsed_seconds':time.monotonic()-t,'stderr':err.decode('utf-8','replace')})\\n    assert c.returncode==0,(args,c.returncode,err)\\n    return out\\nassert short(['rev-parse','HEAD']).decode().strip()==p['parent']\\nassert short(['status','--porcelain','--untracked-files=all'])==b''\\nassert time.time()*1000-p['started']<30*60*1000\\nfor path in p['allowed']:\\n    assert not os.path.lexists(os.path.join(p['wt'],path)),path\\nc=subprocess.Popen(['git','cat-file','--batch'],cwd=p['wt'],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=dict(os.environ,GIT_OPTIONAL_LOCKS='0'))\\ndata={}\\ntry:\\n    for row in p['inputs']:\\n        key=row['identity']\\n        if key.startswith('git:'):\\n            c.stdin.write((key[4:]+'\\\\n').encode('utf-8'));c.stdin.flush()\\n            header=c.stdout.readline().decode('ascii').strip().split()\\n            assert len(header)==3 and header[1]=='blob',(key,header)\\n            size=int(header[2]);raw=c.stdout.read(size)\\n            assert len(raw)==size and c.stdout.read(1)==b'\\\\n',key\\n        else:\\n            assert key.startswith('file:/'),key\\n            with open(key[5:],'rb') as f:raw=f.read()\\n        assert hashlib.sha256(raw).hexdigest()==row['sha256'],key\\n        assert len(raw)==row['bytes'],key\\n        data[key]=raw\\n        assert time.monotonic()-t0<120,'static wall'\\n    d0=time.monotonic();c.stdin.close()\\n    tail=c.stdout.read();err=c.stderr.read();c.wait(timeout=30)\\n    receipts.append({'pid':c.pid,'args':['cat-file','--batch'],'exit':c.returncode,'stdout_EOF':True,'stderr_EOF':True,'drained':True,'drain_seconds':time.monotonic()-d0,'tail_bytes':len(tail),'stderr':err.decode('utf-8','replace')})\\n    assert c.returncode==0 and not tail and not err,'cat-file completion'\\n    assert time.monotonic()-d0<=30,'drain bound'\\nfinally:\\n    if c.poll() is None:\\n        c.kill();c.wait(timeout=30)\\n    for stream in [c.stdin,c.stdout,c.stderr]:\\n        if stream and not stream.closed:stream.close()\\nfor r in p['declared']:\\n    assert hashlib.sha256(data[r['identity']]).hexdigest()==r['sha256'],r['identity']\\nbase='docs/reviews/20260908-full-product-audit/'\\ndef current(path):return data['git:'+p['parent']+':'+path]\\ncard=json.loads(current(base+'parallel-control-r1/task-exhausted-documentary-purposes-impact-review-r3.json'))\\nassert card['allowed_files']==p['allowed'] and set(p['buffers'])==set(p['allowed'])\\nassert card['budgets']['review_iteration']==card['budgets']['review_cap']==3\\nfor x in ['runtime','tests','build','lint','browser','native','server','qualification','probes','vendor','children','network']:assert card['budgets'][x]==0,x\\nassert data[p['sourceProposal']]==data[p['integrationProposal']]\\nimpact=data[p['sourceProposal']]\\nfor key in p['embedded']+[p['source2']]:assert data[key] in impact,key\\nfence=chr(96)*3\\npattern=fence+'json\\\\n([\\\\s\\\\S]*?)\\\\n'+fence\\nrecords=[json.loads(s) for s in re.findall(pattern,data[p['source2']].decode('utf-8'))]\\nrecord_ids=[]\\nfor obj in records:\\n    if isinstance(obj,list):record_ids.extend(r['id'] for r in obj)\\n    elif 'id' in obj:record_ids.append(obj['id'])\\ne8=json.loads(re.findall(pattern,impact.decode('utf-8'))[0])\\nassert e8==p['e8']\\nassert e8['full_source_record_ids']==record_ids\\nassert e8['acceptance_from_last_lawful_card']==json.loads(data[p['govCardIdentity']])['acceptance']\\nassert hashlib.sha256(data[p['source2']]).hexdigest()==e8['source_contract_sha256']\\nassert hashlib.sha256(data[p['source2Manifest']]).hexdigest()==e8['source_manifest_sha256']\\nassert e8['original_review_used']==e8['original_review_cap']==3\\nassert e8['proposed_review_iteration']==e8['proposed_cumulative_review_cap']==4\\nassert e8['max_new_review_opportunities']==1 and e8['author_opportunities']==0 and e8['source_unchanged'] is True\\nassert e8['owner_decision'] is None and e8['budget_grant']==[] and e8['fifth_attempt'] is False\\nassert e8['old_D3_quiescence']=='UNPROVEN' and e8['new_owned_process_quiescence_required'] is True\\nfor e in p['e67']:\\n    assert e['acceptance_from_last_lawful_card']==json.loads(data[e['original_card_identity']])['acceptance']\\n    assert e['original_author_used']==e['original_author_cap']==3\\n    assert e['proposed_author_iteration']==e['proposed_cumulative_author_cap']==4\\n    assert e['paired_review_iteration']==1 and e['paired_review_cap_unchanged']==3\\n    assert e['max_new_author_opportunities']==e['max_new_review_opportunities']==1\\n    assert e['owner_decision'] is None and e['grant']==[] and e['fifth_attempt'] is False\\nfor e in p['e67']+[e8]:\\n    assert e['reviewer_repairs'] is False\\n    assert all(v==0 for v in e['zero_budgets'].values())\\n    assert e['per_dispatch']=={'total_wall_minutes':30,'static_processes':1,'static_seconds':120,'owned_drain_seconds':30}\\npaths=[path for e in p['e67'] for path in e['author_files']+e['review_files']]+e8['review_files']\\nassert len(paths)==len(set(paths))\\nassert all(path.startswith('docs/reviews/') and '..' not in path.split('/') for path in paths)\\ndispatches=sum(e['max_new_author_opportunities']+e['max_new_review_opportunities'] for e in p['e67'])+e8['max_new_review_opportunities']\\nassert p['snapshot']['finite_paths']==paths\\nassert p['snapshot']['maximum_dispatches']==dispatches\\nassert p['snapshot']['wall_minutes']==dispatches*30 and p['snapshot']['static_minutes']==dispatches*120/60 and p['snapshot']['drain_minutes']==dispatches*30/60\\npending=json.loads(current(base+'parallel-control-r1/minimum-documentary-budget-decision-p64.json'))\\nassert pending['question_sent'] is True and pending['decision'] is None and pending['budget_grant']==[]\\nassert current(base+'parallel-control-r1/minimum-documentary-budget-decision-p64.json') in impact\\nex=json.loads(current(base+'EXECUTION.json'));todo=json.loads(current(base+'TODO.json'));scope=json.loads(current(base+'parallel-control-r1/scope-map.json'));state=json.loads(current(base+'parallel-control-r1/execution-state.json'))\\norig=[x for s in todo['sections'] for x in s['tasks']]\\nassert [x['id'] for x in orig]==[x['id'] for x in scope['items']]==[x['id'] for x in ex['items']]\\nassert len(ex['items'])==312 and sum(len(x['evidence']) for x in ex['items'])==939\\nassert dict(collections.Counter(x['status'] for x in ex['items']))==state['formal_counts']=={'completed':13,'verification_pending':3,'in_progress':3,'pending':293}\\nfor o,s,x in zip(orig,scope['items'],ex['items']):\\n    for key in o:\\n        assert o[key]==(s['original_module'] if key=='module' else s[key]),(o['id'],key)\\n    prior=s['retained_execution_record']\\n    assert prior['status']==x['status'] and x['evidence'][:len(prior['evidence'])]==prior['evidence'],x['id']\\nreport=p['buffers'][p['allowed'][0]];index=p['buffers'][p['allowed'][1]]\\nreport_blocks=[json.loads(s) for s in re.findall(pattern,report)]\\nassert report_blocks==[p['e67'],e8,p['snapshot']]\\nassert p['canonSection'].encode('utf-8') in data[p['canonIdentity']] and p['canonSection'] in report\\nparsed=[]\\nfor line in index.splitlines():\\n    if not line or line.startswith('#'):continue\\n    m=re.fullmatch(r'([0-9a-f]{64})  (git:[0-9a-f]{40}:.+|file:/.+)',line)\\n    assert m,line\\n    parsed.append((m[2],m[1]))\\nassert parsed==[(r['identity'],r['sha256']) for r in p['inputs']]\\nfor path,buf in p['buffers'].items():\\n    raw=buf.encode('utf-8');assert raw.decode('utf-8')==buf and raw.endswith(b'\\\\n') and b'\\\\x00' not in raw,path\\nassert short(['status','--porcelain','--untracked-files=all'])==b''\\nassert time.monotonic()-t0<120\\nprint(json.dumps({'result':'PASS','pid':os.getpid(),'elapsed_seconds':time.monotonic()-t0,'input_identities':len(data),'input_bytes':sum(len(b) for b in data.values()),'source_record_ids':record_ids,'owned_git_receipts':receipts,'outputs':{path:{'bytes':len(buf.encode('utf-8')),'sha256':hashlib.sha256(buf.encode('utf-8')).hexdigest()} for path,buf in p['buffers'].items()}),ensure_ascii=False))\\n`; var checkerStart=Date.now();var staticReceipt=await new Promise(resolve=>{var c=cp.spawn('python3',['-c',checker],{cwd:wt,stdio:['pipe','pipe','pipe']});var out=[],err=[],errors=[],oe=false,ee=false,exitAt=null;var timer=setTimeout(()=>{errors.push('static wall exceeded');c.kill('SIGKILL');},120000);c.on('error',e=>errors.push('process:'+e.message));c.stdin.on('error',e=>errors.push('stdin:'+e.message));c.stdout.on('error',e=>errors.push('stdout:'+e.message));c.stderr.on('error',e=>errors.push('stderr:'+e.message));c.stdout.on('data',b=>out.push(b));c.stderr.on('data',b=>err.push(b));c.stdout.on('end',()=>oe=true);c.stderr.on('end',()=>ee=true);c.on('exit',()=>exitAt=Date.now());c.on('close',(code,signal)=>{clearTimeout(timer);resolve({pid:c.pid??'UNKNOWN',numeric_exit:code??'UNKNOWN',signal,stdout:Buffer.concat(out).toString('utf8'),stderr:Buffer.concat(err).toString('utf8'),stdout_EOF:oe,stderr_EOF:ee,drained:oe&&ee,drain_ms:exitAt===null?'UNKNOWN':Date.now()-exitAt,elapsed_ms:Date.now()-checkerStart,errors,tool_chunk:'UNKNOWN',tool_session:'UNKNOWN'});});c.stdin.end(JSON.stringify(payload));});var staticParsed=null;if(staticReceipt.numeric_exit===0&&staticReceipt.errors.length===0){try{staticParsed=JSON.parse(staticReceipt.stdout);}catch(e){staticReceipt.errors.push('result JSON:'+e.message);}}nodeRepl.write({receipt:staticReceipt,parsed:staticParsed});\",\"timeout_ms\":30000,\"title\":\"Run sole independent prewrite documentary static check\"}));\n",
+            "internal_chat_message_metadata_passthrough": {
+              "turn_id": "01a12748-17ba-7153-b230-41d546c02a69",
+              "create_time": 1791660779.091361
+            }
+          }
+        },
+        "output": {
+          "timestamp": "2026-10-10T19:33:40.213Z",
+          "ordinal": 183,
+          "type": "response_item",
+          "payload": {
+            "type": "custom_tool_call_output",
+            "id": "ctco_01a1274e-86f5-7a60-aa13-9020199b0d6b",
+            "call_id": "call_a352ea2d2eb34dffb0bbce9e2a3aabac",
+            "output": [
+              {
+                "type": "input_text",
+                "text": "Script completed\nWall time 0.1 seconds\nOutput:\n"
+              },
+              {
+                "type": "input_text",
+                "text": "{\"content\":[{\"type\":\"text\",\"text\":\"{\\n  receipt: {\\n    pid: 41397,\\n    numeric_exit: 1,\\n    signal: null,\\n    stdout: '',\\n    stderr: '  File \\\"<string>\\\", line 120\\\\n' +\\n      \\\"    print(json.dumps({'result':'PASS','pid':os.getpid(),'elapsed_seconds':time.monotonic()-t0,'input_identities':len(data),'input_bytes':sum(len(b) for b in data.values()),'source_record_ids':record_ids,'owned_git_receipts':receipts,'outputs':{path:{'bytes':len(buf.encode('utf-8')),'sha256':hashlib.sha256(buf.encode('utf-8')).hexdigest()} for path,buf in p['buffers'].items()}),ensure_ascii=False))\\\\n\\\" +\\n      '                                                                                                                                                                                                                                                                                                                                                                                          ^\\\\n' +\\n      \\\"SyntaxError: closing parenthesis ')' does not match opening parenthesis '{'\\\\n\\\",\\n    stdout_EOF: true,\\n    stderr_EOF: true,\\n    drained: true,\\n    drain_ms: 1,\\n    elapsed_ms: 75,\\n    errors: [ 'stdin:write EPIPE' ],\\n    tool_chunk: 'UNKNOWN',\\n    tool_session: 'UNKNOWN'\\n  },\\n  parsed: null\\n}\"}],\"isError\":false}"
+              }
+            ],
+            "internal_chat_message_metadata_passthrough": {
+              "turn_id": "01a12748-17ba-7153-b230-41d546c02a69",
+              "create_time": 1791660820.213748
+            }
+          },
+          "metadata": {
+            "client_authored": false,
+            "fallback_token_limit_override": 12000
+          }
+        }
+      },
+      {
+        "row": 198,
+        "call": {
+          "timestamp": "2026-10-10T19:34:03.880Z",
+          "ordinal": 194,
+          "type": "response_item",
+          "payload": {
+            "type": "custom_tool_call",
+            "id": "ctc_084ee13e517a1b51016aca93263b008197a79dce4814bce968",
+            "status": "completed",
+            "call_id": "call_5e88f0bbd16c4d6a9710eb89190c346d",
+            "name": "exec",
+            "input": "text(await tools.mcp__node_repl__js({code:\"var mechanicalReceipt=[];for(var args of [['rev-parse','HEAD'],['status','--porcelain','--untracked-files=all'],['diff','--name-only']]){var mr=cp.spawnSync('git',args,{cwd:wt,encoding:'utf8'});mechanicalReceipt.push({args,pid:mr.pid,numeric_exit:mr.status,signal:mr.signal,stdout:mr.stdout,stderr:mr.stderr,error:mr.error?String(mr.error):null});}var failureHandoff={checker:{...staticReceipt,stdout_bytes:Buffer.byteLength(staticReceipt.stdout),stderr_bytes:Buffer.byteLength(staticReceipt.stderr),stdout_sha256:crypto.createHash('sha256').update(staticReceipt.stdout).digest('hex'),stderr_sha256:crypto.createHash('sha256').update(staticReceipt.stderr).digest('hex'),checker_source_sha256:crypto.createHash('sha256').update(checker).digest('hex')},mechanical:mechanicalReceipt,outputs:allowed.map(path=>({path,exists:fs.existsSync(wt+'/'+path),unvalidated_buffer_bytes:Buffer.byteLength(finalBuffers[path]),unvalidated_buffer_sha256:crypto.createHash('sha256').update(finalBuffers[path]).digest('hex')})),output_directory_exists:fs.existsSync(wt+'/docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-review-r3'),elapsed_instrumented_ms:Date.now()-started,preinstrumented_wall:'UNKNOWN',filesystem_writes:0,commits:0,retries:0,children_spawned_by_checker:0};nodeRepl.write(failureHandoff);\",\"title\":\"Preserve actual failed checker receipt and confirm clean untouched scope\"}));\n",
+            "internal_chat_message_metadata_passthrough": {
+              "turn_id": "01a12748-17ba-7153-b230-41d546c02a69",
+              "create_time": 1791660838.2449028
+            }
+          }
+        },
+        "output": {
+          "timestamp": "2026-10-10T19:34:04.091Z",
+          "ordinal": 197,
+          "type": "response_item",
+          "payload": {
+            "type": "custom_tool_call_output",
+            "id": "ctco_01a1274e-e43b-7710-a101-37bc6dfd5764",
+            "call_id": "call_5e88f0bbd16c4d6a9710eb89190c346d",
+            "output": [
+              {
+                "type": "input_text",
+                "text": "Script completed\nWall time 0.2 seconds\nOutput:\n"
+              },
+              {
+                "type": "input_text",
+                "text": "{\"content\":[{\"type\":\"text\",\"text\":\"{\\n  checker: {\\n    pid: 41397,\\n    numeric_exit: 1,\\n    signal: null,\\n    stdout: '',\\n    stderr: '  File \\\"<string>\\\", line 120\\\\n' +\\n      \\\"    print(json.dumps({'result':'PASS','pid':os.getpid(),'elapsed_seconds':time.monotonic()-t0,'input_identities':len(data),'input_bytes':sum(len(b) for b in data.values()),'source_record_ids':record_ids,'owned_git_receipts':receipts,'outputs':{path:{'bytes':len(buf.encode('utf-8')),'sha256':hashlib.sha256(buf.encode('utf-8')).hexdigest()} for path,buf in p['buffers'].items()}),ensure_ascii=False))\\\\n\\\" +\\n      '                                                                                                                                                                                                                                                                                                                                                                                          ^\\\\n' +\\n      \\\"SyntaxError: closing parenthesis ')' does not match opening parenthesis '{'\\\\n\\\",\\n    stdout_EOF: true,\\n    stderr_EOF: true,\\n    drained: true,\\n    drain_ms: 1,\\n    elapsed_ms: 75,\\n    errors: [ 'stdin:write EPIPE' ],\\n    tool_chunk: 'UNKNOWN',\\n    tool_session: 'UNKNOWN',\\n    stdout_bytes: 0,\\n    stderr_bytes: 885,\\n    stdout_sha256: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',\\n    stderr_sha256: 'ccc3a290a08f1ff5757021a3593d5f40fae81a104841a8e9f42248cd3b3d1f9f',\\n    checker_source_sha256: 'f1d350a45a758807788251fcdddf3ff0b345204d753d5bfa88a5324576b650e8'\\n  },\\n  mechanical: [\\n    {\\n      args: [ 'rev-parse', 'HEAD' ],\\n      pid: 41479,\\n      numeric_exit: 0,\\n      signal: null,\\n      stdout: '8e3bad2985f9818f23c4df1c0fb4007b16921ef9\\\\n',\\n      stderr: '',\\n      error: null\\n    },\\n    {\\n      args: [ 'status', '--porcelain', '--untracked-files=all' ],\\n      pid: 41491,\\n      numeric_exit: 0,\\n      signal: null,\\n      stdout: '',\\n      stderr: '',\\n      error: null\\n    },\\n    {\\n      args: [ 'diff', '--name-only' ],\\n      pid: 41503,\\n      numeric_exit: 0,\\n      signal: null,\\n      stdout: '',\\n      stderr: '',\\n      error: null\\n    }\\n  ],\\n  outputs: [\\n    {\\n      path: 'docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-review-r3/review.md',\\n      exists: false,\\n      unvalidated_buffer_bytes: 70535,\\n      unvalidated_buffer_sha256: '34acee21bfc72e4f13396f619472f4a4bce5781ffc42e5cc9f61bd08fa63bc2e'\\n    },\\n    {\\n      path: 'docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-review-r3/inputs.sha256',\\n      exists: false,\\n      unvalidated_buffer_bytes: 156685,\\n      unvalidated_buffer_sha256: '02633a097a13833bb048b4a295ce587868ba6a5cfae85b654a6991d59b4b58d1'\\n    }\\n  ],\\n  output_directory_exists: false,\\n  elapsed_instrumented_ms: 422474,\\n  preinstrumented_wall: 'UNKNOWN',\\n  filesystem_writes: 0,\\n  commits: 0,\\n  retries: 0,\\n  children_spawned_by_checker: 0\\n}\"}],\"isError\":false}"
+              }
+            ],
+            "internal_chat_message_metadata_passthrough": {
+              "turn_id": "01a12748-17ba-7153-b230-41d546c02a69",
+              "create_time": 1791660844.091405
+            }
+          },
+          "metadata": {
+            "client_authored": false,
+            "fallback_token_limit_override": 12000
+          }
+        }
+      }
+    ],
+    "selection_note": "Only actual current receipt/printer/mechanical records184/198. Earlier source-acquisition133 referenced historical PID41397 text and is excluded; not another invocation."
+  }
+}
