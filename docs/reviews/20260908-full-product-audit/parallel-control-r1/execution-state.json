@@ -657,7 +657,8 @@
       "archive_ref": "codex/archive/parallel-met05-runner-source-r1-20261010",
       "input_hashes_checked": 2594,
       "output_hashes_checked": 8,
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TASK-06/RUNNER-SOURCE-REVIEW",
@@ -676,7 +677,8 @@
       "integration_commit": "84c919c0622409a2f815828f7c29fa37e7d438ac",
       "archive_ref": "codex/archive/parallel-task06-source-review-r1-20261010",
       "input_hashes_checked": 265,
-      "review_iteration": 1
+      "review_iteration": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "DASH-06/PREPARE",
@@ -694,7 +696,8 @@
       "source_commit": "f8546788d28106aac17b96797dcb08469717dcdc",
       "integration_commit": "7e83bac6010fd28680583d3151fb17ad0fd53c04",
       "archive_ref": "codex/archive/parallel-dash06-prep-r1-20261010",
-      "input_hashes_checked": 541
+      "input_hashes_checked": 541,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "BRD-12/PREPARE",
@@ -964,6 +967,9 @@
     {
       "event": "BRD12 preparer actuallylaunchedfixed52a80bc; TASKsourcecorrector2+METreview continue, actual3workers+root4/4; DASHreviewqueued",
       "registration": "52a80bcbf0293b0bb0446e6360d379edc1f26387"
+    },
+    {
+      "event": "All34remote source identities/integrationancestry verified; three completed owned worktrees recoverablearchivedconfirmed, active3 unchanged"
     }
   ],
   "wave_P2_tasks": [
@@ -987,7 +993,8 @@
     "P10_owned_completed_worktrees": "5clean completed original heads exactremote then recoverablearchive confirmed; active3/unrelated5untouched",
     "P10_inventory_intermediate": "6debb65b76840a08aca1d57c08933a3ee12eee37 identified as inventory initial commit before message correction, exactsame tree as final8c481eb; preservedadditionalremote archiveparallel-tt08-inventory-initial, not evidenceaccepted or extra scanneriteration; no recoverydeletion",
     "deep_P10": "2FAIL0WARN scanstartedbefore extra initialinventorysource remote preservation: one reflog and six unreachable commits vs priorfive; preserveexactresult, fullobjectidentity scanpending, no deletion or assertion ofsame5",
-    "P10_fullidentity_scan": "literal six commit IDs: priorfive plus1955d250a7b33cde0f51c09c5836822f92bd0807 createdduring scan and nowancestororigin52a80bc; currentref/refloglocalonly0, priorfive retained; notstabledeepPASS"
+    "P10_fullidentity_scan": "literal six commit IDs: priorfive plus1955d250a7b33cde0f51c09c5836822f92bd0807 createdduring scan and nowancestororigin52a80bc; currentref/refloglocalonly0, priorfive retained; notstabledeepPASS",
+    "P11_owned_completed_worktrees": "3completed clean original heads exactremote then recoverablearchivesconfirmed, active3/unrelated5untouched; all34originalrefs+integrationancestry checked"
   },
   "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization",
   "active_scheduler": {
