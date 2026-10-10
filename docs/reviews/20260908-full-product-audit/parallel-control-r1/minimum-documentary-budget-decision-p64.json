@@ -1,0 +1,77 @@
+{
+  "id": "AUDIT/FIVE-DOCUMENTARY-BUDGET-EXCEPTIONS",
+  "state": "ready_for_one_consolidated_owner_decision_AFTER_review_reception_push_sync",
+  "owner": "Jinlong Li",
+  "source_proposal": "eb69c0bef221f15500824ab72d1db1ee4f86df8e",
+  "source_review": "1603f5d650466f6d2cf5285e1f811d8c99746826",
+  "review_verdict": "APPROVED proposalONLY",
+  "authority_need": {
+    "original_goal": "/Users/lijinlong/.codex/attachments/5ad08a9a-b470-446f-9ee0-205f5ffb672a/goal-objective.md",
+    "line": 24,
+    "literal": "每个运行单元诊断迭代 ≤3 轮",
+    "parallel_override": "global serial restriction replaced; cap3 retained",
+    "technical_revision_authority": "independent technical revisions do not implicitly waive explicitcap3"
+  },
+  "rows": [
+    {
+      "id": "E1",
+      "purpose": "SHARED/SOURCE-BYTE-COLLECTION-REVIEW",
+      "extra": "one review4/4",
+      "paired": "none",
+      "prohibited": "collector4/shared-designauthor4/runtimequalification"
+    },
+    {
+      "id": "E2",
+      "purpose": "BRD-12/TECHNICAL-CONTRACT-AMENDMENT",
+      "extra": "one author4/4",
+      "paired": "existing fullreview3/3"
+    },
+    {
+      "id": "E3",
+      "purpose": "CD-03/SOURCE-CONTRACT-REVIEW",
+      "extra": "one fullreview4/4",
+      "paired": "existing sourceauthor3/3"
+    },
+    {
+      "id": "E4",
+      "purpose": "DASH-06/SOURCE-AVAILABILITY-CONTRACT",
+      "extra": "one author4/4",
+      "paired": "existing fullreview2/3",
+      "permanent": "3 phases/4 actualfailedchecks/overrun1; launchednewi4 =>actual5checks"
+    },
+    {
+      "id": "E5",
+      "purpose": "AI-05/SOURCE-DISCOVERY",
+      "extra": "one author4/4",
+      "paired": "fresh whole review with lawful purpose capacity reconciled beforelaunch",
+      "permanent": "3 failedPythonchecks/overrun2+separateunlawfulmaterialization1 retained not retroapproved"
+    }
+  ],
+  "max_dispatch_opportunities": 9,
+  "per_dispatch": {
+    "total_wall_minutes": 30,
+    "concluding_static_max_seconds": 120,
+    "owned_child_drain_max_seconds": 30,
+    "concluding_static_processes": 1
+  },
+  "aggregate_allocation": {
+    "dispatch_wall_minutes": 270,
+    "concluding_static_minutes": 18,
+    "drain_minutes": 4.5,
+    "not_parallel_elapsed_or_billing": true,
+    "billing": "UNKNOWN"
+  },
+  "conditions": [
+    "original3/3 permanent no reset; extra i4=4/4 no fifth",
+    "each fresh exactfixedparent/taskcard/finite2ADD/provenance/readreviewcapacity bounds beforelaunch",
+    "fresh independent author and whole reviewer, neverrepairreviewer",
+    "actualfailedchecker freezes no retry/materialization/commit",
+    "all runtime/test/native/browser/qualification/probe/vendor/moduleimports/server/network budget0",
+    "no source/API/product/helper/bus/fixture edits or admission/before/caller/release grant",
+    "scope-insufficient fixture/allocation/quiescence/credentials remains BLOCKED",
+    "no optionalOuterreview4 or collector/shared-design4",
+    "six already pendingquestions excluded no repeat"
+  ],
+  "budget_grant": [],
+  "question_sent": false
+}
