@@ -2256,7 +2256,7 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "received_FULL_PROPOSED_UNADOPTED_await_independent_whole_impactreview",
+      "state": "adopted_FULL_conditional_technical_impact_basis_ONLY_DEPENDENCIES_HELD",
       "fixed_input": "aed09103a71c7e939ffc71d23c7b9b802ac47b51",
       "family_iteration": 2,
       "family_cap": 3,
@@ -2273,7 +2273,8 @@
       "input_hashes_checked": 70445,
       "static_pass": 1,
       "static_result": "PASS",
-      "product_write_grant": []
+      "product_write_grant": [],
+      "independent_review": "01891c834aa9ecd1c0349430c70aafea0b6bfc0d"
     },
     {
       "id": "BRD-12/TECHNICAL-CONTRACT-AMENDMENT-REVIEW2",
@@ -2432,7 +2433,7 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "received_FULL_PROPOSED_UNADOPTED_needs_fresh_FULL_independent_review",
+      "state": "adopted_FULL_conditional_technical_DOCUMENT_ONLY_all_admission_HELD",
       "fixed_input": "d64a7e151df25497f6d75b11e8a1890a2e71644a",
       "family_iteration": 2,
       "family_cap": 3,
@@ -2449,7 +2450,8 @@
       "input_hashes_checked": 2133,
       "product_write_grant": [],
       "static_pass": 1,
-      "static_result": "PASS"
+      "static_result": "PASS",
+      "independent_review": "145dd19a1a7813a6106b1720bef11e5946aa1210"
     },
     {
       "id": "GOV-01+GOV-02/SOURCE-CONTRACT1",
@@ -2597,7 +2599,7 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "documentary_PASS_knownstaged2ADD_finalization_registered_EOFresidual_notaccepted",
+      "state": "received_FULL_APPROVED_conditional_DOCUMENT_ONLY_EOFresidual_retained",
       "fixed_input": "7e57bb81594476e28727430b4fb9ed87dbdcfb2d",
       "family_iteration": 2,
       "family_cap": 3,
@@ -2611,10 +2613,15 @@
       "static_invocations": 1,
       "static_result": "PASS",
       "static_pass": 1,
-      "source_commit": null,
+      "source_commit": "145dd19a1a7813a6106b1720bef11e5946aa1210",
       "format_residual_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/postpass-verbatim-whitespace-disposition-p56.json",
       "independent_verdict": "APPROVED_conditionaldocumentONLY_unreceived",
-      "input_hashes_checked": 2591
+      "input_hashes_checked": 2591,
+      "integration_commit": "21dc2c01d630da4f9d48f4d6af0ae660d7813ca1",
+      "archive_ref": "codex/archive/parallel-med03-source-contract-review-r2-20261010",
+      "review_verdict": "APPROVED",
+      "product_write_grant": [],
+      "format_default_check": "FAIL blank-at-EOF sourcebytes retained P56 disposition"
     },
     {
       "id": "GOV-01+GOV-02/SOURCE-CONTRACT-IMPACT-REVIEW1",
@@ -2649,7 +2656,7 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "delivered_documentary_PASS_pending_reception_EOFresidual",
+      "state": "received_FULL_APPROVED_conditional_DOCUMENT_ONLY_EOFresidual_retained",
       "fixed_input": "02e34fa2153bac16c1c82db7e9e53ba6534ccdbe",
       "family_iteration": 2,
       "family_cap": 3,
@@ -2662,14 +2669,21 @@
       "static_invocations": 1,
       "static_result": "PASS",
       "format_residual_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/postpass-verbatim-whitespace-disposition-p56.json",
-      "pending_source_commit": "01891c834aa9ecd1c0349430c70aafea0b6bfc0d"
+      "source_commit": "01891c834aa9ecd1c0349430c70aafea0b6bfc0d",
+      "integration_commit": "19a072dedea5414ca75e00773930a2c2ae7d62cd",
+      "archive_ref": "codex/archive/parallel-brd28-source-machinery-impact-review-r2-20261010",
+      "input_hashes_checked": 89317,
+      "static_pass": 1,
+      "review_verdict": "APPROVED",
+      "product_write_grant": [],
+      "format_default_check": "FAIL blank-at-EOF sourcebytes retained P56 disposition"
     },
     {
       "id": "GOV-06/AUTHORITY-SOURCE-DISCOVERY1",
       "workflow": "B",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "same_task_startup_workdir_corrected_continuation_registered",
+      "state": "delivered_SOURCE_ONLY_candidate_PENDING_reception_fullcontract_unadopted",
       "fixed_input": "6f5910ea036ee6f54a26f25c4faba63389aac496",
       "family_iteration": 1,
       "family_cap": 3,
@@ -2681,14 +2695,18 @@
       "actual_actor_launched": true,
       "startup_failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov06-workdir-launch-failure-p56-receipt.json",
       "concluding_checker_invocations": 0,
-      "process_creation_rejections": 6
+      "process_creation_rejections": 6,
+      "pending_source_commit": "a9346fc1efd565833bbc715d848b9a414a87175d",
+      "static_result": "PASS",
+      "static_invocations": 1,
+      "input_hashes_checked": 26
     },
     {
       "id": "SHARED/OUTER-CAPTURE-ADMISSION-IMPACT-REVIEW3",
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_FINAL_FULL_independent_task",
+      "state": "FAILED_static1_FINAL_review3_EXHAUSTED_NO4_noartifact",
       "fixed_input": "2cfd71ada03bb13017c703c37ec7a9a604edd9cb",
       "family_iteration": 3,
       "family_cap": 3,
@@ -2697,19 +2715,40 @@
       "actor": "/root/parallel_d_outer_capture_full_review_r3",
       "fixed_parent": "23b7ad71a125ab3830b35e74bf9aff93da8afc7d",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-outer-capture-review3-20261010/XAI_Desktop",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/outer-capture-impact-review3-failure-receipt.json",
+      "static_result": "FAILED",
+      "static_invocations": 1,
+      "review_verdict": "UNRUN_NO_VALID_ARTIFACT",
+      "source_commit": null
     },
     {
       "id": "GOV-01+GOV-02/SOURCE-CONTRACT2",
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_FULL_independent_task",
+      "state": "running_fresh_FULL_independent_task",
       "fixed_input": "61ca9c77e183a94bb4a3c58d5bee1eec35f5e230",
       "family_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov01-gov02-source-contract-r2.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov01-gov02-source-contract-r2.json",
+      "actor": "/root/parallel_c_gov_source_contract_r2",
+      "fixed_parent": "e834a75b9de1c4b021cd58388748d1fe92b2bdd8",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-gov-source-contract2-20261010/XAI_Desktop",
+      "actual_actor_launched": true
+    },
+    {
+      "id": "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT1",
+      "workflow": "A",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_proposal_ONLY_no_newbudget_grant",
+      "fixed_input": "19a072dedea5414ca75e00773930a2c2ae7d62cd",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-exhausted-documentary-purposes-impact-r1.json"
     }
   ],
   "workflow_B": "GOV01+02 whole sourcecontract impact review1 RUNNING; AI05 failedcontinuation candidate frozen NOvaliddiscovery; next unrelated GOV06 sixmodule authority source discovery registered, no parser/authority/code grant.",
@@ -2719,14 +2758,10 @@
     "total": 2,
     "capacity": 4,
     "actors": [
-      "/root/parallel_d_outer_capture_full_review_r3"
-    ],
-    "registered_same_task_continuations": [
-      "MED-03/SOURCE-CONTRACT-REVIEW2",
-      "GOV-06/AUTHORITY-SOURCE-DISCOVERY1"
+      "/root/parallel_c_gov_source_contract_r2"
     ],
     "next_ready": [
-      "GOV-01+GOV-02/SOURCE-CONTRACT2"
+      "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT1"
     ]
   },
   "cost": {
@@ -2737,24 +2772,24 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 97,
+    "static_passes": 99,
     "rework_findings": 71,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 98,
+    "completed_source_receipts": 100,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "98delivered97concluding incl10FAILED1whitespaceONLY; pending15FAILED1UNKNOWN2PASS(MEDstaged/BRDunreceived)=>115known25FAILED1UNKNOWN89knownsuccessfulincl1whitespaceONLY. NewpostpassGithygiene default2EOFFAIL+supplement1PASS separate not semanticreruns; oldcompletehygienecensus UNKNOWN. GOV06sixwrongcwd no process/checker0 sameunit/cap. Rootsyntaxerror metadataonly separate.",
+    "static_passes_basis": "100delivered99concluding incl10FAILED1whitespaceONLY; pending16FAILED1UNKNOWN1PASS(GOV06unreceived)=>117known26FAILED1UNKNOWN90knownsuccessfulincl1whitespaceONLY. GOV06sameunit1 Nodechecker0b42e2exit0 afterwrongcwd6rejections, no reset; 26manifesthashes metadataPASS relativepaths at explicit56feheader, bodyCP6f identityclaim unreviewed. EOFhygiene2FAIL1PASS separate oldcensusUNKNOWN.",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 10,
     "rework_findings_basis": "69prior plus2 independentfullGOV findings=71; memoryfailuredrafts and invalidAI notaccepted.",
     "pending_no_delivery_static_invocations": 18,
-    "pending_no_delivery_static_failures": 15,
-    "actual_static_invocations_total_known": 115,
-    "actual_static_failed_total_known": 25,
+    "pending_no_delivery_static_failures": 16,
+    "actual_static_invocations_total_known": 117,
+    "actual_static_failed_total_known": 26,
     "static_budget_overruns": 3,
     "pending_no_delivery_static_unknown": 1,
     "actual_static_completion_unknown_total_known": 1,
@@ -2764,13 +2799,13 @@
     "mechanical_failure_preservation_invocations": 1,
     "delivered_whitespace_only_static": 1,
     "discovery_input_checksum_invocations": 1,
-    "delivered_concluding_static_invocations": 97,
-    "actual_concluding_static_successes_known": 89,
+    "delivered_concluding_static_invocations": 99,
+    "actual_concluding_static_successes_known": 90,
     "ai_source_discovery_authoring_attempts": 4,
     "ai_actual_failed_concluding_attempts": 3,
     "ai_postfailure_materialization_invocations": 1,
     "ai_numeric_exit_receipts_unknown": 3,
-    "pending_no_delivery_static_successes": 2,
+    "pending_no_delivery_static_successes": 1,
     "postpass_git_hygiene_newly_disclosed_checks": 3,
     "postpass_git_hygiene_newly_disclosed_failures": 2,
     "gov06_process_creation_rejections": 6,
@@ -3250,6 +3285,15 @@
       "at": "2026-10-10T17:25:49.084910+00:00",
       "event": "P56 finalization: MEDreview2 semantic26309/session7243/b04d6fexit0/2591identities prewritePASS thenGithygiene699c11exit2 EOFblankonly, exactstagedhashes08ca/239f preserved; sameoriginalreviewer/unit/fixedinput may finalize unchangedbytes with disclosedformatresidual, no adoption before reception. BRDwholeimpactreview2 semantic26893exit0/89317identities source01891 pendingreceive; defaultformatc85e0dexit2 EOFblank+supplementPASS retained/no quotedbyteedit/defaultgreenclaim. Root accepts isolated verbatimdocumentformatresidual for finalization only, no business/method/frozenstandardwaiver/failedsemanticcontinuation(AIstillFAILED). GOV06forensic6launchrejections allnonexistentwrongcwd extra source segment; correctcwd ce83b3exit0; checkerUNLAUNCHED0 same discovery1/cap3 continuation registered correctcwd only no budgetreset. RootP56metadataSyntaxError602565exit1 beforeanyrepo write corrected/e7c65eexit0, laterunexecutedJSassemblyfault separatelydisclosed. Root+Outerfinalwhole3=2/4; MED/GOVsameunitcontinuations thenGOVcorrector2 ready.98receipts115knownconcluding25FAILED1UNKNOWN/2pendingPASS/newhygiene2FAIL1PASS separate/rework71/formal13/3/3/293=312/939 unchanged.",
       "input": "61ca9c77e183a94bb4a3c58d5bee1eec35f5e230"
+    },
+    {
+      "at": "2026-10-10T17:32:39.600481+00:00",
+      "event": "P57 receiveMEDwholefullreview2 145dd19a1a7813a6106b1720bef11e5946aa1210 ->21dc2c01d630da4f9d48f4d6af0ae660d7813ca1 exact2ADD/clean/2591hashes; exactsource5bc8e02 adopted FULLconditionaltechnicalDOCUMENTONLY no sourcequalified/code/before/callergrant. ReceiveBRD28wholeimpactreview2 01891c834aa9ecd1c0349430c70aafea0b6bfc0d ->19a072dedea5414ca75e00773930a2c2ae7d62cd exact2ADD/clean/89317hashes; source4d wholeB/R/T/W conditionalimpactbasis adoptedONLY allBRD12unresolved/shared/outer/qualificationholds retained. BothdefaultGitEOFblankFAIL retained byte-exact P56disposition no checkerrerun/defaultgreen. OuterFINALreview3 actual27931/session74754/f1d2be,c4dedfexit1 phasepath4440guard noartifact/validtechnicalverdict; review3EXHAUSTED NO4. Registerfreshindependent EXHAUSTED-DOCUMENTARY-PURPOSES impactproposal1: preciseoldcaps/provenance/minimalpossibleownerbudgetexception ONLY, no oldverifier/correction/retry/newbudgetgrant; excludes alreadyaskedClockretention/REL andpendingproductpolicies, otherreadytaskscontinue. Root+GOVwholecorrector2+GOV06sameunitcorrectcwdsource1=3/4; proposalnextfillslot.100receipts116knownconcluding26FAILED1UNKNOWN/rework71/knownsuccess89inclwhitespace1/hygiene2FAIL1PASS/AIillegal1; formal13/3/3/293=312/939unchanged TT08onlynewfullcalleraccepted, vendor3LISTnotbilling/ninecleanupunconfirmed. P56normal0FAIL1WARN kept P57freshpending; goalunfinished no runtime/method/sourcequalification/product/caller/releaseadoption.",
+      "input": "19a072dedea5414ca75e00773930a2c2ae7d62cd"
+    },
+    {
+      "at": "2026-10-10T17:34:46.742011+00:00",
+      "event": "P57 latest: GOV06same-source-discovery1 completeda9346fc1 aftercorrectcwd continuation; Node0b42e2exit0/static1PASS/stagef7d5e0/commit74ae6a/postcommitcbb403 exit0/clean; sixprocesscreationrejections preserved no reset. Root26manifestinputhashes at explicitHEAD56fe relativelabels qualifiedmetadataONLY, discoverybodyCPclaim6f versusmanifestactual56fe will be corrected by freshfullcontract author, no validbefore/authoritygrant. CandidateNOTyetreceived/source100 unchanged, actualroot+GOVcorrector2=2/4; exhaustionimpact nextfill thenGOV06wholecontract once received.117knownconcluding26FAILED1UNKNOWN/1pendingPASS/90knownsuccessinclwhitespace1/rework71; formal312939 unchanged."
     }
   ],
   "wave_P2_tasks": [
@@ -3258,7 +3302,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P55literal0FAIL1WARN; newGOVoriginalremote/received P56freshnormalpending",
+    "normal": "P56literal0FAIL1WARN; MED/BRD originalsremote received P57freshnormalpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -3557,6 +3601,21 @@
       "review_sha256": "136d2e05f824006e691c7a39bf41631145c78971fccc5b0857d405024929e1f5",
       "scope": "Whole15rows/L1-L8/11paths/20machinery conditionaltechnicalbasisONLY; nativePOMOlock distinct canonicalactivation. No source/method/runtime/implementationgrant.",
       "product_write_grant": []
+    },
+    {
+      "caller": "BRD-28",
+      "source": "4d1c1bdfb4378fcb5c9c0307bbf60333881a4de1",
+      "source_sha256": "a267bb8c62eddc21eb2db071603a9ca95086ecbb093d3a5527930ab75185d380",
+      "independent_review": "01891c834aa9ecd1c0349430c70aafea0b6bfc0d",
+      "review_sha256": "24d1b60d05b932e7b8808b8985173ce15109622accc1366cfa323b49fe670385",
+      "scope": "WholeB01-B13/R01-R12/T1-T4/W01-W21/publichelpers/fullgraph/lifecycle SDK/reset/importrollback/finitepaths/emitter/native/canonicalG1 conditionalimpactONLY; no sourceAPI/schema/UI/method/before/implementation/callergrant",
+      "product_write_grant": [],
+      "holds": [
+        "BRD12R2-01/R2-02 author3FAILED/exhausted no correctedartifact",
+        "sharedbyte3/review3/outerreview3 exhausted unqualifiedrootfixture",
+        "sourcecontract/fullreview/adopt/qualification/fullvalidbefore/fixedintegratedaffectedG1vendor/freshwholeaccept/rootappendinventory"
+      ],
+      "format_residual": "defaultGitEOFblankFAIL disclosed exactquotedbytes P56"
     }
   ],
   "adopted_source_contract_documents": [
@@ -3575,6 +3634,22 @@
         "complete olderpurpose invocationhistory",
         "full sourcequalification/indepreview/rootadopt/fullvalidbefore/fixedintegratedaffectednativeG1/vendor/freshfullaccept/rootappendinventory"
       ]
+    },
+    {
+      "caller": "MED-03",
+      "source": "5bc80abca8845b2ed0b2645fb616e73b2c156273",
+      "contract_sha256": "8e02a5deed8e0821c83eef4e8d7c89b146a7023d889dc3dda6d30977c57f312e",
+      "independent_review": "145dd19a1a7813a6106b1720bef11e5946aa1210",
+      "review_sha256": "08ca5b02d97f598a3ee03313372d417206a110938ee96c6b43b393540e230bac",
+      "scope": "Whole16rows/11original+23conditionalpaths/18roles/87registry/7events/10logs13comparisons sourcecontract technicalDOCUMENTONLY; no runtime API/code/methodqualified/before/caller grant",
+      "product_write_grant": [],
+      "admission_holds": [
+        "consumedSDK/loadconfig/acquisitionforwarding/qualifiedrootcapture",
+        "lawful nativefocus/capacity and complete oldpurposehistory",
+        "sourcequalification/independent review/rootadopt/full validP0before",
+        "boundedfreshimpl/fullfixedintegratedaffectednativeG1/actualvendor/freshwholeaccept/rootappendinventory"
+      ],
+      "format_residual": "defaultGitEOFblankFAIL retained exactquotedbytes P56"
     }
   ]
 }

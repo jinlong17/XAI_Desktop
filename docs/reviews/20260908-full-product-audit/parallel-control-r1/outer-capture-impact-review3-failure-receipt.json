@@ -1,0 +1,36 @@
+{
+  "id": "SHARED/OUTER-CAPTURE-ADMISSION-IMPACT-REVIEW3",
+  "result": "FAILED_STATIC_FINAL_REVIEW3_EXHAUSTED_NO4",
+  "parent": "23b7ad71a125ab3830b35e74bf9aff93da8afc7d",
+  "fixed_input": "2cfd71ada03bb13017c703c37ec7a9a604edd9cb",
+  "review_iteration": 3,
+  "review_cap": 3,
+  "static_invocations": 1,
+  "process": {
+    "pid": 27931,
+    "session": 74754,
+    "start_chunk": "f1d2be",
+    "final_chunk": "c4dedf",
+    "exit": 1,
+    "fully_drained": true,
+    "git_child_pids": null,
+    "git_child_pids_status": "externallyUNKNOWN in failedmemory; communicate stdinclosed streamsdrained waited",
+    "mechanical_chunk": "7e4997",
+    "mechanical_exit": 0
+  },
+  "failed_guard": "line151 sum(len(c['outputs']) for c in task1['cases']) ==4440",
+  "classification": "checker equates per-case outputs to complete historical phasepath cardinality; not proven sourcecorruption",
+  "completed": "top hashes/selected2903/2963/3258/f667/bdc/6c/TASK477/MET2663 aliases reported",
+  "unrun": [
+    "remaining fullmatrix/patch/payload/canonical/formal",
+    "both finalbuffers",
+    "all writes",
+    "stage",
+    "commit"
+  ],
+  "in_memory": "B1O12 fixturecircle/B2lawfulallocation unvalidated notacceptedBLOCKED",
+  "source_commit": null,
+  "output_hashes": null,
+  "runtime": 0,
+  "freeze": "no reviewer4/newlabel reset/sourcegrant/TASKMETsource3release; original fullG1 conditions intact"
+}
