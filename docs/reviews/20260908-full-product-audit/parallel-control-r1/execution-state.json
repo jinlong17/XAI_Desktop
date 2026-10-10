@@ -426,17 +426,48 @@
       "state": "running",
       "static_pass": 1,
       "formal_invocations": 0
+    },
+    {
+      "id": "TT-08/verify3",
+      "workflow": "D",
+      "actor": "external-cli/TT-08/verify/i3",
+      "tool": "ClaudeCode2.1.280",
+      "configured_model": "opus",
+      "provider_attested": false,
+      "fixed_parent": "6db0903f966b49d4c9cfeb099db5885d5ec76758",
+      "candidate": "59809b32a4dc19dbdefff871cf9c60bb5b0b96b1",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-vendor3-20261010/XAI_Desktop",
+      "state": "running_actual_cross_vendor_readonly_last3of3",
+      "owned_pid": 36897,
+      "exec_session_id": 61115,
+      "verification_iteration": 3,
+      "family_cap": 3,
+      "max_usd": 12,
+      "wall_seconds": 900,
+      "formal_invocations": 0
+    },
+    {
+      "id": "DASH-03/CONTRACT-REVIEW2",
+      "workflow": "D",
+      "actor": "/root/parallel_d_world_clocks_review2",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "6db0903f966b49d4c9cfeb099db5885d5ec76758",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-world-clocks-review2-20261010/XAI_Desktop",
+      "state": "running_full_review_and_U1_necessity",
+      "review_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 1,
-    "total": 2,
+    "workers": 3,
+    "total": 4,
     "capacity": 4
   },
   "cost": {
-    "accepted_parallel_tasks": 3,
     "new_formal": 0,
     "new_development_probes": 0,
     "clock_inherited_focus_formal": 1,
@@ -448,8 +479,10 @@
     "rework_findings": 11,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
-    "actual_cross_vendor_verification_invocations": 2,
-    "reported_vendor_usd_list_total": 4.3731168
+    "actual_cross_vendor_verification_invocations": 3,
+    "reported_vendor_usd_list_total": 4.3731168,
+    "completed_source_receipts": 20,
+    "accepted_parallel_tasks_P1_historical": 3
   },
   "events": [
     {
@@ -545,6 +578,11 @@
       "at": "2026-10-10T10:44:28.399836+00:00",
       "event": "Preserve vendor2 rawAPPROVED butwithholdrequiredrulegap; finalfresh3/3 registered with complete actualgovernance input blocks. Receive World115hashes version2 U1blocked andfreshreview2 registered; TASK06 runs",
       "input": "5ab57eb953a99bb58c27caf173e8a088c5b85e6d"
+    },
+    {
+      "at": "2026-10-10T10:47:23.675378+00:00",
+      "event": "P7 actualvendor3 PID36897 andfreshWorldreview2 launched; TASK06 continuing; total3workers+root; all20receivedsource remote identities+integration ancestry checked",
+      "registration": "6db0903f966b49d4c9cfeb099db5885d5ec76758"
     }
   ],
   "wave_P2_tasks": [
