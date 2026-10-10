@@ -3482,28 +3482,48 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "registered_ready_fresh_wholeD2",
+      "state": "running_fresh_independent_whole_source_and_processD2",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov04-gov07-status-source-discovery-review-r2.json",
       "fixed_input": "ae9ea3ce70d1d822b462b726fcdb43f1d59e2746",
       "family_iteration": 2,
+      "family_cap": 3,
+      "actual_actor_launched": true,
+      "adopted": false,
+      "new_budget_grant": [],
+      "actor": "/root/parallel_d_gov04_gov07_whole_source_process_review_r2",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-gov04-gov07-review2-20261010/XAI_Desktop",
+      "fixed_parent": "5ca699b982d3a1adca29867bff5057c5a78fbee8",
+      "worktree_registration": "checkoutcreatedsuccessful appattachment100error no retry/recreation"
+    },
+    {
+      "id": "MAT-01+MAT-02+MAT-03/SOURCE-DISCOVERY1",
+      "workflow": "C",
+      "primary_workflow": "mixed_B_and_C_preserve_original_ownership",
+      "configured_model": "gpt-6-luna",
+      "provider_attested": false,
+      "state": "registered_ready_after_slot",
+      "fixed_input": "5ca699b982d3a1adca29867bff5057c5a78fbee8",
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-mat01-mat03-source-discovery-r1.json",
+      "family_iteration": 1,
       "family_cap": 3,
       "actual_actor_launched": false,
       "adopted": false,
       "new_budget_grant": []
     }
   ],
-  "workflow_B": "GOV01+02 whole sourcecontract impact review1 RUNNING; AI05 failedcontinuation candidate frozen NOvaliddiscovery; next unrelated GOV06 sixmodule authority source discovery registered, no parser/authority/code grant.",
+  "workflow_B": "TT08 FULL documentary caller accepted/reconciled/inventoryaccepted; unchangedruntimeP0. MEDsource2/BRD28wholeimpact2/GOV01+02sourcecontract2 conditionaltechnicalDOCUMENT adopted. Otherimplementation descendants wait eachowningqualification/before/scope/gate; no newruntime/caller/formal/releasegrant.",
   "concurrency": {
     "root": 1,
-    "workers": 2,
-    "total": 3,
+    "workers": 3,
+    "total": 4,
     "capacity": 4,
     "actors": [
       "/root/parallel_d_exhausted_documentary_whole_impact_review_r3",
-      "/root/parallel_c_hab01_hab05_whole_source_correction_r2"
+      "/root/parallel_c_hab01_hab05_whole_source_correction_r2",
+      "/root/parallel_d_gov04_gov07_whole_source_process_review_r2"
     ],
     "ready_next": [
-      "GOV-04+GOV-07/STATUS-SOURCE-DISCOVERY-REVIEW2"
+      "MAT-01+MAT-02+MAT-03/SOURCE-DISCOVERY1"
     ]
   },
   "cost": {
@@ -4230,6 +4250,11 @@
       "at": "2026-10-10T19:30:56.517866+00:00",
       "event": "P79 preserveGov04FINALsource3 0049remote->ae9 sameexact2ADDbytes conventional subject ONLY integrationmetadata originalWhy-as-subjectunchangedremote no sourceadmission; all91inputs+reportself92declaredhashesmatch butauthorpostcommit actualsourcebindinggaps Med/player/project UNKNOWN completeness static28377exit0.001703s/noGitchild/sessionchunkEOFUNKNOWN sourcepurpose3/3 spent reservedfreshwholeD2 noauthor4/reset. Recover ORIGINALownSKsource1toolraw5executedPREWRITE_STOP at602/613/624/651/666 not3historicalreport; codeafterGitmetadata-beforefullinputs/write, actualvalidationnotpretool numericPIDexit/wholeconcludingclassificationUNKNOWN stricthold retained noimplicitauthor2. Fullrawcall/event/output preserved no businessrerun. P78literal2FAIL1WARN exactly0049newlocalrefs/reflognowremotepreserved no recoverydelete.118sources142knownconcluding31FAILED3UNKNOWN108reportedPASS plusSK5observedclassificationHELD/rework83/formal13/3/3/293312299unclosed939 unchanged. Root+impactD3+Habsource2=3/4 nextGovwholeD2, goalunfinished.",
       "input": "ae9ea3ce70d1d822b462b726fcdb43f1d59e2746"
+    },
+    {
+      "at": "2026-10-10T19:33:38.845319+00:00",
+      "event": "P80 refreshCURRENTworkflowA/B/C/D summary previouslystaleB Govreview1/C MEDreview2RUNNING nowtruthfullateststate, oldhistoryevents retained. Root+freshGov04wholeD2 atfixedparent5ca+FINALimpactD3+Habsource2=4/4. RegisterMatrixoriginalMAT01CRUD/legalempty/MAT02independentvsTaskprojectionexistingrule-first/minimumundecidedhold/MAT03keyboardtouchguide source1/3 freshreportonly,nextslot; preserveprimaryB/B/C ownershiporiginal312 map notduplicateGOV05dossierfailedpurpose. Canonical/run/qualification/before/productdecisions/sharedwritergates nonegranted. P79root5caandGovintegrationae9originancestors normal0FAIL1WARN; 118sources142knownconcluding31FAILED3UNKNOWN108reportedPASS+SK5observedclassificationHELD/rework83/formal13/3/3/293312299unclosed939 unchanged. Goalunfinished.",
+      "input": "5ca699b982d3a1adca29867bff5057c5a78fbee8"
     }
   ],
   "wave_P2_tasks": [
@@ -4238,7 +4263,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P78literal2FAIL1WARN exactlynewconcurrentGov04source3 originallocalrefs/reflog nowremote preserved P79freshpending",
+    "normal": "P79literal0FAIL1WARN P80freshpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -4273,7 +4298,7 @@
     "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
     "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
     "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched",
-    "normal_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e",
+    "normal_log_sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b",
     "deep": "P44 1FAIL0WARN exactfiveoriginalunreachable identities confirmedP45 retainedno deletion",
     "initial_shared_review_recovery_ref": "codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
     "deep_log_sha256": "81179a39509cd6990ed115565d43bcb22a280b4cdd999f074f1ed52ae3e97079",
@@ -4282,7 +4307,7 @@
     "normal_intermediate_P59": "Literal2FAIL1WARN: one newlycompleted GOVsource2 original in localrefs/reflog before archive push; exactd116 original nowremotepreserved before rootreception; freshrepeat pending, no recovery deletion",
     "normal_intermediate_P59_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e"
   },
-  "workflow_C": "MED03 correcting fullsourcecontract2 awaiting whole review2 RUNNING; BRD12 finaltechnicalauthor3 FAILED exhausted no4; CAL/BK/World minimumownerdecision localholds; prepare other original candidates without sharedcap resets.",
+  "workflow_C": "Habits whole sourcecorrection2 RUNNING; Gov04+07finalsource3UNADOPTED authorbindinggaps awaitingwholeD2. SKwholeD2REVISE4/sourceFORENSIC_ONLY budgetclassificationHELD recoveredfivefailures. Matrixoriginalthree source1 registered nextslot, distinctGOV05dossierpurpose no repeatedhistoricalqualifiedbatch.",
   "active_scheduler": {
     "graph": "docs/reviews/20260908-full-product-audit/parallel-control-r2/dependencies.json",
     "sha256": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
@@ -4676,5 +4701,7 @@
     "integrations_origin_ancestors": true,
     "normal": "P77literal0FAIL1WARN",
     "no_recovery_deletion": true
-  }
+  },
+  "workflow_A": "Clock MGBconditionalgrant retained; retention3/3/sourcequalification/nativebudgetholds pendingownerexceptions. Sharedtechnicaldocumentadopted but engine/method/runtimequalification/before/sourceadmission held. Existingfivebudgetquestion and pendingE6E7E8proposal nogrant.",
+  "workflow_D": "FINALwholeexhaustionimpactreview3 andGov04+07wholeD2 RUNNING; futurefreshHabwholeD2 reserved. Root117originalproofcheckpointP78 validat8e3, newest118th0049originalremotepreserved P79integrationpushed; no formalclosure."
 }
