@@ -1,0 +1,69 @@
+{
+  "id": "MET-05/RUNNER-SOURCE-CORRECT2",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent source-only corrector2, no runtime or selfacceptance",
+  "model": "gpt-6.1-sol",
+  "fixed_input": "25c4dea3d03e867fba898928a21cbf859050075d",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "0d5a65390d5a30bc0a034c08aaf4740bb6834a29",
+    "476b89f43ddbf07c7122a4ffb4b2b3335568de25",
+    "ced574944f5defd14e9bf558cd9e8dbe55eb8ec6",
+    "adf06b6936efa9c6cc0437c603159302aaa0c88a"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-met05-runner-source-r2/driver.mjs",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/fixture.tsx",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/vite.config.mjs",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/host-adapter.mjs",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/focus-adapter.mjs",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/source-gate.mjs",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/browser-controls.mjs",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/launch.mjs",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/qualification-runner.mjs",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/qualification-controls.test.mjs",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/execution-manifest.json",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/qualification.md",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/inputs.sha256",
+    "docs/reviews/audit-parallel-met05-runner-source-r2/source.patch"
+  ],
+  "acceptance": [
+    "Resolve complete reviewR1-R11 andfullM1-M9table in exact14newversionedADDs, preserveoriginal89rows/2437pathobligations/fullG1G9E1E9/WeightonlyPlannedrule and allinputs includingfull2612review corpus; finite additionalneededsubcases/paths allowed but no reduction",
+    "Implement actualsourceGate/build/publichost/fullAppProviders/gates/browsercontrols and current-realphase observation adapters; archive-name metadata resolver rejectsduplicates/unknown/outsideexports, fullsource/dependencyclosure/provenance/cache/env andreadonlymain-dependency root. No LegacyAuth config=null relabeledactualmanagedlive; exact lawfulpublicexternal seam source-boundaccountforallactualomitted bridges. Missing source is REVISE not acceptedenvironmentresidual",
+    "Full actualfirstmounted ready subtreeidentity/kind/account/generation/epoch/currentphysicalkey +lockedabsence+A/B rendered sentinels andallwrongkeyattemptcensus/bytes. Explicitallrequiredcontrolpresence/visiblelabels/selectedafter/realLog-recordreload/source-normalizationattempts/pendingdeniedretryeffects. Real newloader/document barrier/hostdifferentstart route/CmdKnavigation proof, no forcedrouter/DOMclick/hiddeninjection",
+    "Full frozenbyte-identical original pixel method compatibility context/meaningfuloriginalselftests/fulloutsidestopcensus/deferredfailure/trustedkeyaudit/forwardreverseactions/artifacts. No fakehue/skipselftests/thresholdsettleunionvisibilityrelax/borrowClock Mauthorization; lawfulincompatibility freezesprecisegap forfreshimpact no sourceAPPROVEDstub",
+    "Typedrootreservation/sourcequal vsbusiness launcher schemas, exactactors/exclusions/lineage/source-reviewqualadoptionreceipts/unitrowmembership/cumulativecap/refusalconsumption/provenance replayguard. M8 retainsactualoldREL05lowerbound2 unknowncomplete nativehistory, cannotlaunchuntilprovedallowance; newPlanned sourceboundnovelunits notgenericunknownblocked",
+    "Ownresourcesatspawn/partialbuild, fencecancelandjoin tasks/streams/descendants ortruthfulquarantine, finiteallindependentcleanup, stickyprimary+latechildexit/CDPparser/idleframe/page/journalflushclose/finalizeerrors; durablefinalstatus afterallterminalbarriers. Outerwxpreallocationrefusal/capture/pathrealpathsymlinks/fsync/contenthash/requiredoptional-lanecompleteness/scratchownership. No generictimeoutPromise.race or latefaultignored",
+    "Guardedqualificationrunner with paired actuallifecycle/archive/alias/parser/lateidle/childretainedstream/partialbuild/finalwrite/admission/oracle positive+negativecontrols strictcause/stage/faultID/invalidvalue/counter; unrelatedexception cannotpassnegative. Author SOURCE2/3/static1 andallruntime/tests/qualification/native/browser/vendor/probes0; full13file selfexcludingpatch/sourceonlyreport, laterfreshreview2 thenindqual/adoption beforebusiness"
+  ],
+  "protected": [
+    "allnonallowedpaths",
+    "product/tests/sharedsource/API/CSS/config/lockfile",
+    "r1sources/reviews/contracts/methods/failures/otherworktrees",
+    "globalcontrol/ledgers/inventory",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "source_author_iteration": 2,
+    "source_author_cap": 3,
+    "inherited_source_author_used": 1,
+    "source_review_used": 1,
+    "source_review_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "native": 0,
+    "browser": 0,
+    "qualification": 0,
+    "probes": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "lawfulfullhost/frozenfocus infeasible precisegap requiresindimpact keepotherwork",
+    "extra/protectedfile or unsupportedownerdecision",
+    "runtime need or inheritedcap"
+  ],
+  "no_children": true
+}
