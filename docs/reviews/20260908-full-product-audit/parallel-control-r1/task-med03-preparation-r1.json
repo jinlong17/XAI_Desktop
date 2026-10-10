@@ -1,0 +1,100 @@
+{
+  "id": "MED-03/PREPARE",
+  "workflow": "C",
+  "module": "web",
+  "role": "fresh original full-obligation preparer; no implementation or product decisions",
+  "model": "gpt-6-astra",
+  "fixed_input": "e5caddc1abb1b12afb8802960d6e2b993c0c365a",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "original_item": {
+    "id": "POMO-04",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "明确Stop、Reset及中途离开的保存规则",
+    "acceptance": "每个按钮的保存/放弃含义清楚；Reset不静默丢失用户以为已保存的记录",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "POMO-04",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:POMO-04"
+    ],
+    "source_section": "POMO",
+    "acceptance_evidence": {
+      "business_acceptance": "每个按钮的保存/放弃含义清楚；Reset不静默丢失用户以为已保存的记录",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "POMO-04/prepare",
+      "POMO-04/contract-review",
+      "POMO-04/before",
+      "POMO-04/implement",
+      "POMO-04/verify",
+      "POMO-04/accept",
+      "POMO-04/reconcile",
+      "POMO-04/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  },
+  "allowed_files": [
+    "docs/reviews/audit-parallel-med03-preparation-r1/contract.md",
+    "docs/reviews/audit-parallel-med03-preparation-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Preserve complete original MED-03 action: 定义冥想历史记录、离开修正和重新播放规则; acceptance: 是否计入离开时长、是否续播和实际记录字段有可测试合同. All original312fields/order/39reversiblemodulelabels/original933+TT08six=939 evidence/formal13,3,3,293 remain. No omission/duplicate caller attribution or replacing full original goal with a smaller slice.",
+    "First pin existing owning package design/API/test/devlog actualsource/current accepted contract/decisions and historical before/fixed/failure/refusal/acceptance. Define meditation history, away-time correction, replay/resume and actual record fields using existing explicit rules first. No invented product decision from implementation accident/prototype/similar module. Where explicitrules suffice propose exact testable continuation. Only source-proven unresolved minimum owner question recorded for independentreview first; do not ask user fromdraft or override prior decision.",
+    "Full source owner/writer/reader/producer/consumer actualhost route/fullscreen/reload/processclose/account scope andgeneration/queued latework/history/importexport/delete compatibility/sourceerror/readonly default handling. Exact finite conditionalpaths+semanticresources/protectedsharedscope, all before/qualification/nativevisual/trustedkeyboard/account/regression/actualvendor/freshacceptance/rootreconcile/inventory gates. Complete canonicalClockr2G1 E1-E25/E24+jcopies andcurrentmethoddependency mapping; staticprep mayproceed while method blocked, no weakened acceptance.",
+    "Actual permanent running-unit history census sourcepurpose/commands/modes/launch IDs/refusals/calibration vs assertions/logduplicates/formal-probe unknown. Reuse valid exacthistoricalproof with applicability; do not rerun. Cap3 no actor/path/wt reset/empty evidence0; genuine new purposes source-bound separatelyregisterable, inherited mixedunitsunknown hold onlythoseunits. One static1, runtime/tests/build/lint/browser/native/qualification/probes/vendor0/no childrenpush. Complete proposedcontract+hashmanifest, fresh independentreview mandatory beforeadoption."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/lockfile/config",
+    "original contracts/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/other worktrees",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "preparation_iteration": 1,
+    "preparation_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "hash/dirty/scope drift",
+    "unsupported product decision or weakened acceptance",
+    "protected boundary or runtime need"
+  ],
+  "no_children": true,
+  "source_inputs": [
+    "e5caddc1abb1b12afb8802960d6e2b993c0c365a",
+    "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "e041c2bc293b70db367444c62c4300231976dbf7"
+  ]
+}

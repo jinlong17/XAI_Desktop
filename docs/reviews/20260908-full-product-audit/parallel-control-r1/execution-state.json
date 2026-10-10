@@ -735,7 +735,8 @@
       "archive_ref": "codex/archive/parallel-task06-runner-source-r2-20261010",
       "input_hashes_checked": 447,
       "static_pass": 1,
-      "source_patch_sha256": "648436d64cb21e552c8b057e8ecb76fa34cf1e5586e78a7769b8e18944982f4d"
+      "source_patch_sha256": "648436d64cb21e552c8b057e8ecb76fa34cf1e5586e78a7769b8e18944982f4d",
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "MET-05/RUNNER-SOURCE-REVIEW",
@@ -798,7 +799,8 @@
       "output_hashes_checked": 14,
       "exact_patch_sha256": "d895b2ba053b1b1d9f77d649f22f94ef97f5fadeb368747c6c4ea66d84224b85",
       "exact_patch_bytes": 1541142,
-      "original89rows_and2437paths_byte_equal": true
+      "original89rows_and2437paths_byte_equal": true,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "BRD-12/CONTRACT-REVIEW",
@@ -837,7 +839,8 @@
       "integration_commit": "a58a119d5efe4eb508701ea050349a44b16aec7f",
       "archive_ref": "codex/archive/parallel-dash06-prep-r2-20261010",
       "input_hashes_checked": 8424,
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "POMO-04/PREPARE",
@@ -856,7 +859,8 @@
       "integration_commit": "5ebbdd57f1b02e5cab36751bbefe6129ee97d2ae",
       "archive_ref": "codex/archive/parallel-pomo04-prep-r1-20261010",
       "input_hashes_checked": 2900,
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "BRD-12/PREPARE-CORRECT2",
@@ -875,7 +879,8 @@
       "integration_commit": "aec56c13dbd01a95899f62dec8b8755f09897f7f",
       "archive_ref": "codex/archive/parallel-brd12-prep-r2-20261010",
       "input_hashes_checked": 15257,
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "DASH-06/SOURCE-AVAILABILITY-IMPACT",
@@ -894,7 +899,8 @@
       "integration_commit": "07fc0c5b897a2fadb94e135829b735098c1907c4",
       "archive_ref": "codex/archive/parallel-dash06-availability-impact-r1-20261010",
       "input_hashes_checked": 633,
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TASK-06/RUNNER-SOURCE-REVIEW2",
@@ -915,14 +921,19 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_independent_source_only",
+      "state": "received_APPROVED_full_conditional_S_proposal_only",
       "fixed_input": "a58a119d5efe4eb508701ea050349a44b16aec7f",
       "review_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
       "actor": "/root/parallel_d_dash06_contract_review_r2",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-review2-20261010/XAI_Desktop",
-      "fixed_parent": "094fc86815a07143636a36ed1ccdfa4c7f96b461"
+      "fixed_parent": "094fc86815a07143636a36ed1ccdfa4c7f96b461",
+      "source_commit": "a441a0b0022deb856edac3ef2751fb9ebce7be0d",
+      "integration_commit": "e5caddc1abb1b12afb8802960d6e2b993c0c365a",
+      "archive_ref": "codex/archive/parallel-dash06-contract-review-r2-20261010",
+      "input_hashes_checked": 8472,
+      "static_pass": 1
     },
     {
       "id": "MET-05/RUNNER-SOURCE-REVIEW2",
@@ -943,11 +954,14 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_full_independent_review",
+      "state": "running_fresh_full_independent_contract_review2",
       "fixed_input": "5ebbdd57f1b02e5cab36751bbefe6129ee97d2ae",
       "review_iteration": 2,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "actor": "/root/parallel_d_brd12_contract_review_r2",
+      "fixed_parent": "9262f5f31128bc6bbf5de54e9c24238c58227d0e",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-review2-20261010/XAI_Desktop"
     },
     {
       "id": "POMO-04/CONTRACT-REVIEW",
@@ -970,6 +984,28 @@
       "review_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0
+    },
+    {
+      "id": "MED-03/PREPARE",
+      "workflow": "C",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_full_original_preparation_after_older_reviews",
+      "fixed_input": "e5caddc1abb1b12afb8802960d6e2b993c0c365a",
+      "preparation_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "CD-03/PREPARE",
+      "workflow": "C",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_full_original_preparation_after_older_reviews",
+      "fixed_input": "e5caddc1abb1b12afb8802960d6e2b993c0c365a",
+      "preparation_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -987,17 +1023,17 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 41,
+    "static_passes": 42,
     "rework_findings": 35,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 44,
+    "completed_source_receipts": 45,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "44deliveries minus3actualvendor, includes1FAILED consumed METstatic pass; retention3 separatelypreserved",
+    "static_passes_basis": "45deliveries minus3actualvendor includes1FAILEDconsumed static; retention3separate",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 1
   },
@@ -1242,6 +1278,11 @@
       "at": "2026-10-10T12:43:12.647859+00:00",
       "event": "Aavailabilityimpact633inputs receivedPROPOSED; freshindependentreview1registeredqueued; actualTASK/DASH/MET freshDreviews root+3=4/4. Cycle38 POMOprep+availabilityimpact two receipts; nextqueuedBRDreview/POMOreview/impactreview. No runtime or scope adoption.",
       "input": "07fc0c5b897a2fadb94e135829b735098c1907c4"
+    },
+    {
+      "at": "2026-10-10T12:46:21.688167+00:00",
+      "event": "DASHfullconditional S review2 APPROVED received/adopted doc-only no product grant; BRDfreshreview2 actuallylaunchedfixed9262f5f alongsideTASK/MET reviewers. FullMED03/CD03 original preparationcards queuedafterolderPOMO+impactreview. Cycle38 POMO/impact/DASHreviewcomplete;45receipts42staticconsumed1FAILED/3vendor. Sixcompletedown recoverablearchives queued, original44remote+ancestorPASS.",
+      "input": "e5caddc1abb1b12afb8802960d6e2b993c0c365a"
     }
   ],
   "wave_P2_tasks": [
@@ -1269,7 +1310,9 @@
     "P11_owned_completed_worktrees": "3completed clean original heads exactremote then recoverablearchivesconfirmed, active3/unrelated5untouched; all34originalrefs+integrationancestry checked",
     "normal_intermediate_P12": "2FAIL1WARN at008bc70 while new DASHreviewsource localref/reflog completed before remote preservation; exactsource now remote, repeat after controlpush",
     "P12_owned_completed_worktrees": "BRDpreparer andDASHreviewer clean exactheads/remote identities proved thenrecoverablearchive confirmed viaapp; METreviewarchive confirmed; active3/unrelated5 untouched",
-    "deep_P14": "Literal deep concurrent snapshot1FAIL0WARN reported6 unreachable commits; subsequent full fsck concurrently yielded prior5 exactIDs 4417e847/7be57616/395f17dd/17672dd3/ea9201d2. Preservebothresults, no stabledeepPASS or object deletion; source originals preserved before integration."
+    "deep_P14": "Literal deep concurrent snapshot1FAIL0WARN reported6 unreachable commits; subsequent full fsck concurrently yielded prior5 exactIDs 4417e847/7be57616/395f17dd/17672dd3/ea9201d2. Preservebothresults, no stabledeepPASS or object deletion; source originals preserved before integration.",
+    "P14_before_owned_cleanup": "44originalrefs exactremote/44integration ancestors origin9262f5f; six completed own worktrees clean exactoriginalheads verified. Deep literal1FAIL0WARN fiveunreachable retained; refs/reflog/stashPASS. Sixrecoverablearchivequeued, confirmationpending.",
+    "P14_owned_completed_worktrees": "Six exactclean completed originalheads/remote identities/ancestor checks anddeep receipt then recoverablearchivesconfirmed viaapp list; active3 reviewers and5 unrelatedwts untouched."
   },
   "workflow_C": "Full ready preparation advances; POMO04 r1, DASH06 r2, BRD12 r2 received UNADOPTED and fresh reviews queued/running; next MED03/CD03 discovery after older ready reviews. No runtime or product authority from proposals.",
   "active_scheduler": {
@@ -1347,5 +1390,22 @@
       "full_input_hashes": 335
     },
     "commit": "46e2d967993d61f41706e15f69308d75ac1f0346"
-  }
+  },
+  "adopted_document_contracts": [
+    {
+      "caller": "DASH-06",
+      "scope": "complete conditional S scale proposal documentation only; no product write or runtime admission",
+      "source": "dbc818c01045637104fa3ed2f833a77b758ff55d",
+      "contract_sha256": "a0819592a3f0edca7bf8d3fc5ebc3f49a4ed8ba341001bf03ccf4acfd31629c8",
+      "independent_review": "a441a0b0022deb856edac3ef2751fb9ebce7be0d",
+      "review_sha256": "3ace8c6d7593b5e873ab6897a48d16c3b26e15b4fab5a792b716489a03d4869f",
+      "full_original_16_rows_retained": true,
+      "technical_prerequisites": [
+        "D06-08 source availability fullimpact freshreview chosencontract exactscope",
+        "finite real-purpose machinery source review qualification validbefore",
+        "independent fixed affected native fullG1 actualvendor freshfullacceptance"
+      ],
+      "product_write_grant": []
+    }
+  ]
 }
