@@ -249,7 +249,7 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-vendor-20261010/XAI_Desktop",
       "fixed_parent": "908873442fa043149da7211ae9105bbb1e47e970",
       "candidate": "01efd359d910fbe5cd5092570fe9060ffc9d8ef7",
-      "state": "running_actual_cross_vendor_readonly",
+      "state": "BLOCKED_F1_actual_cross_vendor_completed",
       "owned_pid": 17860,
       "exec_session_id": 9249,
       "verification_iteration": 1,
@@ -261,14 +261,24 @@
       ],
       "max_usd": 12,
       "wall_seconds": 900,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "source_commit": "68ac65f8fa1b8d9868b0fe15392dc9d445aa94b4",
+      "integration_commit": "16645a9ca033902229146c6387d7a0990c5a4b2e",
+      "archive_ref": "codex/archive/parallel-tt08-vendor-i1-20261010",
+      "elapsed_seconds": 227.612,
+      "readonly_tool_calls": 52,
+      "reported_turns": 53,
+      "reported_cost_usd_list": 2.3251116,
+      "transport_exit": 0,
+      "business_verdict": "BLOCKED",
+      "output_hashes_checked": 5
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 1,
-    "total": 2,
+    "workers": 0,
+    "total": 1,
     "capacity": 4
   },
   "cost": {
@@ -350,6 +360,11 @@
     {
       "at": "2026-10-10T10:18:08.212299+00:00",
       "event": "Received WorldClocks proposal and Clock hard-budget impact; actual vendorCLI running; P5 ready independent tasks registered"
+    },
+    {
+      "at": "2026-10-10T10:28:25.841417+00:00",
+      "event": "Actual vendor verification1 BLOCKED F1 persisted literal, author correction2 registered; P5 static actors finished awaiting source receipt; queued full312 inventory ready",
+      "input": "16645a9ca033902229146c6387d7a0990c5a4b2e"
     }
   ],
   "wave_P2_tasks": [

@@ -1,0 +1,60 @@
+{
+  "id": "TT-08/DOC-CORRECT2",
+  "workflow": "B",
+  "module": "web",
+  "fixed_input": "16645a9ca033902229146c6387d7a0990c5a4b2e",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "source_inputs": [
+    "68ac65f8fa1b8d9868b0fe15392dc9d445aa94b4",
+    "01efd359d910fbe5cd5092570fe9060ffc9d8ef7",
+    "00933c91241159e26f444213146d9ba949bac823",
+    "287547e2b0e0724a48a89e50377ccc7e840db93b",
+    "c6ab3c967074595ab59b7e0bf7dc86d66b229e97"
+  ],
+  "role": "fresh independent documentation corrector; not prior author or verifier",
+  "model": "gpt-6.1-sol",
+  "allowed_files": [
+    "packages/plugin-web-time-tracker/docs/test.md",
+    "docs/product/time-tracker/prd.md"
+  ],
+  "input_file_hashes": {
+    "packages/plugin-web-time-tracker/docs/test.md": "0024b1f8ef80308647e8560d046eba8fe7782dea5e92e94e635d53ea7cd7811c",
+    "docs/product/time-tracker/prd.md": "16e84af0a41ac05915cf0e950220787e7ecce30892f01dff36f10659ce7cd2c3"
+  },
+  "scope": "Only actual external F1 test trace correction and A1 unsourced Owner removal. Preserve full D1-D7, accepted historical evidence, unchanged historical tails and current PENDING. No product behavior decision or test repair.",
+  "acceptance": [
+    "test map names single confirmation/atomic switch in sessionEditor.test.tsx; module multi raw-key fixture distinguished from mode selector UI",
+    "Explicit existing automated/native selector UI coverage absent; selector correspondence static source only; qualify PRD TT-M01 accordingly",
+    "Remove unsourced Owner line; do not replace with invented authority",
+    "Exactly two MOD docs, no extra report files, no status change or source/test edits; retain old candidate/raw failed verification unchanged",
+    "Full approved contract/before read, source checked exact P0, meaningful link/whitespace/doc diff checks only; no runtime or previous batch reruns"
+  ],
+  "protected": [
+    "all other paths",
+    "global control/ledgers/inventory",
+    "runtime/source/tests/runner/CSS",
+    "all original reports/contracts/logs",
+    "other worktrees",
+    "push/merge/rebase/release/deploy/promote/D3"
+  ],
+  "locks": [
+    "TT08:modes-docs",
+    "GOV05:TT-prd",
+    "GOV04:TT-status-semantic-no-write"
+  ],
+  "budgets": {
+    "author_iteration": 2,
+    "family_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "verify_used": 1,
+    "next_fresh_verify": 2
+  },
+  "stop": [
+    "unknown ownership/dirty input",
+    "hash mismatch or scope expansion",
+    "needs source or behavior change",
+    "budget cap"
+  ],
+  "no_children": true
+}

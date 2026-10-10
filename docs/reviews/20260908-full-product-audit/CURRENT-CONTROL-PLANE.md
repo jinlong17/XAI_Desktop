@@ -599,3 +599,7 @@ Worldprepfd52c37→3dd85e6,79fullinputhashes/proposalonly; freshWC01-WC20contrac
 ActualindependentClaudeCodeTT08verifyi1/3runningPID17860,execsession9249, fixed908873442fa043149da7211ae9105bbb1e47e970; init reportsclaude-opus-5-5andONLYReadGlobGrep. Provider/model self-report isretainedraw, no independentengineattestation/noPASSyet. MaxUSD12/900s+2+2ownshutdown; stdoutstderrwxstreaming inownwt. P5registerfreshWorldcontractreview(D) andREL02/03residualgateprep(C), queuedLunafull312readyinventory. ExternalCLIcountsone slot, root+2newworkers+CLI≤4total.
 
 Formal13/3/3/293=312and299unclosed unchanged; no newruntime/native/browser/formal/probes. Docs5candidate changed4package-docs deliberately; P0runtimeclosure protected. Source/controlcommits preservedremote, originalfailures/contracts remain.
+
+## Parallel controller checkpoint: TT08 vendor iteration1
+
+Actual Claude CLI verification returned BLOCKED F1; transport exit0 is not PASS. Exact raw source 68ac65f8fa1b8d9868b0fe15392dc9d445aa94b4 received at 16645a9ca033902229146c6387d7a0990c5a4b2e. Family1/3, 52 readonly calls, 227.612 seconds; reported list-price cost $2.3251116 (not subscription billing). Fresh exact2-doc correction2 registered; current status remains PENDING. WorldClocks contract review REVISE and REL02/03 static proposal awaiting full root receipts. Formal13/3/3/293,299unclosed unchanged. Clock retention3/3 budget exception and app goal resume pending; independent work continues.
