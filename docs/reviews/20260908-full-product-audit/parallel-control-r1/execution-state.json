@@ -1356,13 +1356,16 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_full_original_scope",
+      "state": "running_fresh_full_shared_impact_author2_I1_correction",
       "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
       "family_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
-      "actual_actor_launched": false,
-      "canonical_parent_phase": "shared-methods/prerequisite"
+      "actual_actor_launched": true,
+      "canonical_parent_phase": "shared-methods/prerequisite",
+      "actor": "/root/parallel_a_shared_impact_correct2",
+      "fixed_parent": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-impact-correct2-20261010/XAI_Desktop"
     },
     {
       "id": "MED-03/CONTRACT-REVIEW2",
@@ -1765,6 +1768,11 @@
       "at": "2026-10-10T13:45:34.456570+00:00",
       "event": "Cycles43-44 complete: shared impactreview1 REVISEI1/full2821; POMO fullreview2 APPROVEDdocbasis/full2954 rootadoptedexact9e2e6cf; DASH contract1 PROPOSED/full8548 bothsemanticstaticFAILED+overrun1 retained; MED corrected2/full737 needsfullreview2; BRD T1-T4 review/full30933 APPROVEDtechnicalbasis notschema/API/path; BRD28fullprep/full25729 unadopted. Newfresh cards sharedimpact2,MEDreview2,DASHavailabilityreview1,POMOmachineryimpact1,BRDamendment1,BRD28review1. ActualCALprepC+CDmachineryA root+2=3/4, remainingreadyrankedBK07/criticalsharedcorrection usefourthslot byFIFOaging.63deliveries/61staticconsumed6FAILED/overrun1/rework57/vendor3 and$7.6052402reportedlist unchanged; formal13/3/3/293 and939evidence unchanged. Rootpreservation/integration/state/adoptionserial; fixedinputs retained; no source3 beforefullmethodcorrectionreview/adoption; old external holds remain.",
       "input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1"
+    },
+    {
+      "at": "2026-10-10T13:48:21.237934+00:00",
+      "event": "P23 normal0FAIL1WARN at6bcb03c/all63 originalremote identities+integrationancestors verified. Actualfresh root+CALfullprepC+CDfullmachineryA+sharedimpact2A=4/4; fullMEDreview2/DASHavailabilityreview1 idleprepared6bcb parents retain fixedinputb52b5da. Newsharedcorrector fresh independentlyowned exact2ADD author2/3 static1/noexecution beforefullreview2/rootadoption. Ninecompletedownclean wts queuedrecoverablearchives onlyafterliteraldeep receipt; fiveother-session untouched. Parent filename/schema misstatement discoveredbyCAL/CD read-only: actualEXECUTIONitems vsTODOsections.tasks; newcards corrected beforewriting, priorfailedchecker results unchanged/no semanticretry.",
+      "input": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641"
     }
   ],
   "wave_P2_tasks": [
@@ -1773,7 +1781,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL1WARN at9d8245d; refs/reflog/stashesremote, no deletion; latestPOMO integration requiresnextcontrolpush",
+    "normal": "0FAIL1WARN at6bcb03c; all63originalremote refs and63integration ancestors checked; refs/reflog/all23stashesremote no deletion",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -1800,7 +1808,10 @@
     "P17_before_owned_cleanup": "All50originalremote refs exactidentity/50integrationancestors origin53a961 PASS; six completed clean reviewer heads and one neverlaunched clean idle535wt verified. Deep literal1FAIL0WARN fiveknown unreachable; all23stashesremote, no recovery deleted.",
     "P17_owned_completed_worktrees": "Six completed reviewers plus superseded TASK-only idleworktree archivedrecoverable confirmedviaapp list. Active sharedA andnewBRD/POMO wts and5unrelated untouched; unlaunchedsupersededstatic0 preserved.",
     "P20_before_owned_cleanup": "All54originalsource refs exactremote/54integrations ancestororiginab77db7. Fourcompletedownsources clean exactheads. Deep literal1FAIL0WARN fiveunreachable; boundedmetadata fsck exact priorfive IDs confirmed; first raw fsck output oversized/truncated, no deletion or PASS inference.",
-    "P20_owned_completed_worktrees": "MEDprep/CDprep/sharedimpact/POMOcorrector fourrecoverablearchivesconfirmedviaapp, activeworkers/unrelated5untouched"
+    "P20_owned_completed_worktrees": "MEDprep/CDprep/sharedimpact/POMOcorrector fourrecoverablearchivesconfirmedviaapp, activeworkers/unrelated5untouched",
+    "P23_precleanup": "Nine completed ownedworktrees exactHEADclean+remote verified; deep receipt and recoverable archival pending; activeCAL/CD/shared and two idlefreshreview worktrees plus other-session5 excluded.",
+    "deep_P23": "Literal1FAIL0WARN fiveunreachable; refs/reflog/63source/all23stashes remotePASS; priorfive exactIDs recorded earlier, no fullobjectidentity rescanthisbatch/no deletion; completedowned recoverablecleanup follows",
+    "deep_P23_log_sha256": "9c47ad75eebe846da6d9e957bbe4c6d5c4a0d13eebf4f35a2bdc96350ad24516"
   },
   "workflow_C": "Full ready preparation advances; POMO04 r1, DASH06 r2, BRD12 r2 received UNADOPTED and fresh reviews queued/running; next MED03/CD03 discovery after older ready reviews. No runtime or product authority from proposals.",
   "active_scheduler": {
