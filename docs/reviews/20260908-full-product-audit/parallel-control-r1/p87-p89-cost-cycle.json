@@ -1,0 +1,20 @@
+{
+  "controller_batches": [
+    87,
+    88,
+    89
+  ],
+  "new_source_receipts": 0,
+  "new_actual_failed_concluding": 3,
+  "units": [
+    "Matrixsource3",
+    "Habtechnical1",
+    "SHELL05source1"
+  ],
+  "historical_failures_retained": true,
+  "new_runtime_tests_formal_probes_vendor_network": 0,
+  "actual_billing_USD": "UNKNOWN",
+  "prior_reported_vendor_list_USD": 7.6052402,
+  "rework_findings": 83,
+  "not_qualifying_or_budget_reset": true
+}

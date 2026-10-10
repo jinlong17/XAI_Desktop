@@ -1,0 +1,51 @@
+{
+  "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/TECHNICAL-CONTRACT2",
+  "source": "4db69a0d026c7788766953d342cb7dd994716602",
+  "parent": "ac6d1e7daf5d26a7c0cfa244620f5bd2514035a7",
+  "fixed_input": "6715c4367799366a10a9337a863f78036ec07ed9",
+  "integration": "036e2f39c653ef7198704e3df38458c16ec3e35c",
+  "archive_ref": "codex/archive/parallel-hab01-hab05-contract2-20261010",
+  "all_inputs_checked": 134,
+  "outputs": {
+    "docs/reviews/audit-parallel-hab01-hab05-technical-contract-r2/contract.md": "b19cc3478a9b701d6da5631ad5ea245622d632be0e1ba3257ae5eeecab9479d1",
+    "docs/reviews/audit-parallel-hab01-hab05-technical-contract-r2/inputs.sha256": "94cc94a55935fb04be380203cd70214b6b89df4d03ce9d57751522569e7cb001"
+  },
+  "disposition": "UNADOPTED_WHOLE_TECHNICAL_PROPOSAL_PENDING_FRESH_INDEPENDENT_REVIEW",
+  "static": {
+    "invocations": 1,
+    "reported_PID": 57824,
+    "reported_exit": 0,
+    "reported_internal_seconds": 2.75216191704385,
+    "reported_outer_ms": 2951,
+    "stdout_bytes": 43798,
+    "stdout_sha256": "d3c12f35f31eacd1966f5d89ab7c07bad9d3463e6b06c7d14114f653f00e15e1",
+    "stderr_empty": true,
+    "reported_Git_reads": 135,
+    "reported_Git_exits": 0,
+    "reported_Git_EOF": true,
+    "reported_outer_EOF": true,
+    "raw_format": "last tool receipt gzip+base64 complete stdout; original records preserved INERT",
+    "session_chunk": "UNKNOWN",
+    "independent_drain_seconds": "UNKNOWN",
+    "full_task_wall": "UNKNOWN",
+    "initial_untimed_reads": "UNKNOWN",
+    "prewrite": "author reports complete134input identities and BOTHwholebuffers beforewrite; independent process review pending"
+  },
+  "author_family": "2/3 priorauthor1 actualFAILED retained",
+  "source_family": "2/3",
+  "source_review_family": "2/3",
+  "product_policy": "weeklyquota/weekstart/partialweek/streak/duegrace unresolved BLOCKED pending owning evidence no choice",
+  "new_journal_validator_shared_storage_lifecycle_JOB": "PROPOSED_ONLY need separate exact independent impact and writer grant",
+  "raw_provenance": {
+    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/hab-contract2-p91-original-tool-records.json",
+    "sha256": "816d90273a35197c06c64b67eae97f392d907033ecb3f045602bba5d6f69120b"
+  },
+  "root_business_checks": 0,
+  "formal_counts": [
+    13,
+    3,
+    3,
+    293
+  ],
+  "references": 939
+}
