@@ -177,16 +177,43 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-clock-review-r2-20261010/XAI_Desktop",
       "fixed_parent": "866a7417037f82e6cd031b41104482d57a4b0e1b",
       "source_input": "a6a78097120094464701bf833a51bf0014d1d8d0",
-      "state": "running",
+      "state": "REVISE_R1_to_R6_FORMAL_BLOCKED",
       "source_review_iteration": 1,
+      "formal_invocations": 0,
+      "source_commit": "cbf18b491ef10941d396bc9655d10c8beed4a68b",
+      "integration_commit": "6e7d95b36ca3ac18e4609d72729eae1308290deb",
+      "input_hashes_checked": 368,
+      "archive_ref": "codex/archive/parallel-clock-correction-review-r1-20261010",
+      "static_pass": 1
+    },
+    {
+      "id": "TT-08/implement",
+      "workflow": "B",
+      "actor": "/root/parallel_b_tt08_docs_r1",
+      "configured_model": "gpt-6.1-sol",
+      "provider_attested": false,
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-docs-20261010/XAI_Desktop",
+      "fixed_parent": "c7df57204698b015554759b29af5a61b13a07207",
+      "state": "running",
+      "formal_invocations": 0
+    },
+    {
+      "id": "DASH-03/prepare",
+      "workflow": "C",
+      "actor": "/root/parallel_c_world_clocks_prepare_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-world-clocks-prep-20261010/XAI_Desktop",
+      "fixed_parent": "c7df57204698b015554759b29af5a61b13a07207",
+      "state": "running",
       "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 1,
-    "total": 2,
+    "workers": 2,
+    "total": 3,
     "capacity": 4
   },
   "cost": {
@@ -198,8 +225,8 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 7,
-    "rework_findings": 1,
+    "static_passes": 8,
+    "rework_findings": 7,
     "retention_validation_invocations": 3,
     "retention_assertions": 145
   },
@@ -251,6 +278,10 @@
       "at": "2026-10-10T09:58:35.748688+00:00",
       "event": "Adopt exact independently approved r2 document resource policy; receive full TT08before; register fresh documentation author and WorldClocks preparation",
       "input": "f4522752ded589a6909bdc17cb961233eeafeae8"
+    },
+    {
+      "at": "2026-10-10T10:03:00.799008+00:00",
+      "event": "Clock exact source REVISE received; frozen budget; P4 docauthor and WorldClocks preparer dispatched; fresh technical impact registered"
     }
   ],
   "wave_P2_tasks": [
@@ -273,5 +304,11 @@
     "source": "11b8d721f9d423fcabb19857e96c927375b9323a",
     "independent_review": "240ce1ff1b3b4573ba11ef3cd4255422b0fda4e3",
     "state": "adopted_document_contract; sole root serial operations; automated runtime scheduler not implemented or verified"
+  },
+  "clock_blockers": {
+    "source_review": "R1-R5 lifecycle/causal defects, R6 inheritedexpectedgeometryexitcontradiction",
+    "immutable_metadata": "unstablecaptureattempts+hashes failurepathmissing",
+    "retention_validation": "3/3exhausted; fourth or renamed reset unauthorized; preserve source and all costs",
+    "dependent_chain": "Q1/Q2/adopt/Q3/G/B/Clockrecovery descendants only; otherworkflows continue"
   }
 }

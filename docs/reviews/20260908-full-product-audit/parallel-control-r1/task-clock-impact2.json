@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "id": "CLOCK/CORRECT-IMPACT2",
+  "workflow": "A",
+  "role": "fresh independent Astra technical impact reviewer; no repairs",
+  "model": "gpt-6-astra",
+  "fixed_card_input": "6e7d95b36ca3ac18e4609d72729eae1308290deb",
+  "dispatch_parent": "commit containing this exact card resolved fullSHA before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "cbf18b491ef10941d396bc9655d10c8beed4a68b",
+    "a6a78097120094464701bf833a51bf0014d1d8d0",
+    "f37c8607ef30fc5bd927425ae1ee6837f7276c53",
+    "686e98b6251364aee1fa26c63ad30e6af15c3b25",
+    "213aafd92e4ea3a43d943fb766efa73fb4cbbe96",
+    "710fd8421ed651ec366c5bb5e3b15fa5151ec7e6"
+  ],
+  "allowed_files": [
+    "docs/reviews/web-dashboard-clock-recovery-correction-impact-r2/impact.md",
+    "docs/reviews/web-dashboard-clock-recovery-correction-impact-r2/inputs.sha256"
+  ],
+  "no_children": true,
+  "scope": "Independent static technical impact for all6 source findings, inheritedgeometryexpectedexitcontradiction, immutableunstablemetadata gap, and exhaustedretentionvalidationbudget. Propose exactadditive/versioned corrective bounds iffeasible; never repair/adopt/test/extendcap here. Originalr1/r2/priorimpact/canonical/failures retained.",
+  "acceptance": [
+    "Verify complete368review inputs including51embeddedfields plusoriginals/outputs, causallytrace R1-R6 actualsources",
+    "Bound generatedterminal/event persistencehandling, primary/secondaryindependentstreamclosure andownedchild deadlines preservingfullmatrixlongruntime",
+    "Cause-exclusive predicates fromexistingrawcontext; no mixedfailureacceptance, missingfactsBLOCKED",
+    "Resolve inheritedgeometryold/new wrappers againstactualpreservedexit2/98negative/60overflow outcomes; do not forceexit0/dropfailures/changeproduct",
+    "Separate diagnostic-onlyunstablecaptureattempt/history/failurepathproposal frommeasurementalgorithm; retain thresholds/settling/union/ownership/census/fixtures/original hashes",
+    "Explicit3/3retentioncap retained; NO fourth renamedfamily/probe substitution. Assess validpathwithinremainingbudgets, recordhardbudgetBLOCKED iffreshrequiredvalidation unavailable, smallest genuineownerexternalcondition ifneeded",
+    "Futureexactnewpaths/patch/lineproof/evidencecases +freshauthor/reviewer/fullQ1/Q2conditions; no approvalfromimpactalone; statusescounts andallhistoricalcost unchanged"
+  ],
+  "budgets": {
+    "static_impact_pass": 1,
+    "runtime_browser_native_package_probes": 0,
+    "retention_validation": "3/3exhausted, zero remaining, NO exception authorized",
+    "source_review": "1/3used; freshnext2/3 ifeligible",
+    "Q1": "focus1/3 six0/3; preserveoriginalseven, no native here"
+  },
+  "forbidden": [
+    "nonallowedwrite/anyrepair",
+    "oldcontracts/runner/evidenceoverwrite",
+    "capincrease/reset/fourthsyntheticrun/developmentproberelabel",
+    "product/CSS/source/fixturealgorithmchanges",
+    "globalcontrol/ledger/inventory",
+    "otherworktree/profilecleanup",
+    "push/merge/rebase/deploy/release/promote/D3"
+  ],
+  "stop": [
+    "hash/scopeconflict",
+    "newruntimeevidence needed",
+    "unsupportedcause or productdecision",
+    "cannotproceedwithoutcapextension; freezeexactplanbutfinish staticreport"
+  ]
+}
