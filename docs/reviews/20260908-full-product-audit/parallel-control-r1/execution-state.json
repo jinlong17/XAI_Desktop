@@ -1450,7 +1450,7 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_full_original_scope",
+      "state": "received_full_technical_PROPOSED_UNADOPTED_needs_fresh_fullreview1",
       "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
       "family_iteration": 1,
       "family_cap": 3,
@@ -1459,7 +1459,15 @@
       "canonical_parent_phase": "POMO-04/prepare",
       "actor": "/root/parallel_a_pomo04_machinery_impact_r1",
       "fixed_parent": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641",
-      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-pomo04-machinery-impact1-20261010/XAI_Desktop"
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-pomo04-machinery-impact1-20261010/XAI_Desktop",
+      "source_commit": "a9054733b4f1179dac138b73031e3d0fd22b2416",
+      "integration_commit": "e96543bed85056d9a2581a0681ff44a7f1d0583e",
+      "archive_ref": "codex/archive/parallel-pomo04-machinery-impact-r1-20261010",
+      "input_hashes_checked": 2979,
+      "static_pass": 1,
+      "static_result": "PASS",
+      "future_source_paths": 20,
+      "closeout_errors": "NodeREPL allowed undefined createdemptyoutputdir/no files; absentpathstage refusal; unchangedvalidatedbuffers writtenliteralallowedpaths thencommit/nosemanticrerun"
     },
     {
       "id": "BRD-12/TECHNICAL-CONTRACT-AMENDMENT1",
@@ -1479,13 +1487,16 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_full_original_scope",
+      "state": "running_fresh_FULL_contract_review1_before_owner_question",
       "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
       "family_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
-      "actual_actor_launched": false,
-      "canonical_parent_phase": "BRD-28/prepare"
+      "actual_actor_launched": true,
+      "canonical_parent_phase": "BRD-28/prepare",
+      "actor": "/root/parallel_d_brd28_full_review_r1",
+      "fixed_parent": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd28-full-review1-20261010/XAI_Desktop"
     },
     {
       "id": "CAL-03/CONTRACT-REVIEW1",
@@ -1590,6 +1601,18 @@
       "family_cap": 3,
       "formal_invocations": 0,
       "canonical_parent_phase": "MED-03/prepare"
+    },
+    {
+      "id": "POMO-04/SOURCE-MACHINERY-IMPACT-REVIEW1",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_FULL_POMO_technical_review1",
+      "fixed_input": "e96543bed85056d9a2581a0681ff44a7f1d0583e",
+      "review_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "canonical_parent_phase": "POMO-04/prepare"
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -1607,23 +1630,23 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 66,
+    "static_passes": 67,
     "rework_findings": 58,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 68,
+    "completed_source_receipts": 69,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "68delivered minus3vendor plus1DASHoverrun=66deliveredstatic incl6FAILED; pending sharedauthor2FAILED1+BKUNKNOWN1 gives68actualattempts/7FAILED/1UNKNOWN; no lost-source deliveryinvented",
+    "static_passes_basis": "69delivered minus3vendor plus1DASHoverrun=67deliveredstatic incl6FAILED +sharedauthor2FAILED1/BKUNKNOWN1 =69knownattempts/7FAILED/1UNKNOWN",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 6,
     "rework_findings_basis": "Prior56 plus sharedreview I1; no reset or repeatedfinding inflated",
     "pending_no_delivery_static_invocations": 2,
     "pending_no_delivery_static_failures": 1,
-    "actual_static_invocations_total_known": 68,
+    "actual_static_invocations_total_known": 69,
     "actual_static_failed_total_known": 7,
     "static_budget_overruns": 1,
     "pending_no_delivery_static_unknown": 1,
@@ -1963,6 +1986,11 @@
       "at": "2026-10-10T14:15:27.194976+00:00",
       "event": "Finalsharedimpactsourcef667a0b originalremote preserved/full2842objects/rawrecords-vsunique reconciled/complete12+14patches/static1PASS received, UNADOPTED; freshfullimpactreview2 registered beforemethod/source3adoption, mandatoryactualReactDOM/SDKforwarding+rootcapture bytes missing notversionproof/noauthor4. FullMEDreview2source291a417 originalremote preserved/full803/static1PASS/16rows11paths10logs13applicability/canonicalbytes preserved despite disclosedEOFwhitespaceexit2+routineendmarker no semanticrerun; rootadopts exactfullMED proposal1e2docbasis only/newcompleteMEDmachineryimpact1 registered. Source1/review1FAILED retained. Currentroot+POMOmachineryA+CALfullreviewD=3/4 untilfreshsharedreview2 launch.68deliveries66deliveredstatic6FAILED+pendingFAILED1/UNKNOWN1 actual68/7FAILED/1UNKNOWN/overrun1/rework58/vendor3; cycle46firsttwo shared+MED. Formal13/3/3/293/939unchanged; nextcontrolpush/ancestry/sync.",
       "input": "4c082ca8e40cbf178abb9d63cbed5f18a21b9f8d"
+    },
+    {
+      "at": "2026-10-10T14:18:06.299421+00:00",
+      "event": "POMOmachinery sourcea905473 originalremote-preserved receivede96543bed85056d9a2581a0681ff44a7f1d0583e full2979identities/exact2ADD/parent6bcb/clean/static1PASS/15rows11paths106logs/L1-L8/canonicalRules/20futuresources; UNADOPTED freshfullreview1registered. ExistingPOMOtimernativelock notclosedcanonicalTaskCalendaractivation; actualgenuinePOMOhost qualificationstillrequired, no fakeglobalblock. NodeREPLallowedundefined+absentstagecloseouterrors disclosed/unchangedvalidatedbufferliteralwrite no semanticrerun. All68earlieroriginalrefs+integrationancestors origin3ee checked. ActualCALfullreviewD+BRD28fullreviewD root+2=3/4 beforefreshsharedreview2launch.69receipts67deliveredstatic6FAILED+pendingFAILED1/UNKNOWN1 actual69/7FAILED/1UNKNOWN/overrun1/rework58/vendor3; cycle46complete shared+MED+POMO. Formal13/3/3/293/939unchanged; nextcontrolpush/ancestry/sync, rotateolderreadygates.",
+      "input": "e96543bed85056d9a2581a0681ff44a7f1d0583e"
     }
   ],
   "wave_P2_tasks": [
