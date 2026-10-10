@@ -1,0 +1,41 @@
+{
+  "id": "DASH-06/SOURCE-AVAILABILITY-CONTRACT1/DOCUMENTARY-CLOSURE",
+  "same_author_phase": 1,
+  "not_new_running_unit": true,
+  "original_task_card": "53a961aaa4ae87e1453f27d91af3c8edd6ddaeeb:docs/reviews/20260908-full-product-audit/parallel-control-r1/task-dash06-source-availability-contract-r1.json",
+  "fixed_parent": "53a961aaa4ae87e1453f27d91af3c8edd6ddaeeb",
+  "additional_authority_fixed_input": "711cfd8d7a587468d4ff133eb6d5911ad4dd79ef",
+  "original_static_allowance": 1,
+  "actual_static_invocations": 2,
+  "both_static_failed": true,
+  "overrun_permanently_retained": 1,
+  "allowed_files": [
+    "docs/reviews/audit-parallel-dash06-source-availability-contract-r1/contract.md",
+    "docs/reviews/audit-parallel-dash06-source-availability-contract-r1/inputs.sha256"
+  ],
+  "authority": "Root authorizes only deterministic preservation of already drafted proposal and immutable input/output/parent/scope/hash identity closure. No new semantic/static acceptance pass, no retroactive permission/PASS for the original overrun, no independent role or family reset. Two failures and all unrun assertions must be in proposal; fresh full independent reviewer mandatory before adoption. Original allowance stays1; all further semantic runs0. No product/native/qualification/runtime grant.",
+  "budgets": {
+    "new_static_or_semantic_acceptance": 0,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "protected": [
+    "all nonallowed paths",
+    "original methods/contracts/runners/failurelogs",
+    "globalcontrols/ledgers/otherwts",
+    "product/storage/schema/host/CSS/config/lockfile",
+    "push/children/merge/rebase/promote/deploy/release/D3"
+  ],
+  "stop": [
+    "need further semantic/static pass",
+    "lostdraft cannot deterministically preserve",
+    "scope/hash drift"
+  ]
+}
