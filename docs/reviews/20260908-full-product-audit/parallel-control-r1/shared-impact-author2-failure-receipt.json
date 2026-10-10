@@ -4,7 +4,7 @@
   "actor": "/root/parallel_a_shared_impact_correct2",
   "parent": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641",
   "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
-  "product_sha": "P0 f9eb4b1 remains runtime baseline; exact4 authorized package-docs now differ, never claim fullpackage treeempty",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
   "failure": "One semanticstatic validation FAILED1/1 at line33 assert len(tinputs)==477 and len(minputs)==2663. Dictionaries held normalized unique identities; inherited477/2663 are raw manifest record counts. source/git aliases deduplicate. Author checker error; no input drift established. No rerun/no outputs/no commit.",
   "reached": [
     "exact parent/clean/taskcard/allowedpaths/absentoutputs",
@@ -40,5 +40,6 @@
     "children": 0
   },
   "verification_scope": "Rootmetadata cleanHEAD/absence check only; no replacement author PASS, no source/method/adoption grant",
-  "preservation": "Exact author final handoff failure facts fixed in this root receipt; no new source artifact inferred"
+  "preservation": "Exact author final handoff failure facts fixed in this root receipt; no new source artifact inferred",
+  "controller_metadata_correction": "Original root2ce65ab product_sha mistakenly copied runtime_product_source descriptive text. This successor corrects exactP0 identity only; originalGitversion retained; no actor3 launched beforecorrection/no static or iteration change."
 }
