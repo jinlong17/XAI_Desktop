@@ -1819,7 +1819,7 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_FULL_independent_task",
+      "state": "received_FULL_APPROVED_conditional_DOC_ONLY_minimumownerpolicies_pending",
       "fixed_input": "0121be25e10a8f3f60510c686a1832cbd40a9bcb",
       "family_iteration": 1,
       "family_cap": 3,
@@ -1829,7 +1829,19 @@
       "actor": "/root/parallel_d_bk07_full_review_r1",
       "fixed_parent": "bd4dce4aa7a5b96d533b7a570b5bfb97843f392b",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-bk07-full-review1-20261010/XAI_Desktop",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "source_commit": "e1d8ae4b2304a91382d4aa2c4ab2dc06d46fc65b",
+      "integration_commit": "72de6f41afc5ff4136cab7a655998696b74fe493",
+      "archive_ref": "codex/archive/parallel-bk07-contract-review-r1-20261010",
+      "input_hashes_checked": 4640,
+      "source_identities_verified": 4392,
+      "source_unique_git_blobs": 3111,
+      "review_unique_git_blobs": 3202,
+      "source_raw_reference_count_reported_only": 4451,
+      "static_pass": 1,
+      "static_result": "PASS",
+      "review_verdict": "APPROVED_FULL_conditional_DOC_ONLY",
+      "product_write_grant": []
     },
     {
       "id": "SHARED/SOURCE-BYTE-COLLECTION-REVIEW1",
@@ -1864,12 +1876,16 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_full_independent_review",
+      "state": "running_fresh_FULL_independent_task",
       "fixed_input": "e96543bed85056d9a2581a0681ff44a7f1d0583e",
       "family_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-pomo04-source-machinery-impact-review-r2.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-pomo04-source-machinery-impact-review-r2.json",
+      "actor": "/root/parallel_d_pomo04_machinery_full_review_r2",
+      "fixed_parent": "26f7875d3dd318d62a08afbf5946036af4b19692",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-pomo04-machinery-review2-20261010/XAI_Desktop",
+      "actual_actor_launched": true
     },
     {
       "id": "MED-03/SOURCE-MACHINERY-IMPACT-REVIEW1",
@@ -1927,23 +1943,23 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 74,
+    "static_passes": 75,
     "rework_findings": 61,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 77,
+    "completed_source_receipts": 78,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "77delivered-3vendor-1collection+1overrun=74staticincl6FAILED; pending6FAILED+1UNKNOWN=>81known12FAILED1UNKNOWN; pretoolreview1/static0 andcollection1/static0 separate",
+    "static_passes_basis": "78delivered-3vendor-1collection+1overrun=75staticincl6FAILED; pending6FAILED+1UNKNOWN=>82known12FAILED1UNKNOWN; pretoolreview1/static0/collection1/static0 separate",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 6,
     "rework_findings_basis": "Prior59 plussharedreview factualissues falsemissingpnpm paths and incompletepriorinputinventory; rootmetadata/CDcheckerfailures separate",
     "pending_no_delivery_static_invocations": 7,
     "pending_no_delivery_static_failures": 6,
-    "actual_static_invocations_total_known": 81,
+    "actual_static_invocations_total_known": 82,
     "actual_static_failed_total_known": 12,
     "static_budget_overruns": 1,
     "pending_no_delivery_static_unknown": 1,
@@ -2325,6 +2341,11 @@
       "at": "2026-10-10T15:07:23.908240+00:00",
       "event": "P37 sharedbytesfullreview6c3451 originalremote received5b3192eb2b8d59a0304454523c71769d91888a5d exact2ADD/clean/full2874indexidentities+2863Gitobjects71675457bytes+104embedded/static1PASS PID82588session69254/chunks1344e6ad1f46exit0. AdoptpartialbyteintegrityONLY; 7missingdeps false nestedlookup actualpnpm siblingspresent/fiveSDKrootsuncaptured; TASK477/MET2663 inputsavailable; actualloadedforwarding/config/sourcequal/rootoutercapture stillBLOCKED source3HELD/noauthor4. Registersamecollectionfamilyfresh2/3 original24roots4096files32MiBcumulative immutablebundle/noexecute/noinstall no designrepair. MEDfullreview1started26f7875/fixedf8cc withBKfullreview1+BRDtechnical2 root+3=4/4. Root attempted read reportinmainbeforeintegration(pathabsent) correctedGitshow; earlier normal sync mistakenlylaunchedafternewcherrybeforepush returned4FAIL1WARN fortransientlocalrefs/reflog; preservefailurelog and rerunONLYafterpush, not productiteration/recoverydeletion. 77receipts81knownstatic12FAILED1UNKNOWN/overrun1/rework61/vendor3/collection1static0/pretoolreview1static0; formal13/3/3/293/939unchanged no newcaller/runtime/releaseacceptance. QueuedPOMOfullreview2/CDsourcecontract2/bytecollection2 rotatewithoutsharedwriterconflict.",
       "input": "5b3192eb2b8d59a0304454523c71769d91888a5d"
+    },
+    {
+      "at": "2026-10-10T15:09:32.813030+00:00",
+      "event": "P38 BKfullreviewe1d8ae4 originalremote received72de6f41afc5ff4136cab7a655998696b74fe493 exact2ADD/clean/full4640index3202blobs170927923bytes/source4392identities3111blobs143509137bytes/static1PASS session25736chunks819879f0a5f9exit0. Raw4451duplicates source-reportedONLY not reconstructed. Adoptfullconditional18rowDOCONLY exact59accontract7aaae13/reviewd2b4982; existingledger+month isolation andexplicitexample5000 alreadyapproved, no redundantpermission. Boundedfullauthoritysearch foundno carry/historyclosing/legacyallocationdecision; full62file frozenCloudDesign elevenBKreferencesabsent notread. Registerminimumownerquestionspending no engineeringpolicyguess; BKdescendantsheldonlywhileotherscontinue. POMOreview2started26f7875/fixede965 alongsideBRDtechnical2/MEDreview1 root+3=4/4. 78receipts82knownstatic12FAILED1UNKNOWN/overrun1/rework61/vendor3/collection1static0/pretoolreview1static0. P37normalcheck launchedbeforeBKnewcherry fullydrained mayrace root integration: preserveexactlog notassumePASS, finalpushthenawaitnewnormalbeforeANYrootmutation. Formal13/3/3/293/939unchanged no caller/runtime/release acceptance.",
+      "input": "72de6f41afc5ff4136cab7a655998696b74fe493"
     }
   ],
   "wave_P2_tasks": [
@@ -2392,7 +2413,22 @@
     "no_new_product_decisions": "TT08/WorldClocks existingrules enoughforcurrentstage",
     "REL02+03_V1": "9885870a full9685 inputs: no complete historical count proof; launch BLOCKED. Need provenance-backed census or explicit narrow exception, no missingcount0 or reset. Centralized async decision asked once after exactimpactreceipt: preserved cap/history proof recommended or explicit single bounded staticV1 accounting exception, pending. No waiver adopted.",
     "WorldClocks_U1": "centralized question remains pending, no default adoption",
-    "CAL03_exception_lineage_policy": "Fullreview1d3b6adf REVISEsingleR1; three scopes/localfloating/same-day restrictionalreadydecided; minimumexceptionpreserve-vsrebase-vsclear/orphanrule+splitALLsegment-vslineage policy questionaskedonce async afterreview, pending; onlyCALdescendantsheld, noredundant scopeauthorization."
+    "CAL03_exception_lineage_policy": "Fullreview1d3b6adf REVISEsingleR1; three scopes/localfloating/same-day restrictionalreadydecided; minimumexceptionpreserve-vsrebase-vsclear/orphanrule+splitALLsegment-vslineage policy questionaskedonce async afterreview, pending; onlyCALdescendantsheld, noredundant scopeauthorization.",
+    "BK07_minimum_policy": {
+      "state": "pending_minimum_owner_answers_after_full_independent_review",
+      "review": "e1d8ae4b2304a91382d4aa2c4ab2dc06d46fc65b",
+      "decision_groups": [
+        "carry none/positiveonly/signed; total/category relationship and choiceperledger ifneeded",
+        "historical editing direct vsclosing/reopen; omitcarry downstreambranch ifnocarry",
+        "legacyglobalbudget remainunassigned exactrawbytes vs explicitchosenledger/month allocation no autodupdelete"
+      ],
+      "already_authorized": [
+        "ledger+period entities/monthisolation",
+        "5000onlyexplicitexample, userentered5000 valid"
+      ],
+      "prior_authority_search": "boundedfullPRD/designAPI/testsdevloghistories/12BKrows/REL1/3/4/5 noacceptedanswer; frozenCloudDesign62files/11referencedBKabsent notread",
+      "no_auto_policy": true
+    }
   },
   "ready_inventory_collection": {
     "source": "acd21f9b15a735e2202ca9553aff54b3e3b46e17",
@@ -2532,6 +2568,20 @@
         "complete finite source impact/full independent review/root technical admission",
         "qualified source and valid full before",
         "full fixed/integrated/affected/native/G1/vendor/fresh acceptance"
+      ]
+    },
+    {
+      "caller": "BK-07",
+      "source": "59ac17754b28771d62a2830c144f8d89cea7f6ec",
+      "contract_sha256": "7aaae13aa0b7242351688aa423d7cc459a657fd54d458b865d100b9107a99846",
+      "independent_review": "e1d8ae4b2304a91382d4aa2c4ab2dc06d46fc65b",
+      "review_sha256": "d2b4982a6abd5609d8714b6be4be24e19fce556b1efe3ad7a467f5cedec00ada",
+      "scope": "Full18row conditionalDOC ONLY. Existingledger+month isolation and5000explicitexampleonly authorized; no schema/API/lifecycle grant. Unknowncarry/history/legacy policy minimum groups pending.",
+      "product_write_grant": [],
+      "technical_prerequisites": [
+        "freeze minimum productmeaning owner answers",
+        "fresh precise fulltechnical/lifecycle/sourcecontract and independentreview/rootadoption",
+        "fullqualification/before/fixed/integrated/affected/native/G1/vendor/freshaccept"
       ]
     }
   ],
