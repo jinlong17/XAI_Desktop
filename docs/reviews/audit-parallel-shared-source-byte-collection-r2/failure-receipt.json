@@ -1,0 +1,108 @@
+{
+  "receipt_id": "SHARED/SOURCE-BYTE-COLLECTION2-FAILURE-PRESERVATION",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent mechanical preservation executor; no correction or business verification",
+  "fixed_input": "546bbed6593c6b4938929b668550449461f02c75",
+  "source_parent": "afba9ebd3eabd1adebc5fc0f30ab86ff73ce0e9e",
+  "preservation_state": "FAILED_EXECUTION_EVIDENCE_PRESERVED_UNVERIFIED",
+  "collection": {
+    "family_cap": 3,
+    "family_used": 3,
+    "family_exhausted": true,
+    "fourth_attempt_permitted": false,
+    "actual_commands_were_synchronous": true,
+    "continuation_sessions": 0,
+    "attempts": [
+      {
+        "iteration": 1,
+        "result": "UNKNOWN_FROM_AVAILABLE_FAILURE_CONTEXT",
+        "pid": null,
+        "exit_code": null,
+        "command": null
+      },
+      {
+        "iteration": 2,
+        "pid": 94024,
+        "command": "python3 - with the bounded in-memory collection script; exact shell text unavailable in the recorded context",
+        "failure": "TypeError: Path.write_text() got an unexpected keyword argument 'newline'",
+        "exit_code": 1,
+        "writes_completed": 0,
+        "note": "Failure occurred before the first file write; the authorized output directory existed."
+      },
+      {
+        "iteration": 3,
+        "pid": 94186,
+        "command": "python3 - with the bounded in-memory collection script; exact shell text unavailable in the recorded context",
+        "exit_code": 0,
+        "payload_reread": "SELF_REPORTED_UNVERIFIED",
+        "reported_totals": {
+          "roots": 12,
+          "files": 617,
+          "bytes": 14488785,
+          "edges": 14,
+          "missing": 0
+        },
+        "note": "These totals are preserved as reported metadata only; collection contents and integrity were not verified here."
+      }
+    ],
+    "source_collection_acceptance": "UNRUN",
+    "full_input_corpus_integrity": "UNRUN",
+    "bundle_integrity": "UNRUN",
+    "payload_semantics": "UNRUN"
+  },
+  "checker": {
+    "attempt_count": 1,
+    "chunk_sha256": "3b6b64",
+    "exit_code": 1,
+    "reported_entry_count": 0,
+    "failure": "wrong schema",
+    "pid": null,
+    "continuation_session": null,
+    "full_integrity_check": "UNRUN",
+    "result": "FAILED; no checker pass"
+  },
+  "prior_partial_evidence": {
+    "source_collector_invocations": 1,
+    "source_collector_routines": 1,
+    "source_collector_static_checks": 0,
+    "review_invocations": 1,
+    "review_partial_static_checks": 1,
+    "review_partial_static_result": "PASS_REPORTED; retained and not erased; not full collection acceptance"
+  },
+  "preserved_drafts": [
+    {
+      "path": "docs/reviews/audit-parallel-shared-source-byte-collection-r2/collection.md",
+      "bytes": 14947,
+      "sha256": "248ec11134e9f3397630c8b4b513854e4583f85608e53bb41bb22b0a1b106d88",
+      "state": "unchanged"
+    },
+    {
+      "path": "docs/reviews/audit-parallel-shared-source-byte-collection-r2/source-bytes.json",
+      "bytes": 15319210,
+      "sha256": "69fb91aebacf4720028fbdf8a06e70d64294ca6c0cf7b8124bf6d38ce6eeee4b",
+      "state": "unchanged"
+    },
+    {
+      "path": "docs/reviews/audit-parallel-shared-source-byte-collection-r2/inputs.sha256",
+      "bytes": 1581127,
+      "sha256": "660427500adcddded8f4ec852af38dd0ab7f9e3951be8c82d34b0105764faa21",
+      "state": "unchanged"
+    }
+  ],
+  "budgets": {
+    "mechanical_preservation": 1,
+    "static_checker": 0,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0
+  },
+  "acceptance": "No APPROVED, source-qualified, integrity-qualified, or accepted-contract result is asserted. This commit preserves stopped failure evidence only."
+}
