@@ -1,0 +1,10 @@
+{
+  "unit": "focus-controls",
+  "product": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "iteration": 1,
+  "formalDiagnostic": true,
+  "includesRefusals": true,
+  "startedAt": "2026-10-10T08:56:07.205Z",
+  "status": "PREFLIGHT_PASSED",
+  "manifestSha256": "680084ed7ed5ac0609c5a991615994d3c0d0021b796f2591518ca8a117446b47"
+}

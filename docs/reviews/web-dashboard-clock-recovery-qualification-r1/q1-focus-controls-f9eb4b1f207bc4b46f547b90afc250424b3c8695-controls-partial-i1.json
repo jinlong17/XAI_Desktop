@@ -1,0 +1,1145 @@
+{
+  "status": "BLOCKED_FORMAL_DIAGNOSTIC_MISSING_RAW_RECORDS",
+  "unit": "focus-controls",
+  "formalIteration": 1,
+  "cumulativeUsed": 1,
+  "cap": 3,
+  "exitCode": 1,
+  "manifestSha256": "680084ed7ed5ac0609c5a991615994d3c0d0021b796f2591518ca8a117446b47",
+  "stderrSource": "Exact unified exec session 38781 final output retained; no stdout emitted.",
+  "stderrFile": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-stderr-i1.log",
+  "stderrSha256": "b46ef1ca23fb5e7f33e33a47f37bc3e9fbe8d2ffbfaa5a7335165ba0ddaae22e",
+  "failure": "Unexpected Chrome profile cleanup ENOTEMPTY interrupted finally before accumulated raw records/log/json writes. Primary in-memory case result is unknown and cannot be reconstructed as evidence.",
+  "rawLogPresent": false,
+  "resultJsonPresent": false,
+  "lastFramesByWriteTime": [
+    "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-11-i1.png",
+    "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-12-i1.png",
+    "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-0-outside-target-focused-i1.png",
+    "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-0-outside-target-moved-on-i1.png",
+    "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-0-outside-target-outside-native-context-i1.png",
+    "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-0-outside-target-outside-native-context-repeat-i1.png",
+    "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-1-outside-next-focused-i1.png",
+    "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-1-outside-next-moved-on-i1.png",
+    "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-1-outside-next-outside-native-context-i1.png",
+    "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-1-outside-next-outside-native-context-repeat-i1.png"
+  ],
+  "retainedFrames": [
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-initial-i1.png",
+      "bytes": 12858,
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-original-native-frame-1-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-original-native-frame-2-i1.png",
+      "bytes": 12858,
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-original-native-frame-3-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-original-native-frame-4-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-original-native-frame-5-i1.png",
+      "bytes": 1188,
+      "sha256": "e5c9a639044980520b55e40b7672e0dd5b60890bd2b7b9d0527b4d9c583f29e4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-original-native-frame-6-i1.png",
+      "bytes": 1188,
+      "sha256": "e5c9a639044980520b55e40b7672e0dd5b60890bd2b7b9d0527b4d9c583f29e4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-original-native-frame-7-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-original-native-frame-8-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-original-native-frame-9-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-original-native-frame-10-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-0-outside-target-focused-i1.png",
+      "bytes": 12923,
+      "sha256": "2bd8eca8b54726523040d8787c5e999c41fefde155a56a2333422d9ca2ccd5ea"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-0-outside-target-moved-on-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-0-outside-target-focused-repeat-i1.png",
+      "bytes": 12923,
+      "sha256": "2bd8eca8b54726523040d8787c5e999c41fefde155a56a2333422d9ca2ccd5ea"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-0-outside-target-moved-on-repeat-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-1-outside-next-focused-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-1-outside-next-moved-on-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-1-outside-next-outside-native-context-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-next-only-style-1-outside-next-outside-native-context-repeat-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-initial-i1.png",
+      "bytes": 12858,
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-original-native-frame-1-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-original-native-frame-2-i1.png",
+      "bytes": 12858,
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-original-native-frame-3-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-original-native-frame-4-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-original-native-frame-5-i1.png",
+      "bytes": 1172,
+      "sha256": "1c05ab1ba8d4e17d7b098e02fe2e65ab2c804dca6333d6854e8258124439e790"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-original-native-frame-6-i1.png",
+      "bytes": 1172,
+      "sha256": "1c05ab1ba8d4e17d7b098e02fe2e65ab2c804dca6333d6854e8258124439e790"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-original-native-frame-7-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-original-native-frame-8-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-original-native-frame-9-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-original-native-frame-10-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-original-native-frame-11-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-original-native-frame-12-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-0-clock-target-unselected-focused-i1.png",
+      "bytes": 1172,
+      "sha256": "1c05ab1ba8d4e17d7b098e02fe2e65ab2c804dca6333d6854e8258124439e790"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-0-clock-target-unselected-moved-on-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-1-outside-next-focused-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-1-outside-next-moved-on-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-1-outside-next-outside-native-context-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-unselected-style-1-outside-next-outside-native-context-repeat-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-initial-i1.png",
+      "bytes": 12980,
+      "sha256": "54b917f4b70f429b0d84c4e5ff99f2b6aa7fbcd818aa38cd10d3b72c59374a14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-original-native-frame-1-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-original-native-frame-2-i1.png",
+      "bytes": 12980,
+      "sha256": "54b917f4b70f429b0d84c4e5ff99f2b6aa7fbcd818aa38cd10d3b72c59374a14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-original-native-frame-3-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-original-native-frame-4-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-original-native-frame-5-i1.png",
+      "bytes": 1275,
+      "sha256": "b517b750a0bf7b79ce155bba80b698da45840fe4dac91feaa79c09bc8474c5ed"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-original-native-frame-6-i1.png",
+      "bytes": 1275,
+      "sha256": "b517b750a0bf7b79ce155bba80b698da45840fe4dac91feaa79c09bc8474c5ed"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-original-native-frame-7-i1.png",
+      "bytes": 1230,
+      "sha256": "e80321563fd9c65729e52dd956a1696aa2c5ddd25f95298c67e8e5a8e835bf2b"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-original-native-frame-8-i1.png",
+      "bytes": 1230,
+      "sha256": "e80321563fd9c65729e52dd956a1696aa2c5ddd25f95298c67e8e5a8e835bf2b"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-original-native-frame-9-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-original-native-frame-10-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-original-native-frame-11-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-original-native-frame-12-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-0-clock-target-selected-focused-i1.png",
+      "bytes": 1275,
+      "sha256": "b517b750a0bf7b79ce155bba80b698da45840fe4dac91feaa79c09bc8474c5ed"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-0-clock-target-selected-moved-on-i1.png",
+      "bytes": 1230,
+      "sha256": "e80321563fd9c65729e52dd956a1696aa2c5ddd25f95298c67e8e5a8e835bf2b"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-1-outside-next-focused-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-1-outside-next-moved-on-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-1-outside-next-outside-native-context-i1.png",
+      "bytes": 13035,
+      "sha256": "a557d89e2cab3eb60dd80039589579a8374d18535d767b4fa8a9996b58dbc117"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-selected-style-1-outside-next-outside-native-context-repeat-i1.png",
+      "bytes": 13035,
+      "sha256": "a557d89e2cab3eb60dd80039589579a8374d18535d767b4fa8a9996b58dbc117"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-initial-i1.png",
+      "bytes": 12980,
+      "sha256": "54b917f4b70f429b0d84c4e5ff99f2b6aa7fbcd818aa38cd10d3b72c59374a14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-original-native-frame-1-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-original-native-frame-2-i1.png",
+      "bytes": 12980,
+      "sha256": "54b917f4b70f429b0d84c4e5ff99f2b6aa7fbcd818aa38cd10d3b72c59374a14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-original-native-frame-3-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-original-native-frame-4-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-original-native-frame-5-i1.png",
+      "bytes": 1275,
+      "sha256": "b517b750a0bf7b79ce155bba80b698da45840fe4dac91feaa79c09bc8474c5ed"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-original-native-frame-6-i1.png",
+      "bytes": 1275,
+      "sha256": "b517b750a0bf7b79ce155bba80b698da45840fe4dac91feaa79c09bc8474c5ed"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-original-native-frame-7-i1.png",
+      "bytes": 1230,
+      "sha256": "e80321563fd9c65729e52dd956a1696aa2c5ddd25f95298c67e8e5a8e835bf2b"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-original-native-frame-8-i1.png",
+      "bytes": 1230,
+      "sha256": "e80321563fd9c65729e52dd956a1696aa2c5ddd25f95298c67e8e5a8e835bf2b"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-original-native-frame-9-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-original-native-frame-10-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-original-native-frame-11-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-original-native-frame-12-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-0-clock-target-active-focused-i1.png",
+      "bytes": 1275,
+      "sha256": "b517b750a0bf7b79ce155bba80b698da45840fe4dac91feaa79c09bc8474c5ed"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-0-clock-target-active-moved-on-i1.png",
+      "bytes": 1230,
+      "sha256": "e80321563fd9c65729e52dd956a1696aa2c5ddd25f95298c67e8e5a8e835bf2b"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-1-outside-next-focused-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-1-outside-next-moved-on-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-1-outside-next-outside-native-context-i1.png",
+      "bytes": 13035,
+      "sha256": "a557d89e2cab3eb60dd80039589579a8374d18535d767b4fa8a9996b58dbc117"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-active-style-1-outside-next-outside-native-context-repeat-i1.png",
+      "bytes": 13035,
+      "sha256": "a557d89e2cab3eb60dd80039589579a8374d18535d767b4fa8a9996b58dbc117"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-initial-i1.png",
+      "bytes": 12858,
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-original-native-frame-1-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-original-native-frame-2-i1.png",
+      "bytes": 12858,
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-original-native-frame-3-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-original-native-frame-4-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-original-native-frame-5-i1.png",
+      "bytes": 1172,
+      "sha256": "1c05ab1ba8d4e17d7b098e02fe2e65ab2c804dca6333d6854e8258124439e790"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-original-native-frame-6-i1.png",
+      "bytes": 1172,
+      "sha256": "1c05ab1ba8d4e17d7b098e02fe2e65ab2c804dca6333d6854e8258124439e790"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-original-native-frame-7-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-original-native-frame-8-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-original-native-frame-9-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-original-native-frame-10-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-original-native-frame-11-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-original-native-frame-12-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-0-clock-target-inactive-focused-i1.png",
+      "bytes": 1172,
+      "sha256": "1c05ab1ba8d4e17d7b098e02fe2e65ab2c804dca6333d6854e8258124439e790"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-0-clock-target-inactive-moved-on-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-1-outside-next-focused-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-1-outside-next-moved-on-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-1-outside-next-outside-native-context-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-inactive-style-1-outside-next-outside-native-context-repeat-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-initial-i1.png",
+      "bytes": 12858,
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-original-native-frame-1-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-original-native-frame-2-i1.png",
+      "bytes": 12858,
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-original-native-frame-3-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-original-native-frame-4-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-original-native-frame-5-i1.png",
+      "bytes": 1296,
+      "sha256": "ca3440ad943fe61e5e68e9dff54c6fd02c839efc3955fad8209b360ab3fc1210"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-original-native-frame-6-i1.png",
+      "bytes": 1296,
+      "sha256": "ca3440ad943fe61e5e68e9dff54c6fd02c839efc3955fad8209b360ab3fc1210"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-original-native-frame-7-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-original-native-frame-8-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-original-native-frame-9-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-original-native-frame-10-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-0-outside-target-focused-i1.png",
+      "bytes": 13074,
+      "sha256": "9ccf091f9583096451a77615c02f622768ad2493a4c93671d02239bdf6f4b038"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-0-outside-target-moved-on-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-0-outside-target-focused-repeat-i1.png",
+      "bytes": 13074,
+      "sha256": "9ccf091f9583096451a77615c02f622768ad2493a4c93671d02239bdf6f4b038"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-0-outside-target-moved-on-repeat-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-1-outside-next-focused-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-1-outside-next-moved-on-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-1-outside-next-outside-native-context-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-transformed-style-1-outside-next-outside-native-context-repeat-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-initial-i1.png",
+      "bytes": 12858,
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-native-frame-1-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-native-frame-2-i1.png",
+      "bytes": 12858,
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-native-frame-3-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-native-frame-4-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-native-frame-5-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-native-frame-6-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-native-frame-7-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-native-frame-8-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-pixel--clock-target-no-focus-focused-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-pixel--clock-target-no-focus-moved-on-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-native-frame-9-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-native-frame-10-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-native-frame-11-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-original-native-frame-12-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-0-clock-target-no-focus-focused-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-0-clock-target-no-focus-moved-on-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-1-outside-next-focused-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-1-outside-next-moved-on-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-1-outside-next-outside-native-context-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-no-focus-style-1-outside-next-outside-native-context-repeat-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-initial-i1.png",
+      "bytes": 12909,
+      "sha256": "d630794bb1bac8354f2501afa4d7f7d97b797db8c21b1c5e90d3f3153fb8dd2e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-native-frame-1-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-native-frame-2-i1.png",
+      "bytes": 12909,
+      "sha256": "d630794bb1bac8354f2501afa4d7f7d97b797db8c21b1c5e90d3f3153fb8dd2e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-native-frame-3-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-native-frame-4-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-native-frame-5-i1.png",
+      "bytes": 1173,
+      "sha256": "6b95496c12118da21fdb245f59f9581ee501317c424e735358955ee250f3979e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-native-frame-6-i1.png",
+      "bytes": 1173,
+      "sha256": "6b95496c12118da21fdb245f59f9581ee501317c424e735358955ee250f3979e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-native-frame-7-i1.png",
+      "bytes": 1173,
+      "sha256": "6b95496c12118da21fdb245f59f9581ee501317c424e735358955ee250f3979e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-native-frame-8-i1.png",
+      "bytes": 1173,
+      "sha256": "6b95496c12118da21fdb245f59f9581ee501317c424e735358955ee250f3979e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-pixel--clock-target-masked-focused-i1.png",
+      "bytes": 1173,
+      "sha256": "6b95496c12118da21fdb245f59f9581ee501317c424e735358955ee250f3979e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-pixel--clock-target-masked-moved-on-i1.png",
+      "bytes": 1173,
+      "sha256": "6b95496c12118da21fdb245f59f9581ee501317c424e735358955ee250f3979e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-native-frame-9-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-native-frame-10-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-native-frame-11-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-original-native-frame-12-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-0-clock-target-masked-focused-i1.png",
+      "bytes": 1173,
+      "sha256": "6b95496c12118da21fdb245f59f9581ee501317c424e735358955ee250f3979e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-0-clock-target-masked-moved-on-i1.png",
+      "bytes": 1173,
+      "sha256": "6b95496c12118da21fdb245f59f9581ee501317c424e735358955ee250f3979e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-1-outside-next-focused-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-1-outside-next-moved-on-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-1-outside-next-outside-native-context-i1.png",
+      "bytes": 12952,
+      "sha256": "cafc0e54d7a67b7d249d6e38d40539dc33bf251f46a23c4c5796d4211f612dad"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-masked-style-1-outside-next-outside-native-context-repeat-i1.png",
+      "bytes": 12952,
+      "sha256": "cafc0e54d7a67b7d249d6e38d40539dc33bf251f46a23c4c5796d4211f612dad"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-initial-i1.png",
+      "bytes": 12858,
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-native-frame-1-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-native-frame-2-i1.png",
+      "bytes": 12858,
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-native-frame-3-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-native-frame-4-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-native-frame-5-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-native-frame-6-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-native-frame-7-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-native-frame-8-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-pixel--clock-target-outline-none-focused-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-pixel--clock-target-outline-none-moved-on-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-native-frame-9-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-native-frame-10-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-native-frame-11-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-original-native-frame-12-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-0-clock-target-outline-none-focused-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-0-clock-target-outline-none-moved-on-i1.png",
+      "bytes": 1127,
+      "sha256": "f7bf78858bd510dd1fd7bfb42cb3e183b4ca96ef95003726c4611283de5ea0a6"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-1-outside-next-focused-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-1-outside-next-moved-on-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-1-outside-next-outside-native-context-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-outline-none-style-1-outside-next-outside-native-context-repeat-i1.png",
+      "bytes": 12911,
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-initial-i1.png",
+      "bytes": 11365,
+      "sha256": "07f0beb7a46f300b9d90a07496956cedb18c075097a5a665f98b4ace3a37d914"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-native-frame-1-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-native-frame-2-i1.png",
+      "bytes": 11365,
+      "sha256": "07f0beb7a46f300b9d90a07496956cedb18c075097a5a665f98b4ace3a37d914"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-native-frame-3-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-native-frame-4-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-native-frame-5-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-native-frame-6-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-native-frame-7-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-native-frame-8-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-pixel--clock-target-occluded-focused-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-pixel--clock-target-occluded-moved-on-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-native-frame-9-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-native-frame-10-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-native-frame-11-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-native-frame-12-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-pixel--outside-next-focused-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-original-pixel--outside-next-moved-on-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-0-clock-target-occluded-focused-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-0-clock-target-occluded-moved-on-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-1-outside-next-focused-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-1-outside-next-moved-on-i1.png",
+      "bytes": 240,
+      "sha256": "f6269454dd16c35695ae3877957190a803c0f82c08557d7af8a76d2ac63f695d"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-1-outside-next-outside-native-context-i1.png",
+      "bytes": 11365,
+      "sha256": "07f0beb7a46f300b9d90a07496956cedb18c075097a5a665f98b4ace3a37d914"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-occluded-style-1-outside-next-outside-native-context-repeat-i1.png",
+      "bytes": 11365,
+      "sha256": "07f0beb7a46f300b9d90a07496956cedb18c075097a5a665f98b4ace3a37d914"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-initial-i1.png",
+      "bytes": 12889,
+      "sha256": "72305fb72ab8af0036262f11179741a50a527102e2d2bed6621c94c67104d91e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-1-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-2-i1.png",
+      "bytes": 12889,
+      "sha256": "72305fb72ab8af0036262f11179741a50a527102e2d2bed6621c94c67104d91e"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-3-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-4-i1.png",
+      "bytes": 5849,
+      "sha256": "c98881cc796311a32f1457e82ceaa53f93eb9002723ea29638ceab94bbe60a6a"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-5-i1.png",
+      "bytes": 1159,
+      "sha256": "0bd15f30706c4ee3a372524e997f970154192705edff6470fe5eee61fb8e2712"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-6-i1.png",
+      "bytes": 1159,
+      "sha256": "0bd15f30706c4ee3a372524e997f970154192705edff6470fe5eee61fb8e2712"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-7-i1.png",
+      "bytes": 1145,
+      "sha256": "30e2b85d090187c861304970488f2105cef99752b0cd8c590a682b9ad3ccaaa2"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-8-i1.png",
+      "bytes": 1145,
+      "sha256": "30e2b85d090187c861304970488f2105cef99752b0cd8c590a682b9ad3ccaaa2"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-9-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-10-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-11-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-original-native-frame-12-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-0-outside-target-focused-i1.png",
+      "bytes": 1159,
+      "sha256": "0bd15f30706c4ee3a372524e997f970154192705edff6470fe5eee61fb8e2712"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-0-outside-target-moved-on-i1.png",
+      "bytes": 1145,
+      "sha256": "30e2b85d090187c861304970488f2105cef99752b0cd8c590a682b9ad3ccaaa2"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-0-outside-target-outside-native-context-i1.png",
+      "bytes": 12900,
+      "sha256": "5d3be402e735e962bc8c17776607b25e20d5c01d6ef0c93cb601554cd33f3ace"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-0-outside-target-outside-native-context-repeat-i1.png",
+      "bytes": 12900,
+      "sha256": "5d3be402e735e962bc8c17776607b25e20d5c01d6ef0c93cb601554cd33f3ace"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-1-outside-next-focused-i1.png",
+      "bytes": 930,
+      "sha256": "2134e0b57221313bc4ec44c375dd0f73269e42d919e280af242f2b48d5b20fa4"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-1-outside-next-moved-on-i1.png",
+      "bytes": 884,
+      "sha256": "58cdf181284b6804cc32baacb3b14348c5d9cbd35527d786be5e69a012c68c14"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-1-outside-next-outside-native-context-i1.png",
+      "bytes": 12938,
+      "sha256": "7b465cf92f1d3997581982c9c86ee656de5e2c4465f92b9a37b297691a04a534"
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-controls-en-light-375-next-only-style-1-outside-next-outside-native-context-repeat-i1.png",
+      "bytes": 12938,
+      "sha256": "7b465cf92f1d3997581982c9c86ee656de5e2c4465f92b9a37b297691a04a534"
+    }
+  ],
+  "remainingUnitsFormalUsed": {
+    "reload-controls": 0,
+    "appearance-fapp1": 0,
+    "appearance-fapp2": 0,
+    "appearance-accepted": 0,
+    "apprail-accepted": 0,
+    "geometry-reload-p0": 0
+  },
+  "developmentInvocations": 2,
+  "noSourceChangeAfterFormal": true,
+  "noAutomaticRerun": true
+}

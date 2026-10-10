@@ -1,0 +1,15 @@
+{"check": "independent inline/module block and function assertions match actual bytes", "pass": true, "block": "0aed2a037e67ce781c89eee46591221d576fb41725ebbad07b492b0985e99266", "function": "76584fcc9111b2ca0764011ff9704a2ff6cd480939eccfec59a3ef6c1d0fc62f"}
+{"check": "decodePng byte identity", "pass": true, "sha256": "8b529489ea99d6374732b80cfd66590fd6bf7ba4e609b1bfda83d0338273f087"}
+{"check": "compareFocusBand byte identity", "pass": true, "sha256": "8da54eaf6e0da99c81042a841179930940991cb5bf97cce3dba530a4e2389b3b"}
+{"check": "original read-only clock probe byte identity", "pass": true, "sha256": "10191c2d8a367544e9b3182f0c6bbf18e4c34307910a56ba39242ad8920c78fb"}
+{"check": "node --check", "file": "pixel-focus-qualified-r1.mjs", "pass": true, "sha256": "19c40aecbbd8f442f455a836e2e91694976b08fe842f1969295389161dfed1bc"}
+{"check": "node --check", "file": "verify-qualification.mjs", "pass": true, "sha256": "4caf717a8f28f69ff2504b5632719b76809df735f3fd2fad03dd8a6e793d74d4"}
+{"check": "node --check", "file": "verify-native-focus-qualified-r1.mjs", "pass": true, "sha256": "00f2ccea4fbcbd51ef5d1f2fda5179e9c5e76031219e8adda19dd554d9ce95ca"}
+{"check": "node --check", "file": "verify-native-geometry-reload-r1.mjs", "pass": true, "sha256": "38da53144d5137b531edbbd6c5dcb0cb38702c70e8e0b14a475dbf9b8e731759"}
+{"check": "node --check probe", "pass": true}
+{"check": "node --check generated source", "unit": "appearance-fapp1", "pass": true, "sha256": "2448cba3c1daebbce3d79ec2e84f653586c26c124e9985a25c1ef10ec9a27ffd", "docsProductDelta": ""}
+{"check": "node --check generated source", "unit": "appearance-fapp2", "pass": true, "sha256": "01dcb59d10d6fdbc9eefe05528338842b3a33644d20efee34aa320e29f2a5003", "docsProductDelta": ""}
+{"check": "node --check generated source", "unit": "appearance-accepted", "pass": true, "sha256": "ed7ee8223c09be9016f8826480aecd3c6e5adfb13c0f18f4e99c2a981e294684", "docsProductDelta": ""}
+{"check": "node --check generated source", "unit": "apprail-accepted", "pass": true, "sha256": "a29743090013106702a94bf56ac27853154f7f23aa8be042f5c46b01cd3a2732", "docsProductDelta": ""}
+{"check": "node --check generated geometry", "phase": "old", "pass": true, "sha256": "0078c0c7f347461eff3a0f05e93e9b77539a058cc9ef61f362bda4541e1c106d"}
+{"check": "node --check generated geometry", "phase": "new", "pass": true, "sha256": "77c7098d17384d3dd72568dc6e823f6bf190613d83a3843316a78908c9bbfac1"}
