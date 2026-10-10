@@ -1,0 +1,51 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full original-obligation reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "5ebbdd57f1b02e5cab36751bbefe6129ee97d2ae",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 2,
+    "review_cap": 3,
+    "prior_source_author_used": 2,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "BRD-12/CONTRACT-REVIEW2",
+  "source_inputs": [
+    "5fa4cccb106d10e16562e0a8d6f3b103495607b1",
+    "bb08478d692091e6362926e2b75c1d0c34fc0ca2"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-brd12-contract-review-r2/review.md",
+    "docs/reviews/audit-parallel-brd12-contract-review-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full15257 immutable identities/exact2ADD/fixedparent41295a0 including full prior10166 reviewcorpus, original312 fields/order/39reversiblemodulelabels/933+6 evidence939/13,3,3,293 preserved. OriginalnoinventedItem1 +explainable reversibleDone action unchanged; proposedtechnicalschema is UNADOPTED.",
+    "Full B01-B12/R01-R12/exact24 conditionalpaths/fullcanonicalClockr2G1 andjudgingcopies/permanentactualprocess+formal/probeunknown histories retained. Rawpremount vs authorized canonicalmount transformation explicitlyseparated allnormalization/counters/triggers/manualtrue/oldtimestamp/othercards/dates/sort/urgency retained. No QLQUowner question unless source-proven genuine contradiction existingrulesfirst.",
+    "Independently inspect concrete samephysicalBoardvalue versiontagged checklistRecovery capsule, immutableX/terminalU/Ylinks, owner/key/generation/incarnations/per-field writer tokens/sourcepreimages/committedreadback/readfirstRetry. Real-array vs legacyaggregate information truthful, no fabricated historical rows/provenanceregex. Fieldownedinverse preservesmanualtrue/T0/text/order/newrows/currentderivedcounts; deletion/archive/ambiguoustarget entireinversezerowrite conflict. Same-mountundo vs legitimate future manual/move/newmountReloadY explicit normalautomation; no lifespan suppression.",
+    "Crossdocument lock allactualBoard writers/unfencedmigration prevention unresolved technicaladmission; exactfreshimpact/review/writegrant beforeimplementation, not implicit sharedpersistence/schema/storageguard grant. Versioncollision/importexport/globaldelete/reset/recoveryretention/quota refusal/historyvs liveintent A-B-Aprime/departure/forcedloss explanation and protectedhostguard reachability complete. No broadened24paths/sharedCSS/Desktop boundary or schemaadoption fromsourceproposal. Returnfull conditionalAPPROVED or preciseREVISE boundedfinalauthor3; reviewerneverfixes, runtime0, no calleracceptance."
+  ]
+}

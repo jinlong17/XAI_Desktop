@@ -1,0 +1,51 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full original-obligation reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "5ebbdd57f1b02e5cab36751bbefe6129ee97d2ae",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 2,
+    "review_cap": 3,
+    "prior_source_author_used": 2,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "MET-05/RUNNER-SOURCE-REVIEW2",
+  "source_inputs": [
+    "624e016359a0b48662828ffc9cc15db453792278",
+    "476b89f43ddbf07c7122a4ffb4b2b3335568de25"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-met05-runner-source-review-r2/review.md",
+    "docs/reviews/audit-parallel-met05-runner-source-review-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full2636 immutable inputs/exact14ADD/fixedparentee30c5f/all14outputhashes/selfexcluding13filefullindexpatch1541142bytes d895b2ba053b1b1d9f77d649f22f94ef97f5fadeb368747c6c4ea66d84224b85. Original89rows/2437paths immutable preserved. Authorstatic1 FAILED declaration assertion before syntax/fullhash; documentary restore and root hashreceipt nevererasefailure or establish qualification.",
+    "Complete R1-R11 source and M1-M9/G1-G9/E1-E9 originalcontract: full actualpublic provider/SDK/accountgeneration/router/host/firstframe/realCRUD/field values/nav bus/read-only deps/import closures/actualnamealiases/archive/sourceGate/focus/native/zoom/cancellation/ownedjoin/stdoutstderr/latejournal/finalize/root admission/typed permanenthistory/qualification positive-negative causal paths/artifact completeness. Inspect executable code, not manifest declaration or AST syntax as evidence.",
+    "M5 all8 protected originalAppearancehueslider meaningfulselftest/fulloutsidecontext/reverse/actiondeferred incompatibility declared HARD_FOCUS_CONTEXT_GAP. Frozenfullmethod/block standards preserved, no fakehue/skip/weakthreshold/Clockborrow. Determine independently exact technical-context cause/bounded fresh impact candidate before repair. M8 oldREL05native known>=2/lifetimeunknown BLOCKED; no reset ofmixed inheritedunits or blockedcount0.",
+    "ActualVitepartial-import pairedcontrol missing, malformedcard/outerwx enclosingroot supervisor gaps, admission/replay/reservation incomplete, original39controls/general fault+firstframe ledger gaps and omitted main.tsx auxbridges remain explicitUNQUALIFIED. No acceptedresidualwaiver, no productrepair or runtime. Preserve fullcanonicalr2G1/E1-E25/E24/judgingcopies/regressions/actualvendor/freshacceptance/reconcile/inventory. Returncoordinate REVISE with exact finalauthor3 boundedsource remedy/prerequisites or sourceonlyAPPROVED ifallcomplete; author2/review1/cap3 retained."
+  ]
+}
