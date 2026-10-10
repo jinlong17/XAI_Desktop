@@ -893,7 +893,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL/1WARN after6ownedrecoverablearchives at921d44a; all23stash remotely reachable",
+    "normal": "0FAIL1WARN after initialinventorymessage-onlyremote preservation/fiveownedarchives atfae60b6 checkpoint; all23stashes retainedremote",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -906,7 +906,8 @@
     "normal_intermediate_P9": "2FAIL/1WARN one newlycompleted source commit in refs/reflog while audit ran before its preservation; expected transient, source receipt/push thenrepeat, no deleting recovery",
     "normal_intermediate_P10": "3FAIL1WARN: two justpreserved sourcearchives lacked upstream and one concurrent root reflogcheckpoint prepush; upstream corrected without source/deletion, repush and repeat",
     "P10_owned_completed_worktrees": "5clean completed original heads exactremote then recoverablearchive confirmed; active3/unrelated5untouched",
-    "P10_inventory_intermediate": "6debb65b76840a08aca1d57c08933a3ee12eee37 identified as inventory initial commit before message correction, exactsame tree as final8c481eb; preservedadditionalremote archiveparallel-tt08-inventory-initial, not evidenceaccepted or extra scanneriteration; no recoverydeletion"
+    "P10_inventory_intermediate": "6debb65b76840a08aca1d57c08933a3ee12eee37 identified as inventory initial commit before message correction, exactsame tree as final8c481eb; preservedadditionalremote archiveparallel-tt08-inventory-initial, not evidenceaccepted or extra scanneriteration; no recoverydeletion",
+    "deep_P10": "2FAIL0WARN scanstartedbefore extra initialinventorysource remote preservation: one reflog and six unreachable commits vs priorfive; preserveexactresult, fullobjectidentity scanpending, no deletion or assertion ofsame5"
   },
   "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization",
   "active_scheduler": {
