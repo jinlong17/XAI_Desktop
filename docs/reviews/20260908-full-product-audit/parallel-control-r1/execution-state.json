@@ -207,13 +207,25 @@
       "fixed_parent": "c7df57204698b015554759b29af5a61b13a07207",
       "state": "running",
       "formal_invocations": 0
+    },
+    {
+      "id": "CLOCK/CORRECT-IMPACT2",
+      "workflow": "A",
+      "actor": "/root/parallel_a_clock_impact2",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-clock-impact2-20261010/XAI_Desktop",
+      "fixed_parent": "683d3b1ea5e824170d00cb0b09364df29271d181",
+      "state": "running_static_impact_only",
+      "formal_invocations": 0,
+      "retention_budget": "3/3exhausted; no exception"
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 2,
-    "total": 3,
+    "workers": 3,
+    "total": 4,
     "capacity": 4
   },
   "cost": {
@@ -282,6 +294,10 @@
     {
       "at": "2026-10-10T10:03:00.799008+00:00",
       "event": "Clock exact source REVISE received; frozen budget; P4 docauthor and WorldClocks preparer dispatched; fresh technical impact registered"
+    },
+    {
+      "at": "2026-10-10T10:04:00.917812+00:00",
+      "event": "Fresh independent technicalimpact2 dispatched; hardbudgetcannotreset; P4otherscontinue"
     }
   ],
   "wave_P2_tasks": [
