@@ -1,0 +1,50 @@
+{
+  "source": "23ed3b6fc3058a82af14d90e9c23ab30d7bcd641",
+  "parent": "b85b019ea255bcbb3830f7728e80ad24beba6e2a",
+  "fixed_input": "a9b22ebbec423028960f3c7332a6526f9c04ff45",
+  "integration": "4f988fe610b1c002b73ec3fbd915dd80fd88edcc",
+  "archive_ref": "codex/archive/parallel-exhaustion-impact2-20261010",
+  "input_hashes_checked": 62,
+  "outputs": {
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-r2/inputs.sha256": "5a3c7f96287967172bc3e58de8f1bf370ee0d6827432bdce5a70edcc2a332fb8",
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-r2/impact.md": "b6ae265c97fb80c22eddba55a1baee5048d1e2ef598b40f88565042a011978b7"
+  },
+  "disposition": "PROPOSED_UNADOPTED pendingwholeindependentD2 no budgetgrant",
+  "static": {
+    "invocations": 1,
+    "result": "PASS",
+    "pid": 93988,
+    "chunk": "16a8d3",
+    "numeric_exit": 0,
+    "session": "synchronous no continuation session issued",
+    "internal_elapsed_seconds": 1.412265084,
+    "tool_wall_seconds": 1.346138958,
+    "corpus_bytes": 3757146,
+    "owned_git_children": 64,
+    "all_children_exit": 0,
+    "stdout_stderr_EOF_drained": true,
+    "all_children_waited": true
+  },
+  "finalization": {
+    "pid": 94315,
+    "chunk": "eaa6a3",
+    "numeric_exit": 0,
+    "owned_children": 8,
+    "all_children_exit": 0,
+    "EOF_drained": true,
+    "commit_pid": 94330,
+    "git_whitespace_pid": 94328,
+    "git_whitespace": "PASS",
+    "single_commit": true,
+    "amend": 0,
+    "clean": true
+  },
+  "pretool_error": "JavaScript stringassembly SyntaxError before shell/Python/checker/write launch; noactualretry",
+  "formal_counts_unchanged": [
+    13,
+    3,
+    3,
+    293
+  ],
+  "refs": 939
+}
