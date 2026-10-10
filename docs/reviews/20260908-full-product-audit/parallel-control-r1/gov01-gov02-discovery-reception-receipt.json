@@ -1,0 +1,33 @@
+{
+  "source": "3b1633722b1f84efeaa29d110e5c37b7704b5f92",
+  "parent": "28ba1cf444f2545fb93dd0340204530e07f8f6f6",
+  "exact_two_add": true,
+  "parent_bound_input_hashes_checked": 41,
+  "aliases": [
+    {
+      "alias": ".codex/skills/xai-dev-dashboard-sync/SKILL.md",
+      "canonical_git_path": ".teams/skills/xai-dev-dashboard-sync/SKILL.md",
+      "hash": "641e38f01a42978107e345bd90447b285c5bc12011de260194d133de5beb04fa",
+      "alias_versioned": false
+    }
+  ],
+  "outputs": {
+    "discovery.md": "3c4179d9476f3d4aec9090ad1df05b29be91922e93a7d56b503a443a81b63494",
+    "inputs.sha256": "dc83df671cb64715c17cb49ccab83020f898dec082b1a5d1dfbb8961e0705191"
+  },
+  "static_kind": "git diff cached whitespace only no semantic corpus/schema PASS",
+  "before_write_full_validation": "not established from author handoff; independent review required",
+  "root_metadata_initial_error": "directGitlookup of ignoredcodexskill alias absent; resolvedactualownwtcontained alias totrackedteams source, verifiedcanonicalatfixedparent; originals unchanged",
+  "integration": "3459614e6bf410b52bf1cf2f7c4035f2054e5be1",
+  "archive_ref": "codex/archive/parallel-gov01-gov02-discovery-r1-20261010",
+  "state": "SOURCE_ONLY_CANDIDATE_UNADOPTED",
+  "root_role": "metadata reception ONLY no parserverification",
+  "standards": "Historical19/3/167 currentUNKNOWN. Beforewritebufferpreconditions unestablished no retrosemanticPASS.",
+  "root_pretool_script_assembly_error": {
+    "error": "JavaScript SyntaxError missingclosingparenthesis beforetoolcalls",
+    "actual_commands": 0,
+    "actual_writes": 0,
+    "actual_static_invocations": 0,
+    "correction": "String.raw transport withoutliteralbackticks; same metadata transaction scope"
+  }
+}

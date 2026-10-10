@@ -2019,7 +2019,7 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "received_FULL_PROPOSED_UNADOPTED_needs_fresh_WHOLE_source_review1",
+      "state": "FULL_reviewed_REVISE_SC_R1_R2_R3_UNADOPTED",
       "fixed_input": "aed09103a71c7e939ffc71d23c7b9b802ac47b51",
       "family_iteration": 1,
       "family_cap": 3,
@@ -2036,7 +2036,8 @@
       "reset_registry_rows": 87,
       "static_pass": 1,
       "static_result": "PASS",
-      "product_write_grant": []
+      "product_write_grant": [],
+      "independent_review": "2f98491db76707a3965198b9dbb64f3e586a6e4b"
     },
     {
       "id": "BRD-28/SOURCE-MACHINERY-IMPACT1",
@@ -2156,7 +2157,7 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_FULL_independent_review1",
+      "state": "received_FULL_REVISE_SC_R1_R2_R3_no_source_or_implementationgrant",
       "fixed_input": "b643171fa4ef7a17a7c1cd6cde4c6dea1a509588",
       "family_iteration": 1,
       "family_cap": 3,
@@ -2166,7 +2167,15 @@
       "fixed_parent": "28ba1cf444f2545fb93dd0340204530e07f8f6f6",
       "actual_actor_launched": true,
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-med03-source-review1-20261010/XAI_Desktop",
-      "attachment_registration": "identity count exceeds100; existingcheckout used"
+      "attachment_registration": "identity count exceeds100; existingcheckout used",
+      "source_commit": "2f98491db76707a3965198b9dbb64f3e586a6e4b",
+      "integration_commit": "d64a7e151df25497f6d75b11e8a1890a2e71644a",
+      "archive_ref": "codex/archive/parallel-med03-source-review-r1-20261010",
+      "static_pass": 1,
+      "static_result": "PASS",
+      "product_write_grant": [],
+      "input_hashes_checked": 2069,
+      "review_verdict": "REVISE"
     },
     {
       "id": "SHARED/SOURCE-BYTE-COLLECTION2-FAILURE-PRESERVATION",
@@ -2261,19 +2270,24 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_FULL_independent_review2",
+      "state": "running_fresh_FULL_independent_review",
       "fixed_input": "b21a2450e6d2607487ba3f5ae7663bdf7ad7c301",
       "family_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd12-technical-contract-amendment-review-r2.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd12-technical-contract-amendment-review-r2.json",
+      "actor": "/root/parallel_d_brd12_technical_full_review_r2",
+      "fixed_parent": "af48d69854e9d6157bc51969fd19e09911fe81c0",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-technical-review2-20261010/XAI_Desktop",
+      "actual_actor_launched": true,
+      "attachment_registration": "identitycount>100 existingcheckout used"
     },
     {
       "id": "GOV-01+GOV-02/SOURCE-DISCOVERY1",
       "workflow": "B",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "running_fresh_bounded_independent_task",
+      "state": "received_SOURCE_ONLY_UNADOPTED_candidate_whitespacePASS_not_semanticverification",
       "fixed_input": "6db2aef8d316835e2aea2d469073e25899d6e1fd",
       "family_iteration": 1,
       "family_cap": 3,
@@ -2287,7 +2301,19 @@
       "actual_actor_launched": true,
       "fixed_parent": "28ba1cf444f2545fb93dd0340204530e07f8f6f6",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-gov-parser-discovery1-20261010/XAI_Desktop",
-      "attachment_registration": "identity count exceeds100 existingcheckout used"
+      "attachment_registration": "identity count exceeds100 existingcheckout used",
+      "source_commit": "3b1633722b1f84efeaa29d110e5c37b7704b5f92",
+      "integration_commit": "3459614e6bf410b52bf1cf2f7c4035f2054e5be1",
+      "archive_ref": "codex/archive/parallel-gov01-gov02-discovery-r1-20261010",
+      "static_pass": 1,
+      "static_result": "PASS",
+      "product_write_grant": [],
+      "input_hashes_checked": 41,
+      "input_provenance": "barepathsparent28ba pluscanonicalGitteams skill alias resolution",
+      "static_kind": "WHITESPACE_ONLY",
+      "input_checksum_invocations": 1,
+      "semantic_static_pass": 0,
+      "before_write_full_validation": "NOT_ESTABLISHED_FROM_HANDOFF"
     },
     {
       "id": "CD-03/SOURCE-CONTRACT-REVIEW2",
@@ -2330,12 +2356,41 @@
       "workflow": "D",
       "configured_model": "gpt-6-sol",
       "provider_attested": false,
-      "state": "queued_fresh_FULL_final_independent_review3",
+      "state": "running_fresh_FULL_independent_review",
       "fixed_input": "2461db7d47e19b0a254fe14a9b82985152e94611",
       "family_iteration": 3,
       "family_cap": 3,
       "formal_invocations": 0,
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-source-byte-collection-review-r3.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-source-byte-collection-review-r3.json",
+      "actor": "/root/parallel_d_shared_byte_full_review_r3",
+      "fixed_parent": "984f543fc63fa8f95725d5894ff88dfbf68c8c50",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-byte-review3-20261010/XAI_Desktop",
+      "actual_actor_launched": true,
+      "attachment_registration": "identitycount>100 existingcheckout used"
+    },
+    {
+      "id": "MED-03/SOURCE-CONTRACT2",
+      "workflow": "A",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_FULL_independent_sourcecontract",
+      "fixed_input": "d64a7e151df25497f6d75b11e8a1890a2e71644a",
+      "family_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-med03-source-contract-r2.json"
+    },
+    {
+      "id": "GOV-01+GOV-02/SOURCE-CONTRACT1",
+      "workflow": "B",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_FULL_independent_sourcecontract",
+      "fixed_input": "3459614e6bf410b52bf1cf2f7c4035f2054e5be1",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov01-gov02-source-contract-r1.json"
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -2353,23 +2408,23 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 84,
-    "rework_findings": 62,
+    "static_passes": 86,
+    "rework_findings": 65,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 87,
+    "completed_source_receipts": 89,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "87delivered static84incl7FAILED +pending10FAILED1UNKNOWN=95known17FAILED1UNKNOWN; byte-review2 newFAILED nooutputs; originalreview1partialPASS preserved; collection3/mechanical1/pretool1 separate.",
+    "static_passes_basis": "89delivered concludingstatic86incl7FAILED+1whitespaceONLY; pending10FAILED1UNKNOWN=97known17FAILED1UNKNOWN. GOV1whitespace+inputchecksum1metadata notsemanticqualification. Collection3/mechanical1/pretool1 preserved.",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 7,
-    "rework_findings_basis": "Prior61 pluswholeouterreviewR1 mandatoryactualfixture noncircular prerequisite absent. UncommittedBRD/CD/MEDdraftobservations not findingsaccepted.",
+    "rework_findings_basis": "Prior62 plusFULLMEDreviewSC-R1/2/3; GOVsourcecandidates andmemoryBRD/CD notindependentacceptedfindings.",
     "pending_no_delivery_static_invocations": 11,
     "pending_no_delivery_static_failures": 10,
-    "actual_static_invocations_total_known": 95,
+    "actual_static_invocations_total_known": 97,
     "actual_static_failed_total_known": 17,
     "static_budget_overruns": 1,
     "pending_no_delivery_static_unknown": 1,
@@ -2377,7 +2432,9 @@
     "source_byte_collection_invocations": 3,
     "pretool_no_checker_review_attempts": 1,
     "source_byte_collection2_command_failures": 1,
-    "mechanical_failure_preservation_invocations": 1
+    "mechanical_failure_preservation_invocations": 1,
+    "delivered_whitespace_only_static": 1,
+    "discovery_input_checksum_invocations": 1
   },
   "events": [
     {
@@ -2808,6 +2865,11 @@
       "at": "2026-10-10T16:04:27.841144+00:00",
       "event": "P48 sharedbyteFULLreview2/static1FAILED02f132 synchronousexit1/PIDcatPIDUNKNOWN cardlookedupatfixed2461beforecardadded; manifestparsedcompletehash/payload/dependencies/provenanceUNRUN/nooutputs/clean. FreezeNOTbundlecorruption; registerfreshFULLreview3/3FINAL existingfrozen2461input/B719drafts, actualnewdispatchparentcardexplicitbinding+alloriginal/integration/parentMDs beforeonechecker no retry/recollect/capreset. Originalcollection3/3EXHAUSTED NO4/review1partial remains. BRD28backupmachineryimpactauthor2 startsparent28ba/fixedaed originalfullscope; root+MEDreview+GOVdiscovery+BRD28impact2=4/4. GOVsource-onlyusesxai-dev-dashboard-sync skillread; currenthistorical19/3notasserted/no generator or testsrun. P47normal0FAIL1WARN aftertwofreshsourceorigins preserved; allnormalfailurelogs kept. Nineownedarchive requestsstillQUEUED_UNCONFIRMED no cleanupsuccess/otherwts/recoverydeletion; independentworkersdistincttrees continue.87receipts95knownstatic17FAILED1UNKNOWN/overrun1/rework62/collection3/mechanical1/vendor3LISTnotbilling. Formal13/3/3/293=312/939unchanged TT08onlynewfullcalleraccepted, no newruntime/method/source3/contract/releasegrant. Nextslots oldestBRDfullreview2/CDfullreview2 pluscriticalbytefinalreview3 andPOMOfullreview1/outercorrectingimpact2 withfairaging.",
       "input": "af48d69854e9d6157bc51969fd19e09911fe81c0"
+    },
+    {
+      "at": "2026-10-10T16:15:26.168594+00:00",
+      "event": "P49 GOVdiscovery3b originalremote ->3459614e6bf410b52bf1cf2f7c4035f2054e5be1 exact2ADD/clean/all41parent28bahashes verified inclignoredcodexalias resolvedownwtcontainedtrackedteams. RootdirectaliasGitlookupfailedthenmetadataresolved; rootJSpretoolSyntaxError0commands0writes corrected transport0productiterations. SOURCE_ONLY_UNADOPTED whitespacePID41535PASS/checksum1metadata notsemanticPASS orprewriteproof; historical19/3/167 currentUNKNOWN. RegisterfreshwholeGOV01/02sourcecontract1 finiteAPI/coverage/OwnerMirrors/fixtures/exceptions existingrules only no status/manualregistry/parserrun. MEDfullreview2f984 originalremote ->d64a7e151df25497f6d75b11e8a1890a2e71644a FULL2069/static1PASS semanticREVISESC-R1 perexportadmission/SC-R2 numericcoercionthrow/SC-R3 all7Resetevents utilityvscurrentAppearance. Registersourcecorrector2/3 WHOLEscope nextfullDreview2/no protectedhelpergrant. Actualsourcehistorycutoff root+BRDimpact2+BRDreview2+bytefinalreview3 configured4/4; newlycompletedbyte/BRD results pendingnextreception notignored orreset. NinearchivesQUEUED_UNCONFIRMED/source85remotes preserved no otherwt/recoverydeletion. P48normal2FAIL1WARN knownfreshGOVbeforepreservation nowGOVMEDremote/freshP49normalpending.89receipts97knownconcludingstatic17FAILED1UNKNOWN incl1whitespace-only/overrun1/rework65/collection3/mechanical1/vendor3LISTnotbilling. Formal13/3/3/293=312/939unchanged TT08onlynewfullcalleraccepted. No contract/runtime/method/caller/releaseacceptance.",
+      "input": "d64a7e151df25497f6d75b11e8a1890a2e71644a"
     }
   ],
   "wave_P2_tasks": [
@@ -2816,7 +2878,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P47af48d69 pushedliteral0FAIL1WARN afterbothneworiginalsources682e/be6 remote preservation; priorP46twoFAIL retained",
+    "normal": "P48literal2FAIL1WARN newGOVbeforearchivepush; GOV/MED noworiginalremote+received, failurelogkept freshP49normalpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -2851,7 +2913,7 @@
     "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
     "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
     "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched",
-    "normal_log_sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b",
+    "normal_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e",
     "deep": "P44 1FAIL0WARN exactfiveoriginalunreachable identities confirmedP45 retainedno deletion",
     "initial_shared_review_recovery_ref": "codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
     "deep_log_sha256": "81179a39509cd6990ed115565d43bcb22a280b4cdd999f074f1ed52ae3e97079",
