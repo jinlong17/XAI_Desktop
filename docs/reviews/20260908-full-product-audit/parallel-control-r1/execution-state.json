@@ -1669,7 +1669,7 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_FULL_independent_task",
+      "state": "received_FULL_PROPOSED_UNADOPTED_needs_fresh_fullreview1",
       "fixed_input": "4c082ca8e40cbf178abb9d63cbed5f18a21b9f8d",
       "family_iteration": 1,
       "family_cap": 3,
@@ -1678,14 +1678,21 @@
       "actor": "/root/parallel_a_med03_machinery_impact_r1",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-med03-machinery-impact1-20261010/XAI_Desktop",
       "fixed_parent": "3ee736788a5d488505cd322a95ae61e2c0d76715",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "source_commit": "5a8d7141d8e032ae08c56a7650cdf47597d717ff",
+      "integration_commit": "f8cc150544e050bbb8f38076b1e5d3c41ca47fac",
+      "archive_ref": "codex/archive/parallel-med03-machinery-impact-r1-20261010",
+      "input_hashes_checked": 1216,
+      "static_pass": 1,
+      "static_result": "PASS",
+      "product_write_grant": []
     },
     {
       "id": "POMO-04/SOURCE-MACHINERY-IMPACT-REVIEW1",
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_FULL_independent_task",
+      "state": "PRETOOL_ASSEMBLY_FAILED_ALL_STATIC_UNRUN_frozen_nooutputs",
       "fixed_input": "e96543bed85056d9a2581a0681ff44a7f1d0583e",
       "review_iteration": 1,
       "family_cap": 3,
@@ -1694,14 +1701,19 @@
       "actor": "/root/parallel_d_pomo04_machinery_full_review_r1",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-pomo04-machinery-review1-20261010/XAI_Desktop",
       "fixed_parent": "b7324936f5880c2050e6eecc8c22567fade05444",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/pomo04-machinery-review1-pretool-failure-receipt.json",
+      "failure_receipt_sha256": "124396031a55e91f645f8bf68b8d72c122de796b51ff051b39b3d6e4fd201a8d",
+      "source_commit": null,
+      "static_pass": 0,
+      "static_result": "PRETOOL_ASSEMBLY_FAILED_ALL_STATIC_UNRUN"
     },
     {
       "id": "BRD-28/CONTRACT-REVIEW2",
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_FULL_independent_task",
+      "state": "received_FULL_APPROVED_conditional_documentary_basis_ONLY",
       "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
       "review_iteration": 2,
       "family_cap": 3,
@@ -1712,34 +1724,48 @@
       "actor": "/root/parallel_d_brd28_full_review_r2",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd28-full-review2-20261010/XAI_Desktop",
       "fixed_parent": "214dc41c8c9677ef32e391c89c8b4ad3c1d0d6f4",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "source_commit": "0a0bd4a2bf006c53f2d098ebab29451c5bd0a0fe",
+      "integration_commit": "e8cf1ae191c76e5943780de021432620528b04ce",
+      "archive_ref": "codex/archive/parallel-brd28-contract-review-r2-20261010",
+      "input_hashes_checked": 46284,
+      "static_pass": 1,
+      "static_result": "PASS",
+      "product_write_grant": []
     },
     {
       "id": "DASH-06/SOURCE-AVAILABILITY-CONTRACT3",
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_FINAL_fresh_author3_after_parserfailed2",
+      "state": "FAILED_ASSERTION_AFTER8705HASHES_LATER_UNRUN_frozen_nooutputs",
       "fixed_input": "bf08ae70f2e51a679cc5f87f0880435c601cdbc8",
       "family_iteration": 3,
       "family_cap": 3,
       "formal_invocations": 0,
       "canonical_parent_phase": "DASH-06/prepare",
-      "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/dash06-availability-author2-failure-receipt.json",
-      "failure_receipt_sha256": "66215897690d92b22e0374162add237f4ceaeaa36548d0c4c2fdf61f91a6d3bf"
+      "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/dash06-availability-author3-failure-receipt.json",
+      "failure_receipt_sha256": "88acefb167d5fa15847a26774b70c3b1bbf32c6c53bfc08e1a1f59e6db27d7a8",
+      "source_commit": null,
+      "static_pass": 1,
+      "static_result": "FAILED_ASSERTION_AFTER8705HASHES_LATER_UNRUN"
     },
     {
       "id": "CD-03/SOURCE-CONTRACT1",
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_exact_bounded_prerequisite_task",
+      "state": "running_fresh_FULL_independent_task",
       "fixed_input": "61b6644d2eac5af6c70749bf672839ba7ba79bca",
       "family_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
       "canonical_parent_phase": "CD-03/prepare",
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cd03-source-contract-r1.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cd03-source-contract-r1.json",
+      "actor": "/root/parallel_a_cd03_source_contract_r1",
+      "fixed_parent": "b7324936f5880c2050e6eecc8c22567fade05444",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-cd03-source-contract1-20261010/XAI_Desktop",
+      "actual_actor_launched": true
     },
     {
       "id": "SHARED/SOURCE-BYTE-COLLECTION1",
@@ -1784,26 +1810,58 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_full_bounded_independent_phase",
+      "state": "running_fresh_FULL_independent_task",
       "fixed_input": "0121be25e10a8f3f60510c686a1832cbd40a9bcb",
       "family_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
       "canonical_parent_phase": "BK-07/contract-review",
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-bk07-contract-review-r1.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-bk07-contract-review-r1.json",
+      "actor": "/root/parallel_d_bk07_full_review_r1",
+      "fixed_parent": "bd4dce4aa7a5b96d533b7a570b5bfb97843f392b",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-bk07-full-review1-20261010/XAI_Desktop",
+      "actual_actor_launched": true
     },
     {
       "id": "SHARED/SOURCE-BYTE-COLLECTION-REVIEW1",
       "workflow": "D",
       "configured_model": "gpt-6-sol",
       "provider_attested": false,
-      "state": "queued_fresh_full_bounded_independent_phase",
+      "state": "running_fresh_FULL_independent_task",
       "fixed_input": "0121be25e10a8f3f60510c686a1832cbd40a9bcb",
       "family_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
       "canonical_parent_phase": "TASK-06/prepare+MET-05/prepare",
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-source-byte-collection-review-r1.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-source-byte-collection-review-r1.json",
+      "actor": "/root/parallel_d_shared_byte_full_review_r1",
+      "fixed_parent": "bd4dce4aa7a5b96d533b7a570b5bfb97843f392b",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-byte-review1-20261010/XAI_Desktop",
+      "actual_actor_launched": true
+    },
+    {
+      "id": "POMO-04/SOURCE-MACHINERY-IMPACT-REVIEW2",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_full_independent_review",
+      "fixed_input": "e96543bed85056d9a2581a0681ff44a7f1d0583e",
+      "family_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-pomo04-source-machinery-impact-review-r2.json"
+    },
+    {
+      "id": "MED-03/SOURCE-MACHINERY-IMPACT-REVIEW1",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_full_independent_review",
+      "fixed_input": "f8cc150544e050bbb8f38076b1e5d3c41ca47fac",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-med03-source-machinery-impact-review-r1.json"
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -1821,28 +1879,29 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 71,
+    "static_passes": 73,
     "rework_findings": 59,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 74,
+    "completed_source_receipts": 76,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "74delivered minus3vendor minus1bytecollection(static0) plus1DASHoverrun=71deliveredstatic incl6FAILED; pending4FAILED+1UNKNOWN=76knownstaticattempts10FAILED1UNKNOWN. Collectionroutine1 separate no semanticqualification; syntaxonly mechanicalpreflight1 separate unrunsemantic.",
+    "static_passes_basis": "76delivered minus3vendor minus1bytecollection plus1DASHoverrun=73 incl6FAILED; pending5FAILED+1UNKNOWN=79knownstatic/11FAILED/1UNKNOWN. POMOpretoolreview1 consumed attempt butactualchecker0/unrun separate. Collectionroutine1 separate/static0.",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 6,
     "rework_findings_basis": "Prior58 plusCALreviewR1 policy-narrowing; BRDcheckerfailurecost counted separately notbusinessfinding",
-    "pending_no_delivery_static_invocations": 5,
-    "pending_no_delivery_static_failures": 4,
-    "actual_static_invocations_total_known": 76,
-    "actual_static_failed_total_known": 10,
+    "pending_no_delivery_static_invocations": 6,
+    "pending_no_delivery_static_failures": 5,
+    "actual_static_invocations_total_known": 79,
+    "actual_static_failed_total_known": 11,
     "static_budget_overruns": 1,
     "pending_no_delivery_static_unknown": 1,
     "actual_static_completion_unknown_total_known": 1,
-    "source_byte_collection_invocations": 1
+    "source_byte_collection_invocations": 1,
+    "pretool_no_checker_review_attempts": 1
   },
   "events": [
     {
@@ -2203,6 +2262,11 @@
       "at": "2026-10-10T14:49:12.742258+00:00",
       "event": "P34 BKprep59ac177 originalremote receivedebb4909/full4392uniquehashes4451rawrefs3111blobs/exact2ADD/clean/PASSstatic1; PROPOSEDfull18rows/minimumpoliciesdraftONLY/fullreview1queued/noownerquestion. Sharedbytes05e8514 originalremote received0121be25e10a8f3f60510c686a1832cbd40a9bcb exact3ADD/104embeddedfiles7993322bytes+5indexfilehashes; PARTIALBLOCKED/no sourceclosureadoption/static0 collectionroutine1 distinct; full2863TASKMETbasisnotreconstructed/subpackage lookup gaps/rootcaptureunproven freshindepSolsource-byte-review1queued. RootinspectorlargebodytruncKeyError+lastassumed109indexcountassert(actual5+104embedded) disclosed/allactualbytehashloopscompleted/correctedmetadataonly no productiteration. BRDtechnicalauthor1FAILEDParserNonUTF8line170 chunk02082dexit1/bodyhashbufferswritesUNRUN; priorinmemorysyntax-onlypreflight3ba858passNOTtransportproof; memorydraftunvalidatednooutputs/clean6bcb/failurehash1398b4d5e7f66c646d4e370952053b2ec02db2c1238ce717ea0d47135e337b7b freshauthor2/3registered noreset. ActualworkersMEDAimpact1/POMODfullreview1/BRD28Dfullreview2 root+3=4/4. P33normal0FAIL1WARN+72remoteidentities/ancestorsPASS.74receipts71deliveredstatic6FAILED+pending4FAILED1UNKNOWN=76knownattempts10FAILED1UNKNOWN; bytecollection1 separate/static0; overrun1/rework59/vendor3. Formal13/3/3/293/939unchanged; no newcalleraccepted/runtime/release. NextoldestfinalDASH3/CDsourcecontract1 then freshBKreview/bytefullreview/correctBRDtechnical2 rotatingdependencies/aging.",
       "input": "0121be25e10a8f3f60510c686a1832cbd40a9bcb"
+    },
+    {
+      "at": "2026-10-10T15:02:58.000295+00:00",
+      "event": "P35 BRD28 fullreview2 source0a0bd4a originalremote receivede8cf1ae full46284identities/6030blobs/raw79853refs/static1PASS; adoptcompleteconditionalDOCbasis ce9 only, existingOptionC/noUI resolvesQ-B28/noownerquestion/noAPIgrant. MEDimpact5a8d714 originalremote receivedf8cc150544e050bbb8f38076b1e5d3c41ca47fac full1216static1PASS PROPOSEDunadopted/fullreview1queued. DASHfinalauthor3 solecheckerFAILED stdin151 unsupportednonemptygatecount118 after8705hashes passed; latercanonical/buffers/writesUNRUN/nooutputs/clean62fde; author3/3exhaustedfreeze/noauthor4. POMOreview1 pretoolJSconstructionFAIL checker0/allsemanticsUNRUN/nooutputs/cleanb732; attempt1/3consumed/no draftAPPROVED; freshfullreview2queued preservingalloriginalpurposecounts. CDsourcecontract1+BKfullreview1+sharedbytefullreview1 root+3=4/4. 76receipts/79knownstatic11FAILED1UNKNOWN/overrun1/rework59/vendor3/collection1static0/pretoolreview1static0. Rootmetadata initially used nonexistent BRD contract directory; validation stopped BEFOREANYwrites, corrected exact preparation-r1 Git path/rawbytes, not product iteration. Formal13completed3verification_pending3in_progress293pending/299unclosed/939unchanged. No newcaller/runtime/method/releaseacceptance; continueagedBRDtechnical2/MEDreview/POMOreview2 afterslotsfree; allhumanpendingdecisionsholdonlydescendants.",
+      "input": "f8cc150544e050bbb8f38076b1e5d3c41ca47fac"
     }
   ],
   "wave_P2_tasks": [
@@ -2395,6 +2459,20 @@
         "complete machinery/protectedsourceavailability+reset/lifecycle/export impact+fullreview",
         "qualifiedsources/permanentpurposebudget/fullvalidbefore",
         "full fixed/integrated/native/affected/G1/actualvendor/freshacceptance"
+      ]
+    },
+    {
+      "caller": "BRD-28",
+      "source": "ce9eef6cb50b592e05593dc800ed3439615f7458",
+      "contract_sha256": "d49dfd594fcef7644d42847d8cc1617f3683f8c6e8133d2ef4110ceae0f9972f",
+      "independent_review": "0a0bd4a2bf006c53f2d098ebab29451c5bd0a0fe",
+      "review_sha256": "1a6a0ab1b559eb12e65f6a878e4a4ceb6b95943442209f602ff816b34cf6e640",
+      "scope": "Complete backup preview/schema/reference/trialrestore/errorrollback contract conditional DOC ONLY; existing OptionC/helper-only original noUI alternative resolves Q-B28; no UI/API/schema/storage/runtime grant.",
+      "product_write_grant": [],
+      "technical_prerequisites": [
+        "complete finite source impact/full independent review/root technical admission",
+        "qualified source and valid full before",
+        "full fixed/integrated/affected/native/G1/vendor/fresh acceptance"
       ]
     }
   ],

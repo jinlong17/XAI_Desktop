@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "POMO-04/SOURCE-MACHINERY-IMPACT-REVIEW1",
+  "fixed_parent": "b7324936f5880c2050e6eecc8c22567fade05444",
+  "fixed_input": "e96543bed85056d9a2581a0681ff44a7f1d0583e",
+  "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-pomo04-machinery-review1-20261010/XAI_Desktop",
+  "source_commit": null,
+  "outputs": [],
+  "static_command_launches": 0,
+  "static_result": "PRETOOL_ASSEMBLY_FAILED_ALL_STATIC_UNRUN",
+  "chunks": [
+    "cee8d8"
+  ],
+  "session_id": null,
+  "no_retry": true,
+  "worktree_clean": true,
+  "costs": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "actual_billed_usd": null
+  },
+  "exit_code": null,
+  "pretool_error": "SyntaxError: Unexpected token '^' in functions.exec source construction; actual shell/checker not launched",
+  "unrun": "all2979hashes/concludingsemantics/buffers/writes; memoryAPPROVED notartifact",
+  "review_iteration": 1,
+  "review_cap": 3,
+  "mechanical_final_status_exit": 0
+}

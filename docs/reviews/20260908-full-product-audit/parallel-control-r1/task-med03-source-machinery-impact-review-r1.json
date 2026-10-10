@@ -1,0 +1,103 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent FULL MED machinery impact reviewer1; neverrepair",
+  "model": "gpt-6-astra",
+  "fixed_input": "f8cc150544e050bbb8f38076b1e5d3c41ca47fac",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "review_iteration": 1,
+    "review_cap": 3,
+    "static_pass": 1,
+    "prior_source_author_used": 1
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "MED-03/SOURCE-MACHINERY-IMPACT-REVIEW1",
+  "source_inputs": [
+    "5a8d7141d8e032ae08c56a7650cdf47597d717ff",
+    "1e2d0ac42ecdc142c34291294fca09bce1f77dae",
+    "291a4175d9ea237451bec9fe87cd9fc6cc736de7"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-med03-source-machinery-impact-review-r1/review.md",
+    "docs/reviews/audit-parallel-med03-source-machinery-impact-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full803review2/737source2/688review1/649author1/all16MEDrows11conditionalpaths10logs13applicability/complete originalactionacceptance and canonicalClock§14 E1-E25/E24/Rules VERBATIM. Adopteddocbasis ONLY/noimplgrant. SourcefeasiblecompleteactualpublicMeditation route/localexecution vs persistentPOMOhost/startup/SDK/managedscope/session lifecycle/playbackconsent/noautoplay/oneendedrowuntilDismiss/nohistoryledger/durableprotocol/sourceavailability/versionoptionalcoercibleactualcodec/5fieldproposalexport vs committedbackup/errorchannel visibility/preflivevolume vs snapshot/sourceguards/firstframe/accountqueue/enddismiss/departure/importmigration/genericresetREL10pref-only contradiction/fullrawdiskexport+midownerchange/forcedloss controls and exactfiniteprotectedexception/sourcefixture-emitterrole candidates. No fictitiousstarttime/listening/history/statistics or sharedaccount/schema/ownerrewrite/new productdecision. Reuseexactvalidhistoricalevidence applicability notwholeclaim; distinguisholdauthorautoplaybypass vs genuineindependent defaults. Whole16case-emitter/controlmapping/loadedclosure/realstreams/terminalquiescence/sourcequalifiedmethods/native/G1/vendor/freshfullacceptance/before prerequisite. Fullsourcegroundedpermanentactualpurposebudgets/commands/modes/refusals/unknowncaps no actor/pathreset; sourceerror/reset/export protectedextensions needfreshfullreview/rootadoption. SharedI1 finalimpact3UNADOPTED/missingReactDOMSDKbytes/sourcequalification localhold, retention3/visual3/M8unknown/RELunknown/prodactivation holds do notwaivestandards.",
+    "Complete original312 ordered fields/39 literal reversible module labels/939 references/formal13,3,3,293 and299unclosed preserved. Observe actual schemas: EXECUTION top-levelitems and TODO sections[].tasks; original web（project-system）30 and web（跨模块验证索引）9. P0runtime parity with exactly4 acceptedTT08 owningdocs separately; no wholeapps/packages equality assertion.",
+    "Complete canonical Clockr2§14 E1-E25/E24/Rules and copies retained verbatim; complete full original acceptance, all historical actual purpose/command/process/mode/duplicate/refusal/probe/unknowncap3 budgets no actor/worktree/pathreset. No product/runner/test/runtime grant. Allinputs validated and bothbuffers constructed beforeANYwrites; one semanticstatic allowance and failed/unrun truth permanent; fresh independent actors/reviewerneverrepair.",
+    "Retain exact source qualification and independent review/rootadoption/fullvalidbefore/implementation/fixed+integrated+native+visual+affected/fullG1/actualcrossvendor/freshfullacceptance/root evidence-only reconciliation/inventory chain; local blocked dependencies cannot weaken standards. No children/push/globalwrites/protectedchanges.",
+    "Reviewer NEVERrepair. Independentlyjudge WHOLE1216identities/full803/737/688/649/all16rows/11original+23additionalcandidateexceptions/18machinery and canonicalG1. Sourceimpact PROPOSED no technicalgrant; exactconditionalbasisAPPROVED orpreciseREVISE only. Samecaller freshactor/allruntime0/static1/ALLinputsBOTHbuffersbeforeANYwrite/FULLsessionexitdrain. Keep actual route-local meditation vs persistentPOMO distinction/R1twoerrorchannels/R2optionalcoercibleactualcodec/R3fivefieldproposalexport/oneended/nohistory/noautoplay/REL10pref-only reset/fullpublichostactualdiskmidownerforcedloss/controls/histories. Dynamicstate.tasks LIST/card notinitialregistry. SafequotedASCII/UTF8 transport/pretool!=checker/no unsupported118obligation count."
+  ],
+  "original_item": {
+    "id": "MED-03",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "定义冥想历史记录、离开修正和重新播放规则",
+    "acceptance": "是否计入离开时长、是否续播和实际记录字段有可测试合同",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "MED-03",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:MED-03"
+    ],
+    "source_section": "MED",
+    "acceptance_evidence": {
+      "business_acceptance": "是否计入离开时长、是否续播和实际记录字段有可测试合同",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "MED-03/prepare",
+      "MED-03/contract-review",
+      "MED-03/before",
+      "MED-03/implement",
+      "MED-03/verify",
+      "MED-03/accept",
+      "MED-03/reconcile",
+      "MED-03/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  }
+}
