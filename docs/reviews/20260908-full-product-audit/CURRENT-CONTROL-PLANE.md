@@ -8,7 +8,7 @@ Updated: 2026-10-10
 
 模块归属：`web`
 
-Current mode: **A-Codex controller; Q1 BLOCKED / UNQUALIFIED after first formal invocation.** M+G+B authorization remains recorded; no method adoption. E4 remains BLOCKED; geometry/baseline/Terra71 await valid prerequisites. STOP checkpoint: no automatic repair or retry; next single bounded task is independent harness impact review.
+Current mode: **A-Codex sole controller; four workflows A/B/C/D with dependency-driven parallel agents (operator authorized 2026-10-10).** Clock Q1 remains BLOCKED / UNQUALIFIED locally, original M+G+B conditions apply. Independent ready work continues; no global single-batch restriction. Canonical r2/evidence/ledger states preserved. Runtime goal metadata remains blocked because public tools cannot edit/resume it; this authorized execution continues under the repository overlay.
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
@@ -511,7 +511,7 @@ Current mode: **A-Codex controller; Q1 BLOCKED / UNQUALIFIED after first formal 
 - **Cost/stop:** <=3 per registered unit, bounded capture settling; development probes separately recorded, not formal replacements. Stop/freeze on scope/hash/provenance conflict, false-positive control, incomplete census, unstable/unattributable/occluded comparison, cap exhaustion, unreproducible original outcome or new real product defect. No repair under Q1; disclose partial results and all consumed costs.
 - **Commit:** exact files, one final commit after static checks, real-newline Why/What/Scope/Risk/Docs/Tests body; no amend-away draft. Report full SHA/parent, manifest/output hashes, raw formal/probe counts and clean worktree; do not push. Controller performs receipt/push/ancestry/owned cleanup/deep/normal checks and one consolidated result update.
 
-## Next single bounded task: 70-Q1-R1 independent harness impact review
+## Historical registration: 70-Q1-R1 independent harness impact review
 
 - **STOP checkpoint / not launched.** A fresh independent Astra reviewer, not Q1 or any earlier Clock/AppRail author, must define the source/evidence-retention correction scope. Reviewer never repairs. Existing M+G+B conditions remain effective; this review grants no broader algorithm, product or CSS permission.
 - **Inputs:** exact Q1 `686e98b6251364aee1fa26c63ad30e6af15c3b25`, parent710fd84; manifest680084ed/report063d151f and every retained artifact identity; canonical r2, approved proposal213aafd, immutable authorization710fd84 CP blob46f1e38c, P0f9eb4b1 and original bacdbbc identities. Review this controller STOP/card through its fixed committed blob.
@@ -519,9 +519,21 @@ Current mode: **A-Codex controller; Q1 BLOCKED / UNQUALIFIED after first formal 
 - **Acceptance:** independently explain cleanup/finalization loss from source and retained stderr, distinguish the unknown prior business result; assess durable incremental raw logging, primary-versus-cleanup error handling and bounded process-exit/owned-profile cleanup ordering. Map any proposed changed line to approved plan3.1 or identify a real scope gap requiring a revised concrete proposal. Assess whether generic negative-refusal checks require stronger cause evidence without relaxing oracle criteria. Do not infer PASS/FAIL from the last scenario or repair in the review.
 - **Budget/stop:** original formal focus1/3 and six units0/3 survive any next author; B70 budgets never reset. Stop on hash conflict, unsupported causal conclusion, algorithm/product scope crossing or need for new native reproduction. Preserve all missing/unrun obligations. Exact input hash index, one final two-file commit with Why/What/Scope/Risk/Docs/Tests; controller receipt/push/sync follows when actually dispatched.
 
-## Next step
+## Historical next step (superseded only as global schedule)
 
 1. Report Q1 STOP after completing receipt/control push/sync; next single task is the independent static impact review above, currently unlaunched.
 2. Only a reviewed, separately registered new correcting author may repair the narrowly justified retention/lifecycle scope; remaining formal budgets persist. Complete all seven units and new independent Q2 before method adoption.
 3. Q3/G1/G2/G3/B1/B2/Terra71/fixed/final/acceptance remain gated by approved conditions. No repeated human approval for already granted conditions, no broader substitute.
 4. Product baseline and ledger states stay unchanged; five-object deep recovery gap and task transient-profile residue remain visible and preserved.
+
+## Parallel execution authority / current schedule (2026-10-10)
+
+The user explicitly replaces global serialization and authorizes dependency-driven parallel agents/worktrees, automatic technical revisions after independent impact review, independent correction/reverify, and controller receipt/integration scheduling. Four workflow master prompts, all312 exact action/acceptance/status/evidence mapping, full task DAG, locks, budgets and preservation receipt are saved in [parallel-control-r1](parallel-control-r1/authority-overlay.md). Original attachment remains immutable. Latest schedule here supersedes old STOP/single-task wording only for global dispatch; local Clock prerequisites remain binding.
+
+- A: CLOCK/R1 independent harness impact review registered; next fresh narrow corrector, seven-unit qualification/Q2, Q3→G→B→r2 Clock recovery/complete verification.
+- B: Independent products/governance queue; implementation awaits committed exact contracts/before/locks; no arbitrary all-file authorization.
+- C: TT-08/prepare contract/impact, complete remaining candidate/owner/module-gate preparation.
+- D: PARALLEL/MAP-REVIEW independently checks all312 scope/authorization/dependencies; then contract/verification/acceptance/ledger report rotation.
+- First wave max3workers (root fourth slot); currently registered-not-launched, immutable dispatch parent is the commit containing these exact cards. Controller serializes receipts, preserves source commits remotely, uses ff when possible or scoped ordinary cherry-pick for verified disjoint siblings with source/integration SHA mapping; no merge/rebase/conflict repair by controller.
+- Formal counts unchanged:13 completed,3 verification_pending,3 in_progress,293 pending;299unclosed. Wave progress/caller acceptance/releases separate. Q1 focus1/3 and other six0/3, dev2/83; B70 historical counters unchanged.
+- Unknown product decisions and unavailable credentials/hardware/vendor gates stay recorded and block only their dependent nodes; no repeated MGB approval. Existing deep five-object gap and task profile residue retained.
