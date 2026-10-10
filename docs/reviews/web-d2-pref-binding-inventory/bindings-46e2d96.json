@@ -1,0 +1,439 @@
+{
+  "revision": "46e2d967993d61f41706e15f69308d75ac1f0346",
+  "boundary": "Tracked packages/**/*.tsx except __tests__, direct identifier usePref calls; syntactic references only, no symbol flow or full writer inventory",
+  "counts": {
+    "files": 22,
+    "bindings": 47,
+    "literalKeys": 26,
+    "dynamicSites": 1,
+    "setterBindings": 30,
+    "directlyInvokedSetters": 27,
+    "downstreamOnly": 3,
+    "readOnlyBindings": 17
+  },
+  "rows": [
+    {
+      "file": "packages/plugin-web-board-core/src/BoardModule.tsx",
+      "line": 53,
+      "key": "xai_boards_v2",
+      "literal": true,
+      "setter": "setRawBoards",
+      "directCalls": 2,
+      "syntacticReferences": 3
+    },
+    {
+      "file": "packages/plugin-web-board-core/src/BoardModule.tsx",
+      "line": 54,
+      "key": "xai_active_board",
+      "literal": true,
+      "setter": "setActiveBoardId",
+      "directCalls": 1,
+      "syntacticReferences": 1
+    },
+    {
+      "file": "packages/plugin-web-board-views/src/BoardModule.tsx",
+      "line": 83,
+      "key": "xai_boards_v2",
+      "literal": true,
+      "setter": "setRawBoards",
+      "directCalls": 2,
+      "syntacticReferences": 3
+    },
+    {
+      "file": "packages/plugin-web-board-views/src/BoardModule.tsx",
+      "line": 84,
+      "key": "xai_active_board",
+      "literal": true,
+      "setter": "setActiveBoardId",
+      "directCalls": 1,
+      "syntacticReferences": 1
+    },
+    {
+      "file": "packages/plugin-web-board-views/src/BoardModule.tsx",
+      "line": 85,
+      "key": "xai_board_view_by_id",
+      "literal": true,
+      "setter": "setRawViewByBoardId",
+      "directCalls": 1,
+      "syntacticReferences": 2
+    },
+    {
+      "file": "packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx",
+      "line": 341,
+      "key": "xai_boards_v2",
+      "literal": true,
+      "setter": "setRawBoards",
+      "directCalls": 5,
+      "syntacticReferences": 12
+    },
+    {
+      "file": "packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx",
+      "line": 342,
+      "key": "xai_active_board",
+      "literal": true,
+      "setter": "setActiveBoardId",
+      "directCalls": 2,
+      "syntacticReferences": 5
+    },
+    {
+      "file": "packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx",
+      "line": 343,
+      "key": "xai_board_workspaces",
+      "literal": true,
+      "setter": "setRawWorkspaces",
+      "directCalls": 0,
+      "syntacticReferences": 1
+    },
+    {
+      "file": "packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx",
+      "line": 344,
+      "key": "xai_board_panels",
+      "literal": true,
+      "setter": "setRawPanels",
+      "directCalls": 1,
+      "syntacticReferences": 2
+    },
+    {
+      "file": "packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx",
+      "line": 345,
+      "key": "xai_board_inbox",
+      "literal": true,
+      "setter": "setRawInbox",
+      "directCalls": 1,
+      "syntacticReferences": 2
+    },
+    {
+      "file": "packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx",
+      "line": 346,
+      "key": "xai_task_cols",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx",
+      "line": 352,
+      "key": "xai_board_view_by_id",
+      "literal": true,
+      "setter": "setRawViewByBoardId",
+      "directCalls": 1,
+      "syntacticReferences": 2
+    },
+    {
+      "file": "packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx",
+      "line": 355,
+      "key": "xai_board_filter_by_id",
+      "literal": true,
+      "setter": "setRawSavedFilters",
+      "directCalls": 1,
+      "syntacticReferences": 2
+    },
+    {
+      "file": "packages/plugin-web-pomodoro/src/PomodoroModule.tsx",
+      "line": 195,
+      "key": "xai_pomodoro_sessions",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/plugin-web-settings-rest/src/CallbackPage.tsx",
+      "line": 57,
+      "key": "xai_pref_integrations_connected_notion",
+      "literal": true,
+      "setter": "setNotionConnected",
+      "directCalls": 1,
+      "syntacticReferences": 5
+    },
+    {
+      "file": "packages/plugin-web-settings-rest/src/CallbackPage.tsx",
+      "line": 60,
+      "key": "xai_pref_integrations_connected_gcal",
+      "literal": true,
+      "setter": "setGcalConnected",
+      "directCalls": 1,
+      "syntacticReferences": 5
+    },
+    {
+      "file": "packages/plugin-web-settings-rest/src/CallbackPage.tsx",
+      "line": 63,
+      "key": "xai_pref_integrations_connected_linear",
+      "literal": true,
+      "setter": "setLinearConnected",
+      "directCalls": 1,
+      "syntacticReferences": 5
+    },
+    {
+      "file": "packages/plugin-web-settings-rest/src/panes/aiPane.tsx",
+      "line": 49,
+      "key": "xai_ai_provider",
+      "literal": true,
+      "setter": "setProvider",
+      "directCalls": 1,
+      "syntacticReferences": 2
+    },
+    {
+      "file": "packages/plugin-web-settings-rest/src/panes/aiPane.tsx",
+      "line": 53,
+      "key": "xai_ai_base_url",
+      "literal": true,
+      "setter": "setBaseUrl",
+      "directCalls": 3,
+      "syntacticReferences": 4
+    },
+    {
+      "file": "packages/plugin-web-settings-rest/src/panes/aiPane.tsx",
+      "line": 57,
+      "key": "xai_ai_model_default",
+      "literal": true,
+      "setter": "setModelDefault",
+      "directCalls": 2,
+      "syntacticReferences": 3
+    },
+    {
+      "file": "packages/plugin-web-settings-rest/src/panes/aiPane.tsx",
+      "line": 61,
+      "key": "xai_ai_streaming",
+      "literal": true,
+      "setter": "setStreaming",
+      "directCalls": 1,
+      "syntacticReferences": 1
+    },
+    {
+      "file": "packages/plugin-web-settings-rest/src/panes/integrationsPane.tsx",
+      "line": 94,
+      "key": "xai_pref_integrations_connected_notion",
+      "literal": true,
+      "setter": "setNotionConnected",
+      "directCalls": 1,
+      "syntacticReferences": 1
+    },
+    {
+      "file": "packages/plugin-web-settings-rest/src/panes/integrationsPane.tsx",
+      "line": 97,
+      "key": "xai_pref_integrations_connected_gcal",
+      "literal": true,
+      "setter": "setGcalConnected",
+      "directCalls": 1,
+      "syntacticReferences": 1
+    },
+    {
+      "file": "packages/plugin-web-settings-rest/src/panes/integrationsPane.tsx",
+      "line": 100,
+      "key": "xai_pref_integrations_connected_linear",
+      "literal": true,
+      "setter": "setLinearConnected",
+      "directCalls": 1,
+      "syntacticReferences": 1
+    },
+    {
+      "file": "packages/plugin-web-statistics/src/StatisticsModule.tsx",
+      "line": 85,
+      "key": "xai_pomodoro_sessions",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/plugin-web-statistics/src/StatisticsModule.tsx",
+      "line": 86,
+      "key": "xai_habits_state",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/plugin-web-statistics/src/StatisticsModule.tsx",
+      "line": 87,
+      "key": "xai_pref_week_start",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/plugin-web-statistics/src/StatisticsModule.tsx",
+      "line": 89,
+      "key": "xai_task_cols",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/xai-web-calendar/src/CalendarModule.tsx",
+      "line": 75,
+      "key": "xai_pref_week_start",
+      "literal": true,
+      "setter": "setWeekStartPref",
+      "directCalls": 1,
+      "syntacticReferences": 2
+    },
+    {
+      "file": "packages/xai-web-calendar/src/CalendarModule.tsx",
+      "line": 77,
+      "key": "xai_boards_v2",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/xai-web-calendar/src/CalendarModule.tsx",
+      "line": 80,
+      "key": "xai_calendar_view",
+      "literal": true,
+      "setter": "setViewPref",
+      "directCalls": 1,
+      "syntacticReferences": 2
+    },
+    {
+      "file": "packages/xai-web-dashboard-grid/src/DashboardModule.tsx",
+      "line": 50,
+      "key": "xai_dash_order",
+      "literal": true,
+      "setter": "rawSetOrder",
+      "directCalls": 0,
+      "syntacticReferences": 1
+    },
+    {
+      "file": "packages/xai-web-dashboard-widgets/src/StickyComposer.tsx",
+      "line": 246,
+      "key": "xai_task_cols",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx",
+      "line": 51,
+      "key": "xai_clock_style",
+      "literal": true,
+      "setter": "setStyle",
+      "directCalls": 1,
+      "syntacticReferences": 1
+    },
+    {
+      "file": "packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx",
+      "line": 52,
+      "key": "xai_clock_tz",
+      "literal": true,
+      "setter": "setTz",
+      "directCalls": 2,
+      "syntacticReferences": 2
+    },
+    {
+      "file": "packages/xai-web-dashboard-widgets/src/widgets/MailWidget.tsx",
+      "line": 37,
+      "key": "xai_task_cols",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/xai-web-dashboard-widgets/src/widgets/MailWidget.tsx",
+      "line": 38,
+      "key": "xai_calendar_events",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/xai-web-dashboard-widgets/src/widgets/MiniCalWidget.tsx",
+      "line": 52,
+      "key": "xai_calendar_events",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/xai-web-dashboard-widgets/src/widgets/StatPomos.tsx",
+      "line": 35,
+      "key": "xai_pomodoro_sessions",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/xai-web-dashboard-widgets/src/widgets/StatStreak.tsx",
+      "line": 35,
+      "key": "xai_habits_state",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/xai-web-dashboard-widgets/src/widgets/StatTasks.tsx",
+      "line": 31,
+      "key": "xai_task_cols",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/xai-web-dashboard-widgets/src/widgets/UpcomingWidget.tsx",
+      "line": 42,
+      "key": "xai_calendar_events",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/xai-web-dashboard-widgets/src/widgets/WorldClocks.tsx",
+      "line": 42,
+      "key": "xai_zones",
+      "literal": true,
+      "setter": "setPersistedZones",
+      "directCalls": 2,
+      "syntacticReferences": 2
+    },
+    {
+      "file": "packages/xai-web-pet/src/DesktopPet.tsx",
+      "line": 82,
+      "key": "xai_pet_id",
+      "literal": true,
+      "setter": "setPetId",
+      "directCalls": 0,
+      "syntacticReferences": 2
+    },
+    {
+      "file": "packages/xai-web-pet/src/DesktopPet.tsx",
+      "line": 83,
+      "key": "xai_pet_pos",
+      "literal": true,
+      "setter": "setPos",
+      "directCalls": 2,
+      "syntacticReferences": 4
+    },
+    {
+      "file": "packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx",
+      "line": 43,
+      "key": "prefKey",
+      "literal": false,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    },
+    {
+      "file": "packages/xai-web-tasks/src/TasksModule.tsx",
+      "line": 80,
+      "key": "xai_task_cols",
+      "literal": true,
+      "setter": null,
+      "directCalls": 0,
+      "syntacticReferences": 0
+    }
+  ]
+}
