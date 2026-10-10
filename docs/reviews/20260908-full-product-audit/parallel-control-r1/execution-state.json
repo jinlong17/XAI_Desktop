@@ -699,11 +699,16 @@
     {
       "id": "BRD-12/PREPARE",
       "workflow": "C",
-      "state": "queued_next_available_slot",
+      "state": "running_static_preparation_only",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
       "fixed_input": "1955d250a7b33cde0f51c09c5836822f92bd0807",
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "actor": "/root/parallel_c_brd12_prepare_r1",
+      "fixed_parent": "52a80bcbf0293b0bb0446e6360d379edc1f26387",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-prepare-20261010/XAI_Desktop",
+      "preparation_iteration": 1,
+      "family_cap": 3
     },
     {
       "id": "TASK-06/RUNNER-SOURCE-CORRECT2",
@@ -743,8 +748,8 @@
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 2,
-    "total": 3,
+    "workers": 3,
+    "total": 4,
     "capacity": 4
   },
   "cost": {
@@ -955,6 +960,10 @@
     {
       "event": "DASH541input proposal received; freshminimumdecision reviewregisteredqueued; TASKcorrector2+METreview actuallyrunningfixed1496abe, BRD12nextfree queued",
       "input": "7e83bac6010fd28680583d3151fb17ad0fd53c04"
+    },
+    {
+      "event": "BRD12 preparer actuallylaunchedfixed52a80bc; TASKsourcecorrector2+METreview continue, actual3workers+root4/4; DASHreviewqueued",
+      "registration": "52a80bcbf0293b0bb0446e6360d379edc1f26387"
     }
   ],
   "wave_P2_tasks": [
