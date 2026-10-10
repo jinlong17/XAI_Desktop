@@ -90,7 +90,8 @@
       "input_hashes_checked": 291,
       "output_hashes_checked": 18,
       "byte_identical_copies": 6,
-      "archive_ref": "codex/archive/parallel-clock-retention-r2-20261010"
+      "archive_ref": "codex/archive/parallel-clock-retention-r2-20261010",
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "PARALLEL/LOCK-CORRECT",
@@ -101,7 +102,7 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-lock-correct-20261010/XAI_Desktop",
       "fixed_parent": "fb95dd39117ca98a9b5a038a29b40d015936fe85",
       "parent_graph_node": "PARALLEL/MAP-REVIEW",
-      "state": "received_unaccepted_await_fresh_review2",
+      "state": "accepted_static_schema_by_fresh_review2",
       "source_commit": "11b8d721f9d423fcabb19857e96c927375b9323a",
       "integration_commit": "b9ef48342385c1ed2e28f14f4788596dcb095272",
       "formal_invocations": 0,
@@ -109,7 +110,8 @@
       "cumulative_review_family": "schema review1 consumed; next fresh2/3; TTcontractreview1/3; Clockoriginalseven inherited",
       "input_hashes_checked": 84,
       "archive_ref": "codex/archive/parallel-lock-correct-r2-20261010",
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TT-08/contract-review",
@@ -128,7 +130,8 @@
       "cumulative_review_family": "schema review1 consumed; next fresh2/3; TTcontractreview1/3; Clockoriginalseven inherited",
       "input_hashes_checked": 137,
       "archive_ref": "codex/archive/parallel-tt08-contract-review-r1-20261010",
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "PARALLEL/MAP-REVIEW2",
@@ -139,8 +142,14 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-map-review2-20261010/XAI_Desktop",
       "fixed_parent": "3eb262b3e45a0ae4658ed86a523473fdef75858a",
       "source_input": "11b8d721f9d423fcabb19857e96c927375b9323a",
-      "state": "running",
-      "formal_invocations": 0
+      "state": "accepted_static_APPROVED_D-R1-01",
+      "formal_invocations": 0,
+      "source_commit": "240ce1ff1b3b4573ba11ef3cd4255422b0fda4e3",
+      "integration_commit": "3ad6414e736762cb850af0ade91201c9f642d330",
+      "input_hashes_checked": 95,
+      "archive_ref": "codex/archive/parallel-map-review2-20261010",
+      "static_pass": 1,
+      "review_iteration": 2
     },
     {
       "id": "TT-08/before",
@@ -151,8 +160,13 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-before-20261010/XAI_Desktop",
       "fixed_parent": "3eb262b3e45a0ae4658ed86a523473fdef75858a",
       "source_input": "287547e2b0e0724a48a89e50377ccc7e840db93b",
-      "state": "running",
-      "formal_invocations": 0
+      "state": "accepted_static_before_only",
+      "formal_invocations": 0,
+      "source_commit": "00933c91241159e26f444213146d9ba949bac823",
+      "integration_commit": "f4522752ded589a6909bdc17cb961233eeafeae8",
+      "input_hashes_checked": 307,
+      "archive_ref": "codex/archive/parallel-tt08-before-r1-20261010",
+      "static_pass": 1
     },
     {
       "id": "CLOCK/CORRECT-REVIEW",
@@ -171,8 +185,8 @@
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 1,
+    "total": 2,
     "capacity": 4
   },
   "cost": {
@@ -184,7 +198,7 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 5,
+    "static_passes": 7,
     "rework_findings": 1,
     "retention_validation_invocations": 3,
     "retention_assertions": 145
@@ -232,6 +246,11 @@
     {
       "at": "2026-10-10T09:52:53.589697+00:00",
       "event": "Fresh exact Clock correction source reviewer dispatched, synthetic cap no rerun"
+    },
+    {
+      "at": "2026-10-10T09:58:35.748688+00:00",
+      "event": "Adopt exact independently approved r2 document resource policy; receive full TT08before; register fresh documentation author and WorldClocks preparation",
+      "input": "f4522752ded589a6909bdc17cb961233eeafeae8"
     }
   ],
   "wave_P2_tasks": [
@@ -240,10 +259,19 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL/1WARN after P2 registration",
-    "deep_before_owned_cleanup": "1FAIL/0WARN, same5unreachable retained,23stash remote reachable",
+    "normal": "0FAIL/1WARN after source/controlpush",
+    "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
-    "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result"
+    "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
+    "P2_owned_worktrees": "all3archived/recoverable confirmedviaapp; no unrelated cleanup"
   },
-  "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization"
+  "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization",
+  "active_scheduler": {
+    "graph": "docs/reviews/20260908-full-product-audit/parallel-control-r2/dependencies.json",
+    "sha256": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
+    "policy": "docs/reviews/20260908-full-product-audit/parallel-control-r2/scheduler.md",
+    "source": "11b8d721f9d423fcabb19857e96c927375b9323a",
+    "independent_review": "240ce1ff1b3b4573ba11ef3cd4255422b0fda4e3",
+    "state": "adopted_document_contract; sole root serial operations; automated runtime scheduler not implemented or verified"
+  }
 }

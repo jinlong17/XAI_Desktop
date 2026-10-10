@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "wave": "P4",
+  "fixed_input": "f4522752ded589a6909bdc17cb961233eeafeae8",
+  "registration_sha": "commit containing these cards",
+  "tasks": [
+    {
+      "fixed_card_input": "f4522752ded589a6909bdc17cb961233eeafeae8",
+      "dispatch_parent": "commit containing this exact card; resolve fullSHA before launch",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "no_children": true,
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "state": "registered_not_launched",
+      "forbidden": [
+        "any nonallowedpath",
+        "originalcontract/runners/failures/evidence overwrite",
+        "globalcontrol/ledgers/inventory",
+        "otherworktrees",
+        "push/merge/rebase/deploy/release/promote/D3"
+      ],
+      "stop": [
+        "inputhashconflict",
+        "neednewownerdecision",
+        "scope/protectedboundaryconflict",
+        "capexhausted",
+        "unknown dirty ownership"
+      ],
+      "id": "TT-08/implement",
+      "workflow": "B",
+      "model": "gpt-6.1-sol",
+      "role": "fresh independent bounded documentation author",
+      "depends_on": [
+        "TT-08/before"
+      ],
+      "source_inputs": [
+        "00933c91241159e26f444213146d9ba949bac823",
+        "287547e2b0e0724a48a89e50377ccc7e840db93b",
+        "c6ab3c967074595ab59b7e0bf7dc86d66b229e97"
+      ],
+      "allowed_files": [
+        "docs/product/time-tracker/prd.md",
+        "packages/plugin-web-time-tracker/docs/design.md",
+        "packages/plugin-web-time-tracker/docs/api.md",
+        "packages/plugin-web-time-tracker/docs/test.md",
+        "packages/plugin-web-time-tracker/docs/dev_log.md"
+      ],
+      "semantic_write_locks": [
+        "TT08/mode-documentation",
+        "GOV05/time-tracker-PRD",
+        "GOV04/time-tracker-status"
+      ],
+      "scope": "Only approved D1-D7 five-document correction from fixed staticbefore. PRD acceptedmode/session capability slice, actual source/page consumers, truthful historical traceability. Currentiteration pending verification only. No source/pagebehavior/test/runtime changes.",
+      "acceptance": [
+        "Every claim matches fixed34package/host inputs and acceptedTT02rules; no present unusedmodeclaim or fictionalwidgetconsumer",
+        "Preserve exact historicalTT01/TT02/TT03/REL01outcomes/limitations and oldfailures; distinguish observation from ownerpolicy",
+        "CanonicalPRD usercapability source/evidence trace, no fullGOV05closure or unsupportedrequirements",
+        "Design/API/test docdrift resolved; dateddev_log Workflow/Executor/Updated/SuggestedNext/WorkLog pendingverify, old READY_TO_SHIP/commands explicitly historical and retained",
+        "Only ADD1MOD4, all other indexedsource/evidence unchanged; meaningfuldiffcheck/linkanchors/sourcecomparison only",
+        "No currentREADY_TO_SHIP untilfresh exactcandidateverifier actual cross-tool gate; separate statuspublicationthen freshfullAstraacceptance thenrootreconcile"
+      ],
+      "budgets": {
+        "documentation_author_pass": 1,
+        "candidate_verify_family_cap": 3,
+        "newruntime_package_browser_native_probes": 0,
+        "historical": "unchanged"
+      }
+    },
+    {
+      "fixed_card_input": "f4522752ded589a6909bdc17cb961233eeafeae8",
+      "dispatch_parent": "commit containing this exact card; resolve fullSHA before launch",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "no_children": true,
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "state": "registered_not_launched",
+      "forbidden": [
+        "any nonallowedpath",
+        "originalcontract/runners/failures/evidence overwrite",
+        "globalcontrol/ledgers/inventory",
+        "otherworktrees",
+        "push/merge/rebase/deploy/release/promote/D3"
+      ],
+      "stop": [
+        "inputhashconflict",
+        "neednewownerdecision",
+        "scope/protectedboundaryconflict",
+        "capexhausted",
+        "unknown dirty ownership"
+      ],
+      "id": "DASH-03/prepare",
+      "workflow": "C",
+      "model": "gpt-6-astra",
+      "role": "fresh independent full caller contract/impact author",
+      "depends_on": [],
+      "source_inputs": [
+        "f4522752ded589a6909bdc17cb961233eeafeae8",
+        "f9eb4b1f207bc4b46f547b90afc250424b3c8695"
+      ],
+      "allowed_files": [
+        "docs/reviews/audit-parallel-world-clocks-preparation-r1/contract.md",
+        "docs/reviews/audit-parallel-world-clocks-preparation-r1/inputs.sha256"
+      ],
+      "semantic_read_locks": [
+        "DashboardWorldClocks/currentP0",
+        "sharedClockCSS/exactP0readOnly",
+        "ownerW1/immutablecurrentCP"
+      ],
+      "scope": "Read-only complete WorldClocks caller discovery/contract/impact and candidate preparation for DASH03 fulloriginal action+acceptance. Use existing W1 allowempty+empty state/addentry; never reask or invent other decisions. Assess existing persisted city/view fields fullrecovery and allshareddependency obligations. No implementation/before runtime.",
+      "acceptance": [
+        "Preserve complete DASH03 original add/delete/reopen/date-difference and existingW1 allowempty rule",
+        "Map current source/storage/usePref/account identity/ENZHview/style controls, acceptedsharedbaselines and allcalledcomponents; identify actual safe implementationallowlist withoutgranting it",
+        "Fullcaller failure/read/write/reload/reset/lifecycle/sourceidentity/keyboard/geometrybefore andindependentverification acceptance cases, honest costs/caps/provenance/oldhistorical reuse",
+        "New contractor neverwrites sharedClock/grid/widgetsCSS; future such dependency stays gatedonClockqualifiedbefore/independentimpact; no accidental CSSscopeexpansion",
+        "Readfull currentaudit/control/contract canonicalr2/acceptedcaller lessons andapprovedMGB limits, explain exact read/write+semantic conflicts vsparallelTTdocs/Clock",
+        "Proposedfixedcontract requiresfreshreview,before,author,indverify/affectedregressions/finalaccept/rootledger; sourcehashindexandminimumtrueownerquestions ifany; no proposalacceptance or itemcompletion"
+      ],
+      "budgets": {
+        "static_preparation_pass": 1,
+        "newruntime_browser_native_probe_package": 0,
+        "futureeachunitcap": 3,
+        "historical": "allunchanged"
+      }
+    }
+  ],
+  "max_workers": 3,
+  "operational_stage_routing": "TT08before collector was explicitlyC preparatorycollection; originalconceptualDnode retained, primaryTT08B unchanged. D independentverification/accept remains separate."
+}
