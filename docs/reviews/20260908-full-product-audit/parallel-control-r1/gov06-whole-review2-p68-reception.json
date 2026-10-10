@@ -1,0 +1,50 @@
+{
+  "source": "c583597a5a07bbbc7b5864a40b158156ca2c8f38",
+  "integration": "7e9d95316c3b25fbcb9fa9de05dd323e6b1f903b",
+  "archive_ref": "codex/archive/parallel-gov06-authority-contract-impact-review-r2-20261010",
+  "parent": "b27b38fa924feaecf9766f9aa81fae0ee5d2c246",
+  "fixed_input": "2736a112964974d6ed17b88025feb66c50a68846",
+  "all_inputs_checked": 231,
+  "outputs": {
+    "docs/reviews/audit-parallel-gov06-authority-contract-impact-review-r2/review.md": "4372f878edbeebddacb31b0a32cbcb2b0a2c24f49632c4fbbfc83531af647075",
+    "docs/reviews/audit-parallel-gov06-authority-contract-impact-review-r2/inputs.sha256": "69bf90c524eaa4faf9e08606693be0e79f6cfaf9e3696fa8fb7fa72f7b6d483b"
+  },
+  "whole_verdict": "REVISE",
+  "findings": [
+    "R2-01 P1consumedT39delta",
+    "R2-02 P1G1Organizermirrors",
+    "R2-03 P2releasefactqualifiers"
+  ],
+  "static": {
+    "invocations": 1,
+    "result": "PASS",
+    "pid": 69972,
+    "session": 96532,
+    "chunks": [
+      "a67ae0",
+      "e1e409"
+    ],
+    "numeric_exit": 0,
+    "elapsed_seconds": 3.461,
+    "corpus_bytes": 10867691,
+    "owned_git_children": 234,
+    "all_children_exit": 0,
+    "EOF_drained": true,
+    "stderr_empty": true
+  },
+  "finalization": {
+    "commit_pid": 70551,
+    "commit_chunk": "889391",
+    "commit_exit": 0,
+    "final_pid": 66946,
+    "final_chunk": "a6a8ab",
+    "final_exit": 0,
+    "EOF_drained": true,
+    "buffer_process_wall_seconds": 497.028,
+    "git_whitespace": "PASS",
+    "single_commit": true,
+    "amend": 0,
+    "clean": true
+  },
+  "disposition": "receivedfullREVISE only no contractadoption/sourcegrant; nextfreshauthor2 andreservedD3"
+}

@@ -2781,7 +2781,7 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "received_WHOLE_PROPOSAL_UNADOPTED_requires_fresh_D1",
+      "state": "WHOLE_REVISE_UNADOPTED_fresh_completeauthor2_registered",
       "fixed_input": "0348f1e73725991e3bb2cc402b2d5aac95918b23",
       "family_iteration": 1,
       "family_cap": 3,
@@ -2797,7 +2797,8 @@
       "input_hashes_checked": 127,
       "static_invocations": 1,
       "static_result": "PASS",
-      "product_write_grant": []
+      "product_write_grant": [],
+      "independent_review": "c583597a5a07bbbc7b5864a40b158156ca2c8f38"
     },
     {
       "id": "GOV-05/NINE-PRODUCT-DOSSIER-AUDIT1",
@@ -2939,7 +2940,7 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_independent_registered_task",
+      "state": "received_WHOLE_REVISE_three_findings",
       "fixed_input": "2736a112964974d6ed17b88025feb66c50a68846",
       "family_iteration": 2,
       "family_cap": 3,
@@ -2949,7 +2950,20 @@
       "actor": "/root/parallel_d_gov06_whole_contract_review_r2",
       "fixed_parent": "b27b38fa924feaecf9766f9aa81fae0ee5d2c246",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-gov06-review2-20261010/XAI_Desktop",
-      "worktree_registration": "created successful; app attachment rejected identitycount>100; no recreation/attach loop"
+      "worktree_registration": "created successful; app attachment rejected identitycount>100; no recreation/attach loop",
+      "source_commit": "c583597a5a07bbbc7b5864a40b158156ca2c8f38",
+      "integration_commit": "7e9d95316c3b25fbcb9fa9de05dd323e6b1f903b",
+      "archive_ref": "codex/archive/parallel-gov06-authority-contract-impact-review-r2-20261010",
+      "input_hashes_checked": 231,
+      "static_invocations": 1,
+      "static_result": "PASS",
+      "review_verdict": "REVISE",
+      "findings": [
+        "GOV06-R2-01",
+        "GOV06-R2-02",
+        "GOV06-R2-03"
+      ],
+      "product_write_grant": []
     },
     {
       "id": "GOV-01+GOV-02/PARSER-PURPOSE-PROVENANCE-CENSUS2",
@@ -3001,7 +3015,7 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "running_fresh_independent_registered_task",
+      "state": "running_sameunit_source1_infrastructure_transport_continuation",
       "fixed_input": "b27b38fa924feaecf9766f9aa81fae0ee5d2c246",
       "family_iteration": 1,
       "family_cap": 3,
@@ -3015,7 +3029,9 @@
       "actor": "/root/parallel_c_gov04_gov07_status_source_discovery_r1",
       "fixed_parent": "41111042c093c2110770d1e12829d377242d4c74",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-gov04-gov07-source1-20261010/XAI_Desktop",
-      "worktree_registration": "createdcompleted appattachmentidentitycount>100rejected no duplicate"
+      "worktree_registration": "createdcompleted appattachmentidentitycount>100rejected no duplicate",
+      "infrastructure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov04-gov07-p68-exec-transport-continuation.json",
+      "concluding_static_started": 0
     },
     {
       "id": "SK-01+SK-02+SK-03+SK-04+SK-05+SK-06/TRACE-SOURCE-DISCOVERY1",
@@ -3023,7 +3039,7 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "registered_ready_waiting_available_slot",
+      "state": "running_fresh_source_only",
       "fixed_input": "b27b38fa924feaecf9766f9aa81fae0ee5d2c246",
       "family_iteration": 1,
       "family_cap": 3,
@@ -3037,10 +3053,13 @@
         "SK-06"
       ],
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-sk01-sk06-trace-source-discovery-r1.json",
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "prepared_worktree": "/Users/lijinlong/.codex/worktrees/audit-sk01-sk06-source1-20261010/XAI_Desktop",
       "prepared_parent": "41111042c093c2110770d1e12829d377242d4c74",
-      "worktree_registration": "createdcompleted appattachmentidentitycount>100rejected; actorNOTlaunched waitingcapacity"
+      "worktree_registration": "createdcompleted appattachmentidentitycount>100rejected; actorNOTlaunched waitingcapacity",
+      "actor": "/root/parallel_c_sk01_sk06_trace_source_discovery_r1",
+      "fixed_parent": "41111042c093c2110770d1e12829d377242d4c74",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-sk01-sk06-source1-20261010/XAI_Desktop"
     },
     {
       "id": "GOV-01+GOV-02/PARSER-PURPOSE-PROVENANCE-CENSUS3",
@@ -3048,7 +3067,7 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "running_fresh_independent_registered_task",
+      "state": "FAILED_FINAL_EXHAUSTED3of3_noartifact",
       "fixed_input": "2434373d391b6cfafec0a3883623650a57a0a366",
       "family_iteration": 3,
       "family_cap": 3,
@@ -3058,22 +3077,41 @@
       "actor": "/root/parallel_c_gov_parser_provenance_census_r3",
       "fixed_parent": "41111042c093c2110770d1e12829d377242d4c74",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-gov-parser-census3-20261010/XAI_Desktop",
-      "worktree_registration": "createdcompleted appattachmentidentitycount>100rejected no duplicate"
+      "worktree_registration": "createdcompleted appattachmentidentitycount>100rejected no duplicate",
+      "static_invocations": 1,
+      "static_result": "FAILED",
+      "failure_record": "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov-parser-census3-p68-final-failure-receipt.json",
+      "budget_grant": []
+    },
+    {
+      "id": "GOV-06/AUTHORITY-SOURCE-CONTRACT-IMPACT2",
+      "workflow": "C",
+      "primary_workflow": "B",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "registered_ready_fresh_whole_correction2",
+      "fixed_input": "7e9d95316c3b25fbcb9fa9de05dd323e6b1f903b",
+      "family_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov06-authority-source-contract-impact-r2.json",
+      "actual_actor_launched": false,
+      "reserved_full_review_iteration": 3,
+      "reserved_full_review_cap": 3
     }
   ],
   "workflow_B": "GOV01+02 whole sourcecontract impact review1 RUNNING; AI05 failedcontinuation candidate frozen NOvaliddiscovery; next unrelated GOV06 sixmodule authority source discovery registered, no parser/authority/code grant.",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 2,
+    "total": 3,
     "capacity": 4,
     "actors": [
-      "/root/parallel_d_gov06_whole_contract_review_r2",
-      "/root/parallel_c_gov_parser_provenance_census_r3",
-      "/root/parallel_c_gov04_gov07_status_source_discovery_r1"
+      "/root/parallel_c_gov04_gov07_status_source_discovery_r1",
+      "/root/parallel_c_sk01_sk06_trace_source_discovery_r1"
     ],
     "ready_next": [
-      "SK-01+SK-02+SK-03+SK-04+SK-05+SK-06/TRACE-SOURCE-DISCOVERY1"
+      "GOV-06/AUTHORITY-SOURCE-CONTRACT-IMPACT2"
     ]
   },
   "cost": {
@@ -3084,24 +3122,24 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 105,
-    "rework_findings": 71,
+    "static_passes": 106,
+    "rework_findings": 74,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 106,
+    "completed_source_receipts": 107,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "106delivered105concluding incl10FAILED1whitespaceONLY; pending20FAILED1UNKNOWN=>126known30FAILED1completionUNKNOWN95successinclwhitespace1. GOV05finalauthor3 newcheckerFAILED; census2preparation1/concluding0 separate, overrun3/rework71 unchanged.",
+    "static_passes_basis": "107delivered106concluding incl10FAILED1whitespaceONLY; pending21FAILED1UNKNOWN=>128known31FAILED1completionUNKNOWN96successinclwhitespace1. Census3failed1+GOV06D2PASS1; phase2acquisitionfailure1/static0 separate; originaloverrun3 retained.",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 10,
-    "rework_findings_basis": "69prior plus2 independentfullGOV findings=71; memoryfailuredrafts and invalidAI notaccepted.",
-    "pending_no_delivery_static_invocations": 21,
-    "pending_no_delivery_static_failures": 20,
-    "actual_static_invocations_total_known": 126,
-    "actual_static_failed_total_known": 30,
+    "rework_findings_basis": "71prior+3WHOLEGOV06review2independentlyconfirmed; failedmemoryleads not counted",
+    "pending_no_delivery_static_invocations": 22,
+    "pending_no_delivery_static_failures": 21,
+    "actual_static_invocations_total_known": 128,
+    "actual_static_failed_total_known": 31,
     "static_budget_overruns": 3,
     "pending_no_delivery_static_unknown": 1,
     "actual_static_completion_unknown_total_known": 1,
@@ -3111,8 +3149,8 @@
     "mechanical_failure_preservation_invocations": 1,
     "delivered_whitespace_only_static": 1,
     "discovery_input_checksum_invocations": 1,
-    "delivered_concluding_static_invocations": 105,
-    "actual_concluding_static_successes_known": 95,
+    "delivered_concluding_static_invocations": 106,
+    "actual_concluding_static_successes_known": 96,
     "ai_source_discovery_authoring_attempts": 4,
     "ai_actual_failed_concluding_attempts": 3,
     "ai_postfailure_materialization_invocations": 1,
@@ -3127,7 +3165,16 @@
     "gov05_static_history": "reported0 no raw original receipt; no evidenced checker invocation added to known totals",
     "gov_parser_census_numeric_exit_unknown": 1,
     "gov_parser_census_precheck_acquisition_failures": 1,
-    "gov_parser_census_preparation_launches": 1
+    "gov_parser_census_preparation_launches": 1,
+    "gov04_gov07_exec_process_creation_rejections": 2,
+    "controller_p68_metadata_argument_failure": {
+      "count": 1,
+      "chunk": "592e7a",
+      "numeric_exit": 1,
+      "error": "helper JSON outerarray omitted ValueError beforemetadataacquisition",
+      "business_static": 0,
+      "corrected_metadata_invocation": "3349be exit0 all231hashes; rootonlyprovenance notbusinessverification"
+    }
   },
   "events": [
     {
@@ -3670,6 +3717,11 @@
       "at": "2026-10-10T18:25:40.470036+00:00",
       "event": "P67 GOV05finalauthor3 staticFAILED5721bb PID69805 exit1 .8s P0alias/newlinecheckererror, cleanparentb27/2outputsabsent/no writes or commit. Originalallthree attempts permanentlyretained, no artifact/fullreview/author4grant; not within pendingfiveexception request. Freshfinalparsercensus3 + GOV04+07source1 dispatched411 fixedinputs; GOV06D2continues root4/4, SK01-06source1 queuedownreadycheckout411. Appartifactreadonlyinventory100identities=91archived+9active ninecleanup candidates STILLactive; not100active/zeroallhistoricalarchives, no repeatarchive/delete, registrationceilingnotfullgoalblock. GoalAPIget stillblocked1499260tokens/3462seconds originalobjective/no resumetool ownerpanelquestion alreadypending; directauthorizedfourworkflow workcontinues no falsecomplete.106sources126knownconcluding30FAILED1completionUNKNOWN95successinclwhitespace1/preparationfailed1 separate/rework71/overrun3/formal13/3/3/293/939 unchanged. P66normal0FAIL1WARN P67freshpending.",
       "input": "41111042c093c2110770d1e12829d377242d4c74"
+    },
+    {
+      "at": "2026-10-10T18:31:02.586526+00:00",
+      "event": "P68 receive/preserve GOV06wholeD2 c583 ->7e9d953 exact2ADD clean231immutablehashes/static1PASS PID69972session96532a67ae0/e1e409exit0 3.461s/234Gitall0EOF. WHOLE_REVISE3 realfindings T39consumedstatuspayload/G1OrganizerApp→Pluginmirrors/Sitecopiedreleasefacts; originalsourceUNADOPTED freshcompleteauthor2/3 registered reserveduninvolvedfinalD3/3. Parsercensus3final ownwordguardFAILEDdce6d1exit1 PIDUNKNOWN clean4112outputsabsent/noartifact, cap3/3EXHAUSTED currentcounts/purposebudgets UNKNOWN, noextra4 norincludedinpending5exceptions. Gov04source1twoUNIFIEDexeccreationENOENTnotphysicaldelete rootfs/Gitpresentclean411, sameunitinfratransportcontinuationviaverifiedlocalnode no business/checkerreset; SK01-06source1 nowrunning411. P67normal2FAIL1WARN exactsingleconcurrentc583unpreservedlocalref/reflog, noworiginalremotepreserved; no recoverydelete. RootmetadatahelperbadouterJSON592e7aexit1 preacquisition corrected3349be231hashes provenanceONLY.107sources128knownconcluding31FAILED1completionUNKNOWN96successinclwhitespace1/rework74/overrun3/preparationfailure1/root+2=3/4/formal13/3/3/293/939 unchanged. P68freshpending allholds preserved goalunfinished.",
+      "input": "7e9d95316c3b25fbcb9fa9de05dd323e6b1f903b"
     }
   ],
   "wave_P2_tasks": [
@@ -3678,7 +3730,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P66literal0FAIL1WARN P67freshpending",
+    "normal": "P67known2FAIL1WARN singleconcurrentGOV06D2source localref/reflog beforearchive; originalsource nowexactremote P68freshpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -3713,7 +3765,7 @@
     "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
     "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
     "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched",
-    "normal_log_sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b",
+    "normal_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e",
     "deep": "P44 1FAIL0WARN exactfiveoriginalunreachable identities confirmedP45 retainedno deletion",
     "initial_shared_review_recovery_ref": "codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
     "deep_log_sha256": "81179a39509cd6990ed115565d43bcb22a280b4cdd999f074f1ed52ae3e97079",
@@ -4093,5 +4145,18 @@
     "count_limit": "registration ceiling counts attachment identities including archived; do notcall100activeworktrees",
     "physical_checkout_census": "not inferred from appattachment inventory",
     "new_root_owned_checkouts": "successfulGitcreation despiteappattachment failure; no recreate"
+  },
+  "GOV01_GOV02_parser_provenance_hold": {
+    "state": "sourcecensusEXHAUSTED3/3",
+    "history": [
+      "staticFAILED1",
+      "acquisitionFAILED2/static0",
+      "staticFAILED3"
+    ],
+    "counts": "19/3/167 current UNKNOWN historicexpected only",
+    "document_contract_adopted": true,
+    "actual_parser_admission": [],
+    "extra4_grant": [],
+    "other_ready_work_continues": true
   }
 }

@@ -1,0 +1,20 @@
+{
+  "id": "GOV-04+GOV-07/STATUS-SOURCE-DISCOVERY1",
+  "parent": "41111042c093c2110770d1e12829d377242d4c74",
+  "worktree": "/Users/lijinlong/.codex/worktrees/audit-gov04-gov07-source1-20261010/XAI_Desktop",
+  "original_process_creation_rejections": 2,
+  "raw_error": "Rejected Failed to create unified exec process: No such file or directory (os error2)",
+  "PIDs": null,
+  "sessions": null,
+  "numeric_child_exits": null,
+  "provenance": "processNOTcreated so no childPID/exit; notfailedbusinesscheck",
+  "physical_path_disappearance": "NOT established; rootGit/read-onlyfs confirms presentclean411",
+  "root_metadata_chunks": [
+    "18418d",
+    "74a7e2"
+  ],
+  "root_metadata_exit": 0,
+  "local_node_fs_stat": true,
+  "continuation": "sameunit/actor infrastructureonly via one different localnode transport, originalsource1/checkerunused0 unchanged, noexecretry/recreate/primarysourcework",
+  "any_business_check_rerun": false
+}
