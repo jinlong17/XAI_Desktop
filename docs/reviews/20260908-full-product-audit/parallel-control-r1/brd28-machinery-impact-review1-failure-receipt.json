@@ -1,0 +1,36 @@
+{
+  "id": "BRD-28/SOURCE-MACHINERY-IMPACT-REVIEW1",
+  "state": "FAILED_static1_syntax_no_artifact_fresh_review2_required",
+  "parent": "dce3ea904104da8a89b0ca5a4d6482b6e8dc6e93",
+  "fixed_input": "02e34fa2153bac16c1c82db7e9e53ba6534ccdbe",
+  "review_iteration": 1,
+  "review_cap": 3,
+  "static_invocations": 1,
+  "process": {
+    "pid": 85323,
+    "exit": 1,
+    "failed_line": 25,
+    "code_sha256": "b33a60b3d847be221978813daa8bec72dc2f38a3c51803b971d43c7fe4b591a9",
+    "stdin": "EPIPE retained",
+    "streams": "stdoutstderrEND processclose observed",
+    "preparatory_metadata_catfile_pid": 82427,
+    "preparatory_raw_catfile_pid": 82456,
+    "preparatory_children_exit": 0,
+    "mechanical_chunk": "9b8afe",
+    "mechanical_exit": 1,
+    "mechanical_exit_reason": "ps missing stopped processes; clean parent/artifactabsence confirmed"
+  },
+  "classification": "actual Python unterminatedstringliteral JS newline transport failure, counts actual attempt",
+  "pretool": "bare absolutegoalalias lookup normalized in memory beforechecker no new bytes read",
+  "preparatory_identities": 76305,
+  "preparatory_integrity": "UNVALIDATED not staticPASS",
+  "unrun": [
+    "all concluding hashes/source-membership/semantic/ledger/canonical/output buffers/protected delta",
+    "all writes",
+    "stage",
+    "commit"
+  ],
+  "memory_hypotheses": "NOT accepted REVISE",
+  "source_commit": null,
+  "runtime": 0
+}

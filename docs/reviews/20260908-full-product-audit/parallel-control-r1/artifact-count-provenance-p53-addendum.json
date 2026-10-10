@@ -1,0 +1,21 @@
+{
+  "kind": "append-only root metadata corrective provenance",
+  "artifacts": [
+    {
+      "sha": "309483d66397a1e4bc83760de032321bd1f01432",
+      "path": "docs/reviews/audit-parallel-dash06-source-availability-impact-r1/inputs.sha256",
+      "raw_records": 633,
+      "unique_labels": 633,
+      "sha256": "92bd2699e2ffe91d542f6eceb435049ac3f13cd4f402e27a812dc22e5e161552"
+    },
+    {
+      "sha": "ab1ea42c09a055a599902d4d2b42d7c42d77e252",
+      "path": "docs/reviews/audit-parallel-dash06-source-availability-impact-review-r1/inputs.sha256",
+      "raw_records": 649,
+      "unique_labels": 649,
+      "sha256": "5ddc21a2c6eee37e3bdc569df655442eb4842f5ee9ff35e3fa758206d626466f"
+    }
+  ],
+  "correction": "633 source-impact versus649 impact-review are DIFFERENT ARTIFACTS, not raw/dedup aliases. Prior CD review2 guard selected source-artifact with review-artifact headline. Historical receipts/cards/events immutable; no retroactive PASS or businessqualification.",
+  "independent_confirmation": "0d4f8870b6f080b2ec45d69605892a00bf83d812"
+}
