@@ -3848,15 +3848,19 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "registered_queued_new_original_item_source1_capacity_wait",
+      "state": "running_fresh_WHOLE_independent",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd24-source-discovery-r1.json",
       "fixed_input": "a68c2295c1aa0db359b0a62cb38317b29168c24c",
       "family_iteration": 1,
       "family_cap": 3,
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "adopted": false,
       "new_budget_grant": [],
-      "logical_writer": "new source report only"
+      "logical_writer": "new source report only",
+      "actor": "/root/parallel_c_brd24_map_whole_source_r1",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-brd24-map-source1-20261010/XAI_Desktop",
+      "fixed_parent": "57f693e512f9db0837aac529a5f2c70d8903bff6",
+      "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation"
     },
     {
       "id": "CAL-01+CAL-02+CAL-04+CAL-05/SOURCE-DISCOVERY2",
@@ -3887,33 +3891,33 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "registered_ready_fresh_exact_Habits_technical_impact1",
+      "state": "running_fresh_WHOLE_independent",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-hab01-hab05-journal-sourcehealth-lifecycle-impact-r1.json",
       "fixed_input": "82ddebb9994eed255cd35a7c701c5bd84a5fa6dc",
       "family_iteration": 1,
       "family_cap": 3,
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "adopted": false,
-      "new_budget_grant": []
+      "new_budget_grant": [],
+      "actor": "/root/parallel_a_hab01_hab05_exact_journal_sourcehealth_lifecycle_impact_r1",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-hab-journal-sourcehealth-impact1-20261010/XAI_Desktop",
+      "fixed_parent": "57f693e512f9db0837aac529a5f2c70d8903bff6",
+      "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation"
     }
   ],
   "workflow_B": "TT08 FULL documentary caller accepted/reconciled/inventoryaccepted; unchangedruntimeP0. MEDsource2/BRD28wholeimpact2/GOV01+02sourcecontract2 conditionaltechnicalDOCUMENT adopted. Otherimplementation descendants wait eachowningqualification/before/scope/gate; no newruntime/caller/formal/releasegrant.",
   "concurrency": {
     "root": 1,
-    "workers": 1,
-    "total": 2,
+    "workers": 3,
+    "total": 4,
     "capacity": 4,
     "actors": [
-      "/root/parallel_c_cal01_cal02_cal04_cal05_whole_source_correction_r2"
+      "/root/parallel_c_cal01_cal02_cal04_cal05_whole_source_correction_r2",
+      "/root/parallel_a_hab01_hab05_exact_journal_sourcehealth_lifecycle_impact_r1",
+      "/root/parallel_c_brd24_map_whole_source_r1"
     ],
-    "ready_next": [
-      "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/JOURNAL-SOURCEHEALTH-LIFECYCLE-IMPACT1",
-      "BRD-24/SOURCE-DISCOVERY1"
-    ],
-    "queued_original_sources": [
-      "SHELL-01+SHELL-02+SHELL-03/SOURCE-DISCOVERY1",
-      "BRD-24/SOURCE-DISCOVERY1"
-    ]
+    "original_calendar_wall": "20:26:09UTC+30min no restart",
+    "next_free_slot": "fresh whole review upondelivery else queuedSHELL01/02/03 originalsource"
   },
   "cost": {
     "new_formal": 0,
@@ -4762,6 +4766,11 @@
       "at": "2026-10-10T20:32:25.021206+00:00",
       "event": "P96 HabitsWHOLEtechnicalD1 original3bf59 exactarchive->82ddebb9994eed255cd35a7c701c5bd84a5fa6dc exact2ADDclean156bindings sole66696exit0 2.433004s outer2541ms157Git0EOFclosed/allinputs+BOTHbuffersbeforewrite rawsessionchunk/fullwall/historicaldrainUNKNOWN; WHOLEboundedtechnicalproposal DOCONLY ADOPTED decidedrows, P-WEEK1..4/newjournal/sourcehealth/lifecycleallwriters/qualificationbeforeexecutionbusinessBLOCKED. Fresh exactimpact1/3registered no oldshared/Clock/exhaustedfamilyreset. WebPetFINAL3actualexit1.846289875s guessedgoal literal13completed beforefullmanifest/BOTHbuffers UNRUN butintendedFAILED counts3/3EXHAUSTED noartifact/no4 rawPIDEOFUNKNOWN originalcallpreserved. Calendar2 exactrawcall proves inputretrievalONLY no intendedchecker; originaltruncatedinterleavedread1/UNKNOWN frozen; SAMEphase splitreadcontinuation within original20:26:09+30min wall no staticbudgetreset/retry, failureofactualconcludingstillfreeze.124sources156known40FAIL3UNKNOWN113reportedPASS/rework89 plusCal1input1/postwriteUNQUALIFIED1+Cal2readtransport1 separate/newformalprobevendor0. P95literal2FAIL1WARN due exactnewHaboriginal nowarchived no deletion. Actualroot+Cal2=2/4 readyHabimpact1+BRD24; formal13/3/3/293312299unclosed939 unchanged all oldgates goalunfinished.",
       "input": "82ddebb9994eed255cd35a7c701c5bd84a5fa6dc"
+    },
+    {
+      "at": "2026-10-10T20:35:12.645003+00:00",
+      "event": "P97 ALL124distinctoriginals exactremote +integrationoriginancestors57 proven fullproof. Actualroot+freshHabits exactjournal/sourcehealth/lifecycleimpact1(parent57/input82dd)+freshBRD24Mapwholeoriginalsource1(parent57/inputa68)+SAMECalendarWHOLEsource2(parent55/inputbcea original20:26:09+30minwall/no intendedcheckerretry)=4/4. SHELL01/02/03queued nextfree afterreviewpriority; Pet3/3EXHAUSTEDno4 alloldfailedUNKNOWNfrozen. P96normal0FAIL1WARN confirms newlycompletedHaboriginalarchive preservesrecovery withoutdeletion; P95literal2FAIL1WARNretained.124sources156knownconcluding40FAIL3UNKNOWN113reportedPASS plusCalinputonly/postwriteunqualified/readtransport separately/rework89/newformalprobevendor0. Formal13/3/3/293312299unclosed939 unchanged, callerDOC progress≠item completion orrelease; originalsevenpendinggroups/E6E7E8/Clocksharedholds no waiver goalunfinished.",
+      "input": "57f693e512f9db0837aac529a5f2c70d8903bff6"
     }
   ],
   "wave_P2_tasks": [
@@ -4770,7 +4779,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P95literal2FAIL1WARN exactnewHabrevieworiginallocalref/reflog nowarchivepreserved; P96freshpending no recoverydelete",
+    "normal": "P96literal0FAIL1WARN P97freshpending; P95literal2FAIL1WARN preserved nowexactoriginalremote no deletion",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -4805,7 +4814,7 @@
     "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
     "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
     "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched",
-    "normal_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e",
+    "normal_log_sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b",
     "deep": "P44 1FAIL0WARN exactfiveoriginalunreachable identities confirmedP45 retainedno deletion",
     "initial_shared_review_recovery_ref": "codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
     "deep_log_sha256": "81179a39509cd6990ed115565d43bcb22a280b4cdd999f074f1ed52ae3e97079",
@@ -4814,7 +4823,7 @@
     "normal_intermediate_P59": "Literal2FAIL1WARN: one newlycompleted GOVsource2 original in localrefs/reflog before archive push; exactd116 original nowremotepreserved before rootreception; freshrepeat pending, no recovery deletion",
     "normal_intermediate_P59_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e"
   },
-  "workflow_C": "CalendarSAMEsource2 splitreadtransport continuation with originalfixedparent/input/wall no intendedconcludingretry; WebPetFINAL3actualFAIL EXHAUSTED no4. BRD24 originalsource ready next free slot; SHELL01/02/03 queue preserved.",
+  "workflow_C": "FreshBRD24MapWHOLEsource1 RUNNING parent57/inputa68 alongside SAMECalendarWHOLEsource2 readtransportcontinuation parent55/inputbcea originalwall. WebPet3/3EXHAUSTED no4. SHELL01/02/03 queued unlaunched.",
   "active_scheduler": {
     "graph": "docs/reviews/20260908-full-product-audit/parallel-control-r2/dependencies.json",
     "sha256": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
@@ -5200,17 +5209,17 @@
     "other_ready_work_continues": true
   },
   "preservation_checkpoint": {
-    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p95-123-originals-remote-integration-ancestry.json",
-    "sha256": "7986bc06005ced3e035776ae4a55b06d1497f42773ed390f663cb9d3194da3d2",
-    "fixed_remote_control": "55cba78f2acc01eeda1d42210dfaf495122835c1",
-    "originals": 123,
+    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p97-124-originals-remote-integration-ancestry.json",
+    "sha256": "ee81652a518b58ecff175c6cf7e9c4c0c1897f5a3589ec6339e04932155ce576",
+    "fixed_remote_control": "57f693e512f9db0837aac529a5f2c70d8903bff6",
+    "originals": 124,
     "exact_remote": true,
     "integrations_origin_ancestors": true,
     "no_recovery_deletion": true,
-    "normal": "P94literal0FAIL1WARN"
+    "normal": "P96literal0FAIL1WARN"
   },
-  "workflow_A": "Habits boundedtechnicalproposal independentlyWHOLEAPPROVED docONLY, fresh exactjournal/sourcehealth/lifecycleimpact1 registered no oldClock/sharedunitreset or codegrant. Clock sevenpendinggroups+E6E7E8holds unchanged.",
-  "workflow_D": "HabitsWHOLEtechnicalD1receivedscopedDOCUMENTONLY; weeklyfullydeterminedrequirements/implementationBLOCKED. Next independentimpactreview afterauthorartifact. CalendarD1REVISE6 source1forensiconly.",
+  "workflow_A": "Fresh independent exactHabits journal/sourcehealth/lifecycleimpact1 RUNNING parent57/input82dd; adoptedWHOLEtechnicalDOCONLY and weekly/shared/runtimebeforebusinessholds retained. Not exhaustedsharedsource/Clock reset.",
+  "workflow_D": "HabitsWHOLEtechnicalD1DOCadopted decidedrows only; next independentWHOLEimpact/source reviews afterdeliveredartifacts. CalendarD1REVISE6 source1FORENSICONLY. Reviewer norepair.",
   "Habits_source_admission": {
     "source": "e7d113e01bbe5b1df47d5fb51821779b30916bf0",
     "source_integration": "8a05231add157e43f31bb1f853b3b2fadb69cace",
