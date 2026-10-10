@@ -1,0 +1,110 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh FINAL WHOLE independent CD sourcecontract reviewer3 neverrepair",
+  "model": "gpt-6-astra",
+  "fixed_input": "316ff9696a6a4d4ff2ae95e805c7e8a0fd3dad8e",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "review_iteration": 3,
+    "review_cap": 3,
+    "static_pass": 1,
+    "prior_source_author_used": 2
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "CD-03/SOURCE-CONTRACT-REVIEW3",
+  "source_inputs": [
+    "1d26bc1ed1d4af6f1c311fe34f9640c0f68e2e36",
+    "b5e6843bce9a6feb62afb6c451451e626b51c999",
+    "a8a75d15c9c482547e50905dc237344c9b49d9c2",
+    "2a35488361bfbad596473fc355bd18d8feb5b164",
+    "fda069eb300704f24384eccacfd74ffc147aef37"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-cd03-source-contract-review-r3/review.md",
+    "docs/reviews/audit-parallel-cd03-source-contract-review-r3/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full5857independentreview/full5807impact/full3351review/full3326prep/shared2808+649/full14CDrow/allhistoricalreports complete. Rootadoptedexactconditionalb5impact+a8review basisONLY. Freeze WHOLEsourcecontract/admissionconfig/finiteexact23candidateproductpath subset+18machinerysourceexports/signatures/errorpolicy/readonlyS-CD xai_countdowns domain+ownerpredicate/backward optionalnormalization/SSR/nativeevents/no setterretryreset/actualexport action+disk causalboundary. No arbitraryclickatomicity/posthandoffrecall/durabledraft/diskUIack promise or waiver; sourcecontractresolves exactnative event/defaultactionqualification controls honestly full07/09, no reminder/JOB/date/CD01/CD02/newownerpolicy.",
+    "Fullactualpublicmanagedhost/mainstartup SDK/httpaux/device/todo/observability/copyarchive+consumedbytes/bootstrappreimport/passivecapture/queue/owner+generation/keytombstone/source raw-coherent state andfinitecausal emittersallC01-C14/K01-K14/Q01-Q18+fullG1 covered not declaration. Exactcommands/modes/resourcepairing/casecontrols/normal-positive+actualfaultcause/artifactemitters/immutablepatch/reusedoriginalcopies/nativefocuscontext/loadedclosure/stdoutstderr/quiescence/terminalfailure indexed. Freeze exactsourcewriting scope and laterqualification budget-purpose registry no executionnow; missingactualdependencybytes/rootcapture/focus/shared holds explicit, no mandatoryrefusingskeleton.",
+    "Completecurrentlyrequired full sourcequalification+indepreview/rootadoption/fullvalidP0before/boundedfreshimplementation/fullfixed/integrated/affected/native/trustedkeyboard/visual/G1/actualvendor/freshfulloriginalcalleracceptance/rootappend/inventory/remoteancestry unchanged. Permanentactualhistoricalpurpose/unit/command/mode/launch IDs/refusals/probes/unknown/exhausted cap3 retains mixedolderunits, no newlabel0/reset. Exact sourcecontractNEWtechnical phase fromapprovedbasis notoldimpactauthor reset; fullproposal/newfullindepreview before sourcegrant.",
+    "Fullcanonical Clockr2§14E1-E25/E24ANDRules verbatim. Whole312originalfields/39exactliteralreversiblelabels/939/formal13,3,3,293 intact; actualEXECUTIONitems vsTODOsections.tasks/dynamicexecution-state.tasks+card notinitialregistry. FourTT08docs vsP0runtimeparity separate. ValidateALLinputs/BOTHbuffersbeforeANYwrite/static1failurestopsnoretry/keepFULLexecsession+exitdrain. Allruntime/tests/build/lint/browser/native/server/qualification/probes/vendor0/nochildrenpush/exact2ADDonly.",
+    "PriorSOURCE-CONTRACT1/3 soleactualstatic1 FAILEDb94d30exit1 stdin109 wrong literal-label Counter overnormalizedmodule, fullhashloop/canonical/buffers/writes UNRUN/nooutputs. Rootindependentmetadatafact scope module normalizedweb213/app22/plugin16/sync41/admin16/site4; original_module exactweb174+project-system30+crossmodule9+othermodules. gate_obligations nonempty150 not118gatedpolicy. Preserve wholeoriginalfields and deriveactualschema notunsupportedguard. Freshsourcecontract2/3 samefixed61b6644/full5857scope/allC/K/Q/G1 no budgetreset/no memorydraftartifact. Pretoolassembly!=actualcheckerlaunch; safeASCIIUnicodeescapes/correctquotedUTF8; actualfailurefreeze no retry.",
+    "WHOLE5940/5857/5807/3351/3326/shared2808/DASH649/sharedreview2863/164sourcepaths/all14CDrows/C01-C14/K01-K14/Q01-Q18/23conditionalproductpaths18machinery complete notsourcepredicateparagraphs. Independentlyjudge exactS-CDsignatures/readonlyrequiredrecorddomain+optionalnormalization/errors/SSR/nativeevents/refresh no setterResetRetryAPI; wholepublicmanagedhost/mainSDKactualHTTP/sourcegenerationphysicalkeys/tombstones/rawcoherentavailability/reset/migration/copyarchive/loadedconfig/transitivedeps/bootstraprootcapture/causalnativecapture/resourcepurpose/emittertables and fullcanonicalG1. Actualdetachedanchor defaultactionreentrancy/exportphysicaldisk observedoutcome: stale postguard default-action download BLOCKS qualification, no durability/arbitraryatomicclick/posthandoffrecall guarantee and no waiver. OriginalCD01/02reminder/nativeownerpolicy unchanged. Sourceauthor2/3 solePASS plusauthor1FAILEDb94d30laterUNRUN retained; memorydraftneverartifact. Review1/3/static1(allruntime0), reviewer neverrepair; APPROVEDfullconditionalexacttechnicalproposal orpreciseREVISE ONLY/no actualmethodsourcequalified/implgrant.",
+    "Exactsourcequalification+independentreview/rootadoption/fullvalidP0before/boundedfreshimplementation/fullfixedintegratedaffectednativevisualtrustedkeys/G1/actualvendor/freshfulloriginalcalleracceptance/rootappendinventory mandatory. SDKbytes/config/forwarding/rootoutercapture/focus/retention3visual3/M8RELunknownlocalholds explicit. No source3release/author4/budgetreset. ALLinputsBOTHbuffersbeforeANYwrite/static1actualfailurefreeze/no retry/FULLsessionexitdrain/safeASCIIUnicodeescapes orcorrectUTF8 noMarkdownbacktickJS. normalizedmodule vsoriginal_module39labels/nonemptygate150not118distinctpolicy/dynamicstate.tasksLIST/card/fourTTdocs vsP0runtime notwholepackageassert.",
+    "Priorreview1/static1 unsupportedsource-pathsubset==164 FAILED after5940hashloop/predecessor/canonical/ledgerchecks, finalextraidentity/buffers/writesUNRUN noartifact. Preserve originalfullscope5940/5857/5807/3351/3326/164reportedsourcepaths actual list and exact14C/K/Q rows; do not infer a convenient prefix-extracted cardinality mustmatch attributedheadline. Independently investigate contract46 AccountScopeowner passed to actualstringaccountId helpers14-19 .trim; uncommitted observation isnot acceptedREVISE. WholeexactAPI/helperbinding/source/availability/errors/exportdefaultaction/accountdisk/lifecycle/qualifiedsources/native/G1/histories remain reviewed. Bind EVERYrequiredsource-outputMD at EVERYaccessed SHA beforechecker. Fullinputs+bOTHcompletebuffers beforeANYwrite, meaningful source-grounded coverage/hashchecks notinvented cardinality/minsize guards. Ownedcatfile stdin/EOF/stderr/threadcleanup onerror too and finalactualexit fullydrained. Review2/3/static1 allruntime0/no repair/retry/no capreset.",
+    "FINALWHOLEreview3/3 afterreview2failedstdin104 assertedDASH headline649 rawidentities ==uniquealiases but actual633. All6261hashes including5940 passed beforelater semantic/canonical/ledger/buffers UNRUN. MemoryR1AccountScope-vsstring andR2 subscribeSameTab silentno-op binding are unvalidated no acceptedREVISE; independentlyinvestigateWHOLEoriginal5940/5857/5807/3351/3326/all14C/K/Q/G1/fullsource/helper/error/native/export/account/retirement/permanentcaps. No reviewer4 or retry/budgetreset. EVERYcompleteMD eachusedSHA and actualparentcard/failure/globalmetadata prebound beforechecker. Never assert headline count equals dedupcount: source-derived exact record/hash comparisons only; preserve aliases/raw/unique separately withoutinventedcount/minsize. Sole concludingchecker invariants are source/hash/parent/schema/originalfield equality and exactcoverage, not convenience countsguards. ALLinputs+BOTHbuffersbeforewrite/ownedEOFstderrthreadcleanup/fullsessiondrain/allruntime0. Sharedbytescollection3review3 exhausted andouterimpact2BLOCKED UNADOPTED nofixture/sourcegrant; preserve localholds."
+  ],
+  "original_item": {
+    "id": "CD-03",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "定义重复/到期动作及是否提供提醒",
+    "acceptance": "无后台动作时明确只是日期差展示；新增提醒接JOB统一机制",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "CD-03",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:CD-03"
+    ],
+    "source_section": "CD",
+    "acceptance_evidence": {
+      "business_acceptance": "无后台动作时明确只是日期差展示；新增提醒接JOB统一机制",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "CD-03/prepare",
+      "CD-03/contract-review",
+      "CD-03/before",
+      "CD-03/implement",
+      "CD-03/verify",
+      "CD-03/accept",
+      "CD-03/reconcile",
+      "CD-03/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  },
+  "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/cd03-source-contract-review2-failure-receipt.json"
+}
