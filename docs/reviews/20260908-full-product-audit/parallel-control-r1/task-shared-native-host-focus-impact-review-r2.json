@@ -1,0 +1,55 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent FULL final shared technical impact reviewer2; never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "4c082ca8e40cbf178abb9d63cbed5f18a21b9f8d",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "review_iteration": 2,
+    "review_cap": 3,
+    "static_pass": 1,
+    "prior_source_author_used": 3
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "SHARED/NATIVE-HOST-FOCUS-IMPACT-REVIEW2",
+  "source_inputs": [
+    "f667a0b6996b4039d2c4e5ca28657953703e830b",
+    "b7e075c51e77fbf9c376ae33e3a9e2fb3b69fd06",
+    "516495625056a6123f22ff67df61c9c34dff2484",
+    "43ba9fcfadb1075bc117b4d75f8888573d1ae2f2"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-shared-native-host-focus-impact-review-r2/review.md",
+    "docs/reviews/audit-parallel-shared-native-host-focus-impact-review-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full2842objects/full2821review1/full2808impact1/fullTASK477raw477unique/MET2663raw2651unique/union2781/hashconsistentaliases/all12TASK14METsource2outputs+completepatches/fullfutureTASK12MET16/exactfrozenAppearancefileblockfunctioncontext/probes/alloriginal111/4440/64plus112/5072/59/MET89/2437/2497/full5rows preserved. Review wholefinalimpactreport notI1paragraph only. Author3/3static1PASS no sourcequalification. Author2FAILED1/1 unique-vsrawcount nooutputs/fullhash+buffersunrun retained; exact43bacorrectedrootreceipt/card hashes bound, original2cebadmetadata retained/no budgetreset/NOauthor4. Review2/3only/static1/no repair.",
+    "Challenge COMPLETEI1 synchronous nativeproperty/DOM boundary acquisition beforeimport/nativeevent beforeReact/immutable detachedpre-postsnapshots/transparent forwardingandrestoration/nestedcaptures/throws/nativegettervsowngetter/Reactinstancevalue tracker/browserinternalnativechanges withpaired14actualcausalcontrols. No journalinginstrumentation mutation/readsideeffects/source/gettertracking interference/no finalepochfilter/no missedtransients guessedCAPTURE_INCOMPLETE. Explicitadmission closure/configuration predicates/sourceidentities/refusal/no blind versionnumberproof. Commit/mutation/event/prepaint distinct semantics/loss+quiet terminalactualcauses unchanged. Exactrootmachinerymandatorybeforecaller source3; no intentionallyincomplete finalsource skeleton.",
+    "Fullfourconditionalbases P-HOST managedpublicAppProviders plusmainstartup+SDK realHTTPaux/device andsourceclosure; P-ACTpublictest seam qualificationONLY actualproductionactivationCLOSED; P-FOCUSnamedversionednativecontextsuccessor originalstandards/protectedbytes/calibration/realRetinaDPR+actualChrome200/scrolledmapping/perstopinjective census/wholeoutside/reverse/actions/authenticAppearance+target revalidation; P-OUTERenclosingrootreservation/bootstrap/actualstreams/alllateerrors/quiescence/command-browser-loadedclosure/fullartifactoriginal-emittermapping. MissingactualReactDOM/SDK consumedsource bytes/sourceforwarding+existingrootcapture closure explicitlyNOTavailable inauthorwt andmandatorybeforeeitherlastsource3. Decide sourcefeasible exacttechnicalbasisvsunproven prerequisites, neveradopt fromlockversionalone. Sourcebytecollection distinctevidenceinput iffeasible no semanticrepair/author4 disguise; ifno viablewithinremainingbudget freezeaffecteddescendantscontinueotheraudit.",
+    "TASK/METsourceauthor2/review2cap3finalslotsheld/no source3grant fromrowapproval; M8nativeunknownlowerbound2, retention3/visual3/RELunknown staylocalholds. Fullsourcequalification/indepreview/rootadopt/completeoriginalvalidbefore/boundedimplementation/fixed+integrated/native/visual/affected/fullcanonicalClock§14 E1-E25/E24/Rules verbatim/fullregressions/actualvendor/freshfullcalleracceptance/rootevidence-onlyreconcile/inventory chain intact. Original312orderedfields/39exactreversible labels/939/formal13,3,3,293 unchanged; EXECUTIONitems/TODOsections.tasks; exactfourTT08docs vsP0runtimeparity no wholepackage equality. Allinputsvalidated/BOTHbuffersbeforeANYwrite; static1failurestops/no semanticrerun; keepFULLexecresult/session ID await completion. Allruntime/tests/build/lint/browser/native/server/qualification/probe/vendor0/nochildrenpush. APPROVED exactconditionaltechnicalbasis or preciseREVISE/blocked no impl/methodgrant."
+  ]
+}
