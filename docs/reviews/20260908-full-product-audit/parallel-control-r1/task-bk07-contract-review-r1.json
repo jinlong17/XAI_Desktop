@@ -1,0 +1,101 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent FULL original BK07 contract and minimum policy necessity reviewer; neverrepair",
+  "model": "gpt-6-astra",
+  "fixed_input": "0121be25e10a8f3f60510c686a1832cbd40a9bcb",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "review_iteration": 1,
+    "review_cap": 3,
+    "static_pass": 1,
+    "prior_source_author_used": 2
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "BK-07/CONTRACT-REVIEW1",
+  "source_inputs": [
+    "59ac17754b28771d62a2830c144f8d89cea7f6ec",
+    "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-bk07-contract-review-r1/review.md",
+    "docs/reviews/audit-parallel-bk07-contract-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full4392uniqueindexedinputs/4451rawreferences/3111uniqueGitblobs/fullB01-B18/originalledger+periodbudgetentity/carryforward/monthisolation/5000onlyEXPLICITexample+noautomaticlivefallback intact. FullBookkeepingactualsource/owningPRDdesignAPItestdevlog/historyaccount/REL03REL04REL05/BK08/sharedwriter availability andcanonicalG1 preserved. Prep2static1PASS only no runtime/implgrant, prep1staticUNKNOWN lostsession/nooutputs remainsconsumed. Wholeproposal review notthreequestionsalone.",
+    "Independentlysearch existingaccepted productauthority FIRST beforeendorsing draftcarryforward/closedperiod/historicaledit+recompute/legacyscalarallocation questions. AuthoroldCloudDesign referencedbyPRD unavailable atcurrentwt andfrozen58f641designsource inventory; validate exactsearchedgap no pretendread. Existingrequiredledger/monthisolation/5000onlyexplicitexample alreadyauthorized: userinput5000valid no redundantban/scopepermission. Ask ONLYminimumneededproductsemantics afterfreshreview/rootrecord, technicalschema IDs/migrationengineering notownerburden; no guesscarry policy/close/reopen/currency/timezone/globalperiod source. Fullowning currentbudgetTotal/categoryglobal/no periodprojections arefactsNOTdecisions. ExistingBK08archivehistory invariants unchanged no silentdatadelete/fullrestore unsupported.",
+    "Fullactualpublichost/sameaccount ledgerperiod operation binding/currency/defaultprovenance/reset/validator/migration/archive/export/import/oldwriters/generationtombstone/sourceerror/firstframe/departure/storageavailability/CSVFileReaderlatework/actualdiskexport andownedURL cleanup/trialconsumer matrix18 allintact. Exactfiniteconditionalpath proposals independentlyreviewedbefore API/schema/sharedstorage/lifecycle grant. No broadsharedpermission/Gate rewrite fromP0namespacingorothercallerapproval. Entirequalification+source/fullvalidP0before/freshimplementation/fullfixed/integrated/affected/native/visual/trustedkeys/G1/vendor/freshfullacceptance/rootappend+inventory remain, unknown/exhausted purposeholds localonly/cap3 notreset/emptyitemevidence not0.",
+    "Whole312originalfields/39literalreversiblemodulelabels/939/formal13,3,3,293 unchanged; canonicalClock§14 E1-E25/E24ANDRules VERBATIM withoriginalcopies/histories. EXECUTIONitems/TODOsections.tasks/dynamicexecution-state.taskslist+card notinitialregistry. P0runtime vsFOURTT08docs separate no wholepackages assertion. Allinputs/BOTHbuffersbeforeANYwrite/static1fullprocess/session exitdrain/failurestopnoretry/allruntime tests build lint browser native server qualification probes vendor0/nochildrenpush/reviewer neverrepair. FullconditionalproposalAPPROVED orpreciseREVISE/no productpolicyselection oradoption."
+  ],
+  "original_item": {
+    "id": "BK-07",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "预算按账本与期间建实体并确定结转规则",
+    "acceptance": "不同账本/月份预算不串用；默认5000只存在明确示例模式",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "03-web-data-ai-settings.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "BK-07",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:BK-07"
+    ],
+    "source_section": "BK",
+    "acceptance_evidence": {
+      "business_acceptance": "不同账本/月份预算不串用；默认5000只存在明确示例模式",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "BK-07/prepare",
+      "BK-07/contract-review",
+      "BK-07/before",
+      "BK-07/implement",
+      "BK-07/verify",
+      "BK-07/accept",
+      "BK-07/reconcile",
+      "BK-07/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "id": "BRD-12/TECHNICAL-CONTRACT-AMENDMENT2",
+  "workflow": "C",
+  "module": "web",
+  "role": "fresh independent full BRD technical amendment correction author2; no implementation",
+  "model": "gpt-6-astra",
+  "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "5fa4cccb106d10e16562e0a8d6f3b103495607b1",
+    "cdb8820b434aa7f2adb9cc5ad5f14118eb24230c",
+    "11d6527709a5a735200151768296a312a3a30314",
+    "68d0f14b243a1becb70811ca01a503cdcd244022"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-brd12-technical-contract-amendment-r2/contract.md",
+    "docs/reviews/audit-parallel-brd12-technical-contract-amendment-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full30933reviewinputs/25632impact/20349review/15257contract plus all W01-W21/B01-B12/R01-R12/full24conditionalpaths/canonicalG1. Full corrected original scope withoutItem1fiction/autocheckexplainableundo. Finite T1-T4 reviewedbasisONLY: exactselectedsubset/signatures/backwarddecoding/errors/newtests/owningdocs/publiccapsule schema/API/key candidates and wholewriter/account-before-datasetlock/taskLinkthreephase/postawait/immutableX separateterminalU/wholeUconflict/ordinaryfieldpreservation/manualtrueT0/newrow/text/order; migration/importmarker rollbackcapsule/export/inverse retirement/globalreset ignoresrefusal/manageunmount/signout/pre-serverdelete/aboveaccountunmountguard. Old uncooperative clients quiescence externalunproven no localhash ABA claim. Freeze exact technical amendment for fresh full review/rootadoption; no productbehaviorchange/pathgrant or source runtime. Authorstatic1FAILED notretroPASS, reviewerconstructionSyntaxError beforeexecution followedonePASS retained.",
+    "Complete original312 ordered fields/39 literal reversible module labels/939 references/formal13,3,3,293 and299unclosed preserved. Observe actual schemas: EXECUTION top-levelitems and TODO sections[].tasks; original web（project-system）30 and web（跨模块验证索引）9. P0runtime parity with exactly4 acceptedTT08 owningdocs separately; no wholeapps/packages equality assertion.",
+    "Complete canonical Clockr2§14 E1-E25/E24/Rules and copies retained verbatim; complete full original acceptance, all historical actual purpose/command/process/mode/duplicate/refusal/probe/unknowncap3 budgets no actor/worktree/pathreset. No product/runner/test/runtime grant. Allinputs validated and bothbuffers constructed beforeANYwrites; one semanticstatic allowance and failed/unrun truth permanent; fresh independent actors/reviewerneverrepair.",
+    "Retain exact source qualification and independent review/rootadoption/fullvalidbefore/implementation/fixed+integrated+native+visual+affected/fullG1/actualcrossvendor/freshfullacceptance/root evidence-only reconciliation/inventory chain; local blocked dependencies cannot weaken standards. No children/push/globalwrites/protectedchanges.",
+    "Amendmentauthor1checker1FAILEDparserNonUTF8line170/02082dexit1 beforebody/fullhashbufferswritesUNRUN/nofiles/clean6bcb. Inmemorysyntaxonly3ba858PASS didnotproveactualtransport; priorJSpretool/globdisclosed. Frozenfailure NOTretroPASS. Freshauthor2/3 samefixedb52/fulloriginal30933/25632/20349/15257/W21B12R12/T1–T4/24candidatebase+exactsubsettechnicalproposal/newpathsneedfullimpactreview no scopegrant. Use safe literalASCII Unicodeescapes orcorrectUTF8filetransport, JSON.stringify isNOTshellescaping. Oneconcludingcheckerfullresult failurestop/no retry/no budgetreset. Memorydraftunvalidatednotacceptedinputs."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/sharedCSS/storage/schema/account/host/config/lockfile",
+    "all original contracts/runners/failures/evidence",
+    "globalcontrols/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "contract_amendment_iteration": 2,
+    "contract_amendment_cap": 3,
+    "static_pass": 1
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported producttradeoff or weakeningstandards",
+    "runtime orprotectedwrite need"
+  ],
+  "no_children": true,
+  "original_item": {
+    "id": "BRD-12",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "Checklist旧计数迁移与Done自动勾选规则明确化",
+    "acceptance": "不生成看似真实的Item1标题；自动勾选可解释并可撤销",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "BRD-12",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:BRD-12"
+    ],
+    "source_section": "BRD",
+    "acceptance_evidence": {
+      "business_acceptance": "不生成看似真实的Item1标题；自动勾选可解释并可撤销",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "BRD-12/prepare",
+      "BRD-12/contract-review",
+      "BRD-12/before",
+      "BRD-12/implement",
+      "BRD-12/verify",
+      "BRD-12/accept",
+      "BRD-12/reconcile",
+      "BRD-12/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  },
+  "failure_receipt": {
+    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/brd12-technical-amendment-author1-failure-receipt.json",
+    "sha256": "1398b4d5e7f66c646d4e370952053b2ec02db2c1238ce717ea0d47135e337b7b",
+    "registration_commit": "resolvedbeforedispatch"
+  }
+}
