@@ -555,10 +555,16 @@
       "provider_attested": false,
       "fixed_parent": "e7fc643ca472351ede5555bb5caeb5bafa21e18a",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-task06-runner-source-20261010/XAI_Desktop",
-      "state": "running_source_only_noqualification",
+      "state": "received_SOURCE_ONLY_UNQUALIFIED_NEEDS_FRESH_REVIEW",
       "source_author_iteration": 1,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "source_commit": "9c85a2f1049d54145bdb72366f6d4df26d3c1567",
+      "integration_commit": "bb4eb28",
+      "archive_ref": "codex/archive/parallel-task06-runner-source-r1-20261010",
+      "input_hashes_checked": 229,
+      "output_hashes_checked": 8,
+      "static_pass": 1
     },
     {
       "id": "MET-05/PREPARE",
@@ -618,16 +624,36 @@
       "provider_attested": false,
       "fixed_parent": "e4062c9efddf0c4797d0414b22a250ac93d84618",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-inventory-20261010/XAI_Desktop",
-      "state": "running_single_static_AST_scan",
+      "state": "accepted_static_inventory_exact47rows_zerochange",
       "fixed_scan_input": "46e2d967993d61f41706e15f69308d75ac1f0346",
+      "formal_invocations": 0,
+      "source_commit": "8c481eb796f90c8d88283d27d39acbb9f1c074ea",
+      "integration_commit": "7ba41f0e3c88510b2589e43090b10f7484c3956d",
+      "archive_ref": "codex/archive/parallel-tt08-inventory-r1-20261010",
+      "input_hashes_checked": 335,
+      "output_hashes_checked": 3,
+      "static_pass": 1,
+      "static_scanner_invocations": 1
+    },
+    {
+      "id": "MET-05/RUNNER-SOURCE",
+      "workflow": "D",
+      "actor": "/root/parallel_d_met05_runner_source_r1",
+      "configured_model": "gpt-6.1-sol",
+      "provider_attested": false,
+      "fixed_parent": "cfee9f81a7ef378f2f425eaa833027dc2bfe4760",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-met05-runner-source-20261010/XAI_Desktop",
+      "state": "running_source_only_noqualification",
+      "source_author_iteration": 1,
+      "family_cap": 3,
       "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 2,
-    "total": 3,
+    "workers": 1,
+    "total": 2,
     "capacity": 4
   },
   "cost": {
@@ -638,17 +664,18 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 26,
+    "static_passes": 28,
     "rework_findings": 11,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 29,
+    "completed_source_receipts": 31,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "29source deliveries minus3 actualvendor; retention3 separatelyretained"
+    "static_passes_basis": "31source deliveries minus3 actualvendor; retention3 separatelyretained",
+    "postaccept_AST_scanner_invocations": 1
   },
   "events": [
     {
@@ -814,6 +841,10 @@
       "at": "2026-10-10T11:25:51.763258+00:00",
       "event": "Receive MET130inputs approved contract with preciseM8 historyblock, register fresh source-only tools; postaccept TTinventory actuallyrunning; TASKsource continues",
       "input": "23e7a34421fbe2141fe4a25ed0f8e331aec5c8f2"
+    },
+    {
+      "event": "MET source actual dispatched fixedcfee; TASKsource229 and TTinventory335 received, exact static47rows; fresh TASKsource review and DASH06 preparation registered",
+      "input": "7ba41f0e3c88510b2589e43090b10f7484c3956d"
     }
   ],
   "wave_P2_tasks": [
@@ -900,7 +931,15 @@
       "EXECUTION.md": "f052f0072abd3ef3e15603c06c37386a7ba65128934c8b05c4f970220c825f38",
       "EXECUTION.json": "b11bd620c608b9d56ea1f0f879e0705278a1bda86f09cd09675f598552d181fc"
     },
-    "fresh_inventory": "registered_pending",
+    "fresh_inventory": {
+      "state": "accepted_static_only",
+      "source": "8c481eb796f90c8d88283d27d39acbb9f1c074ea",
+      "integration": "7ba41f0e3c88510b2589e43090b10f7484c3956d",
+      "scan_sha": "46e2d967993d61f41706e15f69308d75ac1f0346",
+      "rows": 47,
+      "ordered_rows_boundary_counts_unchanged": true,
+      "full_input_hashes": 335
+    },
     "commit": "46e2d967993d61f41706e15f69308d75ac1f0346"
   }
 }

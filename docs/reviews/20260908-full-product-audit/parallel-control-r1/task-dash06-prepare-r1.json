@@ -1,0 +1,42 @@
+{
+  "id": "DASH-06/PREPARE",
+  "workflow": "C",
+  "module": "web",
+  "role": "fresh source-grounded full original-obligation contract preparation",
+  "model": "gpt-6-astra",
+  "fixed_input": "7ba41f0e3c88510b2589e43090b10f7484c3956d",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "allowed_files": [
+    "docs/reviews/audit-parallel-dash06-preparation-r1/contract.md",
+    "docs/reviews/audit-parallel-dash06-preparation-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Locate original DASH06 full action/acceptance in all312/933 records, complete frozen item fields and actual StatPomos/PomoDots/goal consumers/stores/tests/docs/source closure; retain original scope and boundaries, no duplicate TT/TASK/MET/Clock work",
+    "Resolve behavior from explicit existing product/owner design rules first. If eight dots semantics or goal binding genuinely undecided, document minimal alternative choices and dependent blocked nodes; no invented goal, arbitrary0, default owner decision or scope reduction",
+    "Produce exact protected and proposed future allowlist, original-complete row oracles, before/fixed full source/data/error/recovery/account/visual/native/affected regression/vendor/freshacceptance/reconciliation/inventory chain and dependency locks. Static history is not runtime proof; canonical focus/Clock foundation and full G1 judgingcopies retained as actual dependencies without broad unrelated stop",
+    "Source-grounded permanent actual unit histories and diagnostic cap3/refusals mapping, distinguish genuine new purposes from corresponding old units; do not reset by actor/path or assume unknown0. Full input hashes, candidate not adopted before independent review; no product edits or business acceptance"
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/CSS/runner repair/globalcontrol/ledgers/inventory",
+    "original evidence/contracts/methods/failures/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "preparation_iteration": 1,
+    "preparation_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "native": 0,
+    "browser": 0,
+    "probes": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported product decision or weakening standard",
+    "runtime need or inherited cap/protected boundary"
+  ],
+  "no_children": true
+}
