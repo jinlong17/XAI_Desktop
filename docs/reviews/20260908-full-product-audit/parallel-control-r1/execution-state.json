@@ -1930,7 +1930,7 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_FULL_independent_task",
+      "state": "received_FULL_PROPOSED_UNADOPTED_needs_fresh_full_source_review1",
       "fixed_input": "61b6644d2eac5af6c70749bf672839ba7ba79bca",
       "family_iteration": 2,
       "family_cap": 3,
@@ -1939,7 +1939,15 @@
       "actor": "/root/parallel_a_cd03_source_contract_r2",
       "fixed_parent": "2d68848094b9e24744a97f74be0c11496f7c4334",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-cd03-source-contract2-20261010/XAI_Desktop",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "source_commit": "1d26bc1ed1d4af6f1c311fe34f9640c0f68e2e36",
+      "integration_commit": "316ff9696a6a4d4ff2ae95e805c7e8a0fd3dad8e",
+      "archive_ref": "codex/archive/parallel-cd03-source-contract-r2-20261010",
+      "input_hashes_checked": 5940,
+      "source_paths": 164,
+      "static_pass": 1,
+      "static_result": "PASS",
+      "product_write_grant": []
     },
     {
       "id": "SHARED/SOURCE-BYTE-COLLECTION2",
@@ -1955,7 +1963,8 @@
       "actor": "/root/parallel_a_shared_source_bytes_r2",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-source-bytes2-20261010/XAI_Desktop",
       "fixed_parent": "afba9ebd3eabd1adebc5fc0f30ab86ff73ce0e9e",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "accounting_clarification": "qualification0; concludingfullinput+bundle/output integritychecker iflaunched consumes existingstatic1 allowance andreportedactualPASS/FAIL; collectioncommandsalways actualPIDsessionexit; earlierdispatchstatic0shorthand referredNOmethodqualification notpermissiontolabelchecker0. Samecollectionfamily2/3/no reset/no actualcheckerretry."
     },
     {
       "id": "MED-03/SOURCE-CONTRACT1",
@@ -1978,12 +1987,16 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_full_bounded_technical_phase",
+      "state": "running_fresh_FULL_independent_task",
       "fixed_input": "aed09103a71c7e939ffc71d23c7b9b802ac47b51",
       "family_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd28-source-machinery-impact-r1.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd28-source-machinery-impact-r1.json",
+      "actor": "/root/parallel_a_brd28_machinery_impact_r1",
+      "fixed_parent": "e8b29df83f34fc13a55a04d78c3db2002b2d5fb6",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd28-machinery-impact1-20261010/XAI_Desktop",
+      "actual_actor_launched": true
     },
     {
       "id": "BRD-12/TECHNICAL-CONTRACT-AMENDMENT-REVIEW1",
@@ -2020,6 +2033,18 @@
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-outer-capture-admission-impact-r1.json"
+    },
+    {
+      "id": "CD-03/SOURCE-CONTRACT-REVIEW1",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_FULL_independent_source_review1",
+      "fixed_input": "316ff9696a6a4d4ff2ae95e805c7e8a0fd3dad8e",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cd03-source-contract-review-r1.json"
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -2037,23 +2062,23 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 78,
+    "static_passes": 79,
     "rework_findings": 61,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 81,
+    "completed_source_receipts": 82,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "81delivered-3vendor-1collection+1overrun=78staticincl6FAILED; pending6FAILED+1UNKNOWN=>85known12FAILED1UNKNOWN; pretoolreview1/static0/collection1/static0 separate",
+    "static_passes_basis": "82delivered-3vendor-1collection+1overrun=79staticincl6FAILED; pending6FAILED+1UNKNOWN=>86known12FAILED1UNKNOWN; pretoolreview1/static0/collection1/static0 separate",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 6,
     "rework_findings_basis": "Prior59 plussharedreview factualissues falsemissingpnpm paths and incompletepriorinputinventory; rootmetadata/CDcheckerfailures separate",
     "pending_no_delivery_static_invocations": 7,
     "pending_no_delivery_static_failures": 6,
-    "actual_static_invocations_total_known": 85,
+    "actual_static_invocations_total_known": 86,
     "actual_static_failed_total_known": 12,
     "static_budget_overruns": 1,
     "pending_no_delivery_static_unknown": 1,
@@ -2450,6 +2475,11 @@
       "at": "2026-10-10T15:22:28.124140+00:00",
       "event": "P40 receiveBRDtechnical3a7d5f originalremote ->84f0048/full36229/4247objects202614763bytes/static1PASS PID89800session4682a8db7813f8ccexit0/author2/3/pretoolASCIIemdashguard0launch correctedbeforeonlypass. Whole80candidates24+40+9+7UNGRANTED/PROPOSED freshFULLreview1registered. ReceivePOMO86de30 originalremote ->b21a2450e6d2607487ba3f5ae7663bdf7ad7c301 full3007review/full2979/106logs/15P04L1-L8/11paths20source/static1PASS PID89940session63151f84af9bfdfebexit0. Adoptexacta905impact9729+review136dwholeconditionaltechnicalONLY/nativePOMOlockdistinctcanonicalactivation; sourcecontract1registered/freshfullreviewlater. RegisterindependentoutercaptureadmissionIMPACTONLY existingcaptureunidentified: judgelegal genuineprerequisiteimplementationphase underapprovedP-OUTER; disguisedsharedauthor4/designrepair/budgetreset BLOCKS. No code/adoption/lastsource3release beforefreshfullimpactreview/rootdecision/sourcequal. RootP40 firstfunctions.exec JSstringassemblySyntaxError beforeANYtool/filewrites, correctedconstruction not productiteration. ActualCDsourcecontract2/bytecollector2/MEDsourcecontract1 root+3=4/4. 81receipts85knownstatic12FAILED1UNKNOWN/overrun1/rework61/vendor3/collection1static0/pretoolreview1static0. Formal13/3/3/293/939unchanged/no newcaller/runtime/releaseacceptance. OldreadyBRD28impact thenBRDfullreview/captureimpact/POMOsourcedraft rotate dependencies/FIFOaging.",
       "input": "b21a2450e6d2607487ba3f5ae7663bdf7ad7c301"
+    },
+    {
+      "at": "2026-10-10T15:25:03.091449+00:00",
+      "event": "P41 CDsourcecontract2 source1d26bc originalremote ->316ff9696a6a4d4ff2ae95e805c7e8a0fd3dad8e full5940identities164paths/full276799byteproposal1071649bytemanifest/exact2ADD/clean/static1PASS PID91770catfile91781EOFexit0beforebuffers/session88024c117cc978e62exit0/3.442904083s. CompleteS-CDsignatures/rawdomain/optionalcodec/errors/SSR/events/no-writeAPI/all14C/K/Q/23product18machinery/publicactualmanagedhost/config/realexporthandoffvsdisk+reentrancy/blockstaledownload/frozenG1 preserved. PROPOSEDUNADOPTED freshWHOLEsource-review1registered/no impl/methodgrant; author1failurecountsunchanged. BRD28fullimpact1startedate8fixedaed alongsidebytecollector2/MEDsourcecontract1 actualroot+3=4/4. Collection2clarified actualfullintegritychecker consumesexistingstatic1 iflaunched (qualification0), neverlabelchecker0; commandPIDsessionexit andfamily2/3 immutable.82receipts86knownstatic12FAILED1UNKNOWN/overrun1/rework61/vendor3/collection1static0/pretoolreview1static0. Formal13/3/3/293/939unchanged/no newcaller/runtime/releaseacceptance. Nextrootpushthenawaitnormal/all82sourceancestors beforefurtherrootmutation; olderBRDfullreview/outercaptureimpact/POMOsourcedraft/CDreview rotatewithdependencies/FIFOaging.",
+      "input": "316ff9696a6a4d4ff2ae95e805c7e8a0fd3dad8e"
     }
   ],
   "wave_P2_tasks": [
