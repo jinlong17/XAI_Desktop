@@ -1,0 +1,66 @@
+{
+  "input": "a2467404a794f4d6df946a3d4edd6c75bf6dceef",
+  "failures": [
+    {
+      "id": "GOV-06/AUTHORITY-CONTRACT-IMPACT-REVIEW1",
+      "parent": "9753051783b949bce9ec1d0b771bed058d20d431",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-gov06-contract-review1-20261010/XAI_Desktop",
+      "concluding_static_invocations": 1,
+      "result": "FAILED",
+      "no_artifact": true,
+      "no_commit": true,
+      "clean_readonly_confirmation": true,
+      "outputs_absent": [
+        "docs/reviews/audit-parallel-gov06-authority-contract-impact-review-r1/review.md",
+        "docs/reviews/audit-parallel-gov06-authority-contract-impact-review-r1/inputs.sha256"
+      ],
+      "stop_observed": true,
+      "independent_new_iteration_required": true,
+      "chunk": "8c81b1",
+      "pid": 64175,
+      "numeric_exit": 1,
+      "session": null,
+      "session_status": "UNKNOWN; synchronous completion reported",
+      "failure": "AssertionError: sibling document-only approval and protected helper",
+      "completed_pre_failure": {
+        "input_identities_reported": 271,
+        "bytes_reported": 12508934,
+        "declared_bindings_reported": 127,
+        "literal_spans_reported": 49,
+        "json_pointers_reported": 27
+      },
+      "unvalidated_leads": [
+        "T39 consumed status/count payload changes",
+        "release/G1 mirror coverage omissions"
+      ],
+      "finding_status": "UNVALIDATED leads only, no formal review verdict"
+    },
+    {
+      "id": "GOV-01+GOV-02/PARSER-PURPOSE-PROVENANCE-CENSUS1",
+      "parent": "878570a6307308a2853067f0fe58af8747093488",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-gov-parser-census1-20261010/XAI_Desktop",
+      "concluding_static_invocations": 1,
+      "result": "FAILED",
+      "no_artifact": true,
+      "no_commit": true,
+      "clean_readonly_confirmation": true,
+      "outputs_absent": [
+        "docs/reviews/audit-parallel-gov01-gov02-parser-purpose-provenance-census-r1/census.md",
+        "docs/reviews/audit-parallel-gov01-gov02-parser-purpose-provenance-census-r1/inputs.sha256"
+      ],
+      "stop_observed": true,
+      "independent_new_iteration_required": true,
+      "chunk": null,
+      "pid": null,
+      "numeric_exit": null,
+      "session": null,
+      "EOF": null,
+      "drain": null,
+      "process_provenance": "UNKNOWN raw process/chunk/exit/EOF; traceback reported a failed invocation, not fabricated exit1",
+      "failure": "input-hash assertion for AGENTS.md failed",
+      "finding_status": "no census artifact or lawful admission"
+    }
+  ],
+  "root_role": "readonly provenance and scheduling only",
+  "root_business_checks": 0
+}

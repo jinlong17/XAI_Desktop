@@ -73,5 +73,12 @@
     "six already pendingquestions excluded no repeat"
   ],
   "budget_grant": [],
-  "question_sent": false
+  "question_sent": true,
+  "question_tool": "request_user_input_async acceptedtrue after P64push+normal0FAIL1WARN",
+  "question_choices": [
+    "approve allfive",
+    "approve DASH+AI only",
+    "retain originalcap freeze"
+  ],
+  "decision": null
 }
