@@ -1,0 +1,102 @@
+{
+  "wave": "P8",
+  "fixed_input": "4b6e0db589002a7a6d36c73e5c1337995ff80a64",
+  "max_workers": 3,
+  "tasks": [
+    {
+      "id": "TT-08/STATUS-WRITER",
+      "workflow": "B",
+      "module": "web",
+      "role": "fresh independent bounded documentation status writer",
+      "model": "gpt-6.1-sol",
+      "fixed_input": "4b6e0db589002a7a6d36c73e5c1337995ff80a64",
+      "dispatch_parent": "exact registration commit resolved beforelaunch",
+      "source_inputs": [
+        "f475cf5d0598dcb18e0e75e2e025969e7c16b056",
+        "59809b32a4dc19dbdefff871cf9c60bb5b0b96b1",
+        "541a016fa64051a0b952e6c87ea839de99cc623d",
+        "68ac65f8fa1b8d9868b0fe15392dc9d445aa94b4",
+        "c6ab3c967074595ab59b7e0bf7dc86d66b229e97",
+        "287547e2b0e0724a48a89e50377ccc7e840db93b",
+        "00933c91241159e26f444213146d9ba949bac823"
+      ],
+      "allowed_files": [
+        "packages/plugin-web-time-tracker/docs/dev_log.md"
+      ],
+      "input_file_hashes": {
+        "packages/plugin-web-time-tracker/docs/dev_log.md": "ee68da749ab8df4a58e85845b2ead83a3b976bd11c2dee5067e00f4dfcdfc0ba"
+      },
+      "acceptance": [
+        "Approvedcontract\u00a77 authorizes a separately registered TT08 documentation-only READY_TO_SHIP entry after actualindependentPASS; freshAST fullcalleracceptance remainspending. Precisely separate scoped docreadiness fromwholeproduct/release/caller/formal312 acceptance",
+        "Append dated iteration/update currentTT08 metadata with Workflow/Executor/Updated/SuggestedNext/WorkLog and exact3receipts/author1/corrector2 source lineage. Retain oldhistoricalJune tail byte-for-byte and all failedattempts/limits",
+        "Record r1BLOCKED F1\u2192freshcorrector\u2192r2reportedAPPROVEDwithheldmandatorygovernancegap\u2192r3actualAPPROVEDcompleteinputs; threeattempts exhausted, no automatic4",
+        "No edits tootherfourcandidate docs/runtime/tests/CSS/runner/globalcontrol/ledger/inventory; exactlyoneMOD, allruntime/sourceclaims remainqualified andunchanged",
+        "Meaningful doclinks/whitespace/diff checks only, no runtime orhistoricalreruns. New independentAstra fullchain acceptance next, no selfacceptance or push"
+      ],
+      "locks": [
+        "TT08:modes-docs",
+        "GOV04:TT-status",
+        "GOV05:TT-prd-readonly"
+      ],
+      "budgets": {
+        "author_iteration": 3,
+        "author_family_cap": 3,
+        "status_writer_pass": 1,
+        "vendor_family_used": 3,
+        "vendor_cap": 3,
+        "runtime": 0
+      },
+      "stop": [
+        "hash/scope/dirty",
+        "cannot substantiateexactPASS",
+        "newproductorstatusscope",
+        "cap or protectedboundary"
+      ],
+      "no_children": true
+    },
+    {
+      "id": "REL02+03/BUDGET-IMPACT",
+      "workflow": "A",
+      "module": "web",
+      "role": "fresh independent bounded budget/source-authority impact reviewer; no repair",
+      "model": "gpt-6-astra",
+      "fixed_input": "4b6e0db589002a7a6d36c73e5c1337995ff80a64",
+      "dispatch_parent": "exact registration commit resolved beforelaunch",
+      "source_inputs": [
+        "c6050091f21aca4f3003da8f67f92a41a4a528d4",
+        "03dcf47931aba6d92daed76cf9f04a119d29c359"
+      ],
+      "allowed_files": [
+        "docs/reviews/audit-parallel-rel02-rel03-budget-impact-r1/impact.md",
+        "docs/reviews/audit-parallel-rel02-rel03-budget-impact-r1/inputs.sha256"
+      ],
+      "acceptance": [
+        "Read originalgoal24 per\u8fd0\u884c\u5355\u5143diagnostic\u22643 and newuser no actor/file/wt reset; actual\u00a78 contract permanentfamily restriction and full historical sourcedcounts, report distinctions correctly",
+        "HistoricalREL02atleastone actualClaude401 documented ced7bc0f:report9; REL03 knownOAuthpending doesnotdistinctlaunch; no exhaustedtotal ledger inpreviousreview. Locate any other exactdocumentedprocess receipts in thisaudits frozenrecordcorpus, never genericHTTP401 or duplicatedreportmention as newattempt",
+        "Determine whether source-grounded permissibleV1unit/budget accounting path exists underunchangedauthority, or genuinely unavailablepriorcount requires explicit smallestexception; no certifyunknown0/exhaustivetotal, no rename/worktree/providercapreset",
+        "Independenttechnicalimpact only. If rule amendment wouldweaken/usercap, explicitlyoutsideautomaticauthority; concrete minimalproposal/evidence possible forlater root centraldecision, no automaticexecutionpermission",
+        "No contracts/ledger/source/runtime/probes/native/browser/pkg/tests/otherwts or credentials; exact2ADD fullinputs hashbound; honestREADY_FOR_REGISTRATIONorBLOCKED reasoning notcalleracceptance"
+      ],
+      "budgets": {
+        "static_impact_pass": 1,
+        "runtime": 0,
+        "vendor_invocations": 0,
+        "historical": "allretained, no declarationofremainingattemptswithoutsource"
+      },
+      "stop": [
+        "missing/unverifiableinputs",
+        "scope/dirty",
+        "needexternalsecret/historyoutsidefrozenaudits",
+        "unwarrantedcapreset"
+      ],
+      "no_children": true
+    }
+  ],
+  "dispatch_now": [
+    "TT-08/STATUS-WRITER",
+    "REL02+03/BUDGET-IMPACT"
+  ],
+  "already_running": [
+    "TASK-06/CONTRACT-REVIEW"
+  ]
+}
