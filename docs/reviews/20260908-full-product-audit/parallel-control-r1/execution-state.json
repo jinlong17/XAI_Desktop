@@ -587,13 +587,26 @@
       "acceptance_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0
+    },
+    {
+      "id": "MET-05/CONTRACT-REVIEW",
+      "workflow": "D",
+      "actor": "/root/parallel_d_met05_contract_review_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "921d44ae10d7b9c9065b5817790b30179b365456",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-met05-review-20261010/XAI_Desktop",
+      "state": "running_independent_contract_review",
+      "review_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 2,
-    "total": 3,
+    "workers": 3,
+    "total": 4,
     "capacity": 4
   },
   "cost": {
@@ -755,6 +768,11 @@
       "at": "2026-10-10T11:16:53.788082+00:00",
       "event": "Receive MET110input bounded Planned proposal, fresh review registered;6 completed ownedwts archivedconfirmed after knownsame5deep fail snapshot; all formalstates unchanged",
       "input": "a559b2b0eff8893d2813e41fe22e401ad9138253"
+    },
+    {
+      "at": "2026-10-10T11:18:52.078317+00:00",
+      "event": "Fresh MET05 reviewer actuallylaunched, TTfullacceptance andTASKsource remainactive3workers+root; normal after6archives0FAIL1WARN",
+      "registration": "921d44ae10d7b9c9065b5817790b30179b365456"
     }
   ],
   "wave_P2_tasks": [
@@ -763,7 +781,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL/1WARN at c086837, all23stash remotely reachable, 26originalsource refs exact and26integration ancestors checked",
+    "normal": "0FAIL/1WARN after6ownedrecoverablearchives at921d44a; all23stash remotely reachable",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
