@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "id": "TT-08/verify",
+  "workflow": "D",
+  "role": "fresh independent actual ClaudeCode read-only verifier; reviewerneverrepairs",
+  "actor": "external-cli/TT-08/verify/i1",
+  "configured_model": "opus CLI alias; actual reportedmodelUsage retained, no fallback",
+  "fixed_card_input": "8f56a03310cf268e1f04cafbfa65cf8d7d0776dc",
+  "dispatch_parent": "resolve this exactregistrationcommit, freezeownworktree beforeinvoke",
+  "source_inputs": [
+    "01efd359d910fbe5cd5092570fe9060ffc9d8ef7",
+    "00933c91241159e26f444213146d9ba949bac823",
+    "287547e2b0e0724a48a89e50377ccc7e840db93b",
+    "c6ab3c967074595ab59b7e0bf7dc86d66b229e97"
+  ],
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "candidate_exact_patch_sha256": "fdc0c61977b3427a87758736cc334aad1bf6814a7bbf2ef869631b5ab47f8a22",
+  "depends_on": [
+    "TT-08/implement"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-tt08-vendor-verification-r1/prompt.md",
+    "docs/reviews/audit-parallel-tt08-vendor-verification-r1/preflight.json",
+    "docs/reviews/audit-parallel-tt08-vendor-verification-r1/stdout.jsonl",
+    "docs/reviews/audit-parallel-tt08-vendor-verification-r1/stderr.log",
+    "docs/reviews/audit-parallel-tt08-vendor-verification-r1/receipt.md"
+  ],
+  "writer_model": "Controller persists exactexternalactor prompt/raw streams/finalresult plus nonbusiness provenance; reviewer hasRead/Glob/Grep tools only, no filesystemwrite/shell/Agent/MCP/runtime",
+  "no_children": true,
+  "acceptance": [
+    "Independentlyread all5candidate docs vs fixed34package-host source/P0andcomplete staticbefore/approvedcontract D1-D7",
+    "Every currentclaim exactmode/Startconfirm/lock/controller/sessionaccounting/widget/page/source truth; acceptedTT02 unchanged, conversion/recoverylimits observationonly",
+    "CanonicalPRD acceptedcapability trace, preciseTT01/02/03/REL01history/counts/failedattempts/limits, no inventedfutureGOV05/adjacent/releasecoverage",
+    "Currentdated iteration PENDINGverification; historicalJune status/commands retained; no currentREADY_TO_SHIP",
+    "Allrequirement/evidence/linkage responsibilities and exact5pathscope covered; explicitAPPROVED/BLOCKEDandfilelinefindings; reviewerneverrepairs",
+    "Actualdifferenttoolprovider CLI invocation/rawstream/modelUsage/exit/refusals/cost preserved; configuration/authavailable alone neverPASS",
+    "Separate statuswriter→freshAstra fullchain acceptance→rootledger/inventory needed; formalcounts/caps andClockgatesunchanged"
+  ],
+  "budgets": {
+    "candidate_verification_iteration": 1,
+    "family_cap": 3,
+    "max_usd": 12,
+    "wall_seconds": 900,
+    "own_shutdown_grace_seconds": 2,
+    "own_kill_wait_seconds": 2,
+    "newruntime_package_browser_native_probe": 0,
+    "historical": "unchanged; vendor staticreview isnot rerun runtime"
+  },
+  "external_invocation_policy": "One fresh session print+stream-json+verbose; restricted safe-mode, no-session-persistence, no-chrome, disable-slash-commands, strictMCPempty, toolsRead/Glob/Grep only, permissiondontAsk, explicitmanualprojectrules. No auto fallback/no reuseoldClaude/no hook/Bash/Agent/write. Deadlineonlyexactownedchild; stdoutstderrwxstreamed; timeout/error/refusalcounts1/3andBLOCKED, retainpartialoutputs. Rootcopyfinalresultliteralwithoutrepair; exit/actualresult determinestransportstatusnotbusinessPASS.",
+  "forbidden": [
+    "any product/5doc repair/statuspublication",
+    "runner/test/runtime/package/native/browser/probe",
+    "globalcontrol/ledger/inventorybyexternalreviewer",
+    "oldprofile/recoverydeletion/otherworktreeaccess",
+    "push/merge/rebase/deploy/release/promote/D3",
+    "toolsoutsideReadGlobGrep/children/hooks/MCP/fallback"
+  ],
+  "stop": [
+    "hash/scopeconflict",
+    "providerpermissions/auth unavailable",
+    "budget/deadline",
+    "unsupporteddecision/sourceclaim",
+    "missingevidence; BLOCKEDretainno repair"
+  ]
+}
