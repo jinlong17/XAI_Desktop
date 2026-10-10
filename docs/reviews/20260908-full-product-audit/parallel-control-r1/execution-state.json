@@ -1836,7 +1836,7 @@
       "workflow": "D",
       "configured_model": "gpt-6-sol",
       "provider_attested": false,
-      "state": "running_fresh_FULL_independent_task",
+      "state": "received_APPROVED_PARTIALbyteintegrityONLY_fullclosureBLOCKED",
       "fixed_input": "0121be25e10a8f3f60510c686a1832cbd40a9bcb",
       "family_iteration": 1,
       "family_cap": 3,
@@ -1846,7 +1846,18 @@
       "actor": "/root/parallel_d_shared_byte_full_review_r1",
       "fixed_parent": "bd4dce4aa7a5b96d533b7a570b5bfb97843f392b",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-byte-review1-20261010/XAI_Desktop",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "source_commit": "6c3451eda23a90841db907502b647c53b43fe1a2",
+      "integration_commit": "5b3192eb2b8d59a0304454523c71769d91888a5d",
+      "archive_ref": "codex/archive/parallel-shared-source-bytes-review-r1-20261010",
+      "input_hashes_checked": 2874,
+      "unique_full_corpus_git_objects": 2863,
+      "embedded_files_checked": 104,
+      "static_pass": 1,
+      "static_result": "PASS",
+      "review_verdict": "APPROVED_PARTIAL_integrity_only",
+      "rootcapture": "unidentified_notexistinginboundedsourceinventory",
+      "caller3_release": false
     },
     {
       "id": "POMO-04/SOURCE-MACHINERY-IMPACT-REVIEW2",
@@ -1865,12 +1876,16 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_full_independent_review",
+      "state": "running_fresh_FULL_independent_task",
       "fixed_input": "f8cc150544e050bbb8f38076b1e5d3c41ca47fac",
       "family_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-med03-source-machinery-impact-review-r1.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-med03-source-machinery-impact-review-r1.json",
+      "actor": "/root/parallel_d_med03_machinery_full_review_r1",
+      "fixed_parent": "26f7875d3dd318d62a08afbf5946036af4b19692",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-med03-machinery-review1-20261010/XAI_Desktop",
+      "actual_actor_launched": true
     },
     {
       "id": "CD-03/SOURCE-CONTRACT2",
@@ -1883,6 +1898,18 @@
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cd03-source-contract-r2.json"
+    },
+    {
+      "id": "SHARED/SOURCE-BYTE-COLLECTION2",
+      "workflow": "A",
+      "configured_model": "gpt-6-luna",
+      "provider_attested": false,
+      "state": "queued_fresh_bounded_bytecorrection2",
+      "fixed_input": "5b3192eb2b8d59a0304454523c71769d91888a5d",
+      "family_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-source-byte-collection-r2.json"
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -1900,23 +1927,23 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 73,
-    "rework_findings": 59,
+    "static_passes": 74,
+    "rework_findings": 61,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 76,
+    "completed_source_receipts": 77,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "76delivered minus3vendor minus1collection plus1overrun=73staticincl6FAILED; pending6FAILED+1UNKNOWN=>80known/12FAILED/1UNKNOWN; POMOpretoolreview1/static0 andcollection1/static0 separate",
+    "static_passes_basis": "77delivered-3vendor-1collection+1overrun=74staticincl6FAILED; pending6FAILED+1UNKNOWN=>81known12FAILED1UNKNOWN; pretoolreview1/static0 andcollection1/static0 separate",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 6,
-    "rework_findings_basis": "Prior58 plusCALreviewR1 policy-narrowing; BRDcheckerfailurecost counted separately notbusinessfinding",
+    "rework_findings_basis": "Prior59 plussharedreview factualissues falsemissingpnpm paths and incompletepriorinputinventory; rootmetadata/CDcheckerfailures separate",
     "pending_no_delivery_static_invocations": 7,
     "pending_no_delivery_static_failures": 6,
-    "actual_static_invocations_total_known": 80,
+    "actual_static_invocations_total_known": 81,
     "actual_static_failed_total_known": 12,
     "static_budget_overruns": 1,
     "pending_no_delivery_static_unknown": 1,
@@ -2293,6 +2320,11 @@
       "at": "2026-10-10T15:05:16.994892+00:00",
       "event": "P36 freezeCDsourcecontractauthor1 b94d30exit1/0.300388792s/stdin109 wrongmoduleCounter/fullhashloopcanonicalbuffersALLwritesUNRUN/nooutputs/cleanb732/memorydraftnotartifact. Independentlyrootmetadataestablishednormalizedmoduleweb213/app22/plugin16/sync41/admin16/site4 vsoriginal_moduleweb174+project-system30+crossmodule9; nonemptygateobligations150 not118distinctgatepolicy. RegisterfreshCDsourcecontract2/3 samefixed61/fulloriginal5857; no standards/capsreset. BRDtechnicalauthor2startedatbd4fixedb52+BKfullreview1+sharedbytefullreview1 actualroot+3=4/4; pendingMEDfullreview/POMOfullreview2continueFIFOaging. P35control26f7875pushedliteralnormal0FAIL1WARN/76exactoriginalremote+76integrationancestorsPASS. 76receipts/80knownstatic12FAILED1UNKNOWN/overrun1/pretoolreview1static0/collection1static0/rework59/vendor3; formal13/3/3/293/939unchanged no producttest or calleracceptance.",
       "input": "26f7875d3dd318d62a08afbf5946036af4b19692"
+    },
+    {
+      "at": "2026-10-10T15:07:23.908240+00:00",
+      "event": "P37 sharedbytesfullreview6c3451 originalremote received5b3192eb2b8d59a0304454523c71769d91888a5d exact2ADD/clean/full2874indexidentities+2863Gitobjects71675457bytes+104embedded/static1PASS PID82588session69254/chunks1344e6ad1f46exit0. AdoptpartialbyteintegrityONLY; 7missingdeps false nestedlookup actualpnpm siblingspresent/fiveSDKrootsuncaptured; TASK477/MET2663 inputsavailable; actualloadedforwarding/config/sourcequal/rootoutercapture stillBLOCKED source3HELD/noauthor4. Registersamecollectionfamilyfresh2/3 original24roots4096files32MiBcumulative immutablebundle/noexecute/noinstall no designrepair. MEDfullreview1started26f7875/fixedf8cc withBKfullreview1+BRDtechnical2 root+3=4/4. Root attempted read reportinmainbeforeintegration(pathabsent) correctedGitshow; earlier normal sync mistakenlylaunchedafternewcherrybeforepush returned4FAIL1WARN fortransientlocalrefs/reflog; preservefailurelog and rerunONLYafterpush, not productiteration/recoverydeletion. 77receipts81knownstatic12FAILED1UNKNOWN/overrun1/rework61/vendor3/collection1static0/pretoolreview1static0; formal13/3/3/293/939unchanged no newcaller/runtime/releaseacceptance. QueuedPOMOfullreview2/CDsourcecontract2/bytecollection2 rotatewithoutsharedwriterconflict.",
+      "input": "5b3192eb2b8d59a0304454523c71769d91888a5d"
     }
   ],
   "wave_P2_tasks": [
@@ -2538,6 +2570,15 @@
       "independent_review": "bdc06bd5b57f026caf6d7838563bfdae6f8684c9",
       "review_sha256": "3a8d96e1fd90d75a2b508be7da9e2c7598f01728a99991c0305773c2ba56c9c1",
       "scope": "Completefive-row conditionaldesignbasis only; no measurementadoption/qualification. Bothsource3slotsHELD until immutableactualReactDOMSDK source/forwardingconfiguration+existingrootcapture provided; noauthor4.",
+      "product_write_grant": []
+    },
+    {
+      "caller": "SHARED/sourcebytepreservation",
+      "source": "05e8514429e9f24bd2e1d6ffa9dd9e9312899e1d",
+      "source_sha256": "e32bf67cbeab2e7502ad25663f55906745ea6ae158c909e7c0a92d957145fe74",
+      "independent_review": "6c3451eda23a90841db907502b647c53b43fe1a2",
+      "review_sha256": "7aee22fbb2d6b81207c97d11bcd7aeedd1f3de7fe27dcf985ca89ca07c9baa0d",
+      "scope": "Immutable4root104files7993322byte partialintegrity ONLY; all7missingdeps incorrectnestedpnpmlookup/actualsiblings exist; TASKMET priorfullsourceidentityavailable; actualSDKtransitives uncaptured/loadedforwardingconfiguredbehavior unqualified/existingoutercaptureunidentified. No lastsource3release/methodqualification orauthor4.",
       "product_write_grant": []
     }
   ]
