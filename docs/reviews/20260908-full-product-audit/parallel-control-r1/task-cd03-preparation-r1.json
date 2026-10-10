@@ -8,11 +8,11 @@
   "dispatch_parent": "exact registration commit resolved before launch",
   "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
   "original_item": {
-    "id": "POMO-04",
+    "id": "CD-03",
     "priority": "P2",
     "kind": "决策",
-    "action": "明确Stop、Reset及中途离开的保存规则",
-    "acceptance": "每个按钮的保存/放弃含义清楚；Reset不静默丢失用户以为已保存的记录",
+    "action": "定义重复/到期动作及是否提供提醒",
+    "acceptance": "无后台动作时明确只是日期差展示；新增提醒接JOB统一机制",
     "status": "待复核/待办",
     "module": "web",
     "gate": "当前范围",
@@ -21,18 +21,18 @@
     "original_module": "web",
     "formal_state": "pending",
     "retained_execution_record": {
-      "id": "POMO-04",
+      "id": "CD-03",
       "status": "pending",
       "evidence": []
     },
     "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
     "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
     "gate_obligations": [
-      "existing-owner-rule-or-minimal-decision:POMO-04"
+      "existing-owner-rule-or-minimal-decision:CD-03"
     ],
-    "source_section": "POMO",
+    "source_section": "CD",
     "acceptance_evidence": {
-      "business_acceptance": "每个按钮的保存/放弃含义清楚；Reset不静默丢失用户以为已保存的记录",
+      "business_acceptance": "无后台动作时明确只是日期差展示；新增提醒接JOB统一机制",
       "existing": [],
       "required_future": [
         "fixed-source contract and before evidence",
@@ -44,14 +44,14 @@
       ]
     },
     "tasks": [
-      "POMO-04/prepare",
-      "POMO-04/contract-review",
-      "POMO-04/before",
-      "POMO-04/implement",
-      "POMO-04/verify",
-      "POMO-04/accept",
-      "POMO-04/reconcile",
-      "POMO-04/inventory"
+      "CD-03/prepare",
+      "CD-03/contract-review",
+      "CD-03/before",
+      "CD-03/implement",
+      "CD-03/verify",
+      "CD-03/accept",
+      "CD-03/reconcile",
+      "CD-03/inventory"
     ],
     "execution_state": "needs_fixed_scope_discovery"
   },
@@ -96,5 +96,11 @@
     "e5caddc1abb1b12afb8802960d6e2b993c0c365a",
     "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
     "e041c2bc293b70db367444c62c4300231976dbf7"
-  ]
+  ],
+  "metadata_amendment": {
+    "reason": "Root copied stale POMO04 original_item in template. Header/acceptance/files were correct; only nested metadata corrected from immutable scope-map. Original parent/product/fixed discovery input/author1/static1 retained; explicit new immutable amendment consumed additionally, no silent repin or runtime budget reset.",
+    "supersedes_card_sha256": "d2413a79d1635264a86af9ef4fb7c63962bc7cc1fb8f3bace9116064460244e7",
+    "original_registration": "11d1d67e67719cf331217786e60fa24ae487e12b",
+    "scope_map_sha256": "29be78e04b59fbaf1a818a6ab2ad7542ddc161512367b451fd472789f7a52b7a"
+  }
 }
