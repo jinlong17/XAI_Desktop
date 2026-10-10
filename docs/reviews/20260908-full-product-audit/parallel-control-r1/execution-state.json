@@ -647,13 +647,41 @@
       "source_author_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0
+    },
+    {
+      "id": "TASK-06/RUNNER-SOURCE-REVIEW",
+      "workflow": "D",
+      "actor": "/root/parallel_d_task06_source_review_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "50b0bb4719af682e9e44f64206afa6d59333f929",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-task06-source-review-20261010/XAI_Desktop",
+      "state": "running_static_only",
+      "static_pass": 1,
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "DASH-06/PREPARE",
+      "workflow": "C",
+      "actor": "/root/parallel_c_dash06_prepare_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "50b0bb4719af682e9e44f64206afa6d59333f929",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-prepare-20261010/XAI_Desktop",
+      "state": "running_static_only",
+      "static_pass": 1,
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 1,
-    "total": 2,
+    "workers": 3,
+    "total": 4,
     "capacity": 4
   },
   "cost": {
@@ -845,6 +873,10 @@
     {
       "event": "MET source actual dispatched fixedcfee; TASKsource229 and TTinventory335 received, exact static47rows; fresh TASKsource review and DASH06 preparation registered",
       "input": "7ba41f0e3c88510b2589e43090b10f7484c3956d"
+    },
+    {
+      "event": "Fresh TASKsource reviewer and DASH06 preparer actuallylaunched; METsource continues exactly3workers+root4/4",
+      "registration": "50b0bb4719af682e9e44f64206afa6d59333f929"
     }
   ],
   "wave_P2_tasks": [
@@ -863,7 +895,8 @@
     "P3_P4_P5_P6_owned_completed_worktrees": "14archived recoverable, confirmedviaapp list; originals remote refs checked; active3worktrees retained, unrelateduntouched",
     "deep_before_owned_cleanup_P8": "1FAIL/0WARN same5knownunreachable; refs/reflog26sourcePASS/all23stash remote; retained notdeleted",
     "P8_owned_completed_worktrees": "6clean originals remotely preserved then archivedrecoverableconfirmedviaapp; active3andunrelateduntouched",
-    "normal_intermediate_P9": "2FAIL/1WARN one newlycompleted source commit in refs/reflog while audit ran before its preservation; expected transient, source receipt/push thenrepeat, no deleting recovery"
+    "normal_intermediate_P9": "2FAIL/1WARN one newlycompleted source commit in refs/reflog while audit ran before its preservation; expected transient, source receipt/push thenrepeat, no deleting recovery",
+    "normal_intermediate_P10": "3FAIL1WARN: two justpreserved sourcearchives lacked upstream and one concurrent root reflogcheckpoint prepush; upstream corrected without source/deletion, repush and repeat"
   },
   "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization",
   "active_scheduler": {
