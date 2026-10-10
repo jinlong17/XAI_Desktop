@@ -1,0 +1,71 @@
+{
+  "status": "CORRECTION_VALIDATION_PASS_UNQUALIFIED",
+  "iteration": 3,
+  "cases": [
+    {
+      "name": "01-primary-plus-cleanup-failure",
+      "pass": true
+    },
+    {
+      "name": "02-cleanup-only-failure",
+      "pass": true
+    },
+    {
+      "name": "03-slow-no-exit-owned-signals",
+      "pass": true
+    },
+    {
+      "name": "04-CDP-close-rejection",
+      "pass": true
+    },
+    {
+      "name": "05-startup-before-handle",
+      "pass": true
+    },
+    {
+      "name": "06-journal-and-result-write-failure",
+      "pass": true
+    },
+    {
+      "name": "07-stream-partial-child-nonzero-exit2",
+      "pass": true
+    },
+    {
+      "name": "08-checkout-cleanup-failure",
+      "pass": true
+    },
+    {
+      "name": "09-overwrite-refusal",
+      "pass": true
+    },
+    {
+      "name": "10-interrupted-tail-visible",
+      "pass": true
+    },
+    {
+      "name": "11-permanent-cumulative-reservations",
+      "pass": true
+    },
+    {
+      "name": "12-exact-ownership",
+      "pass": true
+    },
+    {
+      "name": "13-unrelated-causal-refusal-rejected",
+      "pass": true
+    },
+    {
+      "name": "14-static-generated-adapter-source-freeze",
+      "pass": true
+    }
+  ],
+  "checks": 55,
+  "formal": 0,
+  "probes": 0,
+  "browserNative": 0,
+  "sourceHashes": {
+    "evidence-retention.mjs": "c45cb0ea31a0ecc2871dff336b03bda485bb724d8c70ab0f4528bdcecac42dc3",
+    "verify-evidence-retention.mjs": "476b09ab1fab0718aa8c45518db648a574112ce72035542fa2703dac1802a193",
+    "verify-qualification.mjs": "9e3e478124f59e37c780ef78ebd1058a08838f5d7d6494f9cb367c46de101c71"
+  }
+}
