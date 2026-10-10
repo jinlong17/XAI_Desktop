@@ -1,0 +1,50 @@
+{
+  "id": "MET-05/PREPARE",
+  "workflow": "C",
+  "module": "web",
+  "role": "fresh independent source-grounded bounded contract preparation",
+  "model": "gpt-6-astra",
+  "fixed_input": "9db84ccc8836b3ba7f32b8c13b73fc8a60dd5045",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "acd21f9b15a735e2202ca9553aff54b3e3b46e17",
+    "7bb8df1631b94295bb7c3f928fcd9924b1337873"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-met05-preparation-r1/contract.md",
+    "docs/reviews/audit-parallel-met05-preparation-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Preserve complete original MET05 action/acceptance/formalrecord; planned sleep/water/exercise cannot be activated or treated as mandatory bug implementation",
+    "Read complete original audit and existing metrics design/PRD/ADR/accepted owner rules/source/tests/host route/data identity; trace actual disabled bilingual Planned controls, not infer pass from seed entities",
+    "Find reusable valid frozen source/native evidence if byteidentical and specifically covering required behaviors; no rerun historical batches and no sourceequality proves new nativePASS",
+    "Define exact finite before/fixed positive-negative acceptance for preserved unimplemented tabs and active Weight, trusted keyboard/pointer accessibility and actualhost/source/account semantics relevant to original obligation; do not absorb or close neighboring MET/REL obligations",
+    "Existing product decisions first; no new extension requirement invented; only concretely missing minimal decision after sourcechallenge. Scope boundaries and futureexactallowlist if necessary, no productwritegrant",
+    "Full independentcontractreview/qualifiedinstrumentation/before/candidateintegratedverification/actualvendor/freshAST/rootevidence-onlyreconciliation/inventory/remote chain retained; dependencies/locks/permanentbudgetsource/caps/stop precise; runtime readiness not claimed"
+  ],
+  "protected": [
+    "allnonallowedpaths",
+    "product/CSS/tests/runner/globalcontrol/ledgers/inventory",
+    "otherworktrees",
+    "pausedmodules/new metrics/ownerdecisions",
+    "push/merge/rebase/deploy/release/promote/D3"
+  ],
+  "budgets": {
+    "preparation_static_pass": 1,
+    "runtime": 0,
+    "native": 0,
+    "browser": 0,
+    "tests": 0,
+    "probes": 0,
+    "historical_reruns": 0,
+    "permanent_histories": "retain all, unknown not0; later units separately source-grounded registered caps3"
+  },
+  "stop": [
+    "dirty/hash/source mismatch",
+    "protected boundary needed",
+    "unsupported choice or runtime required",
+    "newmodule orcapreset"
+  ],
+  "no_children": true
+}
