@@ -1138,7 +1138,7 @@
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "stopped_two_FAILED_static_invocations_overrun_one_no_outputs_docclosure_only_authorized",
+      "state": "running_author1_documentaryclosure_only_additionalauthority_b9ed5f6",
       "fixed_input": "ccf2ee5b4980393e5b506eb6ebaeede9604fbd48",
       "family_iteration": 1,
       "family_cap": 3,
@@ -1154,7 +1154,9 @@
       "static_allowance_original": 1,
       "static_overrun": 1,
       "remaining_static_invocations": 0,
-      "source_outputs_exist": false
+      "source_outputs_exist": false,
+      "documentary_closure_authority": "b9ed5f63256620b1135ba9e782f08992923bd3c4",
+      "documentary_closure_card_sha256": "a7e57e64c56b64298c0908e721391ffe3e01f2fa2688d86da27a48115a98ceef"
     },
     {
       "id": "MED-03/CONTRACT-REVIEW1",
@@ -1181,14 +1183,20 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "completed_conditional_APPROVED_reported_awaiting_root_fullreceipt",
+      "state": "received_conditional_APPROVED_complete_documentary_proposal_only",
       "fixed_input": "a489adcb1205c56623738a8fa54696e40f22d17a",
       "review_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
       "actor": "/root/parallel_d_cd03_contract_review_r1",
       "fixed_parent": "2236ab6b87d2ec423e7e5920e6dfdd3ef0f7c8ad",
-      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-cd03-review1-20261010/XAI_Desktop"
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-cd03-review1-20261010/XAI_Desktop",
+      "source_commit": "fda069eb300704f24384eccacfd74ffc147aef37",
+      "integration_commit": "04797e39f0a6c42051601207f0429deef3300a6a",
+      "archive_ref": "codex/archive/parallel-cd03-contract-review-r1-20261010",
+      "input_hashes_checked": 3351,
+      "static_pass": 1,
+      "static_result": "PASS"
     },
     {
       "id": "SHARED/NATIVE-HOST-FOCUS-IMPACT-REVIEW1",
@@ -1278,6 +1286,18 @@
       "review_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0
+    },
+    {
+      "id": "CD-03/SOURCE-MACHINERY-IMPACT1",
+      "workflow": "A",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fullCD_source_machinery_and_dependency_impact1",
+      "fixed_input": "04797e39f0a6c42051601207f0429deef3300a6a",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "canonical_parent_phase": "CD-03/prepare"
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -1295,23 +1315,23 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 53,
+    "static_passes": 54,
     "rework_findings": 56,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 56,
+    "completed_source_receipts": 57,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "56deliveries minus3actualvendor =53consumed receiptstatics incl4FAILED; DASHno-delivery2FAILED separate pending, actualknown55/6FAILED, no doublecount after receipt",
+    "static_passes_basis": "57 deliveries minus3actualvendor54 receiptstatic incl4FAILED +pendingDASH2FAILED =knownactual56/6FAILED; budgetoverrun1 unchanged",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 4,
     "rework_findings_basis": "Accumulated blockingreviewgroups incl3MEDreview1R1-R3; repeats notuniqueissues orruntimeattempts",
     "pending_no_delivery_static_invocations": 2,
     "pending_no_delivery_static_failures": 2,
-    "actual_static_invocations_total_known": 55,
+    "actual_static_invocations_total_known": 56,
     "actual_static_failed_total_known": 6,
     "static_budget_overruns": 1
   },
@@ -1605,6 +1625,11 @@
     {
       "at": "2026-10-10T13:25:26.045311+00:00",
       "event": "CDreview completedreported notyetrootreceived; olderPOMOreview2launchedfixedab77, actualsharedreview1+POMOreview2 twoDworkers root+2=3/4; DASHdocclosurependingauthoritydelivery no new semantic runs."
+    },
+    {
+      "at": "2026-10-10T13:28:46.888243+00:00",
+      "event": "CDreview full3351 PASS conditionalAPPROVED received; rootadopts full14rowdocproposal/no productgrant, finite sourceavailability/export/machineryimpact1queued. ActualsharedreviewD/POMOreview2D/DASHauthor1docclosureC root+3=4/4 no furtherDASHsemanticchecks. Cycle42completeBRDimpact/MEDreview/CDreview.57deliveries54receiptstatic4FAILED+pending2FAILED known56/6FAILED/overrun1/vendor3/rework56; formalunchanged.",
+      "input": "04797e39f0a6c42051601207f0429deef3300a6a"
     }
   ],
   "wave_P2_tasks": [
@@ -1746,6 +1771,20 @@
         "All Board writer lock/migration fencing impact+review",
         "exact capsule/migration/importexport/accountglobaldeletion/departure reachability",
         "sourcequalified fullbefore inheritedbudget/implementation/fixed/native/fullG1/vendor/freshacceptance"
+      ],
+      "product_write_grant": []
+    },
+    {
+      "caller": "CD-03",
+      "scope": "Full14row/11conditionalpath documentary proposal only; no implementation or unavailable-source/export risk waiver",
+      "source": "2a35488361bfbad596473fc355bd18d8feb5b164",
+      "contract_sha256": "6ee52802a9cfe8ec74ab9726f5948c091817c5ed8ed8ff7ae27c6222b82d74d6",
+      "independent_review": "fda069eb300704f24384eccacfd74ffc147aef37",
+      "review_sha256": "6c7a2e6129e09c0335f82f5c475a67fc1822c33baa766884e8e91ae4a2ffdeb7",
+      "technical_prerequisites": [
+        "Fullsource machinery/readonlyavailability and mid-export ownerchange impact+review",
+        "exact finite protectedscope amendment if implicated",
+        "qualifiedfullbefore/purposebudgets/native/fullG1/vendor/freshacceptance"
       ],
       "product_write_grant": []
     }
