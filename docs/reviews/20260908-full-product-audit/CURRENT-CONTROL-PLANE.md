@@ -4,7 +4,7 @@ Updated: 2026-10-10
 
 控制分支：`codex/web/full-product-audit-20260908`
 
-当前产品 SHA：`f9eb4b1f207bc4b46f547b90afc250424b3c8695`（已接受的 AppRail caller；本轮 `b5688d8..01bd516` 只有审查证据，产品树不变）
+当前产品代码基线：`f9eb4b1f207bc4b46f547b90afc250424b3c8695`（AppRail caller 已接受）。P92 在固定控制父提交 `396f2e6e0e4f171586b85328ccdf0f49ec5ec647` 实际核对：apps/packages 相对 P0 仅有四份已接受 TT-08 owning docs 差异，产品代码仍为 P0。历史“产品树不变”陈述仅适用于其登记的旧提交区间。
 
 模块归属：`web`
 
@@ -14,7 +14,8 @@ Current mode: **A-Codex sole controller; four workflows A/B/C/D with dependency-
 
 ## 当前仓库状态
 
-- Before this control commit, HEAD `686e98b6251364aee1fa26c63ad30e6af15c3b25` is clean/pushed/origin-ancestor verified, 0/0. Own Q1 worktree `audit-clock-qualification-q1-20261010` is archived and recoverable; other sessions untouched. Normal sync-check failures=0/warnings=1; cleanup-preflight deep failures=1/warnings=0, five unreachable commits still preserved. Actual control HEAD is obtained with git rev-parse HEAD.
+- Current P92 pre-control checkpoint: HEAD `396f2e6e0e4f171586b85328ccdf0f49ec5ec647`, clean/pushed, exact origin head and ancestry checked. P91 normal sync-check 0 FAIL / 1 WARN. 122 distinct original source commits are at exact archive refs and all integrations are origin ancestors. Actual root + Calendar source/process D1 + Habits technical D1 + Pet source FINAL3 = 4/4 slots; task cards keep their own fixed parents/inputs. Formal 13 completed / 3 verification_pending / 3 in_progress / 293 pending, 939 references; caller/documentary progress does not close items. Deep recovery gap remains OPEN; no recovery deletion or other-session changes.
+- Historical checkpoint (not current HEAD): `686e98b6251364aee1fa26c63ad30e6af15c3b25` was clean/pushed/origin-ancestor verified, 0/0. Own Q1 worktree `audit-clock-qualification-q1-20261010` is archived and recoverable; other sessions untouched. Normal sync-check failures=0/warnings=1; cleanup-preflight deep failures=1/warnings=0, five unreachable commits still preserved. Actual control HEAD is obtained with git rev-parse HEAD.
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）→ `24073b5`（Appearance 合同 r3 §11 的 24 个文件：Appearance 包、shell 的 Topbar/Shell/types 与 Topbar 测试、`App.tsx` 与新 App 测试）→ `5bbf473`（F-APP-1：Appearance `styles.css` 追加 9 行，并新增一个焦点环守卫测试）→ `419e56d`（F-APP-2：`styles.css` 再追加 13 行，并新增一个选中焦点守卫测试）→ `f9eb4b1`（AppRail 合同 §11 的 19 个产品文件：17 个 shell 文件、`App.tsx` 与新增 App railorder 测试）。本轮 `b5688d8..01bd516` 及本控制面提交均无产品变化；当前基线的 dashboard-widgets、dashboard-grid、共享 storage 与 lockfile 沿用前一基线。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 70-R1 执行者先生成 `193c7f1` 草稿，随后 amend 为正式 `01fc448`（提交正文换为真实换行，并澄清两处草案路径/固定父输入说明）。草稿最初只在执行树 reflog；总控保存到远端 `codex/archive/clock-impact-r1-draft-20261009` 并核对祖先，不删除恢复状态。此归档不是正式审查证据，不合并。
@@ -1020,3 +1021,6 @@ P90 Calendar369originalexactremote->965a66a7991b426007dea316e6045f30ecade1ec exa
 
 
 P91 Habitswholetechnicalcontract2 original4db exactarchive->036e2f39c653ef7198704e3df38458c16ec3e35c exact2ADDclean134bindings receivedUNADOPTEDproposal; reportedstatic57824exit0 2.752162s/outer2951ms 135readonlyGit0EOF/bothbuffersprewrite rawsessionchunk/drain/fullwallUNKNOWN; rawrecords preservedINERT. FreshWHOLEtechnicalD1registered all5original actionacceptance/codefacts/requirements/proposedsharedseams/process no repair/no codegrant. Author2/3 prioractualFAIL retained; source2/3/sourceD2/3 retained. Weeklypolicyunresolved BLOCKED no ownerchoice.122sources153knownconcluding39FAIL3UNKNOWN111reportedPASS plusCalinputonly1/postwriteUNQUALIFIED1/rework83/newformalprobevendor0. P87-P89cost3actualFAILED/billingUNKNOWN notwaiver. Formal13/3/3/293312299unclosed939 unchanged. Ready3workers CalD1/HabtechnicalD1/WebPetFINAL3 after pushedregistration; sevenpendinggroups/E6E7E8HELD goalunfinished.
+
+
+P92 currentnavigation refreshedmetadataONLY old686checkpoint markedhistorical; actualP0productCODE+fouracceptedTT08owningdocs, notwholeproducttreeparity. ALL122distinctoriginals exactremote andintegrationoriginancestors396 proof; freshformal312unique13/3/3/293299unclosed939 verified. Actualroot+CalendarWHOLEsource/processD1(parent96/input965)+HabitsWHOLEtechnicalD1(parent396/input036)+WebPetFINALwhole3(parent396/input965)=4/4 fixedinputs/no silentrepin.153knownconcluding39FAIL3UNKNOWN111reportedPASS plusCalinputonly1/postwriteUNQUALIFIED1/rework83/overruns3/newformalprobevendor0. Sevenpendinggroups/E6E7E8/Clockholds retained no scope/owner/gate/budgetwaiver. Goal unfinished.

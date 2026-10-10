@@ -3756,14 +3756,18 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "registered_ready_fresh_WHOLE",
+      "state": "running_fresh_WHOLE_independent",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cal01-cal02-cal04-cal05-source-discovery-review-r1.json",
       "fixed_input": "965a66a7991b426007dea316e6045f30ecade1ec",
       "family_iteration": 1,
       "family_cap": 3,
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "adopted": false,
-      "new_budget_grant": []
+      "new_budget_grant": [],
+      "actor": "/root/parallel_d_cal01_cal02_cal04_cal05_whole_source_review_r1",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-cal4-source-review1-20261010/XAI_Desktop",
+      "fixed_parent": "96e01a4ea73410ae4d75692c64f902ca242f8609",
+      "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation"
     },
     {
       "id": "SHELL-05/SOURCE-DISCOVERY3",
@@ -3771,14 +3775,18 @@
       "primary_workflow": "C",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "registered_ready_fresh_WHOLE",
+      "state": "running_fresh_WHOLE_independent",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shell05-web-pet-source-discovery-r3.json",
       "fixed_input": "965a66a7991b426007dea316e6045f30ecade1ec",
       "family_iteration": 3,
       "family_cap": 3,
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "adopted": false,
-      "new_budget_grant": []
+      "new_budget_grant": [],
+      "actor": "/root/parallel_c_shell05_web_pet_final_whole_source_r3",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-shell05-web-pet-source3-20261010/XAI_Desktop",
+      "fixed_parent": "396f2e6e0e4f171586b85328ccdf0f49ec5ec647",
+      "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation"
     },
     {
       "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/TECHNICAL-CONTRACT-REVIEW1",
@@ -3786,27 +3794,32 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "registered_ready_fresh_WHOLE_technical_review1",
+      "state": "running_fresh_WHOLE_independent",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-hab01-hab05-technical-contract-review-r1.json",
       "fixed_input": "036e2f39c653ef7198704e3df38458c16ec3e35c",
       "family_iteration": 1,
       "family_cap": 3,
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "adopted": false,
-      "new_budget_grant": []
+      "new_budget_grant": [],
+      "actor": "/root/parallel_d_hab01_hab05_whole_technical_contract_review_r1",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-hab01-hab05-contract-review1-20261010/XAI_Desktop",
+      "fixed_parent": "396f2e6e0e4f171586b85328ccdf0f49ec5ec647",
+      "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation"
     }
   ],
   "workflow_B": "TT08 FULL documentary caller accepted/reconciled/inventoryaccepted; unchangedruntimeP0. MEDsource2/BRD28wholeimpact2/GOV01+02sourcecontract2 conditionaltechnicalDOCUMENT adopted. Otherimplementation descendants wait eachowningqualification/before/scope/gate; no newruntime/caller/formal/releasegrant.",
   "concurrency": {
     "root": 1,
-    "workers": 0,
-    "total": 1,
+    "workers": 3,
+    "total": 4,
     "capacity": 4,
-    "ready_next": [
-      "CAL-01+CAL-02+CAL-04+CAL-05/SOURCE-DISCOVERY-REVIEW1",
-      "SHELL-05/SOURCE-DISCOVERY3",
-      "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/TECHNICAL-CONTRACT-REVIEW1"
-    ]
+    "actors": [
+      "/root/parallel_d_cal01_cal02_cal04_cal05_whole_source_review_r1",
+      "/root/parallel_c_shell05_web_pet_final_whole_source_r3",
+      "/root/parallel_d_hab01_hab05_whole_technical_contract_review_r1"
+    ],
+    "review_priority": "two full independent reviews plus final Pet source; no runtime grant"
   },
   "cost": {
     "new_formal": 0,
@@ -4620,6 +4633,11 @@
       "at": "2026-10-10T20:17:17.881920+00:00",
       "event": "P91 Habitswholetechnicalcontract2 original4db exactarchive->036e2f39c653ef7198704e3df38458c16ec3e35c exact2ADDclean134bindings receivedUNADOPTEDproposal; reportedstatic57824exit0 2.752162s/outer2951ms 135readonlyGit0EOF/bothbuffersprewrite rawsessionchunk/drain/fullwallUNKNOWN; rawrecords preservedINERT. FreshWHOLEtechnicalD1registered all5original actionacceptance/codefacts/requirements/proposedsharedseams/process no repair/no codegrant. Author2/3 prioractualFAIL retained; source2/3/sourceD2/3 retained. Weeklypolicyunresolved BLOCKED no ownerchoice.122sources153knownconcluding39FAIL3UNKNOWN111reportedPASS plusCalinputonly1/postwriteUNQUALIFIED1/rework83/newformalprobevendor0. P87-P89cost3actualFAILED/billingUNKNOWN notwaiver. Formal13/3/3/293312299unclosed939 unchanged. Ready3workers CalD1/HabtechnicalD1/WebPetFINAL3 after pushedregistration; sevenpendinggroups/E6E7E8HELD goalunfinished.",
       "input": "036e2f39c653ef7198704e3df38458c16ec3e35c"
+    },
+    {
+      "at": "2026-10-10T20:19:42.202996+00:00",
+      "event": "P92 currentnavigation refreshedmetadataONLY old686checkpoint markedhistorical; actualP0productCODE+fouracceptedTT08owningdocs, notwholeproducttreeparity. ALL122distinctoriginals exactremote andintegrationoriginancestors396 proof; freshformal312unique13/3/3/293299unclosed939 verified. Actualroot+CalendarWHOLEsource/processD1(parent96/input965)+HabitsWHOLEtechnicalD1(parent396/input036)+WebPetFINALwhole3(parent396/input965)=4/4 fixedinputs/no silentrepin.153knownconcluding39FAIL3UNKNOWN111reportedPASS plusCalinputonly1/postwriteUNQUALIFIED1/rework83/overruns3/newformalprobevendor0. Sevenpendinggroups/E6E7E8/Clockholds retained no scope/owner/gate/budgetwaiver. Goal unfinished.",
+      "input": "396f2e6e0e4f171586b85328ccdf0f49ec5ec647"
     }
   ],
   "wave_P2_tasks": [
@@ -4628,7 +4646,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P90literal0FAIL1WARN P91freshpending",
+    "normal": "P91literal0FAIL1WARN P92freshpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -4672,7 +4690,7 @@
     "normal_intermediate_P59": "Literal2FAIL1WARN: one newlycompleted GOVsource2 original in localrefs/reflog before archive push; exactd116 original nowremotepreserved before rootreception; freshrepeat pending, no recovery deletion",
     "normal_intermediate_P59_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e"
   },
-  "workflow_C": "WebPetFINALwhole3 registered. Habitswholecontract2 receivedUNADOPTED proposal; source-only prioradmission unchanged. No originalbudget reset.",
+  "workflow_C": "WebPetFINALwhole3 RUNNING parent396/input965; originalownerP1 held, originaltwoactualFAIL retained. Calendar andHabits authors completed source/proposal unadopted pendingwholeD.",
   "active_scheduler": {
     "graph": "docs/reviews/20260908-full-product-audit/parallel-control-r2/dependencies.json",
     "sha256": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
@@ -5058,17 +5076,17 @@
     "other_ready_work_continues": true
   },
   "preservation_checkpoint": {
-    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p89-120-originals-remote-integration-ancestry.json",
-    "sha256": "38cac4ebd366d5a9757738fa0c70385e5a6e465ca428b60f07995bbfea05acc5",
-    "fixed_remote_control": "ac6d1e7daf5d26a7c0cfa244620f5bd2514035a7",
-    "originals": 120,
+    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p92-122-originals-remote-integration-ancestry.json",
+    "sha256": "26333465b3b985e8d94b200f886eabb25fa338756d603ce6a7e44c5b87730089",
+    "fixed_remote_control": "396f2e6e0e4f171586b85328ccdf0f49ec5ec647",
+    "originals": 122,
     "exact_remote": true,
     "integrations_origin_ancestors": true,
     "no_recovery_deletion": true,
-    "normal": "P88literal0FAIL1WARN"
+    "normal": "P91literal0FAIL1WARN"
   },
   "workflow_A": "Clock MGBconditionalgrant retained; retention3/3/sourcequalification/nativebudgetholds pendingownerexceptions. Sharedtechnicaldocumentadopted but engine/method/runtimequalification/before/sourceadmission held. Existingfivebudgetquestion and pendingE6E7E8proposal nogrant.",
-  "workflow_D": "Fresh CalendarWHOLEsource/processD1 and HabitsWHOLEtechnicalD1 ready; implementation/reviewer separated. Exact sourcebindings/provenance retained; unresolved policy/impact gates held.",
+  "workflow_D": "CalendarWHOLEsource/processD1 RUNNING parent96/input965 and HabitsWHOLEtechnicalD1 RUNNING parent396/input036; freshindependence no repair. Full factual andprocess acceptance no retroqualification missingprewrite, unprovenwall/session/drain UNKNOWN.",
   "Habits_source_admission": {
     "source": "e7d113e01bbe5b1df47d5fb51821779b30916bf0",
     "source_integration": "8a05231add157e43f31bb1f853b3b2fadb69cace",

@@ -1,0 +1,754 @@
+{
+  "control": "396f2e6e0e4f171586b85328ccdf0f49ec5ec647",
+  "source_receipts": 122,
+  "all_originals_exact_remote": true,
+  "all_integrations_origin_ancestors": true,
+  "rows": [
+    {
+      "id": "CLOCK/R1",
+      "source_commit": "f37c8607ef30fc5bd927425ae1ee6837f7276c53",
+      "integration_commit": "3f106c6d431c78cbefcf19ccffa5f3de3d68e74f",
+      "archive_ref": "codex/archive/parallel-clock-q1-impact-r1-20261010"
+    },
+    {
+      "id": "TT-08/prepare",
+      "source_commit": "c6ab3c967074595ab59b7e0bf7dc86d66b229e97",
+      "integration_commit": "832013f001a21aba6bbde319ba752f190b0976d8",
+      "archive_ref": "codex/archive/parallel-tt08-prep-r1-20261010"
+    },
+    {
+      "id": "PARALLEL/MAP-REVIEW",
+      "source_commit": "4ba9c44a60fe97eeee8d5489c320eaedf2e342cc",
+      "integration_commit": "0d6124dac872e040e8eac389b44bb5e52602197a",
+      "archive_ref": "codex/archive/parallel-control-review-r1-20261010"
+    },
+    {
+      "id": "CLOCK/CORRECT-IMPL",
+      "source_commit": "a6a78097120094464701bf833a51bf0014d1d8d0",
+      "integration_commit": "f4cc65291aa5d0b97ec30a6654e30dfd3136474c",
+      "archive_ref": "codex/archive/parallel-clock-retention-r2-20261010"
+    },
+    {
+      "id": "PARALLEL/LOCK-CORRECT",
+      "source_commit": "11b8d721f9d423fcabb19857e96c927375b9323a",
+      "integration_commit": "b9ef48342385c1ed2e28f14f4788596dcb095272",
+      "archive_ref": "codex/archive/parallel-lock-correct-r2-20261010"
+    },
+    {
+      "id": "TT-08/contract-review",
+      "source_commit": "287547e2b0e0724a48a89e50377ccc7e840db93b",
+      "integration_commit": "01408fb386b3d3e11a31e0a0ed24622395566aea",
+      "archive_ref": "codex/archive/parallel-tt08-contract-review-r1-20261010"
+    },
+    {
+      "id": "PARALLEL/MAP-REVIEW2",
+      "source_commit": "240ce1ff1b3b4573ba11ef3cd4255422b0fda4e3",
+      "integration_commit": "3ad6414e736762cb850af0ade91201c9f642d330",
+      "archive_ref": "codex/archive/parallel-map-review2-20261010"
+    },
+    {
+      "id": "TT-08/before",
+      "source_commit": "00933c91241159e26f444213146d9ba949bac823",
+      "integration_commit": "f4522752ded589a6909bdc17cb961233eeafeae8",
+      "archive_ref": "codex/archive/parallel-tt08-before-r1-20261010"
+    },
+    {
+      "id": "CLOCK/CORRECT-REVIEW",
+      "source_commit": "cbf18b491ef10941d396bc9655d10c8beed4a68b",
+      "integration_commit": "6e7d95b36ca3ac18e4609d72729eae1308290deb",
+      "archive_ref": "codex/archive/parallel-clock-correction-review-r1-20261010"
+    },
+    {
+      "id": "TT-08/implement",
+      "source_commit": "01efd359d910fbe5cd5092570fe9060ffc9d8ef7",
+      "integration_commit": "8f56a03310cf268e1f04cafbfa65cf8d7d0776dc",
+      "archive_ref": "codex/archive/parallel-tt08-docs-r1-20261010"
+    },
+    {
+      "id": "DASH-03/prepare",
+      "source_commit": "fd52c3746ba322e3cb0048748263b8cc29f2c932",
+      "integration_commit": "3dd85e67e770d69b6507fbc7a883cbcf6f492c85",
+      "archive_ref": "codex/archive/parallel-world-clocks-prep-r1-20261010"
+    },
+    {
+      "id": "CLOCK/CORRECT-IMPACT2",
+      "source_commit": "44d04c8edc9cfc793317059a503152f8b27f6171",
+      "integration_commit": "1cc4caedcb3398e72eb5f017409820877b57b681",
+      "archive_ref": "codex/archive/parallel-clock-impact2-20261010"
+    },
+    {
+      "id": "TT-08/verify",
+      "source_commit": "68ac65f8fa1b8d9868b0fe15392dc9d445aa94b4",
+      "integration_commit": "16645a9ca033902229146c6387d7a0990c5a4b2e",
+      "archive_ref": "codex/archive/parallel-tt08-vendor-i1-20261010"
+    },
+    {
+      "id": "DASH-03/contract-review",
+      "source_commit": "792a6ba95157de6430d5f16a5b392aa8f0f89f22",
+      "integration_commit": "ba08206bad48bad7e8822220a5f56e38cbc8159a",
+      "archive_ref": "codex/archive/parallel-world-clocks-review-r1-20261010"
+    },
+    {
+      "id": "REL02+03/GATE-PREPARE",
+      "source_commit": "c6050091f21aca4f3003da8f67f92a41a4a528d4",
+      "integration_commit": "d9c36dbb9400a39e447e47fb0a82d4868fb18195",
+      "archive_ref": "codex/archive/parallel-rel02-rel03-prep-r1-20261010"
+    },
+    {
+      "id": "TT-08/DOC-CORRECT2",
+      "source_commit": "59809b32a4dc19dbdefff871cf9c60bb5b0b96b1",
+      "integration_commit": "d08b5c6ee46a98fad6354a1b626f9ebea74ed474",
+      "archive_ref": "codex/archive/parallel-tt08-doc-correct2-20261010"
+    },
+    {
+      "id": "FULL312/READY-INVENTORY-R1",
+      "source_commit": "acd21f9b15a735e2202ca9553aff54b3e3b46e17",
+      "integration_commit": "f6ea3e62c723195353cc2d5f000ddc4c10cc396e",
+      "archive_ref": "codex/archive/parallel-ready-inventory-r1-20261010"
+    },
+    {
+      "id": "REL02+03/CONTRACT-REVIEW",
+      "source_commit": "03dcf47931aba6d92daed76cf9f04a119d29c359",
+      "integration_commit": "bfbe3ed0b3967038375e41e5b10f738574ea0d54",
+      "archive_ref": "codex/archive/parallel-rel02-rel03-review-r1-20261010"
+    },
+    {
+      "id": "DASH-03/CONTRACT-CORRECT2",
+      "source_commit": "d8ac35cc64e8f764166af9ca4aa02c17b8faf384",
+      "integration_commit": "5ab57eb953a99bb58c27caf173e8a088c5b85e6d",
+      "archive_ref": "codex/archive/parallel-world-clocks-correct2-20261010"
+    },
+    {
+      "id": "TT-08/verify2",
+      "source_commit": "541a016fa64051a0b952e6c87ea839de99cc623d",
+      "integration_commit": "18f9913f957b17941c5cf1596c2a105f84ee8389",
+      "archive_ref": "codex/archive/parallel-tt08-vendor-i2-20261010"
+    },
+    {
+      "id": "TASK-06/PREPARE",
+      "source_commit": "d6a310f2472356bd69d7a240c81f4b71e35d5ac1",
+      "integration_commit": "9442530e7194e7b5c62ae69cdcc68bc4c4e8d550",
+      "archive_ref": "codex/archive/parallel-task06-prep-r1-20261010"
+    },
+    {
+      "id": "TT-08/verify3",
+      "source_commit": "f475cf5d0598dcb18e0e75e2e025969e7c16b056",
+      "integration_commit": "4b6e0db589002a7a6d36c73e5c1337995ff80a64",
+      "archive_ref": "codex/archive/parallel-tt08-vendor-i3-20261010"
+    },
+    {
+      "id": "DASH-03/CONTRACT-REVIEW2",
+      "source_commit": "527a9a1e29e344526e44ebae52b8965113fdb915",
+      "integration_commit": "f2c1c1d3838556c55d22500dd88ef0a871726fda",
+      "archive_ref": "codex/archive/parallel-world-clocks-review2-20261010"
+    },
+    {
+      "id": "TASK-06/CONTRACT-REVIEW",
+      "source_commit": "9bd435df80345e6e94f256777a3d865144cb9611",
+      "integration_commit": "05dcf91c1025e58b90cab13ccb7fc576e88770e6",
+      "archive_ref": "codex/archive/parallel-task06-review-r1-20261010"
+    },
+    {
+      "id": "TT-08/STATUS-WRITER",
+      "source_commit": "b4c33120bde198214bbe3bf76ead543b5f139c3a",
+      "integration_commit": "023451abc9df575c24056cb07cf1c9bebe4a6d43",
+      "archive_ref": "codex/archive/parallel-tt08-status-r1-20261010"
+    },
+    {
+      "id": "REL02+03/BUDGET-IMPACT",
+      "source_commit": "9885870aa55ea4a8f7c6bb475958989b429aeaf2",
+      "integration_commit": "125501cbb2d63fc691725d9154e365888d7b68e0",
+      "archive_ref": "codex/archive/parallel-rel-budget-impact-r1-20261010"
+    },
+    {
+      "id": "TASK-06/RUNNER-SOURCE",
+      "source_commit": "9c85a2f1049d54145bdb72366f6d4df26d3c1567",
+      "integration_commit": "bb4eb28687ea853c6b9cedec6831686618107423",
+      "archive_ref": "codex/archive/parallel-task06-runner-source-r1-20261010"
+    },
+    {
+      "id": "MET-05/PREPARE",
+      "source_commit": "ced574944f5defd14e9bf558cd9e8dbe55eb8ec6",
+      "integration_commit": "a559b2b0eff8893d2813e41fe22e401ad9138253",
+      "archive_ref": "codex/archive/parallel-met05-prep-r1-20261010"
+    },
+    {
+      "id": "TT-08/FINAL-ACCEPTANCE",
+      "source_commit": "c5874e5f6e803aa391ef2e5fb677e4bab592f4ef",
+      "integration_commit": "9ff5df698458611104a217b172b71aa3efd9cc82",
+      "archive_ref": "codex/archive/parallel-tt08-final-acceptance-r1-20261010"
+    },
+    {
+      "id": "MET-05/CONTRACT-REVIEW",
+      "source_commit": "adf06b6936efa9c6cc0437c603159302aaa0c88a",
+      "integration_commit": "23e7a34421fbe2141fe4a25ed0f8e331aec5c8f2",
+      "archive_ref": "codex/archive/parallel-met05-review-r1-20261010"
+    },
+    {
+      "id": "TT-08/POSTACCEPT-INVENTORY",
+      "source_commit": "8c481eb796f90c8d88283d27d39acbb9f1c074ea",
+      "integration_commit": "7ba41f0e3c88510b2589e43090b10f7484c3956d",
+      "archive_ref": "codex/archive/parallel-tt08-inventory-r1-20261010"
+    },
+    {
+      "id": "MET-05/RUNNER-SOURCE",
+      "source_commit": "0d5a65390d5a30bc0a034c08aaf4740bb6834a29",
+      "integration_commit": "54b193f429f46ee04e748e1b1e5f45bcd36ead7d",
+      "archive_ref": "codex/archive/parallel-met05-runner-source-r1-20261010"
+    },
+    {
+      "id": "TASK-06/RUNNER-SOURCE-REVIEW",
+      "source_commit": "3145fd8442895bae14fab7e5d16cb0edd5b6ad1b",
+      "integration_commit": "84c919c0622409a2f815828f7c29fa37e7d438ac",
+      "archive_ref": "codex/archive/parallel-task06-source-review-r1-20261010"
+    },
+    {
+      "id": "DASH-06/PREPARE",
+      "source_commit": "f8546788d28106aac17b96797dcb08469717dcdc",
+      "integration_commit": "7e83bac6010fd28680583d3151fb17ad0fd53c04",
+      "archive_ref": "codex/archive/parallel-dash06-prep-r1-20261010"
+    },
+    {
+      "id": "BRD-12/PREPARE",
+      "source_commit": "5d1f28a0f81ae01155a213fac93133730f7bad51",
+      "integration_commit": "83508ec199a6d759c4eba07460131ea91e417b82",
+      "archive_ref": "codex/archive/parallel-brd12-prep-r1-20261010"
+    },
+    {
+      "id": "TASK-06/RUNNER-SOURCE-CORRECT2",
+      "source_commit": "f8821c1bb99a51f07a3e6d077bc3391affde7a99",
+      "integration_commit": "e0d63000297ed83f379012a7e717489692577f03",
+      "archive_ref": "codex/archive/parallel-task06-runner-source-r2-20261010"
+    },
+    {
+      "id": "MET-05/RUNNER-SOURCE-REVIEW",
+      "source_commit": "476b89f43ddbf07c7122a4ffb4b2b3335568de25",
+      "integration_commit": "25c4dea3d03e867fba898928a21cbf859050075d",
+      "archive_ref": "codex/archive/parallel-met05-source-review-r1-20261010"
+    },
+    {
+      "id": "DASH-06/CONTRACT-REVIEW",
+      "source_commit": "c269ae212135f3b7729f843825ece70c7a00a724",
+      "integration_commit": "85065cccad251747da97944a80dd805c4dae44ef",
+      "archive_ref": "codex/archive/parallel-dash06-review-r1-20261010"
+    },
+    {
+      "id": "MET-05/RUNNER-SOURCE-CORRECT2",
+      "source_commit": "624e016359a0b48662828ffc9cc15db453792278",
+      "integration_commit": "78df47b8e228414cd65a454d5ad12d0375293b77",
+      "archive_ref": "codex/archive/parallel-met05-runner-source-r2-20261010"
+    },
+    {
+      "id": "BRD-12/CONTRACT-REVIEW",
+      "source_commit": "bb08478d692091e6362926e2b75c1d0c34fc0ca2",
+      "integration_commit": "42ca98c92e12c10772f496b72da7653f20a61be1",
+      "archive_ref": "codex/archive/parallel-brd12-review-r1-20261010"
+    },
+    {
+      "id": "DASH-06/PREPARE-CORRECT2",
+      "source_commit": "dbc818c01045637104fa3ed2f833a77b758ff55d",
+      "integration_commit": "a58a119d5efe4eb508701ea050349a44b16aec7f",
+      "archive_ref": "codex/archive/parallel-dash06-prep-r2-20261010"
+    },
+    {
+      "id": "POMO-04/PREPARE",
+      "source_commit": "59dae0b524e19e6d0c273174488b84d68fb323f3",
+      "integration_commit": "5ebbdd57f1b02e5cab36751bbefe6129ee97d2ae",
+      "archive_ref": "codex/archive/parallel-pomo04-prep-r1-20261010"
+    },
+    {
+      "id": "BRD-12/PREPARE-CORRECT2",
+      "source_commit": "5fa4cccb106d10e16562e0a8d6f3b103495607b1",
+      "integration_commit": "aec56c13dbd01a95899f62dec8b8755f09897f7f",
+      "archive_ref": "codex/archive/parallel-brd12-prep-r2-20261010"
+    },
+    {
+      "id": "DASH-06/SOURCE-AVAILABILITY-IMPACT",
+      "source_commit": "309483d66397a1e4bc83760de032321bd1f01432",
+      "integration_commit": "07fc0c5b897a2fadb94e135829b735098c1907c4",
+      "archive_ref": "codex/archive/parallel-dash06-availability-impact-r1-20261010"
+    },
+    {
+      "id": "TASK-06/RUNNER-SOURCE-REVIEW2",
+      "source_commit": "cd7be1409e6198e5032dceb85bad8cca2182c3ae",
+      "integration_commit": "5fd4139ec3ed2977a4fa0e3a5655eb6be77ddd21",
+      "archive_ref": "codex/archive/parallel-task06-source-review-r2-20261010"
+    },
+    {
+      "id": "DASH-06/CONTRACT-REVIEW2",
+      "source_commit": "a441a0b0022deb856edac3ef2751fb9ebce7be0d",
+      "integration_commit": "e5caddc1abb1b12afb8802960d6e2b993c0c365a",
+      "archive_ref": "codex/archive/parallel-dash06-contract-review-r2-20261010"
+    },
+    {
+      "id": "MET-05/RUNNER-SOURCE-REVIEW2",
+      "source_commit": "21519e7f55db4fa609e194e5d2a9bd622445107c",
+      "integration_commit": "16f4fe8c787ad5f7376e48685e7a544463cf8d52",
+      "archive_ref": "codex/archive/parallel-met05-source-review-r2-20261010"
+    },
+    {
+      "id": "BRD-12/CONTRACT-REVIEW2",
+      "source_commit": "cdb8820b434aa7f2adb9cc5ad5f14118eb24230c",
+      "integration_commit": "197e6de47d598df601d99ba978eeaa7a095b335c",
+      "archive_ref": "codex/archive/parallel-brd12-contract-review-r2-20261010"
+    },
+    {
+      "id": "POMO-04/CONTRACT-REVIEW",
+      "source_commit": "0f2f5c1a155f8fda127758f7986010dd57335f21",
+      "integration_commit": "d39d8a9a32bf9e66310535c8622355daefb6b280",
+      "archive_ref": "codex/archive/parallel-pomo04-contract-review-r1-20261010"
+    },
+    {
+      "id": "DASH-06/SOURCE-AVAILABILITY-IMPACT-REVIEW1",
+      "source_commit": "ab1ea42c09a055a599902d4d2b42d7c42d77e252",
+      "integration_commit": "ccf2ee5b4980393e5b506eb6ebaeede9604fbd48",
+      "archive_ref": "codex/archive/parallel-dash06-availability-impact-review-r1-20261010"
+    },
+    {
+      "id": "MED-03/PREPARE",
+      "source_commit": "23bd8545b317e2d5565ad069aaabd0e65061737b",
+      "integration_commit": "bf85a6b7677293d3c725e47edec6f6f9ee26bf40",
+      "archive_ref": "codex/archive/parallel-med03-prep-r1-20261010"
+    },
+    {
+      "id": "CD-03/PREPARE",
+      "source_commit": "2a35488361bfbad596473fc355bd18d8feb5b164",
+      "integration_commit": "a489adcb1205c56623738a8fa54696e40f22d17a",
+      "archive_ref": "codex/archive/parallel-cd03-prep-r1-20261010"
+    },
+    {
+      "id": "SHARED/NATIVE-HOST-FOCUS-IMPACT1",
+      "source_commit": "516495625056a6123f22ff67df61c9c34dff2484",
+      "integration_commit": "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473",
+      "archive_ref": "codex/archive/parallel-shared-native-host-focus-impact-r1-20261010"
+    },
+    {
+      "id": "BRD-12/WRITER-LIFECYCLE-IMPACT1",
+      "source_commit": "11d6527709a5a735200151768296a312a3a30314",
+      "integration_commit": "8695c64d04a509f16959a683fcba0e64e33c9e20",
+      "archive_ref": "codex/archive/parallel-brd12-writer-lifecycle-impact-r1-20261010"
+    },
+    {
+      "id": "POMO-04/PREPARE-CORRECT2",
+      "source_commit": "9e2e6cf722171936dc8c085d588f0c047d968e92",
+      "integration_commit": "3275e45a20314d39e1f6e1b0606ecfee9868f54b",
+      "archive_ref": "codex/archive/parallel-pomo04-prep-r2-20261010"
+    },
+    {
+      "id": "DASH-06/SOURCE-AVAILABILITY-CONTRACT1",
+      "source_commit": "d39ab343f8aa0d1ce742aa77ba95ab4ceedcead1",
+      "integration_commit": "2e1c607523b9b1d40550348f3e1086cd69b76fb3",
+      "archive_ref": "codex/archive/parallel-dash06-availability-contract-r1-20261010"
+    },
+    {
+      "id": "MED-03/CONTRACT-REVIEW1",
+      "source_commit": "a87f90c40490e3ac02d392fe9f89aa038e439ec5",
+      "integration_commit": "711cfd8d7a587468d4ff133eb6d5911ad4dd79ef",
+      "archive_ref": "codex/archive/parallel-med03-contract-review-r1-20261010"
+    },
+    {
+      "id": "CD-03/CONTRACT-REVIEW1",
+      "source_commit": "fda069eb300704f24384eccacfd74ffc147aef37",
+      "integration_commit": "04797e39f0a6c42051601207f0429deef3300a6a",
+      "archive_ref": "codex/archive/parallel-cd03-contract-review-r1-20261010"
+    },
+    {
+      "id": "SHARED/NATIVE-HOST-FOCUS-IMPACT-REVIEW1",
+      "source_commit": "b7e075c51e77fbf9c376ae33e3a9e2fb3b69fd06",
+      "integration_commit": "1115e27c90d76632f64907e84dcafdb8922618cd",
+      "archive_ref": "codex/archive/parallel-shared-native-host-focus-impact-review-r1-20261010"
+    },
+    {
+      "id": "BRD-28/PREPARE",
+      "source_commit": "ce9eef6cb50b592e05593dc800ed3439615f7458",
+      "integration_commit": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
+      "archive_ref": "codex/archive/parallel-brd28-prep-r1-20261010"
+    },
+    {
+      "id": "CAL-03/PREPARE",
+      "source_commit": "57b2bfe7a94ed06f5359952a73b0f728759868a4",
+      "integration_commit": "936c197dcf732bddf27bac00a6fc694fd010f6d1",
+      "archive_ref": "codex/archive/parallel-cal03-prep-r1-20261010"
+    },
+    {
+      "id": "POMO-04/CONTRACT-REVIEW2",
+      "source_commit": "d75a0d6de0521abde0128339049bd860bc0ec7a2",
+      "integration_commit": "3672325fd7e87439cee9e1715d8bc7c192ac92dc",
+      "archive_ref": "codex/archive/parallel-pomo04-contract-review-r2-20261010"
+    },
+    {
+      "id": "MED-03/PREPARE-CORRECT2",
+      "source_commit": "1e2d0ac42ecdc142c34291294fca09bce1f77dae",
+      "integration_commit": "0055fb42bf2e36de487a10654128522d5ef62ce3",
+      "archive_ref": "codex/archive/parallel-med03-prep-r2-20261010"
+    },
+    {
+      "id": "BRD-12/WRITER-LIFECYCLE-IMPACT-REVIEW1",
+      "source_commit": "68d0f14b243a1becb70811ca01a503cdcd244022",
+      "integration_commit": "5b5214868aca9e99f8fd738a88287bfa384b0116",
+      "archive_ref": "codex/archive/parallel-brd12-lifecycle-impact-review-r1-20261010"
+    },
+    {
+      "id": "CD-03/SOURCE-MACHINERY-IMPACT1",
+      "source_commit": "b5e6843bce9a6feb62afb6c451451e626b51c999",
+      "integration_commit": "d75e4e1e619b36bc64f411f960603712df5479f1",
+      "archive_ref": "codex/archive/parallel-cd03-machinery-impact-r1-20261010"
+    },
+    {
+      "id": "MED-03/CONTRACT-REVIEW2",
+      "source_commit": "291a4175d9ea237451bec9fe87cd9fc6cc736de7",
+      "integration_commit": "4c082ca8e40cbf178abb9d63cbed5f18a21b9f8d",
+      "archive_ref": "codex/archive/parallel-med03-contract-review-r2-20261010"
+    },
+    {
+      "id": "DASH-06/SOURCE-AVAILABILITY-CONTRACT-REVIEW1",
+      "source_commit": "6fd7786e7ed734b7ca407169a07dc75727e7365f",
+      "integration_commit": "bf08ae70f2e51a679cc5f87f0880435c601cdbc8",
+      "archive_ref": "codex/archive/parallel-dash06-availability-contract-review-r1-20261010"
+    },
+    {
+      "id": "POMO-04/SOURCE-MACHINERY-IMPACT1",
+      "source_commit": "a9054733b4f1179dac138b73031e3d0fd22b2416",
+      "integration_commit": "e96543bed85056d9a2581a0681ff44a7f1d0583e",
+      "archive_ref": "codex/archive/parallel-pomo04-machinery-impact-r1-20261010"
+    },
+    {
+      "id": "CAL-03/CONTRACT-REVIEW1",
+      "source_commit": "d3b6adf994d9e4938b99056fbe0738af9b2b1389",
+      "integration_commit": "08c89246f5f12b4e7c60e35f3c92fd17c403336d",
+      "archive_ref": "codex/archive/parallel-cal03-contract-review-r1-20261010"
+    },
+    {
+      "id": "SHARED/NATIVE-HOST-FOCUS-IMPACT3",
+      "source_commit": "f667a0b6996b4039d2c4e5ca28657953703e830b",
+      "integration_commit": "51897794a7135a535674aed0eb5afae22f2cfbde",
+      "archive_ref": "codex/archive/parallel-shared-native-host-focus-impact-r3-20261010"
+    },
+    {
+      "id": "CD-03/SOURCE-MACHINERY-IMPACT-REVIEW1",
+      "source_commit": "a8a75d15c9c482547e50905dc237344c9b49d9c2",
+      "integration_commit": "9a2a2fafb0be618f6089810de0ea9f49beb1ee85",
+      "archive_ref": "codex/archive/parallel-cd03-machinery-impact-review-r1-20261010"
+    },
+    {
+      "id": "BK-07/PREPARE2",
+      "source_commit": "59ac17754b28771d62a2830c144f8d89cea7f6ec",
+      "integration_commit": "ebb49092312112bcbeb5c1cc4c220bfe75269ad0",
+      "archive_ref": "codex/archive/parallel-bk07-prep-r2-20261010"
+    },
+    {
+      "id": "SHARED/NATIVE-HOST-FOCUS-IMPACT-REVIEW2",
+      "source_commit": "bdc06bd5b57f026caf6d7838563bfdae6f8684c9",
+      "integration_commit": "61b6644d2eac5af6c70749bf672839ba7ba79bca",
+      "archive_ref": "codex/archive/parallel-shared-native-host-focus-impact-review-r2-20261010"
+    },
+    {
+      "id": "MED-03/SOURCE-MACHINERY-IMPACT1",
+      "source_commit": "5a8d7141d8e032ae08c56a7650cdf47597d717ff",
+      "integration_commit": "f8cc150544e050bbb8f38076b1e5d3c41ca47fac",
+      "archive_ref": "codex/archive/parallel-med03-machinery-impact-r1-20261010"
+    },
+    {
+      "id": "BRD-28/CONTRACT-REVIEW2",
+      "source_commit": "0a0bd4a2bf006c53f2d098ebab29451c5bd0a0fe",
+      "integration_commit": "e8cf1ae191c76e5943780de021432620528b04ce",
+      "archive_ref": "codex/archive/parallel-brd28-contract-review-r2-20261010"
+    },
+    {
+      "id": "SHARED/SOURCE-BYTE-COLLECTION1",
+      "source_commit": "05e8514429e9f24bd2e1d6ffa9dd9e9312899e1d",
+      "integration_commit": "0121be25e10a8f3f60510c686a1832cbd40a9bcb",
+      "archive_ref": "codex/archive/parallel-shared-source-bytes-r1-20261010"
+    },
+    {
+      "id": "BRD-12/TECHNICAL-CONTRACT-AMENDMENT2",
+      "source_commit": "3a7d5f1b8a448ac44ac6d5090af63a6a81097546",
+      "integration_commit": "84f0048a74c34bfef2b463e3b525b514e67586d2",
+      "archive_ref": "codex/archive/parallel-brd12-technical-amendment-r2-20261010"
+    },
+    {
+      "id": "BK-07/CONTRACT-REVIEW1",
+      "source_commit": "e1d8ae4b2304a91382d4aa2c4ab2dc06d46fc65b",
+      "integration_commit": "72de6f41afc5ff4136cab7a655998696b74fe493",
+      "archive_ref": "codex/archive/parallel-bk07-contract-review-r1-20261010"
+    },
+    {
+      "id": "SHARED/SOURCE-BYTE-COLLECTION-REVIEW1",
+      "source_commit": "6c3451eda23a90841db907502b647c53b43fe1a2",
+      "integration_commit": "5b3192eb2b8d59a0304454523c71769d91888a5d",
+      "archive_ref": "codex/archive/parallel-shared-source-bytes-review-r1-20261010"
+    },
+    {
+      "id": "POMO-04/SOURCE-MACHINERY-IMPACT-REVIEW2",
+      "source_commit": "86de30ce7c16dd1823ccf9327f67993f45f193b5",
+      "integration_commit": "b21a2450e6d2607487ba3f5ae7663bdf7ad7c301",
+      "archive_ref": "codex/archive/parallel-pomo04-machinery-impact-review-r2-20261010"
+    },
+    {
+      "id": "MED-03/SOURCE-MACHINERY-IMPACT-REVIEW1",
+      "source_commit": "30e0a903196db8b11c3f30cc02f173bfe2a4bffd",
+      "integration_commit": "aed09103a71c7e939ffc71d23c7b9b802ac47b51",
+      "archive_ref": "codex/archive/parallel-med03-machinery-impact-review-r1-20261010"
+    },
+    {
+      "id": "CD-03/SOURCE-CONTRACT2",
+      "source_commit": "1d26bc1ed1d4af6f1c311fe34f9640c0f68e2e36",
+      "integration_commit": "316ff9696a6a4d4ff2ae95e805c7e8a0fd3dad8e",
+      "archive_ref": "codex/archive/parallel-cd03-source-contract-r2-20261010"
+    },
+    {
+      "id": "SHARED/SOURCE-BYTE-COLLECTION2",
+      "source_commit": "b719ee3c54992c905b7f91d82eb3c8646d16df6f",
+      "integration_commit": "2461db7d47e19b0a254fe14a9b82985152e94611",
+      "archive_ref": "codex/archive/parallel-shared-source-bytes-r2-failure-preservation-20261010"
+    },
+    {
+      "id": "MED-03/SOURCE-CONTRACT1",
+      "source_commit": "dc9f0046c431d1357d947884c282a53a6e257f30",
+      "integration_commit": "b643171fa4ef7a17a7c1cd6cde4c6dea1a509588",
+      "archive_ref": "codex/archive/parallel-med03-source-contract-r1-20261010"
+    },
+    {
+      "id": "POMO-04/SOURCE-CONTRACT1",
+      "source_commit": "be6afe0e22fac540ae156ff53c23159874f17b8a",
+      "integration_commit": "da0f76f0ae52a4371fff128904700ce88d4a3b0a",
+      "archive_ref": "codex/archive/parallel-pomo04-source-contract-r1-20261010"
+    },
+    {
+      "id": "SHARED/OUTER-CAPTURE-ADMISSION-IMPACT1",
+      "source_commit": "cefb29401bd6a413044c6783c7d01510d720b235",
+      "integration_commit": "48de11d3f5a8d84c8d0902ade2bf6bfcc8027e12",
+      "archive_ref": "codex/archive/parallel-outer-capture-admission-impact-r1-20261010"
+    },
+    {
+      "id": "MED-03/SOURCE-CONTRACT-REVIEW1",
+      "source_commit": "2f98491db76707a3965198b9dbb64f3e586a6e4b",
+      "integration_commit": "d64a7e151df25497f6d75b11e8a1890a2e71644a",
+      "archive_ref": "codex/archive/parallel-med03-source-review-r1-20261010"
+    },
+    {
+      "id": "SHARED/OUTER-CAPTURE-ADMISSION-IMPACT-REVIEW1",
+      "source_commit": "682e932b960acd0ef36dfaa7beb33d020c993c5f",
+      "integration_commit": "75ee126193d8cd49d140c318fcc61b6883374835",
+      "archive_ref": "codex/archive/parallel-outer-capture-admission-review-r1-20261010"
+    },
+    {
+      "id": "BRD-28/SOURCE-MACHINERY-IMPACT2",
+      "source_commit": "4d1c1bdfb4378fcb5c9c0307bbf60333881a4de1",
+      "integration_commit": "02e34fa2153bac16c1c82db7e9e53ba6534ccdbe",
+      "archive_ref": "codex/archive/parallel-brd28-machinery-impact-r2-20261010"
+    },
+    {
+      "id": "BRD-12/TECHNICAL-CONTRACT-AMENDMENT-REVIEW2",
+      "source_commit": "1de3ac344a0a7a5068f89be57b734c705d316f48",
+      "integration_commit": "147b4dc7286a4ce75f58f9de8befe913696283a3",
+      "archive_ref": "codex/archive/parallel-brd12-technical-review-r2-20261010"
+    },
+    {
+      "id": "GOV-01+GOV-02/SOURCE-DISCOVERY1",
+      "source_commit": "3b1633722b1f84efeaa29d110e5c37b7704b5f92",
+      "integration_commit": "3459614e6bf410b52bf1cf2f7c4035f2054e5be1",
+      "archive_ref": "codex/archive/parallel-gov01-gov02-discovery-r1-20261010"
+    },
+    {
+      "id": "POMO-04/SOURCE-CONTRACT-REVIEW1",
+      "source_commit": "d496488920779530d8b8e7ec1d982acb2b9a250f",
+      "integration_commit": "ed77e15b98a8d2c1f4467ec15700969417a02367",
+      "archive_ref": "codex/archive/parallel-pomo04-source-contract-review-r1-20261010"
+    },
+    {
+      "id": "SHARED/OUTER-CAPTURE-ADMISSION-IMPACT2",
+      "source_commit": "01e67a94b694fda26013447b8fe966414b136f18",
+      "integration_commit": "2cfd71ada03bb13017c703c37ec7a9a604edd9cb",
+      "archive_ref": "codex/archive/parallel-outer-capture-admission-impact-r2-20261010"
+    },
+    {
+      "id": "MED-03/SOURCE-CONTRACT2",
+      "source_commit": "5bc80abca8845b2ed0b2645fb616e73b2c156273",
+      "integration_commit": "7e57bb81594476e28727430b4fb9ed87dbdcfb2d",
+      "archive_ref": "codex/archive/parallel-med03-source-contract-r2-20261010"
+    },
+    {
+      "id": "GOV-01+GOV-02/SOURCE-CONTRACT1",
+      "source_commit": "3ae8bd48502131a8d30bfaa38b04de3d733de97a",
+      "integration_commit": "46b6d12067c3f348e250751dff8a3c80b31b4382",
+      "archive_ref": "codex/archive/parallel-gov01-gov02-source-contract-r1-20261010"
+    },
+    {
+      "id": "AI-05/SOURCE-DISCOVERY1",
+      "source_commit": "4f3bc63cd396319e3b1b9d043485b9d742c2bdd3",
+      "integration_commit": "de172da0b2d05e48db62cf625ffae6c411770479",
+      "archive_ref": "codex/archive/parallel-ai05-discovery-r1-failed-20261010"
+    },
+    {
+      "id": "CD-03/SOURCE-CONTRACT-REVIEW3",
+      "source_commit": "0d4f8870b6f080b2ec45d69605892a00bf83d812",
+      "integration_commit": "863257ed4976b1ce4ec21936464c0f84295c11d6",
+      "archive_ref": "codex/archive/parallel-cd03-source-contract-review-r3-20261010"
+    },
+    {
+      "id": "MED-03/SOURCE-CONTRACT-REVIEW2",
+      "source_commit": "145dd19a1a7813a6106b1720bef11e5946aa1210",
+      "integration_commit": "21dc2c01d630da4f9d48f4d6af0ae660d7813ca1",
+      "archive_ref": "codex/archive/parallel-med03-source-contract-review-r2-20261010"
+    },
+    {
+      "id": "GOV-01+GOV-02/SOURCE-CONTRACT-IMPACT-REVIEW1",
+      "source_commit": "56acc24b16ed3df30bb68e3310ebecb024119051",
+      "integration_commit": "61ca9c77e183a94bb4a3c58d5bee1eec35f5e230",
+      "archive_ref": "codex/archive/parallel-gov01-gov02-source-contract-impact-review-r1-20261010"
+    },
+    {
+      "id": "BRD-28/SOURCE-MACHINERY-IMPACT-REVIEW2",
+      "source_commit": "01891c834aa9ecd1c0349430c70aafea0b6bfc0d",
+      "integration_commit": "19a072dedea5414ca75e00773930a2c2ae7d62cd",
+      "archive_ref": "codex/archive/parallel-brd28-source-machinery-impact-review-r2-20261010"
+    },
+    {
+      "id": "GOV-06/AUTHORITY-SOURCE-DISCOVERY1",
+      "source_commit": "a9346fc1efd565833bbc715d848b9a414a87175d",
+      "integration_commit": "0348f1e73725991e3bb2cc402b2d5aac95918b23",
+      "archive_ref": "codex/archive/parallel-gov06-authority-source-discovery-r1-20261010"
+    },
+    {
+      "id": "GOV-01+GOV-02/SOURCE-CONTRACT2",
+      "source_commit": "d116728b145a9a4608ca0be1b6504163038574e5",
+      "integration_commit": "f7ba38de07dc41d4d1a29be75a142afe89ac4524",
+      "archive_ref": "codex/archive/parallel-gov01-gov02-source-contract-r2-20261010"
+    },
+    {
+      "id": "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT1",
+      "source_commit": "eb69c0bef221f15500824ab72d1db1ee4f86df8e",
+      "integration_commit": "2d01d827d7ede5aaddb853b3d4caad2a5a23adf4",
+      "archive_ref": "codex/archive/parallel-exhausted-purposes-impact-r1-20261010"
+    },
+    {
+      "id": "GOV-06/AUTHORITY-SOURCE-CONTRACT-IMPACT1",
+      "source_commit": "327e5006cc2511f0faec8b61d638576eb96501b5",
+      "integration_commit": "2736a112964974d6ed17b88025feb66c50a68846",
+      "archive_ref": "codex/archive/parallel-gov06-authority-contract-impact-r1-20261010"
+    },
+    {
+      "id": "GOV-01+GOV-02/SOURCE-CONTRACT-IMPACT-REVIEW2",
+      "source_commit": "5045c5556a13b23ec96c156deb7a761a701fbd6d",
+      "integration_commit": "2434373d391b6cfafec0a3883623650a57a0a366",
+      "archive_ref": "codex/archive/parallel-gov01-gov02-source-full-review-r2-20261010"
+    },
+    {
+      "id": "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT-REVIEW1",
+      "source_commit": "1603f5d650466f6d2cf5285e1f811d8c99746826",
+      "integration_commit": "0f42d8f058e3febfd15630a5602bad57a37e6fad",
+      "archive_ref": "codex/archive/parallel-exhausted-purposes-full-review-r1-20261010"
+    },
+    {
+      "id": "GOV-06/AUTHORITY-CONTRACT-IMPACT-REVIEW2",
+      "source_commit": "c583597a5a07bbbc7b5864a40b158156ca2c8f38",
+      "integration_commit": "7e9d95316c3b25fbcb9fa9de05dd323e6b1f903b",
+      "archive_ref": "codex/archive/parallel-gov06-authority-contract-impact-review-r2-20261010"
+    },
+    {
+      "id": "GOV-04+GOV-07/STATUS-SOURCE-DISCOVERY1",
+      "source_commit": "4093bbb99a1eb5578975f61351a71f4f7fc88135",
+      "integration_commit": "47ca69965cfcd5f3e0fcc7bba98aa9c35034c4fd",
+      "archive_ref": "codex/archive/parallel-gov04-gov07-source1-20261010"
+    },
+    {
+      "id": "SK-01+SK-02+SK-03+SK-04+SK-05+SK-06/TRACE-SOURCE-DISCOVERY1",
+      "source_commit": "56de3d65d9619e93c27c69c06a382ea0382f3aa5",
+      "integration_commit": "97054ea69f55c4fb4dbed58f817fe96c023c1795",
+      "archive_ref": "codex/archive/parallel-sk01-sk06-source1-20261010"
+    },
+    {
+      "id": "GOV-06/AUTHORITY-SOURCE-CONTRACT-IMPACT2",
+      "source_commit": "c103a93602736652c08e6ca71d6b6c070e63f4f2",
+      "integration_commit": "32670e894d7779e0870e73ffef23d64a13e734a6",
+      "archive_ref": "codex/archive/parallel-gov06-authority-contract2-20261010"
+    },
+    {
+      "id": "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT2",
+      "source_commit": "23ed3b6fc3058a82af14d90e9c23ab30d7bcd641",
+      "integration_commit": "4f988fe610b1c002b73ec3fbd915dd80fd88edcc",
+      "archive_ref": "codex/archive/parallel-exhaustion-impact2-20261010"
+    },
+    {
+      "id": "GOV-04+GOV-07/STATUS-SOURCE-DISCOVERY-REVIEW1",
+      "source_commit": "1e0a9f9fdf03062b206a11ae41a8219322ac27f9",
+      "integration_commit": "5cc7f5e6c940016aa5f414127213d219f21ea5a2",
+      "archive_ref": "codex/archive/parallel-gov04-gov07-review1-20261010"
+    },
+    {
+      "id": "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT-REVIEW2",
+      "source_commit": "d71d42c6b5ee4c1c03c86ccbc9be1aab56c1619d",
+      "integration_commit": "f0f9850b1af51c18536b9c803d74d44ba5c933af",
+      "archive_ref": "codex/archive/parallel-exhaustion-review2-20261010"
+    },
+    {
+      "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY1",
+      "source_commit": "7c6b867b046f82f7fa667edf187bc1cdda120ccd",
+      "integration_commit": "f3c324179ff138c60c50e5f98c8334a48d113fa0",
+      "archive_ref": "codex/archive/parallel-hab01-hab05-source1-20261010"
+    },
+    {
+      "id": "SK-01+SK-02+SK-03+SK-04+SK-05+SK-06/TRACE-SOURCE-DISCOVERY-REVIEW2",
+      "source_commit": "0364ab34f4448849c2d97cb5723bd708b394b279",
+      "integration_commit": "f0223c09b9b89d926bbf767a32c4e8c1749d0ddc",
+      "archive_ref": "codex/archive/parallel-sk01-sk06-review2-20261010"
+    },
+    {
+      "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY-REVIEW1",
+      "source_commit": "9c36ebcd1b647306fc6393ed5bb4310009615e7f",
+      "integration_commit": "fbd0ab3bfa951c901107116fb07c435ee37e6552",
+      "archive_ref": "codex/archive/parallel-hab01-hab05-review1-20261010"
+    },
+    {
+      "id": "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT3",
+      "source_commit": "037d71c69e14567d5bbb54f32e7b3ede332d59f6",
+      "integration_commit": "8c2e5e8b2490df303eda91d7c1adc08d4a8c6811",
+      "archive_ref": "codex/archive/parallel-exhaustion-impact3-20261010"
+    },
+    {
+      "id": "GOV-04+GOV-07/STATUS-SOURCE-DISCOVERY3",
+      "source_commit": "0049ef84724688de6194d43fbea0b171a7855a40",
+      "integration_commit": "ae9ea3ce70d1d822b462b726fcdb43f1d59e2746",
+      "archive_ref": "codex/archive/parallel-gov04-gov07-source3-20261010"
+    },
+    {
+      "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY2",
+      "source_commit": "e7d113e01bbe5b1df47d5fb51821779b30916bf0",
+      "integration_commit": "8a05231add157e43f31bb1f853b3b2fadb69cace",
+      "archive_ref": "codex/archive/parallel-hab01-hab05-source2-20261010"
+    },
+    {
+      "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY-REVIEW2",
+      "source_commit": "2190bb260f521a8239c3a9482de4efa6a02bea95",
+      "integration_commit": "6102651bcfc108914992f3caef5b1e97ac618042",
+      "archive_ref": "codex/archive/parallel-hab01-hab05-review2-20261010"
+    },
+    {
+      "id": "CAL-01+CAL-02+CAL-04+CAL-05/SOURCE-DISCOVERY1",
+      "source_commit": "369c265290e0f52e6d764f463dea0ea632e0fecc",
+      "integration_commit": "965a66a7991b426007dea316e6045f30ecade1ec",
+      "archive_ref": "codex/archive/parallel-cal01-cal02-cal04-cal05-source1-20261010"
+    },
+    {
+      "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/TECHNICAL-CONTRACT2",
+      "source_commit": "4db69a0d026c7788766953d342cb7dd994716602",
+      "integration_commit": "036e2f39c653ef7198704e3df38458c16ec3e35c",
+      "archive_ref": "codex/archive/parallel-hab01-hab05-contract2-20261010"
+    }
+  ],
+  "formal_counts": {
+    "completed": 13,
+    "verification_pending": 3,
+    "in_progress": 3,
+    "pending": 293
+  },
+  "references": 939,
+  "product_diff": [
+    "packages/plugin-web-time-tracker/docs/api.md",
+    "packages/plugin-web-time-tracker/docs/design.md",
+    "packages/plugin-web-time-tracker/docs/dev_log.md",
+    "packages/plugin-web-time-tracker/docs/test.md"
+  ],
+  "no_product_code_change_from_P0": true
+}
