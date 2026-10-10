@@ -519,8 +519,12 @@
       "provider_attested": false,
       "fixed_parent": "0af25048f7fb5706d19f2948a344fd319347c14d",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-status-20261010/XAI_Desktop",
-      "state": "running",
-      "formal_invocations": 0
+      "state": "received_scoped_documentary_status_PENDING_freshfullacceptance",
+      "formal_invocations": 0,
+      "source_commit": "b4c33120bde198214bbe3bf76ead543b5f139c3a",
+      "integration_commit": "023451abc9df575c24056cb07cf1c9bebe4a6d43",
+      "archive_ref": "codex/archive/parallel-tt08-status-r1-20261010",
+      "input_hashes_checked": 575
     },
     {
       "id": "REL02+03/BUDGET-IMPACT",
@@ -530,8 +534,12 @@
       "provider_attested": false,
       "fixed_parent": "0af25048f7fb5706d19f2948a344fd319347c14d",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-rel-budget-impact-20261010/XAI_Desktop",
-      "state": "running",
-      "formal_invocations": 0
+      "state": "accepted_impact_only_V1_HISTORICAL_ACCOUNTING_BLOCKED",
+      "formal_invocations": 0,
+      "source_commit": "9885870aa55ea4a8f7c6bb475958989b429aeaf2",
+      "integration_commit": "125501cbb2d63fc691725d9154e365888d7b68e0",
+      "archive_ref": "codex/archive/parallel-rel-budget-impact-r1-20261010",
+      "input_hashes_checked": 9685
     },
     {
       "id": "TASK-06/RUNNER-SOURCE",
@@ -545,13 +553,24 @@
       "source_author_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0
+    },
+    {
+      "id": "MET-05/PREPARE",
+      "workflow": "C",
+      "actor": "/root/parallel_c_met05_prepare_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "a317d0c8a876cb29d21a6dc2e56eb3eaacca9a8f",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-met05-prepare-20261010/XAI_Desktop",
+      "state": "running_source_discovery",
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 2,
+    "total": 3,
     "capacity": 4
   },
   "cost": {
@@ -568,7 +587,7 @@
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 24,
+    "completed_source_receipts": 26,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167
@@ -697,6 +716,11 @@
       "at": "2026-10-10T11:06:09.350722+00:00",
       "event": "Queue nonconflicting MET05 source contract discovery from existing explicit planned V1 boundary; no metric activation or extension decision invented",
       "input": "9db84ccc8836b3ba7f32b8c13b73fc8a60dd5045"
+    },
+    {
+      "at": "2026-10-10T11:10:50.031050+00:00",
+      "event": "Receive REL9685 impact blocked and TT sole1MOD status; fresh final Astra acceptance registered; MET05 discovery and TASK06 source continue",
+      "input": "023451abc9df575c24056cb07cf1c9bebe4a6d43"
     }
   ],
   "wave_P2_tasks": [
@@ -733,7 +757,8 @@
   "external_conditions": {
     "goal_runtime": "originalgoal metadata stillblocked; noedit/resumeAPI, CUA refusesCodexappaccessforsafety; useraskedresumeviaapp, pending; directauthorizedworkcontinues",
     "clock_retention_budget": "freshimpact no validpath within3/3; minimalone cumulativei4exception asked separately, pending; noMGBreapproval",
-    "no_new_product_decisions": "TT08/WorldClocks existingrules enoughforcurrentstage"
+    "no_new_product_decisions": "TT08/WorldClocks existingrules enoughforcurrentstage",
+    "REL02+03_V1": "9885870a full9685 inputs: no complete historical count proof; launch BLOCKED. Need provenance-backed census or explicit narrow exception, no missingcount0 or reset."
   },
   "ready_inventory_collection": {
     "source": "acd21f9b15a735e2202ca9553aff54b3e3b46e17",

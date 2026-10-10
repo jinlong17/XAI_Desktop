@@ -645,3 +645,7 @@ TASK06 freshreview9bd435df80345e6e94f256777a3d865144cb9611 remote-preserved then
 Fresh TASK06 evidence machinery source author `/root/parallel_d_task06_runner_source_r1` launched in own fixed e7fc643 worktree; exact8ADD, zero runtime/qualification/probes. Alongside TT08statuswriter andRELbudgetimpact actual3workers+root=4/4. Reviewers remain separate from authors; all fixedparent inputs retained ascontrol advances.
 
 MET05 bounded discovery queued for next free slot: preserve existing disabled Planned sleep/water/exercise V1 boundary, independent source-grounded preparation only. No new metric implementation, caller acceptance or formal closure grant; actual three workers remain active.
+
+## Parallel controller checkpoint: TT08 final acceptance / REL census
+
+RELimpact9885870a remote-preserved received125501c, all9685inputs checked; V1 remains BLOCKED unknown exhaustive counts. TTstatusb4c3312 received023451a, sole1MOD/fullhistoricalbody and June/9061protectedrows/patch/575indexidentities verified; scoped doc READY_TO_SHIP only, caller acceptance pending. Initial contiguous-document assumption and legacy barepath parser refused before writes; corrected to exact section removal and frozen parent labels. Registration script quote error also stopped before any writes; no source or runtime failure. Fresh Astra exact2ADD final acceptance registered; no fourth vendor or author reset. MET05 actual source discovery and TASK06 evidence author continue. Formal13/3/3/293 and299unclosed unchanged; allthree ledger hashes retained.

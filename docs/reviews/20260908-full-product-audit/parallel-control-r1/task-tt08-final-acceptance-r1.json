@@ -1,0 +1,61 @@
+{
+  "id": "TT-08/FINAL-ACCEPTANCE",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh uninvolved fullchain Astra caller documentary acceptance reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "023451abc9df575c24056cb07cf1c9bebe4a6d43",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "c6ab3c967074595ab59b7e0bf7dc86d66b229e97",
+    "287547e2b0e0724a48a89e50377ccc7e840db93b",
+    "00933c91241159e26f444213146d9ba949bac823",
+    "01efd359d910fbe5cd5092570fe9060ffc9d8ef7",
+    "59809b32a4dc19dbdefff871cf9c60bb5b0b96b1",
+    "68ac65f8fa1b8d9868b0fe15392dc9d445aa94b4",
+    "541a016fa64051a0b952e6c87ea839de99cc623d",
+    "f475cf5d0598dcb18e0e75e2e025969e7c16b056",
+    "b4c33120bde198214bbe3bf76ead543b5f139c3a"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-tt08-final-acceptance-r1/acceptance.md",
+    "docs/reviews/audit-parallel-tt08-final-acceptance-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Complete original TT08 obligation and D1-D7 against approved contract, full before, exact five-doc author/corrector/status lineage and all inputs; full scope unchanged",
+    "Validate actual ClaudeCode raw tools/literal final and complete mandatory governing inputs at3; retain F1 and withheld gap, all3/3 costs. Same corrected candidate verified before authorized separate status entry; final review includes status delta under contract7, no fourth vendor",
+    "Truthful consumed Single/Multi default/confirmation/atomic switch, raw fixture vs selector/native coverage, PRD conventions/links/current source and accepted TT01/02/03/REL01 historical evidence qualified; no source or old test becomes fresh runtime PASS",
+    "Protected30 runtime/host identities, four unchanged candidate docs, exact patches, June suffix and earlier author body preserved; no sharedsource/CSS/test/ledger/inventory broad changes",
+    "Explicit full documentary TT08 caller ACCEPTED or REVISE/BLOCKED; distinguish scoped READY_TO_SHIP from whole-product/release/formal312/GOV04/GOV05; all C-FB002/OE/C-RD1/predictedC-FD1/G1 Required evidence retained for affected runtime work, no rerun or waiver",
+    "Root evidence-only reconciliation unchangedstates and fresh inventory only after acceptance; reviewer never repairs. Author3/3 and vendor3/3 exhaustion forbids automatic rework or actor/path resets"
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/CSS/tests/runners/original reports/raw failures",
+    "global control/three ledgers/inventory/status",
+    "other worktrees",
+    "push/merge/rebase/deploy/release/promote/D3"
+  ],
+  "budgets": {
+    "final_acceptance_iteration": 1,
+    "final_acceptance_cap": 3,
+    "static_pass": 1,
+    "author_family_used": 3,
+    "author_cap": 3,
+    "vendor_family_used": 3,
+    "vendor_cap": 3,
+    "runtime": 0,
+    "browser": 0,
+    "native": 0,
+    "tests": 0,
+    "probes": 0
+  },
+  "stop": [
+    "hash/scope/unknown dirty",
+    "unsupported product/candidate claim",
+    "missing protocol or scope approval",
+    "exhausted cap or protected boundary"
+  ],
+  "no_children": true
+}
