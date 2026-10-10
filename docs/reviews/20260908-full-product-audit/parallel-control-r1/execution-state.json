@@ -3588,7 +3588,7 @@
       "primary_workflow": "mixed_B_and_C_preserve_original_ownership",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "running_fresh_whole_independent",
+      "state": "FAILED_PREWRITE_STATIC_NO_ARTIFACT",
       "fixed_input": "66060a9caa7bd4c5443c202bf8fad99469e1e123",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-mat01-mat03-source-discovery-r2.json",
       "family_iteration": 2,
@@ -3599,7 +3599,10 @@
       "actor": "/root/parallel_c_mat01_mat03_whole_source_correction_r2",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-mat01-mat03-source2-20261010/XAI_Desktop",
       "fixed_parent": "e913502cc2b47546fce6566babb9d6f723db8e42",
-      "worktree_registration": "checkoutcreatedsuccessful appattachment100error no retry/recreation"
+      "worktree_registration": "checkoutcreatedsuccessful appattachment100error no retry/recreation",
+      "static_invocations": 1,
+      "static_result": "FAILED",
+      "failure_record": "docs/reviews/20260908-full-product-audit/parallel-control-r1/matrix-source2-p85-failed-prewrite-receipt.json"
     },
     {
       "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/TECHNICAL-CONTRACT1",
@@ -3607,14 +3610,51 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "registered_ready_fresh_whole_contract1",
+      "state": "running_fresh_whole_technical_contract1",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-hab01-hab05-technical-contract-r1.json",
       "fixed_input": "6102651bcfc108914992f3caef5b1e97ac618042",
       "family_iteration": 1,
       "family_cap": 3,
+      "actual_actor_launched": true,
+      "adopted": false,
+      "new_budget_grant": [],
+      "actor": "/root/parallel_c_hab01_hab05_whole_technical_contract_r1",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-hab01-hab05-contract1-20261010/XAI_Desktop",
+      "fixed_parent": "0d62992ef39a6075281c0bbe83e4c7318ab3598e",
+      "worktree_registration": "createdsuccessful attachment100error no recreation/retry"
+    },
+    {
+      "id": "MAT-01+MAT-02+MAT-03/SOURCE-DISCOVERY3",
+      "workflow": "C",
+      "primary_workflow": "mixed_B_and_C_preserve_original_ownership",
+      "configured_model": "gpt-6-luna",
+      "provider_attested": false,
+      "state": "registered_ready_FINALwhole_source3",
+      "fixed_input": "0d62992ef39a6075281c0bbe83e4c7318ab3598e",
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-mat01-mat03-source-discovery-r3.json",
+      "family_iteration": 3,
+      "family_cap": 3,
       "actual_actor_launched": false,
       "adopted": false,
       "new_budget_grant": []
+    },
+    {
+      "id": "SHELL-05/SOURCE-DISCOVERY1",
+      "workflow": "C",
+      "primary_workflow": "C",
+      "configured_model": "gpt-6-luna",
+      "provider_attested": false,
+      "state": "registered_ready_fresh_whole_source1",
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shell05-web-pet-source-discovery-r1.json",
+      "fixed_input": "0d62992ef39a6075281c0bbe83e4c7318ab3598e",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "actual_actor_launched": false,
+      "adopted": false,
+      "new_budget_grant": [],
+      "original_gate_obligations": [
+        "owner-P-1"
+      ]
     }
   ],
   "workflow_B": "TT08 FULL documentary caller accepted/reconciled/inventoryaccepted; unchangedruntimeP0. MEDsource2/BRD28wholeimpact2/GOV01+02sourcecontract2 conditionaltechnicalDOCUMENT adopted. Otherimplementation descendants wait eachowningqualification/before/scope/gate; no newruntime/caller/formal/releasegrant.",
@@ -3624,10 +3664,11 @@
     "total": 2,
     "capacity": 4,
     "actors": [
-      "/root/parallel_c_mat01_mat03_whole_source_correction_r2"
+      "/root/parallel_c_hab01_hab05_whole_technical_contract_r1"
     ],
     "ready_next": [
-      "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/TECHNICAL-CONTRACT1"
+      "MAT-01+MAT-02+MAT-03/SOURCE-DISCOVERY3",
+      "SHELL-05/SOURCE-DISCOVERY1"
     ]
   },
   "cost": {
@@ -3648,14 +3689,14 @@
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "120delivered119reportedconcluding incl10FAILED1WHITESPACE_ONLY; pending24FAILED3UNKNOWN1reportedPASSfactualFAIL=>147known34FAILED3UNKNOWN110reportedPASSinclwhitespace1; GovD3acquisitionFAILstaticUNRUN; SK5observedclassificationHELD separate no0.",
+    "static_passes_basis": "120delivered119reportedconcluding incl10FAILED1WHITESPACE_ONLY; pending25FAILED3UNKNOWN1reportedPASSfactualFAIL=>148known35FAILED3UNKNOWN110reportedPASSinclwhitespace1; GovD3acquisitionFAILstaticUNRUN; SK5observedclassificationHELD separate no0.",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 10,
     "rework_findings_basis": "76prior+4wholeSKD2+3wholeHabD1; Gov04source2producerfactual1 separateunvalidated",
-    "pending_no_delivery_static_invocations": 28,
-    "pending_no_delivery_static_failures": 24,
-    "actual_static_invocations_total_known": 147,
-    "actual_static_failed_total_known": 34,
+    "pending_no_delivery_static_invocations": 29,
+    "pending_no_delivery_static_failures": 25,
+    "actual_static_invocations_total_known": 148,
+    "actual_static_failed_total_known": 35,
     "static_budget_overruns": 3,
     "pending_no_delivery_static_unknown": 3,
     "actual_static_completion_unknown_total_known": 3,
@@ -4380,6 +4421,11 @@
       "at": "2026-10-10T19:51:12.998607+00:00",
       "event": "P84 receiveHabWHOLED2original2190remote->6102651 exact2ADDclean185bindings WHOLEAPPROVED correctedsourcee7d ADOPTED_SOURCE_DISCOVERY_ONLY no contract/qualification/before/code/caller/releasegrant. Static46867exit0.270184s process430ms/threeGit0EOF rawsessionchunkUNKNOWN measured5.442367min priorhistoryUNKNOWN retained; nonblocking .hcell weeklystrip naming carried to freshWHOLEtechnicalcontract1/3 proposal registered originalall5 no policyinvention. Gov04+07FINALD3inputacquisition3593a1exit1/Git128 manifestcomment mistakenpath staticUNRUN nooutputs/noverdict bothfamilies3/3EXHAUSTED no4/reset; receiptunknowns retained. P83literal2FAIL1WARN exactnewHaboriginalnowremote preserved no recoverydelete. Actualroot+Matrixsource2=2/4 readyHabcontract.120sources147knownconcluding34FAILED3UNKNOWN110reportedPASS+SK5classificationHELD/rework83/newvendorformalprobe0. Formal13/3/3/293312299unclosed939 unchanged oldsevenpendinggroups/newE6E7E8HELD goalunfinished.",
       "input": "6102651bcfc108914992f3caef5b1e97ac618042"
+    },
+    {
+      "at": "2026-10-10T19:53:58.364616+00:00",
+      "event": "P85 freezeMatrixsource2actualprewrite7da6d0exit1 capfieldwrongtop-level vsnestedbudgets tool3.276s PID/EOFUNKNOWN/noartifactno retry; source2/3consumed freshFINALwholeauthor3/3 registered no4/reset. Habitswholetechnicalcontract1freshAstra RUNNINGparent0d6299/source610 input unchanged sourceapprovalONLY. Register independentwholeSHELL05WebPet source1/3 originalC ownerP1gate retained distinctexhaustedGOV05dossier/no nativepet/AI/sharedscope grants. Actualroot+Habauthor=2/4 nextMatrixfinal+WebPet first. P84normal0FAIL1WARN/root0d6299pushed Hab610originancestor.120sources148knownconcluding35FAILED3UNKNOWN110reportedPASS+SK5classificationHELD/rework83/newformalprobevendor0. Formal13/3/3/293312299unclosed939 unchanged oldsevenquestionsnewE6E7E8HELD goalunfinished.",
+      "input": "0d62992ef39a6075281c0bbe83e4c7318ab3598e"
     }
   ],
   "wave_P2_tasks": [
@@ -4388,7 +4434,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P83literal2FAIL1WARN newlycompletedHabD2originallocalref/reflog noworiginalremote preserved P84freshpending",
+    "normal": "P84literal0FAIL1WARN P85freshpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -4423,7 +4469,7 @@
     "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
     "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
     "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched",
-    "normal_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e",
+    "normal_log_sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b",
     "deep": "P44 1FAIL0WARN exactfiveoriginalunreachable identities confirmedP45 retainedno deletion",
     "initial_shared_review_recovery_ref": "codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
     "deep_log_sha256": "81179a39509cd6990ed115565d43bcb22a280b4cdd999f074f1ed52ae3e97079",
@@ -4432,7 +4478,7 @@
     "normal_intermediate_P59": "Literal2FAIL1WARN: one newlycompleted GOVsource2 original in localrefs/reflog before archive push; exactd116 original nowremotepreserved before rootreception; freshrepeat pending, no recovery deletion",
     "normal_intermediate_P59_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e"
   },
-  "workflow_C": "Matrixwhole source2 RUNNING. Habits WHOLEsource2 adoptedSOURCEONLY; fresh wholetechnicalcontract1 registered, unresolvedpolicy blockedrows retained not chosen. SK fiveguardFAIL classificationHELD.",
+  "workflow_C": "Habitswholetechnicalcontract1 RUNNING. Matrixsource2actualnestedcardguardFAIL frozen; freshFINALsource3 registered. FreshSHELL05WebPet source1registered originalC/P1gate retained distinctGOV05purpose. Otherholdsunchanged.",
   "active_scheduler": {
     "graph": "docs/reviews/20260908-full-product-audit/parallel-control-r2/dependencies.json",
     "sha256": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
