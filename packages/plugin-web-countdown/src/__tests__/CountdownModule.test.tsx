@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * CountdownModule.test.tsx — Tests M1..M10
  *
@@ -22,7 +23,7 @@ import type { CountdownCard } from "../types.js";
 
 // Seed localStorage before a test
 function seedStorage(cards: CountdownCard[]) {
-  localStorage.setItem("xai_countdowns", JSON.stringify(cards));
+  localStorage.setItem(accountScope.physicalKey("xai_countdowns"), JSON.stringify(cards));
 }
 
 describe("CountdownModule — M1 empty state", () => {
@@ -65,7 +66,7 @@ describe("CountdownModule — M2 add card", () => {
     // Card should appear in grid
     expect(screen.getByText("New Event")).toBeInTheDocument();
     // localStorage should contain the new card
-    const stored = JSON.parse(localStorage.getItem("xai_countdowns") ?? "[]");
+    const stored = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_countdowns")) ?? "[]");
     expect(Array.isArray(stored)).toBe(true);
     expect(stored.length).toBeGreaterThan(0);
     expect(stored.some((card: CountdownCard) => card.title.en === "New Event")).toBe(true);
@@ -94,7 +95,7 @@ describe("CountdownModule — M3 edit card", () => {
     });
     expect(screen.getByText("Weekend Updated")).toBeInTheDocument();
     // Verify localStorage
-    const stored = JSON.parse(localStorage.getItem("xai_countdowns") ?? "[]");
+    const stored = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_countdowns")) ?? "[]");
     const updated = stored.find((card: CountdownCard) => card.id === FIXTURE_FUTURE.id);
     expect(updated.title.en).toBe("Weekend Updated");
   });
@@ -114,7 +115,7 @@ describe("CountdownModule — M4 delete", () => {
       fireEvent.click(deleteButtons[deleteButtons.length - 1]!);
     });
     expect(screen.queryByText("Weekend")).not.toBeInTheDocument();
-    const stored = JSON.parse(localStorage.getItem("xai_countdowns") ?? "[]");
+    const stored = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_countdowns")) ?? "[]");
     const deleted = stored.find((card: CountdownCard) => card.id === FIXTURE_FUTURE.id);
     expect(deleted.status).toBe("deleted");
     expect(deleted.is_hidden).toBe(true);
@@ -162,7 +163,7 @@ describe("CountdownModule — M7 corrupted entry", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     // Store one valid card and one invalid entry
     localStorage.setItem(
-      "xai_countdowns",
+      accountScope.physicalKey("xai_countdowns"),
       JSON.stringify([FIXTURE_FUTURE, { id: "bad", title: { en: "Only EN" } }]),
     );
     render(<CountdownModule lang="en" />);
@@ -229,7 +230,7 @@ describe("CountdownModule — V2 interaction polish", () => {
     fireEvent.drop(alpha, { dataTransfer });
     fireEvent.dragEnd(beta, { dataTransfer });
 
-    const stored = JSON.parse(localStorage.getItem("xai_countdowns") ?? "[]") as CountdownCard[];
+    const stored = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_countdowns")) ?? "[]") as CountdownCard[];
     const alphaStored = stored.find((card) => card.id === "cd_alpha")!;
     const betaStored = stored.find((card) => card.id === "cd_beta")!;
     expect(betaStored.sort_order ?? Number.MAX_SAFE_INTEGER).toBeLessThan(alphaStored.sort_order ?? Number.MAX_SAFE_INTEGER);

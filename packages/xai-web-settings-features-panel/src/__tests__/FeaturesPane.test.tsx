@@ -6,6 +6,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { FeaturesPane } from "../FeaturesPane.js";
 import { featureIdOrder } from "../featureIds.js";
 import { getPref, setPref } from "@repo/plugin-web-storage";
+import { flushFeatures, installFeaturesLockFixture } from "./featuresLockFixture.js";
 
 beforeEach(() => {
   // SettingsFooter uses window.confirm for the Reset path; jsdom does not
@@ -31,7 +32,8 @@ describe("FeaturesPane", () => {
     expect(screen.getByText("Meditation")).toBeInTheDocument();
   });
 
-  it("AC-PANE-3: clicking a Toggle flips the underlying pref", () => {
+  it("AC-PANE-3: clicking a Toggle flips the underlying pref", async () => {
+    installFeaturesLockFixture();
     const { container } = render(<FeaturesPane lang="en" />);
     const boardCard = container.querySelector<HTMLElement>(
       '[data-feature-id="board"]',
@@ -44,6 +46,7 @@ describe("FeaturesPane", () => {
     expect(toggle, "toggle button must exist").not.toBeNull();
     expect(getPref("xai_pref_features_board")).toBe(true);
     fireEvent.click(toggle!);
+    await flushFeatures();
     expect(getPref("xai_pref_features_board")).toBe(false);
   });
 
@@ -64,7 +67,8 @@ describe("FeaturesPane", () => {
     expect(screen.getByText("冥想")).toBeInTheDocument();
   });
 
-  it("AC-PANE-6: SettingsFooter Reset restores all 8 prefs to true", () => {
+  it("AC-PANE-6: SettingsFooter Reset restores all 8 prefs to true", async () => {
+    installFeaturesLockFixture();
     // Pre-flip 3 prefs to false.
     setPref("xai_pref_features_board", false);
     setPref("xai_pref_features_calendar", false);
@@ -75,6 +79,7 @@ describe("FeaturesPane", () => {
     // The Reset button is rendered by SettingsFooter — locate by EN label "Reset to defaults".
     const reset = screen.getByRole("button", { name: /reset to defaults/i });
     fireEvent.click(reset);
+    await flushFeatures();
 
     // After reset: keys removed → readback returns default (true).
     expect(getPref("xai_pref_features_board")).toBe(true);

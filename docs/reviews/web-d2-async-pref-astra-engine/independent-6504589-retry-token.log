@@ -1,0 +1,24 @@
+INDEPENDENT ASTRA product=650458908342013acffd7a43fc5161f7d687fea2 archive=/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-engine-i63gn06c test_sha256=a82139622eb5a922bce34ed363f92b0cdb27b7fc9fb11312b2d4ef8aba1e72f4
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-engine-i63gn06c/packages/plugin-web-storage
+
+ ✓ src/__tests__/astraEngine.test.ts > set token reconciles original baseline exactly once without another physical mutation 4ms
+ ✓ src/__tests__/astraEngine.test.ts > reset token reconciles original baseline exactly once without another physical mutation 1ms
+ ✓ src/__tests__/astraEngine.test.ts > token refuses wrong-token without consuming the valid original grant 1ms
+ ✓ src/__tests__/astraEngine.test.ts > token refuses original-raw without consuming the valid original grant 0ms
+ ✓ src/__tests__/astraEngine.test.ts > token refuses different-key without consuming the valid original grant 0ms
+ ✓ src/__tests__/astraEngine.test.ts > token refuses different-intent without consuming the valid original grant 0ms
+ ✓ src/__tests__/astraEngine.test.ts > token refuses operation-kind without consuming the valid original grant 0ms
+ ✓ src/__tests__/astraEngine.test.ts > token cannot cross account identity even when current raw/intended/original values otherwise match 0ms
+ ✓ src/__tests__/astraEngine.test.ts > token cannot cross generation or bypass its full persistent marker/tombstone admission 0ms
+ ✓ src/__tests__/astraEngine.test.ts > observed external replacement irrevocably invalidates a token even if intended bytes later reappear 0ms
+ ✓ src/__tests__/astraEngine.test.ts > public set no-token reconciliation remains supported and consumes its original token 0ms
+ ✓ src/__tests__/astraEngine.test.ts > public remove no-token reconciliation remains supported and consumes its original token 0ms
+ ✓ src/__tests__/astraEngine.test.ts > pre-write quota failure issues no reconciliation grant and cannot waive a later baseline conflict 1ms
+
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+   Start at  19:56:08
+   Duration  957ms (transform 98ms, setup 0ms, collect 117ms, tests 9ms, environment 459ms, prepare 134ms)
+
+EXIT_CODE=0

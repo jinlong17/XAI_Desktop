@@ -1,0 +1,16 @@
+revision=2962b49 fixed_commit=2962b49bd63fa351a2c17b406456ea1b987eca8f
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-Mwbeh5
+
+ ✓ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx (16 tests) 4788ms
+   ✓ preset: discard clears only its actual failed draft, preserving successful siblings and timer bytes  351ms
+   ✓ custom_minutes: discard clears only its actual failed draft, preserving successful siblings and timer bytes  339ms
+   ✓ source-only repair is clean while repairing one source leaves another actual failed draft guarded  539ms
+   ✓ targeted conflict discard preserves another latest quota-failed choice and its Retry  410ms
+   ✓ completion-driven failed next preset is a draft; successful retry releases it without replaying history or event  1956ms
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  23:58:32
+   Duration  8.01s (transform 827ms, setup 0ms, collect 1.31s, tests 4.79s, environment 745ms, prepare 245ms)

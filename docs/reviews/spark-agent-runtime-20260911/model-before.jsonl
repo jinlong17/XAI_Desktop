@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a09063-026f-7de1-9e51-a7e3bb550556"}
+{"type":"turn.started"}
+{"type":"error","message":"{\n  \"type\": \"error\",\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"code\": null,\n    \"message\": \"Tool 'image_generation' is not supported with gpt-5.3-codex-spark.\",\n    \"param\": \"tools\"\n  },\n  \"status\": 400\n}"}
+{"type":"turn.failed","error":{"message":"{\n  \"type\": \"error\",\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"code\": null,\n    \"message\": \"Tool 'image_generation' is not supported with gpt-5.3-codex-spark.\",\n    \"param\": \"tools\"\n  },\n  \"status\": 400\n}"}}

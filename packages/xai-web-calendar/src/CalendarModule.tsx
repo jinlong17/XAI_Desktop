@@ -1,3 +1,4 @@
+import { useLocalDayClock } from "@repo/plugin-web-tokens";
 /**
  * CalendarModule — top-level calendar surface.
  *
@@ -42,7 +43,6 @@ import {
   boardCalendarEventsByDate,
   mergeEventsForMonth as mergeBoardFeedForMonth,
 } from "./internal/boardCalendarFeed.js";
-import { utcDateKey } from "./internal/dateKeys.js";
 import { tryParseDateKey, dateKeyMonth, formatDateKey, stepDateKey } from "./internal/parseDateKey.js";
 import { WeekView } from "./WeekView.js";
 import { DayView } from "./DayView.js";
@@ -79,7 +79,7 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
   // P4: view is now persisted via xai_calendar_view.
   const [viewRaw, setViewPref] = usePref("xai_calendar_view", "month");
   const view: CalendarView = toView(viewRaw as string);
-  const todayKey = useMemo(() => utcDateKey(new Date()), []);
+  const { dayKey: todayKey } = useLocalDayClock();
 
   // Wrap setViewPref to enforce CalendarView typing.
   const setView = useCallback((v: CalendarView) => {
@@ -156,9 +156,13 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
   }, []);
 
   const handleComposerSave = useCallback(
-    (event: UserCalEvent) => {
+    async (event: UserCalEvent) => {
+      const operation = composer;
       if (composer.mode === "edit" && composer.editing) {
-        update(composer.editing.id, {
+        if (JSON.stringify(getById(composer.editing.id)) !== JSON.stringify(composer.editing)) {
+          throw new Error("Calendar event changed; reopen before saving");
+        }
+        const saved = await update(composer.editing.id, {
           title: event.title,
           startISO: event.startISO,
           endISO: event.endISO,
@@ -168,9 +172,10 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
           tag: event.tag,
           notes: event.notes,
           reminder: event.reminder,
-        });
+        }, composer.editing);
+        if (!saved) throw new Error("Calendar changes were not saved");
       } else {
-        create({
+        const saved = await create({
           title: event.title,
           startISO: event.startISO,
           endISO: event.endISO,
@@ -181,21 +186,26 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
           notes: event.notes,
           reminder: event.reminder,
         });
+        if (!saved) throw new Error("Calendar changes were not saved");
       }
       setActiveDate(event.startISO.slice(0, 10));
-      setComposer(COMPOSER_CLOSED);
+      setComposer(current => current === operation ? COMPOSER_CLOSED : current);
     },
-    [composer, create, update],
+    [composer, create, update, getById],
   );
 
   const handleComposerDelete = useCallback(
-    (id: string) => {
-      remove(id);
+    async (id: string) => {
+      const operation = composer;
+      if (JSON.stringify(getById(id)) !== JSON.stringify(composer.editing)) {
+        throw new Error("Calendar event changed; reopen before deleting");
+      }
+      if (!await remove(id, composer.editing ?? undefined)) throw new Error("Calendar changes were not saved");
       // composer.onDelete already calls onClose internally; we still snap
       // state back to ensure no edge case leaves the dialog open.
-      setComposer(COMPOSER_CLOSED);
+      setComposer(current => current === operation ? COMPOSER_CLOSED : current);
     },
-    [remove],
+    [remove, getById, composer],
   );
 
   // Merge fixture + user events for the Month view.

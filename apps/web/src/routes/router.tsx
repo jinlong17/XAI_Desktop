@@ -39,7 +39,7 @@ export const webHostRouteObjects: RouteObject[] = [
         // P4: <App> is now the layout for all /app/* routes.
         // <App> provides WebShellProvider + Shell with <Outlet/> for module content.
         path: "app",
-        element: <App />,
+        element: <ProtectedAppRouteElement><App /></ProtectedAppRouteElement>,
         errorElement: <RouteErrorBoundary scope="app" />,
         children: [
           {

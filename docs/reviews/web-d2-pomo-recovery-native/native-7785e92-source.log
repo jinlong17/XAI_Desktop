@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"7785e92","mode":"source","browser":"Chrome/152.0.7977.83"}
+{"name":"targeted-preference-recovery","pass":true,"mode":"source","scope":"Actual Chrome controls, no account marker; explicit read/discard is write-free; no running timer or reopen claim"}

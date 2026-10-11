@@ -1,0 +1,98 @@
+{
+  "id": "GOV-06/AUTHORITY-CONTRACT-IMPACT-REVIEW1",
+  "workflow": "D",
+  "primary_workflow": "B",
+  "module": "web",
+  "role": "fresh WHOLE independent sixmodule authority contract and impact reviewer1 NEVER repair",
+  "model": "gpt-6-astra",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "2736a112964974d6ed17b88025feb66c50a68846",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "dev_readonly_sha": "343cc5f1002559291b3f8fd1511b93c6e1196082",
+  "allowed_files": [
+    "docs/reviews/audit-parallel-gov06-authority-contract-impact-review-r1/review.md",
+    "docs/reviews/audit-parallel-gov06-authority-contract-impact-review-r1/inputs.sha256"
+  ],
+  "protected": [
+    "ALL nonallowed paths",
+    "sixmoduleauthority ADRs/mirrors/registry/generator/consumers/generated dashboard",
+    "all product/runner/tests/fixtures/evidence/originalfailures",
+    "globalcontrol/ledgers/otherwts",
+    "dev/main/web writes, merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0,
+    "review_iteration": 1,
+    "review_cap": 3
+  },
+  "no_children": true,
+  "logical_locks": {
+    "write": [
+      "newGOV06contract-impact-only"
+    ],
+    "read": [
+      "sixmoduleauthority",
+      "GOV01+02currentparserproposals",
+      "dashboardregistry-consumers"
+    ],
+    "future_shared_writer": "GOV01+02/GOV06 authority+registry logical conflict must be reviewed and serialized before any grants"
+  },
+  "read_paths": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".cursor/rules/product-module-routing.mdc",
+    "docs/PRODUCT_MODULE_MAP.md",
+    "docs/MODULE_BOUNDARIES.md",
+    "docs/PLUGIN_MAP.md",
+    "docs/adr/0010-p1-desktop-resume-plan.md",
+    "docs/adr/0013-branch-sync-governance.md",
+    "docs/adr/0015-desktop-plugin-scope-and-organizer-level.md",
+    "docs/planning/LONG_TERM_PRODUCT_ROADMAP.md",
+    "docs/workflow/project/workflow.md",
+    "docs/workflow/project/multi-machine-development.md",
+    "docs/workflow/project/dev-dashboard.md",
+    "docs/workflow/project/dashboard-state.json",
+    "docs/prototypes/dev-dashboard/index.html",
+    "docs/prototypes/dev-dashboard/js/product-flow.js",
+    "docs/prototypes/dev-dashboard/js/overview.js",
+    "docs/prototypes/dev-dashboard/js/state.js",
+    "scripts/dashboard/generate-state.mjs",
+    ".teams/skills/xai-dev-dashboard-sync/SKILL.md",
+    "docs/reviews/audit-parallel-gov06-authority-source-discovery-r1/discovery.md",
+    "docs/reviews/audit-parallel-gov06-authority-source-discovery-r1/inputs.sha256",
+    "docs/reviews/audit-parallel-gov01-gov02-source-contract-r1/contract.md",
+    "docs/reviews/audit-parallel-gov01-gov02-source-contract-impact-review-r1/review.md"
+  ],
+  "readonly_dev_paths": [
+    "docs/adr/0011-p1-react-tauri-local-first-hybrid.md",
+    "docs/adr/0015-desktop-plugin-scope-and-organizer-level.md",
+    "docs/adr/0013-branch-sync-governance.md"
+  ],
+  "stop": [
+    "actual input/hash/dirty/protected scope drift",
+    "needs undecided productbehavior or accepted ownerdecision changes",
+    "actual concluding static failure STOP no retry/materialization/commit/amend"
+  ],
+  "acceptance": [
+    "Whole original GOV06 action/acceptance and ALL six module responsibilities/branch existence/G1 runtime versus paused concrete packages/Organizer shipped exception/independent web-dev divergence/D3/module gates/crossplatform mirrors. Read complete accepted web ADR0015 and exact readonly dev343 ADR0011+0015+0013 before reporting unknown authority questions. Web Accepted decision and dev pending reconcile are distinct: reconcile web mirrors using accepted decisions, preserve dev status/branch and operator gate; never implicitly amend ADR decisions or sync dev. Existing clear rules resolve factual technical mirror choices without asking again. Missing true ownerdecision only minimum question, do not invent product policy.",
+    "Read full listed registry/generator/consumer sources with dashboard skill source-only. Map exact consumed module registry fields and source authority graph, stale generated vs authored sources and freshness rule; no generator/browser/Overview regeneration. Propose only finite exact future paths+blocks+literal before/after or precise patch for documentary factual mirrors, and whole backward consumer/ownership/status/branch semantics impact. Actualneeded change subset, not all candidate files automatically writable. Preserve ADR0010/0013 dated historical snapshots; do not convert remote branch presence to creation/promotion/merge/runtime parity authority. No code/API/parser repair grant. GOV01/02 sharing explicit dependency and singlewriter; fixed proposals not author2 uncommitted work.",
+    "Original source discovery a93426inputchecks only SOURCEONLY not before/contractaccepted. Retain exact failure logs and body CP6f versus manifest HEAD56fe identity mismatch, correct new source bindings not overwrite discovery. Bind actual taskcard/currentrootmetadata at registrationparent; complete every immutable read at EACH actually used SHA (including dev343). Include fixed branch-observation snapshot not fresh implicit repin. Current formal13/3/3/293, original312939 no closure or reduction. Enumerate whole evidence chain contract/independentfullimpactreview/rootgrant/valid before/narrowimplementation/frozen full verification+affected consumer regressions/true vendor if required/full independent caller acceptance/rootappend/inventory/ancestry/sync. Actual vendor distinct runtime not fresh Codex; credentials/external holds honest.",
+    "ALL input checks and BOTH complete output buffers BEFORE ANY writes. One meaningful documentary static validates own full proposal/source bindings/coverage, not old business verifier or guessed source-corruption qualification; all runtime/test/native/vendor0. No guessed count/minsize/headline/P0auditdoc parity guards. Raw numericexit/PID/session/chunk/EOFdrain receipts; UNKNOWN never0. Python3.9 API/UTF8 JSON transport actual newline safe. Exactly2ADD single hooksdisabled commit real newline WhyWhatScopeRiskDocsTests clean no amend/push. Actual semantic failure immediatefreeze; P56 only disclosed Git EOFblank original quotedbytes residual, no rerun permission. Fresh whole independent D reviewer required before adoption/grants.",
+    "FULL independently assess all106913bytes/127sourcebindings and whole original GOV06 action+acceptance; ALL49 literal documentary span replacements/27 exact JSON-pointer replacements/one separately held state.js fallback consumer wording obligation, exactversioned current-before vs historicalADR/remote facts, complete sixmodule branching/G1pausedpackages/Organizer/pet/dev reconciliation/independentwebdev/D3/owner gates. Sourceauthor reports source1GOVparserunadopted; current correctedsource2 remains unadopted pendingwholeD2, no scope/policychange from proposals. Check exact finite futurepaths/blocks/consumer backwardABI/registry/status freshness/proposedmethod fixture scope and fullvalidbefore/frozenintegratedaffectedconsumer/staticUI/truevendorifrequired/fullcalleraccept/rootappendinventory preservation. No actual authority/registry/code grant; technicalDOCUMENTONLY if wholeAPPROVED rootadopts separately. EVERY complete sourceMD at EACH actualusedSHA and actualparentcard/control prebound; source127allchecks, ownwholeverdict APPROVED/REVISE/BLOCKED exactlines neverrepair. Prepare ALL inputs and BOTH finalbuffers BEFORE ANY filesystem writes including draft. One meaningfulstatic1 failureSTOP no retry/materialization/commit; no authorchecker/oldbusinessvalidator imports or execution. No guessedcounts/headlines/minsize/P0auditdocs parity, actualrawPID/session/chunk/numericexit/fullEOFdrain; original source knownread failures/transports retained not passing inputs. Exactly2ADD hooksdisabledonecommit realnewlines clean noamendpush."
+  ],
+  "source_inputs": [
+    "327e5006cc2511f0faec8b61d638576eb96501b5",
+    "a9346fc1efd565833bbc715d848b9a414a87175d"
+  ]
+}

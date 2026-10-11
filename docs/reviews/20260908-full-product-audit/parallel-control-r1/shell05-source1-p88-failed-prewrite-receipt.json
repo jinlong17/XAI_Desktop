@@ -1,0 +1,50 @@
+{
+  "id": "SHELL-05/SOURCE-DISCOVERY1",
+  "actor": "/root/parallel_c_shell05_web_pet_source_r1",
+  "parent": "5272ab08b3afd1aba9f89515054a23b40ba0b6c4",
+  "fixed_input": "0d62992ef39a6075281c0bbe83e4c7318ab3598e",
+  "result": "FAILED_INPUT_HASH_PREWRITE_NO_ARTIFACT",
+  "family_iteration": 1,
+  "family_cap": 3,
+  "concluding_invocations": 1,
+  "pid": 52944,
+  "numeric_exit": 1,
+  "tool_chunk": "e2c13f",
+  "reported_elapsed_seconds": 0.175,
+  "session": "UNKNOWN noactivechildreported",
+  "outer_stdout_stderr_split_EOF_drain": "UNKNOWN",
+  "error": "sha256sum -c stdin unsupported by actualenvironment CLI",
+  "manifest_complete_validation": "FAILED",
+  "source_findings": "UNVALIDATED in-memory only nosourceadoption",
+  "filesystem_writes": 0,
+  "retries": 0,
+  "materializations": 0,
+  "commits": 0,
+  "root_metadata_clean_parent_output_absent": true,
+  "original_P1_gate_retained": true,
+  "original_raw_tool_provenance": {
+    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/shell05-source1-p88-original-failed-tool-records.json",
+    "sha256": "9cdc653cf8daa87c54959f123b473a482445f4368d4340dab7c6e93df5e8b47d",
+    "response": {
+      "type": "custom_tool_call_output",
+      "id": "ctco_01a12767-b09b-7bb1-86a1-24e7d7bfc537",
+      "call_id": "call_tBVgnSovn4uBgyri1Lli7BD1",
+      "output": [
+        {
+          "type": "input_text",
+          "text": "Script completed\nWall time 0.4 seconds\nOutput:\n"
+        },
+        {
+          "type": "input_text",
+          "text": "{\"chunk_id\":\"e2c13f\",\"exit_code\":1,\"wall_time_seconds\":0.175520625,\"output\":\"STATIC_PID=52944\\nHEAD=5272ab08b3afd1aba9f89515054a23b40ba0b6c4\\nSTATUS=PRODUCT_ANCESTOR=yes\\nSOURCE_DIFF_NAMES_BEGIN\\nSOURCE_DIFF_NAMES_END\\nALLOWED_OUTPUTS_EXIST=no\\nusage: sha256sum [-bctwz] [files ...]\\n\"}"
+        }
+      ],
+      "internal_chat_message_metadata_passthrough": {
+        "turn_id": "01a12762-481b-7282-bbff-f058596e8156",
+        "create_time": 1791662469.275664
+      }
+    },
+    "call_id": "call_tBVgnSovn4uBgyri1Lli7BD1"
+  },
+  "new_budget_grant": []
+}

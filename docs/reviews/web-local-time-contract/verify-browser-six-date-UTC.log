@@ -1,0 +1,41 @@
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:745:17:
+      745 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:753:17:
+      753 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:761:15:
+      761 │     if (typeof import.meta !== "undefined" && (import.meta as { e...
+          ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-shell/src/AppRail.tsx:51:13:
+      51 │       typeof import.meta !== "undefined" &&
+         ╵              ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-shell/src/AvatarMenu.tsx:132:25:
+      132 │                   typeof import.meta !== "undefined" &&
+          ╵                          ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+{"status":"PASS","zone":"UTC","expected":"2026-09-09","features":["Habits","TT","Statistics","Metrics","Tasks","Calendar actual UI"],"dstHours":[24,24,24,24],"calendarResume":"PASS"}

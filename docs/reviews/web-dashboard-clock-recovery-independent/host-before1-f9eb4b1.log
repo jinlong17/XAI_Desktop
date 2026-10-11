@@ -1,0 +1,1074 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+widgets_package_tree=4d65ad167b0d3712166e96569b1d9f44ed66a500 grid_package_tree=8e96464cae57ba35a7f1a4c39c9b0a8f9df64509 storage_package_tree=782c79de33a1da6851b5a235950408eb7ae89f99 shell_package_tree=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 web_app_tree=61ddf71751eaa9f1a456897ecb7fbe23e708be4b
+mode=host
+suffix=before1
+include=docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-dashboard-clock-recovery-independent/verify-fixed.mjs f9eb4b1 host before1
+runner_checkout_head=bbd897117e681537225bb5e7959d8ae629b70e43
+product_tree_delta_files_vs_runner_head=0
+contract_r2_sha256=214dc7582ff866cf76482b8883cc284edba8fa180f88bbf940fcaa7ab32cf0ae (asserted equal to 214dc7582ff866cf76482b8883cc284edba8fa180f88bbf940fcaa7ab32cf0ae)
+archive_method=stream (spawned git archive piped to tar -x; no fixed buffer) archive_bytes=148408320 archive_sha256=bb468cede8a9659d9798bdb4c7f0a528faedf3ddfb344fb946f159ce6305a097
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps/web/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-host-EtGmXZ/clock-host-host.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-host-EtGmXZ/.report-host.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 host-fixture.tsx=dc3b03d1cf6d65c7e168699faed49cadc24fb3b5063420f92d42f392c14b84e6 host.test.tsx=aab7710eb8c286c6d55122ab88c2ff771f0dbbd8ffafb03d9dd4ff22c03d831b verify-fixed.mjs=5f4fc0793eb87337a568dba10cc405d0824b0640ff82ee892f7bb4507540fc18
+archive_file_sha256 (50/50 equal the contract r2 source table) packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx=10bf13e8550bdf1207cfd89b372e5b87f099b1110326248dbf5b7ea2325614e9(contract:match) packages/xai-web-dashboard-widgets/src/registrations.tsx=346cfddfbb3c299aff251b2e4daff31b909d0690196857c36b8ee71f6e015154(contract:match) packages/xai-web-dashboard-widgets/src/styles.css=a7a4cf039b343b8c6b06113bf6b6997084524aa4c0413e2ab0396a1ca933a853(contract:match) packages/xai-web-dashboard-widgets/src/internal/cityLibrary.ts=50de913a73caaef2ea98c7021fec24dd46a30d56177527ddda54db89bcb36f48(contract:match) packages/xai-web-dashboard-widgets/src/internal/Icon.tsx=afd71c525472e5ba9087cfcfe78b6b801767bff34f61c7a73b59a6cdd5b26985(contract:match) packages/xai-web-dashboard-widgets/src/index.ts=1e22d6b74d4f22655e273415798edd1c255b5af9a108f2a99822299ac8031b0b(contract:match) packages/xai-web-dashboard-grid/src/DashboardModule.tsx=36a8532beb638a5741d3b51338a2ce32da9daa220e1a461cd00729da61e542a2(contract:match) packages/xai-web-dashboard-grid/src/DashboardGrid.tsx=395a134c9c1c3044ed86afdb48839373a7ba80ff57a387177dd277d76098fc2f(contract:match) packages/xai-web-dashboard-grid/src/types.ts=afeb1112713155f8998ca13cc9dbfc174025c98497148ab21cd4f015201e40f2(contract:match) packages/xai-web-dashboard-grid/src/index.ts=fc5da5907da4de81a327736297ef2ae377a7cf3e589fb3c121475229f9acf71c(contract:match) packages/xai-web-dashboard-grid/src/DashHeader.tsx=0aaa4ce3b456b1fedf3c4bb3f7163830e6ee7390ba65382564d9c13852e40456(contract:match) packages/xai-web-dashboard-grid/src/WidgetGhost.tsx=0b476928649a3b24bd35d97869c0b1e9e4588ebdec4908b6ef8c5583d0272c9b(contract:match) packages/xai-web-dashboard-grid/src/WidgetShell.tsx=7d1b74b80076983eb5cc34921d06d58b5365cbcf91efb63128a6c7938b1bd708(contract:match) packages/xai-web-dashboard-grid/src/styles.css=d9e330e70a375b0579fcf3b98e3d9ea2c633fc4b498b4b3a66fda3df8db9fdc6(contract:match) apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075(contract:match) apps/web/src/routes/modules/dashboardRegistration.tsx=66c524e4e02117275ed369c02049f33a0eb2c42ad068388eb4041fa469c903e8(contract:match) apps/web/src/routes/modules/settingsDeparture.ts=80c3a5787df8eb02102c4a508f2fe67c1fbd6a6b8ba7f16b3a65c3f542c8548b(contract:match) apps/web/src/routes/modules/shellRegistrations.tsx=c003c499ca3330ff6e3b7e738df4e3366d0daca141d65327dacc3d3665e1b8fe(contract:match) apps/web/src/main.tsx=6a7cdfbc6b17cdc13a3dbcb44611b09c33ddf7c7787da4a6ed31265e4abbf243(contract:match) apps/web/src/providers/AccountStorageGate.tsx=1c6bf8c695e9bc8b80b83c6da0c3c55c44e9a88498dded1b8dd46f302d8cb666(contract:match) apps/web/src/providers/AppProviders.tsx=950cde0f7f6ba7cae9776a8e8442a303f938d5bb04d389dd1ac9760e10ebe655(contract:match) apps/web/src/App.tsx=f644e78ec482c0b9b66f9702407eb34e1dcd110e837293e4a736964bfe7ac408(contract:match) packages/xai-web-shell/src/AppRail.tsx=fe789078fecc60936d3e6c5fc2b203001a15490aecf30f3a0ca301da1399fb44(contract:match) packages/xai-web-shell/src/Topbar.tsx=aa5ac56e7b6a7652df70e82ed4d83dc81b44558181bfb48a30eb40b157d43c0e(contract:match) packages/xai-web-shell/src/Shell.tsx=38e25c6b20f6413c9362f53e9be7e2aa121001170898a6097e29fccabf22e432(contract:match) packages/xai-web-shell/src/types.ts=d18f637e9bec8c05f305fb29467acfd3fdcf2649e83ad2b28b877389752139c0(contract:match) packages/xai-web-shell/src/index.ts=396a894d09b5b2b95f2ed063b615b41f371044f356d4d2ef9f224189e09b66ab(contract:match) packages/xai-web-shell/src/internal/railOrderController.tsx=d7f2f0b699e087c34d453309d9fe4c0eb6ba38ef52e6dfc70fe49d2f75c4e2a6(contract:match) packages/xai-web-shell/src/internal/RailOrderStatus.tsx=48b611ff1e2efbc96a888fd87f048925472702db898530cbf21f5df560ecff95(contract:match) packages/xai-web-shell/src/internal/railOrderCopy.ts=268fb934f921843efd1c3e41cd9a81614ce26b3a94026e5884e10d633a05d7ba(contract:match) packages/xai-web-shell/src/railOrderStatus.css=338f0eae7338458da54b996880cfa93034940e0f19220a1669c1570a8fd4b6e5(contract:match) packages/xai-web-shell/src/AvatarMenu.tsx=3401b838a2dc5a16d1c6f1113a2aaf1ef6d8673897029bb2a1614db8c379c4c2(contract:match) packages/xai-web-settings-appearance/src/internal/appearanceController.tsx=64d6c8b74f689bc989bc8d1bcfa85bb333b068826829269f1e31d97cd2878e5a(contract:match) packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts=991232e97e44919c1b00b5502a62df05d814de3ccc34ed4452104ad59b54dab0(contract:match) packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491(contract:match) packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332(contract:match) packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00(contract:match) packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188(contract:match) packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421(contract:match) packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3(contract:match) packages/plugin-web-storage/src/internal/accountOwnership.ts=8d5b7fef04a014044b81cb95d56eaf084bfc306d7c8b9a27540b6caa3a2bef20(contract:match) packages/plugin-web-storage/src/internal/accountCoordination.ts=d669fe47d22f6d9f4b5c56b24ca60eb68dee9fc6877de4901d328ffdd7e50e1c(contract:match) packages/plugin-web-storage/src/internal/codec.ts=99a735801cab8ce9d7208c244efb8eda66dd641cf5c7d795302384207c6b9b8f(contract:match) packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts=f292de4ec2e44d0fe75dde836fb360cfc2c292ceeaa47b2c107036765cd5b922(contract:match) packages/xai-web-cmdk/src/internal/readModuleStates.ts=1ee898681af67b21bd84308bef99abf196ab8551069d53c8e570a9ec9e0ba008(contract:match) packages/xai-web-cmdk/src/adapters/dashboard.ts=0c8e6ac9cfbcffd6a52e3f21cd5a09b077d03bd0539798ebcbc626776b64b1eb(contract:match) packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7(contract:match) packages/plugin-web-tokens/src/tokens.css=7c6eddebd1d826f939862ef75ba8159e966f0c76b0b9d34a0911f6b47265615d(contract:match) packages/plugin-web-tokens/src/i18n.ts=d5f2189b081d16a9f26b7146978c5f81660a6a44d6f534b9ac48e6e3c7ccb885(contract:match) packages/xai-web-pet/src/DesktopPet.tsx=35edb0e686bf6682192ba1bbe7842d159e161a6593b7ccd13a432d59fe58ad6f(contract:match)
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+forbidden_source_roots /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4ddc9155411f0787/packages /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4ddc9155411f0787/apps /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4ddc9155411f0787/docs
+vitest_exit=1
+harness_checks=PASS (6/6)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-host-EtGmXZ
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once; faulted attempts (including the key-scoped Clock faults) never delegate; no nested Storage call and no accountScope helper call
+OBSERVED FX1 F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerStep":[1,1,1,0,0,0,1,1,0,0],"threwPerStep":[false,false,false,true,true,true,false,false,true,true],"logged":["set:clock-host-selfcheck=1","get:clock-host-selfcheck","remove:clock-host-selfcheck","set:clock-host-selfcheck=2!threw","remove:clock-host-selfcheck!threw","get:clock-host-selfcheck!threw","get:clock-host-selfcheck","set:xai_clock_style=analog!threw","get:xai_clock_tz!threw"],"faultsFired":[1,1,1,1,1],"bytesAfterFaultedSet":null,"bytesAfterFaultedRemove":"3","sessionStorageLogged":false,"styleBytesAfterFault":null}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once; faulted attempts (including the key-scoped Clock faults) never delegate; no nested Storage call and no accountScope helper call
+OBSERVED census-recorder FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once; faulted attempts (including the key-scoped Clock faults) never delegate; no nested Storage call and no accountScope helper call {"censusChecks":0,"railExpectations":[],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > FX2 the Web Lock fixture: asynchronous grants and a test hold keeps a product request waiting until release
+OBSERVED census-recorder FX2 the Web Lock fixture: asynchronous grants and a test hold keeps a product request waiting until release {"censusChecks":0,"railExpectations":[],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once; faulted attempts (including the key-scoped Clock faults) never delegate; no nested Storage call and no accountScope helper call 4ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > FX2 the Web Lock fixture: asynchronous grants and a test hold keeps a product request waiting until release 37ms
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > FX3 composition and drivers: the production App from the archive with only the auth hook substituted; the Dashboard with the Header, the Clock and the Mini Calendar; the coordinator probe reads the Header's guard; DesktopPet; the recorder, downloads, bus and history counters work; no network
+OBSERVED FX3 composition {"scope":{"kind":"account","accountId":"clock-host-parent-A","generation":"g1","epoch":8},"hookCalls":10,"network":0,"productionRouterAtImport":"/","coordinator":{"label":"Dashboard header","version":3}}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > FX3 composition and drivers: the production App from the archive with only the auth hook substituted; the Dashboard with the Header, the Clock and the Mini Calendar; the coordinator probe reads the Header's guard; DesktopPet; the recorder, downloads, bus and history counters work; no network
+OBSERVED census-recorder FX3 composition and drivers: the production App from the archive with only the auth hook substituted; the Dashboard with the Header, the Clock and the Mini Calendar; the coordinator probe reads the Header's guard; DesktopPet; the recorder, downloads, bus and history counters work; no network {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > FX3 composition and drivers: the production App from the archive with only the auth hook substituted; the Dashboard with the Header, the Clock and the Mini Calendar; the coordinator probe reads the Header's guard; DesktopPet; the recorder, downloads, bus and history counters work; no network 264ms
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > PC clean control (coordinator branch): zero-write mount displaying the committed bytes; no recovery region, no unload warning; an AppRail click and Back navigate unheld with the f9eb4b1 navigation event; sign-out without drafts asks nothing and completes
+OBSERVED census-recorder PC clean control (coordinator branch): zero-write mount displaying the committed bytes; no recovery region, no unload warning; an AppRail click and Back navigate unheld with the f9eb4b1 navigation event; sign-out without drafts asks nothing and completes {"censusChecks":4,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > PC clean control (coordinator branch): zero-write mount displaying the committed bytes; no recovery region, no unload warning; an AppRail click and Back navigate unheld with the f9eb4b1 navigation event; sign-out without drafts asks nothing and completes 253ms
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > a §9 row a: each of the 17 values through the UI stores exact bytes with exactly one write and no recovery region; readModuleStates() returns those bytes; reopening CmdK and querying the style finds the Clock
+OBSERVED row a values [{"field":"style","value":"classic","writes":["set:xai_clock_style=classic"],"bytes":"classic","shown":"classic","region":false,"cmdk":"classic","popover":false},{"field":"style","value":"split","writes":["set:xai_clock_style=split"],"bytes":"split","shown":"split","region":false,"cmdk":"split","popover":false},{"field":"style","value":"minimal","writes":["set:xai_clock_style=minimal"],"bytes":"minimal","shown":"minimal","region":false,"cmdk":"minimal","popover":false},{"field":"style","value":"analog","writes":["set:xai_clock_style=analog"],"bytes":"analog","shown":"analog","region":false,"cmdk":"analog","popover":false},{"field":"timezone","value":"local","writes":["set:xai_clock_tz=local"],"bytes":"local","shown":"local","region":false,"cmdk":"local","popover":false},{"field":"timezone","value":"shanghai","writes":["set:xai_clock_tz=shanghai"],"bytes":"shanghai","shown":"shanghai","region":false,"cmdk":"shanghai","popover":false},{"field":"timezone","value":"london","writes":["set:xai_clock_tz=london"],"bytes":"london","shown":"london","region":false,"cmdk":"london","popover":false},{"field":"timezone","value":"new_york","writes":["set:xai_clock_tz=new_york"],"bytes":"new_york","shown":"new_york","region":false,"cmdk":"new_york","popover":false},{"field":"timezone","value":"tokyo","writes":["set:xai_clock_tz=tokyo"],"bytes":"tokyo","shown":"tokyo","region":false,"cmdk":"tokyo","popover":false},{"field":"timezone","value":"sf","writes":["set:xai_clock_tz=sf"],"bytes":"sf","shown":"sf","region":false,"cmdk":"sf","popover":false},{"field":"timezone","value":"paris","writes":["set:xai_clock_tz=paris"],"bytes":"paris","shown":"paris","region":false,"cmdk":"paris","popover":false},{"field":"timezone","value":"sydney","writes":["set:xai_clock_tz=sydney"],"bytes":"sydney","shown":"sydney","region":false,"cmdk":"sydney","popover":false},{"field":"timezone","value":"berlin","writes":["set:xai_clock_tz=berlin"],"bytes":"berlin","shown":"berlin","region":false,"cmdk":"berlin","popover":false},{"field":"timezone","value":"dubai","writes":["set:xai_clock_tz=dubai"],"bytes":"dubai","shown":"dubai","region":false,"cmdk":"dubai","popover":false},{"field":"timezone","value":"singapore","writes":["set:xai_clock_tz=singapore"],"bytes":"singapore","shown":"singapore","region":false,"cmdk":"singapore","popover":false},{"field":"timezone","value":"hk","writes":["set:xai_clock_tz=hk"],"bytes":"hk","shown":"hk","region":false,"cmdk":"hk","popover":false},{"field":"timezone","value":"la","writes":["set:xai_clock_tz=la"],"bytes":"la","shown":"la","region":false,"cmdk":"la","popover":false}]
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > a §9 row a: each of the 17 values through the UI stores exact bytes with exactly one write and no recovery region; readModuleStates() returns those bytes; reopening CmdK and querying the style finds the Clock
+OBSERVED row a CmdK query analog {"labels":["Clock"],"bytes":"analog"}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > a §9 row a: each of the 17 values through the UI stores exact bytes with exactly one write and no recovery region; readModuleStates() returns those bytes; reopening CmdK and querying the style finds the Clock
+OBSERVED census-recorder a §9 row a: each of the 17 values through the UI stores exact bytes with exactly one write and no recovery region; readModuleStates() returns those bytes; reopening CmdK and querying the style finds the Clock {"censusChecks":19,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > b §9 row b style: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2)
+OBSERVED row b style after the failed choice {"shown":"classic","bytes":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"region":false,"unload":{"warned":false,"attempts":0}}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > a §9 row a: each of the 17 values through the UI stores exact bytes with exactly one write and no recovery region; readModuleStates() returns those bytes; reopening CmdK and querying the style finds the Clock 780ms
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > b §9 row b style: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2)
+OBSERVED census-recorder b §9 row b style: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > b §9 row b style: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2) 105ms
+   → H1 §5.5 row b: the latest choice stays displayed after the failed write: expected 'classic' to be 'analog' // Object.is equality
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > b §9 row b timezone: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2)
+OBSERVED row b timezone after the failed choice {"shown":"local","bytes":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"region":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > b §9 row b timezone: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2)
+OBSERVED census-recorder b §9 row b timezone: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > b §9 row b timezone: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2) 105ms
+   → H2 §5.5 row b: the latest choice stays displayed after the failed write: expected 'local' to be 'tokyo' // Object.is equality
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > c §9 row c style: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3)
+OBSERVED row c style while held {"shown":"analog","writes":["set:xai_clock_style=analog"],"bytes":"analog","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"lock":"test","waiting":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > c §9 row c style: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3)
+OBSERVED census-recorder c §9 row c style: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > c §9 row c style: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3) 112ms
+   → H3 §5.4 row c: no write lands while the real per-key lock is held: expected [ 'set:xai_clock_style=analog' ] to deeply equal []
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > c §9 row c timezone: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3)
+OBSERVED row c timezone while held {"shown":"tokyo","writes":["set:xai_clock_tz=tokyo"],"bytes":"tokyo","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"lock":"test","waiting":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > c §9 row c timezone: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3)
+OBSERVED census-recorder c §9 row c timezone: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > c §9 row c timezone: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3) 117ms
+   → H3 §5.4 row c: no write lands while the real per-key lock is held: expected [ 'set:xai_clock_tz=tokyo' ] to deeply equal []
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > c §9 row c lock independence (positive control): while prefMutationLockName("xai_rail_order") and prefMutationLockName("xai_pref_theme") are held, each Clock choice still completes with exactly one write
+OBSERVED census-recorder c §9 row c lock independence (positive control): while prefMutationLockName("xai_rail_order") and prefMutationLockName("xai_pref_theme") are held, each Clock choice still completes with exactly one write {"censusChecks":4,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > c §9 row c lock independence (positive control): while prefMutationLockName("xai_rail_order") and prefMutationLockName("xai_pref_theme") are held, each Clock choice still completes with exactly one write 201ms
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > d §9 row d: after a failed Clock choice an AppRail click is held; Stay keeps everything with zero history mutations; dialog Discard makes zero set/remove attempts on both keys and navigates once (H5)
+OBSERVED row d after the AppRail click {"path":"/app/tasks","dialog":{"open":false,"aria":null,"text":""},"departures":["PUSH:/app/tasks"],"navigation":[{"moduleId":"tasks","source":"app-rail"}]}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > d §9 row d: after a failed Clock choice an AppRail click is held; Stay keeps everything with zero history mutations; dialog Discard makes zero set/remove attempts on both keys and navigates once (H5)
+OBSERVED census-recorder d §9 row d: after a failed Clock choice an AppRail click is held; Stay keeps everything with zero history mutations; dialog Discard makes zero set/remove attempts on both keys and navigates once (H5) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > d §9 row d: after a failed Clock choice an AppRail click is held; Stay keeps everything with zero history mutations; dialog Discard makes zero set/remove attempts on both keys and navigates once (H5) 192ms
+   → H5 §7.3 row d: the AppRail click is held under "Clock": expected { held: false, dialog: { …(3) } } to strictly equal { held: true, …(1) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > e §9 row e Back: after a failed Clock choice, Back is held (POP); a successful Retry releases exactly once to the location an ordinary Back reaches (H5)
+OBSERVED row e after Back {"path":"/app/tasks","dialog":{"open":false,"aria":null,"text":""},"departures":["POP:/app/tasks"]}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > e §9 row e Back: after a failed Clock choice, Back is held (POP); a successful Retry releases exactly once to the location an ordinary Back reaches (H5)
+OBSERVED census-recorder e §9 row e Back: after a failed Clock choice, Back is held (POP); a successful Retry releases exactly once to the location an ordinary Back reaches (H5) {"censusChecks":3,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > e §9 row e Back: after a failed Clock choice, Back is held (POP); a successful Retry releases exactly once to the location an ordinary Back reaches (H5) 286ms
+   → H5 §7.3 row e: Back is held under "Clock": expected { held: false, dialog: { …(3) } } to strictly equal { held: true, …(1) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > e §9 row e Forward: after a failed Clock choice, Forward is held (POP); a successful Retry releases exactly once to the location an ordinary Forward reaches (H5)
+OBSERVED row e after Forward {"path":"/app/tasks","dialog":{"open":false,"aria":null,"text":""},"departures":["POP:/app/tasks"]}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > e §9 row e Forward: after a failed Clock choice, Forward is held (POP); a successful Retry releases exactly once to the location an ordinary Forward reaches (H5)
+OBSERVED census-recorder e §9 row e Forward: after a failed Clock choice, Forward is held (POP); a successful Retry releases exactly once to the location an ordinary Forward reaches (H5) {"censusChecks":3,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > e §9 row e Forward: after a failed Clock choice, Forward is held (POP); a successful Retry releases exactly once to the location an ordinary Forward reaches (H5) 247ms
+   → H5 §7.3 row e: Forward is held under "Clock": expected { held: false, dialog: { …(3) } } to strictly equal { held: true, …(1) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > f §9 row f: after a failed Clock choice the Mini Calendar's open action is held; Stay keeps the Dashboard; Discard navigates once (H5)
+OBSERVED row f after goTo {"path":"/app/calendar","dialog":{"open":false,"aria":null,"text":""},"departures":["PUSH:/app/calendar"],"navigation":[{"moduleId":"calendar","source":"mini-cal"}]}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > f §9 row f: after a failed Clock choice the Mini Calendar's open action is held; Stay keeps the Dashboard; Discard navigates once (H5)
+OBSERVED census-recorder f §9 row f: after a failed Clock choice the Mini Calendar's open action is held; Stay keeps the Dashboard; Discard navigates once (H5) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > f §9 row f: after a failed Clock choice the Mini Calendar's open action is held; Stay keeps the Dashboard; Discard navigates once (H5) 136ms
+   → H5 §7.3 row f: the widget goTo is held under "Clock": expected { held: false, dialog: { …(3) } } to strictly equal { held: true, …(1) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > g §9 row g coordinator: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5)
+OBSERVED row g coordinator attempt 1 {"confirms":{"rail":0,"appearance":0,"other":0},"dialog":{"open":false,"aria":null,"text":""},"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":60},"redirects":["/"]}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > g §9 row g coordinator: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5)
+OBSERVED census-recorder g §9 row g coordinator: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > g §9 row g coordinator: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5) 115ms
+   → H5 §7.5 row g: the coordinator dialog appears for the Clock: expected { open: false, aria: null, text: '' } to strictly equal { open: true, …(2) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > g §9 row g fallback: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5)
+OBSERVED row g fallback attempt 1 {"confirms":{"rail":0,"appearance":0,"other":0},"dialog":{"open":false,"aria":null,"text":""},"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":66},"redirects":["/"]}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > g §9 row g fallback: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5)
+OBSERVED census-recorder g §9 row g fallback: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > h §9 row h settled: no warning in the clean state; a settled Clock draft warns with zero storage attempts in the handler; Discard removes the warning (H5)
+OBSERVED row h settled {"settled":{"warned":false,"attempts":0},"block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > g §9 row g fallback: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5) 121ms
+   → H5 §7.5 row g: the coordinator dialog appears for the Clock: expected { open: false, aria: null, text: '' } to strictly equal { open: true, …(2) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > h §9 row h settled: no warning in the clean state; a settled Clock draft warns with zero storage attempts in the handler; Discard removes the warning (H5)
+OBSERVED census-recorder h §9 row h settled: no warning in the clean state; a settled Clock draft warns with zero storage attempts in the handler; Discard removes the warning (H5) {"censusChecks":3,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > h §9 row h pending: a pending Clock choice held behind the real per-key lock warns with zero storage attempts in the handler; after the write lands there is no warning (H5)
+OBSERVED row h pending {"pending":{"warned":false,"attempts":0},"bytes":"tokyo","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > h §9 row h pending: a pending Clock choice held behind the real per-key lock warns with zero storage attempts in the handler; after the write lands there is no warning (H5)
+OBSERVED census-recorder h §9 row h pending: a pending Clock choice held behind the real per-key lock warns with zero storage attempts in the handler; after the write lands there is no warning (H5) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > h §9 row h settled: no warning in the clean state; a settled Clock draft warns with zero storage attempts in the handler; Discard removes the warning (H5) 99ms
+   → H5 §7.4 row h: a settled Clock draft warns; zero storage attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > h §9 row h pending: a pending Clock choice held behind the real per-key lock warns with zero storage attempts in the handler; after the write lands there is no warning (H5) 94ms
+   → H5 §7.4 row h: a pending Clock draft warns; zero storage attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > i §9 row i idle (positive control, H7): an idle Clock updates live when another document commits each field, with zero writes and no recovery region
+OBSERVED census-recorder i §9 row i idle (positive control, H7): an idle Clock updates live when another document commits each field, with zero writes and no recovery region {"censusChecks":4,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > i §9 row i idle (positive control, H7): an idle Clock updates live when another document commits each field, with zero writes and no recovery region 165ms
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > i §9 row i drafted: a drafted field in document A becomes a preserved conflict when document B commits that field; A keeps its draft displayed with the block; Retry never overwrites B's bytes (H1/H2)
+OBSERVED row i drafted style after document B {"shown":"minimal","bytes":"minimal","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > i §9 row i drafted: a drafted field in document A becomes a preserved conflict when document B commits that field; A keeps its draft displayed with the block; Retry never overwrites B's bytes (H1/H2)
+OBSERVED census-recorder i §9 row i drafted: a drafted field in document A becomes a preserved conflict when document B commits that field; A keeps its draft displayed with the block; Retry never overwrites B's bytes (H1/H2) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="bogus": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_style="bogus" {"shown":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"bogus","dialog":false}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="bogus": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_style="bogus": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > i §9 row i drafted: a drafted field in document A becomes a preserved conflict when document B commits that field; A keeps its draft displayed with the block; Retry never overwrites B's bytes (H1/H2) 129ms
+   → §5.6 §10.5 row i: the drafted style keeps the draft displayed as a preserved conflict; B's bytes stay: expected { shown: 'minimal', …(2) } to strictly equal { shown: 'analog', …(2) }
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="bogus": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 62ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="Analog": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_style="Analog" {"shown":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"Analog","dialog":false}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="Analog": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_style="Analog": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_style="" {"shown":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"","dialog":false}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_style="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="Analog": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 66ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 58ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style=" classic": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_style=" classic" {"shown":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":" classic","dialog":false}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style=" classic": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_style=" classic": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="\"analog\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_style="\"analog\"" {"shown":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"\"analog\"","dialog":false}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="\"analog\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_style="\"analog\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style=" classic": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 50ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="\"analog\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 50ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="mars": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_tz="mars" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"mars","dialog":false}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="mars": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_tz="mars": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_tz="Shanghai" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"Shanghai","dialog":false}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_tz="Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="UTC+8": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_tz="UTC+8" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"UTC+8","dialog":false}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="mars": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 55ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 51ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="UTC+8": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_tz="UTC+8": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="Asia/Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_tz="Asia/Shanghai" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"Asia/Shanghai","dialog":false}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="Asia/Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_tz="Asia/Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="new-york": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_tz="new-york" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"new-york","dialog":false}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="UTC+8": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 49ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="Asia/Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 53ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="new-york": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_tz="new-york": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_tz="" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"","dialog":false}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_tz="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="new-york": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 50ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 60ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="\"local\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_tz="\"local\"" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"\"local\"","dialog":false}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="\"local\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_tz="\"local\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_style getItem throws (key-scoped) {"shown":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"classic","dialog":false}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_style getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="\"local\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 62ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 61ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED row j xai_clock_tz getItem throws (key-scoped) {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"local","dialog":false}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+OBSERVED census-recorder j §9 row j xai_clock_tz getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) 62ms
+   → H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > k §9 row k1: a failed Header save and a failed Clock choice hold an AppRail click under "Dashboard"; dialog Export calls each participant's export once (two files); dialog Discard discards both with zero Clock writes and navigates once (H6)
+OBSERVED row k1 held {"held":true,"dialog":{"open":true,"aria":"Unsaved Dashboard header draft","text":"Dashboard header has unsaved changes."},"guard":"Dashboard header"}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > k §9 row k1: a failed Header save and a failed Clock choice hold an AppRail click under "Dashboard"; dialog Export calls each participant's export once (two files); dialog Discard discards both with zero Clock writes and navigates once (H6)
+OBSERVED census-recorder k §9 row k1: a failed Header save and a failed Clock choice hold an AppRail click under "Dashboard"; dialog Export calls each participant's export once (two files); dialog Discard discards both with zero Clock writes and navigates once (H6) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > k §9 row k1: a failed Header save and a failed Clock choice hold an AppRail click under "Dashboard"; dialog Export calls each participant's export once (two files); dialog Discard discards both with zero Clock writes and navigates once (H6) 236ms
+   → H6 §6.6 row k1: two blocking participants are labelled "Dashboard": expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > k §9 row k2: with a failed Header save and a failed Clock choice the hold is labelled "Dashboard"; a Clock Retry success keeps the hold, now "Dashboard header"; a Header Retry success releases it exactly once (H6)
+OBSERVED row k2 held {"held":true,"dialog":{"open":true,"aria":"Unsaved Dashboard header draft","text":"Dashboard header has unsaved changes."},"guard":"Dashboard header"}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > k §9 row k2: with a failed Header save and a failed Clock choice the hold is labelled "Dashboard"; a Clock Retry success keeps the hold, now "Dashboard header"; a Header Retry success releases it exactly once (H6)
+OBSERVED census-recorder k §9 row k2: with a failed Header save and a failed Clock choice the hold is labelled "Dashboard"; a Clock Retry success keeps the hold, now "Dashboard header"; a Header Retry success releases it exactly once (H6) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > k §9 row k2: with a failed Header save and a failed Clock choice the hold is labelled "Dashboard"; a Clock Retry success keeps the hold, now "Dashboard header"; a Header Retry success releases it exactly once (H6) 223ms
+   → H6 §6.6 row k2: two blocking participants are labelled "Dashboard": expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > l §9 row l (positive control): a failed Header save only holds an AppRail click under "Dashboard header"; dialog Export downloads one Header file; dialog Discard proceeds once with zero Clock writes
+OBSERVED census-recorder l §9 row l (positive control): a failed Header save only holds an AppRail click under "Dashboard header"; dialog Export downloads one Header file; dialog Discard proceeds once with zero Clock writes {"censusChecks":4,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > l §9 row l (positive control): a failed Header save only holds an AppRail click under "Dashboard header"; dialog Export downloads one Header file; dialog Discard proceeds once with zero Clock writes 269ms
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > l §9 row l (positive control): a failed Header save only, then a successful Header Retry auto-releases the held AppRail click exactly once
+OBSERVED census-recorder l §9 row l (positive control): a failed Header save only, then a successful Header Retry auto-releases the held AppRail click exactly once {"censusChecks":3,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > m §9 row m: with a failed Clock draft (block and unload warning), a successful removal discards it with zero Clock writes, removes the participant and the warning; the next AppRail click is not held (A7)
+OBSERVED row m before removal {"block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"unload":{"warned":false,"attempts":0},"guard":"Dashboard header","version":3}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > m §9 row m: with a failed Clock draft (block and unload warning), a successful removal discards it with zero Clock writes, removes the participant and the warning; the next AppRail click is not held (A7)
+OBSERVED census-recorder m §9 row m: with a failed Clock draft (block and unload warning), a successful removal discards it with zero Clock writes, removes the participant and the warning; the next AppRail click is not held (A7) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > l §9 row l (positive control): a failed Header save only, then a successful Header Retry auto-releases the held AppRail click exactly once 290ms
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > m §9 row m: with a failed Clock draft (block and unload warning), a successful removal discards it with zero Clock writes, removes the participant and the warning; the next AppRail click is not held (A7) 90ms
+   → H1 H5 §7.6 row m: a failed Clock draft exists before the removal (block and unload warning): expected { …(2) } to strictly equal { Object (block, unload) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > n §9 row n: over a pointer drag of the Clock widget the ghost makes zero set/remove attempts (reads recorded) and adds no participant registration; after the drop the block is still shown and departure is still held
+OBSERVED row n over the drag {"during":{"ghost":true,"ghostClock":true,"version":3},"writes":[],"reads":6,"versionDuring":3,"versionAfter":3,"orderWrites":[],"versionBefore":3}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > n §9 row n: over a pointer drag of the Clock widget the ghost makes zero set/remove attempts (reads recorded) and adds no participant registration; after the drop the block is still shown and departure is still held
+OBSERVED census-recorder n §9 row n: over a pointer drag of the Clock widget the ghost makes zero set/remove attempts (reads recorded) and adds no participant registration; after the drop the block is still shown and departure is still held {"censusChecks":3,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > n §9 row n: over a pointer drag of the Clock widget the ghost makes zero set/remove attempts (reads recorded) and adds no participant registration; after the drop the block is still shown and departure is still held 144ms
+   → H1 §7.7 row n: after the drop the source block is still shown with the draft: expected { …(2) } to strictly equal { Object (block, shown) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > o §9 row o (positive control): a forced scope change through the identity channel from a second document remounts App; the Clock displays the committed bytes, with no recovery region, no success claim, zero Clock writes and zero runtime errors
+OBSERVED row o forced scope change {"away":{"clock":false,"gate":true,"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":168}},"after":{"kind":"account","accountId":"clock-host-parent-A","generation":"g1","epoch":170},"epochBefore":166,"refreshSession":2,"writes":[]}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > o §9 row o (positive control): a forced scope change through the identity channel from a second document remounts App; the Clock displays the committed bytes, with no recovery region, no success claim, zero Clock writes and zero runtime errors
+OBSERVED census-recorder o §9 row o (positive control): a forced scope change through the identity channel from a second document remounts App; the Clock displays the committed bytes, with no recovery region, no success claim, zero Clock writes and zero runtime errors {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > o §9 row o (positive control): a forced scope change through the identity channel from a second document remounts App; the Clock displays the committed bytes, with no recovery region, no success claim, zero Clock writes and zero runtime errors 208ms
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > p §9 row p (positive control): over at least three ticks without edits there are zero participant re-registrations and zero set/remove attempts; with a draft present, zero additional re-registrations across the ticks
+OBSERVED row p {"clean":{"version":3,"guard":"Dashboard header","face":"10:06:09","from":192},"cleanAfter":{"version":3,"sameGuard":true,"face":"10:06:12","writes":[],"clockReads":0},"drafted":{"version":3,"guard":"Dashboard header","face":"10:06:12","from":194},"draftedAfter":{"version":3,"sameGuard":true,"face":"10:06:15","writes":[],"clockReads":0}}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > p §9 row p (positive control): over at least three ticks without edits there are zero participant re-registrations and zero set/remove attempts; with a draft present, zero additional re-registrations across the ticks
+OBSERVED census-recorder p §9 row p (positive control): over at least three ticks without edits there are zero participant re-registrations and zero set/remove attempts; with a draft present, zero additional re-registrations across the ticks {"censusChecks":3,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > p §9 row p (positive control): over at least three ticks without edits there are zero participant re-registrations and zero set/remove attempts; with a draft present, zero additional re-registrations across the ticks 6819ms
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q coordinator Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched
+OBSERVED row q coordinator attempt 1 (Cancel at the rail prompt) {"confirms":{"rail":1,"appearance":0,"other":0},"firstKind":"rail","dialog":false,"clock":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false},"guardVersion":0,"sameGuard":true,"clockWrites":[],"clockReads":0,"downloads":0,"rail":["Boards","Dashboard","Calendar","Tasks","Matrix","Pomodoro","Time Tracker","Habits","Meditation","Countdown","XAI Chat","Statistics","Bookkeeping","Metrics"],"railStatus":true,"mutations":{"navigations":0,"pushes":0,"replaces":0,"locationChanged":false},"sameScope":true,"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"clockBefore":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false}}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q coordinator Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched
+OBSERVED census-recorder q §9 row q coordinator Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched {"censusChecks":4,"railExpectations":["absent","failed-closed"],"confirms":{"rail":1,"appearance":0,"other":0},"confirmTexts":["rail:Cancel"],"blockerMessages":0}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q coordinator Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched 225ms
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q coordinator OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5)
+OBSERVED row q coordinator attempt 1 (Cancel at the rail prompt) {"confirms":{"rail":1,"appearance":0,"other":0},"firstKind":"rail","dialog":false,"clock":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false},"guardVersion":0,"sameGuard":true,"clockWrites":[],"clockReads":0,"downloads":0,"rail":["Boards","Dashboard","Calendar","Tasks","Matrix","Pomodoro","Time Tracker","Habits","Meditation","Countdown","XAI Chat","Statistics","Bookkeeping","Metrics"],"railStatus":true,"mutations":{"navigations":0,"pushes":0,"replaces":0,"locationChanged":false},"sameScope":true,"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"clockBefore":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false}}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q coordinator OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5)
+OBSERVED row q coordinator attempt 2 (OK at the rail prompt) {"confirms":{"rail":1,"appearance":0,"other":0},"dialog":{"open":false,"aria":null,"text":""},"railWrites":[],"railStatus":false,"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":184}}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q coordinator OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5)
+OBSERVED census-recorder q §9 row q coordinator OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5) {"censusChecks":5,"railExpectations":["absent","failed-closed"],"confirms":{"rail":2,"appearance":0,"other":0},"confirmTexts":["rail:Cancel","rail:OK"],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q coordinator OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5) 249ms
+   → H5 §7.5 row q attempt 2: the coordinator dialog appears for the Clock: expected { open: false, aria: null, text: '' } to strictly equal { open: true, …(2) }
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q fallback Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched
+OBSERVED row q fallback attempt 1 (Cancel at the rail prompt) {"confirms":{"rail":1,"appearance":0,"other":0},"firstKind":"rail","dialog":false,"clock":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false},"guardVersion":0,"sameGuard":true,"clockWrites":[],"clockReads":0,"downloads":0,"rail":["Boards","Dashboard","Calendar","Tasks","Matrix","Pomodoro","Time Tracker","Habits","Meditation","Countdown","XAI Chat","Statistics","Bookkeeping","Metrics"],"railStatus":true,"mutations":{"navigations":0,"pushes":0,"replaces":0,"locationChanged":false},"sameScope":true,"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"clockBefore":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false}}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q fallback Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched
+OBSERVED census-recorder q §9 row q fallback Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched {"censusChecks":4,"railExpectations":["absent","failed-closed"],"confirms":{"rail":1,"appearance":0,"other":0},"confirmTexts":["rail:Cancel"],"blockerMessages":0}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q fallback Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched 211ms
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q fallback OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5)
+OBSERVED row q fallback attempt 1 (Cancel at the rail prompt) {"confirms":{"rail":1,"appearance":0,"other":0},"firstKind":"rail","dialog":false,"clock":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false},"guardVersion":0,"sameGuard":true,"clockWrites":[],"clockReads":0,"downloads":0,"rail":["Boards","Dashboard","Calendar","Tasks","Matrix","Pomodoro","Time Tracker","Habits","Meditation","Countdown","XAI Chat","Statistics","Bookkeeping","Metrics"],"railStatus":true,"mutations":{"navigations":0,"pushes":0,"replaces":0,"locationChanged":false},"sameScope":true,"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"clockBefore":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false}}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q fallback OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5)
+OBSERVED row q fallback attempt 2 (OK at the rail prompt) {"confirms":{"rail":1,"appearance":0,"other":0},"dialog":{"open":false,"aria":null,"text":""},"railWrites":[],"railStatus":false,"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":194}}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q fallback OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5)
+OBSERVED census-recorder q §9 row q fallback OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5) {"censusChecks":5,"railExpectations":["absent","failed-closed"],"confirms":{"rail":2,"appearance":0,"other":0},"confirmTexts":["rail:Cancel","rail:OK"],"blockerMessages":0}
+
+ × docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q fallback OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5) 245ms
+   → H5 §7.5 row q attempt 2: the coordinator dialog appears for the Clock: expected { open: false, aria: null, text: '' } to strictly equal { open: true, …(2) }
+
+ Test Files  1 failed (1)
+      Tests  33 failed | 13 passed (46)
+   Start at  10:05:59
+   Duration  17.84s (transform 2.24s, setup 0ms, collect 3.60s, tests 13.56s, environment 401ms, prepare 59ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-host-EtGmXZ/.report-host.json
+
+---- stderr ----
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > b §9 row b style: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > b §9 row b timezone: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2)
+[plugin-web-storage] quota exceeded for xai_clock_tz.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > d §9 row d: after a failed Clock choice an AppRail click is held; Stay keeps everything with zero history mutations; dialog Discard makes zero set/remove attempts on both keys and navigates once (H5)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > e §9 row e Back: after a failed Clock choice, Back is held (POP); a successful Retry releases exactly once to the location an ordinary Back reaches (H5)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > e §9 row e Forward: after a failed Clock choice, Forward is held (POP); a successful Retry releases exactly once to the location an ordinary Forward reaches (H5)
+[plugin-web-storage] quota exceeded for xai_clock_tz.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > f §9 row f: after a failed Clock choice the Mini Calendar's open action is held; Stay keeps the Dashboard; Discard navigates once (H5)
+[plugin-web-storage] quota exceeded for xai_clock_tz.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > g §9 row g coordinator: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > g §9 row g fallback: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > h §9 row h settled: no warning in the clean state; a settled Clock draft warns with zero storage attempts in the handler; Discard removes the warning (H5)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > i §9 row i drafted: a drafted field in document A becomes a preserved conflict when document B commits that field; A keeps its draft displayed with the block; Retry never overwrites B's bytes (H1/H2)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > k §9 row k1: a failed Header save and a failed Clock choice hold an AppRail click under "Dashboard"; dialog Export calls each participant's export once (two files); dialog Discard discards both with zero Clock writes and navigates once (H6)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > k §9 row k2: with a failed Header save and a failed Clock choice the hold is labelled "Dashboard"; a Clock Retry success keeps the hold, now "Dashboard header"; a Header Retry success releases it exactly once (H6)
+[plugin-web-storage] quota exceeded for xai_clock_tz.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > m §9 row m: with a failed Clock draft (block and unload warning), a successful removal discards it with zero Clock writes, removes the participant and the warning; the next AppRail click is not held (A7)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > n §9 row n: over a pointer drag of the Clock widget the ghost makes zero set/remove attempts (reads recorded) and adds no participant registration; after the drop the block is still shown and departure is still held
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > o §9 row o (positive control): a forced scope change through the identity channel from a second document remounts App; the Clock displays the committed bytes, with no recovery region, no success claim, zero Clock writes and zero runtime errors
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > p §9 row p (positive control): over at least three ticks without edits there are zero participant re-registrations and zero set/remove attempts; with a draft present, zero additional re-registrations across the ticks
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q coordinator Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q coordinator OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q fallback Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q fallback OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 33 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > b §9 row b style: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2)
+AssertionError: H1 §5.5 row b: the latest choice stays displayed after the failed write: expected 'classic' to be 'analog' // Object.is equality
+
+Expected: "analog"
+Received: "classic"
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:294:133
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > b §9 row b timezone: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2)
+AssertionError: H2 §5.5 row b: the latest choice stays displayed after the failed write: expected 'local' to be 'tokyo' // Object.is equality
+
+Expected: "tokyo"
+Received: "local"
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:294:133
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > c §9 row c style: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3)
+AssertionError: H3 §5.4 row c: no write lands while the real per-key lock is held: expected [ 'set:xai_clock_style=analog' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "set:xai_clock_style=analog",
++ ]
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:319:112
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > c §9 row c timezone: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3)
+AssertionError: H3 §5.4 row c: no write lands while the real per-key lock is held: expected [ 'set:xai_clock_tz=tokyo' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "set:xai_clock_tz=tokyo",
++ ]
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:319:112
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > d §9 row d: after a failed Clock choice an AppRail click is held; Stay keeps everything with zero history mutations; dialog Discard makes zero set/remove attempts on both keys and navigates once (H5)
+AssertionError: H5 §7.3 row d: the AppRail click is held under "Clock": expected { held: false, dialog: { …(3) } } to strictly equal { held: true, …(1) }
+
+- Expected
++ Received
+
+  {
+    "dialog": {
+-     "aria": "Unsaved Clock draft",
+-     "open": true,
+-     "text": "Clock has unsaved changes.",
++     "aria": null,
++     "open": false,
++     "text": "",
+    },
+-   "held": true,
++   "held": false,
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:360:114
+    358|   census("row d clicked");
+    359|   observed("row d after the AppRail click", { path: app.pathname(), di…
+    360|   expect({ held: held(app), dialog: dialogState() }, "H5 §7.3 row d: t…
+       |                                                                                                                  ^
+    361|   await click(dialogButton(DIALOG.stay));
+    362|   census("row d stay");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > e §9 row e Back: after a failed Clock choice, Back is held (POP); a successful Retry releases exactly once to the location an ordinary Back reaches (H5)
+AssertionError: H5 §7.3 row e: Back is held under "Clock": expected { held: false, dialog: { …(3) } } to strictly equal { held: true, …(1) }
+
+- Expected
++ Received
+
+  {
+    "dialog": {
+-     "aria": "Unsaved Clock draft",
+-     "open": true,
+-     "text": "Clock has unsaved changes.",
++     "aria": null,
++     "open": false,
++     "text": "",
+    },
+-   "held": true,
++   "held": false,
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:388:101
+    386|   census("row e back");
+    387|   observed("row e after Back", { path: app.pathname(), dialog: dialogS…
+    388|   expect({ held: held(app), dialog: dialogState() }, "H5 §7.3 row e: B…
+       |                                                                                                     ^
+    389|   quota.off();
+    390|   await click(need(action("style", "retry"), "Retry Clock style"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > e §9 row e Forward: after a failed Clock choice, Forward is held (POP); a successful Retry releases exactly once to the location an ordinary Forward reaches (H5)
+AssertionError: H5 §7.3 row e: Forward is held under "Clock": expected { held: false, dialog: { …(3) } } to strictly equal { held: true, …(1) }
+
+- Expected
++ Received
+
+  {
+    "dialog": {
+-     "aria": "Unsaved Clock draft",
+-     "open": true,
+-     "text": "Clock has unsaved changes.",
++     "aria": null,
++     "open": false,
++     "text": "",
+    },
+-   "held": true,
++   "held": false,
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:409:104
+    407|   census("row e forward");
+    408|   observed("row e after Forward", { path: app.pathname(), dialog: dial…
+    409|   expect({ held: held(app), dialog: dialogState() }, "H5 §7.3 row e: F…
+       |                                                                                                        ^
+    410|   quota.off();
+    411|   await click(need(action("timezone", "retry"), "Retry Clock timezone"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > f §9 row f: after a failed Clock choice the Mini Calendar's open action is held; Stay keeps the Dashboard; Discard navigates once (H5)
+AssertionError: H5 §7.3 row f: the widget goTo is held under "Clock": expected { held: false, dialog: { …(3) } } to strictly equal { held: true, …(1) }
+
+- Expected
++ Received
+
+  {
+    "dialog": {
+-     "aria": "Unsaved Clock draft",
+-     "open": true,
+-     "text": "Clock has unsaved changes.",
++     "aria": null,
++     "open": false,
++     "text": "",
+    },
+-   "held": true,
++   "held": false,
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:432:112
+    430|   census("row f goTo");
+    431|   observed("row f after goTo", { path: app.pathname(), dialog: dialogS…
+    432|   expect({ held: held(app), dialog: dialogState() }, "H5 §7.3 row f: t…
+       |                                                                                                                ^
+    433|   await click(dialogButton(DIALOG.stay));
+    434|   census("row f stay");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > g §9 row g coordinator: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > g §9 row g fallback: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5)
+AssertionError: H5 §7.5 row g: the coordinator dialog appears for the Clock: expected { open: false, aria: null, text: '' } to strictly equal { open: true, …(2) }
+
+- Expected
++ Received
+
+  {
+-   "aria": "Unsaved Clock draft",
+-   "open": true,
+-   "text": "Clock has unsaved changes.",
++   "aria": null,
++   "open": false,
++   "text": "",
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:460:90
+    458|     observed(`row g ${branch} attempt 1`, { confirms: confirmsByClass(…
+    459|     expect(confirmsByClass(records), "§7.5 rule 12 row g: the rail and…
+    460|     expect(dialogState(), "H5 §7.5 row g: the coordinator dialog appea…
+       |                                                                                          ^
+    461|     await click(dialogButton(DIALOG.stay));
+    462|     census(`row g ${branch} stay`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > h §9 row h settled: no warning in the clean state; a settled Clock draft warns with zero storage attempts in the handler; Discard removes the warning (H5)
+AssertionError: H5 §7.4 row h: a settled Clock draft warns; zero storage attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+
+- Expected
++ Received
+
+  {
+    "attempts": 0,
+-   "warned": true,
++   "warned": false,
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:487:103
+    485|   const settled = probeUnload();
+    486|   observed("row h settled", { settled, block: blockState("style") });
+    487|   expect(settled, "H5 §7.4 row h: a settled Clock draft warns; zero st…
+       |                                                                                                       ^
+    488|   await click(need(action("style", "discard"), "Discard Clock style"));
+    489|   census("row h discarded");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > h §9 row h pending: a pending Clock choice held behind the real per-key lock warns with zero storage attempts in the handler; after the write lands there is no warning (H5)
+AssertionError: H5 §7.4 row h: a pending Clock draft warns; zero storage attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+
+- Expected
++ Received
+
+  {
+    "attempts": 0,
+-   "warned": true,
++   "warned": false,
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:501:103
+    499|   const pending = probeUnload();
+    500|   observed("row h pending", { pending, bytes: bytesOf("timezone"), blo…
+    501|   expect(pending, "H5 §7.4 row h: a pending Clock draft warns; zero st…
+       |                                                                                                       ^
+    502|   await lock.release();
+    503|   census("row h released");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > i §9 row i drafted: a drafted field in document A becomes a preserved conflict when document B commits that field; A keeps its draft displayed with the block; Retry never overwrites B's bytes (H1/H2)
+AssertionError: §5.6 §10.5 row i: the drafted style keeps the draft displayed as a preserved conflict; B's bytes stay: expected { shown: 'minimal', …(2) } to strictly equal { shown: 'analog', …(2) }
+
+- Expected
++ Received
+
+  {
+    "block": {
+-     "discard": true,
+-     "notSaved": true,
+-     "present": true,
++     "discard": false,
++     "notSaved": false,
++     "present": false,
+      "reload": false,
+-     "retry": true,
++     "retry": false,
+      "source": false,
+    },
+    "bytes": "minimal",
+-   "shown": "analog",
++   "shown": "minimal",
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:537:194
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="bogus": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="Analog": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style=" classic": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style="\"analog\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="mars": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="UTC+8": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="Asia/Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="new-york": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz="\"local\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_style getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > j §9 row j xai_clock_tz getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:570:82
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > k §9 row k1: a failed Header save and a failed Clock choice hold an AppRail click under "Dashboard"; dialog Export calls each participant's export once (two files); dialog Discard discards both with zero Clock writes and navigates once (H6)
+AssertionError: H6 §6.6 row k1: two blocking participants are labelled "Dashboard": expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+
+- Expected
++ Received
+
+  {
+-   "aria": "Unsaved Dashboard draft",
++   "aria": "Unsaved Dashboard header draft",
+    "open": true,
+-   "text": "Dashboard has unsaved changes.",
++   "text": "Dashboard header has unsaved changes.",
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:598:97
+    596|   observed("row k1 held", { held: held(app), dialog: dialogState(), gu…
+    597|   expect(held(app), "§6.6 row k1: the AppRail click is held").toBe(tru…
+    598|   expect(dialogState(), "H6 §6.6 row k1: two blocking participants are…
+       |                                                                                                 ^
+    599|   const downloadFrom = downloads.clicks.length;
+    600|   await click(dialogButton(DIALOG.exportDraft));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > k §9 row k2: with a failed Header save and a failed Clock choice the hold is labelled "Dashboard"; a Clock Retry success keeps the hold, now "Dashboard header"; a Header Retry success releases it exactly once (H6)
+AssertionError: H6 §6.6 row k2: two blocking participants are labelled "Dashboard": expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+
+- Expected
++ Received
+
+  {
+-   "aria": "Unsaved Dashboard draft",
++   "aria": "Unsaved Dashboard header draft",
+    "open": true,
+-   "text": "Dashboard has unsaved changes.",
++   "text": "Dashboard header has unsaved changes.",
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:621:97
+    619|   observed("row k2 held", { held: held(app), dialog: dialogState(), gu…
+    620|   expect(held(app), "§6.6 row k2: the AppRail click is held").toBe(tru…
+    621|   expect(dialogState(), "H6 §6.6 row k2: two blocking participants are…
+       |                                                                                                 ^
+    622|   clockQuota.off();
+    623|   await click(need(action("timezone", "retry"), "Retry Clock timezone"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > m §9 row m: with a failed Clock draft (block and unload warning), a successful removal discards it with zero Clock writes, removes the participant and the warning; the next AppRail click is not held (A7)
+AssertionError: H1 H5 §7.6 row m: a failed Clock draft exists before the removal (block and unload warning): expected { …(2) } to strictly equal { Object (block, unload) }
+
+- Expected
++ Received
+
+  {
+    "block": {
+-     "discard": true,
+-     "notSaved": true,
+-     "present": true,
++     "discard": false,
++     "notSaved": false,
++     "present": false,
+      "reload": false,
+-     "retry": true,
++     "retry": false,
+      "source": false,
+    },
+    "unload": {
+      "attempts": 0,
+-     "warned": true,
++     "warned": false,
+    },
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:684:113
+    682|   const before = { block: blockState("style"), unload: probeUnload() };
+    683|   observed("row m before removal", { ...before, guard: coordinator().g…
+    684|   expect(before, "H1 H5 §7.6 row m: a failed Clock draft exists before…
+       |                                                                                                                 ^
+    685|   const from = mark();
+    686|   await click(removeClockButton());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > n §9 row n: over a pointer drag of the Clock widget the ghost makes zero set/remove attempts (reads recorded) and adds no participant registration; after the drop the block is still shown and departure is still held
+AssertionError: H1 §7.7 row n: after the drop the source block is still shown with the draft: expected { …(2) } to strictly equal { Object (block, shown) }
+
+- Expected
++ Received
+
+  {
+    "block": {
+-     "discard": true,
+-     "notSaved": true,
+-     "present": true,
++     "discard": false,
++     "notSaved": false,
++     "present": false,
+      "reload": false,
+-     "retry": true,
++     "retry": false,
+      "source": false,
+    },
+-   "shown": "analog",
++   "shown": "classic",
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:716:145
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/33]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q coordinator OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5)
+ FAIL  docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx > q §9 row q fallback OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5)
+AssertionError: H5 §7.5 row q attempt 2: the coordinator dialog appears for the Clock: expected { open: false, aria: null, text: '' } to strictly equal { open: true, …(2) }
+
+- Expected
++ Received
+
+  {
+-   "aria": "Unsaved Clock draft",
+-   "open": true,
+-   "text": "Clock has unsaved changes.",
++   "aria": null,
++   "open": false,
++   "text": "",
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx:843:100
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/33]⎯
+
+
+---- runner summary ----
+json_report=success=false numTotalTests=46 numPassedTests=13 numFailedTests=33 numPendingTests=0 numTodoTests=0
+totals cases=46 passed=13 failed=33 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 runtime_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles [], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required production modules loaded from the archive (52)
+harness PASS no test-file suite error
+case 001 PASSED | FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once; faulted attempts (including the key-scoped Clock faults) never delegate; no nested Storage call and no accountScope helper call
+case 002 PASSED | FX2 the Web Lock fixture: asynchronous grants and a test hold keeps a product request waiting until release
+case 003 PASSED | FX3 composition and drivers: the production App from the archive with only the auth hook substituted; the Dashboard with the Header, the Clock and the Mini Calendar; the coordinator probe reads the Header's guard; DesktopPet; the recorder, downloads, bus and history counters work; no network
+case 004 PASSED | PC clean control (coordinator branch): zero-write mount displaying the committed bytes; no recovery region, no unload warning; an AppRail click and Back navigate unheld with the f9eb4b1 navigation event; sign-out without drafts asks nothing and completes
+case 005 PASSED | a §9 row a: each of the 17 values through the UI stores exact bytes with exactly one write and no recovery region; readModuleStates() returns those bytes; reopening CmdK and querying the style finds the Clock
+case 006 FAILED | b §9 row b style: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2)
+    first: AssertionError: H1 §5.5 row b: the latest choice stays displayed after the failed write: expected 'classic' to be 'analog' // Object.is equality
+case 007 FAILED | b §9 row b timezone: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2)
+    first: AssertionError: H2 §5.5 row b: the latest choice stays displayed after the failed write: expected 'local' to be 'tokyo' // Object.is equality
+case 008 FAILED | c §9 row c style: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3)
+    first: AssertionError: H3 §5.4 row c: no write lands while the real per-key lock is held: expected [ 'set:xai_clock_style=analog' ] to deeply equal []
+case 009 FAILED | c §9 row c timezone: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3)
+    first: AssertionError: H3 §5.4 row c: no write lands while the real per-key lock is held: expected [ 'set:xai_clock_tz=tokyo' ] to deeply equal []
+case 010 PASSED | c §9 row c lock independence (positive control): while prefMutationLockName("xai_rail_order") and prefMutationLockName("xai_pref_theme") are held, each Clock choice still completes with exactly one write
+case 011 FAILED | d §9 row d: after a failed Clock choice an AppRail click is held; Stay keeps everything with zero history mutations; dialog Discard makes zero set/remove attempts on both keys and navigates once (H5)
+    first: AssertionError: H5 §7.3 row d: the AppRail click is held under "Clock": expected { held: false, dialog: { …(3) } } to strictly equal { held: true, …(1) }
+case 012 FAILED | e §9 row e Back: after a failed Clock choice, Back is held (POP); a successful Retry releases exactly once to the location an ordinary Back reaches (H5)
+    first: AssertionError: H5 §7.3 row e: Back is held under "Clock": expected { held: false, dialog: { …(3) } } to strictly equal { held: true, …(1) }
+case 013 FAILED | e §9 row e Forward: after a failed Clock choice, Forward is held (POP); a successful Retry releases exactly once to the location an ordinary Forward reaches (H5)
+    first: AssertionError: H5 §7.3 row e: Forward is held under "Clock": expected { held: false, dialog: { …(3) } } to strictly equal { held: true, …(1) }
+case 014 FAILED | f §9 row f: after a failed Clock choice the Mini Calendar's open action is held; Stay keeps the Dashboard; Discard navigates once (H5)
+    first: AssertionError: H5 §7.3 row f: the widget goTo is held under "Clock": expected { held: false, dialog: { …(3) } } to strictly equal { held: true, …(1) }
+case 015 FAILED | g §9 row g coordinator: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5)
+    first: AssertionError: H5 §7.5 row g: the coordinator dialog appears for the Clock: expected { open: false, aria: null, text: '' } to strictly equal { open: true, …(2) }
+case 016 FAILED | g §9 row g fallback: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5)
+    first: AssertionError: H5 §7.5 row g: the coordinator dialog appears for the Clock: expected { open: false, aria: null, text: '' } to strictly equal { open: true, …(2) }
+case 017 FAILED | h §9 row h settled: no warning in the clean state; a settled Clock draft warns with zero storage attempts in the handler; Discard removes the warning (H5)
+    first: AssertionError: H5 §7.4 row h: a settled Clock draft warns; zero storage attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+case 018 FAILED | h §9 row h pending: a pending Clock choice held behind the real per-key lock warns with zero storage attempts in the handler; after the write lands there is no warning (H5)
+    first: AssertionError: H5 §7.4 row h: a pending Clock draft warns; zero storage attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+case 019 PASSED | i §9 row i idle (positive control, H7): an idle Clock updates live when another document commits each field, with zero writes and no recovery region
+case 020 FAILED | i §9 row i drafted: a drafted field in document A becomes a preserved conflict when document B commits that field; A keeps its draft displayed with the block; Retry never overwrites B's bytes (H1/H2)
+    first: AssertionError: §5.6 §10.5 row i: the drafted style keeps the draft displayed as a preserved conflict; B's bytes stay: expected { shown: 'minimal', …(2) } to strictly equal { shown: 'analog', …(2) }
+case 021 FAILED | j §9 row j xai_clock_style="bogus": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 022 FAILED | j §9 row j xai_clock_style="Analog": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 023 FAILED | j §9 row j xai_clock_style="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 024 FAILED | j §9 row j xai_clock_style=" classic": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 025 FAILED | j §9 row j xai_clock_style="\"analog\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 026 FAILED | j §9 row j xai_clock_tz="mars": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 027 FAILED | j §9 row j xai_clock_tz="Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 028 FAILED | j §9 row j xai_clock_tz="UTC+8": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 029 FAILED | j §9 row j xai_clock_tz="Asia/Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 030 FAILED | j §9 row j xai_clock_tz="new-york": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 031 FAILED | j §9 row j xai_clock_tz="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 032 FAILED | j §9 row j xai_clock_tz="\"local\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 033 FAILED | j §9 row j xai_clock_style getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 034 FAILED | j §9 row j xai_clock_tz getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4)
+    first: AssertionError: H4 §5.2 §5.7 row j: the source block with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 035 FAILED | k §9 row k1: a failed Header save and a failed Clock choice hold an AppRail click under "Dashboard"; dialog Export calls each participant's export once (two files); dialog Discard discards both with zero Clock writes and navigates once (H6)
+    first: AssertionError: H6 §6.6 row k1: two blocking participants are labelled "Dashboard": expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+case 036 FAILED | k §9 row k2: with a failed Header save and a failed Clock choice the hold is labelled "Dashboard"; a Clock Retry success keeps the hold, now "Dashboard header"; a Header Retry success releases it exactly once (H6)
+    first: AssertionError: H6 §6.6 row k2: two blocking participants are labelled "Dashboard": expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+case 037 PASSED | l §9 row l (positive control): a failed Header save only holds an AppRail click under "Dashboard header"; dialog Export downloads one Header file; dialog Discard proceeds once with zero Clock writes
+case 038 PASSED | l §9 row l (positive control): a failed Header save only, then a successful Header Retry auto-releases the held AppRail click exactly once
+case 039 FAILED | m §9 row m: with a failed Clock draft (block and unload warning), a successful removal discards it with zero Clock writes, removes the participant and the warning; the next AppRail click is not held (A7)
+    first: AssertionError: H1 H5 §7.6 row m: a failed Clock draft exists before the removal (block and unload warning): expected { …(2) } to strictly equal { Object (block, unload) }
+case 040 FAILED | n §9 row n: over a pointer drag of the Clock widget the ghost makes zero set/remove attempts (reads recorded) and adds no participant registration; after the drop the block is still shown and departure is still held
+    first: AssertionError: H1 §7.7 row n: after the drop the source block is still shown with the draft: expected { …(2) } to strictly equal { Object (block, shown) }
+case 041 PASSED | o §9 row o (positive control): a forced scope change through the identity channel from a second document remounts App; the Clock displays the committed bytes, with no recovery region, no success claim, zero Clock writes and zero runtime errors
+case 042 PASSED | p §9 row p (positive control): over at least three ticks without edits there are zero participant re-registrations and zero set/remove attempts; with a draft present, zero additional re-registrations across the ticks
+case 043 PASSED | q §9 row q coordinator Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched
+case 044 FAILED | q §9 row q coordinator OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5)
+    first: AssertionError: H5 §7.5 row q attempt 2: the coordinator dialog appears for the Clock: expected { open: false, aria: null, text: '' } to strictly equal { open: true, …(2) }
+case 045 PASSED | q §9 row q fallback Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched
+case 046 FAILED | q §9 row q fallback OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5)
+    first: AssertionError: H5 §7.5 row q attempt 2: the coordinator dialog appears for the Clock: expected { open: false, aria: null, text: '' } to strictly equal { open: true, …(2) }
+observed_lines=89
+observed FX1 F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerStep":[1,1,1,0,0,0,1,1,0,0],"threwPerStep":[false,false,false,true,true,true,false,false,true,true],"logged":["set:clock-host-selfcheck=1","get:clock-host-selfcheck","remove:clock-host-selfcheck","set:clock-host-selfcheck=2!threw","remove:clock-host-selfcheck!threw","get:clock-host-selfcheck!threw","get:clock-host-selfcheck","set:xai_clock_style=analog!threw","get:xai_clock_tz!threw"],"faultsFired":[1,1,1,1,1],"bytesAfterFaultedSet":null,"bytesAfterFaultedRemove":"3","sessionStorageLogged":false,"styleBytesAfterFault":null}
+observed census-recorder FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once; faulted attempts (including the key-scoped Clock faults) never delegate; no nested Storage call and no accountScope helper call {"censusChecks":0,"railExpectations":[],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed census-recorder FX2 the Web Lock fixture: asynchronous grants and a test hold keeps a product request waiting until release {"censusChecks":0,"railExpectations":[],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed FX3 composition {"scope":{"kind":"account","accountId":"clock-host-parent-A","generation":"g1","epoch":8},"hookCalls":10,"network":0,"productionRouterAtImport":"/","coordinator":{"label":"Dashboard header","version":3}}
+observed census-recorder FX3 composition and drivers: the production App from the archive with only the auth hook substituted; the Dashboard with the Header, the Clock and the Mini Calendar; the coordinator probe reads the Header's guard; DesktopPet; the recorder, downloads, bus and history counters work; no network {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed census-recorder PC clean control (coordinator branch): zero-write mount displaying the committed bytes; no recovery region, no unload warning; an AppRail click and Back navigate unheld with the f9eb4b1 navigation event; sign-out without drafts asks nothing and completes {"censusChecks":4,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row a values [{"field":"style","value":"classic","writes":["set:xai_clock_style=classic"],"bytes":"classic","shown":"classic","region":false,"cmdk":"classic","popover":false},{"field":"style","value":"split","writes":["set:xai_clock_style=split"],"bytes":"split","shown":"split","region":false,"cmdk":"split","popover":false},{"field":"style","value":"minimal","writes":["set:xai_clock_style=minimal"],"bytes":"minimal","shown":"minimal","region":false,"cmdk":"minimal","popover":false},{"field":"style","value":"analog","writes":["set:xai_clock_style=analog"],"bytes":"analog","shown":"analog","region":false,"cmdk":"analog","popover":false},{"field":"timezone","value":"local","writes":["set:xai_clock_tz=local"],"bytes":"local","shown":"local","region":false,"cmdk":"local","popover":false},{"field":"timezone","value":"shanghai","writes":["set:xai_clock_tz=shanghai"],"bytes":"shanghai","shown":"shanghai","region":false,"cmdk":"shanghai","popover":false},{"field":"timezone","value":"london","writes":["set:xai_clock_tz=london"],"bytes":"london","shown":"london","region":false,"cmdk":"london","popover":false},{"field":"timezone","value":"new_york","writes":["set:xai_clock_tz=new_york"],"bytes":"new_york","shown":"new_york","region":false,"cmdk":"new_york","popover":false},{"field":"timezone","value":"tokyo","writes":["set:xai_clock_tz=tokyo"],"bytes":"tokyo","shown":"tokyo","region":false,"cmdk":"tokyo","popover":false},{"field":"timezone","value":"sf","writes":["set:xai_clock_tz=sf"],"bytes":"sf","shown":"sf","region":false,"cmdk":"sf","popover":false},{"field":"timezone","value":"paris","writes":["set:xai_clock_tz=paris"],"bytes":"paris","shown":"paris","region":false,"cmdk":"paris","popover":false},{"field":"timezone","value":"sydney","writes":["set:xai_clock_tz=sydney"],"bytes":"sydney","shown":"sydney","region":false,"cmdk":"sydney","popover":false},{"field":"timezone","value":"berlin","writes":["set:xai_clock_tz=berlin"],"bytes":"berlin","shown":"berlin","region":false,"cmdk":"berlin","popover":false},{"field":"timezone","value":"dubai","writes":["set:xai_clock_tz=dubai"],"bytes":"dubai","shown":"dubai","region":false,"cmdk":"dubai","popover":false},{"field":"timezone","value":"singapore","writes":["set:xai_clock_tz=singapore"],"bytes":"singapore","shown":"singapore","region":false,"cmdk":"singapore","popover":false},{"field":"timezone","value":"hk","writes":["set:xai_clock_tz=hk"],"bytes":"hk","shown":"hk","region":false,"cmdk":"hk","popover":false},{"field":"timezone","value":"la","writes":["set:xai_clock_tz=la"],"bytes":"la","shown":"la","region":false,"cmdk":"la","popover":false}]
+observed row a CmdK query analog {"labels":["Clock"],"bytes":"analog"}
+observed census-recorder a §9 row a: each of the 17 values through the UI stores exact bytes with exactly one write and no recovery region; readModuleStates() returns those bytes; reopening CmdK and querying the style finds the Clock {"censusChecks":19,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row b style after the failed choice {"shown":"classic","bytes":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"region":false,"unload":{"warned":false,"attempts":0}}
+observed census-recorder b §9 row b style: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row b timezone after the failed choice {"shown":"local","bytes":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"region":false,"unload":{"warned":false,"attempts":0}}
+observed census-recorder b §9 row b timezone: a quota failure keeps the choice displayed with the block (Retry, Discard); a successful Retry makes exactly one write and removes the block (H1/H2) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row c style while held {"shown":"analog","writes":["set:xai_clock_style=analog"],"bytes":"analog","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"lock":"test","waiting":0}
+observed census-recorder c §9 row c style: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row c timezone while held {"shown":"tokyo","writes":["set:xai_clock_tz=tokyo"],"bytes":"tokyo","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"lock":"test","waiting":0}
+observed census-recorder c §9 row c timezone: while the write is held behind the real per-key lock there is no block, the controls stay enabled and no write lands; an AppRail click is held under "Clock"; on release one write and one release to the AppRail target (H3) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed census-recorder c §9 row c lock independence (positive control): while prefMutationLockName("xai_rail_order") and prefMutationLockName("xai_pref_theme") are held, each Clock choice still completes with exactly one write {"censusChecks":4,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row d after the AppRail click {"path":"/app/tasks","dialog":{"open":false,"aria":null,"text":""},"departures":["PUSH:/app/tasks"],"navigation":[{"moduleId":"tasks","source":"app-rail"}]}
+observed census-recorder d §9 row d: after a failed Clock choice an AppRail click is held; Stay keeps everything with zero history mutations; dialog Discard makes zero set/remove attempts on both keys and navigates once (H5) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row e after Back {"path":"/app/tasks","dialog":{"open":false,"aria":null,"text":""},"departures":["POP:/app/tasks"]}
+observed census-recorder e §9 row e Back: after a failed Clock choice, Back is held (POP); a successful Retry releases exactly once to the location an ordinary Back reaches (H5) {"censusChecks":3,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row e after Forward {"path":"/app/tasks","dialog":{"open":false,"aria":null,"text":""},"departures":["POP:/app/tasks"]}
+observed census-recorder e §9 row e Forward: after a failed Clock choice, Forward is held (POP); a successful Retry releases exactly once to the location an ordinary Forward reaches (H5) {"censusChecks":3,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row f after goTo {"path":"/app/calendar","dialog":{"open":false,"aria":null,"text":""},"departures":["PUSH:/app/calendar"],"navigation":[{"moduleId":"calendar","source":"mini-cal"}]}
+observed census-recorder f §9 row f: after a failed Clock choice the Mini Calendar's open action is held; Stay keeps the Dashboard; Discard navigates once (H5) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row g coordinator attempt 1 {"confirms":{"rail":0,"appearance":0,"other":0},"dialog":{"open":false,"aria":null,"text":""},"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":60},"redirects":["/"]}
+observed census-recorder g §9 row g coordinator: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row g fallback attempt 1 {"confirms":{"rail":0,"appearance":0,"other":0},"dialog":{"open":false,"aria":null,"text":""},"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":66},"redirects":["/"]}
+observed census-recorder g §9 row g fallback: sign-out with a Clock draft and no rail or Appearance draft; zero confirms of every class; the coordinator dialog "Clock": Stay resolves false; a second attempt with Discard writes nothing and invalidates identity (H5) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row h settled {"settled":{"warned":false,"attempts":0},"block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}}
+observed census-recorder h §9 row h settled: no warning in the clean state; a settled Clock draft warns with zero storage attempts in the handler; Discard removes the warning (H5) {"censusChecks":3,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row h pending {"pending":{"warned":false,"attempts":0},"bytes":"tokyo","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}}
+observed census-recorder h §9 row h pending: a pending Clock choice held behind the real per-key lock warns with zero storage attempts in the handler; after the write lands there is no warning (H5) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed census-recorder i §9 row i idle (positive control, H7): an idle Clock updates live when another document commits each field, with zero writes and no recovery region {"censusChecks":4,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row i drafted style after document B {"shown":"minimal","bytes":"minimal","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}}
+observed census-recorder i §9 row i drafted: a drafted field in document A becomes a preserved conflict when document B commits that field; A keeps its draft displayed with the block; Retry never overwrites B's bytes (H1/H2) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_style="bogus" {"shown":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"bogus","dialog":false}
+observed census-recorder j §9 row j xai_clock_style="bogus": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_style="Analog" {"shown":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"Analog","dialog":false}
+observed census-recorder j §9 row j xai_clock_style="Analog": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_style="" {"shown":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"","dialog":false}
+observed census-recorder j §9 row j xai_clock_style="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_style=" classic" {"shown":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":" classic","dialog":false}
+observed census-recorder j §9 row j xai_clock_style=" classic": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_style="\"analog\"" {"shown":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"\"analog\"","dialog":false}
+observed census-recorder j §9 row j xai_clock_style="\"analog\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_tz="mars" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"mars","dialog":false}
+observed census-recorder j §9 row j xai_clock_tz="mars": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_tz="Shanghai" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"Shanghai","dialog":false}
+observed census-recorder j §9 row j xai_clock_tz="Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_tz="UTC+8" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"UTC+8","dialog":false}
+observed census-recorder j §9 row j xai_clock_tz="UTC+8": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_tz="Asia/Shanghai" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"Asia/Shanghai","dialog":false}
+observed census-recorder j §9 row j xai_clock_tz="Asia/Shanghai": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_tz="new-york" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"new-york","dialog":false}
+observed census-recorder j §9 row j xai_clock_tz="new-york": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_tz="" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"","dialog":false}
+observed census-recorder j §9 row j xai_clock_tz="": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_tz="\"local\"" {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"\"local\"","dialog":false}
+observed census-recorder j §9 row j xai_clock_tz="\"local\"": no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_style getItem throws (key-scoped) {"shown":"classic","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"classic","dialog":false}
+observed census-recorder j §9 row j xai_clock_style getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row j xai_clock_tz getItem throws (key-scoped) {"shown":"local","block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"sibling":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"exportButton":false,"unload":{"warned":false,"attempts":0},"writes":[],"bytes":"local","dialog":false}
+observed census-recorder j §9 row j xai_clock_tz getItem throws (key-scoped): no route error; the default displayed; the source block with Reload only; no hold, no unload warning, zero writes; after document B repairs the bytes, Reload shows them (H4) {"censusChecks":1,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row k1 held {"held":true,"dialog":{"open":true,"aria":"Unsaved Dashboard header draft","text":"Dashboard header has unsaved changes."},"guard":"Dashboard header"}
+observed census-recorder k §9 row k1: a failed Header save and a failed Clock choice hold an AppRail click under "Dashboard"; dialog Export calls each participant's export once (two files); dialog Discard discards both with zero Clock writes and navigates once (H6) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row k2 held {"held":true,"dialog":{"open":true,"aria":"Unsaved Dashboard header draft","text":"Dashboard header has unsaved changes."},"guard":"Dashboard header"}
+observed census-recorder k §9 row k2: with a failed Header save and a failed Clock choice the hold is labelled "Dashboard"; a Clock Retry success keeps the hold, now "Dashboard header"; a Header Retry success releases it exactly once (H6) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed census-recorder l §9 row l (positive control): a failed Header save only holds an AppRail click under "Dashboard header"; dialog Export downloads one Header file; dialog Discard proceeds once with zero Clock writes {"censusChecks":4,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed census-recorder l §9 row l (positive control): a failed Header save only, then a successful Header Retry auto-releases the held AppRail click exactly once {"censusChecks":3,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row m before removal {"block":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"unload":{"warned":false,"attempts":0},"guard":"Dashboard header","version":3}
+observed census-recorder m §9 row m: with a failed Clock draft (block and unload warning), a successful removal discards it with zero Clock writes, removes the participant and the warning; the next AppRail click is not held (A7) {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row n over the drag {"during":{"ghost":true,"ghostClock":true,"version":3},"writes":[],"reads":6,"versionDuring":3,"versionAfter":3,"orderWrites":[],"versionBefore":3}
+observed census-recorder n §9 row n: over a pointer drag of the Clock widget the ghost makes zero set/remove attempts (reads recorded) and adds no participant registration; after the drop the block is still shown and departure is still held {"censusChecks":3,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row o forced scope change {"away":{"clock":false,"gate":true,"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":168}},"after":{"kind":"account","accountId":"clock-host-parent-A","generation":"g1","epoch":170},"epochBefore":166,"refreshSession":2,"writes":[]}
+observed census-recorder o §9 row o (positive control): a forced scope change through the identity channel from a second document remounts App; the Clock displays the committed bytes, with no recovery region, no success claim, zero Clock writes and zero runtime errors {"censusChecks":2,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row p {"clean":{"version":3,"guard":"Dashboard header","face":"10:06:09","from":192},"cleanAfter":{"version":3,"sameGuard":true,"face":"10:06:12","writes":[],"clockReads":0},"drafted":{"version":3,"guard":"Dashboard header","face":"10:06:12","from":194},"draftedAfter":{"version":3,"sameGuard":true,"face":"10:06:15","writes":[],"clockReads":0}}
+observed census-recorder p §9 row p (positive control): over at least three ticks without edits there are zero participant re-registrations and zero set/remove attempts; with a draft present, zero additional re-registrations across the ticks {"censusChecks":3,"railExpectations":["absent"],"confirms":{"rail":0,"appearance":0,"other":0},"confirmTexts":[],"blockerMessages":0}
+observed row q coordinator attempt 1 (Cancel at the rail prompt) {"confirms":{"rail":1,"appearance":0,"other":0},"firstKind":"rail","dialog":false,"clock":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false},"guardVersion":0,"sameGuard":true,"clockWrites":[],"clockReads":0,"downloads":0,"rail":["Boards","Dashboard","Calendar","Tasks","Matrix","Pomodoro","Time Tracker","Habits","Meditation","Countdown","XAI Chat","Statistics","Bookkeeping","Metrics"],"railStatus":true,"mutations":{"navigations":0,"pushes":0,"replaces":0,"locationChanged":false},"sameScope":true,"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"clockBefore":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false}}
+observed census-recorder q §9 row q coordinator Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched {"censusChecks":4,"railExpectations":["absent","failed-closed"],"confirms":{"rail":1,"appearance":0,"other":0},"confirmTexts":["rail:Cancel"],"blockerMessages":0}
+observed row q coordinator attempt 1 (Cancel at the rail prompt) {"confirms":{"rail":1,"appearance":0,"other":0},"firstKind":"rail","dialog":false,"clock":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false},"guardVersion":0,"sameGuard":true,"clockWrites":[],"clockReads":0,"downloads":0,"rail":["Boards","Dashboard","Calendar","Tasks","Matrix","Pomodoro","Time Tracker","Habits","Meditation","Countdown","XAI Chat","Statistics","Bookkeeping","Metrics"],"railStatus":true,"mutations":{"navigations":0,"pushes":0,"replaces":0,"locationChanged":false},"sameScope":true,"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"clockBefore":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false}}
+observed row q coordinator attempt 2 (OK at the rail prompt) {"confirms":{"rail":1,"appearance":0,"other":0},"dialog":{"open":false,"aria":null,"text":""},"railWrites":[],"railStatus":false,"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":184}}
+observed census-recorder q §9 row q coordinator OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5) {"censusChecks":5,"railExpectations":["absent","failed-closed"],"confirms":{"rail":2,"appearance":0,"other":0},"confirmTexts":["rail:Cancel","rail:OK"],"blockerMessages":0}
+observed row q fallback attempt 1 (Cancel at the rail prompt) {"confirms":{"rail":1,"appearance":0,"other":0},"firstKind":"rail","dialog":false,"clock":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false},"guardVersion":0,"sameGuard":true,"clockWrites":[],"clockReads":0,"downloads":0,"rail":["Boards","Dashboard","Calendar","Tasks","Matrix","Pomodoro","Time Tracker","Habits","Meditation","Countdown","XAI Chat","Statistics","Bookkeeping","Metrics"],"railStatus":true,"mutations":{"navigations":0,"pushes":0,"replaces":0,"locationChanged":false},"sameScope":true,"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"clockBefore":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false}}
+observed census-recorder q §9 row q fallback Cancel half (positive control): with a rail draft and a Clock draft, the rail confirm comes first; Cancel there asks nothing else, opens no coordinator dialog and leaves the Clock, the rail draft and identity untouched {"censusChecks":4,"railExpectations":["absent","failed-closed"],"confirms":{"rail":1,"appearance":0,"other":0},"confirmTexts":["rail:Cancel"],"blockerMessages":0}
+observed row q fallback attempt 1 (Cancel at the rail prompt) {"confirms":{"rail":1,"appearance":0,"other":0},"firstKind":"rail","dialog":false,"clock":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false},"guardVersion":0,"sameGuard":true,"clockWrites":[],"clockReads":0,"downloads":0,"rail":["Boards","Dashboard","Calendar","Tasks","Matrix","Pomodoro","Time Tracker","Habits","Meditation","Countdown","XAI Chat","Statistics","Bookkeeping","Metrics"],"railStatus":true,"mutations":{"navigations":0,"pushes":0,"replaces":0,"locationChanged":false},"sameScope":true,"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"clockBefore":{"style":"classic","timezone":"local","region":false,"blocks":{"style":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false},"timezone":{"present":false,"notSaved":false,"source":false,"retry":false,"discard":false,"reload":false}},"exportButton":false,"popover":false}}
+observed row q fallback attempt 2 (OK at the rail prompt) {"confirms":{"rail":1,"appearance":0,"other":0},"dialog":{"open":false,"aria":null,"text":""},"railWrites":[],"railStatus":false,"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":194}}
+observed census-recorder q §9 row q fallback OK half: after Cancel, OK at the rail prompt discards the rail draft with zero writes and asks no Appearance confirm; the coordinator dialog "Clock" appears and Stay resolves false; a third attempt asks nothing and dialog Discard writes nothing and invalidates identity once (H5) {"censusChecks":5,"railExpectations":["absent","failed-closed"],"confirms":{"rail":2,"appearance":0,"other":0},"confirmTexts":["rail:Cancel","rail:OK"],"blockerMessages":0}
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-host-EtGmXZ","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-host-EtGmXZ/.clock-host-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":[],"include":["docs/reviews/web-dashboard-clock-recovery-independent/host.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/dashboardRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/routes/modules/settingsDeparture.ts apps/web/src/providers/AccountStorageGate.tsx apps/web/src/providers/AppProviders.tsx apps/web/src/observability/runtime.ts apps/web/src/service-worker/register.ts packages/plugin-web-storage/src/AccountDataGate.tsx packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/accountCoordination.ts packages/plugin-web-storage/src/internal/registry.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/storage.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/sameTabBus.ts packages/xai-web-shell/src/index.ts packages/xai-web-shell/src/registry.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/AvatarMenu.tsx packages/xai-web-shell/src/SignOutConfirmDialog.tsx packages/xai-web-shell/src/internal/railOrderController.tsx packages/xai-web-shell/src/internal/RailOrderStatus.tsx packages/xai-web-shell/src/internal/railOrderCopy.ts packages/xai-web-shell/src/internal/railOrderModel.ts packages/xai-web-settings-appearance/src/internal/appearanceController.tsx packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts packages/xai-web-dashboard-grid/src/DashboardModule.tsx packages/xai-web-dashboard-grid/src/DashboardGrid.tsx packages/xai-web-dashboard-grid/src/DashHeader.tsx packages/xai-web-dashboard-grid/src/WidgetShell.tsx packages/xai-web-dashboard-grid/src/WidgetGhost.tsx packages/xai-web-dashboard-widgets/src/registrations.tsx packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx packages/xai-web-dashboard-widgets/src/widgets/MiniCalWidget.tsx packages/xai-web-dashboard-widgets/src/internal/cityLibrary.ts packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-cmdk/src/internal/readModuleStates.ts packages/xai-web-cmdk/src/adapters/dashboard.ts packages/xai-web-event-bus/src/emitter.ts packages/plugin-web-tokens/src/index.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=632 by package: apps/web=30 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=14 packages/xai-web-tasks=23

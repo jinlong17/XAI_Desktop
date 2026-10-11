@@ -1,0 +1,13 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-TweZOL
+
+ ✓ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx (24 tests) 2880ms
+   ✓ display_style: physical fault retains current choice and actual Retry persists only the unresolved intent  320ms
+   ✓ partial preference export is actual latest six-value JSON and download setup failure retains choices  368ms
+
+ Test Files  1 passed (1)
+      Tests  24 passed (24)
+   Start at  01:31:20
+   Duration  5.95s (transform 856ms, setup 0ms, collect 1.54s, tests 2.88s, environment 880ms, prepare 266ms)

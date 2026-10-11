@@ -1,0 +1,25 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stderr | docs/reviews/web-ai-save-recovery/save-contract.test.tsx > shows an unsaved result when the initial conversation cannot be persisted
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | docs/reviews/web-ai-save-recovery/save-contract.test.tsx > shows an unsaved result when the initial conversation cannot be persisted
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | docs/reviews/web-ai-save-recovery/save-contract.test.tsx > does not silently keep an empty store after storage recovers and another message is sent
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | docs/reviews/web-ai-save-recovery/save-contract.test.tsx > does not silently keep an empty store after storage recovers and another message is sent
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+ ✓ docs/reviews/web-ai-save-recovery/save-contract.test.tsx (2 tests) 506ms
+   ✓ shows an unsaved result when the initial conversation cannot be persisted  442ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  14:17:25
+   Duration  2.52s (transform 401ms, setup 151ms, collect 696ms, tests 506ms, environment 694ms, prepare 100ms)
+

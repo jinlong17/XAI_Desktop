@@ -1,0 +1,252 @@
+log=E23 frozen host-suite runner invocations (contract r1 §13 last row), run unchanged before any copy
+driver=sequential, cwd = worktree root, node v24.16.0; each line below is one invocation, its exit status from the driver transcript, and the first lines of its stderr (Node prints the 104,923,136-byte partial stdout buffer of `git archive`, elided here)
+archive_bytes f359be6=74393600 419e56d=125992960 f9eb4b1=148408320 (git archive <rev> | wc -c); frozen buffer = 100 * 1024 * 1024 = 104857600
+evidence_logs_written=0 (each runner aborts at line 14, inside try, before any Vitest run; its finally removes the temporary archive)
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs f9eb4b1 export apprail-final-v1
+start=2026-10-09T15:00:45.511Z end=2026-10-09T15:00:46.844Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs f9eb4b1 host apprail-final-v1
+start=2026-10-09T15:00:46.845Z end=2026-10-09T15:00:47.367Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs f9eb4b1 host-entry apprail-final-v1
+start=2026-10-09T15:00:47.367Z end=2026-10-09T15:00:47.892Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs f9eb4b1 host-wrapper apprail-final-v1
+start=2026-10-09T15:00:47.892Z end=2026-10-09T15:00:48.487Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs f9eb4b1 app apprail-final-v1
+start=2026-10-09T15:00:48.488Z end=2026-10-09T15:00:49.071Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs f9eb4b1 original39 apprail-final-v1
+start=2026-10-09T15:00:49.072Z end=2026-10-09T15:00:49.719Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs f9eb4b1 original-parent apprail-final-v1
+start=2026-10-09T15:00:49.719Z end=2026-10-09T15:00:50.267Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs f9eb4b1 package apprail-final-v1
+start=2026-10-09T15:00:50.267Z end=2026-10-09T15:00:50.824Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-collaborate-recovery-independent/verify-fixed.mjs f9eb4b1 contracts apprail-final-v1
+start=2026-10-09T15:00:50.824Z end=2026-10-09T15:00:51.369Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-collaborate-recovery-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-collaborate-recovery-independent/verify-fixed.mjs f9eb4b1 host apprail-final-v1
+start=2026-10-09T15:00:51.369Z end=2026-10-09T15:00:51.897Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-collaborate-recovery-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-collaborate-recovery-independent/verify-fixed.mjs f9eb4b1 package apprail-final-v1
+start=2026-10-09T15:00:51.897Z end=2026-10-09T15:00:52.439Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-collaborate-recovery-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-pomodoro-departure-independent/verify-fixed.mjs f9eb4b1 departure apprail-final-v1
+start=2026-10-09T15:00:52.440Z end=2026-10-09T15:00:52.987Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-pomodoro-departure-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-pomodoro-departure-independent/verify-fixed.mjs f9eb4b1 advanced apprail-final-v1
+start=2026-10-09T15:00:52.987Z end=2026-10-09T15:00:53.522Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-pomodoro-departure-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-pomodoro-departure-independent/verify-fixed.mjs f9eb4b1 package apprail-final-v1
+start=2026-10-09T15:00:53.522Z end=2026-10-09T15:00:54.062Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-pomodoro-departure-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-dashboard-header-departure-independent/verify-fixed.mjs f9eb4b1 departure apprail-final-v1
+start=2026-10-09T15:00:54.062Z end=2026-10-09T15:00:54.601Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-dashboard-header-departure-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-dashboard-header-departure-independent/verify-fixed.mjs f9eb4b1 advanced apprail-final-v1
+start=2026-10-09T15:00:54.601Z end=2026-10-09T15:00:55.129Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-dashboard-header-departure-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-dashboard-header-departure-independent/verify-fixed.mjs f9eb4b1 followon apprail-final-v1
+start=2026-10-09T15:00:55.129Z end=2026-10-09T15:00:55.691Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-dashboard-header-departure-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', 'f9eb4b1f207bc4b46f547b90afc250424b3c8695' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs 419e56d export apprail-final-v1
+start=2026-10-09T15:00:55.691Z end=2026-10-09T15:00:56.346Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs 419e56d host apprail-final-v1
+start=2026-10-09T15:00:56.346Z end=2026-10-09T15:00:56.909Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs 419e56d host-entry apprail-final-v1
+start=2026-10-09T15:00:56.910Z end=2026-10-09T15:00:57.460Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs 419e56d host-wrapper apprail-final-v1
+start=2026-10-09T15:00:57.460Z end=2026-10-09T15:00:58.027Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs 419e56d app apprail-final-v1
+start=2026-10-09T15:00:58.027Z end=2026-10-09T15:00:58.617Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs 419e56d original39 apprail-final-v1
+start=2026-10-09T15:00:58.617Z end=2026-10-09T15:00:59.181Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs 419e56d original-parent apprail-final-v1
+start=2026-10-09T15:00:59.181Z end=2026-10-09T15:00:59.728Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-smart-lists-recovery-astra/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-collaborate-recovery-independent/verify-fixed.mjs 419e56d contracts apprail-final-v1
+start=2026-10-09T15:00:59.728Z end=2026-10-09T15:01:00.306Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-collaborate-recovery-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-collaborate-recovery-independent/verify-fixed.mjs 419e56d host apprail-final-v1
+start=2026-10-09T15:01:00.306Z end=2026-10-09T15:01:00.904Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-collaborate-recovery-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-pomodoro-departure-independent/verify-fixed.mjs 419e56d departure apprail-final-v1
+start=2026-10-09T15:01:00.904Z end=2026-10-09T15:01:01.492Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-pomodoro-departure-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-pomodoro-departure-independent/verify-fixed.mjs 419e56d advanced apprail-final-v1
+start=2026-10-09T15:01:01.492Z end=2026-10-09T15:01:02.070Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-pomodoro-departure-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-dashboard-header-departure-independent/verify-fixed.mjs 419e56d departure apprail-final-v1
+start=2026-10-09T15:01:02.070Z end=2026-10-09T15:01:02.659Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-dashboard-header-departure-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-dashboard-header-departure-independent/verify-fixed.mjs 419e56d advanced apprail-final-v1
+start=2026-10-09T15:01:02.659Z end=2026-10-09T15:01:03.202Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-dashboard-header-departure-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',
+## node docs/reviews/web-dashboard-header-departure-independent/verify-fixed.mjs 419e56d followon apprail-final-v1
+start=2026-10-09T15:01:03.202Z end=2026-10-09T15:01:03.754Z exit=1
+  <ref *1> Error: spawnSync git ENOBUFS
+  at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs/reviews/web-dashboard-header-departure-independent/verify-fixed.mjs:14:50
+  code: 'ENOBUFS',
+  spawnargs: [ 'archive', '419e56de9f23e4467fea806fbd4a990e1f429941' ],
+  status: null,
+  signal: 'SIGTERM',

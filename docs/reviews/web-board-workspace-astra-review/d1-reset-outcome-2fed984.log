@@ -1,0 +1,18 @@
+revision=2fed984
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d1-laKqq1
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-reset-outcome.test.tsx > reset must preserve local state if the removal read and its outcome read fail after a successful preflight
+reset-failed-read {"reads":2,"removeCalls":0,"localValue":{"e1":{"title":"Keep legacy bytes"}},"isDefault":false}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-reset-outcome.test.tsx (2 tests) 13ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  17:11:34
+   Duration  795ms (transform 101ms, setup 0ms, collect 211ms, tests 13ms, environment 269ms, prepare 79ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-reset-outcome.test.tsx > reset must preserve local state if the removal read and its outcome read fail after a successful preflight
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.

@@ -77,8 +77,8 @@ describe("tasksReducer.moveCard", () => {
     expect(moved.inbox).toBe(true);  // preserved
   });
 
-  // T-RD-6: move to non-nodate bucket writes date + dateZh, strips dateLabel + sub
-  it("T-RD-6: moveCard to later writes date + dateZh, strips dateLabel + sub, keeps tag + inbox", () => {
+  // T-RD-6: move to non-nodate bucket writes date + dateZh, strips dateLabel, preserves sub
+  it("T-RD-6: moveCard to later writes date + dateZh, strips dateLabel, preserves sub, keeps tag + inbox", () => {
     const cols = cloneSeed();
     // t12 in next7 has dateLabel + sub, no date
     const result = moveCard(cols, "t12", "next7", "later", NOW);
@@ -88,7 +88,7 @@ describe("tasksReducer.moveCard", () => {
     expect(moved.date).toBeDefined();
     expect(moved.dateZh).toBeDefined();
     expect(moved.dateLabel).toBeUndefined();
-    expect(moved.sub).toBeUndefined();
+    expect(moved.sub).toBeDefined();
   });
 
   // T-RD-7 (T-10 rewrite): toggleComplete flips done in TaskCol[] (persisted path)

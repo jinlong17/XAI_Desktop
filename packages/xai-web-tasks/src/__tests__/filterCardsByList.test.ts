@@ -91,96 +91,32 @@ describe("filterCardsByList — T-FILT-3 inbox filter", () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// T-FILT-4 — next7 bucket filter
-// ---------------------------------------------------------------------------
-
-describe("filterCardsByList — T-FILT-4 next7 filter", () => {
-  it("T-FILT-4a: returns only cards in the next7 bucket; other buckets are empty", () => {
-    const cols = cloneCols(SEED_TASK_COLS);
-    const result = filterCardsByList(cols, "next7");
-
-    const next7Out = result.find((c) => c.id === "next7")!;
-    const next7In  = cols.find((c)  => c.id === "next7")!;
-
-    // next7 column unchanged (referential equality)
-    expect(next7Out).toBe(next7In);
-
-    // All other columns have empty tasks
-    for (const col of result) {
-      if (col.id !== "next7") {
-        expect(col.tasks).toHaveLength(0);
-        expect(col.count).toBe(0);
-      }
-    }
-  });
-
-  it("T-FILT-4b: next7 column still has 2 seed tasks", () => {
-    const cols = cloneCols(SEED_TASK_COLS);
-    const result = filterCardsByList(cols, "next7");
-    const next7Out = result.find((c) => c.id === "next7")!;
-    expect(next7Out.tasks).toHaveLength(2);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// T-FILT-5 — today → overdue bucket (bucket approximation, Q-T)
-// ---------------------------------------------------------------------------
-
-describe("filterCardsByList — T-FILT-5 today → overdue bucket (Q-T approximation)", () => {
-  it("T-FILT-5a: today returns only overdue bucket cards; other buckets empty", () => {
-    const cols = cloneCols(SEED_TASK_COLS);
-    const result = filterCardsByList(cols, "today");
-
-    const overdueOut = result.find((c) => c.id === "overdue")!;
-    const overdueIn  = cols.find((c)  => c.id === "overdue")!;
-
-    // overdue column unchanged (referential equality)
-    expect(overdueOut).toBe(overdueIn);
-
-    for (const col of result) {
-      if (col.id !== "overdue") {
-        expect(col.tasks).toHaveLength(0);
-        expect(col.count).toBe(0);
-      }
-    }
-  });
-
-  it("T-FILT-5b: today returns 10 overdue cards (seed count)", () => {
-    const cols = cloneCols(SEED_TASK_COLS);
-    const result = filterCardsByList(cols, "today");
-    const overdueOut = result.find((c) => c.id === "overdue")!;
-    expect(overdueOut.tasks).toHaveLength(10);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// T-FILT-6 — tomorrow → next7 bucket (bucket approximation, Q-T)
-// ---------------------------------------------------------------------------
-
-describe("filterCardsByList — T-FILT-6 tomorrow → next7 bucket (Q-T approximation)", () => {
-  it("T-FILT-6a: tomorrow returns only next7 bucket cards; other buckets empty", () => {
-    const cols = cloneCols(SEED_TASK_COLS);
-    const result = filterCardsByList(cols, "tomorrow");
-
-    const next7Out = result.find((c) => c.id === "next7")!;
-    const next7In  = cols.find((c)  => c.id === "next7")!;
-
-    expect(next7Out).toBe(next7In);
-
-    for (const col of result) {
-      if (col.id !== "next7") {
-        expect(col.tasks).toHaveLength(0);
-        expect(col.count).toBe(0);
-      }
-    }
-  });
-
-  it("T-FILT-6b: tomorrow returns 2 next7 seed cards", () => {
-    const cols = cloneCols(SEED_TASK_COLS);
-    const result = filterCardsByList(cols, "tomorrow");
-    const next7Out = result.find((c) => c.id === "next7")!;
-    expect(next7Out.tasks).toHaveLength(2);
+describe("real local due-date filters", () => {
+  const now = new Date(2026, 11, 31, 23, 30);
+  const dates = ["2026-12-30", "2026-12-31", "2027-01-01", "2027-01-07", "2027-01-08", "2027-02-30"];
+  function fixture() {
+    const cols = cloneCols(SEED_TASK_COLS).map(c => ({ ...c, tasks: [] as TaskCard[], completed: [], count: 0 }));
+    cols[3]!.tasks = dates.map(dueDate => ({ id: dueDate, title: { en: dueDate, zh: dueDate }, dueDate }));
+    cols[0]!.tasks = [{ id: "legacy", title: { en: "legacy", zh: "legacy" }, date: "12/31" }];
+    return cols;
+  }
+  for (const [list, expected] of [
+    ["today", ["2026-12-30", "2026-12-31"]],
+    ["tomorrow", ["2027-01-01"]],
+    ["next7", ["2027-01-01", "2027-01-07"]],
+  ] as const) {
+    it(`${list} matches dates across every bucket, excluding legacy and invalid dates`, () => {
+      const cols = fixture();
+      const snapshot = JSON.stringify(cols);
+      expect(filterCardsByList(cols, list, now).flatMap(c => c.tasks).map(t => t.id)).toEqual(expected);
+      expect(JSON.stringify(cols)).toBe(snapshot);
+      expect(filterCardsByList(cols, "all", now)).toBe(cols);
+    });
+  }
+  it("refreshes across local midnight without rewriting legacy data", () => {
+    const cols = fixture();
+    expect(filterCardsByList(cols, "tomorrow", new Date(2027, 0, 1)).flatMap(c => c.tasks)).toEqual([]);
+    expect(filterCardsByList(cols, "today", new Date(2027, 0, 1)).flatMap(c => c.tasks).map(t => t.id)).toContain("2027-01-01");
   });
 });
 

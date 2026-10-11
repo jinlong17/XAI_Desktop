@@ -14,12 +14,15 @@ import { BOARD_CARD_DND_MIME } from "./BoardCard.js";
 import type {
   BoardList as BoardListData,
   BoardListColorId,
+  BoardLabel,
+  BoardMemberOption,
 } from "./types.js";
 
 export interface BoardViewProps {
   lists: BoardListData[];
   lang: "en" | "zh";
 
+  composerLocked?: boolean;
   // Composer states (lifted to caller)
   draftListId: string | null;
   setDraftListId: (next: string | null) => void;
@@ -62,6 +65,10 @@ export interface BoardViewProps {
 
   // Open card detail (deferred to row #9; row #7 passes a no-op)
   onOpenCard?: (cardId: string, listId: string) => void;
+
+  // Catalogs for resolving card label/member chips
+  labelCatalog?: readonly BoardLabel[];
+  memberCatalog?: readonly BoardMemberOption[];
 }
 
 interface DragState {
@@ -72,6 +79,7 @@ interface DragState {
 export function BoardView({
   lists,
   lang,
+  composerLocked = false,
   draftListId,
   setDraftListId,
   composerText,
@@ -99,6 +107,8 @@ export function BoardView({
   cardMenu,
   setCardMenu,
   onOpenCard,
+  labelCatalog,
+  memberCatalog,
 }: BoardViewProps) {
   const [dragging, setDragging] = useState<DragState | null>(null);
   const [overListId, setOverListId] = useState<string | null>(null);
@@ -176,7 +186,7 @@ export function BoardView({
     }
     if (event.key === "Escape") {
       event.preventDefault();
-      setShowListComposer(false);
+      if (!composerLocked) setShowListComposer(false);
     }
   };
 
@@ -189,10 +199,11 @@ export function BoardView({
           lang={lang}
           isComposer={draftListId === list.id}
           openComposer={() => {
+            if (composerLocked) return;
             setDraftListId(list.id);
             setComposerText("");
           }}
-          closeComposer={() => setDraftListId(null)}
+          closeComposer={() => { if (!composerLocked) setDraftListId(null); }}
           composerText={composerText}
           setComposerText={setComposerText}
           addCard={() => addCard(list.id)}
@@ -233,6 +244,8 @@ export function BoardView({
           onCardDragEnd={onCardDragEnd}
           draggingCardId={dragging?.cardId ?? null}
           onOpenCard={(cardId) => onOpenCard?.(cardId, list.id)}
+          labelCatalog={labelCatalog}
+          memberCatalog={memberCatalog}
         />
       ))}
 
@@ -261,7 +274,7 @@ export function BoardView({
             <button
               type="button"
               className="icon-btn"
-              onClick={() => setShowListComposer(false)}
+              onClick={() => { if (!composerLocked) setShowListComposer(false); }}
               aria-label={lang === "zh" ? "取消" : "Cancel"}
             >
               ✕
@@ -272,7 +285,7 @@ export function BoardView({
         <button
           type="button"
           className="add-list-btn"
-          onClick={() => setShowListComposer(true)}
+          onClick={() => { if (!composerLocked) setShowListComposer(true); }}
           data-testid="add-list-btn"
         >
           {lang === "zh" ? "+ 添加列" : "+ Add a list"}

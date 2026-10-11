@@ -1,0 +1,947 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 features_package_tree=3f25c84b5b582719d74fda8872db4e6e1db388f1 shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=host
+suffix=before1
+include=docs/reviews/web-apprail-order-recovery-independent/host.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-apprail-order-recovery-independent/verify-fixed.mjs 419e56d host before1
+runner_checkout_head=995060cc71feb954c84453905d5e059c264ec3da
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps/web/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/apprail-host-host.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/.report-host.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 host-fixture.tsx=314e239146364ab291ecd6666aeca2b48afa6b41011d678339eb59f154800af6 host.test.tsx=11e660998c5421e8b6f7b77b82db30543dad273ce5eab9c541ed0ae23e33b719 verify-fixed.mjs=646bf047a4634ce48100505fef0a351536864f2d4a3e23019215b7e5060618a8
+archive_file_sha256 (13/13 equal the contract r1 source table) packages/xai-web-shell/src/AppRail.tsx=6312caa162a7d194774bf95282c203ddc633ccc54068edcd2854dfbfd4633f67(contract:match) packages/xai-web-shell/src/internal/dnd.ts=a538b51f119f9cedbed3421f8cd21549f1730d0ede9059257402bee9a63deaf9(contract:match) packages/xai-web-shell/src/registry.tsx=b621abbecfda785a5d7da628465925dacdb3249638b181cc3ca074687b734c1e(contract:match) packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0(contract:match) packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f(contract:match) packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a(contract:match) packages/xai-web-shell/src/index.ts=c404a9713dee4d821ba3ec6b5c7591f984da3c92b5fb1a62d88fbab5cec368ed(contract:match) packages/xai-web-shell/src/__tests__/AppRail.test.tsx=cbe4179146b7f9565cb038027f004520b46917db3da6c0e9f653cf319b309e8f(contract:match) packages/xai-web-shell/src/__tests__/Topbar.test.tsx=b3a068eab6bbb95e62cb2ec73f8a715921a48549f090bf7237e8d8c0dabfcb12(contract:match) apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a(contract:match) packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3(contract:match) packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7(contract:match) apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075(contract:match)
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+forbidden_source_roots /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a9b820e4551de44bc/packages /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a9b820e4551de44bc/apps /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a9b820e4551de44bc/docs
+vitest_exit=1
+harness_checks=PASS (6/6)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt
+
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once; faulted attempts (including the rail-order quota fault) never delegate; no nested Storage call and no accountScope helper call
+OBSERVED FX1 F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerStep":[1,1,1,0,0,0,1,1,0],"threwPerStep":[false,false,false,true,true,true,false,false,true],"logged":["set:apprail-host-selfcheck=1","get:apprail-host-selfcheck","remove:apprail-host-selfcheck","set:apprail-host-selfcheck=2!threw","remove:apprail-host-selfcheck!threw","get:apprail-host-selfcheck!threw","get:apprail-host-selfcheck","set:xai_rail_order=[\"selfcheck\"]!threw"],"faultsFired":[1,1,1,1],"bytesAfterFaultedSet":null,"bytesAfterFaultedRemove":"3","sessionStorageLogged":false,"railBytesAfterFault":null}
+
+ ✓ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once; faulted attempts (including the rail-order quota fault) never delegate; no nested Storage call and no accountScope helper call 4ms
+ ✓ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > FX2 the Web Lock fixture: asynchronous grants and a test hold keeps a product request waiting until release 22ms
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > FX3 composition and drivers: the production App from the archive with only the auth hook substituted; the rail registry R; absent bytes display D(DEFAULT, R); the drag driver reaches the product handlers; the confirm recorder and the history counters work; no network
+OBSERVED FX3 driver probe {"record":{"initial":["tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","habits","meditation","countdown","ai","statistics","bookkeeping","metrics"],"expected":["board","tasks","dashboard","calendar","matrix","pomodoro","timetrack","habits","meditation","countdown","ai","statistics","bookkeeping","metrics"],"draggingAtStart":true,"payload":"tasks"},"writes":["set:xai_rail_order=[\"board\",\"tasks\",\"dashboard\",\"calendar\",\"matrix\",\"pomodoro\",\"timetrack\",\"habits\",\"meditation\",\"countdown\",\"ai\",\"statistics\",\"bookkeeping\",\"metrics\"]!threw"],"fired":1}
+OBSERVED FX3 composition {"scope":{"kind":"account","accountId":"apprail-host-parent-A","generation":"g1","epoch":8},"hookCalls":10,"network":0,"productionRouterAtImport":"/"}
+
+ ✓ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > FX3 composition and drivers: the production App from the archive with only the auth hook substituted; the rail registry R; absent bytes display D(DEFAULT, R); the drag driver reaches the product handlers; the confirm recorder and the history counters work; no network 321ms
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > PC clean state (coordinator branch): zero-write mount; no rail status and no unload warning; a successful drag stores exactly merge(S, R, P) = P with one rail write over the gesture and displays P; a rail click and Back navigate; sign-out without drafts asks nothing and completes
+OBSERVED PC successful drag {"P":["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"writes":["set:xai_rail_order=[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"],"bytes":"[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","rail":["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > PC clean state (coordinator branch): zero-write mount; no rail status and no unload warning; a successful drag stores exactly merge(S, R, P) = P with one rail write over the gesture and displays P; a rail click and Back navigate; sign-out without drafts asks nothing and completes
+OBSERVED PC sign-out without drafts (coordinator) {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":14},"redirects":["/"]}
+
+ ✓ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > PC clean state (coordinator branch): zero-write mount; no rail status and no unload warning; a successful drag stores exactly merge(S, R, P) = P with one rail write over the gesture and displays P; a rail click and Back navigate; sign-out without drafts asks nothing and completes 284ms
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > PC2 clean state (fallback branch): sign-out without drafts asks nothing and completes (session storage cleared, redirect)
+OBSERVED PC2 sign-out without drafts (fallback) {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":20},"redirects":["/"]}
+
+ ✓ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > PC2 clean state (fallback branch): sign-out without drafts asks nothing and completes (session storage cleared, redirect) 126ms
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > PC3 coordinator: with an Appearance draft only (no rail draft) the confirm list is exactly the Appearance text; Cancel resolves false
+OBSERVED PC3 coordinator sign-out with an Appearance draft only {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"apprail-host-parent-A","generation":"g1","epoch":24}}
+
+ ✓ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > PC3 coordinator: with an Appearance draft only (no rail draft) the confirm list is exactly the Appearance text; Cancel resolves false 158ms
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > PC3 fallback: with an Appearance draft only (no rail draft) the confirm list is exactly the Appearance text; Cancel resolves false
+OBSERVED PC3 fallback sign-out with an Appearance draft only {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"apprail-host-parent-A","generation":"g1","epoch":28}}
+
+ ✓ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > PC3 fallback: with an Appearance draft only (no rail draft) the confirm list is exactly the Appearance text; Cancel resolves false 180ms
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H2 alone: a failed rail drag on /app/tasks keeps the dropped order displayed with the rail status and the unload warning; the bytes keep the committed order
+OBSERVED H2 alone after the failed drag {"P":["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H2 alone: a failed rail drag on /app/tasks keeps the dropped order displayed with the rail status and the unload warning; the bytes keep the committed order 162ms
+   → H2 §5 item 4 row d: the latest dropped order stays displayed after the failed write: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H2 with-appearance: a failed rail drag on /app/tasks keeps the dropped order displayed with the rail status and the unload warning; the bytes keep the committed order
+OBSERVED H2 with-appearance after the failed drag {"P":["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H2 with-appearance: a failed rail drag on /app/tasks keeps the dropped order displayed with the rail status and the unload warning; the bytes keep the committed order 184ms
+   → H2 §5 item 4 row d: the latest dropped order stays displayed after the failed write: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-rail alone: after a failed drag on /app/tasks an AppRail click to Calendar is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+OBSERVED G-rail alone after the failed drag {"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-rail alone: after a failed drag on /app/tasks an AppRail click to Calendar is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+OBSERVED G-rail alone after the AppRail click {"path":"/app/calendar","dialog":false,"navigations":1,"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-sidebar alone: after a failed drag on /app/settings/appearance the Settings sidebar to About is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+OBSERVED G-sidebar alone after the failed drag {"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-rail alone: after a failed drag on /app/tasks an AppRail click to Calendar is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2) 162ms
+   → H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown on the destination: expected null not to be null
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-sidebar alone: after a failed drag on /app/settings/appearance the Settings sidebar to About is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+OBSERVED G-sidebar alone after the Settings sidebar {"path":"/app/settings/about","dialog":false,"navigations":1,"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-sidebar alone: after a failed drag on /app/settings/appearance the Settings sidebar to About is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2) 111ms
+   → H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown on the destination: expected null not to be null
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-back alone: after a rail click to Calendar and a failed drag there, Back returns to /app/tasks unheld (no dialog); the rail status is shown there and the draft is intact (H9, H2)
+OBSERVED G-back alone after the failed drag {"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-back alone: after a rail click to Calendar and a failed drag there, Back returns to /app/tasks unheld (no dialog); the rail status is shown there and the draft is intact (H9, H2)
+OBSERVED G-back alone after Back {"path":"/app/tasks","dialog":false,"navigations":1,"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-back alone: after a rail click to Calendar and a failed drag there, Back returns to /app/tasks unheld (no dialog); the rail status is shown there and the draft is intact (H9, H2) 199ms
+   → H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown after Back: expected null not to be null
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-rail with-appearance: after a failed drag on /app/tasks an AppRail click to Calendar is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+OBSERVED G-rail with-appearance after the failed drag {"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-rail with-appearance: after a failed drag on /app/tasks an AppRail click to Calendar is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+OBSERVED G-rail with-appearance after the AppRail click {"path":"/app/calendar","dialog":false,"navigations":1,"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-rail with-appearance: after a failed drag on /app/tasks an AppRail click to Calendar is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2) 210ms
+   → H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown on the destination: expected null not to be null
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-sidebar with-appearance: after a failed drag on /app/settings/appearance the Settings sidebar to About is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+OBSERVED G-sidebar with-appearance after the failed drag {"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-sidebar with-appearance: after a failed drag on /app/settings/appearance the Settings sidebar to About is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+OBSERVED G-sidebar with-appearance after the Settings sidebar {"path":"/app/settings/about","dialog":false,"navigations":1,"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-sidebar with-appearance: after a failed drag on /app/settings/appearance the Settings sidebar to About is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2) 145ms
+   → H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown on the destination: expected null not to be null
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-back with-appearance: after a rail click to Calendar and a failed drag there, Back returns to /app/tasks unheld (no dialog); the rail status is shown there and the draft is intact (H9, H2)
+OBSERVED G-back with-appearance after the failed drag {"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-back with-appearance: after a rail click to Calendar and a failed drag there, Back returns to /app/tasks unheld (no dialog); the rail status is shown there and the draft is intact (H9, H2)
+OBSERVED G-back with-appearance after Back {"path":"/app/tasks","dialog":false,"navigations":1,"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-back with-appearance: after a rail click to Calendar and a failed drag there, Back returns to /app/tasks unheld (no dialog); the rail status is shown there and the draft is intact (H9, H2) 273ms
+   → H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown after Back: expected null not to be null
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > U alone: after a failed drag a cancelable beforeunload warns on /app/tasks and after an AppRail navigation, with zero storage attempts in the handler (H9)
+OBSERVED U alone beforeunload {"onTasks":{"warned":false,"attempts":0},"onCalendar":{"path":"/app/calendar","warned":false,"attempts":0},"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > U with-appearance: with an Appearance draft and a failed drag, unload warns; after the Appearance draft is discarded the rail draft alone still warns, with zero storage attempts in the handler (H9)
+OBSERVED U with-appearance beforeunload with both drafts {"withBoth":{"warned":true,"attempts":0},"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > U alone: after a failed drag a cancelable beforeunload warns on /app/tasks and after an AppRail navigation, with zero storage attempts in the handler (H9) 145ms
+   → H9 A6 §7.3 row l: while a rail draft exists a cancelable beforeunload warns on every route, with zero storage attempts in the handler: expected { …(2) } to strictly equal { …(2) }
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > U with-appearance: with an Appearance draft and a failed drag, unload warns; after the Appearance draft is discarded the rail draft alone still warns, with zero storage attempts in the handler (H9)
+OBSERVED U with-appearance beforeunload after the Appearance discard {"railOnly":{"warned":false,"attempts":0},"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > U with-appearance: with an Appearance draft and a failed drag, unload warns; after the Appearance draft is discarded the rail draft alone still warns, with zero storage attempts in the handler (H9) 142ms
+   → H9 A6 §7.3 row l: with only the rail draft left, a cancelable beforeunload still warns, with zero storage attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator alone Cancel: from /app/tasks with a failed rail draft, one confirm with the rail text; Cancel resolves false with zero history mutations and identity intact (H9)
+OBSERVED S-coordinator alone Cancel {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":74},"redirects":["/"],"rail":[],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator alone Cancel: from /app/tasks with a failed rail draft, one confirm with the rail text; Cancel resolves false with zero history mutations and identity intact (H9) 140ms
+   → H9 A6 §7.4 row i: one window.confirm with the rail text; Cancel resolves false (identity intact, no redirect, no backend sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator alone OK: from /app/tasks with a failed rail draft, one confirm with the rail text; OK discards with zero writes and sign-out completes (H9)
+OBSERVED S-coordinator alone OK {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":80},"redirects":["/"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator alone OK: from /app/tasks with a failed rail draft, one confirm with the rail text; OK discards with zero writes and sign-out completes (H9) 152ms
+   → H9 A6 §7.4 row i: one window.confirm with the rail text; OK lets the sequence complete: expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator with-appearance rail Cancel: with a failed rail draft and an Appearance draft, the rail asks first; Cancel resolves false and the Appearance step is never asked (H9)
+OBSERVED S-coordinator with-appearance rail Cancel {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"apprail-host-parent-A","generation":"g1","epoch":84},"redirects":[]}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator with-appearance rail Cancel: with a failed rail draft and an Appearance draft, the rail asks first; Cancel resolves false and the Appearance step is never asked (H9) 210ms
+   → H9 A6 §7.4 rows i/j: the rail confirm comes first; its Cancel resolves false without asking the Appearance step: expected { …(2) } to strictly equal { …(2) }
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator with-appearance OK, OK: the confirm list is exactly [rail text, Appearance text] and sign-out completes (H9)
+OBSERVED S-coordinator with-appearance OK OK {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":90},"redirects":["/"]}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator with-appearance OK, OK: the confirm list is exactly [rail text, Appearance text] and sign-out completes (H9) 207ms
+   → H9 A6 §7.4 row j: exactly two confirms, rail first; OK and OK proceed: expected { …(2) } to strictly equal { confirms: [ …(2) ], …(1) }
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator with-appearance OK, Cancel: the confirm list is exactly [rail text, Appearance text]; sign-out resolves false with the rail draft discarded (zero writes) and the Appearance draft kept (H9)
+OBSERVED S-coordinator with-appearance OK Cancel {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":96},"redirects":["/"],"rail":[],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator with-appearance OK, Cancel: the confirm list is exactly [rail text, Appearance text]; sign-out resolves false with the rail draft discarded (zero writes) and the Appearance draft kept (H9) 184ms
+   → H9 A6 §7.4 row j: exactly two confirms, rail first; OK then Cancel resolves false: expected { …(2) } to strictly equal { confirms: [ …(2) ], …(1) }
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback alone Cancel: from /app/tasks with a failed rail draft, one confirm with the rail text; Cancel resolves false with zero history mutations and identity intact (H9)
+OBSERVED S-fallback alone Cancel {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":102},"redirects":["/"],"rail":[],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback alone Cancel: from /app/tasks with a failed rail draft, one confirm with the rail text; Cancel resolves false with zero history mutations and identity intact (H9) 149ms
+   → H9 A6 §7.4 row i: one window.confirm with the rail text; Cancel resolves false (identity intact, no redirect, no backend sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback alone OK: from /app/tasks with a failed rail draft, one confirm with the rail text; OK discards with zero writes and sign-out completes (H9)
+OBSERVED S-fallback alone OK {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":108},"redirects":["/"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback alone OK: from /app/tasks with a failed rail draft, one confirm with the rail text; OK discards with zero writes and sign-out completes (H9) 142ms
+   → H9 A6 §7.4 row i: one window.confirm with the rail text; OK lets the sequence complete: expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback with-appearance rail Cancel: with a failed rail draft and an Appearance draft, the rail asks first; Cancel resolves false and the Appearance step is never asked (H9)
+OBSERVED S-fallback with-appearance rail Cancel {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"apprail-host-parent-A","generation":"g1","epoch":112},"redirects":[]}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback with-appearance rail Cancel: with a failed rail draft and an Appearance draft, the rail asks first; Cancel resolves false and the Appearance step is never asked (H9) 183ms
+   → H9 A6 §7.4 rows i/j: the rail confirm comes first; its Cancel resolves false without asking the Appearance step: expected { …(2) } to strictly equal { …(2) }
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback with-appearance OK, OK: the confirm list is exactly [rail text, Appearance text] and sign-out completes (H9)
+OBSERVED S-fallback with-appearance OK OK {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":118},"redirects":["/"]}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback with-appearance OK, OK: the confirm list is exactly [rail text, Appearance text] and sign-out completes (H9) 211ms
+   → H9 A6 §7.4 row j: exactly two confirms, rail first; OK and OK proceed: expected { …(2) } to strictly equal { confirms: [ …(2) ], …(1) }
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback with-appearance OK, Cancel: the confirm list is exactly [rail text, Appearance text]; sign-out resolves false with the rail draft discarded (zero writes) and the Appearance draft kept (H9)
+OBSERVED S-fallback with-appearance OK Cancel {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":124},"redirects":["/"],"rail":[],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 {} at /app/tasks: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+OBSERVED H1 {} at /app/tasks {"atLoad":{"path":"/app/tasks","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"afterReload":{"path":"/app/tasks","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"bytes":"{}","writes":[]}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback with-appearance OK, Cancel: the confirm list is exactly [rail text, Appearance text]; sign-out resolves false with the rail draft discarded (zero writes) and the Appearance draft kept (H9) 192ms
+   → H9 A6 §7.4 row j: exactly two confirms, rail first; OK then Cancel resolves false: expected { …(2) } to strictly equal { confirms: [ …(2) ], …(1) }
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 {} at /app/settings/appearance: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+OBSERVED H1 {} at /app/settings/appearance {"atLoad":{"path":"/app/settings/appearance","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"afterReload":{"path":"/app/settings/appearance","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"bytes":"{}","writes":[]}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 {} at /app/tasks: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes 90ms
+   → H1 §5 item 2 §10 item 4 row o: {} at load must not render the route error boundary on /app/tasks: expected 'Route Error (app): prefOrder is not i…' to be null
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 {} at /app/settings/appearance: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes 86ms
+   → H1 §5 item 2 §10 item 4 row o: {} at load must not render the route error boundary on /app/settings/appearance: expected 'Route Error (app): prefOrder is not i…' to be null
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 1 at /app/tasks: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+OBSERVED H1 1 at /app/tasks {"atLoad":{"path":"/app/tasks","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"afterReload":{"path":"/app/tasks","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"bytes":"1","writes":[]}
+
+stdout | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 1 at /app/settings/appearance: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+OBSERVED H1 1 at /app/settings/appearance {"atLoad":{"path":"/app/settings/appearance","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"afterReload":{"path":"/app/settings/appearance","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"bytes":"1","writes":[]}
+
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 1 at /app/tasks: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes 85ms
+   → H1 §5 item 2 §10 item 4 row o: 1 at load must not render the route error boundary on /app/tasks: expected 'Route Error (app): prefOrder is not i…' to be null
+ × docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 1 at /app/settings/appearance: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes 88ms
+   → H1 §5 item 2 §10 item 4 row o: 1 at load must not render the route error boundary on /app/settings/appearance: expected 'Route Error (app): prefOrder is not i…' to be null
+
+ Test Files  1 failed (1)
+      Tests  24 failed | 7 passed (31)
+   Start at  03:01:23
+   Duration  8.67s (transform 1.86s, setup 0ms, collect 2.99s, tests 4.95s, environment 374ms, prepare 64ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/.report-host.json
+
+---- stderr ----
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > FX3 composition and drivers: the production App from the archive with only the auth hook substituted; the rail registry R; absent bytes display D(DEFAULT, R); the drag driver reaches the product handlers; the confirm recorder and the history counters work; no network
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H2 alone: a failed rail drag on /app/tasks keeps the dropped order displayed with the rail status and the unload warning; the bytes keep the committed order
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H2 with-appearance: a failed rail drag on /app/tasks keeps the dropped order displayed with the rail status and the unload warning; the bytes keep the committed order
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-rail alone: after a failed drag on /app/tasks an AppRail click to Calendar is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-sidebar alone: after a failed drag on /app/settings/appearance the Settings sidebar to About is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-back alone: after a rail click to Calendar and a failed drag there, Back returns to /app/tasks unheld (no dialog); the rail status is shown there and the draft is intact (H9, H2)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-rail with-appearance: after a failed drag on /app/tasks an AppRail click to Calendar is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-sidebar with-appearance: after a failed drag on /app/settings/appearance the Settings sidebar to About is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-back with-appearance: after a rail click to Calendar and a failed drag there, Back returns to /app/tasks unheld (no dialog); the rail status is shown there and the draft is intact (H9, H2)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > U alone: after a failed drag a cancelable beforeunload warns on /app/tasks and after an AppRail navigation, with zero storage attempts in the handler (H9)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > U with-appearance: with an Appearance draft and a failed drag, unload warns; after the Appearance draft is discarded the rail draft alone still warns, with zero storage attempts in the handler (H9)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator alone Cancel: from /app/tasks with a failed rail draft, one confirm with the rail text; Cancel resolves false with zero history mutations and identity intact (H9)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator alone OK: from /app/tasks with a failed rail draft, one confirm with the rail text; OK discards with zero writes and sign-out completes (H9)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator with-appearance rail Cancel: with a failed rail draft and an Appearance draft, the rail asks first; Cancel resolves false and the Appearance step is never asked (H9)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator with-appearance OK, OK: the confirm list is exactly [rail text, Appearance text] and sign-out completes (H9)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator with-appearance OK, Cancel: the confirm list is exactly [rail text, Appearance text]; sign-out resolves false with the rail draft discarded (zero writes) and the Appearance draft kept (H9)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback alone Cancel: from /app/tasks with a failed rail draft, one confirm with the rail text; Cancel resolves false with zero history mutations and identity intact (H9)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback alone OK: from /app/tasks with a failed rail draft, one confirm with the rail text; OK discards with zero writes and sign-out completes (H9)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback with-appearance rail Cancel: with a failed rail draft and an Appearance draft, the rail asks first; Cancel resolves false and the Appearance step is never asked (H9)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback with-appearance OK, OK: the confirm list is exactly [rail text, Appearance text] and sign-out completes (H9)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback with-appearance OK, Cancel: the confirm list is exactly [rail text, Appearance text]; sign-out resolves false with the rail draft discarded (zero writes) and the Appearance draft kept (H9)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 {} at /app/tasks: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 {} at /app/tasks: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 {} at /app/settings/appearance: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 {} at /app/settings/appearance: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 1 at /app/tasks: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 1 at /app/tasks: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 1 at /app/settings/appearance: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 1 at /app/settings/appearance: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 24 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H2 alone: a failed rail drag on /app/tasks keeps the dropped order displayed with the rail status and the unload warning; the bytes keep the committed order
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H2 with-appearance: a failed rail drag on /app/tasks keeps the dropped order displayed with the rail status and the unload warning; the bytes keep the committed order
+AssertionError: H2 §5 item 4 row d: the latest dropped order stays displayed after the failed write: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:285:111
+    283|     const facts = railFacts();
+    284|     observed(`H2 ${variant} after the failed drag`, { P, ...facts });
+    285|     expect(facts.rail, "H2 §5 item 4 row d: the latest dropped order s…
+       |                                                                                                               ^
+    286|     expect(facts.bytes, "§5 item 4: the bytes keep the committed order…
+    287|     expect(railStatusNamed("draft"), `H9 A8 row d: the Topbar rail sta…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-rail alone: after a failed drag on /app/tasks an AppRail click to Calendar is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-rail with-appearance: after a failed drag on /app/tasks an AppRail click to Calendar is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+AssertionError: H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown on the destination: expected null not to be null
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:307:136
+    305|     observed(`G-rail ${variant} after the AppRail click`, { ...route, …
+    306|     expect(route, "A6 §7.1 row g: the AppRail click is never held by a…
+    307|     expect(railStatusNamed("draft"), `H9 A6 §7.2 row g: the Topbar rai…
+       |                                                                                                                                        ^
+    308|     expect(railIds(), "H2 row g: the draft stays intact (the dropped o…
+    309|     expect(runtimeErrors, "zero runtime errors").toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-sidebar alone: after a failed drag on /app/settings/appearance the Settings sidebar to About is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-sidebar with-appearance: after a failed drag on /app/settings/appearance the Settings sidebar to About is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+AssertionError: H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown on the destination: expected null not to be null
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:321:136
+    319|     observed(`G-sidebar ${variant} after the Settings sidebar`, { ...r…
+    320|     expect(route, "A6 §7.1 row g: the Settings sidebar is never held b…
+    321|     expect(railStatusNamed("draft"), `H9 A6 §7.2 row g: the Topbar rai…
+       |                                                                                                                                        ^
+    322|     expect(railIds(), "H2 row g: the draft stays intact (the dropped o…
+    323|     expect(runtimeErrors, "zero runtime errors").toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, alone > G-back alone: after a rail click to Calendar and a failed drag there, Back returns to /app/tasks unheld (no dialog); the rail status is shown there and the draft is intact (H9, H2)
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > route outcomes, with-appearance > G-back with-appearance: after a rail click to Calendar and a failed drag there, Back returns to /app/tasks unheld (no dialog); the rail status is shown there and the draft is intact (H9, H2)
+AssertionError: H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown after Back: expected null not to be null
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:337:128
+    335|     observed(`G-back ${variant} after Back`, { ...route, ...railFacts(…
+    336|     expect(route, "A6 §7.1 row g: Back is never held by a rail draft")…
+    337|     expect(railStatusNamed("draft"), `H9 A6 §7.2 row g: the Topbar rai…
+       |                                                                                                                                ^
+    338|     expect(railIds(), "H2 row g: the draft stays intact (the dropped o…
+    339|     expect(runtimeErrors, "zero runtime errors").toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > U alone: after a failed drag a cancelable beforeunload warns on /app/tasks and after an AppRail navigation, with zero storage attempts in the handler (H9)
+AssertionError: H9 A6 §7.3 row l: while a rail draft exists a cancelable beforeunload warns on every route, with zero storage attempts in the handler: expected { …(2) } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+    "onCalendar": {
+      "attempts": 0,
+      "path": "/app/calendar",
+-     "warned": true,
++     "warned": false,
+    },
+    "onTasks": {
+      "attempts": 0,
+-     "warned": true,
++     "warned": false,
+    },
+  }
+
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:354:172
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > U with-appearance: with an Appearance draft and a failed drag, unload warns; after the Appearance draft is discarded the rail draft alone still warns, with zero storage attempts in the handler (H9)
+AssertionError: H9 A6 §7.3 row l: with only the rail draft left, a cancelable beforeunload still warns, with zero storage attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+
+- Expected
++ Received
+
+  {
+    "attempts": 0,
+-   "warned": true,
++   "warned": false,
+  }
+
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:368:153
+    366|   const railOnly = probeUnload();
+    367|   observed("U with-appearance beforeunload after the Appearance discar…
+    368|   expect(railOnly, "H9 A6 §7.3 row l: with only the rail draft left, a…
+       |                                                                                                                                                         ^
+    369|   expect(runtimeErrors, "zero runtime errors").toEqual([]);
+    370| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator alone Cancel: from /app/tasks with a failed rail draft, one confirm with the rail text; Cancel resolves false with zero history mutations and identity intact (H9)
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback alone Cancel: from /app/tasks with a failed rail draft, one confirm with the rail text; Cancel resolves false with zero history mutations and identity intact (H9)
+AssertionError: H9 A6 §7.4 row i: one window.confirm with the rail text; Cancel resolves false (identity intact, no redirect, no backend sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "confirms": [
+-     "Your sidebar order change is not saved. Sign out and discard it?",
+-   ],
++   "confirms": [],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:386:154
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator alone OK: from /app/tasks with a failed rail draft, one confirm with the rail text; OK discards with zero writes and sign-out completes (H9)
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback alone OK: from /app/tasks with a failed rail draft, one confirm with the rail text; OK discards with zero writes and sign-out completes (H9)
+AssertionError: H9 A6 §7.4 row i: one window.confirm with the rail text; OK lets the sequence complete: expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+@@ -1,9 +1,7 @@
+  {
+-   "confirms": [
+-     "Your sidebar order change is not saved. Sign out and discard it?",
+-   ],
++   "confirms": [],
+    "outcome": {
+      "backendSignOuts": 1,
+      "identityInvalidated": true,
+      "redirected": true,
+    },
+
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:401:110
+    399|     const result = await signOutAnswering([true], branch);
+    400|     observed(`S-${branch} alone OK`, { ...result, scope: scopeSummary(…
+    401|     expect(result, "H9 A6 §7.4 row i: one window.confirm with the rail…
+       |                                                                                                              ^
+    402|     expect(writesSince(from, [RAIL_KEY]), "§7.4 OK: the discard makes …
+    403|     expect(runtimeErrors, "zero runtime errors").toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator with-appearance rail Cancel: with a failed rail draft and an Appearance draft, the rail asks first; Cancel resolves false and the Appearance step is never asked (H9)
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback with-appearance rail Cancel: with a failed rail draft and an Appearance draft, the rail asks first; Cancel resolves false and the Appearance step is never asked (H9)
+AssertionError: H9 A6 §7.4 rows i/j: the rail confirm comes first; its Cancel resolves false without asking the Appearance step: expected { …(2) } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+@@ -1,8 +1,8 @@
+  {
+    "confirms": [
+-     "Your sidebar order change is not saved. Sign out and discard it?",
++     "Some appearance changes are not saved. Sign out and discard them?",
+    ],
+    "outcome": {
+      "backendSignOuts": 0,
+      "identityInvalidated": false,
+      "redirected": false,
+
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:413:135
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator with-appearance OK, OK: the confirm list is exactly [rail text, Appearance text] and sign-out completes (H9)
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback with-appearance OK, OK: the confirm list is exactly [rail text, Appearance text] and sign-out completes (H9)
+AssertionError: H9 A6 §7.4 row j: exactly two confirms, rail first; OK and OK proceed: expected { …(2) } to strictly equal { confirms: [ …(2) ], …(1) }
+
+- Expected
++ Received
+
+@@ -1,8 +1,7 @@
+  {
+    "confirms": [
+-     "Your sidebar order change is not saved. Sign out and discard it?",
+      "Some appearance changes are not saved. Sign out and discard them?",
+    ],
+    "outcome": {
+      "backendSignOuts": 1,
+      "identityInvalidated": true,
+
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:426:93
+    424|     const result = await signOutAnswering([true, true], branch);
+    425|     observed(`S-${branch} with-appearance OK OK`, { ...result, scope: …
+    426|     expect(result, "H9 A6 §7.4 row j: exactly two confirms, rail first…
+       |                                                                                             ^
+    427|     expect(writesSince(from, [RAIL_KEY]), "§7.4: zero rail set/remove …
+    428|     expect(runtimeErrors, "zero runtime errors").toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, coordinator branch > S-coordinator with-appearance OK, Cancel: the confirm list is exactly [rail text, Appearance text]; sign-out resolves false with the rail draft discarded (zero writes) and the Appearance draft kept (H9)
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > sign-out, fallback branch > S-fallback with-appearance OK, Cancel: the confirm list is exactly [rail text, Appearance text]; sign-out resolves false with the rail draft discarded (zero writes) and the Appearance draft kept (H9)
+AssertionError: H9 A6 §7.4 row j: exactly two confirms, rail first; OK then Cancel resolves false: expected { …(2) } to strictly equal { confirms: [ …(2) ], …(1) }
+
+- Expected
++ Received
+
+  {
+    "confirms": [
+-     "Your sidebar order change is not saved. Sign out and discard it?",
+      "Some appearance changes are not saved. Sign out and discard them?",
+    ],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:438:105
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 {} at /app/tasks: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+AssertionError: H1 §5 item 2 §10 item 4 row o: {} at load must not render the route error boundary on /app/tasks: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:466:142
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 {} at /app/settings/appearance: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+AssertionError: H1 §5 item 2 §10 item 4 row o: {} at load must not render the route error boundary on /app/settings/appearance: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:466:142
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 1 at /app/tasks: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+AssertionError: H1 §5 item 2 §10 item 4 row o: 1 at load must not render the route error boundary on /app/tasks: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:466:142
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/24]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-independent/host.test.tsx > H1 1 at /app/settings/appearance: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+AssertionError: H1 §5 item 2 §10 item 4 row o: 1 at load must not render the route error boundary on /app/settings/appearance: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ docs/reviews/web-apprail-order-recovery-independent/host.test.tsx:466:142
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/24]⎯
+
+
+---- runner summary ----
+json_report=success=false numTotalTests=31 numPassedTests=7 numFailedTests=24 numPendingTests=0 numTodoTests=0
+totals cases=31 passed=7 failed=24 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 runtime_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles [], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required production modules loaded from the archive (40)
+harness PASS no test-file suite error
+case 001 PASSED | FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once; faulted attempts (including the rail-order quota fault) never delegate; no nested Storage call and no accountScope helper call
+case 002 PASSED | FX2 the Web Lock fixture: asynchronous grants and a test hold keeps a product request waiting until release
+case 003 PASSED | FX3 composition and drivers: the production App from the archive with only the auth hook substituted; the rail registry R; absent bytes display D(DEFAULT, R); the drag driver reaches the product handlers; the confirm recorder and the history counters work; no network
+case 004 PASSED | PC clean state (coordinator branch): zero-write mount; no rail status and no unload warning; a successful drag stores exactly merge(S, R, P) = P with one rail write over the gesture and displays P; a rail click and Back navigate; sign-out without drafts asks nothing and completes
+case 005 PASSED | PC2 clean state (fallback branch): sign-out without drafts asks nothing and completes (session storage cleared, redirect)
+case 006 PASSED | PC3 coordinator: with an Appearance draft only (no rail draft) the confirm list is exactly the Appearance text; Cancel resolves false
+case 007 PASSED | PC3 fallback: with an Appearance draft only (no rail draft) the confirm list is exactly the Appearance text; Cancel resolves false
+case 008 FAILED | H2 alone: a failed rail drag on /app/tasks keeps the dropped order displayed with the rail status and the unload warning; the bytes keep the committed order
+    first: AssertionError: H2 §5 item 4 row d: the latest dropped order stays displayed after the failed write: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 009 FAILED | H2 with-appearance: a failed rail drag on /app/tasks keeps the dropped order displayed with the rail status and the unload warning; the bytes keep the committed order
+    first: AssertionError: H2 §5 item 4 row d: the latest dropped order stays displayed after the failed write: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 010 FAILED | route outcomes, alone G-rail alone: after a failed drag on /app/tasks an AppRail click to Calendar is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+    first: AssertionError: H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown on the destination: expected null not to be null
+case 011 FAILED | route outcomes, alone G-sidebar alone: after a failed drag on /app/settings/appearance the Settings sidebar to About is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+    first: AssertionError: H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown on the destination: expected null not to be null
+case 012 FAILED | route outcomes, alone G-back alone: after a rail click to Calendar and a failed drag there, Back returns to /app/tasks unheld (no dialog); the rail status is shown there and the draft is intact (H9, H2)
+    first: AssertionError: H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown after Back: expected null not to be null
+case 013 FAILED | route outcomes, with-appearance G-rail with-appearance: after a failed drag on /app/tasks an AppRail click to Calendar is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+    first: AssertionError: H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown on the destination: expected null not to be null
+case 014 FAILED | route outcomes, with-appearance G-sidebar with-appearance: after a failed drag on /app/settings/appearance the Settings sidebar to About is not held (one navigation, no dialog); the rail status is shown there and the draft is intact (H9, H2)
+    first: AssertionError: H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown on the destination: expected null not to be null
+case 015 FAILED | route outcomes, with-appearance G-back with-appearance: after a rail click to Calendar and a failed drag there, Back returns to /app/tasks unheld (no dialog); the rail status is shown there and the draft is intact (H9, H2)
+    first: AssertionError: H9 A6 §7.2 row g: the Topbar rail status "Sidebar order not saved. Review it." is shown after Back: expected null not to be null
+case 016 FAILED | U alone: after a failed drag a cancelable beforeunload warns on /app/tasks and after an AppRail navigation, with zero storage attempts in the handler (H9)
+    first: AssertionError: H9 A6 §7.3 row l: while a rail draft exists a cancelable beforeunload warns on every route, with zero storage attempts in the handler: expected { …(2) } to strictly equal { …(2) }
+case 017 FAILED | U with-appearance: with an Appearance draft and a failed drag, unload warns; after the Appearance draft is discarded the rail draft alone still warns, with zero storage attempts in the handler (H9)
+    first: AssertionError: H9 A6 §7.3 row l: with only the rail draft left, a cancelable beforeunload still warns, with zero storage attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+case 018 FAILED | sign-out, coordinator branch S-coordinator alone Cancel: from /app/tasks with a failed rail draft, one confirm with the rail text; Cancel resolves false with zero history mutations and identity intact (H9)
+    first: AssertionError: H9 A6 §7.4 row i: one window.confirm with the rail text; Cancel resolves false (identity intact, no redirect, no backend sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 019 FAILED | sign-out, coordinator branch S-coordinator alone OK: from /app/tasks with a failed rail draft, one confirm with the rail text; OK discards with zero writes and sign-out completes (H9)
+    first: AssertionError: H9 A6 §7.4 row i: one window.confirm with the rail text; OK lets the sequence complete: expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 020 FAILED | sign-out, coordinator branch S-coordinator with-appearance rail Cancel: with a failed rail draft and an Appearance draft, the rail asks first; Cancel resolves false and the Appearance step is never asked (H9)
+    first: AssertionError: H9 A6 §7.4 rows i/j: the rail confirm comes first; its Cancel resolves false without asking the Appearance step: expected { …(2) } to strictly equal { …(2) }
+case 021 FAILED | sign-out, coordinator branch S-coordinator with-appearance OK, OK: the confirm list is exactly [rail text, Appearance text] and sign-out completes (H9)
+    first: AssertionError: H9 A6 §7.4 row j: exactly two confirms, rail first; OK and OK proceed: expected { …(2) } to strictly equal { confirms: [ …(2) ], …(1) }
+case 022 FAILED | sign-out, coordinator branch S-coordinator with-appearance OK, Cancel: the confirm list is exactly [rail text, Appearance text]; sign-out resolves false with the rail draft discarded (zero writes) and the Appearance draft kept (H9)
+    first: AssertionError: H9 A6 §7.4 row j: exactly two confirms, rail first; OK then Cancel resolves false: expected { …(2) } to strictly equal { confirms: [ …(2) ], …(1) }
+case 023 FAILED | sign-out, fallback branch S-fallback alone Cancel: from /app/tasks with a failed rail draft, one confirm with the rail text; Cancel resolves false with zero history mutations and identity intact (H9)
+    first: AssertionError: H9 A6 §7.4 row i: one window.confirm with the rail text; Cancel resolves false (identity intact, no redirect, no backend sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 024 FAILED | sign-out, fallback branch S-fallback alone OK: from /app/tasks with a failed rail draft, one confirm with the rail text; OK discards with zero writes and sign-out completes (H9)
+    first: AssertionError: H9 A6 §7.4 row i: one window.confirm with the rail text; OK lets the sequence complete: expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 025 FAILED | sign-out, fallback branch S-fallback with-appearance rail Cancel: with a failed rail draft and an Appearance draft, the rail asks first; Cancel resolves false and the Appearance step is never asked (H9)
+    first: AssertionError: H9 A6 §7.4 rows i/j: the rail confirm comes first; its Cancel resolves false without asking the Appearance step: expected { …(2) } to strictly equal { …(2) }
+case 026 FAILED | sign-out, fallback branch S-fallback with-appearance OK, OK: the confirm list is exactly [rail text, Appearance text] and sign-out completes (H9)
+    first: AssertionError: H9 A6 §7.4 row j: exactly two confirms, rail first; OK and OK proceed: expected { …(2) } to strictly equal { confirms: [ …(2) ], …(1) }
+case 027 FAILED | sign-out, fallback branch S-fallback with-appearance OK, Cancel: the confirm list is exactly [rail text, Appearance text]; sign-out resolves false with the rail draft discarded (zero writes) and the Appearance draft kept (H9)
+    first: AssertionError: H9 A6 §7.4 row j: exactly two confirms, rail first; OK then Cancel resolves false: expected { …(2) } to strictly equal { confirms: [ …(2) ], …(1) }
+case 028 FAILED | H1 {} at /app/tasks: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+    first: AssertionError: H1 §5 item 2 §10 item 4 row o: {} at load must not render the route error boundary on /app/tasks: expected 'Route Error (app): prefOrder is not i…' to be null
+case 029 FAILED | H1 {} at /app/settings/appearance: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+    first: AssertionError: H1 §5 item 2 §10 item 4 row o: {} at load must not render the route error boundary on /app/settings/appearance: expected 'Route Error (app): prefOrder is not i…' to be null
+case 030 FAILED | H1 1 at /app/tasks: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+    first: AssertionError: H1 §5 item 2 §10 item 4 row o: 1 at load must not render the route error boundary on /app/tasks: expected 'Route Error (app): prefOrder is not i…' to be null
+case 031 FAILED | H1 1 at /app/settings/appearance: the App renders without the route error boundary, before and after a reload; the rail displays D(DEFAULT, R) with the source status; zero writes
+    first: AssertionError: H1 §5 item 2 §10 item 4 row o: 1 at load must not render the route error boundary on /app/settings/appearance: expected 'Route Error (app): prefOrder is not i…' to be null
+observed_lines=39
+observed FX1 F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerStep":[1,1,1,0,0,0,1,1,0],"threwPerStep":[false,false,false,true,true,true,false,false,true],"logged":["set:apprail-host-selfcheck=1","get:apprail-host-selfcheck","remove:apprail-host-selfcheck","set:apprail-host-selfcheck=2!threw","remove:apprail-host-selfcheck!threw","get:apprail-host-selfcheck!threw","get:apprail-host-selfcheck","set:xai_rail_order=[\"selfcheck\"]!threw"],"faultsFired":[1,1,1,1],"bytesAfterFaultedSet":null,"bytesAfterFaultedRemove":"3","sessionStorageLogged":false,"railBytesAfterFault":null}
+observed FX3 driver probe {"record":{"initial":["tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","habits","meditation","countdown","ai","statistics","bookkeeping","metrics"],"expected":["board","tasks","dashboard","calendar","matrix","pomodoro","timetrack","habits","meditation","countdown","ai","statistics","bookkeeping","metrics"],"draggingAtStart":true,"payload":"tasks"},"writes":["set:xai_rail_order=[\"board\",\"tasks\",\"dashboard\",\"calendar\",\"matrix\",\"pomodoro\",\"timetrack\",\"habits\",\"meditation\",\"countdown\",\"ai\",\"statistics\",\"bookkeeping\",\"metrics\"]!threw"],"fired":1}
+observed FX3 composition {"scope":{"kind":"account","accountId":"apprail-host-parent-A","generation":"g1","epoch":8},"hookCalls":10,"network":0,"productionRouterAtImport":"/"}
+observed PC successful drag {"P":["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"writes":["set:xai_rail_order=[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"],"bytes":"[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","rail":["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+observed PC sign-out without drafts (coordinator) {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":14},"redirects":["/"]}
+observed PC2 sign-out without drafts (fallback) {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":20},"redirects":["/"]}
+observed PC3 coordinator sign-out with an Appearance draft only {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"apprail-host-parent-A","generation":"g1","epoch":24}}
+observed PC3 fallback sign-out with an Appearance draft only {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"apprail-host-parent-A","generation":"g1","epoch":28}}
+observed H2 alone after the failed drag {"P":["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+observed H2 with-appearance after the failed drag {"P":["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+observed G-rail alone after the failed drag {"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+observed G-rail alone after the AppRail click {"path":"/app/calendar","dialog":false,"navigations":1,"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+observed G-sidebar alone after the failed drag {"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+observed G-sidebar alone after the Settings sidebar {"path":"/app/settings/about","dialog":false,"navigations":1,"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+observed G-back alone after the failed drag {"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+observed G-back alone after Back {"path":"/app/tasks","dialog":false,"navigations":1,"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+observed G-rail with-appearance after the failed drag {"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+observed G-rail with-appearance after the AppRail click {"path":"/app/calendar","dialog":false,"navigations":1,"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+observed G-sidebar with-appearance after the failed drag {"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+observed G-sidebar with-appearance after the Settings sidebar {"path":"/app/settings/about","dialog":false,"navigations":1,"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+observed G-back with-appearance after the failed drag {"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+observed G-back with-appearance after Back {"path":"/app/tasks","dialog":false,"navigations":1,"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+observed U alone beforeunload {"onTasks":{"warned":false,"attempts":0},"onCalendar":{"path":"/app/calendar","warned":false,"attempts":0},"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+observed U with-appearance beforeunload with both drafts {"withBoth":{"warned":true,"attempts":0},"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":true,"unload":{"warned":true,"attempts":0}}
+observed U with-appearance beforeunload after the Appearance discard {"railOnly":{"warned":false,"attempts":0},"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+observed S-coordinator alone Cancel {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":74},"redirects":["/"],"rail":[],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"}
+observed S-coordinator alone OK {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":80},"redirects":["/"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"}
+observed S-coordinator with-appearance rail Cancel {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"apprail-host-parent-A","generation":"g1","epoch":84},"redirects":[]}
+observed S-coordinator with-appearance OK OK {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":90},"redirects":["/"]}
+observed S-coordinator with-appearance OK Cancel {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":96},"redirects":["/"],"rail":[],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+observed S-fallback alone Cancel {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":102},"redirects":["/"],"rail":[],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"}
+observed S-fallback alone OK {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":108},"redirects":["/"],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"}
+observed S-fallback with-appearance rail Cancel {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"apprail-host-parent-A","generation":"g1","epoch":112},"redirects":[]}
+observed S-fallback with-appearance OK OK {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":118},"redirects":["/"]}
+observed S-fallback with-appearance OK Cancel {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":124},"redirects":["/"],"rail":[],"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","railStatus":false,"railStatusNamedDraft":false,"appearanceStatus":false,"unload":{"warned":false,"attempts":0}}
+observed H1 {} at /app/tasks {"atLoad":{"path":"/app/tasks","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"afterReload":{"path":"/app/tasks","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"bytes":"{}","writes":[]}
+observed H1 {} at /app/settings/appearance {"atLoad":{"path":"/app/settings/appearance","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"afterReload":{"path":"/app/settings/appearance","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"bytes":"{}","writes":[]}
+observed H1 1 at /app/tasks {"atLoad":{"path":"/app/tasks","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"afterReload":{"path":"/app/tasks","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"bytes":"1","writes":[]}
+observed H1 1 at /app/settings/appearance {"atLoad":{"path":"/app/settings/appearance","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"afterReload":{"path":"/app/settings/appearance","routeError":"Route Error (app): prefOrder is not iterable","topbar":false,"rail":false,"railStatus":false},"bytes":"1","writes":[]}
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-host-ej1PZt/.apprail-host-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":[],"include":["docs/reviews/web-apprail-order-recovery-independent/host.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/index.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-features-panel/src/index.ts packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/settingsPaneComposition.ts apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/routes/modules/settingsDeparture.ts apps/web/src/providers/AccountStorageGate.tsx apps/web/src/providers/AppProviders.tsx apps/web/src/observability/runtime.ts apps/web/src/service-worker/register.ts packages/plugin-web-storage/src/AccountDataGate.tsx packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/accountCoordination.ts packages/plugin-web-storage/src/internal/registry.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/storage.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/sameTabBus.ts packages/xai-web-shell/src/index.ts packages/xai-web-shell/src/registry.tsx packages/xai-web-shell/src/internal/dnd.ts packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/AvatarMenu.tsx packages/xai-web-shell/src/SignOutConfirmDialog.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/plugin-web-tokens/src/index.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=627 by package: apps/web=30 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23

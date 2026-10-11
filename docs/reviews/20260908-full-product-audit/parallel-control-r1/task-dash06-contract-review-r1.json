@@ -1,0 +1,46 @@
+{
+  "id": "DASH-06/CONTRACT-REVIEW",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full contract and minimum decision reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "7e83bac6010fd28680583d3151fb17ad0fd53c04",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "f8546788d28106aac17b96797dcb08469717dcdc"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-dash06-contract-review-r1/review.md",
+    "docs/reviews/audit-parallel-dash06-contract-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Verify all541inputs/original312fields/933originalevidence+sixTTappended/939current and original DASH06 full action+acceptance; contractfullsource/read/localday/error/recovery/account/visual/native/G1 currentr2/affected copies/remote preservation boundaries, no simplification or automaticcompleted",
+    "Independently challenge genuine necessity of proposed S-scale vs G-goal owner question. User explicitly says use existing clearprojectrulesfirst: designtruecount/dotscapped8/localday/read-only may suffice for minimumoriginalgoal without newownerask; originalauditkinddecision may retaingenuine alternative. Search actualexplicitowner/design/acceptedlater decisions fullscope, do not manufacture question or authorize futuregoal/schema. Ifnoexistingruling prove minimalchoice, ifrule suffices source-bound outcome and no question. Reviewer neverchooses contrary to owner",
+    "Challenge every D06-01–16 row/fullsource/status vscomponenttests and sharedfallbackzero ambiguity; fullsource unavailable/partial cannot be acceptedasempty; proposedninefile Sscope vs actualsharedsource repairneed preciseindimpact boundaries; read-onlydisplay no writer/clockCSS/goaldefault",
+    "Permanent actualunit histories: do not impose genericcallerwideunknown on source-grounded genuinelynewscale/AX purpose nor assumeoldunknown0; map actual correspondingcount/date/account/recovery/package/host units sourcebound and retained cap3 includingrefusals. Actor/path/worktreeneverreset. Fullfrozenfocus/lawfuladoption and Clock/REL onlyactualdependencies; reviewAPPROVED proposalonly",
+    "Return coordinate-specific APPROVED/REVISE for complete conditional proposal, exact minimum genuineproductdecision onlywhen independentfactsproveunresolved; bounded corrector scope preservingauthor1/review1; no reviewerrepair/runtime/acceptance/standardswaiver"
+  ],
+  "protected": [
+    "all nonallowedpaths",
+    "product/source/CSS/tests/runner/globalcontrol/ledgers/inventory",
+    "original contracts/evidence/failures/otherworktrees",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "contract_review_iteration": 1,
+    "contract_review_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "native": 0,
+    "browser": 0,
+    "probes": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "runtime need or protectedboundary",
+    "unsupported productchoice/weakeningstandards"
+  ],
+  "no_children": true
+}

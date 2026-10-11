@@ -1,0 +1,149 @@
+revision=a6ad06d
+test-fixture=review-owned only; package run unmodified
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-Brz7zs
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx > a server response cannot authorize cleanup after its original deletion operationId was replaced
+replaced-server-intent {"state":"success","receipt":{"version":1,"accountId":"A","kind":"account","generation":"g1","phase":"complete","updatedAt":"2026-09-10T01:14:44.134Z"},"remaining":null}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx (16 tests | 3 failed) 33ms
+   ✓ account deletion captures the initiating owner > modern successful cleanup completes the receipt then redirects without a second shared clear 10ms
+   × account deletion captures the initiating owner > modern cleanup after B replaces A still revokes only captured A and does not navigate B 5ms
+     → expected "spy" to be called with arguments: [ Array(2) ]
+
+Number of calls: 0
+
+   ✓ account deletion captures the initiating owner > does not finish its durable receipt before captured auth cleanup succeeds 2ms
+   ✓ account deletion captures the initiating owner > pins the server token, removes only A content/secrets, and preserves device, B and archive 2ms
+   ✓ account deletion captures the initiating owner > mock-auth deletes only the demo scope and never invokes the real server 1ms
+   ✓ account deletion captures the initiating owner > does not allow mock mode to delete a real account namespace 1ms
+   ✓ account deletion captures the initiating owner > server failure preserves all local content and exposes the failure 1ms
+   ✓ account deletion captures the initiating owner > already-deleted server outcome still performs scoped local cleanup 1ms
+   ✓ account deletion captures the initiating owner > secret cleanup failure is not reported as successful deletion 1ms
+   ✓ account deletion captures the initiating owner > suppresses duplicate submit while the server request is pending 1ms
+   × account deletion captures the initiating owner > A server completion after switching to B deletes only A and leaves B session/navigation alone 1ms
+     → expected 'A content' to be null
+   ✓ account deletion captures the initiating owner > switching during asynchronous secret cleanup does not clear B authentication 1ms
+   ✓ account deletion captures the initiating owner > switching during auth storage clearing does not navigate away from B 1ms
+   ✓ account deletion captures the initiating owner > a callback captured before account switch cannot start deletion as B 0ms
+   ✓ account deletion captures the initiating owner > locked scope rejects deletion before any backend or local action 0ms
+   × a server response cannot authorize cleanup after its original deletion operationId was replaced 3ms
+     → expected 'success' to be 'failure' // Object.is equality
+     → expected { version: 1, accountId: 'A', …(4) } to be null
+     → expected null to be 'A content' // Object.is equality
+     → expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "accountId": "A",
+        "epoch": -1,
+        "generation": "g1",
+        "kind": "account",
+      },
+    ]
+
+
+Number of calls: 1
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 13 passed (16)
+   Start at  18:14:43
+   Duration  1.08s (transform 189ms, setup 0ms, collect 378ms, tests 33ms, environment 380ms, prepare 74ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx > account deletion captures the initiating owner > modern cleanup after B replaces A still revokes only captured A and does not navigate B
+AssertionError: expected "spy" to be called with arguments: [ Array(2) ]
+
+Number of calls: 0
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx:71:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx > account deletion captures the initiating owner > A server completion after switching to B deletes only A and leaves B session/navigation alone
+AssertionError: expected 'A content' to be null
+
+- Expected: 
+null
+
++ Received: 
+"A content"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx:149:47
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx > a server response cannot authorize cleanup after its original deletion operationId was replaced
+AssertionError: expected 'success' to be 'failure' // Object.is equality
+
+Expected: "failure"
+Received: "success"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx:186:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx > a server response cannot authorize cleanup after its original deletion operationId was replaced
+AssertionError: expected { version: 1, accountId: 'A', …(4) } to be null
+
+- Expected: 
+null
+
++ Received: 
+{
+  "accountId": "A",
+  "generation": "g1",
+  "kind": "account",
+  "phase": "complete",
+  "updatedAt": "2026-09-10T01:14:44.134Z",
+  "version": 1,
+}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx:186:97
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx > a server response cannot authorize cleanup after its original deletion operationId was replaced
+AssertionError: expected null to be 'A content' // Object.is equality
+
+- Expected: 
+"A content"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx:186:155
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx > a server response cannot authorize cleanup after its original deletion operationId was replaced
+AssertionError: expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "accountId": "A",
+        "epoch": -1,
+        "generation": "g1",
+        "kind": "account",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx:187:94
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯

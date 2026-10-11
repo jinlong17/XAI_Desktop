@@ -1,0 +1,28 @@
+revision=7785e9 fixed_commit=7785e9227a7888d2db02fc3db457d55ce0727bc8
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-gNN30z
+
+ ✓ packages/plugin-web-pomodoro/src/__tests__/derivedCounters.test.ts (16 tests) 6ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/durableSession.test.ts (14 tests) 21ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/PomodoroOverview.test.tsx (7 tests) 38ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/useTimerTick.test.tsx (8 tests) 66ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/FocusRecordList.test.tsx (8 tests) 220ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/eventEmit.integration.test.tsx (6 tests) 802ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/computeRemainingMs.test.ts (8 tests) 3ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/sessionsReducer.test.ts (7 tests) 6ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/validate.test.ts (11 tests) 9ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/index-barrel.test.ts (5 tests) 4ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/TimerRing.test.tsx (4 tests) 152ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/PomodoroModule.test.tsx (22 tests) 2224ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/formatLocalTime.test.ts (3 tests) 8ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/nextMode.test.ts (10 tests) 4ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/preferenceRecovery.test.tsx (1 test) 296ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/formatDuration.test.ts (5 tests) 3ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/formatRecordDate.test.ts (8 tests) 25ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/registration.test.tsx (3 tests) 15ms
+
+ Test Files  18 passed (18)
+      Tests  146 passed (146)
+   Start at  21:13:06
+   Duration  4.91s (transform 1.28s, setup 5.61s, collect 2.94s, tests 3.90s, environment 13.24s, prepare 1.95s)

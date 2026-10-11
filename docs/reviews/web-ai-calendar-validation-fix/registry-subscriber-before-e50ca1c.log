@@ -1,0 +1,54 @@
+RUN  v3.2.7 /private/tmp/xai-calendar-a1-e50.hCwFnX/tree
+
+ ❯ docs/reviews/web-ai-calendar-validation-fix/registry-subscriber-contract.test.tsx (6 tests | 5 failed) 23ms
+   × calendar tool registry → subscriber contract > applies documented create defaults only when the optional fields are omitted 12ms
+     → expected '09:00' to be undefined
+   ✓ calendar tool registry → subscriber contract > create preserves explicit invalid date and the subscriber rejects it 2ms
+   × calendar tool registry → subscriber contract > create preserves explicit non-number duration and the subscriber rejects it 4ms
+     → expected { …(6) } to match object { ok: false, reason: 'invalid' }
+   × calendar tool registry → subscriber contract > create preserves explicit decimal duration and the subscriber rejects it 1ms
+     → expected { …(6) } to match object { ok: false, reason: 'invalid' }
+   × calendar tool registry → subscriber contract > update preserves explicit invalid date beside a valid title and the subscriber rejects the whole patch 2ms
+     → expected { …(6) } to match object { ok: false, reason: 'invalid' }
+   × calendar tool registry → subscriber contract > update preserves explicit decimal duration and the subscriber rejects the whole patch 1ms
+     → expected { …(6) } to match object { ok: false, reason: 'invalid' }
+
+ FAIL  docs/reviews/web-ai-calendar-validation-fix/registry-subscriber-contract.test.tsx > calendar tool registry → subscriber contract > applies documented create defaults only when the optional fields are omitted
+AssertionError: expected '09:00' to be undefined
+
+- Expected:
+undefined
+
++ Received:
+"09:00"
+
+ FAIL  docs/reviews/web-ai-calendar-validation-fix/registry-subscriber-contract.test.tsx > calendar tool registry → subscriber contract > create preserves explicit non-number duration and the subscriber rejects it
+ FAIL  docs/reviews/web-ai-calendar-validation-fix/registry-subscriber-contract.test.tsx > calendar tool registry → subscriber contract > create preserves explicit decimal duration and the subscriber rejects it
+AssertionError: expected { …(6) } to match object { ok: false, reason: 'invalid' }
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "invalid",
++   "ok": true,
+  }
+
+ FAIL  docs/reviews/web-ai-calendar-validation-fix/registry-subscriber-contract.test.tsx > calendar tool registry → subscriber contract > update preserves explicit invalid date beside a valid title and the subscriber rejects the whole patch
+ FAIL  docs/reviews/web-ai-calendar-validation-fix/registry-subscriber-contract.test.tsx > calendar tool registry → subscriber contract > update preserves explicit decimal duration and the subscriber rejects the whole patch
+AssertionError: expected { …(6) } to match object { ok: false, reason: 'invalid' }
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "invalid",
++   "ok": true,
+  }
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 1 passed (6)
+   Start at  14:50:36
+   Duration  1.06s (transform 123ms, setup 70ms, collect 165ms, tests 23ms, environment 577ms, prepare 64ms)

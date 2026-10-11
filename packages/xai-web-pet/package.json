@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "description": "Floating 8-character desktop pet with drag + tips + picker for the XAI Web Console.",
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -18,8 +20,8 @@
     "lint": "eslint --max-warnings 0 ."
   },
   "dependencies": {
-    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/xai-web-event-bus": "workspace:*"
   },
   "peerDependencies": {
@@ -37,6 +39,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "typescript": "5.9.2",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.7"
   }
 }

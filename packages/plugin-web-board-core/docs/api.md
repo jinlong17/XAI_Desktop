@@ -670,3 +670,5 @@ Rules:
 - setting `shared` or toggling an explicit value returns a cloned board
 - helper surface is pure and does not touch storage, events, or network state
 - this is not a backend ACL grant
+
+TASK-02 adds optional `BoardCardTaskLink.pending: { title: {en, zh}; dueDate?: string }` as a durable, account-local create-link request. Board serialization preserves it through card/list moves and archive/restore. Workspaces removes it only after the Task write succeeds; it is not proof the Task exists. Legacy links without pending remain readable.

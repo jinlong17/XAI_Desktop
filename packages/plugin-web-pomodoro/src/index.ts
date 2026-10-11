@@ -1,3 +1,4 @@
+import "./internal/accountMigration.js";
 /**
  * @repo/plugin-web-pomodoro — public surface.
  *
@@ -24,6 +25,8 @@ export { pomodoroWebModuleRegistration } from "./registration.js";
 export type {
   PomodoroSession,
   PomodoroMode,
+  PomodoroDepartureGuard,
+  PomodoroDepartureGuardRegistration,
 } from "./types.js";
 
 // ---- Constants -------------------------------------------------------------

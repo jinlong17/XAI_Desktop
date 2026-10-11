@@ -1,0 +1,18 @@
+startup-and-queue exit=1
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-Gqhnqu
+
+ ❯ docs/reviews/web-board-workspace-astra-review/startup-and-queue.test.tsx (6 tests | 3 failed) 236ms
+   ✓ genuinely absent board storage initializes valid persistent boards 79ms
+   ✓ valid legacy automation retries a rejected write and retains storage format 50ms
+   ✓ valid envelope automation retries a rejected write and retains storage format 25ms
+   × queued selection correction refuses same-account active-only before the queued write 40ms
+     → expected 'b-default' to be 'b-pm' // Object.is equality
+   × queued selection correction refuses same-account board-replaced before the queued write 21ms
+     → expected 'b-default' to be 'stale-id' // Object.is equality
+   × queued selection correction refuses same-account board-removed before the queued write 21ms
+     → expected 'b-default' to be 'stale-id' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 3 passed (6)
+   Start at  15:04:57
+   Duration  1.81s (transform 505ms, setup 180ms, collect 651ms, tests 236ms, environment 354ms, prepare 127ms)

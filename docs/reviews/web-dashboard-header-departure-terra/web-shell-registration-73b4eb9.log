@@ -1,0 +1,14 @@
+
+> @repo/web@0.1.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps/web
+> vitest run "shellRegistrations.integration.test.tsx"
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps/web
+
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx (11 tests) 4ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  00:57:18
+   Duration  3.53s (transform 2.17s, setup 0ms, collect 3.08s, tests 4ms, environment 214ms, prepare 67ms)
+

@@ -1,0 +1,141 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+mode=appearance-unchanged-files
+suffix=appearance-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-final/verify-packages.mjs 5cd63ff appearance-unchanged-files appearance-final-v1
+output_dir=docs/reviews/web-appearance-recovery-final
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+runner_sha256=8f9fb90f38717515c9ba9606b4f99c643d61c0523a07adbbe071982adb864e80
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/plugin-web-settings-appearance (packages/xai-web-settings-appearance) kind=vitest script=test: "vitest run"
+archive_file_sha256 packages/xai-web-settings-appearance/package.json=41cdc7c0ba6af12b4a0c267a68a70f0e82e78f4053f25c7ba835e3a6e1523e39 packages/xai-web-settings-appearance/tsconfig.json=8264895f6ff844446cf042a6ea81db1464d3187dd69095537b215e6634a6c9c7 packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/eslint.config.js=e5fd80cab496575b6978b55d18244da722c48ad0e917a1a1149337612ae14bb3
+package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e appearance_package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e shell_package_tree=0f0fed40fe94a9de5c79eb273d1103757a807a9c web_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a
+node_modules_links third_party=448 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-settings-shell->packages/plugin-web-settings-shell @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus @repo/xai-web-shell->packages/xai-web-shell
+tsconfig_extends_checked=46 unresolved=none own=@repo/plugin-web-settings-appearance:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-wo40du/packages/xai-web-settings-appearance/final-appearance-unchanged-files.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-wo40du/.final-guard/report-appearance-unchanged-files.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+tool_exit=0
+harness_checks=PASS (7/7)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-wo40du/packages/xai-web-settings-appearance
+
+ ✓ src/__tests__/constants.test.ts > BG_TONES > AC-CONST-1: length=6 and correct id order 1ms
+ ✓ src/__tests__/constants.test.ts > BG_TONES > AC-CONST-4: hues match source lines 498-503 0ms
+ ✓ src/__tests__/constants.test.ts > BG_TONES > AC-CONST-6: every entry has non-empty en and zh name 0ms
+ ✓ src/__tests__/constants.test.ts > BG_TONES > AC-CONST-7: array is frozen and first element is frozen 0ms
+ ✓ src/__tests__/constants.test.ts > HUE_PRESETS > AC-CONST-2: length=6 and correct id order 0ms
+ ✓ src/__tests__/constants.test.ts > HUE_PRESETS > AC-CONST-3: hues match source (verbatim) 0ms
+ ✓ src/__tests__/constants.test.ts > HUE_PRESETS > AC-CONST-6: every entry has non-empty en and zh name 0ms
+ ✓ src/__tests__/constants.test.ts > RAIL_POSITIONS > AC-CONST-5: length=4 and correct id order 0ms
+ ✓ src/__tests__/constants.test.ts > RAIL_POSITIONS > AC-CONST-6: every entry has non-empty en and zh label 0ms
+ ✓ src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-1: id === 'appearance' 1ms
+ ✓ src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-2: i18nKey === 'settings.appearance' 0ms
+ ✓ src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-3: icon === 'sun' (valid WebShellIconName matching chassis placeholder) 0ms
+ ✓ src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-4: render({ lang: 'en' }) returns a React element for <AppearancePane lang='en' /> 0ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches 3ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches 1ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches 0ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches 0ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches 0ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches 0ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-7: appearanceDefaults does NOT contain a lang key 1ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-8: appearanceDefaults is frozen 0ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs() 1ms
+
+ Test Files  3 passed (3)
+      Tests  22 passed (22)
+   Start at  13:29:29
+   Duration  731ms (transform 272ms, setup 153ms, collect 546ms, tests 12ms, environment 646ms, prepare 133ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-wo40du/.final-guard/report-appearance-unchanged-files.json
+
+---- stderr ----
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-7: appearanceDefaults does NOT contain a lang key
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-8: appearanceDefaults is frozen
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs()
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+
+---- runner summary ----
+harness PASS archive package.json script "test" is "vitest run" (found "vitest run")
+harness PASS JSON report parsed
+harness PASS reported test files equal the expected set (3 files, explicit include)
+harness PASS package config in effect (environment jsdom, globals true, setupFiles [vitest.setup.ts], include ["src/__tests__/appearanceDefaults.test.ts","src/__tests__/constants.test.ts","src/__tests__/appearancePane.registry.test.ts"], root = archive package)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (3 present of 3 listed)
+harness PASS no test-file suite error
+required_tests_absent_from_archive=none
+json_report=success=true numTotalTestSuites=8 numTotalTests=22 numPassedTests=22 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals files=3 tests=22 passed=22 failed=0 other=0 suite_errors=0 unhandled_error_lines=0
+file src/__tests__/appearanceDefaults.test.ts status=passed tests=9 passed=9 failed=0
+file src/__tests__/appearancePane.registry.test.ts status=passed tests=4 passed=4 failed=0
+file src/__tests__/constants.test.ts status=passed tests=9 passed=9 failed=0
+case 001 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches
+case 002 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches
+case 003 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches
+case 004 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches
+case 005 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches
+case 006 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches
+case 007 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-7: appearanceDefaults does NOT contain a lang key
+case 008 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-8: appearanceDefaults is frozen
+case 009 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs()
+case 010 PASSED | src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry AC-REG-1: id === 'appearance'
+case 011 PASSED | src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry AC-REG-2: i18nKey === 'settings.appearance'
+case 012 PASSED | src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry AC-REG-3: icon === 'sun' (valid WebShellIconName matching chassis placeholder)
+case 013 PASSED | src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry AC-REG-4: render({ lang: 'en' }) returns a React element for <AppearancePane lang='en' />
+case 014 PASSED | src/__tests__/constants.test.ts > BG_TONES AC-CONST-1: length=6 and correct id order
+case 015 PASSED | src/__tests__/constants.test.ts > BG_TONES AC-CONST-4: hues match source lines 498-503
+case 016 PASSED | src/__tests__/constants.test.ts > BG_TONES AC-CONST-6: every entry has non-empty en and zh name
+case 017 PASSED | src/__tests__/constants.test.ts > BG_TONES AC-CONST-7: array is frozen and first element is frozen
+case 018 PASSED | src/__tests__/constants.test.ts > HUE_PRESETS AC-CONST-2: length=6 and correct id order
+case 019 PASSED | src/__tests__/constants.test.ts > HUE_PRESETS AC-CONST-3: hues match source (verbatim)
+case 020 PASSED | src/__tests__/constants.test.ts > HUE_PRESETS AC-CONST-6: every entry has non-empty en and zh name
+case 021 PASSED | src/__tests__/constants.test.ts > RAIL_POSITIONS AC-CONST-5: length=4 and correct id order
+case 022 PASSED | src/__tests__/constants.test.ts > RAIL_POSITIONS AC-CONST-6: every entry has non-empty en and zh label
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-wo40du/packages/xai-web-settings-appearance","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-wo40du/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["./vitest.setup.ts"],"include":["src/__tests__/appearanceDefaults.test.ts","src/__tests__/constants.test.ts","src/__tests__/appearancePane.registry.test.ts"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/xai-web-settings-appearance/src/constants.ts packages/xai-web-settings-appearance/src/appearanceDefaults.ts packages/xai-web-settings-appearance/src/internal/appearancePane.tsx
+pin_required_provenance_missing=none
+pin_modules=65 by package: packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-settings-appearance=8 packages/xai-web-shell=9

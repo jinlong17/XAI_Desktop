@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"f359be6","browser":"Chrome/154.0.8037.97"}
+{"name":"blur-control-observation","path":"/app/dashboard","dialog":false,"note":"Ordinary blur saved note","active":""}
+{"name":"supplemental","pass":true,"mode":"blur-control","runtimeErrors":0}

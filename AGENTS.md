@@ -65,6 +65,55 @@ Templates use abstract tiers. Codex mappings are set in the generation script:
 | `opus` | `CODEX_STRONG_MODEL` (currently `gpt-5.4`) | plan, review, verify, diagnose, loop |
 | `sonnet` | `CODEX_FAST_MODEL` (currently `gpt-5.3-codex`) | build, fix, ship |
 
+#### Spark specialist routing
+
+When delegation is authorized and supported by the current session:
+
+- Use `spark-explorer` for bounded code searches, symbol location, and checklist evidence.
+- Use `spark-ui-fixer` for local UI or fixture changes only after the parent defines
+  allowed files, acceptance conditions, risk, and protected boundaries.
+- Keep Terra as the default for medium implementation, Sol for complex races and
+  cross-module work, and Astra for architecture, risk, acceptance, and final review.
+- Spark implementations require independent review by an uninvolved Terra, Sol,
+  or Astra. Passing tests alone does not close the business contract.
+- Do not assign Spark sole ownership of persistence, account lifecycle, asynchronous
+  races, timer recovery, migrations, deletion/recovery, security, payments, deployment,
+  architecture, screenshot-based visual judgment, or final acceptance.
+- Report model/launch failures explicitly; never label a fallback model as Spark.
+- If the runtime reports Spark quota exhaustion or a usage-window limit, the parent
+  is authorized to continue the same bounded task with `gpt-5.5` without asking again.
+  Use the reported reset time when available; do not infer exhaustion from elapsed
+  session time, a generic network failure, or an unsupported-tool error.
+- Preserve the original role's instructions, sandbox, allowed files, acceptance
+  conditions, and independent Terra/Sol/Astra review when falling back. Use a fresh
+  generic worker explicitly configured for `gpt-5.5`; do not reuse a Spark-pinned
+  custom role and assume a spawn model override supersedes its TOML.
+- Before retrying interrupted implementation, inspect git status/diff and completed
+  work so the fallback does not overwrite changes or repeat completed actions.
+  Record the quota reason and actual model as `gpt-5.5 (Spark quota fallback)`.
+  If GPT-5.5 also fails, report it; do not silently cascade or retry indefinitely.
+- These are parent dispatch rules, not a claim that Codex automatically changes
+  models or that a quota-exhaustion fallback has already been tested.
+
+The project-owned `.codex/agents/spark-explorer.toml` and
+`.codex/agents/spark-ui-fixer.toml` are standalone custom agents, maintained separately
+from generated Workflow V2 templates. Preserve them when regenerating agents; do not
+set the generator's shared `CODEX_FAST_MODEL` to Spark to enable these specialists.
+File configuration does not establish successful runtime model access; verify actual
+agent/model selection in an authorized parent session before claiming Spark execution.
+
+CLI 0.135 compatibility: `.codex/config.toml` explicitly registers these two role
+names without changing concurrency/depth defaults. For CLI delegation smoke checks,
+use a persisted session with `--enable multi_agent_v2`; `--ephemeral` cannot resolve
+the parent thread in this version. Spawn with the exact `agent_type` and
+`fork_turns = "none"`. Both role files disable inherited `image_generation`, which
+Spark rejects. These CLI checks do not add Spark to an already-running app's tool schema.
+On this installation project-only discovery still returned `unknown agent_type`;
+use the explicit per-invocation role registration in the runtime receipt below.
+Do not run the agent generator with `--force` unless custom `[agents.*]` registrations
+are preserved/restored: its default config template overwrites this file.
+Runtime evidence and reproducible invocation: `docs/reviews/spark-agent-runtime-20260911/README.md`.
+
 ### 2.3 Sandbox mode
 
 Each `.toml` agent includes `sandbox_mode` sourced from the template's
@@ -89,6 +138,7 @@ The tracked sync surface includes at least:
 - `.teams/skills/`
 - `docs/workflow/_portable/`
 - `docs/workflow/project/workflow.md`
+- `docs/workflow/project/multi-machine-development.md`
 - `CLAUDE.md`, `AGENTS.md`, `.cursor/rules/handoff.mdc`
 
 Before finishing a workflow/agent/skill change, audit for project-level
@@ -100,7 +150,26 @@ git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/wo
 
 If the change is intended to apply on another computer, push it after commit.
 
-### 2.5 Personal developer dashboard
+### 2.5 Multi-machine development
+
+GitHub is the exchange source of truth for all recoverable project work. Follow
+`docs/workflow/project/multi-machine-development.md` whenever more than one
+computer or worktree may continue the project.
+
+- One writable short branch belongs to one machine/worktree at a time; use
+  sibling branches when two computers work on the same feature.
+- Before switching computers or ending a session, commit and push all
+  recoverable work. A local stash, reflog entry, hidden ref, untracked source,
+  or chat transcript is not a handoff.
+- Keep secrets outside Git and maintain tracked names-only `.env.example`
+  templates plus a documented secure restore channel.
+- Run `pnpm git:sync-check -- --fetch` at normal handoff and add `--deep` before
+  migration or cleanup. Do not delete local recovery state merely to make the
+  check pass.
+- Independent long-lived product branches remain intentionally divergent; this
+  rule never authorizes a bulk merge or D3 bypass.
+
+### 2.6 Personal developer dashboard
 
 The local personal developer dashboard is the project-system cockpit at
 `docs/prototypes/dev-dashboard/index.html`. Machine-facing rules live in
@@ -136,6 +205,9 @@ inside the admin roadmap gates. Future iPhone / iPad / Apple Watch / Android /
 browser-extension surfaces are planning-only in
 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`; do not classify them as active
 module targets or open work branches without operator confirmation.
+`desktop-plugin-next` already exists; creating `desktop-next` /
+`release/desktop/<version>`, advancing to `dev`, or starting a release branch
+still requires explicit operator confirmation.
 
 ---
 

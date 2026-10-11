@@ -1,0 +1,11 @@
+revision=5c13fec
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-b2-uKVij0
+
+ ✓ packages/xai-web-tasks/src/__tests__/canonicalMigrationCompatibility.test.ts (2 tests) 3ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  15:30:54
+   Duration  557ms (transform 92ms, setup 0ms, collect 122ms, tests 3ms, environment 197ms, prepare 49ms)

@@ -1,3 +1,5 @@
+import { accountScope, registerAccountMigrationValidator, type AccountScope } from "@repo/plugin-web-storage";
+import { addLocalDays, nextLocalDayStart, useLocalDayClock } from "@repo/plugin-web-tokens";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, FormEvent, ReactNode } from "react";
 import type { CopyKey } from "./internal/copy.js";
@@ -13,12 +15,18 @@ import {
   useCategoryMap,
   useTimeTrackerCategories,
   useTimeTrackerEntries,
+  useTimeTrackerMode,
 } from "./internal/storage.js";
 import {
   DAY_MS,
   addDays,
   dayKey,
   entryDuration,
+  entriesInWindow,
+  entriesOnDay,
+  entryDayTotals,
+  entryHourTotals,
+  sourceEntry,
   entryLastEnd,
   entryStart,
   formatClock,
@@ -124,6 +132,31 @@ const INSIGHTS_KEY = "xai_tt_insights_v1";
 const SIDEBAR_INSIGHTS_KEY = "xai_tt_sidebar_insights_hidden_v1";
 const CATEGORY_COLLAPSED_KEY = "xai_tt_category_collapsed_v1";
 const DAY_RECORDS_COLLAPSED_KEY = "xai_tt_day_records_collapsed_v1";
+const TIME_STATUS_HIDDEN_KEY = "xai_tt_time_status_hidden_v1";
+const TIME_STATUS_CARDS_KEY = "xai_tt_time_status_cards_v1";
+const TIME_STATUS_CUSTOM_CARDS_KEY = "xai_tt_time_status_custom_cards_v1";
+
+type TimeStatusStaticCardKey = "date" | "month" | "year" | "today" | "active";
+type TimeStatusCardKey = TimeStatusStaticCardKey | `custom:${string}`;
+type TimeStatusCardView = {
+  readonly key: TimeStatusCardKey;
+  readonly icon: string;
+  readonly label: string;
+  readonly value: string;
+  readonly detail: string;
+  readonly progress?: string;
+  readonly running?: boolean;
+  readonly custom?: boolean;
+};
+type TimeStatusCustomCard = {
+  readonly id: string;
+  readonly name: string;
+  readonly targetMs: number;
+  readonly createdAt: number;
+  readonly updatedAt: number;
+};
+
+const DEFAULT_TIME_STATUS_CARDS: readonly TimeStatusStaticCardKey[] = ["date", "month", "year", "today", "active"];
 
 const INSIGHT_DEFS: ReadonlyArray<{ readonly type: InsightType; readonly span: 3 | 4 | 6 | 8; readonly icon: string }> = [
   { type: "today-total", span: 3, icon: "clock" },
@@ -304,12 +337,62 @@ function startOfYear(ts: number): number {
   return d.getTime();
 }
 
+function startOfNextMonth(ts: number): number {
+  const d = new Date(startOfMonth(ts));
+  d.setMonth(d.getMonth() + 1);
+  return d.getTime();
+}
+
+function startOfNextYear(ts: number): number {
+  const d = new Date(startOfYear(ts));
+  d.setFullYear(d.getFullYear() + 1);
+  return d.getTime();
+}
+
+function clampProgress(value: number): number {
+  return Math.max(0, Math.min(1, value));
+}
+
+function progressText(value: number): string {
+  return `${Math.round(clampProgress(value) * 100)}%`;
+}
+
+function weekdayLabel(ts: number, lang: Lang): string {
+  const d = new Date(ts);
+  if (lang === "zh") return `星期${["日", "一", "二", "三", "四", "五", "六"][d.getDay()] ?? ""}`;
+  return d.toLocaleDateString("en-US", { weekday: "long" });
+}
+
+function monthLabel(ts: number, lang: Lang): string {
+  const d = new Date(ts);
+  if (lang === "zh") return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月`;
+  return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
+
+function daysLeftText(days: number, lang: Lang): string {
+  if (lang === "zh") return `${days}${ttCopy(lang, "daysLeft")}`;
+  return `${days} ${ttCopy(lang, days === 1 ? "dayLeft" : "daysLeft")}`;
+}
+
+function calendarDayIndex(ts: number): number {
+  const d = new Date(startOfDay(ts));
+  return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAY_MS;
+}
+
+function daysLeftAfterToday(endExclusiveMs: number, nowMs: number): number {
+  return Math.max(0, calendarDayIndex(endExclusiveMs) - calendarDayIndex(nowMs) - 1);
+}
+
+function todayRemainingMs(nowMs: number): number {
+  return Math.max(0, nextLocalDayStart(nowMs).getTime() - nowMs);
+}
+
 function dateInputValue(ts: number): string {
   return dayKey(ts);
 }
 
 function endOfDayExclusive(key: string): number {
-  return keyToDate(key) + DAY_MS;
+  return nextLocalDayStart(keyToDate(key)).getTime();
 }
 
 function rangeLabel(startMs: number, endMs: number, lang: Lang): string {
@@ -322,7 +405,7 @@ function rangeLabel(startMs: number, endMs: number, lang: Lang): string {
 function readInsightBoard(): InsightCard[] {
   if (typeof window === "undefined") return defaultInsightBoard();
   try {
-    const raw = JSON.parse(window.localStorage.getItem(INSIGHTS_KEY) ?? "null") as unknown;
+    const raw = JSON.parse(window.localStorage.getItem(accountScope.physicalKey(INSIGHTS_KEY)) ?? "null") as unknown;
     if (Array.isArray(raw) && raw.length > 0) {
       const allowed = new Set(INSIGHT_DEFS.map((def) => def.type));
       const cards = raw.filter((item): item is InsightCard => {
@@ -358,13 +441,13 @@ function defaultInsightBoard(): InsightCard[] {
 
 function readSidebarInsightsHidden(): boolean {
   if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(SIDEBAR_INSIGHTS_KEY) === "1";
+  return window.localStorage.getItem(accountScope.physicalKey(SIDEBAR_INSIGHTS_KEY)) === "1";
 }
 
 function readCollapsedCategoryIds(): ReadonlySet<string> {
   if (typeof window === "undefined") return new Set();
   try {
-    const raw = JSON.parse(window.localStorage.getItem(CATEGORY_COLLAPSED_KEY) ?? "[]") as unknown;
+    const raw = JSON.parse(window.localStorage.getItem(accountScope.physicalKey(CATEGORY_COLLAPSED_KEY)) ?? "[]") as unknown;
     if (!Array.isArray(raw)) return new Set();
     return new Set(raw.filter((item): item is string => typeof item === "string" && item !== ""));
   } catch {
@@ -374,13 +457,70 @@ function readCollapsedCategoryIds(): ReadonlySet<string> {
 
 function readDayRecordsCollapsed(): boolean {
   if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(DAY_RECORDS_COLLAPSED_KEY) === "1";
+  return window.localStorage.getItem(accountScope.physicalKey(DAY_RECORDS_COLLAPSED_KEY)) === "1";
+}
+
+function readTimeStatusHidden(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(accountScope.physicalKey(TIME_STATUS_HIDDEN_KEY)) === "1";
+}
+
+function customTimeStatusKey(id: string): TimeStatusCardKey {
+  return `custom:${id}`;
+}
+
+function isTimeStatusStaticCardKey(value: unknown): value is TimeStatusStaticCardKey {
+  return typeof value === "string" && DEFAULT_TIME_STATUS_CARDS.includes(value as TimeStatusStaticCardKey);
+}
+
+function isTimeStatusCardKey(value: unknown): value is TimeStatusCardKey {
+  return isTimeStatusStaticCardKey(value) || (typeof value === "string" && value.startsWith("custom:") && value.length > "custom:".length);
+}
+
+function readTimeStatusCardKeys(): readonly TimeStatusCardKey[] {
+  if (typeof window === "undefined") return DEFAULT_TIME_STATUS_CARDS;
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(accountScope.physicalKey(TIME_STATUS_CARDS_KEY)) ?? "null") as unknown;
+    if (!Array.isArray(raw)) return DEFAULT_TIME_STATUS_CARDS;
+    const seen = new Set<TimeStatusCardKey>();
+    const keys = raw.filter((item): item is TimeStatusCardKey => {
+      if (!isTimeStatusCardKey(item) || seen.has(item)) return false;
+      seen.add(item);
+      return true;
+    });
+    return keys;
+  } catch {
+    return DEFAULT_TIME_STATUS_CARDS;
+  }
+}
+
+function readTimeStatusCustomCards(): readonly TimeStatusCustomCard[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(accountScope.physicalKey(TIME_STATUS_CUSTOM_CARDS_KEY)) ?? "[]") as unknown;
+    if (!Array.isArray(raw)) return [];
+    return raw.filter((item): item is TimeStatusCustomCard => {
+      if (typeof item !== "object" || item === null) return false;
+      if (!("id" in item) || typeof item.id !== "string" || item.id.trim() === "") return false;
+      if (!("name" in item) || typeof item.name !== "string" || item.name.trim() === "") return false;
+      if (!("targetMs" in item) || typeof item.targetMs !== "number" || !Number.isFinite(item.targetMs)) return false;
+      if (!("createdAt" in item) || typeof item.createdAt !== "number" || !Number.isFinite(item.createdAt)) return false;
+      if (!("updatedAt" in item) || typeof item.updatedAt !== "number" || !Number.isFinite(item.updatedAt)) return false;
+      return true;
+    });
+  } catch {
+    return [];
+  }
 }
 
 export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
+  const scope = useRef(accountScope.capture()).current;
   const [categories, setCategories] = useTimeTrackerCategories();
-  const [entries, setEntries] = useTimeTrackerEntries();
+  const [entries, setEntries, entryRecovery] = useTimeTrackerEntries();
+  const [mode, setMode] = useTimeTrackerMode();
+  const [exportError, setExportError] = useState(false);
   const [view, setView] = useState<TrackerView>("tracker");
+  const { now: calendarNow } = useLocalDayClock();
   const [nowMs, setNowMs] = useState(() => Date.now());
   const [selectedKey, setSelectedKey] = useState(() => dayKey(Date.now()));
   const [categoryEditor, setCategoryEditor] = useState<CategoryEditorState | null>(null);
@@ -391,12 +531,18 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [sidebarInsightsHidden, setSidebarInsightsHidden] = useState(readSidebarInsightsHidden);
   const [collapsedCategoryIds, setCollapsedCategoryIds] = useState(readCollapsedCategoryIds);
   const [dayRecordsCollapsed, setDayRecordsCollapsed] = useState(readDayRecordsCollapsed);
+  const [timeStatusHidden, setTimeStatusHidden] = useState(readTimeStatusHidden);
+  const [focusEntryId, setFocusEntryId] = useState<string | null>(null);
 
   const liveCategories = useMemo(() => categories.filter((category) => category.deleted !== true), [categories]);
   const categoryMap = useCategoryMap(liveCategories);
   const liveEntries = useMemo(() => entries.filter((entry) => entry.deleted !== true), [entries]);
   const activeEntries = useMemo(() => liveEntries.filter(isActiveEntry), [liveEntries]);
   const hasActive = activeEntries.length > 0;
+  const focusEntry = focusEntryId === null ? null : activeEntries.find((entry) => entry.id === focusEntryId) ?? null;
+
+  // Idle trackers still cross midnight and resume from suspended browser pages.
+  useEffect(() => { setNowMs(calendarNow.getTime()); }, [calendarNow]);
 
   useEffect(() => {
     if (!hasActive) return;
@@ -405,23 +551,37 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   }, [hasActive]);
 
   useEffect(() => {
-    window.localStorage.setItem(SIDEBAR_INSIGHTS_KEY, sidebarInsightsHidden ? "1" : "0");
-  }, [sidebarInsightsHidden]);
+    writeTrackerUi(SIDEBAR_INSIGHTS_KEY, sidebarInsightsHidden ? "1" : "0", scope);
+  }, [sidebarInsightsHidden, scope]);
 
   useEffect(() => {
-    window.localStorage.setItem(CATEGORY_COLLAPSED_KEY, JSON.stringify([...collapsedCategoryIds]));
-  }, [collapsedCategoryIds]);
+    writeTrackerUi(CATEGORY_COLLAPSED_KEY, JSON.stringify([...collapsedCategoryIds]), scope);
+  }, [collapsedCategoryIds, scope]);
 
   useEffect(() => {
-    window.localStorage.setItem(DAY_RECORDS_COLLAPSED_KEY, dayRecordsCollapsed ? "1" : "0");
-  }, [dayRecordsCollapsed]);
+    writeTrackerUi(DAY_RECORDS_COLLAPSED_KEY, dayRecordsCollapsed ? "1" : "0", scope);
+  }, [dayRecordsCollapsed, scope]);
+
+  useEffect(() => {
+    writeTrackerUi(TIME_STATUS_HIDDEN_KEY, timeStatusHidden ? "1" : "0", scope);
+  }, [timeStatusHidden, scope]);
+
+  useEffect(() => {
+    if (focusEntryId !== null && focusEntry === null) setFocusEntryId(null);
+  }, [focusEntry, focusEntryId]);
 
   const todayKey = dayKey(nowMs);
+  const previousToday = useRef(todayKey);
+  useEffect(() => {
+    const prior = previousToday.current;
+    previousToday.current = todayKey;
+    if (prior !== todayKey) setSelectedKey(selected => selected === prior ? todayKey : selected);
+  }, [todayKey]);
   const isToday = selectedKey === todayKey;
   const weekStart = startOfWeek(nowMs);
   const selectedEntries = useMemo(
-    () => liveEntries.filter((entry) => dayKey(entryStart(entry)) === selectedKey),
-    [liveEntries, selectedKey],
+    () => entriesOnDay(liveEntries, selectedKey, nowMs),
+    [liveEntries, selectedKey, nowMs],
   );
   const doneForDay = useMemo(
     () => selectedEntries.filter((entry) => entry.done).sort((a, b) => entryStart(b) - entryStart(a)),
@@ -429,9 +589,10 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   );
   const selectedByCategory = useMemo(() => totalByCategory(selectedEntries, nowMs), [nowMs, selectedEntries]);
   const selectedTotal = useMemo(() => selectedEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0), [nowMs, selectedEntries]);
-  const todayEntries = useMemo(() => liveEntries.filter((entry) => dayKey(entryStart(entry)) === todayKey), [liveEntries, todayKey]);
+  const todayEntries = useMemo(() => entriesOnDay(liveEntries, todayKey, nowMs), [liveEntries, todayKey, nowMs]);
+  const todayTotal = useMemo(() => todayEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0), [nowMs, todayEntries]);
   const weekTotal = useMemo(
-    () => liveEntries.filter((entry) => entryStart(entry) >= weekStart).reduce((total, entry) => total + entryDuration(entry, nowMs), 0),
+    () => entriesInWindow(liveEntries, weekStart, nowMs, nowMs).reduce((total, entry) => total + entryDuration(entry, nowMs), 0),
     [liveEntries, nowMs, weekStart],
   );
   const trend = useMemo(() => buildDayTrend(liveEntries, nowMs, lang, selectedKey), [lang, liveEntries, nowMs, selectedKey]);
@@ -444,6 +605,18 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
 
   function startCategory(categoryId: string, subId: string | null = null): void {
     if (!isToday) return;
+    const running = entries.filter(isRunningEntry);
+    if (mode === "single" && running.length > 0) {
+      const expected = JSON.stringify(running);
+      setConfirm({ title: lang === "zh" ? "切换计时任务？" : "Switch running task?", body: lang === "zh" ? "确认后结束当前运行中的任务，再开始新任务。" : "End the currently running task before starting this one.", confirmLabel: lang === "zh" ? "结束并开始" : "End and start", run: () => {
+        void setEntries(prev => {
+          if (JSON.stringify(prev.filter(isRunningEntry)) !== expected) throw new Error("The running task changed. Review it before switching.");
+          const stamp = Date.now();
+          return [...prev.map(entry => isRunningEntry(entry) ? finishTimeTrackerEntry(entry, stamp) : entry), createTimeTrackerEntry(categoryId, subId, stamp, null, { en: "", zh: "" })];
+        });
+      }});
+      return;
+    }
     const stamp = Date.now();
     appendEntry(createTimeTrackerEntry(categoryId, subId, stamp, null, { en: "", zh: "" }));
   }
@@ -483,18 +656,20 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
     setNowMs(stamp);
   }
 
-  function saveEntry(draft: EntryDraft): void {
+  async function saveEntry(draft: EntryDraft): Promise<void> {
+    let saved: boolean;
     const stamp = Date.now();
     if (draft.id !== undefined) {
-      setEntries((prev) =>
-        prev.map((entry) =>
-          entry.id === draft.id
+      saved = await setEntries((prev) =>
+        prev.map((entry) => {
+          if (entry.id === draft.id && entryEditor?.mode === "edit" && JSON.stringify(entry) !== JSON.stringify(entryEditor.entry)) throw new Error("This record changed while editing. Export or copy your draft before reopening it.");
+          return entry.id === draft.id
             ? { ...entry, categoryId: draft.categoryId, subId: draft.subId, segments: draft.segments, note: draft.note, done: draft.done, updatedAt: stamp }
-            : entry,
-        ),
+            : entry;
+        }),
       );
     } else {
-      setEntries((prev) => [
+      saved = await setEntries((prev) => [
         ...prev,
         {
           id: uid("rec"),
@@ -508,6 +683,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
         },
       ]);
     }
+    if (!saved) return;
     setEntryEditor(null);
     setNowMs(stamp);
   }
@@ -598,6 +774,21 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
 
   return (
     <div className="module module-timetrack">
+      {entryRecovery.error && <div className="tt-save-error" role="alert">
+        <p>{entryRecovery.error}</p>
+        <p>{lang === "zh" ? "原始数据未覆盖。重试前请检查当前任务；编辑草稿仍在当前页面。" : "Original data was not overwritten. Review current sessions before retrying; editor drafts remain on this page."}</p>
+        <button type="button" className="tt-btn" onClick={() => {
+          try {
+            const url = URL.createObjectURL(new Blob([entryRecovery.exportSource()], { type: "application/json" }));
+            const link = document.createElement("a"); link.href = url; link.download = "time-tracker-original-sessions.json";
+            link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); setExportError(false);
+          } catch { setExportError(true); }
+        }}>{lang === "zh" ? "导出原始记录" : "Export original sessions"}</button>
+        {exportError && <p>{lang === "zh" ? "导出失败，请检查账户与存储权限。" : "Export failed. Check account and storage access."}</p>}
+      </div>}
+      <label className="tt-mode">{lang === "zh" ? "计时模式" : "Timer mode"} <select value={mode} onChange={event => setMode(event.target.value === "multi" ? "multi" : "single")}>
+        <option value="single">{lang === "zh" ? "单任务" : "Single task"}</option><option value="multi">{lang === "zh" ? "多任务" : "Multiple tasks"}</option>
+      </select></label>
       <header className="tt-head">
         <div className="tt-title-wrap">
           <h1 className="tt-title">
@@ -638,14 +829,26 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
                       onPause={pauseEntry}
                       onResume={resumeEntry}
                       onStop={stopEntry}
-                      onEdit={() => setEntryEditor({ mode: "edit", entry })}
+                      onEdit={() => setEntryEditor({ mode: "edit", entry: sourceEntry(entry) })}
+                      onFocus={() => setFocusEntryId(entry.id)}
                     />
                   ))}
                 </div>
               </section>
             )}
 
-            <section className="tt-panel">
+            <TimeStatusPanel
+              lang={lang}
+              nowMs={nowMs}
+              todayTotal={todayTotal}
+              todayRemaining={todayRemainingMs(nowMs)}
+              activeEntries={activeEntries}
+              categoryMap={categoryMap}
+              hidden={timeStatusHidden}
+              onSetHidden={setTimeStatusHidden}
+            />
+
+            <section className="tt-panel tt-category-panel">
               <div className="tt-section-head">
                 <h2>{ttCopy(lang, "categories")}</h2>
                 <div className="tt-section-actions">
@@ -714,11 +917,12 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
                     {doneForDay.map((entry) => (
                       <RecordRow
                         key={entry.id}
-                        entry={entry}
+                        entry={sourceEntry(entry)}
+                        dayContributionMs={entryDuration(entry, nowMs)}
                         category={categoryMap.get(entry.categoryId)}
                         lang={lang}
                         nowMs={nowMs}
-                        onEdit={() => setEntryEditor({ mode: "edit", entry })}
+                        onEdit={() => setEntryEditor({ mode: "edit", entry: sourceEntry(entry) })}
                         onAdjustTime={adjustEntryTime}
                         onDelete={() =>
                           setConfirm({
@@ -845,6 +1049,21 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
           }}
         />
       )}
+      {focusEntry !== null && (
+        <FocusModeOverlay
+          entry={focusEntry}
+          category={categoryMap.get(focusEntry.categoryId)}
+          lang={lang}
+          nowMs={nowMs}
+          onPause={pauseEntry}
+          onResume={resumeEntry}
+          onStop={(entryId) => {
+            stopEntry(entryId);
+            setFocusEntryId(null);
+          }}
+          onClose={() => setFocusEntryId(null)}
+        />
+      )}
     </div>
   );
 }
@@ -868,6 +1087,367 @@ function subcategoryColor(sub: TimeTrackerSubcategory | undefined, category: Tim
 
 function subcategoryIcon(sub: TimeTrackerSubcategory | undefined, category: TimeTrackerCategory | undefined): string {
   return sub?.icon ?? category?.icon ?? "timer";
+}
+
+function activeEntryStatusLabel(entry: TimeTrackerEntry, category: TimeTrackerCategory | undefined, lang: Lang): string {
+  const sub = findSubcategory(category, entry.subId);
+  const primary = sub !== undefined ? textName(sub.name, lang) : textName(category?.name, lang);
+  const parent = textName(category?.name, lang);
+  if (primary === "") return ttCopy(lang, "running");
+  return sub !== undefined && parent !== "" ? `${primary} · ${parent}` : primary;
+}
+
+function focusEntryNames(entry: TimeTrackerEntry, category: TimeTrackerCategory | undefined, lang: Lang) {
+  const sub = findSubcategory(category, entry.subId);
+  const parentName = textName(category?.name, lang) || ttCopy(lang, "category");
+  const taskName = sub !== undefined ? textName(sub.name, lang) : parentName;
+  return { taskName, parentName };
+}
+
+function hourText(hours: number, lang: Lang): string {
+  if (lang === "zh") return `${hours}小时`;
+  return `${hours}h`;
+}
+
+function customTimeStatusValue(targetMs: number, nowMs: number, lang: Lang): string {
+  const remaining = targetMs - nowMs;
+  if (remaining <= 0) return ttCopy(lang, "timeReached");
+  const days = Math.floor(remaining / DAY_MS);
+  const hours = Math.floor((remaining - days * DAY_MS) / 3_600_000);
+  if (days > 0) return hours > 0 ? `${daysLeftText(days, lang)} ${hourText(hours, lang)}` : daysLeftText(days, lang);
+  return formatDuration(remaining);
+}
+
+function customTimeStatusDetail(targetMs: number, lang: Lang): string {
+  return `${ttCopy(lang, "targetTime")}: ${formatDayLabel(targetMs, lang)} ${formatClock(targetMs)}`;
+}
+
+function TimeStatusPanel({
+  lang,
+  nowMs,
+  todayTotal,
+  todayRemaining,
+  activeEntries,
+  categoryMap,
+  hidden,
+  onSetHidden,
+}: {
+  readonly lang: Lang;
+  readonly nowMs: number;
+  readonly todayTotal: number;
+  readonly todayRemaining: number;
+  readonly activeEntries: readonly TimeTrackerEntry[];
+  readonly categoryMap: ReadonlyMap<string, TimeTrackerCategory>;
+  readonly hidden: boolean;
+  readonly onSetHidden: (hidden: boolean) => void;
+}) {
+  const scope = useRef(accountScope.capture()).current;
+  const [visibleCardKeys, setVisibleCardKeys] = useState(readTimeStatusCardKeys);
+  const [customCards, setCustomCards] = useState(readTimeStatusCustomCards);
+  const [customEditorOpen, setCustomEditorOpen] = useState(false);
+  const [dragKey, setDragKey] = useState<TimeStatusCardKey | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
+  const dragKeyRef = useRef<TimeStatusCardKey | null>(null);
+  const monthStart = startOfMonth(nowMs);
+  const nextMonth = startOfNextMonth(nowMs);
+  const yearStart = startOfYear(nowMs);
+  const nextYear = startOfNextYear(nowMs);
+  const monthProgress = clampProgress((nowMs - monthStart) / Math.max(1, nextMonth - monthStart));
+  const yearProgress = clampProgress((nowMs - yearStart) / Math.max(1, nextYear - yearStart));
+  const monthDaysLeft = daysLeftAfterToday(nextMonth, nowMs);
+  const yearDaysLeft = daysLeftAfterToday(nextYear, nowMs);
+  const activeLabels = activeEntries.map((entry) => activeEntryStatusLabel(entry, categoryMap.get(entry.categoryId), lang));
+  const activeValue = activeEntries.length === 0
+    ? ttCopy(lang, "noActiveTimer")
+    : activeEntries.length === 1
+      ? ttCopy(lang, "running")
+      : `${activeEntries.length} ${ttCopy(lang, "runningCount")}`;
+  const activeDetail = activeEntries.length === 0 ? ttCopy(lang, "readyToStart") : activeLabels.slice(0, 2).join(" · ");
+  const allCards: Record<TimeStatusStaticCardKey, TimeStatusCardView> = {
+    date: {
+      key: "date",
+      icon: "calendar",
+      label: ttCopy(lang, "currentDate"),
+      value: weekdayLabel(nowMs, lang),
+      detail: `${monthLabel(nowMs, lang)} · ${formatDayLabel(nowMs, lang)}`,
+    },
+    month: {
+      key: "month",
+      icon: "chart",
+      label: ttCopy(lang, "monthProgress"),
+      value: daysLeftText(monthDaysLeft, lang),
+      detail: ttCopy(lang, "leftThisMonth"),
+      progress: progressText(monthProgress),
+    },
+    year: {
+      key: "year",
+      icon: "target",
+      label: ttCopy(lang, "yearProgress"),
+      value: daysLeftText(yearDaysLeft, lang),
+      detail: ttCopy(lang, "leftThisYear"),
+      progress: progressText(yearProgress),
+    },
+    today: {
+      key: "today",
+      icon: "timer",
+      label: ttCopy(lang, "todayTotal"),
+      value: formatDuration(todayTotal),
+      detail: `${ttCopy(lang, "todayRemaining")}: ${formatDuration(todayRemaining)}`,
+    },
+    active: {
+      key: "active",
+      icon: activeEntries.length > 0 ? "play" : "clock",
+      label: ttCopy(lang, "currentRunning"),
+      value: activeValue,
+      detail: activeDetail,
+      running: activeEntries.length > 0,
+    },
+  };
+  const customCardViews = customCards.map((card): TimeStatusCardView => ({
+    key: customTimeStatusKey(card.id),
+    icon: "alarm",
+    label: card.name,
+    value: customTimeStatusValue(card.targetMs, nowMs, lang),
+    detail: customTimeStatusDetail(card.targetMs, lang),
+    custom: true,
+  }));
+  const customCardViewMap = new Map(customCardViews.map((card) => [card.key, card]));
+  const cardForKey = (key: TimeStatusCardKey): TimeStatusCardView | undefined => {
+    if (isTimeStatusStaticCardKey(key)) return allCards[key];
+    return customCardViewMap.get(key);
+  };
+  const visibleCards = visibleCardKeys.map(cardForKey).filter((card): card is TimeStatusCardView => card !== undefined);
+  const hiddenCards = [
+    ...DEFAULT_TIME_STATUS_CARDS.filter((key) => !visibleCardKeys.includes(key)).map((key) => allCards[key]),
+    ...customCardViews.filter((card) => !visibleCardKeys.includes(card.key)),
+  ];
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    writeTrackerUi(TIME_STATUS_CARDS_KEY, JSON.stringify(visibleCardKeys), scope);
+  }, [visibleCardKeys, scope]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    writeTrackerUi(TIME_STATUS_CUSTOM_CARDS_KEY, JSON.stringify(customCards), scope);
+  }, [customCards, scope]);
+
+  function removeCard(key: TimeStatusCardKey): void {
+    setVisibleCardKeys((prev) => prev.filter((item) => item !== key));
+    setAddOpen(false);
+  }
+
+  function restoreCard(key: TimeStatusCardKey): void {
+    setVisibleCardKeys((prev) => {
+      if (prev.includes(key)) return prev;
+      if (!isTimeStatusStaticCardKey(key)) return [...prev, key];
+      const restored = [...prev];
+      const defaultIndex = DEFAULT_TIME_STATUS_CARDS.indexOf(key);
+      const insertAt = restored.findIndex((item) => isTimeStatusStaticCardKey(item) && DEFAULT_TIME_STATUS_CARDS.indexOf(item) > defaultIndex);
+      if (insertAt < 0) return [...restored, key];
+      restored.splice(insertAt, 0, key);
+      return restored;
+    });
+    setAddOpen(false);
+  }
+
+  function createCustomCard(name: string, targetMs: number): void {
+    const stamp = Date.now();
+    const card: TimeStatusCustomCard = {
+      id: uid("status"),
+      name,
+      targetMs,
+      createdAt: stamp,
+      updatedAt: stamp,
+    };
+    setCustomCards((prev) => [...prev, card]);
+    setVisibleCardKeys((prev) => [...prev, customTimeStatusKey(card.id)]);
+    setCustomEditorOpen(false);
+    setAddOpen(false);
+  }
+
+  function reorderCard(overKey: TimeStatusCardKey): void {
+    const currentDragKey = dragKeyRef.current;
+    if (currentDragKey === null || currentDragKey === overKey) return;
+    setVisibleCardKeys((prev) => {
+      const from = prev.indexOf(currentDragKey);
+      const to = prev.indexOf(overKey);
+      if (from < 0 || to < 0 || from === to) return prev;
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      if (moved === undefined) return prev;
+      next.splice(to, 0, moved);
+      return next;
+    });
+  }
+
+  if (hidden) {
+    return (
+      <section className="tt-panel tt-time-status-panel is-hidden">
+        <div className="tt-time-status-hidden">
+          <span className="tt-time-status-hidden-icon"><IconGlyph name="calendar" size={15} /></span>
+          <strong>{ttCopy(lang, "timeStatusHidden")}</strong>
+          <span>{formatDayLabel(nowMs, lang)} · {formatClock(nowMs)}</span>
+          <button type="button" className="tt-btn tt-btn-subtle" onClick={() => onSetHidden(false)}>
+            {ttCopy(lang, "showTimeStatus")}
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="tt-panel tt-time-status-panel">
+      <div className="tt-section-head tt-time-status-head">
+        <div>
+          <h2>{ttCopy(lang, "timeStatus")}</h2>
+          <span>{formatDayLabel(nowMs, lang)} · {formatClock(nowMs)}</span>
+        </div>
+        <div className="tt-time-status-actions">
+          <div className="tt-time-add-wrap">
+            <button type="button" className="tt-icon-btn tt-mini-action" aria-label={ttCopy(lang, "addTimeStatusCard")} onClick={() => setAddOpen((open) => !open)}>
+              <IconGlyph name="plus" size={14} />
+            </button>
+            {addOpen && (
+              <div className="tt-time-add-menu" role="menu" aria-label={ttCopy(lang, "addTimeStatusCard")}>
+                <button type="button" className="tt-time-custom-add" role="menuitem" onClick={() => { setCustomEditorOpen(true); setAddOpen(false); }}>
+                  <IconGlyph name="plus" size={14} />
+                  <span>{ttCopy(lang, "customTimeStatus")}</span>
+                </button>
+                {hiddenCards.length > 0 ? hiddenCards.map((card) => (
+                  <button key={card.key} type="button" role="menuitem" onClick={() => restoreCard(card.key)}>
+                    <IconGlyph name={card.icon} size={14} />
+                    <span>{card.label}</span>
+                  </button>
+                )) : (
+                  <span>{ttCopy(lang, "noHiddenTimeStatusCards")}</span>
+                )}
+              </div>
+            )}
+          </div>
+          <button type="button" className="tt-icon-btn tt-mini-action" aria-label={ttCopy(lang, "hideTimeStatus")} onClick={() => onSetHidden(true)}>
+            <IconGlyph name="chevD" size={14} />
+          </button>
+        </div>
+      </div>
+      <div className="tt-time-card-grid">
+        {visibleCards.map((card) => (
+          <article
+            key={card.key}
+            className={`tt-time-card${card.running === true ? " is-running" : ""}${card.custom === true ? " is-custom" : ""}${dragKey === card.key ? " is-dragging" : ""}`}
+            draggable
+            onContextMenu={(event) => {
+              event.preventDefault();
+              removeCard(card.key);
+            }}
+            onDragStart={(event) => {
+              event.dataTransfer.effectAllowed = "move";
+              dragKeyRef.current = card.key;
+              setDragKey(card.key);
+            }}
+            onDragOver={(event) => {
+              event.preventDefault();
+              reorderCard(card.key);
+            }}
+            onDragEnd={() => {
+              dragKeyRef.current = null;
+              setDragKey(null);
+            }}
+            onDrop={() => {
+              dragKeyRef.current = null;
+              setDragKey(null);
+            }}
+          >
+            <span className="tt-time-card-icon"><IconGlyph name={card.icon} size={15} /></span>
+            <span className="tt-time-card-copy">
+              <em>{card.label}</em>
+              <strong>{card.value}</strong>
+              <small>{card.detail}</small>
+            </span>
+            <button
+              type="button"
+              className="tt-time-card-remove"
+              aria-label={`${ttCopy(lang, "removeTimeStatusCard")} ${card.label}`}
+              onClick={() => removeCard(card.key)}
+            >
+              <IconGlyph name="close" size={12} />
+            </button>
+            {card.progress !== undefined && (
+              <span className="tt-time-progress-wrap">
+                <span className="tt-time-progress-meta">{card.progress}</span>
+                <span className="tt-time-progress" aria-label={`${card.label} ${card.progress}`}>
+                  <span style={{ width: card.progress }} />
+                </span>
+              </span>
+            )}
+          </article>
+        ))}
+      </div>
+      {customEditorOpen && (
+        <CustomTimeStatusEditor
+          lang={lang}
+          nowMs={nowMs}
+          onClose={() => setCustomEditorOpen(false)}
+          onSave={createCustomCard}
+        />
+      )}
+    </section>
+  );
+}
+
+function CustomTimeStatusEditor({
+  lang,
+  nowMs,
+  onClose,
+  onSave,
+}: {
+  readonly lang: Lang;
+  readonly nowMs: number;
+  readonly onClose: () => void;
+  readonly onSave: (name: string, targetMs: number) => void;
+}) {
+  const [name, setName] = useState("");
+  const [targetValue, setTargetValue] = useState(() => toInputValue(nowMs + DAY_MS));
+  const targetMs = fromInputValue(targetValue, nowMs + DAY_MS);
+  const valid = name.trim() !== "" && Number.isFinite(targetMs);
+
+  function submit(event: FormEvent): void {
+    event.preventDefault();
+    if (!valid) return;
+    onSave(name.trim(), targetMs);
+  }
+
+  return (
+    <Modal title={ttCopy(lang, "customTimeStatus")} onClose={onClose} footer={(
+      <>
+        <span className="tt-head-spacer" />
+        <button type="button" className="tt-btn" onClick={onClose}>{ttCopy(lang, "cancel")}</button>
+        <button type="submit" form="tt-custom-time-status-form" className="tt-btn tt-btn-primary" disabled={!valid}>{ttCopy(lang, "save")}</button>
+      </>
+    )}>
+      <form id="tt-custom-time-status-form" className="tt-custom-time-form" onSubmit={submit}>
+        <label className="tt-field">
+          <span>{ttCopy(lang, "customTimeName")}</span>
+          <input
+            aria-label={ttCopy(lang, "customTimeName")}
+            value={name}
+            placeholder={ttCopy(lang, "customTimePlaceholder")}
+            onChange={(event) => setName(event.target.value)}
+            autoFocus
+          />
+        </label>
+        <label className="tt-field">
+          <span>{ttCopy(lang, "customTimeTarget")}</span>
+          <input
+            aria-label={ttCopy(lang, "customTimeTarget")}
+            type="datetime-local"
+            value={targetValue}
+            onChange={(event) => setTargetValue(event.target.value)}
+          />
+        </label>
+      </form>
+    </Modal>
+  );
 }
 
 type InsightBarRow = {
@@ -970,8 +1550,10 @@ function exportEntriesCsv(
   lang: Lang,
   categoryMap: ReadonlyMap<string, TimeTrackerCategory>,
   label: string,
+  rangeStart: number,
+  rangeEnd: number,
 ): void {
-  const headers = ["Date", "Category", "Subcategory", "Start", "End", "Duration", "Duration minutes", "Note", "Status"];
+  const headers = ["Date", "Category", "Subcategory", "Start", "End", "Duration", "Duration minutes", "Note", "Status", "Source ID", "Range start", "Range end exclusive", "Timezone", "Source start", "Source end", "Contribution ms"];
   const rows = list.map((entry) => {
     const category = categoryMap.get(entry.categoryId);
     const start = entryStart(entry);
@@ -984,9 +1566,16 @@ function exportEntriesCsv(
       formatClock(start),
       end,
       formatDuration(duration),
-      Math.round(duration / 60_000),
+      duration / 60_000,
       entry.note[lang] || entry.note.en,
       isRunningEntry(entry) ? ttCopy(lang, "running") : ttCopy(lang, "records"),
+      entry.id,
+      new Date(rangeStart).toISOString(),
+      new Date(Math.min(rangeEnd, nowMs)).toISOString(),
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+      new Date(start).toISOString(),
+      isRunningEntry(entry) ? "" : new Date(entryLastEnd(entry, nowMs)).toISOString(),
+      duration,
     ];
   });
   const csv = [headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\n");
@@ -996,11 +1585,10 @@ function exportEntriesCsv(
 
 function buildDayTrend(entries: readonly TimeTrackerEntry[], nowMs: number, lang: Lang, selectedKey: string) {
   return Array.from({ length: 7 }, (_, index) => {
-    const start = startOfDay(nowMs - (6 - index) * DAY_MS);
+    const start = startOfDay(addLocalDays(nowMs, -(6 - index)).getTime());
     const key = dayKey(start);
-    const dayEntries = entries.filter((entry) => dayKey(entryStart(entry)) === key);
-    const value = entries
-      .filter((entry) => dayKey(entryStart(entry)) === key)
+    const dayEntries = entriesOnDay(entries, key, nowMs);
+    const value = dayEntries
       .reduce((sum, entry) => sum + entryDuration(entry, nowMs), 0);
     return {
       key,
@@ -1139,35 +1727,47 @@ function CategoryCard({
       }}
       onDragEnd={() => onSetDragId(null)}
     >
-      <div className="tt-card-actions">
-        <button
-          type="button"
-          className="tt-card-collapse"
-          aria-expanded={!collapsed}
-          aria-label={`${ttCopy(lang, collapsed ? "showSubcategories" : "hideSubcategories")} ${textName(category.name, lang)}`}
-          onClick={(event) => { event.stopPropagation(); onToggleCollapsed(); }}
-        >
-          <IconGlyph name="chevD" size={14} />
-        </button>
-        <button type="button" className="tt-card-add-sub" aria-label={`${ttCopy(lang, "addSub")} ${textName(category.name, lang)}`} onClick={(event) => { event.stopPropagation(); onAddSub(); }}>
-          <IconGlyph name="plus" size={14} />
-        </button>
-        <button type="button" className="tt-card-menu" aria-label={ttCopy(lang, "editCategory")} onClick={(event) => { event.stopPropagation(); onEdit(); }}>
-          <IconGlyph name="dots" size={15} />
-        </button>
-      </div>
-      <button type="button" className="tt-category-body" onClick={onDetail}>
-        <div className="tt-category-top">
-          <span className="tt-category-icon"><IconGlyph name={category.icon} size={18} /></span>
-          <div>
+      <div className="tt-card-head">
+        <button type="button" className="tt-category-body" onClick={onDetail}>
+          <span className="tt-category-icon"><IconGlyph name={category.icon} size={17} /></span>
+          <span className="tt-category-copy">
             <h3>{textName(category.name, lang)}</h3>
-            <p>{formatDuration(todayMs)} / {category.goalMin}m {ttCopy(lang, "goal")}</p>
-          </div>
-          <span className="tt-category-meta">{category.subs.length > 0 ? `${category.subs.length} ${ttCopy(lang, "subcategory")}` : ttCopy(lang, "whole")}</span>
-          {running && <span className="tt-run-tag"><span className="tt-live-dot" />{activeCount}</span>}
+            <span>{formatDuration(todayMs)} / {category.goalMin}m {ttCopy(lang, "goal")}</span>
+          </span>
+        </button>
+        <div className="tt-card-actions">
+          <button
+            type="button"
+            className="tt-category-start"
+            disabled={!canStart}
+            aria-label={`${ttCopy(lang, "start")} ${textName(category.name, lang)}`}
+            onClick={(event) => { event.stopPropagation(); onStart(category.id, null); }}
+          >
+            <IconGlyph name="play" size={13} />
+            <span>{ttCopy(lang, "start")}</span>
+          </button>
+          <button
+            type="button"
+            className="tt-card-collapse"
+            aria-expanded={!collapsed}
+            aria-label={`${ttCopy(lang, collapsed ? "showSubcategories" : "hideSubcategories")} ${textName(category.name, lang)}`}
+            onClick={(event) => { event.stopPropagation(); onToggleCollapsed(); }}
+          >
+            <IconGlyph name="chevD" size={13} />
+          </button>
+          <button type="button" className="tt-card-add-sub" aria-label={`${ttCopy(lang, "addSub")} ${textName(category.name, lang)}`} onClick={(event) => { event.stopPropagation(); onAddSub(); }}>
+            <IconGlyph name="plus" size={13} />
+          </button>
+          <button type="button" className="tt-card-menu" aria-label={ttCopy(lang, "editCategory")} onClick={(event) => { event.stopPropagation(); onEdit(); }}>
+            <IconGlyph name="dots" size={14} />
+          </button>
         </div>
-        <div className="tt-progress"><span style={{ width: `${goalPct}%` }} /></div>
-      </button>
+      </div>
+      <div className="tt-category-meta-row">
+        <span className="tt-category-meta">{category.subs.length > 0 ? `${category.subs.length} ${ttCopy(lang, "subcategory")}` : ttCopy(lang, "whole")}</span>
+        {running && <span className="tt-run-tag"><span className="tt-live-dot" />{activeCount}</span>}
+      </div>
+      <div className="tt-progress"><span style={{ width: `${goalPct}%` }} /></div>
       {!collapsed && (
         <div className="tt-subcard-grid">
           {tiles.map((tile) => {
@@ -1188,7 +1788,11 @@ function CategoryCard({
                   <strong>{tile.name}</strong>
                   <em>{textName(category.name, lang)}</em>
                 </span>
-                {tileRunning && <span className="tt-run-tag"><span className="tt-live-dot" />{tileActive}</span>}
+                {tileRunning ? (
+                  <span className="tt-run-tag"><span className="tt-live-dot" />{tileActive}</span>
+                ) : (
+                  <span className="tt-subcard-play" aria-hidden="true"><IconGlyph name="play" size={12} /></span>
+                )}
               </button>
             );
           })}
@@ -1207,6 +1811,7 @@ function ActiveSession({
   onResume,
   onStop,
   onEdit,
+  onFocus,
 }: {
   readonly entry: TimeTrackerEntry;
   readonly category: TimeTrackerCategory | undefined;
@@ -1216,6 +1821,7 @@ function ActiveSession({
   readonly onResume: (entryId: string) => void;
   readonly onStop: (entryId: string) => void;
   readonly onEdit: () => void;
+  readonly onFocus: () => void;
 }) {
   const running = isRunningEntry(entry);
   const sub = findSubcategory(category, entry.subId);
@@ -1223,28 +1829,216 @@ function ActiveSession({
   const icon = subcategoryIcon(sub, category);
   const primaryName = sub !== undefined ? textName(sub.name, lang) : textName(category?.name, lang);
   const parentName = textName(category?.name, lang);
+  const editTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (editTimerRef.current !== null) window.clearTimeout(editTimerRef.current);
+    };
+  }, []);
+
+  function clearPendingEdit(): void {
+    if (editTimerRef.current === null) return;
+    window.clearTimeout(editTimerRef.current);
+    editTimerRef.current = null;
+  }
+
+  function scheduleEdit(): void {
+    clearPendingEdit();
+    editTimerRef.current = window.setTimeout(() => {
+      editTimerRef.current = null;
+      onEdit();
+    }, 180);
+  }
+
+  function openFocus(): void {
+    clearPendingEdit();
+    onFocus();
+  }
+
   return (
-    <article className={`tt-active-row${running ? " is-running" : " is-paused"}`} style={{ "--tt-accent": accent } as CSSProperties}>
+    <article
+      className={`tt-active-row${running ? " is-running" : " is-paused"}`}
+      style={{ "--tt-accent": accent } as CSSProperties}
+      onDoubleClick={(event) => {
+        if ((event.target as HTMLElement).closest("[data-no-focus-open]") !== null) return;
+        openFocus();
+      }}
+    >
       <span className="tt-active-icon"><IconGlyph name={icon} size={18} /></span>
-      <button type="button" className="tt-active-body" onClick={onEdit}>
+      <button
+        type="button"
+        className="tt-active-body"
+        aria-label={`${ttCopy(lang, "enterFocusMode")} ${primaryName}`}
+        onClick={(event) => {
+          if (event.detail > 1) return;
+          scheduleEdit();
+        }}
+        onDoubleClick={openFocus}
+      >
         <strong>{primaryName}{sub !== undefined && <span> · {parentName}</span>}</strong>
         <span>{running ? <><span className="tt-live-dot" />{ttCopy(lang, "running")}</> : ttCopy(lang, "paused")} · {formatClock(entryStart(entry))}</span>
       </button>
       <b>{formatTimer(entryDuration(entry, nowMs))}</b>
-      <div className="tt-active-actions" data-no-drag>
+      <div className="tt-active-actions" data-no-drag data-no-focus-open>
         {isPausedEntry(entry) ? (
-          <button type="button" onClick={() => onResume(entry.id)} aria-label={ttCopy(lang, "resume")}><IconGlyph name="play" size={15} /></button>
+          <button type="button" className="tt-action-pill tt-action-primary" onClick={() => onResume(entry.id)} aria-label={ttCopy(lang, "resume")}><IconGlyph name="play" size={14} /><span>{ttCopy(lang, "resume")}</span></button>
         ) : (
-          <button type="button" onClick={() => onPause(entry.id)} aria-label={ttCopy(lang, "pause")}><IconGlyph name="pause" size={15} /></button>
+          <button type="button" className="tt-action-pill tt-action-primary" onClick={() => onPause(entry.id)} aria-label={ttCopy(lang, "pause")}><IconGlyph name="pause" size={14} /><span>{ttCopy(lang, "pause")}</span></button>
         )}
-        <button type="button" onClick={() => onStop(entry.id)} aria-label={ttCopy(lang, "end")}><IconGlyph name="check" size={15} /></button>
+        <button type="button" className="tt-action-pill tt-action-stop" onClick={() => onStop(entry.id)} aria-label={ttCopy(lang, "end")}><IconGlyph name="check" size={14} /><span>{ttCopy(lang, "end")}</span></button>
       </div>
     </article>
   );
 }
 
+function FocusModeOverlay({
+  entry,
+  category,
+  lang,
+  nowMs,
+  onPause,
+  onResume,
+  onStop,
+  onClose,
+}: {
+  readonly entry: TimeTrackerEntry;
+  readonly category: TimeTrackerCategory | undefined;
+  readonly lang: Lang;
+  readonly nowMs: number;
+  readonly onPause: (entryId: string) => void;
+  readonly onResume: (entryId: string) => void;
+  readonly onStop: (entryId: string) => void;
+  readonly onClose: () => void;
+}) {
+  const running = isRunningEntry(entry);
+  const sub = findSubcategory(category, entry.subId);
+  const accent = subcategoryColor(sub, category);
+  const icon = subcategoryIcon(sub, category);
+  const { taskName, parentName } = focusEntryNames(entry, category, lang);
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const hideTimerRef = useRef<number | null>(null);
+
+  const clearHideTimer = useMemo(() => {
+    return () => {
+      if (hideTimerRef.current === null) return;
+      window.clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    };
+  }, []);
+
+  const scheduleHide = useMemo(() => {
+    return () => {
+      clearHideTimer();
+      hideTimerRef.current = window.setTimeout(() => {
+        setControlsVisible(false);
+        hideTimerRef.current = null;
+      }, 2200);
+    };
+  }, [clearHideTimer]);
+
+  useEffect(() => {
+    scheduleHide();
+    return clearHideTimer;
+  }, [clearHideTimer, scheduleHide]);
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent): void {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== " " && event.key !== "Spacebar" && event.code !== "Space") return;
+      const target = event.target;
+      if (target instanceof HTMLElement && target.closest("button, a, input, textarea, select, [role='button'], [contenteditable='true']") !== null) return;
+      event.preventDefault();
+      if (running) {
+        onPause(entry.id);
+      } else {
+        onResume(entry.id);
+      }
+      setControlsVisible(true);
+      scheduleHide();
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [entry.id, onClose, onPause, onResume, running, scheduleHide]);
+
+  function revealControls(): void {
+    setControlsVisible(true);
+    scheduleHide();
+  }
+
+  return (
+    <div
+      className={`tt-focus-overlay${controlsVisible ? " controls-visible" : ""}${running ? " is-running" : " is-paused"}`}
+      style={{ "--tt-accent": accent } as CSSProperties}
+      role="dialog"
+      aria-modal="true"
+      aria-label={ttCopy(lang, "focusMode")}
+      onMouseMove={revealControls}
+      onMouseLeave={() => {
+        clearHideTimer();
+        setControlsVisible(false);
+      }}
+      onPointerDown={revealControls}
+    >
+      <div className="tt-focus-ambient" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <main className="tt-focus-core">
+        <div className="tt-focus-icon"><IconGlyph name={icon} size={30} /></div>
+        <p className="tt-focus-kicker">{parentName}</p>
+        <h2>{taskName}</h2>
+        <strong className="tt-focus-time">{formatTimer(entryDuration(entry, nowMs))}</strong>
+        <div className="tt-focus-meta" aria-label={ttCopy(lang, "focusMode")}>
+          <span>
+            <em>{ttCopy(lang, "focusElapsed")}</em>
+            <b>{formatDuration(entryDuration(entry, nowMs))}</b>
+          </span>
+          <span>
+            <em>{ttCopy(lang, "focusStartedAt")}</em>
+            <b>{formatClockFull(entryStart(entry))}</b>
+          </span>
+          <span>
+            <em>{ttCopy(lang, "focusStatus")}</em>
+            <b>{running ? ttCopy(lang, "running") : ttCopy(lang, "paused")}</b>
+          </span>
+        </div>
+      </main>
+      <div className="tt-focus-controls" role="toolbar" aria-label={ttCopy(lang, "focusMode")} data-no-drag>
+        {isPausedEntry(entry) ? (
+          <button type="button" className="tt-focus-action primary" onClick={() => { onResume(entry.id); revealControls(); }} aria-label={ttCopy(lang, "resume")}>
+            <IconGlyph name="play" size={15} />
+            {ttCopy(lang, "resume")}
+          </button>
+        ) : (
+          <button type="button" className="tt-focus-action primary" onClick={() => { onPause(entry.id); revealControls(); }} aria-label={ttCopy(lang, "pause")}>
+            <IconGlyph name="pause" size={15} />
+            {ttCopy(lang, "pause")}
+          </button>
+        )}
+        <button type="button" className="tt-focus-action danger" onClick={() => onStop(entry.id)} aria-label={ttCopy(lang, "focusStopAndExit")}>
+          <IconGlyph name="check" size={15} />
+          {ttCopy(lang, "stop")}
+        </button>
+        <button type="button" className="tt-focus-action" onClick={onClose} aria-label={ttCopy(lang, "exitFocusMode")}>
+          <IconGlyph name="close" size={15} />
+          {ttCopy(lang, "exitFocusMode")}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function RecordRow({
   entry,
+  dayContributionMs,
   category,
   lang,
   nowMs,
@@ -1253,6 +2047,7 @@ function RecordRow({
   onDelete,
 }: {
   readonly entry: TimeTrackerEntry;
+  readonly dayContributionMs: number;
   readonly category: TimeTrackerCategory | undefined;
   readonly lang: Lang;
   readonly nowMs: number;
@@ -1339,7 +2134,7 @@ function RecordRow({
         </span>
         {entry.note[lang] !== "" && <small>{entry.note[lang]}</small>}
       </div>
-      <b>{formatDuration(entryDuration(entry, nowMs))}</b>
+      <b title={`${lang === "zh" ? "所选日期" : "Selected day"}: ${formatDuration(dayContributionMs)} · ${lang === "zh" ? "完整记录" : "Complete record"}: ${formatDuration(entryDuration(entry, nowMs))}`}>{formatDuration(dayContributionMs)}</b>
       <div className="tt-row-actions">
         <button type="button" aria-label={ttCopy(lang, "editRecord")} onClick={onEdit}><IconGlyph name="sliders" size={14} /></button>
         <button type="button" aria-label={ttCopy(lang, "delete")} onClick={onDelete}><IconGlyph name="trash" size={14} /></button>
@@ -1598,7 +2393,7 @@ function CategoryDetail({
   readonly onEdit: () => void;
   readonly onStartSub: (subId: string) => void;
 }) {
-  const dayEntries = entries.filter((entry) => entry.categoryId === category.id && dayKey(entryStart(entry)) === selectedKey);
+  const dayEntries = entriesOnDay(entries.filter((entry) => entry.categoryId === category.id), selectedKey, nowMs);
   const total = dayEntries.reduce((sum, entry) => sum + entryDuration(entry, nowMs), 0);
   const bySub = new Map<string, number>();
   for (const entry of dayEntries) {
@@ -1943,6 +2738,8 @@ function EntryEditor({
   const editing = state.mode === "edit";
   const entry = editing ? state.entry : undefined;
   const wasRunning = entry !== undefined && isRunningEntry(entry);
+  const originalStart = entry === undefined ? null : toInputValue(entryStart(entry));
+  const originalEnd = useRef(entry === undefined ? null : toInputValue(entryLastEnd(entry, Date.now()))).current;
   const baseDay = entry === undefined ? keyToDate(defaultDayKey) : entryStart(entry);
   const firstCategory = categories[0];
   const [categoryId, setCategoryId] = useState(entry?.categoryId ?? firstCategory?.id ?? "");
@@ -1952,10 +2749,13 @@ function EntryEditor({
   const [endValue, setEndValue] = useState(() => toInputValue(entry === undefined ? baseDay + 10 * 3_600_000 : entryLastEnd(entry, Date.now())));
   const [keepRunning, setKeepRunning] = useState(wasRunning);
   const [note, setNote] = useState(entry?.note[lang] ?? "");
+  const hasMultipleSegments = (entry?.segments.length ?? 0) > 1;
   const startMs = fromInputValue(startValue, Date.now());
   const endMs = fromInputValue(endValue, Date.now());
   const valid = categoryId !== "" && (keepRunning || endMs > startMs);
-  const durationMs = keepRunning ? Date.now() - startMs : endMs - startMs;
+  const durationMs = entry && startValue === originalStart && endValue === originalEnd && keepRunning === wasRunning
+    ? entryDuration(entry, Date.now())
+    : keepRunning ? Date.now() - startMs : endMs - startMs;
 
   function submit(event: FormEvent): void {
     event.preventDefault();
@@ -1964,9 +2764,11 @@ function EntryEditor({
       id: entry?.id,
       categoryId,
       subId,
-      segments: [{ start: startMs, end: keepRunning ? null : endMs }],
+      segments: entry && startValue === originalStart && endValue === originalEnd && keepRunning === wasRunning
+        ? entry.segments
+        : [{ start: startMs, end: keepRunning ? null : endMs }],
       note: note.trim() === "" ? { en: "", zh: "" } : { en: note.trim(), zh: note.trim() },
-      done: !keepRunning,
+      done: entry && startValue === originalStart && endValue === originalEnd && keepRunning === wasRunning ? entry.done : !keepRunning,
     });
   }
 
@@ -2005,16 +2807,17 @@ function EntryEditor({
         <div className="tt-field-grid">
           <label className="tt-field">
             <span>{ttCopy(lang, "startTime")}</span>
-            <input type="datetime-local" value={startValue} onChange={(event) => setStartValue(event.target.value)} />
+            <input type="datetime-local" disabled={hasMultipleSegments} value={startValue} onChange={(event) => setStartValue(event.target.value)} />
           </label>
           <label className="tt-field">
             <span>{ttCopy(lang, "endTime")}</span>
-            {keepRunning ? <div className="tt-input-static"><span className="tt-live-dot" />{ttCopy(lang, "running")}</div> : <input type="datetime-local" value={endValue} onChange={(event) => setEndValue(event.target.value)} />}
+            {keepRunning ? <div className="tt-input-static"><span className="tt-live-dot" />{ttCopy(lang, "running")}</div> : <input type="datetime-local" disabled={hasMultipleSegments} value={endValue} onChange={(event) => setEndValue(event.target.value)} />}
           </label>
         </div>
+        {hasMultipleSegments && <p>{lang === "zh" ? "此记录包含暂停时段。此处保留原始时段，可修改备注与分类。" : "This record includes paused intervals. Original intervals are preserved here; notes and category can be edited."}</p>}
         {wasRunning && (
           <label className="tt-check-row">
-            <input type="checkbox" checked={keepRunning} onChange={(event) => setKeepRunning(event.target.checked)} />
+            <input type="checkbox" disabled={hasMultipleSegments} checked={keepRunning} onChange={(event) => setKeepRunning(event.target.checked)} />
             <span>{ttCopy(lang, "keepRunning")}</span>
           </label>
         )}
@@ -2047,8 +2850,9 @@ function InsightsBoard({
   readonly categoryMap: ReadonlyMap<string, TimeTrackerCategory>;
   readonly onDeleteRange: (rangeEntries: readonly TimeTrackerEntry[], label: string) => void;
 }) {
+  const scope = useRef(accountScope.capture()).current;
   const [range, setRange] = useState<InsightRange>("week");
-  const [customStart, setCustomStart] = useState(() => dateInputValue(nowMs - 29 * DAY_MS));
+  const [customStart, setCustomStart] = useState(() => dateInputValue(addLocalDays(nowMs, -29).getTime()));
   const [customEnd, setCustomEnd] = useState(() => dateInputValue(nowMs));
   const [cards, setCards] = useState(readInsightBoard);
   const [adding, setAdding] = useState(false);
@@ -2056,13 +2860,13 @@ function InsightsBoard({
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
-    window.localStorage.setItem(INSIGHTS_KEY, JSON.stringify(cards));
-  }, [cards]);
+    writeTrackerUi(INSIGHTS_KEY, JSON.stringify(cards), scope);
+  }, [cards, scope]);
 
   const customA = keyToDate(customStart);
   const customB = endOfDayExclusive(customEnd);
-  const customRangeStart = Math.min(customA, customB - DAY_MS);
-  const customRangeEnd = Math.max(customA + DAY_MS, customB);
+  const customRangeStart = Math.min(customA, addLocalDays(customB, -1).getTime());
+  const customRangeEnd = Math.max(nextLocalDayStart(customA).getTime(), customB);
   const rangeStart = range === "week"
     ? startOfWeek(nowMs)
     : range === "month"
@@ -2072,11 +2876,8 @@ function InsightsBoard({
         : range === "custom"
           ? customRangeStart
           : 0;
-  const rangeEnd = range === "custom" ? customRangeEnd : range === "all" ? Number.POSITIVE_INFINITY : startOfDay(nowMs) + DAY_MS;
-  const inRange = entries.filter((entry) => {
-    const start = entryStart(entry);
-    return start >= rangeStart && start < rangeEnd;
-  });
+  const rangeEnd = range === "custom" ? customRangeEnd : range === "all" ? Number.POSITIVE_INFINITY : nextLocalDayStart(nowMs).getTime();
+  const inRange = entriesInWindow(entries, rangeStart, rangeEnd, nowMs);
   const rangeTotal = inRange.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
   const activeInRange = inRange.filter(isActiveEntry).length;
   const reportLabel = rangeLabel(rangeStart, rangeEnd, lang);
@@ -2110,10 +2911,10 @@ function InsightsBoard({
 	        </div>
 	        <div className="tt-report-actions">
 	          <button type="button" className="tt-btn" title={ttCopy(lang, "resetBoard")} onClick={() => setCards(defaultInsightBoard())}><IconGlyph name="sync" size={14} /></button>
-	          <button type="button" className="tt-btn" disabled={inRange.length === 0} onClick={() => exportEntriesCsv(inRange, nowMs, lang, categoryMap, reportLabel)}>
+	          <button type="button" className="tt-btn" disabled={inRange.length === 0} onClick={() => exportEntriesCsv(inRange, nowMs, lang, categoryMap, reportLabel, rangeStart, rangeEnd)}>
 	            <IconGlyph name="download" size={14} />{ttCopy(lang, "exportCsv")}
 	          </button>
-	          <button type="button" className="tt-btn tt-btn-danger" disabled={inRange.length === 0} onClick={() => onDeleteRange(inRange, reportLabel)}>
+	          <button type="button" className="tt-btn tt-btn-danger" disabled={inRange.length === 0} onClick={() => onDeleteRange(inRange.map(sourceEntry), reportLabel)}>
 	            <IconGlyph name="trash" size={14} />{ttCopy(lang, "deleteRange")}
 	          </button>
 	          <div className="tt-add-menu-wrap">
@@ -2221,7 +3022,7 @@ function InsightContent({
   const today = dayKey(nowMs);
   const sum = (items: readonly TimeTrackerEntry[]) => items.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
   if (card.type === "today-total") {
-    const todayRows = entries.filter((entry) => dayKey(entryStart(entry)) === today);
+    const todayRows = entriesOnDay(entries, today, nowMs);
     const total = sum(todayRows);
     return (
       <InsightNumber
@@ -2244,33 +3045,33 @@ function InsightContent({
     );
   }
   if (card.type === "week-total") {
-    const rows = entries.filter((entry) => entryStart(entry) >= startOfWeek(nowMs));
+    const rows = entriesInWindow(entries, startOfWeek(nowMs), nowMs, nowMs);
     const total = sum(rows);
     return <InsightNumber value={formatDuration(total)} sub={ttCopy(lang, "week")} detail={detailText([ttCopy(lang, "week"), formatDuration(total), entryCountText(rows.length, lang)])} />;
   }
   if (card.type === "month-total") {
-    const rows = entries.filter((entry) => entryStart(entry) >= startOfMonth(nowMs));
+    const rows = entriesInWindow(entries, startOfMonth(nowMs), nowMs, nowMs);
     const total = sum(rows);
     return <InsightNumber value={formatDuration(total)} sub={ttCopy(lang, "month")} detail={detailText([ttCopy(lang, "month"), formatDuration(total), entryCountText(rows.length, lang)])} />;
   }
   if (card.type === "avg-day") {
-    const days = new Set(inRange.map((entry) => dayKey(entryStart(entry)))).size || 1;
+    const days = new Set(inRange.flatMap((entry) => [...entryDayTotals(entry, nowMs).keys()])).size || 1;
     const total = sum(inRange);
     return <InsightNumber value={formatDuration(total / days)} sub={ttCopy(lang, "avgPerDay")} detail={detailText([`${days} ${ttCopy(lang, "daysTracked")}`, `${ttCopy(lang, "duration")}: ${formatDuration(total)}`])} />;
   }
   if (card.type === "days-tracked") {
-    const days = new Set(inRange.map((entry) => dayKey(entryStart(entry)))).size;
+    const days = new Set(inRange.flatMap((entry) => [...entryDayTotals(entry, nowMs).keys()])).size;
     return <InsightNumber value={String(days)} sub={ttCopy(lang, "daysTracked")} detail={detailText([ttCopy(lang, "daysTracked"), `${days}`, entryCountText(inRange.length, lang)])} />;
   }
   if (card.type === "donut-today" || card.type === "donut-range") {
-    const list = card.type === "donut-today" ? entries.filter((entry) => dayKey(entryStart(entry)) === today) : inRange;
+    const list = card.type === "donut-today" ? entriesOnDay(entries, today, nowMs) : inRange;
     return <DistributionInsight list={list} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
   }
   if (card.type === "cat-ranking") {
     return <RankingInsight list={inRange} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
   }
   if (card.type === "goal-progress") {
-    const list = entries.filter((entry) => dayKey(entryStart(entry)) === today);
+    const list = entriesOnDay(entries, today, nowMs);
     return <GoalInsight categories={categories} list={list} nowMs={nowMs} lang={lang} />;
   }
   if (card.type === "sub-split") {
@@ -2281,9 +3082,13 @@ function InsightContent({
     const buckets = [0, 0, 0, 0, 0, 0, 0];
     const counts = [0, 0, 0, 0, 0, 0, 0];
     for (const entry of inRange) {
-      const bucket = (new Date(entryStart(entry)).getDay() + 6) % 7;
-      buckets[bucket] = (buckets[bucket] ?? 0) + entryDuration(entry, nowMs);
-      counts[bucket] = (counts[bucket] ?? 0) + 1;
+      const counted = new Set<number>();
+      for (const [key, value] of entryDayTotals(entry, nowMs)) {
+        const bucket = (new Date(keyToDate(key)).getDay() + 6) % 7;
+        buckets[bucket] = (buckets[bucket] ?? 0) + value;
+        counted.add(bucket);
+      }
+      for (const bucket of counted) counts[bucket] = (counts[bucket] ?? 0) + 1;
     }
     const labels = lang === "zh" ? ["一", "二", "三", "四", "五", "六", "日"] : ["M", "T", "W", "T", "F", "S", "S"];
     return <MiniBars rows={buckets.map((value, index) => ({ key: String(index), value, label: labels[index] ?? "", title: formatDuration(value), detail: detailText([labels[index] ?? "", formatDuration(value), entryCountText(counts[index] ?? 0, lang)]) }))} />;
@@ -2291,9 +3096,9 @@ function InsightContent({
   if (card.type === "trend-7d" || card.type === "trend-30d") {
     const count = card.type === "trend-7d" ? 7 : 30;
     const rows = Array.from({ length: count }, (_, index) => {
-      const start = startOfDay(nowMs - (count - 1 - index) * DAY_MS);
+      const start = startOfDay(addLocalDays(nowMs, -(count - 1 - index)).getTime());
       const key = dayKey(start);
-      const dayEntries = entries.filter((entry) => dayKey(entryStart(entry)) === key);
+      const dayEntries = entriesOnDay(entries, key, nowMs);
       const value = dayEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
       return {
         key,
@@ -2308,10 +3113,7 @@ function InsightContent({
   if (card.type === "by-hour") {
     const buckets = Array.from({ length: 24 }, () => 0);
     for (const entry of inRange) {
-      for (const segment of entry.segments) {
-        const bucket = new Date(segment.start).getHours();
-        buckets[bucket] = (buckets[bucket] ?? 0) + Math.max(0, (segment.end ?? nowMs) - segment.start);
-      }
+      entryHourTotals(entry, nowMs).forEach((value, hour) => { buckets[hour] = (buckets[hour] ?? 0) + value; });
     }
     return <HourChart values={buckets} lang={lang} />;
   }
@@ -2328,7 +3130,7 @@ function InsightContent({
     return <FocusRhythmInsight list={inRange} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
   }
   if (card.type === "recent-sessions") {
-    return <RecentSessionsInsight list={entries} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
+    return <RecentSessionsInsight list={entriesInWindow(entries, Number.NEGATIVE_INFINITY, nowMs, nowMs).map(sourceEntry)} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
   }
   return null;
 }
@@ -2544,11 +3346,11 @@ function Heatmap({ entries, nowMs, lang }: { readonly entries: readonly TimeTrac
   const cells: Array<{ readonly key: string; readonly value: number; readonly count: number }> = [];
   let max = 1;
   const today = startOfDay(nowMs);
-  const start = today - (weeks * 7 - 1) * DAY_MS;
+  const start = addLocalDays(today, -(weeks * 7 - 1)).getTime();
   for (let index = 0; index < weeks * 7; index += 1) {
-    const ts = start + index * DAY_MS;
+    const ts = addLocalDays(start, index).getTime();
     const key = dayKey(ts);
-    const rows = entries.filter((entry) => dayKey(entryStart(entry)) === key);
+    const rows = entriesOnDay(entries, key, nowMs);
     const value = rows.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
     max = Math.max(max, value);
     cells.push({ key, value, count: rows.length });
@@ -2588,14 +3390,12 @@ function RangeSummaryInsight({
   const hourTotals = Array.from({ length: 24 }, () => 0);
   let longest: TimeTrackerEntry | undefined;
   for (const entry of list) {
-    const key = dayKey(entryStart(entry));
     const value = entryDuration(entry, nowMs);
-    const current = dayTotals.get(key) ?? { value: 0, count: 0 };
-    dayTotals.set(key, { value: current.value + value, count: current.count + 1 });
-    for (const segment of entry.segments) {
-      const hour = new Date(segment.start).getHours();
-      hourTotals[hour] = (hourTotals[hour] ?? 0) + Math.max(0, (segment.end ?? nowMs) - segment.start);
+    for (const [key, contribution] of entryDayTotals(entry, nowMs)) {
+      const current = dayTotals.get(key) ?? { value: 0, count: 0 };
+      dayTotals.set(key, { value: current.value + contribution, count: current.count + 1 });
     }
+    entryHourTotals(entry, nowMs).forEach((duration, hour) => { hourTotals[hour] = (hourTotals[hour] ?? 0) + duration; });
     if (longest === undefined || value > entryDuration(longest, nowMs)) longest = entry;
   }
   const bestDay = Array.from(dayTotals.entries()).sort((a, b) => b[1].value - a[1].value)[0];
@@ -2701,15 +3501,13 @@ function FocusRhythmInsight({
 }) {
   const hours = Array.from({ length: 24 }, () => ({ total: 0, count: 0, categoryTotals: new Map<string, number>() }));
   for (const entry of list) {
-    for (const segment of entry.segments) {
-      const hour = new Date(segment.start).getHours();
-      const value = Math.max(0, (segment.end ?? nowMs) - segment.start);
+    entryHourTotals(entry, nowMs).forEach((value, hour) => {
       const bucket = hours[hour];
-      if (bucket === undefined) continue;
+      if (bucket === undefined || value <= 0) return;
       bucket.total += value;
       bucket.count += 1;
       bucket.categoryTotals.set(entry.categoryId, (bucket.categoryTotals.get(entry.categoryId) ?? 0) + value);
-    }
+    });
   }
   const max = Math.max(...hours.map((hour) => hour.total), 1);
   if (max <= 1) return <NoData lang={lang} />;
@@ -2844,3 +3642,18 @@ function ConfirmDialog({
     </Modal>
   );
 }
+
+function writeTrackerUi(key: string, value: string, scope: AccountScope): void {
+  if (!accountScope.isReady(scope)) return;
+  window.localStorage.setItem(accountScope.physicalKey(key, scope), value);
+}
+registerAccountMigrationValidator(INSIGHTS_KEY, value => Array.isArray(value) && value.every(item => {
+  if (!item || typeof item !== "object") return false;
+  const card = item as Record<string, unknown>;
+  return typeof card.iid === "string" && INSIGHT_DEFS.some(def => def.type === card.type) && (card.catId == null || typeof card.catId === "string");
+}));
+registerAccountMigrationValidator(TIME_STATUS_CUSTOM_CARDS_KEY, value => Array.isArray(value) && value.every(item => {
+  if (!item || typeof item !== "object") return false;
+  const card = item as Record<string, unknown>;
+  return typeof card.id === "string" && card.id.trim() !== "" && typeof card.name === "string" && card.name.trim() !== "" && [card.targetMs, card.createdAt, card.updatedAt].every(value => typeof value === "number" && Number.isFinite(value));
+}));

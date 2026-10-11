@@ -1,0 +1,257 @@
+Scope: 2 of 64 workspace projects
+packages/xai-web-tasks test$ vitest run
+packages/xai-web-calendar test$ vitest run
+packages/xai-web-calendar test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-calendar
+packages/xai-web-tasks test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-tasks
+packages/xai-web-tasks test:  ✓ src/__tests__/completionContract.test.tsx (3 tests) 284ms
+packages/xai-web-tasks test:  ✓ src/__tests__/TaskComposer.test.tsx (11 tests) 816ms
+packages/xai-web-tasks test:  ✓ src/__tests__/registration.test.tsx (5 tests) 720ms
+packages/xai-web-tasks test:    ✓ tasksWebModuleRegistration — T-REG-2 RTL render > T-REG-2: TasksModuleRoute inside WebShellProvider renders EN Tasks heading  709ms
+packages/xai-web-tasks test: stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > retains and exports the latest composer draft, then retries exactly once
+packages/xai-web-tasks test: [plugin-web-storage] quota exceeded for xai_task_cols.
+packages/xai-web-tasks test:  ✓ src/__tests__/dueDate.test.tsx (3 tests) 3408ms
+packages/xai-web-tasks test:    ✓ REL-01 dueDate lifecycle > actual composer → detail edit → reload → local midnight refresh  3396ms
+packages/xai-web-tasks test: stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > retains failed detail edits and commits their latest values on retry
+packages/xai-web-tasks test: [plugin-web-storage] quota exceeded for xai_task_cols.
+packages/xai-web-tasks test:  ✓ src/__tests__/aiCreateSubscriber.test.tsx (7 tests) 177ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.recurrence.test.tsx (6 tests) 5422ms
+packages/xai-web-calendar test:    ✓ CalendarModule recurrence integration (P4) > AC-RECUR-1: daily recurring event over Week view renders 7 blocks  1374ms
+packages/xai-web-calendar test:    ✓ CalendarModule recurrence integration (P4) > AC-RECUR-2: weekly recurring event over Week view renders exactly one block  426ms
+packages/xai-web-calendar test:    ✓ CalendarModule recurrence integration (P4) > AC-RECUR-3: daily recurring event over Month view renders all month-window instances  788ms
+packages/xai-web-calendar test:    ✓ CalendarModule recurrence integration (P4) > AC-RECUR-6: editing a recurring event updates all rendered instances  1805ms
+packages/xai-web-calendar test:    ✓ CalendarModule recurrence integration (P4) > AC-RECUR-7: deleting a recurring event removes all rendered instances  804ms
+packages/xai-web-calendar test: stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps a failed new event and its latest draft available for retry
+packages/xai-web-calendar test: [plugin-web-storage] quota exceeded for xai_calendar_events.
+packages/xai-web-calendar test: stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps the editor and record when deletion fails
+packages/xai-web-calendar test: [plugin-web-storage] quota exceeded for xai_calendar_events.
+packages/xai-web-tasks test:  ✓ src/__tests__/TasksSidebar.test.tsx (6 tests) 1372ms
+packages/xai-web-tasks test:    ✓ TasksSidebar smart filters > marks the active smart row  552ms
+packages/xai-web-tasks test:  ✓ src/__tests__/aiMutateSubscriber.test.tsx (8 tests) 276ms
+packages/xai-web-calendar test:  ✓ src/__tests__/YearView.test.tsx (5 tests) 6927ms
+packages/xai-web-calendar test:    ✓ YearView > renders a 12-month year grid from the persisted year view  1994ms
+packages/xai-web-calendar test:    ✓ YearView > clicking a year-view date opens day overview before quick-create  2203ms
+packages/xai-web-calendar test:    ✓ YearView > shows month-view fixture events as same-color dots in the year grid  1067ms
+packages/xai-web-calendar test:    ✓ YearView > caps year-view dots at six and renders overflow as +N  681ms
+packages/xai-web-calendar test:    ✓ YearView > shows user event colors/tags and opens edit from the event dot  980ms
+packages/xai-web-tasks test: stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not publish failed list metadata and retains its editor for retry
+packages/xai-web-tasks test: [plugin-web-storage] quota exceeded for xai_pref_task_lists.
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.nav.test.tsx (6 tests) 8059ms
+packages/xai-web-calendar test:    ✓ CalendarModule nav > AC-NAV-1: > → June 2026  2730ms
+packages/xai-web-calendar test:    ✓ CalendarModule nav > AC-NAV-2: < → April 2026  657ms
+packages/xai-web-calendar test:    ✓ CalendarModule nav > AC-NAV-3: year rollover Dec → Jan  2309ms
+packages/xai-web-calendar test:    ✓ CalendarModule nav > AC-NAV-4: today button resets to May 2026 anchor  1176ms
+packages/xai-web-calendar test:    ✓ CalendarModule nav > AC-NAV-5: nav clears focusedDate  763ms
+packages/xai-web-calendar test:    ✓ CalendarModule nav > AC-NAV-6 (ZH): title updates in ZH after nav  423ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.render.test.tsx (12 tests) 8703ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-RENDER-1: renders without throwing (EN)  410ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-RENDER-4: title shows May 2026 in EN  1372ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-RENDER-4 (ZH): title shows 2026 年 5 月  346ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-RENDER-3: month grid has 42 cells for May 2026 Sunday-first (6 rows)  331ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-RENDER-5: sample-data banner is visible (EN)  799ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-RENDER-6 / AC-TODAY-1: today-pill wraps exactly one in-month day (May 22)  541ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-VIEW-1: all 4 view tabs are present  419ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-VIEW-2: Month is selected by default  481ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-VIEW-3: clicking Week swaps Month grid for Week time-grid (P2+ behavior)  974ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-VIEW-5: clicking back to Month restores the grid  1248ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-TOKENS-EXT-3: .cal-coming-soon class is never rendered (ComingSoonPanel deleted in P4)  1254ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-TODAY-3: DST boundary — UTC today still pinned (Mar 8 2026 spring-forward)  435ms
+packages/xai-web-tasks test:  ✓ src/__tests__/tasksReducer.test.ts (29 tests) 159ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.viewtoggle.test.tsx (11 tests) 9555ms
+packages/xai-web-calendar test:    ✓ CalendarModule view toggle > AC-TOGGLE-1: toggling Month→Week→Day→Month preserves activeDate  1958ms
+packages/xai-web-calendar test:    ✓ CalendarModule view toggle > AC-TOGGLE-2: tab aria-selected flips correctly  512ms
+packages/xai-web-calendar test:    ✓ CalendarModule view toggle > AC-TOGGLE-3: ComingSoonPanel is NOT rendered for any view  792ms
+packages/xai-web-calendar test:    ✓ CalendarModule view toggle > AC-PERSIST-EXT-1: view change calls setViewPref with correct value  583ms
+packages/xai-web-calendar test:    ✓ CalendarModule view toggle > AC-PERSIST-EXT-2: reload restores week view (mocked usePref returns "week")  484ms
+packages/xai-web-calendar test:    ✓ CalendarModule view toggle > AC-PERSIST-YEAR-1: reload restores year view (mocked usePref returns "year")  821ms
+packages/xai-web-calendar test:    ✓ Deep-link forces month view (AC-DEEPLINK-EXT-1) > deep-link handler forces view=month even when current view is week  310ms
+packages/xai-web-calendar test:    ✓ Nav arrows step by view (AC-NAV-EXT-1..3) > AC-NAV-EXT-1: when view=month, prev/next step ±1 month  638ms
+packages/xai-web-calendar test:    ✓ Nav arrows step by view (AC-NAV-EXT-1..3) > AC-NAV-YEAR-1: when view=year, prev/next step ±1 year  2902ms
+packages/xai-web-calendar test:    ✓ Nav arrows step by view (AC-NAV-EXT-1..3) > AC-ACTIVEDATE-3: today reset resets to MAY_2026_ANCHOR_TODAY  459ms
+packages/xai-web-tasks test:  ✓ src/__tests__/TasksModule.test.tsx (15 tests) 11352ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-MOD-1 EN column headers > T-MOD-1: renders 4 column headers in correct order for lang=en  546ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-MOD-2 ZH column headers > T-MOD-2: renders 4 column headers in correct order for lang=zh  629ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-MOD-3 checkbox toggle > T-MOD-3: clicking checkbox toggles is-completed class on card  721ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-MOD-4 DnD overdue → nodate > T-MOD-4: dragging a card from overdue to nodate strips its date element  1298ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-MOD-5 drop-target highlight > T-MOD-5: while dragging over later column, it has drop-target class  1657ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-MOD-6 drag hint while dragging > T-MOD-6: drag-hint element appears while a card is being dragged  991ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-COL-1 + button opens composer > T-COL-1: clicking + on a column with action===add opens the composer with that bucket pre-selected  898ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-EMPTY-1 board-level empty state EN (D-QT) > T-EMPTY-1c: when 'All' is selected, board-level empty state does NOT appear even with empty board  331ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-EMPTY-2 board-level empty state ZH (D-QT) > T-EMPTY-2a: ZH lang + next7 filter + empty next7 bucket → ZH bucket-framed empty state  307ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-EMPTY-2 board-level empty state ZH (D-QT) > T-EMPTY-2b: ZH lang + today filter + empty overdue bucket → ZH 'Nothing due today or overdue' (D-QT)  341ms
+packages/xai-web-tasks test:    ✓ TasksModule — collection overview boards > renders All lists as list-grouped cards instead of time buckets  934ms
+packages/xai-web-tasks test:    ✓ TasksModule — collection overview boards > renders All tags as tag-grouped cards instead of time buckets  1128ms
+packages/xai-web-tasks test:    ✓ TasksModule — collection overview boards > can switch an All lists overview back to time buckets  1070ms
+packages/xai-web-tasks test:  ✓ src/__tests__/persistence.test.tsx (10 tests) 11759ms
+packages/xai-web-tasks test:    ✓ TasksModule persistence > T-PER-1: empty localStorage → renders seed (Overdue column has 10 cards)  475ms
+packages/xai-web-tasks test:    ✓ TasksModule persistence > T-PER-2: after DnD move, localStorage xai_task_cols is a JSON array with updated cols  812ms
+packages/xai-web-tasks test:    ✓ TasksModule create flow + persistence (T-CR) > T-CR-1: create card → appears at top of target column + localStorage round-trips it  2442ms
+packages/xai-web-tasks test:    ✓ TasksModule create flow + persistence (T-CR) > T-CR-2: create card → card prepended and column count +1  1665ms
+packages/xai-web-tasks test:    ✓ TasksModule create flow + persistence (T-CR) > T-CR-3: created card survives unmount + re-mount (simulates page reload)  1683ms
+packages/xai-web-tasks test:    ✓ TasksModule completion persistence (T-PER-DONE) > T-PER-DONE-1: click checkbox → localStorage round-trips with done:true for that card  938ms
+packages/xai-web-tasks test:    ✓ TasksModule completion persistence (T-PER-DONE) > T-PER-DONE-2: toggled card shows is-completed after unmount + re-mount (simulates page reload)  2196ms
+packages/xai-web-tasks test:    ✓ filterCardsByList — T-FILT-COUNT storage byte-identical (FP2) > T-FILT-COUNT: localStorage xai_task_cols is byte-identical before and after applying all filters  561ms
+packages/xai-web-tasks test:    ✓ filterCardsByList — T-FILT-COUNT storage byte-identical (FP2) > T-FILT-COUNT: persisted xai_task_cols count field is not mutated after applying filters  753ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.eventcrud.test.tsx (10 tests) 10323ms
+packages/xai-web-calendar test:    ✓ CalendarModule event CRUD integration (P4) > AC-CREATE-7: toolbar + opens create composer on today (not activeDate)  2068ms
+packages/xai-web-calendar test:    ✓ CalendarModule event CRUD integration (P4) > AC-EDIT-4: clicking a user block in Week view opens edit composer  740ms
+packages/xai-web-calendar test:    ✓ CalendarModule event CRUD integration (P4) > AC-QUICK-CREATE-1: clicking a month date opens day overview, then create composer for that date  2730ms
+packages/xai-web-calendar test:    ✓ CalendarModule event CRUD integration (P4) > AC-QUICK-CREATE-1B: clicking a fixture chip still opens the day overview  540ms
+packages/xai-web-calendar test:    ✓ CalendarModule event CRUD integration (P4) > AC-QUICK-CREATE-2: created event renders on its source date with tag  1786ms
+packages/xai-web-calendar test:    ✓ CalendarModule event CRUD integration (P4) > AC-DELETE-2: deleting a month user event removes it from the date cell  1104ms
+packages/xai-web-calendar test:    ✓ CalendarModule event CRUD integration (P4) > AC-EDIT-5: clicking a user block in Day view opens edit composer  447ms
+packages/xai-web-calendar test:    ✓ CalendarModule event CRUD integration (P4) > AC-OVERLAP-1: two overlapping user events render side-by-side in Week view  464ms
+packages/xai-web-calendar test:    ✓ CalendarModule event CRUD integration (P4) > AC-OVERLAP-3: fixture and user events in same slot both render and keep source tags  356ms
+packages/xai-web-tasks test: stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not publish failed tag metadata and retains its editor for retry
+packages/xai-web-tasks test: [plugin-web-storage] quota exceeded for xai_pref_task_tags.
+packages/xai-web-calendar test: stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > exports the latest unsaved form and refuses old-account retry and export
+packages/xai-web-calendar test: [plugin-web-storage] quota exceeded for xai_calendar_events.
+packages/xai-web-tasks test:  ✓ src/__tests__/filterCardsByList.test.ts (24 tests) 37ms
+packages/xai-web-tasks test:  ✓ src/__tests__/taskLink.test.ts (7 tests) 11ms
+packages/xai-web-tasks test: stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not close failed detail deletion or delete list metadata before task references commit
+packages/xai-web-tasks test: [plugin-web-storage] quota exceeded for xai_task_cols.
+packages/xai-web-tasks test: [plugin-web-storage] quota exceeded for xai_task_cols.
+packages/xai-web-calendar test: stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > does not overwrite newer raw events when retrying a failed draft
+packages/xai-web-calendar test: [plugin-web-storage] quota exceeded for xai_calendar_events.
+packages/xai-web-calendar test:  ❯ src/__tests__/CalendarModule.saveRecovery.test.tsx (4 tests | 1 failed) 14669ms
+packages/xai-web-calendar test:    × keeps a failed new event and its latest draft available for retry 5497ms
+packages/xai-web-calendar test:      → Test timed out in 5000ms.
+packages/xai-web-calendar test: If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+packages/xai-web-calendar test:    ✓ keeps the editor and record when deletion fails  827ms
+packages/xai-web-calendar test:    ✓ exports the latest unsaved form and refuses old-account retry and export  4910ms
+packages/xai-web-calendar test:    ✓ does not overwrite newer raw events when retrying a failed draft  3429ms
+packages/xai-web-tasks test:  ✓ src/__tests__/index-barrel.test.ts (11 tests) 24ms
+packages/xai-web-tasks test:  ✓ src/__tests__/seed.test.ts (4 tests) 45ms
+packages/xai-web-tasks test:  ✓ src/__tests__/validate.test.ts (9 tests) 22ms
+packages/xai-web-tasks test:  ✓ src/__tests__/dateForCol.test.ts (5 tests) 14ms
+packages/xai-web-tasks test:  ✓ src/__tests__/ids.test.ts (2 tests) 4ms
+packages/xai-web-tasks test: stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > revokes failed composer retry and export after switching to B
+packages/xai-web-tasks test: [plugin-web-storage] quota exceeded for xai_task_cols.
+packages/xai-web-tasks test: [plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+packages/xai-web-tasks test:  ✓ src/__tests__/saveRecovery.test.tsx (6 tests) 19518ms
+packages/xai-web-tasks test:    ✓ Tasks recoverable writes > retains and exports the latest composer draft, then retries exactly once  3819ms
+packages/xai-web-tasks test:    ✓ Tasks recoverable writes > retains failed detail edits and commits their latest values on retry  2049ms
+packages/xai-web-tasks test:    ✓ Tasks recoverable writes > does not publish failed list metadata and retains its editor for retry  3169ms
+packages/xai-web-tasks test:    ✓ Tasks recoverable writes > does not publish failed tag metadata and retains its editor for retry  2814ms
+packages/xai-web-tasks test:    ✓ Tasks recoverable writes > does not close failed detail deletion or delete list metadata before task references commit  3832ms
+packages/xai-web-tasks test:    ✓ Tasks recoverable writes > revokes failed composer retry and export after switching to B  3828ms
+packages/xai-web-tasks test:  Test Files  18 passed (18)
+packages/xai-web-tasks test:       Tests  165 passed (165)
+packages/xai-web-tasks test:    Start at  14:15:54
+packages/xai-web-tasks test:    Duration  23.27s (transform 2.65s, setup 20.92s, collect 10.37s, tests 50.00s, environment 41.51s, prepare 6.43s)
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.activedate.test.tsx (5 tests) 4838ms
+packages/xai-web-calendar test:    ✓ CalendarModule activeDate state refactor > AC-ACTIVEDATE-1: mounts and shows month title (external behavior preserved)  1655ms
+packages/xai-web-calendar test:    ✓ CalendarModule activeDate state refactor > AC-ACTIVEDATE-2: displayedMonth is derived from activeDate (May 2026 on mount)  517ms
+packages/xai-web-calendar test:    ✓ CalendarModule activeDate state refactor > AC-ACTIVEDATE-8: all 90 SHIPPED tests pass (regression: external behavior preserved)  711ms
+packages/xai-web-calendar test:    ✓ CalendarModule activeDate state refactor > today reset button keeps activeDate on MAY_2026_ANCHOR_TODAY month  792ms
+packages/xai-web-calendar test:    ✓ CalendarModule activeDate state refactor > prev/next month buttons update the displayed month (derived from activeDate)  1161ms
+packages/xai-web-calendar test:  ✓ src/__tests__/WeekView.test.tsx (14 tests) 4714ms
+packages/xai-web-calendar test:    ✓ WeekView > AC-WEEK-1: renders 7 column labels in header  1251ms
+packages/xai-web-calendar test:    ✓ WeekView > AC-WEEK-2: renders 24 hour rows for a standard day  358ms
+packages/xai-web-calendar test:    ✓ WeekView > AC-WEEK-3: week-start Sun — May 17 is first column  462ms
+packages/xai-web-calendar test:    ✓ WeekView > AC-WEEK-4: week-start Mon — May 18 is first column  367ms
+packages/xai-web-calendar test:    ✓ WeekView > AC-WEEK-7: DST spring-forward day has correct row count  362ms
+packages/xai-web-calendar test:    ✓ WeekView > AC-WEEK-13: multi-hour block (endTime event) renders with height > 48px  531ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.deeplink.test.tsx (7 tests) 6016ms
+packages/xai-web-calendar test:    ✓ CalendarModule deep-link > AC-DEEPLINK-1: focusDate sets focusedDate (same month)  1221ms
+packages/xai-web-calendar test:    ✓ CalendarModule deep-link > AC-DEEPLINK-2: matching cell receives data-focused=true  741ms
+packages/xai-web-calendar test:    ✓ CalendarModule deep-link > AC-DEEPLINK-3: click on < clears focusedDate  1484ms
+packages/xai-web-calendar test:    ✓ CalendarModule deep-link > AC-DEEPLINK-4: non-calendar moduleId is ignored  718ms
+packages/xai-web-calendar test:    ✓ CalendarModule deep-link > AC-DEEPLINK-5: cross-month focusDate navigates displayedMonth  802ms
+packages/xai-web-calendar test:    ✓ CalendarModule deep-link > AC-DEEPLINK-6: malformed focusDate logs warn and does not crash  688ms
+packages/xai-web-calendar test:    ✓ CalendarModule deep-link > missing focusDate is a no-op (no warn)  361ms
+packages/xai-web-tasks test: Done
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.weekstart.test.tsx (4 tests) 3251ms
+packages/xai-web-calendar test:    ✓ CalendarModule weekStart preference > AC-WEEKSTART-1: default Sun-first  755ms
+packages/xai-web-calendar test:    ✓ CalendarModule weekStart preference > AC-WEEKSTART-2: setPref(1) re-renders Mon-first  989ms
+packages/xai-web-calendar test:    ✓ CalendarModule weekStart preference > AC-WEEKSTART-3: flipping back to 0 restores Sun-first  727ms
+packages/xai-web-calendar test:    ✓ CalendarModule weekStart preference > AC-WEEKSTART-4: toolbar settings can switch to Mon-first  778ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.i18n.test.tsx (6 tests) 4273ms
+packages/xai-web-calendar test:    ✓ CalendarModule i18n > AC-I18N-1: EN weekday header (Sun-first default) renders Sun..Sat  735ms
+packages/xai-web-calendar test:    ✓ CalendarModule i18n > AC-I18N-2: ZH weekday header (Sun-first default) renders 周日..周六  635ms
+packages/xai-web-calendar test:    ✓ CalendarModule i18n > AC-I18N-3: today button text — EN Today / ZH 今天  812ms
+packages/xai-web-calendar test:    ✓ CalendarModule i18n > AC-I18N-4: holiday May 1 — EN 'Labor Day' / ZH '劳动节'  304ms
+packages/xai-web-calendar test:    ✓ CalendarModule i18n > AC-I18N-5: holiday May 9 — EN 'Mother\'s Day' / ZH '母亲节'  373ms
+packages/xai-web-calendar test:    ✓ CalendarModule i18n > AC-I18N-6: week tab renders WeekView (ComingSoonPanel removed in P2+ for Week tab)  1390ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.events.test.tsx (6 tests) 2875ms
+packages/xai-web-calendar test:    ✓ event-chip rendering > AC-EVENT-1: Day 1 → 4 chips (amber/blue/mint/mint)  861ms
+packages/xai-web-calendar test:    ✓ event-chip rendering > AC-EVENT-2: Day 14 → 0 chips  301ms
+packages/xai-web-calendar test:    ✓ event-chip rendering > AC-EVENT-3: Day 22 → 3 chips with Data Analysis/Brainstorming/Meditation  579ms
+packages/xai-web-calendar test:    ✓ event-chip rendering > AC-EVENT-4: time field renders ev-time.mono  494ms
+packages/xai-web-calendar test:    ✓ event-chip rendering > ZH day-1 chips use Chinese titles  375ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.boardfeed.test.tsx (3 tests) 1388ms
+packages/xai-web-calendar test:    ✓ CalendarModule Board feed > BCF-MOD-1: absent xai_boards_v2 does not auto-seed Board cards  360ms
+packages/xai-web-calendar test:    ✓ CalendarModule Board feed > BCF-MOD-2: Board card dueDate appears in Month view  378ms
+packages/xai-web-calendar test:    ✓ CalendarModule Board feed > BCF-MOD-3: Board card dueDate appears in Week view all-day strip  650ms
+packages/xai-web-calendar test:  ✓ src/__tests__/localDate.test.tsx (4 tests) 702ms
+packages/xai-web-calendar test:    ✓ today action uses the new civil day after midnight without remounting  695ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.dst-recurrence.test.tsx (2 tests) 3092ms
+packages/xai-web-calendar test:    ✓ CalendarModule DST x recurrence integration (P4) > AC-DST-RECUR-1: daily 09:30 recurrence is stable across Mar 7/8/9 around spring-forward  2098ms
+packages/xai-web-calendar test:    ✓ CalendarModule DST x recurrence integration (P4) > AC-DST-RECUR-2: weekly recurrence anchored on fall-back day appears on Nov 8 + Nov 15  993ms
+packages/xai-web-calendar test:  ✓ src/__tests__/DayView.test.tsx (10 tests) 616ms
+packages/xai-web-calendar test:  ✓ src/__tests__/EventComposer.test.tsx (21 tests) 1333ms
+packages/xai-web-calendar test:  ✓ src/__tests__/perfBudget.test.ts (1 test) 193ms
+packages/xai-web-calendar test:  ✓ src/__tests__/TimeGrid.test.tsx (8 tests) 810ms
+packages/xai-web-calendar test:    ✓ TimeGrid > AC-TIMEGRID-6: renders 7-column grid for week  336ms
+packages/xai-web-calendar test:  ✓ src/__tests__/eventStore.test.ts (13 tests) 33ms
+packages/xai-web-calendar test:  ✓ src/__tests__/aiCreateSubscriber.test.tsx (5 tests) 26ms
+packages/xai-web-calendar test:  ✓ src/__tests__/ids.test.ts (4 tests) 5ms
+packages/xai-web-calendar test:  ✓ src/__tests__/useUserCalEvents.test.tsx (8 tests) 92ms
+packages/xai-web-calendar test:  ✓ src/__tests__/perfBudget.eventcrud.test.ts (1 test) 34ms
+packages/xai-web-calendar test:  ✓ src/__tests__/aiMutateSubscriber.test.tsx (6 tests) 119ms
+packages/xai-web-calendar test:  ✓ src/__tests__/boardCalendarFeed.test.ts (6 tests) 7ms
+packages/xai-web-calendar test:  ✓ src/__tests__/styles.css.tokens.test.ts (11 tests) 7ms
+packages/xai-web-calendar test:  ✓ src/__tests__/sampleEvents.test.ts (10 tests) 7ms
+packages/xai-web-calendar test:  ✓ src/__tests__/mergeEventsForViewport.test.ts (10 tests) 7ms
+packages/xai-web-calendar test:  ✓ src/__tests__/events.test.ts (3 tests) 48ms
+packages/xai-web-calendar test:  ✓ src/__tests__/placeEventBlocks.test.ts (12 tests) 10ms
+packages/xai-web-calendar test:  ✓ src/__tests__/monthGridCells.test.ts (9 tests) 11ms
+packages/xai-web-calendar test:  ✓ src/__tests__/expandRecurrence.test.ts (12 tests) 8ms
+packages/xai-web-calendar test:  ✓ src/__tests__/isoWeekNumber.test.ts (6 tests) 5ms
+packages/xai-web-calendar test:  ✓ src/__tests__/timeGridMath.test.ts (16 tests) 6ms
+packages/xai-web-calendar test:  ✓ src/__tests__/parseDateKey.test.ts (15 tests) 5ms
+packages/xai-web-calendar test:  ✓ src/__tests__/validators.test.ts (11 tests) 4ms
+packages/xai-web-calendar test:  ✓ src/__tests__/weekWindow.test.ts (8 tests) 5ms
+packages/xai-web-calendar test:  ✓ src/__tests__/index-barrel.test.ts (9 tests) 3ms
+packages/xai-web-calendar test:  ✓ src/__tests__/dateKeys.test.ts (7 tests) 3ms
+packages/xai-web-calendar test:  ✓ src/__tests__/formatMonth.test.ts (3 tests) 2ms
+packages/xai-web-calendar test:  ✓ src/__tests__/holidays.test.ts (4 tests) 3ms
+packages/xai-web-calendar test:  ✓ src/__tests__/registry-presence.test.ts (4 tests) 2ms
+packages/xai-web-calendar test:  ✓ src/__tests__/registration.test.tsx (2 tests) 3ms
+packages/xai-web-calendar test:  ✓ src/__tests__/weekdays.test.ts (3 tests) 287ms
+packages/xai-web-calendar test: ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+packages/xai-web-calendar test:  FAIL  src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps a failed new event and its latest draft available for retry
+packages/xai-web-calendar test: Error: Test timed out in 5000ms.
+packages/xai-web-calendar test: If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+packages/xai-web-calendar test:  ❯ src/__tests__/CalendarModule.saveRecovery.test.tsx:16:1
+packages/xai-web-calendar test:      14|   return key;
+packages/xai-web-calendar test:      15| }
+packages/xai-web-calendar test:      16| it("keeps a failed new event and its latest draft available for retry"…
+packages/xai-web-calendar test:        | ^
+packages/xai-web-calendar test:      17|   render(<CalendarModule lang="en" />);
+packages/xai-web-calendar test:      18|   fireEvent.click(screen.getByLabelText("Add event"));
+packages/xai-web-calendar test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+packages/xai-web-calendar test: ⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+packages/xai-web-calendar test: Vitest caught 1 unhandled error during the test run.
+packages/xai-web-calendar test: This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+packages/xai-web-calendar test: ⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+packages/xai-web-calendar test: TypeError: URL.revokeObjectURL is not a function
+packages/xai-web-calendar test:  ❯ Timeout._onTimeout src/EventComposer.tsx:333:36
+packages/xai-web-calendar test:     331|               document.body.appendChild(link); link.click(); link.remo…
+packages/xai-web-calendar test:     332|               setExportFailed(false);
+packages/xai-web-calendar test:     333|               setTimeout(() => URL.revokeObjectURL(url), 1000);
+packages/xai-web-calendar test:        |                                    ^
+packages/xai-web-calendar test:     334|             } catch { setExportFailed(true); }
+packages/xai-web-calendar test:     335|           }}>{lang === "zh" ? "导出当前草稿" : "Export current draft"}</butt…
+packages/xai-web-calendar test:  ❯ listOnTimeout node:internal/timers:605:17
+packages/xai-web-calendar test:  ❯ processTimers node:internal/timers:541:7
+packages/xai-web-calendar test: This error originated in "src/__tests__/CalendarModule.saveRecovery.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+packages/xai-web-calendar test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+packages/xai-web-calendar test:  Test Files  1 failed | 45 passed (46)
+packages/xai-web-calendar test:       Tests  1 failed | 342 passed (343)
+packages/xai-web-calendar test:      Errors  1 error
+packages/xai-web-calendar test:    Start at  14:15:54
+packages/xai-web-calendar test:    Duration  38.49s (transform 4.26s, setup 25.86s, collect 35.45s, tests 98.50s, environment 63.97s, prepare 10.76s)
+packages/xai-web-calendar test: Failed
+/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-calendar:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @repo/plugin-web-calendar@0.0.0 test: `vitest run`
+Exit status 1

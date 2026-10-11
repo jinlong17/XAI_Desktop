@@ -1,0 +1,36 @@
+revision=b152399
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d2-Y1CGbG
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses typed rather than trusting generation alone
+incomplete-marker {"kind":"typed","result":{"ok":false,"reason":"recovery-required"},"bytes":"[\"keep\"]"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses scoped rather than trusting generation alone
+incomplete-marker {"kind":"scoped","result":{"ok":false,"reason":"recovery-required"},"bytes":"[\"keep\"]"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses deletion rather than trusting generation alone
+incomplete-marker {"kind":"deletion","result":{"ok":false,"reason":"recovery-required"},"bytes":"[\"keep\"]"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > new scoped async set cannot discard a protected canonical receipt record
+scoped-canonical {"operation":"set","result":{"ok":false,"reason":"recovery-required"},"preserved":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > new scoped async remove cannot discard a protected canonical receipt record
+scoped-canonical {"operation":"remove","result":{"ok":false,"reason":"recovery-required"},"preserved":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > partial deletion can retry after the first pass removed its generation marker
+deletion-retry {"retry":{"ok":true},"remaining":null}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts (14 tests) 8ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  18:23:22
+   Duration  1.02s (transform 111ms, setup 0ms, collect 144ms, tests 8ms, environment 405ms, prepare 67ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > typed account API still refuses protected canonical replacement
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > typed account API still refuses protected canonical replacement
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.

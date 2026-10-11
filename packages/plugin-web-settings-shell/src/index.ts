@@ -34,6 +34,8 @@ export type {
   SettingsPaneId,
   Pane,
   PaneRenderProps,
+  PaneDepartureGuard,
+  PaneDepartureGuardRegistration,
   SettingsModuleProps,
   ToggleProps,
   SettingRowProps,

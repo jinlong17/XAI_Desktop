@@ -1,0 +1,19 @@
+{
+  "role": "root metadata not product/businesschecker",
+  "script": "/tmp/audit-root-receive-p56.py",
+  "observed_chunk": "602565",
+  "exit": 1,
+  "kind": "PythonSyntaxError unmatched parenthesis line13 before any read/write",
+  "corrected_chunk": "e7c65e",
+  "corrected_exit": 0,
+  "repository_writes_on_failed_attempt": 0,
+  "business_formal_iteration_change": 0,
+  "followup_pretool_JS_assembly_error": "unexecuted patch invocation no Python/tool/files; corrected transport",
+  "disposition_metadata_guard_failure": {
+    "chunk": "0a5fbe",
+    "exit": 1,
+    "line": 6,
+    "reason": "git diff excludes NEW untrackedcard; tracked and untracked sets must be separate",
+    "writes": 0
+  }
+}

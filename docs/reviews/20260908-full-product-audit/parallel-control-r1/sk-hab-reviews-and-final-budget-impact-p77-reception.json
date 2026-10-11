@@ -1,0 +1,114 @@
+{
+  "sources": [
+    {
+      "id": "SK-01+SK-02+SK-03+SK-04+SK-05+SK-06/TRACE-SOURCE-DISCOVERY-REVIEW2",
+      "source": "0364ab34f4448849c2d97cb5723bd708b394b279",
+      "integration": "f0223c09b9b89d926bbf767a32c4e8c1749d0ddc",
+      "archive_ref": "codex/archive/parallel-sk01-sk06-review2-20261010",
+      "all_inputs_checked": 197,
+      "outputs": {
+        "docs/reviews/audit-parallel-sk01-sk06-trace-source-discovery-review-r2/inputs.sha256": "b120f58594bf4d997757acdd0cdcb19975e3c1de7a7ddc52ddcb1f72d4337539",
+        "docs/reviews/audit-parallel-sk01-sk06-trace-source-discovery-review-r2/review.md": "c20e8f2d39fc56a863783cee431bd9b75d412f7cdd87a93ae645fcb3c4a30702"
+      },
+      "disposition": "WHOLE_REVISE4 sourceprocessBLOCKED_FORENSIC_ONLY_FAILED_PROCESS_ADMISSION",
+      "clean": true,
+      "exact2ADD": true,
+      "static": {
+        "invocations": 1,
+        "pid": 21038,
+        "numeric_exit": 0,
+        "elapsed_seconds": 3.266,
+        "stdout_stderr_EOF": true,
+        "drained": true,
+        "tool_chunk": "UNKNOWN",
+        "tool_session": "UNKNOWN",
+        "receipt_saved_before_printer": true
+      },
+      "findings": 4,
+      "owned_Git_children": 198,
+      "all_child_exits": 0,
+      "original69bindingschecked": true,
+      "source_process": "three original validation failures actualconcluding classification/rawreceipts UNKNOWN; possible sourcefamilyexhaustion/overrun retained notauthor2grant",
+      "static_stdout_bytes": 54265,
+      "static_stdout_sha256": "12e07478c1373cb8815d72bc89a5c001179d9d22651ca1b3d831fda8190ab199"
+    },
+    {
+      "id": "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT3",
+      "source": "037d71c69e14567d5bbb54f32e7b3ede332d59f6",
+      "integration": "8c2e5e8b2490df303eda91d7c1adc08d4a8c6811",
+      "archive_ref": "codex/archive/parallel-exhaustion-impact3-20261010",
+      "all_inputs_checked": 388,
+      "outputs": {
+        "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-r3/impact.md": "ae85f052b8eb4c4e61921c047fe6eb4041c49f879892c236d083cd628fad10b4",
+        "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-r3/inputs.sha256": "984ee6b1d80990a7e1c80301c90d3f12791da3476cae7e0bda9783ebb5da07d4"
+      },
+      "disposition": "PROPOSED_UNADOPTED awaiting FINALwholeD3",
+      "clean": true,
+      "exact2ADD": true,
+      "static": {
+        "invocations": 1,
+        "pid": 21978,
+        "numeric_exit": 0,
+        "elapsed_seconds": 6.551247,
+        "stdout_stderr_EOF": true,
+        "drained": true,
+        "tool_chunk": "UNKNOWN",
+        "tool_session": "UNKNOWN",
+        "receipt_saved_before_printer": true
+      },
+      "owned_Git_children": 391,
+      "all_child_exits": 0,
+      "direct_bindings": 357,
+      "static_stdout_bytes": 43648,
+      "static_stderr_bytes": 0,
+      "total_wall": "UNKNOWN",
+      "pretool_parse_failure": "Illegal Unicode escape sequence beforeevaluation/Pythonlaunch correctedtransport only",
+      "exceptions": "E6E7E8 maximum5dispatch150min/10min/2.5min allocationsONLY no budgetgrant; existingfivependingunchanged; GOV06D4onlyproposal noauthor4/no5"
+    },
+    {
+      "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY-REVIEW1",
+      "source": "9c36ebcd1b647306fc6393ed5bb4310009615e7f",
+      "integration": "fbd0ab3bfa951c901107116fb07c435ee37e6552",
+      "archive_ref": "codex/archive/parallel-hab01-hab05-review1-20261010",
+      "all_inputs_checked": 161,
+      "outputs": {
+        "docs/reviews/audit-parallel-hab01-hab05-source-discovery-review-r1/review.md": "7bc4921a527747fc3d9a5a4a73372020c3bfef4533cade073a4626d8469c1f88",
+        "docs/reviews/audit-parallel-hab01-hab05-source-discovery-review-r1/inputs.sha256": "97e0f5e72fc537d08a3689939fb687a32e0aa011cd6c36303cec6121e6f0598d"
+      },
+      "disposition": "WHOLE_REVISE3 noqualification_or_businessadmission",
+      "clean": true,
+      "exact2ADD": true,
+      "static": {
+        "invocations": 1,
+        "pid": 22418,
+        "numeric_exit": 0,
+        "elapsed_seconds": 2.502,
+        "stdout_stderr_EOF": true,
+        "drained": true,
+        "tool_chunk": "UNKNOWN",
+        "tool_session": "UNKNOWN",
+        "receipt_saved_before_printer": true
+      },
+      "findings": 3,
+      "owned_Git_reads": 162,
+      "all_child_exits": 0,
+      "static_stdout_bytes": 51801,
+      "static_stdout_sha256": "3549ebcc00b2482593c8898551efa0f58772fd6b2cb9127ef309b274d41a79a8",
+      "measured_acquisition_finalization_seconds": 402.907,
+      "initial_uninstrumented_wall": "UNKNOWN",
+      "original61bindingcheck": true
+    }
+  ],
+  "all_root_metadata_input_hashes": 746,
+  "source_count": 117,
+  "formal_counts_unchanged": [
+    13,
+    3,
+    3,
+    293
+  ],
+  "refs": 939,
+  "root_business_checker_invocations": 0,
+  "HAB_original_message_representation_clarification": "P75original_message_sha256 covers git show --format=%B includingGitformat extra LF; rawcommitmessage SHA differs due representation, not sourcebody drift; originalremote literalbackslashn retained unchanged",
+  "SK_source_capacity": "HELD actualthreefailedprewriteclassificationUNKNOWN untilrawprovenance or lawfuldecision no implicitremainingcapacity"
+}

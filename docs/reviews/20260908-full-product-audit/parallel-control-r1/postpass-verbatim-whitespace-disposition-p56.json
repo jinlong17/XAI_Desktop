@@ -1,0 +1,61 @@
+{
+  "scope": "controller documentary finalization only",
+  "rule": "Default Git blank-at-EOF diagnostics are retained separately from semantic checker. Exact full quoted-source bytes and prevalidated output hashes may be retained unchanged; defaultcheck NOT PASS, no assertion/threshold/native/product waiver.",
+  "MED": {
+    "state": "knownstaged2ADD_notcommitted_notaccepted",
+    "parent": "6f5910ea036ee6f54a26f25c4faba63389aac496",
+    "fixed_input": "7e57bb81594476e28727430b4fb9ed87dbdcfb2d",
+    "semantic_checker": {
+      "pid": 26309,
+      "session": 7243,
+      "initial_chunk": "5b6526",
+      "final_chunk": "b04d6f",
+      "exit": 0,
+      "identities": 2591,
+      "bytes": 74940754,
+      "all_inputs_and_both_buffers_prewrite": true
+    },
+    "format_check": {
+      "chunk": "699c11",
+      "exit": 2,
+      "line": 907,
+      "message": "new blank line at EOF",
+      "reason": "final full quoted machinery terminator"
+    },
+    "outputs": [
+      {
+        "path": "docs/reviews/audit-parallel-med03-source-contract-review-r2/review.md",
+        "bytes": 93444,
+        "sha256": "08ca5b02d97f598a3ee03313372d417206a110938ee96c6b43b393540e230bac",
+        "staged_equals_worktree": true
+      },
+      {
+        "path": "docs/reviews/audit-parallel-med03-source-contract-review-r2/inputs.sha256",
+        "bytes": 428462,
+        "sha256": "239f03df1163edb32949d06c218a60ca97bfd072bc5944f21432280093a4cd61",
+        "staged_equals_worktree": true
+      }
+    ],
+    "continuation": "same reviewer/unit/fixedinput ONLY unchangedstaged finalization; no rewrite/semanticrerun/amend/sourcegrant/iterationreset; full root reception+remoteproof before adoption"
+  },
+  "BRD": {
+    "source": "01891c834aa9ecd1c0349430c70aafea0b6bfc0d",
+    "semantic_checker": {
+      "pid": 26893,
+      "exit": 0,
+      "identities": 89317,
+      "objects": 8578,
+      "bytes": 366602416
+    },
+    "default_format_check": {
+      "chunk": "c85e0d",
+      "exit": 2,
+      "line": 8599,
+      "message": "new blank line at EOF",
+      "reason": "final whole quoted canonical terminator"
+    },
+    "supplemental": "blank-at-eof exclusion PASS reported; defaultred retained no content edit",
+    "state": "delivered_notreceived_oradopted"
+  },
+  "limits": "Never permission to continue after actual concludingchecker failure/sourcehashscope drift; AI3actualPython failures remainFAILED exhausted/prohibitedmaterialization."
+}

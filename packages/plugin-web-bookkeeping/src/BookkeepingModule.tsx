@@ -1,3 +1,4 @@
+import { BookkeepingSaveFailure } from "./BookkeepingSaveFailure.js";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, PointerEvent, ReactNode } from "react";
 import { ACCOUNT_TYPES, CURRENCIES } from "./internal/defaults.js";
@@ -158,7 +159,7 @@ function Sidebar({
 }: {
   readonly state: BookkeepingState;
   readonly lang: BookkeepingLanguage;
-  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => void;
+  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => boolean;
   readonly setModal: (modal: BookkeepingModal) => void;
 }) {
   const worth = netWorth(state);
@@ -253,7 +254,7 @@ function TransactionRow({
   readonly tx: BookkeepingTransaction;
   readonly showDate?: boolean;
   readonly onOpen: (tx: BookkeepingTransaction) => void;
-  readonly onDelete: (id: string) => void;
+  readonly onDelete: (id: string) => boolean;
 }) {
   const category = categoryOf(state, tx.cat);
   const account = accountOf(state, tx.account);
@@ -307,7 +308,7 @@ function Header({
   readonly state: BookkeepingState;
   readonly activeTab: TabId;
   readonly setModal: (modal: BookkeepingModal) => void;
-  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => void;
+  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => boolean;
 }) {
   const ledger = ledgerOf(state);
   const view = state.prefs.billsView;
@@ -362,10 +363,10 @@ function DashboardView({
 }: {
   readonly state: BookkeepingState;
   readonly lang: BookkeepingLanguage;
-  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => void;
+  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => boolean;
   readonly setModal: (modal: BookkeepingModal) => void;
   readonly openTx: (tx: BookkeepingTransaction) => void;
-  readonly deleteTx: (id: string) => void;
+  readonly deleteTx: (id: string) => boolean;
 }) {
   const ledger = ledgerOf(state);
   const allTx = useMemo(() => ledgerTransactions(state), [state]);
@@ -618,7 +619,7 @@ function DayGroupBlock({
   readonly lang: BookkeepingLanguage;
   readonly group: ReturnType<typeof dayGroups>[number];
   readonly onOpen: (tx: BookkeepingTransaction) => void;
-  readonly onDelete: (id: string) => void;
+  readonly onDelete: (id: string) => boolean;
 }) {
   const ledger = ledgerOf(state);
   const weekday = ["日", "一", "二", "三", "四", "五", "六"][new Date(`${group.date}T00:00:00`).getDay()];
@@ -646,7 +647,7 @@ function BillsView({
   readonly state: BookkeepingState;
   readonly lang: BookkeepingLanguage;
   readonly openTx: (tx: BookkeepingTransaction) => void;
-  readonly deleteTx: (id: string) => void;
+  readonly deleteTx: (id: string) => boolean;
   readonly openRecord: (payload?: Partial<BookkeepingTransaction>) => void;
 }) {
   const [query, setQuery] = useState("");
@@ -802,9 +803,9 @@ function CalendarView({
 }: {
   readonly state: BookkeepingState;
   readonly lang: BookkeepingLanguage;
-  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => void;
+  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => boolean;
   readonly openTx: (tx: BookkeepingTransaction) => void;
-  readonly deleteTx: (id: string) => void;
+  readonly deleteTx: (id: string) => boolean;
   readonly openRecord: (payload?: Partial<BookkeepingTransaction>) => void;
 }) {
   const now = new Date(`${todayKey()}T00:00:00`);
@@ -868,7 +869,7 @@ function MonthCalendar({
   readonly selected: string;
   readonly setSelected: (day: string) => void;
   readonly openTx: (tx: BookkeepingTransaction) => void;
-  readonly deleteTx: (id: string) => void;
+  readonly deleteTx: (id: string) => boolean;
   readonly openRecord: (payload?: Partial<BookkeepingTransaction>) => void;
 }) {
   const ledger = ledgerOf(state);
@@ -1064,7 +1065,7 @@ function BudgetView({
 }: {
   readonly state: BookkeepingState;
   readonly lang: BookkeepingLanguage;
-  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => void;
+  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => boolean;
   readonly setModal: (modal: BookkeepingModal) => void;
 }) {
   const ledger = ledgerOf(state);
@@ -1084,7 +1085,7 @@ function BudgetView({
           <div className="bk-budget-total-row">
             <span className="bk-field-label">{t(lang, "本月总预算", "Monthly budget")}</span>
             {editing ? (
-              <input className="bk-input mono" autoFocus defaultValue={state.budgetTotal} onBlur={(event) => { setState((prev) => ({ ...prev, budgetTotal: Math.max(0, Number(event.target.value) || prev.budgetTotal), updatedAt: new Date().toISOString() })); setEditing(false); }} onKeyDown={(event) => { if (event.key === "Enter") event.currentTarget.blur(); }} />
+              <input className="bk-input mono" autoFocus defaultValue={state.budgetTotal} onBlur={(event) => { if (setState((prev) => ({ ...prev, budgetTotal: Math.max(0, Number(event.target.value) || prev.budgetTotal), updatedAt: new Date().toISOString() }))) setEditing(false); }} onKeyDown={(event) => { if (event.key === "Enter") event.currentTarget.blur(); }} />
             ) : (
               <button type="button" className="bk-total-val mono" onClick={() => setEditing(true)}>{money(state.budgetTotal, ledger.currency)} <Icon name="edit" size={12} /></button>
             )}
@@ -1144,7 +1145,7 @@ function InvestView({
 }: {
   readonly state: BookkeepingState;
   readonly lang: BookkeepingLanguage;
-  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => void;
+  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => boolean;
   readonly setModal: (modal: BookkeepingModal) => void;
 }) {
   const rows = state.invest.map((holding) => {
@@ -1188,7 +1189,7 @@ function RecurringView({
 }: {
   readonly state: BookkeepingState;
   readonly lang: BookkeepingLanguage;
-  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => void;
+  readonly setState: (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => boolean;
   readonly setModal: (modal: BookkeepingModal) => void;
   readonly addTx: (rows: readonly BookkeepingTransaction[], editId?: string) => void;
 }) {
@@ -1234,7 +1235,7 @@ function RecordModal({
   readonly editTx?: BookkeepingTransaction;
   readonly seed?: Partial<BookkeepingTransaction>;
   readonly onClose: () => void;
-  readonly onSave: (rows: readonly BookkeepingTransaction[], editId?: string) => void;
+  readonly onSave: (rows: readonly BookkeepingTransaction[], editId?: string) => boolean;
   readonly onAddNoteTemplate: (catId: string, text: string) => void;
 }) {
   const init = editTx ?? seed ?? {};
@@ -1292,14 +1293,12 @@ function RecordModal({
   const submit = () => {
     if (!Number(amount)) return;
     if (type === "transfer" && account === toAccount) return;
-    onSave([buildRow()], editTx?.id);
-    onClose();
+    if (onSave([buildRow()], editTx?.id)) onClose();
   };
   const parseAI = () => setDrafts(parseNaturalLanguageDrafts(state, aiText));
   const confirmDrafts = () => {
     if (!drafts?.length) return;
-    onSave(drafts.map((draft) => buildTxFromDraft(state, draft)));
-    onClose();
+    if (onSave(drafts.map((draft) => buildTxFromDraft(state, draft)))) onClose();
   };
   const footer = mode === "manual" ? (
     <>
@@ -1355,7 +1354,7 @@ function RecordModal({
   );
 }
 
-function LedgerModal({ state, lang, ledger, onClose, onSave, onDelete }: { readonly state: BookkeepingState; readonly lang: BookkeepingLanguage; readonly ledger?: BookkeepingLedger; readonly onClose: () => void; readonly onSave: (ledger: BookkeepingLedger) => void; readonly onDelete: (id: string) => void }) {
+function LedgerModal({ state, lang, ledger, onClose, onSave, onDelete }: { readonly state: BookkeepingState; readonly lang: BookkeepingLanguage; readonly ledger?: BookkeepingLedger; readonly onClose: () => void; readonly onSave: (ledger: BookkeepingLedger) => boolean; readonly onDelete: (id: string) => boolean }) {
   const [name, setName] = useState(ledger?.name ?? "");
   const [icon, setIcon] = useState(ledger?.icon ?? "wallet");
   const [hue, setHue] = useState(ledger?.hue ?? 150);
@@ -1367,11 +1366,10 @@ function LedgerModal({ state, lang, ledger, onClose, onSave, onDelete }: { reado
   const submit = () => {
     const trimmed = name.trim();
     if (!trimmed) return;
-    onSave({ id: ledger?.id ?? uid("lg"), name: trimmed, en: ledger?.en ?? trimmed, icon, hue, currency, defaultAccount, private: priv, reimburse, desc: desc.trim() });
-    onClose();
+    if (onSave({ id: ledger?.id ?? uid("lg"), name: trimmed, en: ledger?.en ?? trimmed, icon, hue, currency, defaultAccount, private: priv, reimburse, desc: desc.trim() })) onClose();
   };
   return (
-    <Modal title={ledger ? t(lang, "编辑账本", "Edit Ledger") : t(lang, "新建账本", "New Ledger")} icon="wallet" width={520} onClose={onClose} footer={<><>{ledger && state.ledgers.length > 1 ? <button type="button" className="bk-del-link" onClick={() => { onDelete(ledger.id); onClose(); }}><Icon name="trash" size={13} /> {t(lang, "删除", "Delete")}</button> : null}</><span className="grow" /><button type="button" className="btn ghost" onClick={onClose}>{t(lang, "取消", "Cancel")}</button><button type="button" className="btn primary" onClick={submit} disabled={!name.trim()}>{t(lang, "保存", "Save")}</button></>}>
+    <Modal title={ledger ? t(lang, "编辑账本", "Edit Ledger") : t(lang, "新建账本", "New Ledger")} icon="wallet" width={520} onClose={onClose} footer={<><>{ledger && state.ledgers.length > 1 ? <button type="button" className="bk-del-link" onClick={() => { if (onDelete(ledger.id)) onClose(); }}><Icon name="trash" size={13} /> {t(lang, "删除", "Delete")}</button> : null}</><span className="grow" /><button type="button" className="btn ghost" onClick={onClose}>{t(lang, "取消", "Cancel")}</button><button type="button" className="btn primary" onClick={submit} disabled={!name.trim()}>{t(lang, "保存", "Save")}</button></>}>
       <div className="bk-led-preview" style={{ background: soft(hue) }}><span className="bk-led-ico" style={{ background: ink(hue), color: "#fff" }}><Icon name={icon} size={22} /></span><span><b>{name || t(lang, "账本名称", "Ledger name")}</b><span className="tiny">{currency}{reimburse ? t(lang, " · 报销账本", " · reimburse") : ""}{priv ? t(lang, " · 私密", " · private") : ""}</span></span></div>
       <Field label={t(lang, "账本名称", "Name")}><input className="bk-input" autoFocus value={name} onChange={(event) => setName(event.target.value)} /></Field>
       <div className="bk-form-grid"><Field label={t(lang, "默认币种", "Currency")}><select className="bk-input" value={currency} onChange={(event) => setCurrency(event.target.value as CurrencyCode)}>{CURRENCIES.map((item) => <option key={item.code} value={item.code}>{item.code} {item.symbol}</option>)}</select></Field><Field label={t(lang, "默认账户", "Default account")}><select className="bk-input" value={defaultAccount} onChange={(event) => setDefaultAccount(event.target.value)}>{state.accounts.map((item) => <option key={item.id} value={item.id}>{nameOf(item, lang)}</option>)}</select></Field></div>
@@ -1383,7 +1381,7 @@ function LedgerModal({ state, lang, ledger, onClose, onSave, onDelete }: { reado
   );
 }
 
-function AccountModal({ state, lang, account, onClose, onSave, onDelete }: { readonly state: BookkeepingState; readonly lang: BookkeepingLanguage; readonly account?: BookkeepingAccount; readonly onClose: () => void; readonly onSave: (account: BookkeepingAccount) => void; readonly onDelete: (id: string) => void }) {
+function AccountModal({ state, lang, account, onClose, onSave, onDelete }: { readonly state: BookkeepingState; readonly lang: BookkeepingLanguage; readonly account?: BookkeepingAccount; readonly onClose: () => void; readonly onSave: (account: BookkeepingAccount) => boolean; readonly onDelete: (id: string) => boolean }) {
   const [name, setName] = useState(account?.name ?? "");
   const [type, setType] = useState(account?.type ?? "cash");
   const [currency, setCurrency] = useState<CurrencyCode>(account?.currency ?? "CNY");
@@ -1397,11 +1395,10 @@ function AccountModal({ state, lang, account, onClose, onSave, onDelete }: { rea
   const submit = () => {
     const trimmed = name.trim();
     if (!trimmed) return;
-    onSave({ id: account?.id ?? uid("a"), name: trimmed, en: account?.en ?? trimmed, type, currency, initial: Number(initial) || 0, balance: Number(balance) || 0, isDefault, icon: meta.icon, hue: meta.hue, ...(type === "credit" ? { limit: Number(limit) || 0, billDay: Number(billDay) || 1, repayDay: Number(repayDay) || 1 } : {}) });
-    onClose();
+    if (onSave({ id: account?.id ?? uid("a"), name: trimmed, en: account?.en ?? trimmed, type, currency, initial: Number(initial) || 0, balance: Number(balance) || 0, isDefault, icon: meta.icon, hue: meta.hue, ...(type === "credit" ? { limit: Number(limit) || 0, billDay: Number(billDay) || 1, repayDay: Number(repayDay) || 1 } : {}) })) onClose();
   };
   return (
-    <Modal title={account ? t(lang, "编辑账户", "Edit Account") : t(lang, "新建账户", "New Account")} icon="bank" width={500} onClose={onClose} footer={<>{account && state.accounts.length > 1 ? <button type="button" className="bk-del-link" onClick={() => { onDelete(account.id); onClose(); }}><Icon name="trash" size={13} /> {t(lang, "删除", "Delete")}</button> : null}<span className="grow" /><button type="button" className="btn ghost" onClick={onClose}>{t(lang, "取消", "Cancel")}</button><button type="button" className="btn primary" onClick={submit} disabled={!name.trim()}>{t(lang, "保存", "Save")}</button></>}>
+    <Modal title={account ? t(lang, "编辑账户", "Edit Account") : t(lang, "新建账户", "New Account")} icon="bank" width={500} onClose={onClose} footer={<>{account && state.accounts.length > 1 ? <button type="button" className="bk-del-link" onClick={() => { if (onDelete(account.id)) onClose(); }}><Icon name="trash" size={13} /> {t(lang, "删除", "Delete")}</button> : null}<span className="grow" /><button type="button" className="btn ghost" onClick={onClose}>{t(lang, "取消", "Cancel")}</button><button type="button" className="btn primary" onClick={submit} disabled={!name.trim()}>{t(lang, "保存", "Save")}</button></>}>
       <Field label={t(lang, "账户名称", "Name")}><input className="bk-input" autoFocus value={name} onChange={(event) => setName(event.target.value)} /></Field>
       <div className="bk-field-label">{t(lang, "账户类型", "Type")}</div>
       <div className="bk-accttype-grid">{ACCOUNT_TYPES.map((item) => <button key={item.id} type="button" className={`bk-accttype-cell ${type === item.id ? "on" : ""}`} onClick={() => setType(item.id)}><span className="bk-acct-ico" style={{ background: soft(item.hue), color: ink(item.hue) }}><Icon name={item.icon} size={15} /></span>{t(lang, item.zh, item.en)}</button>)}</div>
@@ -1413,7 +1410,7 @@ function AccountModal({ state, lang, account, onClose, onSave, onDelete }: { rea
   );
 }
 
-function CategoryModal({ state, lang, onClose, onSave }: { readonly state: BookkeepingState; readonly lang: BookkeepingLanguage; readonly onClose: () => void; readonly onSave: (patch: Pick<BookkeepingState, "expense" | "income" | "transfer" | "prepay">) => void }) {
+function CategoryModal({ state, lang, onClose, onSave }: { readonly state: BookkeepingState; readonly lang: BookkeepingLanguage; readonly onClose: () => void; readonly onSave: (patch: Pick<BookkeepingState, "expense" | "income" | "transfer" | "prepay">) => boolean }) {
   const [kind, setKind] = useState<BookkeepingKind>("expense");
   const [data, setData] = useState(() => ({ expense: [...state.expense], income: [...state.income], transfer: [...state.transfer], prepay: [...state.prepay] }));
   const list = [...data[kind]].sort((a, b) => a.order - b.order);
@@ -1437,8 +1434,7 @@ function CategoryModal({ state, lang, onClose, onSave }: { readonly state: Bookk
     setSelectedId(next[0]?.id ?? "");
   };
   const submit = () => {
-    onSave(data);
-    onClose();
+    if (onSave(data)) onClose();
   };
   return (
     <Modal title={t(lang, "分类与备注管理", "Categories & Notes")} icon="grid4" width={700} onClose={onClose} footer={<><button type="button" className="btn ghost" onClick={onClose}>{t(lang, "取消", "Cancel")}</button><button type="button" className="btn primary" onClick={submit}>{t(lang, "保存全部", "Save all")}</button></>}>
@@ -1459,7 +1455,7 @@ function HuePicker({ hue, setHue }: { readonly hue: number; readonly setHue: (hu
   return <><div className="bk-field-label">{t("zh", "颜色", "Color")}</div><div className="bk-hue-pick">{HUE_OPTIONS.map((item) => <button key={item} type="button" className={`bk-hue-cell ${hue === item ? "on" : ""}`} style={{ background: ink(item) }} onClick={() => setHue(item)} />)}</div></>;
 }
 
-function RecurringModal({ state, lang, rule, onClose, onSave }: { readonly state: BookkeepingState; readonly lang: BookkeepingLanguage; readonly rule?: BookkeepingRecurringRule; readonly onClose: () => void; readonly onSave: (rule: BookkeepingRecurringRule) => void }) {
+function RecurringModal({ state, lang, rule, onClose, onSave }: { readonly state: BookkeepingState; readonly lang: BookkeepingLanguage; readonly rule?: BookkeepingRecurringRule; readonly onClose: () => void; readonly onSave: (rule: BookkeepingRecurringRule) => boolean }) {
   const ledger = ledgerOf(state);
   const [type, setType] = useState<Exclude<BookkeepingKind, "transfer">>(rule?.type ?? "expense");
   const [cat, setCat] = useState(rule?.cat ?? categoryFallbackId(state, "expense"));
@@ -1472,8 +1468,7 @@ function RecurringModal({ state, lang, rule, onClose, onSave }: { readonly state
   const submit = () => {
     const value = Math.abs(Number(amount)) || 0;
     if (!value) return;
-    onSave({ id: rule?.id ?? uid("r"), ledger: state.activeLedger, type, cat, amount: value, currency, account, note: note || nameOf(categoryOf(state, cat), lang), freq, day: Number(day) || 1, nextDate: rule?.nextDate ?? todayKey(), active: rule?.active ?? true });
-    onClose();
+    if (onSave({ id: rule?.id ?? uid("r"), ledger: state.activeLedger, type, cat, amount: value, currency, account, note: note || nameOf(categoryOf(state, cat), lang), freq, day: Number(day) || 1, nextDate: rule?.nextDate ?? todayKey(), active: rule?.active ?? true })) onClose();
   };
   return (
     <Modal title={rule ? t(lang, "编辑周期", "Edit Recurring") : t(lang, "新建周期记账", "New Recurring")} icon="repeat" width={460} onClose={onClose} footer={<><button type="button" className="btn ghost" onClick={onClose}>{t(lang, "取消", "Cancel")}</button><button type="button" className="btn primary" onClick={submit}>{t(lang, "保存", "Save")}</button></>}>
@@ -1484,7 +1479,7 @@ function RecurringModal({ state, lang, rule, onClose, onSave }: { readonly state
   );
 }
 
-function InvestmentModal({ state, lang, holding, onClose, onSave }: { readonly state: BookkeepingState; readonly lang: BookkeepingLanguage; readonly holding?: BookkeepingInvestment; readonly onClose: () => void; readonly onSave: (holding: BookkeepingInvestment) => void }) {
+function InvestmentModal({ state, lang, holding, onClose, onSave }: { readonly state: BookkeepingState; readonly lang: BookkeepingLanguage; readonly holding?: BookkeepingInvestment; readonly onClose: () => void; readonly onSave: (holding: BookkeepingInvestment) => boolean }) {
   const [name, setName] = useState(holding?.name ?? "");
   const [code, setCode] = useState(holding?.code ?? "");
   const [type, setType] = useState<"stock" | "fund">(holding?.type ?? "stock");
@@ -1494,8 +1489,7 @@ function InvestmentModal({ state, lang, holding, onClose, onSave }: { readonly s
   const [account, setAccount] = useState(holding?.account ?? accountFallbackId(state));
   const submit = () => {
     if (!name.trim() || !Number(shares)) return;
-    onSave({ id: holding?.id ?? uid("i"), name: name.trim(), code: code.trim(), type, shares: Number(shares) || 0, cost: Number(cost) || 0, price: Number(price) || 0, account });
-    onClose();
+    if (onSave({ id: holding?.id ?? uid("i"), name: name.trim(), code: code.trim(), type, shares: Number(shares) || 0, cost: Number(cost) || 0, price: Number(price) || 0, account })) onClose();
   };
   return (
     <Modal title={holding ? t(lang, "编辑持仓", "Edit Holding") : t(lang, "新增持仓", "Add Holding")} icon="trendUp" width={460} onClose={onClose} footer={<><button type="button" className="btn ghost" onClick={onClose}>{t(lang, "取消", "Cancel")}</button><button type="button" className="btn primary" onClick={submit}>{t(lang, "保存", "Save")}</button></>}>
@@ -1505,7 +1499,7 @@ function InvestmentModal({ state, lang, holding, onClose, onSave }: { readonly s
   );
 }
 
-function ImportExportModal({ state, lang, onClose, onImport }: { readonly state: BookkeepingState; readonly lang: BookkeepingLanguage; readonly onClose: () => void; readonly onImport: (rows: readonly BookkeepingTransaction[]) => void }) {
+function ImportExportModal({ state, lang, onClose, onImport }: { readonly state: BookkeepingState; readonly lang: BookkeepingLanguage; readonly onClose: () => void; readonly onImport: (rows: readonly BookkeepingTransaction[]) => boolean }) {
   const [tab, setTab] = useState<"export" | "import">("export");
   const [report, setReport] = useState<readonly BookkeepingTransaction[] | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -1542,13 +1536,13 @@ function ImportExportModal({ state, lang, onClose, onImport }: { readonly state:
   return (
     <Modal title={t(lang, "导入 / 导出", "Import / Export")} icon="download" width={480} onClose={onClose}>
       <div className="seg bk-modeseg"><button type="button" aria-selected={tab === "export"} onClick={() => setTab("export")}>{t(lang, "导出", "Export")}</button><button type="button" aria-selected={tab === "import"} onClick={() => setTab("import")}>{t(lang, "导入", "Import")}</button></div>
-      {tab === "export" ? <div><div className="bk-ai-hint"><Icon name="download" size={14} />{t(lang, `将当前账本 ${rows.length} 笔流水导出为 CSV。`, `Export ${rows.length} records as CSV.`)}</div><div className="bk-export-card"><Icon name="doc" size={26} /><span className="grow"><b>CSV</b><span className="tiny">date · time · type · category · amount · currency · note</span></span><button type="button" className="btn primary" onClick={exportCsv}><Icon name="download" size={14} /> {t(lang, "导出", "Export")}</button></div></div> : <div><div className="bk-ai-hint"><Icon name="trendUp" size={14} />{t(lang, "支持微信、支付宝及通用 CSV 导入到当前账本。", "Import CSV into current ledger.")}</div><button type="button" className="bk-drop" onClick={() => fileRef.current?.click()}><Icon name="download" size={22} /><span>{t(lang, "点击选择 CSV 文件", "Choose CSV file")}</span><span className="tiny">date,time,type,category,sub,amount,currency,account,note</span></button><input ref={fileRef} type="file" accept=".csv,text/csv" className="bk-hidden-file" onChange={readFile} />{report ? <div className="bk-draft-wrap"><div className="bk-draft-head">{t(lang, `解析到 ${report.length} 笔`, `${report.length} parsed`)}</div>{report.slice(0, 4).map((tx) => <div key={tx.id} className="bk-draft-row"><CatCircle cat={categoryOf(state, tx.cat)} size={30} /><span className="grow">{tx.note}</span><MoneyText amount={tx.amount} type={tx.type} currency={tx.currency} /></div>)}<button type="button" className="btn primary bk-full" onClick={() => { onImport(report); onClose(); }}>{t(lang, "确认导入", "Import")}</button></div> : null}</div>}
+      {tab === "export" ? <div><div className="bk-ai-hint"><Icon name="download" size={14} />{t(lang, `将当前账本 ${rows.length} 笔流水导出为 CSV。`, `Export ${rows.length} records as CSV.`)}</div><div className="bk-export-card"><Icon name="doc" size={26} /><span className="grow"><b>CSV</b><span className="tiny">date · time · type · category · amount · currency · note</span></span><button type="button" className="btn primary" onClick={exportCsv}><Icon name="download" size={14} /> {t(lang, "导出", "Export")}</button></div></div> : <div><div className="bk-ai-hint"><Icon name="trendUp" size={14} />{t(lang, "支持微信、支付宝及通用 CSV 导入到当前账本。", "Import CSV into current ledger.")}</div><button type="button" className="bk-drop" onClick={() => fileRef.current?.click()}><Icon name="download" size={22} /><span>{t(lang, "点击选择 CSV 文件", "Choose CSV file")}</span><span className="tiny">date,time,type,category,sub,amount,currency,account,note</span></button><input ref={fileRef} type="file" accept=".csv,text/csv" className="bk-hidden-file" onChange={readFile} />{report ? <div className="bk-draft-wrap"><div className="bk-draft-head">{t(lang, `解析到 ${report.length} 笔`, `${report.length} parsed`)}</div>{report.slice(0, 4).map((tx) => <div key={tx.id} className="bk-draft-row"><CatCircle cat={categoryOf(state, tx.cat)} size={30} /><span className="grow">{tx.note}</span><MoneyText amount={tx.amount} type={tx.type} currency={tx.currency} /></div>)}<button type="button" className="btn primary bk-full" onClick={() => { if (onImport(report)) onClose(); }}>{t(lang, "确认导入", "Import")}</button></div> : null}</div>}
     </Modal>
   );
 }
 
 export function BookkeepingModule({ lang }: BookkeepingModuleProps) {
-  const [state, setState] = useBookkeepingState();
+  const [state, setState, recovery] = useBookkeepingState();
   const [tab, setTab] = useState<TabId>("dashboard");
   const [modal, setModal] = useState<BookkeepingModal>(null);
   const addTx = useCallback((rows: readonly BookkeepingTransaction[], editId?: string) => setState((prev) => upsertTransactions(prev, rows, editId)), [setState]);
@@ -1560,6 +1554,7 @@ export function BookkeepingModule({ lang }: BookkeepingModuleProps) {
   };
   return (
     <div className="module module-bk" data-testid="bookkeeping-module">
+      <div className="bk-workspace" inert={Boolean(recovery.pending)}>
       <Sidebar state={state} lang={lang} setState={setState} setModal={setModal} />
       <main className="bk-main">
         <Header lang={lang} state={state} activeTab={tab} setModal={setModal} setState={setState} />
@@ -1584,6 +1579,8 @@ export function BookkeepingModule({ lang }: BookkeepingModuleProps) {
       {modal?.kind === "recurring" ? <RecurringModal state={state} lang={lang} rule={modal.payload} onClose={() => setModal(null)} onSave={(rule) => setState((prev) => ({ ...prev, recurring: prev.recurring.some((item) => item.id === rule.id) ? prev.recurring.map((item) => item.id === rule.id ? rule : item) : [...prev.recurring, rule], updatedAt: new Date().toISOString() }))} /> : null}
       {modal?.kind === "invest" ? <InvestmentModal state={state} lang={lang} holding={modal.payload} onClose={() => setModal(null)} onSave={(holding) => setState((prev) => ({ ...prev, invest: prev.invest.some((item) => item.id === holding.id) ? prev.invest.map((item) => item.id === holding.id ? holding : item) : [...prev.invest, holding], updatedAt: new Date().toISOString() }))} /> : null}
       {modal?.kind === "import-export" ? <ImportExportModal state={state} lang={lang} onClose={() => setModal(null)} onImport={(rows) => addTx(rows)} /> : null}
+      </div>
+      {recovery.pending ? <BookkeepingSaveFailure recovery={recovery} lang={lang} onRecovered={()=>setModal(null)} /> : null}
     </div>
   );
 }

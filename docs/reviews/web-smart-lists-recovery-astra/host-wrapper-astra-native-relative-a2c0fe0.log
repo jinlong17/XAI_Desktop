@@ -1,0 +1,11 @@
+revision=a2c0fe0 fixed_commit=a2c0fe0df5ef336b5cc98dc6bfc7d1eecf420a11
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UjImlU
+
+ ✓ docs/reviews/web-smart-lists-recovery-astra/host-wrapper.test.tsx (5 tests) 375ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  22:28:27
+   Duration  2.00s (transform 601ms, setup 0ms, collect 995ms, tests 375ms, environment 322ms, prepare 77ms)

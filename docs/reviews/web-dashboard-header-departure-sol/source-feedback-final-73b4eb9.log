@@ -1,0 +1,11 @@
+revision=73b4eb9 fixed_commit=73b4eb9184c06764a3befd101961a3856988022f
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-Fh5TOw
+
+ ✓ docs/reviews/web-d2-device-offset-astra/source-feedback.test.tsx (3 tests) 67ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  00:57:28
+   Duration  754ms (transform 166ms, setup 201ms, collect 55ms, tests 67ms, environment 202ms, prepare 66ms)

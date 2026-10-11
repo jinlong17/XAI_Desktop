@@ -1,0 +1,64 @@
+revision=76edb0c fixed_commit=76edb0c9b36ca7afee327e095840124ef208a94a
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-tDD7BL
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx (13 tests | 2 failed) 199ms
+   × gesture movement is local and dirty until pointerup commits exactly its final position 79ms
+     → expected false to be true // Object.is equality
+   ✓ pointercancel terminates a moved gesture with its final position; a plain click never writes 8ms
+   ✓ resize clamps only presentation and later expansion restores desired saved coordinate without writes 7ms
+   ✓ clean storage event adopts device coordinate while a gesture retains frozen raw and latest local position 11ms
+   ✓ raw replacement during gesture is preserved even without a storage event 7ms
+   ✓ external replacement while final position waits for key lock refuses without losing draft 8ms
+   ✓ two gestures while first save waits preserve final latest intent and correct predecessor baseline 11ms
+   ✓ quota preserves latest second gesture, exports its position and retries through actual save 24ms
+   ✓ unchanged uncertainty retry reconciles one physical write and clears only verified position recovery 10ms
+   ✓ uncertain retry does not overwrite a subsequent external position 10ms
+   ✓ pending device final position survives A to B to locked account without an account admission lock 8ms
+   ✓ holding an account lifecycle lock does not prevent an explicit device gesture commit 6ms
+   × earlier commit cannot erase a newer still-open gesture or strand its successful predecessor baseline 11ms
+     → expected '40px' to be '70px' // Object.is equality
+     → expected '40' to be '70' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 11 passed (13)
+   Start at  20:45:53
+   Duration  1.31s (transform 193ms, setup 303ms, collect 59ms, tests 199ms, environment 394ms, prepare 68ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > gesture movement is local and dirty until pointerup commits exactly its final position
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:23:328
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > earlier commit cannot erase a newer still-open gesture or strand its successful predecessor baseline
+AssertionError: expected '40px' to be '70px' // Object.is equality
+
+Expected: "70px"
+Received: "40px"
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:35:425
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > earlier commit cannot erase a newer still-open gesture or strand its successful predecessor baseline
+AssertionError: expected '40' to be '70' // Object.is equality
+
+Expected: "70"
+Received: "40"
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:35:505
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯

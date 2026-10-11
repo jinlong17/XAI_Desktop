@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"f359be6","browser":"Chrome/154.0.8037.97"}
+{"name":"real-host-journey","pass":true,"scope":"Actual dialog disk export, Stay, keyboard Escape and explicit discard through composed data router"}
+{"name":"actual-host-departure","pass":true,"scope":"Actual composedSettingsRegistration with data router and WebShellProvider, real sidebar; initial departure blocked. Full Stay/Export/Discard flows require their separate final contract checks"}

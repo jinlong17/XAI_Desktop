@@ -18,12 +18,12 @@ export function countTodaysPomos(sessions: PomodoroSession[], todayLocal: string
   ).length;
 }
 
-/** Sum of elapsedMs (in ms) for completed focus sessions finishing today. */
+/** Actual focus time, including early endings, finishing today. */
 export function sumTodaysFocusMs(sessions: PomodoroSession[], todayLocal: string): number {
   return sessions
     .filter(
       (s) =>
-        s.mode === "focus" && s.completed && localDateKey(new Date(s.finishedAt)) === todayLocal,
+        s.mode === "focus" && localDateKey(new Date(s.finishedAt)) === todayLocal,
     )
     .reduce((acc, s) => acc + s.elapsedMs, 0);
 }
@@ -33,10 +33,10 @@ export function countTotalPomos(sessions: PomodoroSession[]): number {
   return sessions.filter((s) => s.mode === "focus" && s.completed).length;
 }
 
-/** Sum of elapsedMs (in ms) for all completed focus sessions (regardless of date). */
+/** Actual focus time, including early endings, regardless of date. */
 export function sumTotalFocusMs(sessions: PomodoroSession[]): number {
   return sessions
-    .filter((s) => s.mode === "focus" && s.completed)
+    .filter((s) => s.mode === "focus")
     .reduce((acc, s) => acc + s.elapsedMs, 0);
 }
 

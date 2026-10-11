@@ -1,0 +1,153 @@
+{
+  "id": "GOV-01+GOV-02/SOURCE-CONTRACT-IMPACT-REVIEW1",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh FULL independent entire two GOV parser sourcecontract impact reviewer1 neverrepair",
+  "model": "gpt-6-astra",
+  "fixed_input": "46b6d12067c3f348e250751dff8a3c80b31b4382",
+  "dispatch_parent": "exact registration commit resolved beforelaunch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "original_items": [
+    {
+      "id": "GOV-01",
+      "priority": "P1",
+      "kind": "修复",
+      "action": "修dev_log解析器遗漏19项并保留不可解析记录",
+      "acceptance": "表格/bullet/纯文本/Status标题和多迭代fixture通过；discovered/parsed/unparsed逐文件对账",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "01-inventory-governance.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web（project-system）",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "GOV-01",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "GOV",
+      "acceptance_evidence": {
+        "business_acceptance": "表格/bullet/纯文本/Status标题和多迭代fixture通过；discovered/parsed/unparsed逐文件对账",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "GOV-01/prepare",
+        "GOV-01/contract-review",
+        "GOV-01/before",
+        "GOV-01/implement",
+        "GOV-01/verify",
+        "GOV-01/accept",
+        "GOV-01/reconcile",
+        "GOV-01/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "GOV-02",
+      "priority": "P2",
+      "kind": "修复",
+      "action": "修roadmap解析器漏3份AI文档，表头#可选",
+      "acceptance": "全部167个slug可解析；Slug/Status/Source/Depends On结构校验可见",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "01-inventory-governance.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web（project-system）",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "GOV-02",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "GOV",
+      "acceptance_evidence": {
+        "business_acceptance": "全部167个slug可解析；Slug/Status/Source/Depends On结构校验可见",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "GOV-02/prepare",
+        "GOV-02/contract-review",
+        "GOV-02/before",
+        "GOV-02/implement",
+        "GOV-02/verify",
+        "GOV-02/accept",
+        "GOV-02/reconcile",
+        "GOV-02/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    }
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-gov01-gov02-source-contract-impact-review-r1/review.md",
+    "docs/reviews/audit-parallel-gov01-gov02-source-contract-impact-review-r1/inputs.sha256"
+  ],
+  "protected": [
+    "ALL nonallowed paths",
+    "product/parsers/scripts/dashboardgeneratedHTML/config/skills/agents/lockfile",
+    "globalcontrol/ledgers/otherwts",
+    "originalevidence/histories",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "static_pass": 1,
+    "runtime": 0,
+    "parser_execution": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0,
+    "review_iteration": 1,
+    "review_cap": 3,
+    "prior_source_author_used": 1
+  },
+  "no_children": true,
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "need protected write or parserexecution",
+    "unsupported productdecision/standardsweakening"
+  ],
+  "acceptance": [
+    "Full original GOV01/02 exact action/acceptance and original312 scope/ledger mapping; do not infer observed nineteen omissions/three AI roadmap docs stillcurrent from historicalnumbers. Read actual relevant source parsers/input discovery rules, complete bounded source docs and malformed/unparseable row preservation rules, target/iteration/ref/schema linkages; source-only factual inventory and finite candidate fix/test/oracle paths with exact hashes. Inspect relevant inherited accepted evidence/current audit history to avoid rerunning validhistoricalpasses; unknownpurposecounts remainunknown neverassume0. Doesnot authorize governance globalstatus writes or runtime parserlaunch.",
+    "Determine independent ready scope vs A/B/C/D candidatefile/semantic locks, currentdashboardmachinecontract/authoritymirrors and generated-vsmaintained status. Missing source/public rules explicit. Before later implementation require fresh completecontractimpact review, actualfixedbefore underlawfulbudgets, exactscope/rootgrant/freshauthor/freshindependentverification/full acceptance/rootreconciliation unchangedformal. If dashboard syncskill applies read fullSKILL and announce; userauthorized boundedsource discovery no routineconfirmation.",
+    "Exact2ADD source-only complete discovery plus immutableinput index; bind fullrequiredoutputs at EACH original/integration/dispatchparent identity before soleconcludingchecker. ReadvalidateALLinputs and BOTH completebuffers BEFOREanywrite. Actualstatic1 failure freezes/no retry. Fulltoolsession finalexit; safequotedUTF8/ASCIIUnicodeescapes nobacktickJS. Exactstage/hookdisabledonecommit bodyWhyWhatScopeRiskDocsTests realnewlines/clean/noamendpush. No children no otherwts; actorfresh/budgetsperpurpose unchanged. Normalize module vs original_module39; nonemptygate150 !=118policy; TODOsections.tasks/EXECUTION.items/statetasksLIST and FOURTTdocs vsP0runtime preserved.",
+    "WHOLEtwooriginalGOV01/02 action/acceptance/41parentboundsourceinputs/fullcandidate3b androotreceptionreceipt. DiscoverywhitespacePASS/sha256summetadata1 notsemanticcoveragePASS; prewriteproofunestablished no retroqualification. BindcanonicalGit .teams/skills/xai-dev-dashboard-sync/SKILL.md SHA641e38 vs ignoredunversioned.codexalias; actualaliasprovenance andfixedcode6db vsparent28ba metadata explicit. RootdirectaliasGitlookupfailedthenall41canonicalhashesPASS metadataonly/originals unchanged.",
+    "Complete exact finite contract+impact: package/file discovery boundary/alltable/bullet/plain/heading/malformed/empty/unknown/multi-iteration/embeddedpipe formats/per-file+block discovered=parsed+unparsed sourceconservation; preserve rawstatus/source/line/Target/iteration/ambiguity noautomaticbusinesswinner/SHIPPED. GOV02requiredSlugStatus optional#/SourceDependsOn/duplicates/errors/nonmanifest/currentactualinventory vs historical167expectation no inventedcount. ThreeAI registryassociation gap finite separatelyreviewedcandidate; NEEDS_REVIEWvsSHIPPED conflict visible no source/statusrewrite. ExactfutureAPI/datashape/errors/OwnerTaskProgress MirrorsOverviewProductStructure/conditionalmachinecontract+skillmirrors/finitefixturepaths proposedONLY; inspectrelatedGOV03/04/05 boundaries no scopecreep. Resolve identity/conflict fromexistingpolicy orretain ambiguousrecords withoutinventeddecision. Fullfixedbefore/boundedimplementation/independentfixedintegrated semanticfixtures/generatedstate/UIifaffected/truevendor/fulloriginaltwoitemaccept/rootappendinventory intact. HistoricstaticPASS limitedscope/newparserpurposecountsunknownuntilreconciled nofake0/capreset. No generator/parser/test/globalstatus/manualregistry writes. Freshfullreview/rootgrant/fullvalidbefore required.",
+    "EVERYcomplete source-outputMD exactSHAprebound and card/control atactualregistrationparent vsfrozenproduct/evidence. ReadvalidateALLinputs+BOTHcompletebuffers BEFOREANYwrite. Meaningful soleconcludingstaticvalidator fullscope/source/hash/contractpresence notwhitespace masquerade. Static1failureSTOP/noretry/safequotedUTF8/ASCIIUnicodeescapes/nobacktickJS/ownedEOFthreadcleanup evenfail/fullsessiondrain. Exact2ADDonehookdisabledcommit realnewlineWhyWhatScopeRiskDocsTests clean/noamendpush/runtime0/nochildren/no routineconfirmation alreadyauthorized.",
+    "Review WHOLE sourcecontract534identities/full41discovery+121package devlogs35toproadmaps/fulltwooriginalactionacceptance, finiteAPI/data/error and ALL supported table/bullet/plain/heading/empty/malformed/unknown/multi-iteration/embeddedpipes/per-file block atom conservation/rawTargetIterationStatus/optional#/structural SourceDependsOn/duplicates/conflicts/exactfixture candidates/OwnerTaskProgress MirrorsOverviewProductStructure/threeAIregistryassociation conditionalseparate. Current19/3/167 UNKNOWN no fabricatedsemanticcounts. Fullcontract and impact not sourceavailability-only; no parser/generator execution, no generatedglobalstatus/rootstate modification. Existingcanonical teams skill read+announce whereapplies; .codexalias not trackedauthority. SourceauthorstaticPASS documentary-only fresh rootadopt after independentfullreview; no parser/test/code grant here. CorrectDASH633source649review distinct artifacts; no headline/minsize/P0auditdocs equality guards. ALLinputs+BOTHbuffers beforeANYwrite soleconcludingstatic1 failureSTOP no retries/amend; compactJSONsafe transport/actual numericreceipt/owned EOF. Allruntime0 reviewerneverrepairs."
+  ],
+  "source_inputs": [
+    "3ae8bd48502131a8d30bfaa38b04de3d733de97a",
+    "3b1633722b1f84efeaa29d110e5c37b7704b5f92"
+  ],
+  "source_reception_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov01-gov02-discovery-reception-receipt.json"
+}

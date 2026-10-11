@@ -142,7 +142,7 @@ No request body is required. The authenticated JWT determines which user to dele
 | `200 OK` | User deleted successfully. |
 | `401 Unauthorized` | Missing or invalid JWT. Client should surface `AccountDeleteError("unauthorized")`. |
 | `403 Forbidden` | JWT is valid but the user is not allowed to delete this account (e.g. service account guard). Client surfaces `AccountDeleteError("forbidden")`. |
-| `404 Not Found` | User already deleted (idempotent path). Client treats as success and proceeds to local wipe. |
+| `404 Not Found` | Failure, including a missing function/router. Client preserves local data and surfaces `AccountDeleteError("server")`. No verified business-code receipt currently authorizes a 404 success path. |
 | `5xx` | Server error. Client surfaces `AccountDeleteError("server")`. Retry is user-initiated via the Retry button in the modal. |
 
 ### RLS / service_role requirements
@@ -167,7 +167,7 @@ No request body is required. The authenticated JWT determines which user to dele
    curl -X POST https://<project-ref>.supabase.co/functions/v1/account-delete \
      -H "Authorization: Bearer <valid-user-jwt>"
    ```
-   Expected: `200 OK` (or `404` if user already deleted).
+   Expected: `200 OK`. A `404` is a failure and does not authorize local cleanup, even with an uncontracted `already_deleted` body. Any future idempotent business receipt needs a verified handler contract and independent tests before the client may accept it.
 
 **Before deploying to production, ensure the function is tested in a staging environment.**
 The mock-auth fallback (`VITE_WEB_AUTH_MODE=mock-authenticated`) is available for local development

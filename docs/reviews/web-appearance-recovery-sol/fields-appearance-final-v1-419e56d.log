@@ -1,0 +1,333 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=fields
+suffix=appearance-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs 419e56d fields appearance-final-v1
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=acd26ad860c90e1a688232db2f8da4b2d016b7a537d53afb3fea528f584666e3 bytes.test.tsx=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 fields.test.tsx=3ff72da5b1a037b0bbd93fbb910cb0772c6306d495871d8a5fb14c3305acc794 reset.test.tsx=3f9f3f86570c1c8f9350532fb0a5fbc03c2a4f92ac74e9fa959956811a2e6595 queues.test.tsx=1d6c85c28224a2fc1dace8ee754873fd3d2b716264f9b812c753a816b6ac2d66 continuity-export.test.tsx=776da524f7479e03d067c2426345df1fb30e518581c7bbfd33a0f1d0838e79ce host.test.tsx=49528aa335cb9f2db87faf152656b6c55011bf5856b69998c9c31dabbffc3eab retry-all.test.tsx=d851c75a5ca80470e928b52425521d8b549d3e91738796ac9f84708d793c513c verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=0818f7ee1cb9b525e6fac603ba4958b175dd401e0fd754d05ed3ac7d88e27c8f packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=40a72a058ba1e4b64f40afe8a31d590935d800e786d065248a8030f3137eeae3 packages/xai-web-settings-appearance/src/index.ts=9113e85cab3eee31e1f54e5220b87e8d8eac69a48f73b2697a8662dac1d5caef packages/xai-web-settings-appearance/src/styles.css=cd95e4a921e334d7ac47fc7e808ffa3e79b664c45fbf754049be33f649f250ce packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0 packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] fields.test.tsx: include=docs/reviews/web-appearance-recovery-sol/fields.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-S9k6FY/appearance-sol-fields-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-S9k6FY/.report-fields-0.json vitest_exit=0 cases=89 passed=89 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=89 numPassedTests=89 numFailedTests=0
+exit=0
+harness_checks=PASS (6/6)
+==== run[0] fields.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-S9k6FY
+
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'lang' > H2 lang: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line 286ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'lang' > H12 §5.8 lang: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value 188ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'lang' > §5.2 H12 §5.8 lang: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save 123ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'lang' > §5.2 lang: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only 234ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'lang' > H8 §5.8 lang: a late completion after Discard never revives the discarded choice 186ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'theme' > H2 theme: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line 165ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'theme' > H12 §5.8 theme: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value 130ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'theme' > §5.2 H12 §5.8 theme: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save 91ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'theme' > §5.2 theme: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only 213ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'theme' > H8 §5.8 theme: a late completion after Discard never revives the discarded choice 138ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'density' > H2 density: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line 180ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'density' > H12 §5.8 density: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value 157ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'density' > §5.2 H12 §5.8 density: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save 114ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'density' > §5.2 density: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only 229ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'density' > H8 §5.8 density: a late completion after Discard never revives the discarded choice 179ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'accentHue' > H1 accentHue: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line 172ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'accentHue' > H12 §5.8 accentHue: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value 130ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'accentHue' > H7 H12 §5.8 accentHue: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save 83ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'accentHue' > §5.2 accentHue: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only 205ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'accentHue' > H8 §5.8 accentHue: a late completion after Discard never revives the discarded choice 142ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'bgTone' > H1 bgTone: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line 165ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'bgTone' > H12 §5.8 bgTone: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value 131ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'bgTone' > H7 H12 §5.8 bgTone: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save 89ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'bgTone' > §5.2 bgTone: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only 198ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'bgTone' > H8 §5.8 bgTone: a late completion after Discard never revives the discarded choice 128ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'railPos' > H1 railPos: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line 168ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'railPos' > H12 §5.8 railPos: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value 126ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'railPos' > H7 H12 §5.8 railPos: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save 87ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'railPos' > §5.2 railPos: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only 214ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'railPos' > H8 §5.8 railPos: a late completion after Discard never revives the discarded choice 140ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'fontScale' > H2 fontScale: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line 139ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'fontScale' > H12 §5.8 fontScale: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value 105ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'fontScale' > §5.2 H12 §5.8 fontScale: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save 84ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'fontScale' > §5.2 fontScale: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only 199ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > 'fontScale' > H8 §5.8 fontScale: a late completion after Discard never revives the discarded choice 129ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > Topbar 'lang' > H3 lang: a failed Topbar choice stays checked and applied, shows the Topbar status and the pane message; Retry saves and removes the status 151ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > Topbar 'theme' > H3 theme: a failed Topbar choice stays checked and applied, shows the Topbar status and the pane message; Retry saves and removes the status 132ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 lang="\"fr\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load lang="\"fr\"" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > Topbar 'density' > H3 density: a failed Topbar choice stays checked and applied, shows the Topbar status and the pane message; Retry saves and removes the status 123ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 lang="en" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load lang="en" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 lang="\"fr\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 115ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 lang="" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load lang="" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 lang="en" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 114ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 lang="null" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load lang="null" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 lang="" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 116ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 lang="1" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load lang="1" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 lang="null" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 123ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 lang="\"EN\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load lang="\"EN\"" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 lang="1" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 123ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 theme="\"neon\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load theme="\"neon\"" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 lang="\"EN\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 123ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 theme="dark" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load theme="dark" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 theme="\"neon\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 108ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 theme="\"Dark\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load theme="\"Dark\"" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 theme="dark" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 109ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 theme="123" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load theme="123" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 theme="\"Dark\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 107ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 density="\"cozy\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load density="\"cozy\"" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 theme="123" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 108ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 density="{}" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load density="{}" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 density="\"cozy\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 114ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 density="compact" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load density="compact" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 density="{}" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 116ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="0" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load fontScale="0" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 density="compact" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 126ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="-1" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load fontScale="-1" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="0" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 112ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="null" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load fontScale="null" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="-1" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 111ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="\"big\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load fontScale="\"big\"" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="null" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 109ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="2" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load fontScale="2" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="\"big\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 108ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="0.5" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load fontScale="0.5" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="2" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 119ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="\"1\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load fontScale="\"1\"" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="0.5" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 108ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 accentHue="abc" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load accentHue="abc" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 fontScale="\"1\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 100ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 accentHue="Infinity" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load accentHue="Infinity" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 accentHue="abc" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 100ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 accentHue="-5" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load accentHue="-5" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 accentHue="Infinity" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 111ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 accentHue="361" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load accentHue="361" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 accentHue="-5" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 113ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 accentHue="12.5" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load accentHue="12.5" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 accentHue="361" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 110ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 railPos="diagonal" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load railPos="diagonal" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 accentHue="12.5" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 108ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 railPos="Left" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load railPos="Left" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 railPos="diagonal" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 108ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 railPos="" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load railPos="" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 railPos="Left" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 108ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 railPos=" left" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load railPos=" left" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 railPos="" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 107ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 bgTone="sage" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load bgTone="sage" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 railPos=" left" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 103ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 bgTone="neon" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load bgTone="neon" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 bgTone="sage" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 98ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 bgTone="Mist" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load bgTone="Mist" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 bgTone="neon" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 100ms
+stdout | docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 bgTone="" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+SOL-OBS source-at-load bgTone="" {"routeError":null,"html":{"theme":"light","density":"comfortable","fontSize":"16px","accentHue":"165","bgTone":null,"railPos":"left"},"appRailPos":"left"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 bgTone="Mist" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 107ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > §5.2 bgTone="" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes 110ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H7 §5.2 'lang' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes 121ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H7 §5.2 'theme' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes 106ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H7 §5.2 'density' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes 121ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H7 §5.2 'accentHue' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes 110ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H7 §5.2 'bgTone' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes 108ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H7 §5.2 'railPos' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes 101ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H7 §5.2 'fontScale' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes 99ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H12 §5.7 A2.4 after a genuine latest success the always-rendered status line reads 'Appearance settings saved.' 86ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H4 A2.1 after a failed write the bottom action never shows Saved; no 'Save & apply' control remains 182ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H1 H2 H12 §5.7 all seven fields unresolved at once: each keeps its choice and message, the count line reads 7, Discard all visits only drafts with zero writes 440ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H12 §5.7 with all seven unresolved, a targeted Retry saves only its field and the count drops to 6 318ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H1 §5.4 background choice with both writes failing keeps both intents; each Retry writes only its own field 170ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H1 §5.7 background choice whose tone write fails while the accent write succeeds: only the tone is unresolved 89ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H13 a background choice whose accent write fails while the tone commits keeps the hue displayed with feedback 105ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H8 §5.5 a missing Web Lock capability refuses the write with failed feedback; Retry after restoration saves (theme and railPos) 170ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H8 §5.5 a rejected Web Lock request refuses the write with failed feedback; Retry after the lock is allowed saves (theme and railPos) 144ms
+ ✓ docs/reviews/web-appearance-recovery-sol/fields.test.tsx > H1 H12 §5 wording in Chinese: a failed accent write shows 主题色未保存。 with 重试 主题色 and 放弃 主题色 102ms
+
+ Test Files  1 passed (1)
+      Tests  89 passed (89)
+   Start at  13:25:01
+   Duration  15.21s (transform 1.81s, setup 38ms, collect 2.67s, tests 12.09s, environment 191ms, prepare 57ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-S9k6FY/.report-fields-0.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-S9k6FY","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-S9k6FY/.appearance-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-S9k6FY/packages/xai-web-settings-appearance/vitest.setup.ts"],"include":["docs/reviews/web-appearance-recovery-sol/fields.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=625 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=11 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=89 passed=89 failed=0 skipped=0 precondition_failures=0
+harness PASS [fields.test.tsx] JSON report parsed
+harness PASS [fields.test.tsx] reported files equal the requested include
+harness PASS [fields.test.tsx] config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-appearance/vitest.setup.ts], root = archive)
+harness PASS [fields.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [fields.test.tsx] required product modules loaded from the archive (22)
+harness PASS [fields.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 PASSED | 'lang' H2 lang: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line
+case 003 PASSED | 'lang' H12 §5.8 lang: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value
+case 004 PASSED | 'lang' §5.2 H12 §5.8 lang: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save
+case 005 PASSED | 'lang' §5.2 lang: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only
+case 006 PASSED | 'lang' H8 §5.8 lang: a late completion after Discard never revives the discarded choice
+case 007 PASSED | 'theme' H2 theme: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line
+case 008 PASSED | 'theme' H12 §5.8 theme: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value
+case 009 PASSED | 'theme' §5.2 H12 §5.8 theme: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save
+case 010 PASSED | 'theme' §5.2 theme: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only
+case 011 PASSED | 'theme' H8 §5.8 theme: a late completion after Discard never revives the discarded choice
+case 012 PASSED | 'density' H2 density: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line
+case 013 PASSED | 'density' H12 §5.8 density: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value
+case 014 PASSED | 'density' §5.2 H12 §5.8 density: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save
+case 015 PASSED | 'density' §5.2 density: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only
+case 016 PASSED | 'density' H8 §5.8 density: a late completion after Discard never revives the discarded choice
+case 017 PASSED | 'accentHue' H1 accentHue: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line
+case 018 PASSED | 'accentHue' H12 §5.8 accentHue: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value
+case 019 PASSED | 'accentHue' H7 H12 §5.8 accentHue: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save
+case 020 PASSED | 'accentHue' §5.2 accentHue: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only
+case 021 PASSED | 'accentHue' H8 §5.8 accentHue: a late completion after Discard never revives the discarded choice
+case 022 PASSED | 'bgTone' H1 bgTone: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line
+case 023 PASSED | 'bgTone' H12 §5.8 bgTone: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value
+case 024 PASSED | 'bgTone' H7 H12 §5.8 bgTone: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save
+case 025 PASSED | 'bgTone' §5.2 bgTone: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only
+case 026 PASSED | 'bgTone' H8 §5.8 bgTone: a late completion after Discard never revives the discarded choice
+case 027 PASSED | 'railPos' H1 railPos: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line
+case 028 PASSED | 'railPos' H12 §5.8 railPos: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value
+case 029 PASSED | 'railPos' H7 H12 §5.8 railPos: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save
+case 030 PASSED | 'railPos' §5.2 railPos: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only
+case 031 PASSED | 'railPos' H8 §5.8 railPos: a late completion after Discard never revives the discarded choice
+case 032 PASSED | 'fontScale' H2 fontScale: a failed pane write keeps the latest choice displayed and applied, with failed feedback, Retry, Discard, Export, Topbar status and unload warning; Retry saves exact bytes and claims the truthful saved line
+case 033 PASSED | 'fontScale' H12 §5.8 fontScale: targeted Discard makes zero set/remove attempts, rereads only its field and returns the display and the document to the committed value
+case 034 PASSED | 'fontScale' §5.2 H12 §5.8 fontScale: a source-only issue shows Reload; Reload of repaired bytes makes zero writes, rereads only its field, clears the alert and claims no save
+case 035 PASSED | 'fontScale' §5.2 fontScale: a valid edit over malformed bytes is a failed draft that never overwrites them; Reload never erases it; Retry is refused again; Discard returns to Reload-only
+case 036 PASSED | 'fontScale' H8 §5.8 fontScale: a late completion after Discard never revives the discarded choice
+case 037 PASSED | Topbar 'lang' H3 lang: a failed Topbar choice stays checked and applied, shows the Topbar status and the pane message; Retry saves and removes the status
+case 038 PASSED | Topbar 'theme' H3 theme: a failed Topbar choice stays checked and applied, shows the Topbar status and the pane message; Retry saves and removes the status
+case 039 PASSED | Topbar 'density' H3 density: a failed Topbar choice stays checked and applied, shows the Topbar status and the pane message; Retry saves and removes the status
+case 040 PASSED | §5.2 lang="\"fr\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 041 PASSED | §5.2 lang="en" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 042 PASSED | §5.2 lang="" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 043 PASSED | §5.2 lang="null" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 044 PASSED | §5.2 lang="1" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 045 PASSED | §5.2 lang="\"EN\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 046 PASSED | §5.2 theme="\"neon\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 047 PASSED | §5.2 theme="dark" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 048 PASSED | §5.2 theme="\"Dark\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 049 PASSED | §5.2 theme="123" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 050 PASSED | §5.2 density="\"cozy\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 051 PASSED | §5.2 density="{}" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 052 PASSED | §5.2 density="compact" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 053 PASSED | §5.2 fontScale="0" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 054 PASSED | §5.2 fontScale="-1" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 055 PASSED | §5.2 fontScale="null" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 056 PASSED | §5.2 fontScale="\"big\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 057 PASSED | §5.2 fontScale="2" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 058 PASSED | §5.2 fontScale="0.5" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 059 PASSED | §5.2 fontScale="\"1\"" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 060 PASSED | §5.2 accentHue="abc" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 061 PASSED | §5.2 accentHue="Infinity" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 062 PASSED | §5.2 accentHue="-5" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 063 PASSED | §5.2 accentHue="361" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 064 PASSED | §5.2 accentHue="12.5" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 065 PASSED | §5.2 railPos="diagonal" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 066 PASSED | §5.2 railPos="Left" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 067 PASSED | §5.2 railPos="" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 068 PASSED | §5.2 railPos=" left" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 069 PASSED | §5.2 bgTone="sage" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 070 PASSED | §5.2 bgTone="neon" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 071 PASSED | §5.2 bgTone="Mist" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 072 PASSED | §5.2 bgTone="" at load: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 073 PASSED | H7 §5.2 'lang' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 074 PASSED | H7 §5.2 'theme' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 075 PASSED | H7 §5.2 'density' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 076 PASSED | H7 §5.2 'accentHue' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 077 PASSED | H7 §5.2 'bgTone' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 078 PASSED | H7 §5.2 'railPos' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 079 PASSED | H7 §5.2 'fontScale' with a throwing getItem: no route error, the default displayed and applied, a Reload-only source alert, zero writes
+case 080 PASSED | H12 §5.7 A2.4 after a genuine latest success the always-rendered status line reads 'Appearance settings saved.'
+case 081 PASSED | H4 A2.1 after a failed write the bottom action never shows Saved; no 'Save & apply' control remains
+case 082 PASSED | H1 H2 H12 §5.7 all seven fields unresolved at once: each keeps its choice and message, the count line reads 7, Discard all visits only drafts with zero writes
+case 083 PASSED | H12 §5.7 with all seven unresolved, a targeted Retry saves only its field and the count drops to 6
+case 084 PASSED | H1 §5.4 background choice with both writes failing keeps both intents; each Retry writes only its own field
+case 085 PASSED | H1 §5.7 background choice whose tone write fails while the accent write succeeds: only the tone is unresolved
+case 086 PASSED | H13 a background choice whose accent write fails while the tone commits keeps the hue displayed with feedback
+case 087 PASSED | H8 §5.5 a missing Web Lock capability refuses the write with failed feedback; Retry after restoration saves (theme and railPos)
+case 088 PASSED | H8 §5.5 a rejected Web Lock request refuses the write with failed feedback; Retry after the lock is allowed saves (theme and railPos)
+case 089 PASSED | H1 H12 §5 wording in Chinese: a failed accent write shows 主题色未保存。 with 重试 主题色 and 放弃 主题色

@@ -1,0 +1,34 @@
+{
+  "id": "BRD-12/TECHNICAL-CONTRACT-AMENDMENT3",
+  "state": "FAILED_static1_author3_EXHAUSTED_NO4_NO_ARTIFACT",
+  "parent": "19c55bad0a7d5a002a262e47c79c1a3ff74f21a3",
+  "fixed_input": "147b4dc7286a4ce75f58f9de8befe913696283a3",
+  "author_iteration": 3,
+  "author_cap": 3,
+  "static_invocations": 1,
+  "process": {
+    "pid": 73011,
+    "exit": 1,
+    "failed_line": 139,
+    "stdout_bytes": 0,
+    "stderr_bytes": 151,
+    "fully_drained": true,
+    "catfile_pid": null,
+    "catfile_pid_status": "unknown not zero",
+    "catfile_exit": 0,
+    "threads_joined": true
+  },
+  "guard": "read source differs P0: get(parent,path)==get(p0,path) or path.startswith('packages/plugin-web-time-tracker/docs/')",
+  "classification": "overbroad readPaths comparison included documentary/control paths; no exact offendingpath receipt; NOT proven source drift",
+  "completed": "reported42103 identities including complete41547/36229/30933/25632/20349/15257, original ledger, runtime-fourTTdocs and baseline80 checks",
+  "unrun": [
+    "subsequent canonical/final buffer validation",
+    "all writes",
+    "stage",
+    "commit"
+  ],
+  "memory_buffers": "not artifacts; 13 additional protected paths UNGRANTED",
+  "source_commit": null,
+  "runtime": 0,
+  "freeze": "source2 remains REVISE R2-01 deleted raw tombstone/R2-02 wholeaccount restore; no lawful correctedartifact for review3"
+}

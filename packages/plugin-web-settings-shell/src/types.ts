@@ -37,7 +37,21 @@ export type SettingsPaneId =
 export interface PaneRenderProps {
   /** Active language. */
   readonly lang: Lang;
+  /** Optional host bridge for a pane that must protect an unsaved private draft. */
+  readonly registerDepartureGuard?: PaneDepartureGuardRegistration;
 }
+
+export interface PaneDepartureGuard {
+  readonly token: object;
+  /** Localized, non-sensitive pane label for the host departure prompt. */
+  readonly label?: string;
+  readonly isBlocking: () => boolean;
+  readonly isCurrent: () => boolean;
+  readonly exportDraft: () => void;
+  readonly discardDraft: () => void;
+}
+
+export type PaneDepartureGuardRegistration = (guard: PaneDepartureGuard) => () => void;
 
 export interface Pane {
   /** Stable id, used as React key + active-state selector. */

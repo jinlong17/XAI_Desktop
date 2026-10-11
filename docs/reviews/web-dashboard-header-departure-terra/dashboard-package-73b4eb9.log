@@ -1,0 +1,74 @@
+
+> @repo/plugin-web-dashboard-grid@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-grid
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-grid
+
+ ✓ src/__tests__/AddWidgetPicker.test.tsx (23 tests) 284ms
+stderr | src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+
+stderr | src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+
+stderr | src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > order failure control retains original persisted and rendered order
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > latest layout proposal retries once while committed view stays unchanged
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+
+ ✓ src/__tests__/DashHeader.test.tsx (16 tests) 390ms
+stderr | src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > appearance latest change and reset are recoverable; old owner export is blocked
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+
+stderr | src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > actual add retry emits once only after saving and closes picker; removal retry commits
+[plugin-web-storage] quota exceeded for xai_dash_order.
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | src/__tests__/gridSaveRecovery.test.tsx > failed order reconciliation remains pending and can retry rather than marking it saved
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+ ✓ src/__tests__/gridSaveRecovery.test.tsx (12 tests) 165ms
+ ✓ src/__tests__/DashboardModule.picker.test.tsx (6 tests) 189ms
+ ✓ src/__tests__/DashboardModule.events.test.tsx (10 tests) 333ms
+ ✓ src/__tests__/DashboardSlotHost.composition.test.tsx (8 tests) 464ms
+ ✓ src/__tests__/DashboardModule.render.test.tsx (5 tests) 251ms
+ ✓ src/__tests__/registration.test.tsx (13 tests) 701ms
+   ✓ DashboardSlotHost > AC-REG-7: reads lang from useWebShell() (en path)  306ms
+ ✓ src/__tests__/DashboardModule.remove.test.tsx (4 tests) 280ms
+ ✓ src/__tests__/DashHeader.departure.test.tsx (12 tests) 807ms
+ ✓ src/__tests__/DashHeader.recovery.test.tsx (7 tests) 813ms
+   ✓ Dashboard header persistence recovery > keeps latest draft on quota, retries it, and warns before unload only while dirty  464ms
+ ✓ src/__tests__/DashHeader.async.test.tsx (5 tests) 795ms
+   ✓ DashHeader async note session > keeps a newer draft open after an earlier pending operation completes  442ms
+ ✓ src/__tests__/EmptyState.test.tsx (5 tests) 116ms
+ ✓ src/__tests__/useGridDrag.test.tsx (11 tests) 250ms
+ ✓ src/__tests__/DashboardModule.lang.test.tsx (3 tests) 151ms
+stderr | src/__tests__/DashboardModule.persist.test.tsx > DashboardModule with widgets (P2 grid) > duplicate ids in widgets[] → first wins, no crash, dev-warn handled silently in test env
+[@repo/plugin-web-dashboard-grid] Duplicate widget id "alpha" — keeping first occurrence, dropping later one(s).
+
+ ✓ src/__tests__/DashboardModule.persist.test.tsx (7 tests) 293ms
+ ✓ src/__tests__/useDashOrder.addWidget.test.tsx (5 tests) 198ms
+ ✓ src/__tests__/useWidgetLayout.test.tsx (4 tests) 26ms
+ ✓ src/__tests__/WidgetShell.test.tsx (26 tests) 224ms
+ ✓ src/__tests__/useDashOrder.removeWidget.test.tsx (6 tests) 27ms
+ ✓ src/__tests__/useDashOrder.test.tsx (9 tests) 95ms
+ ✓ src/__tests__/greeting.test.ts (7 tests) 187ms
+ ✓ src/__tests__/useWidgetAppearance.test.tsx (5 tests) 221ms
+ ✓ src/__tests__/sanitizeOrder.test.ts (14 tests) 9ms
+ ✓ src/__tests__/index-barrel.test.ts (5 tests) 3ms
+
+ Test Files  25 passed (25)
+      Tests  228 passed (228)
+   Start at  00:56:42
+   Duration  9.85s (transform 3.61s, setup 10.29s, collect 10.98s, tests 7.27s, environment 22.50s, prepare 4.02s)
+

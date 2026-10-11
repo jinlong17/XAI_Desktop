@@ -1,0 +1,11 @@
+revision=f9eb4b1 fixed_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-2ELBSN
+
+ ✓ docs/reviews/web-dashboard-header-departure-independent/followon.test.tsx (2 tests) 427ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  08:06:09
+   Duration  3.39s (transform 1.77s, setup 0ms, collect 2.57s, tests 427ms, environment 194ms, prepare 48ms)

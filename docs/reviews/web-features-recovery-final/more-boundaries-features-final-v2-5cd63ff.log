@@ -1,0 +1,693 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+mode=more-boundaries
+suffix=features-final-v2
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-final/verify-callers.mjs 5cd63ff more-boundaries features-final-v2
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=cde91389f0a0baca69d266f5b6a6c5ff8098ac1f
+runner_sha256=7e1aa8b244ed9f63568fa78de79052f980df21a0bad2245a3bbccb2f6ca3454c
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+reproduces=docs/reviews/web-more-recovery-sol/verify-fixed.mjs mode boundaries
+include=docs/reviews/web-more-recovery-sol/boundaries.test.tsx
+setup_files=packages/plugin-web-settings-rest/vitest.setup.ts
+copied docs/reviews/web-more-recovery-sol/fixture.tsx run=b117d2044850cbea822367a0f2bbe9a326e27e4c9b5e5537427b5e0b37b87928 archive_committed=b117d2044850cbea822367a0f2bbe9a326e27e4c9b5e5537427b5e0b37b87928 (same)
+copied docs/reviews/web-more-recovery-sol/fields.test.tsx run=36aa19c20fb97ed3da9f902cc513ef6ae293d15b8649e79a3a85ff3fd041fb9a archive_committed=36aa19c20fb97ed3da9f902cc513ef6ae293d15b8649e79a3a85ff3fd041fb9a (same)
+copied docs/reviews/web-more-recovery-sol/reset.test.tsx run=05f3cbc748dcf5fa7d91e4dfa3ddd1d54b774aadd617009435667591d00c0441 archive_committed=05f3cbc748dcf5fa7d91e4dfa3ddd1d54b774aadd617009435667591d00c0441 (same)
+copied docs/reviews/web-more-recovery-sol/queues.test.tsx run=3bdce398a08908f580139d805947ceb16db7126bf3ba07bd0024eb5acdcfff7c archive_committed=3bdce398a08908f580139d805947ceb16db7126bf3ba07bd0024eb5acdcfff7c (same)
+copied docs/reviews/web-more-recovery-sol/boundaries.test.tsx run=dcbaf57e55f7e907660abacaf233de83dcf769da97b878a9036e358a3dd8ef3e archive_committed=dcbaf57e55f7e907660abacaf233de83dcf769da97b878a9036e358a3dd8ef3e (same)
+copied docs/reviews/web-more-recovery-sol/owner-export.test.tsx run=5a9cfa177f61ddd4feb6278dd5ac7c49cc0c1b972725be2068e902f18f7ebfcf archive_committed=5a9cfa177f61ddd4feb6278dd5ac7c49cc0c1b972725be2068e902f18f7ebfcf (same)
+archive docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts run=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 checkout=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 (same)
+product_file_sha256 packages/plugin-web-settings-rest/src/panes/morePane.tsx=96c8694df00b7e81e9466b874749dd4b54faab04b1078ecbd29d586acb3dde7f packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-settings-rest/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-80LQQJ/final-more-boundaries.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-80LQQJ/.final-guard/report-more-boundaries.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 (react/@testing-library/react from packages/plugin-web-settings-rest; react-router linked for completeness, not aliased by the older runner)
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_checked=46 unresolved=none
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/docs
+accepted_count=10
+vitest_exit=1
+harness_checks=PASS (13/13)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-80LQQJ
+
+ ✓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > missing and rejected Web Locks retain exact device/account edit and reset intents 257ms
+ × docs/reviews/web-more-recovery-sol/boundaries.test.tsx > invalid and unavailable sources retain requested reset intents without purging raw bytes 1283ms
+   → remove_date_text: expected 'true' to be null
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"more-pane"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mLanguage[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Language"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"follow"[39m
+                [36m>[39m
+                  [0mFollow System[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+          [33mstyle[39m=[32m"margin-top: 14px;"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mChoose window type when launching[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Choose window type when launching"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"window"[39m
+                [36m>[39m
+                  [0mWindow[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"tray"[39m
+                [36m>[39m
+                  [0mTray[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"full"[39m
+                [36m>[39m
+                  [0mFullscreen[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mLaunch at Login[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"false"[39m
+                [33maria-label[39m=[32m"Launch at Login"[39m
+                [33mclass[39m=[32m"toggle"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"toggle-knob"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mLaunch at Login reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Launch at Login"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Launch at Login"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mMinimize app when auto launching[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"false"[39m
+                [33maria-label[39m=[32m"Minimize app when auto launching"[39m
+                [33mclass[39m=[32m"toggle"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"toggle-knob"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<h4[39m
+          [33mclass[39m=[32m"pane-h-block"[39m
+        [36m>[39m
+          [0mSmart Recognition[0m
+        [36m</h4>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDate Recognition[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-desc"[39m
+              [36m>[39m
+                [0mWhen adding tasks, recognize date and time information and automatically set reminders.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"Date Recognition"[39m
+                [33mclass[39m=[32m"toggle on"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+ ...
+ ✓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > missing committed marker lets device resets settle but retains both private reset intents 160ms
+ ✓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > deleted tombstone lets device resets settle but retains both private reset intents 214ms
+ ✓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > a held account lifecycle lock leaves device reset independent and private reset pending 105ms
+ ✓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > setting an exact registry default stores bytes while Reset Default removes them 105ms
+ ✓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > a same-field source Reload cannot erase an actual failed edit draft 78ms
+ ✓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > targeted discard rereads only its field with zero mutations and preserves a failed sibling 100ms
+ ✓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > an external conflict coexists with an unrelated quota failure and Retry preserves external bytes 108ms
+ ✓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > all-discard visits only current drafts and a later same-field reset survives old completion 95ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  09:05:43
+   Duration  3.56s (transform 227ms, setup 209ms, collect 206ms, tests 2.51s, environment 365ms, prepare 76ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-80LQQJ/.final-guard/report-more-boundaries.json
+
+---- stderr ----
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > missing and rejected Web Locks retain exact device/account edit and reset intents
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > missing committed marker lets device resets settle but retains both private reset intents
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > deleted tombstone lets device resets settle but retains both private reset intents
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > deleted tombstone lets device resets settle but retains both private reset intents
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > targeted discard rereads only its field with zero mutations and preserves a failed sibling
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > an external conflict coexists with an unrelated quota failure and Retry preserves external bytes
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > all-discard visits only current drafts and a later same-field reset survives old completion
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > invalid and unavailable sources retain requested reset intents without purging raw bytes
+AssertionError: remove_date_text: expected 'true' to be null
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"more-pane"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mLanguage[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Language"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"follow"[39m
+                [36m>[39m
+                  [0mFollow System[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+          [33mstyle[39m=[32m"margin-top: 14px;"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mChoose window type when launching[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Choose window type when launching"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"window"[39m
+                [36m>[39m
+                  [0mWindow[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"tray"[39m
+                [36m>[39m
+                  [0mTray[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"full"[39m
+                [36m>[39m
+                  [0mFullscreen[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mLaunch at Login[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"false"[39m
+                [33maria-label[39m=[32m"Launch at Login"[39m
+                [33mclass[39m=[32m"toggle"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"toggle-knob"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mLaunch at Login reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Launch at Login"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Launch at Login"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mMinimize app when auto launching[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"false"[39m
+                [33maria-label[39m=[32m"Minimize app when auto launching"[39m
+                [33mclass[39m=[32m"toggle"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"toggle-knob"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<h4[39m
+          [33mclass[39m=[32m"pane-h-block"[39m
+        [36m>[39m
+          [0mSmart Recognition[0m
+        [36m</h4>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDate Recognition[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-desc"[39m
+              [36m>[39m
+                [0mWhen adding tasks, recognize date and time information and automatically set reminders.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"Date Recognition"[39m
+                [33mclass[39m=[32m"toggle on"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+ ...
+
+- Expected: 
+null
+
++ Received: 
+"true"
+
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:20:167
+
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+---- runner summary ----
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-more-recovery-sol/fixture.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-more-recovery-sol/fields.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-more-recovery-sol/reset.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-more-recovery-sol/queues.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-more-recovery-sol/boundaries.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-more-recovery-sol/owner-export.test.tsx
+harness PASS single react, react-router and @testing-library/react instance across the archive and the oracle links (react=1 react-router=1 @testing-library/react=1)
+harness PASS JSON report parsed
+harness PASS reported test files equal the requested include
+harness PASS older runner's config in effect (environment jsdom, globals true, setupFiles [packages/plugin-web-settings-rest/vitest.setup.ts], include, root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product and helper modules loaded from the archive (3 of 3)
+harness PASS no test-file suite error
+json_report=success=false numTotalTestSuites=1 numTotalTests=10 numPassedTests=9 numFailedTests=1 numPendingTests=0 numTodoTests=0
+totals cases=10 passed=9 failed=1 other=0 suite_errors=0 unhandled_error_lines=0 console_blocks=7 act_warning_lines=17
+accepted_count=10 count_matches_accepted=false
+file docs/reviews/web-more-recovery-sol/boundaries.test.tsx status=failed tests=10 passed=9 failed=1
+case 001 PASSED | missing and rejected Web Locks retain exact device/account edit and reset intents
+case 002 FAILED | invalid and unavailable sources retain requested reset intents without purging raw bytes
+    first: AssertionError: remove_date_text: expected 'true' to be null
+case 003 PASSED | missing committed marker lets device resets settle but retains both private reset intents
+case 004 PASSED | deleted tombstone lets device resets settle but retains both private reset intents
+case 005 PASSED | a held account lifecycle lock leaves device reset independent and private reset pending
+case 006 PASSED | setting an exact registry default stores bytes while Reset Default removes them
+case 007 PASSED | a same-field source Reload cannot erase an actual failed edit draft
+case 008 PASSED | targeted discard rereads only its field with zero mutations and preserves a failed sibling
+case 009 PASSED | an external conflict coexists with an unrelated quota failure and Retry preserves external bytes
+case 010 PASSED | all-discard visits only current drafts and a later same-field reset survives old completion
+console_block stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > missing and rejected Web Locks retain exact device/account edit and reset intents
+console_block stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > missing committed marker lets device resets settle but retains both private reset intents
+console_block stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > deleted tombstone lets device resets settle but retains both private reset intents
+console_block stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > deleted tombstone lets device resets settle but retains both private reset intents
+console_block stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > targeted discard rereads only its field with zero mutations and preserves a failed sibling
+console_block stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > an external conflict coexists with an unrelated quota failure and Retry preserves external bytes
+console_block stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > all-discard visits only current drafts and a later same-field reset survives old completion
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-80LQQJ","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-80LQQJ/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-80LQQJ/packages/plugin-web-settings-rest/vitest.setup.ts"],"include":["docs/reviews/web-more-recovery-sol/boundaries.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/plugin-web-settings-rest/src/panes/morePane.tsx packages/plugin-web-storage/src/internal/prefMutation.ts docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts
+pin_required_provenance_missing=none
+pin_modules=63 by package: docs/reviews/web-board-workspace-astra-review=1 docs/reviews/web-more-recovery-sol=2 packages/plugin-web-settings-rest=3 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-shell=9

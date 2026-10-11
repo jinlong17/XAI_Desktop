@@ -1,0 +1,11 @@
+revision=2c5dc31
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-c-EsTzje
+
+ ✓ docs/reviews/web-board-workspace-astra-review/c-primitive-contract.test.ts (29 tests) 14ms
+
+ Test Files  1 passed (1)
+      Tests  29 passed (29)
+   Start at  19:45:38
+   Duration  874ms (transform 137ms, setup 0ms, collect 178ms, tests 14ms, environment 297ms, prepare 104ms)

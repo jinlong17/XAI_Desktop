@@ -1,5 +1,17 @@
 # API Contract — xai-web-pomodoro
 
+## Preference save recovery — 2026-09-09
+
+The six device-local preferences (preset, custom minutes, display style, theme, sound and mute) consume autosave results. Every valid explicit edit owns an independent latest-draft identity from submission until its matching write verifies. Failed, pending, conflicting and uncertain writes keep the selected value active and expose retry, targeted discard and a current-values JSON download. Retry preserves the failed hook operation and only retries fields with current drafts; an older equal-value success cannot clear a newer failed intent.
+
+`PomodoroModule` accepts an optional `registerDepartureGuard` host capability. The standalone component remains usable without it. While mounted, actual preference drafts register `beforeunload` and a host route/sign-out guard; source-only errors and a clean mount do not. Account epoch changes revoke old dialog/export/discard permission while retaining device-owned drafts for a fresh decision. Explicit discard reloads only fields with current drafts. Export is `pomodoro-preferences.json`, version 1, kind `pomodoro-preference-draft`, with the complete six-value `values` object and can run from the in-memory snapshot when storage is unavailable.
+
+This recovery surface is separate from durable session settlement. It never reads, exports, retries, resets or discards `xai_pomodoro_active` or `xai_pomodoro_sessions`; export is a manual preference draft, not a cloud backup or import contract. Other autosave consumers need their own UI integration.
+
+## POMO-03 amendment — 2026-09-09 partial focus records
+
+FocusRecordList shows every ended focus session, including early endings, and labels rows Completed / Ended early · Incomplete (已完成 / 提前结束 · 未完成). Displayed duration remains measured `elapsedMs`. Today/total focus-duration overview sums include partial sessions; completed Pomodoro counts and streaks still count only completed sessions. This supersedes older completed-only record-list and duration-sum assumptions. Statistics consumes the same measured elapsed values and preserves unknown legacy measurements without substituting configured time.
+
 > The single public surface of `@repo/plugin-web-pomodoro`. Consumers
 > (`apps/web/src/routes/modules/shellRegistrations.tsx` + `apps/web/src/App.tsx`
 > transitively, plus `@repo/plugin-web-statistics` and
@@ -108,6 +120,8 @@ import type { Lang } from "@repo/plugin-web-tokens";
 export interface PomodoroModuleProps {
   /** Active language. Drives useI18n bundle. */
   lang: Lang;
+  /** Optional host bridge for guarded route/sign-out departure. */
+  registerDepartureGuard?: PomodoroDepartureGuardRegistration;
 }
 
 export function PomodoroModule(props: PomodoroModuleProps): JSX.Element;
@@ -527,3 +541,19 @@ declaration was already shipped in W1 per ADR §S7.
   "owner": "xai-web-pomodoro row #14"
 }
 ```
+
+## 2026-09-09 — durable local session addendum (POMO-01/02)
+
+The public `@repo/plugin-web-pomodoro/session-host` subpath exports `PomodoroSessionHost`. Mount it once inside the unlocked account-data Gate, above route contents. This entry does not import the Pomodoro route or its styles. Timer hooks are observers of a package-owned controller; route teardown does not terminate its durable session.
+
+`xai_pomodoro_active` is a registered account-private JSON record containing version, account data generation, stable sessionId, revision, mode, configured duration, original start, accumulated elapsed, current run start/deadline and running/paused/settlement-pending phase. It is included by registry-derived local lifecycle/export/delete machinery. This is unrelated to authentication IndexedDB generation and does not enable cloud sync. Device display preferences stay device-owned.
+
+Every mutation acquires a same-origin Web Lock scoped by account kind/id, account data generation and feature, re-reads authoritative bytes and verifies account scope. Without Web Locks the controller is read-only with an explicit reason. Start/pause/resume/discard publish state only after storage succeeds. End freezes its command time; automatic completion uses the durable deadline. Settlement writes pending intent, appends history at most once by id, then clears pending. Retry after history success only clears pending; it preserves the first recordedAt. A failed End pending write retains an in-memory recovery draft as well as the old durable active state.
+
+The compatible `PomodoroSession[]` history retains existing fields and adds optional `schemaVersion:2`, `deadline` and `recordedAt` on new rows. `finishedAt` is actual business completion (deadline for completed timers), `elapsedMs` excludes pauses, and `recordedAt` is first successful local recording. Corrupt history/active bytes are preserved and block destructive overwrites. An active record bound to another data generation is not silently resumed; raw recovery export is available.
+
+The existing finished event adds optional `sessionId` and `recordedAt`; legacy `durationMs` remains actual elapsed. History is the durable fact, events are best-effort post-commit notifications. Exactly-once history is not an exactly-once notification promise across a crash. Closing the browser stops JavaScript and alerts; reopening reconciles the preserved deadline. Automatic completion selects a next mode when the route UI is present but does not automatically start another session.
+
+### Cross-tab command conflicts
+
+A stale session/revision or competing Start rejects without writing, refreshes current durable state, drops the obsolete retry intent and exposes `conflict` as a nonblocking notice. The user can issue a new command against the refreshed state. `Retry save` remains reserved for the persistence recovery path; it never automatically reapplies a stale command after another tab wins. Frozen, uncommitted End data is discarded if its source revision no longer matches, leaving the winning session intact.

@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "description": "Web Console Board — 5 additional views (Table/Calendar/Dashboard/Timeline/Map) layered on @repo/plugin-web-board-core. Adds ViewPicker + BoardModule orchestrator. Persists per-board active view in xai_board_view_by_id.",
-  "sideEffects": ["./src/styles.css", "./src/index.ts"],
+  "sideEffects": [
+    "./src/styles.css",
+    "./src/index.ts"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -25,8 +28,8 @@
   "dependencies": {
     "@repo/core": "workspace:*",
     "@repo/plugin-web-board-core": "workspace:*",
-    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/xai-web-shell": "workspace:*",
     "leaflet": "^1.9.4"
   },
@@ -42,6 +45,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "typescript": "5.9.2",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.7"
   }
 }

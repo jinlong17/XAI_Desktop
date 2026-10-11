@@ -25,6 +25,8 @@ export function Shell({
   onOpenSearch,
   children,
   premiumBadge,
+  appearanceStatus,
+  railOrderStatus,
   onSignOut,
 }: ShellProps) {
   const { railPos, petOn, setPetOn } = useWebShell();
@@ -80,6 +82,8 @@ export function Shell({
         onOpenSettings={onOpenSettings}
         onOpenSearch={onOpenSearch}
         premiumBadge={premiumBadge}
+        appearanceStatus={appearanceStatus}
+        railOrderStatus={railOrderStatus}
       />
       <main className="app-main">
         {children ?? <Outlet />}

@@ -8,6 +8,20 @@
 /** The three modes of a Pomodoro session. */
 export type PomodoroMode = "focus" | "short-break" | "long-break";
 
+/** Optional host capability for protecting submitted preference drafts. */
+export interface PomodoroDepartureGuard {
+  readonly token: object;
+  readonly label?: string;
+  readonly isBlocking: () => boolean;
+  readonly isCurrent: () => boolean;
+  readonly exportDraft: () => void;
+  readonly discardDraft: () => void;
+}
+
+export type PomodoroDepartureGuardRegistration = (
+  guard: PomodoroDepartureGuard,
+) => () => void;
+
 /**
  * A completed or partial Pomodoro session record.
  *
@@ -17,6 +31,10 @@ export type PomodoroMode = "focus" | "short-break" | "long-break";
  * Storage schema version: 1 (declared in plugin-web-storage registry.ts line 302–310).
  */
 export interface PomodoroSession {
+  /** Present for durable v2 settlements; absent on legacy rows. */
+  schemaVersion?: 2;
+  deadline?: string;
+  recordedAt?: string;
   /** Stable id. Generated via `pomo_<base36(rand)>` at session start. */
   id: string;
   /** Mode of the session. */

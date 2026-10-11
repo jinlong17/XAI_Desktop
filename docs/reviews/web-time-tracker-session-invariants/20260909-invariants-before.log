@@ -1,0 +1,91 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ❯ docs/reviews/web-time-tracker-session-invariants/invariants.test.ts (5 tests | 4 failed) 10ms
+   × resume is idempotent while already running: one open segment 5ms
+     → expected [ { start: 2000, end: null }, …(1) ] to have a length of 1 but got 2
+   × ended sessions reject stale resume and stay finite 2ms
+     → expected { id: 'tt_mtui8ywk_9vtp62', …(7) } to deeply equal { id: 'tt_mtui8ywk_9vtp62', …(7) }
+   × finish repairs multiple opens so done duration never grows 1ms
+     → expected [ { start: 2000, end: null } ] to have a length of +0 but got 1
+   ✓ normal pause/resume/end counts only elapsed working intervals 0ms
+   × out of order command cannot persist a negative duration segment 1ms
+     → expected false to be true // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-time-tracker-session-invariants/invariants.test.ts > resume is idempotent while already running: one open segment
+AssertionError: expected [ { start: 2000, end: null }, …(1) ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ docs/reviews/web-time-tracker-session-invariants/invariants.test.ts:5:200
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  docs/reviews/web-time-tracker-session-invariants/invariants.test.ts > ended sessions reject stale resume and stay finite
+AssertionError: expected { id: 'tt_mtui8ywk_9vtp62', …(7) } to deeply equal { id: 'tt_mtui8ywk_9vtp62', …(7) }
+
+- Expected
++ Received
+
+@@ -14,9 +14,13 @@
+      },
+      {
+        "end": 3000,
+        "start": 2000,
+      },
++     {
++       "end": null,
++       "start": 4000,
++     },
+    ],
+    "subId": null,
+-   "updatedAt": 3000,
++   "updatedAt": 4000,
+  }
+
+ ❯ docs/reviews/web-time-tracker-session-invariants/invariants.test.ts:6:204
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  docs/reviews/web-time-tracker-session-invariants/invariants.test.ts > finish repairs multiple opens so done duration never grows
+AssertionError: expected [ { start: 2000, end: null } ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ docs/reviews/web-time-tracker-session-invariants/invariants.test.ts:7:272
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  docs/reviews/web-time-tracker-session-invariants/invariants.test.ts > out of order command cannot persist a negative duration segment
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-time-tracker-session-invariants/invariants.test.ts:9:252
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  12:42:14
+   Duration  585ms (transform 153ms, setup 0ms, collect 197ms, tests 10ms, environment 0ms, prepare 62ms)
+

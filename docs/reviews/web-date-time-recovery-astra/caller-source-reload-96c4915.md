@@ -1,0 +1,11 @@
+# DateTime P1: source Reload separates a retained draft from its hook operation
+
+Astra fixed96c4915 public component evidence: `caller-source-before-96c4915.log`, two correct FAILs and two positive controls. One failure is the already recorded pending-Retry ordering. The new failure concerns same-field source repair and is independent of the shared token engine.
+
+Start with invalid start-week raw `invalid-week`. Select Sunday: this is an actual failed draft and remains guarded. An external fixture repairs physical storage to Monday. The current UI exposes both draft Retry/Discard and source Reload for that same field. Click Reload: the hook is reset to a clean Monday session, but the caller retains its Sunday draft/guard. Click Retry: `pref.retry()` now falls back to setting the hook's clean Monday. Its success clears the caller's retained Sunday draft and displays Monday. No Sunday write succeeded and the user did not explicitly discard it.
+
+The correct oracle permits either genuinely persisting the retained Sunday through a properly authorized retry or retaining its unresolved guard; it forbids acknowledging Monday as Sunday. A separate initial-source-only Reload control correctly adopts externally repaired Saturday, performs zero writes and has no false guard/unload. Both controls are public actions with real hooks and physical bytes. The original tests and before logs are preserved.
+
+Required caller repair: source-only Reload must not reset an active draft's hook independently of that draft's operation identity. The simplest narrow design is to expose and authorize source Reload only while the field has no actual draft; actual work keeps explicit Discard/reload and Retry. Check the callback's current qualification as well as visibility so a stale source-only callback cannot reset newer work. An alternative must preserve the same operation/baseline contract without silently rebasing. Preserve unrelated source repair, all-source-only Reload, zero-write targeted discard and their positive controls.
+
+This change belongs solely to DateTime caller UI/recovery, alongside its pending-Retry identity repair. It requires the unchanged caller4 and Sol full matrix plus affected real source-repair journey; it does not authorize a second shared-engine redesign or weaken source alerts globally.

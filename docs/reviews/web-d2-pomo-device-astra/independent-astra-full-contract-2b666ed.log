@@ -1,0 +1,64 @@
+revision=2b666ed fixed_commit=2b666eda345268efe9e0697bfc1fc8dc4474dc63
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UMpC2N
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx (24 tests | 2 failed) 673ms
+   ✓ preset: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 59ms
+   ✓ preset: physical fault retains current choice and actual Retry persists only the unresolved intent 75ms
+   ✓ custom_minutes: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 27ms
+   ✓ custom_minutes: physical fault retains current choice and actual Retry persists only the unresolved intent 40ms
+   ✓ display_style: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 21ms
+   ✓ display_style: physical fault retains current choice and actual Retry persists only the unresolved intent 37ms
+   ✓ theme: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 19ms
+   ✓ theme: physical fault retains current choice and actual Retry persists only the unresolved intent 31ms
+   ✓ sound: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 17ms
+   ✓ sound: physical fault retains current choice and actual Retry persists only the unresolved intent 34ms
+   ✓ muted: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 22ms
+   ✓ muted: physical fault retains current choice and actual Retry persists only the unresolved intent 32ms
+   ✓ invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting 11ms
+   ✓ an unavailable theme read cannot seed its rendered fallback and shows preference recovery 13ms
+   ✓ custom minutes partial success retries only failed minutes and preserves a newer successful-sibling preset 47ms
+   ✓ a clean cross-document theme update projects without creating a write 9ms
+   ✓ dirty queued theme keeps local selection but refuses an external replacement and Retry cannot overwrite it 25ms
+   ✓ uncertain unchanged theme Retry verifies one physical write and does not fake Saved early 19ms
+   ✓ pending device theme survives A to B to locked account with the same key and newest local selection 12ms
+   ✓ two rapid mute clicks retain the latest false choice after a queued first toggle 11ms
+   ✓ partial preference export is actual latest six-value JSON and download setup failure retains choices 44ms
+   × ordinary theme conflict offers explicit reload/discard and adopts the external value only by that user choice 21ms
+     → ordinary conflict needs an explicit recovery choice: expected null not to be null
+   × reloading repaired invalid sound cannot discard unrelated latest failed theme draft or its retry 25ms
+     → unrelated unsaved choice must survive sound reread: expected 'false' to be 'true' // Object.is equality
+     → expected null not to be null
+   ✓ rejected native lock Promise becomes visible retryable preference failure without fallback write 20ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 22 passed (24)
+   Start at  21:08:28
+   Duration  1.90s (transform 315ms, setup 0ms, collect 496ms, tests 673ms, environment 233ms, prepare 75ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > ordinary theme conflict offers explicit reload/discard and adopts the external value only by that user choice
+AssertionError: ordinary conflict needs an explicit recovery choice: expected null not to be null
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:19:538
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > reloading repaired invalid sound cannot discard unrelated latest failed theme draft or its retry
+AssertionError: unrelated unsaved choice must survive sound reread: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:20:953
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > reloading repaired invalid sound cannot discard unrelated latest failed theme draft or its retry
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:20:992
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯

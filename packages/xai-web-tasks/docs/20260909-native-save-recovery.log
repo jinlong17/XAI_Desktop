@@ -1,0 +1,33 @@
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-tasks/src/TasksModule.tsx:85:17:
+      85 │       if (typeof import.meta !== "undefined" && (import.meta as { ...
+         ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:745:17:
+      745 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:753:17:
+      753 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:761:15:
+      761 │     if (typeof import.meta !== "undefined" && (import.meta as { e...
+          ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+{"pass":true,"checks":["native quota preserves committed bytes and editor","visible failure and latest-draft Blob export","successful retry creates one task and closes","account switch revokes old retry"]}

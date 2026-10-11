@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "id": "TT-08/verify3",
+  "workflow": "D",
+  "role": "fresh independent actual ClaudeCode read-only verifier; reviewerneverrepairs",
+  "actor": "external-cli/TT-08/verify/i3",
+  "configured_model": "opus CLI alias; actual reportedmodelUsage retained, no fallback",
+  "fixed_card_input": "5ab57eb953a99bb58c27caf173e8a088c5b85e6d",
+  "dispatch_parent": "resolve this exactregistrationcommit, freezeownworktree beforeinvoke",
+  "source_inputs": [
+    "541a016fa64051a0b952e6c87ea839de99cc623d",
+    "59809b32a4dc19dbdefff871cf9c60bb5b0b96b1",
+    "68ac65f8fa1b8d9868b0fe15392dc9d445aa94b4",
+    "01efd359d910fbe5cd5092570fe9060ffc9d8ef7",
+    "00933c91241159e26f444213146d9ba949bac823",
+    "287547e2b0e0724a48a89e50377ccc7e840db93b",
+    "c6ab3c967074595ab59b7e0bf7dc86d66b229e97"
+  ],
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "candidate_exact_patch_sha256": "90bc2ec9a5ea000e8ae93ebe0e0533e22cf5e0537d4687353c49d37364565df7",
+  "depends_on": [
+    "TT-08/DOC-CORRECT2"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-tt08-vendor-verification-r3/prompt.md",
+    "docs/reviews/audit-parallel-tt08-vendor-verification-r3/preflight.json",
+    "docs/reviews/audit-parallel-tt08-vendor-verification-r3/stdout.jsonl",
+    "docs/reviews/audit-parallel-tt08-vendor-verification-r3/stderr.log",
+    "docs/reviews/audit-parallel-tt08-vendor-verification-r3/receipt.md"
+  ],
+  "writer_model": "Controller persists exactexternalactor prompt/raw streams/finalresult plus nonbusiness provenance; reviewer hasRead/Glob/Grep tools only, no filesystemwrite/shell/Agent/MCP/runtime",
+  "no_children": true,
+  "acceptance": [
+    "Independentlyread all5candidate docs vs fixed34package-host source/P0andcomplete staticbefore/approvedcontract D1-D7",
+    "Every currentclaim exactmode/Startconfirm/lock/controller/sessionaccounting/widget/page/source truth; acceptedTT02 unchanged, conversion/recoverylimits observationonly",
+    "CanonicalPRD acceptedcapability trace, preciseTT01/02/03/REL01history/counts/failedattempts/limits, no inventedfutureGOV05/adjacent/releasecoverage",
+    "Currentdated iteration PENDINGverification; historicalJune status/commands retained; no currentREADY_TO_SHIP",
+    "Allrequirement/evidence/linkage responsibilities and exact5pathscope covered; explicitAPPROVED/BLOCKEDandfilelinefindings; reviewerneverrepairs",
+    "Actualdifferenttoolprovider CLI invocation/rawstream/modelUsage/exit/refusals/cost preserved; configuration/authavailable alone neverPASS",
+    "Separate statuswriter\u2192freshAstra fullchain acceptance\u2192rootledger/inventory needed; formalcounts/caps andClockgatesunchanged",
+    "Explicit F1 correction truthful default-Single/sessionEditor confirmation/raw-keyMulti/selectorstatic-only, A1 Ownerremoved; fullD1-D7 not target-only",
+    "Read COMPLETE approved contract, before and four historical independent reports, allcandidate-referenced relevant tests, not merely targeted snippets; any unread evidence limitation explicit",
+    "Read COMPLETE goal/AGENTS/CLAUDE/workflow/authorityoverlay as actual hashbound governance inputs; supplied verbatim dispatchblocks mayserve fullread, final honestly distinguish providedinput vs toolread",
+    "Final report required governance/input-read census; rule-readgap means BLOCKED regardlessdocumentaryrows; no fourthattempt after3/3"
+  ],
+  "budgets": {
+    "candidate_verification_iteration": 3,
+    "family_cap": 3,
+    "max_usd": 12,
+    "wall_seconds": 900,
+    "own_shutdown_grace_seconds": 2,
+    "own_kill_wait_seconds": 2,
+    "newruntime_package_browser_native_probe": 0,
+    "historical": "unchanged; vendor staticreview isnot rerun runtime"
+  },
+  "external_invocation_policy": "One fresh session print+stream-json+verbose; restricted safe-mode, no-session-persistence, no-chrome, disable-slash-commands, strictMCPempty, toolsRead/Glob/Grep only, permissiondontAsk, explicitmanualprojectrules. No auto fallback/no reuseoldClaude/no hook/Bash/Agent/write. Deadlineonlyexactownedchild; stdoutstderrwxstreamed; timeout/error/refusalcounts1/3andBLOCKED, retainpartialoutputs. Rootcopyfinalresultliteralwithoutrepair; exit/actualresult determinestransportstatusnotbusinessPASS.",
+  "forbidden": [
+    "any product/5doc repair/statuspublication",
+    "runner/test/runtime/package/native/browser/probe",
+    "globalcontrol/ledger/inventorybyexternalreviewer",
+    "oldprofile/recoverydeletion/otherworktreeaccess",
+    "push/merge/rebase/deploy/release/promote/D3",
+    "toolsoutsideReadGlobGrep/children/hooks/MCP/fallback"
+  ],
+  "stop": [
+    "hash/scopeconflict",
+    "providerpermissions/auth unavailable",
+    "budget/deadline",
+    "unsupporteddecision/sourceclaim",
+    "missingevidence; BLOCKEDretainno repair"
+  ],
+  "candidate": "59809b32a4dc19dbdefff871cf9c60bb5b0b96b1",
+  "provenance_clarification": {
+    "author_hash_no_full_index": "df6e53b381ce0f500c8b7d48b21a0324135b502b1c79c0c707a81fb09c097683",
+    "root_hash_full_index": "90bc2ec9a5ea000e8ae93ebe0e0533e22cf5e0537d4687353c49d37364565df7",
+    "finding": "Root initial full-index expectation differed from author abbreviated-index serialization; both reproduced, author explained no edit/newiteration; no candidate byte mismatch"
+  },
+  "prior_attempt2": {
+    "source": "541a016fa64051a0b952e6c87ea839de99cc623d",
+    "reported_verdict": "APPROVED documentation",
+    "root_receipt": "WITHHELD_REQUIRED_GOVERNANCE_READ_GAP AGENTS+CLAUDE notread",
+    "cost_reported_list_usd": 2.0480052,
+    "elapsed_seconds": 185.167,
+    "readonly_tool_calls": 45,
+    "transport_exit": 0,
+    "immutable": true
+  },
+  "input_delivery": "Root may provide complete actual governance bytes in prompt with exactSHA/hash/length; no report edits/standardswaiver, no runner/product implementation. Reviewer reads all provided blocks and requested source evidence, precise census."
+}

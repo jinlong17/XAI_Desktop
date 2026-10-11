@@ -1,0 +1,1162 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+appearance_package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e shell_package_tree=0f0fed40fe94a9de5c79eb273d1103757a807a9c web_app_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a
+mode=retry-all
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs 5cd63ff retry-all before1
+runner_checkout_head=2b9f81d8017e78fa9ff86fe96fc3a5e313ad24ac
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=bfce8935659d9bd2ab1f5e41fa5b29a6e29180d596619ebb050b4be481f1bac7 bytes.test.tsx=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 fields.test.tsx=d49e8e7c16e8d5b8102e67c30e3251186ae62bf877131a8afff8aed4e0d0867e reset.test.tsx=87e6b0cb4b1a5a15bb54b5b78929a51143132c39ed997f3fc201ad872f5e0043 queues.test.tsx=cd01974248506ecf87901c84490f76e7c343c452f502f311a299819f5a1bb07f continuity-export.test.tsx=d665b9328ad829639cbb76a9641beb8f5bbc929fbe35da137b07d267332317b9 host.test.tsx=a0016a17ac06faf77485fc36ed2021eb606e4eb964bd93eab2c434dd3952124e retry-all.test.tsx=e59645c5499cf2b18210113a7d041bb61528cb0e6b39fa392b634b0de923e908 verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=552eb224c5103d1c0d0ee878420f8a586ee91575dd8461f908de1147cf2b08c3 packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=18d5894e6603427f933100f9030d6e403c03abc57d9bd561f372b0b4f559f6d6 packages/xai-web-settings-appearance/src/index.ts=10bfbed11749e9c65fc3c2d40d0a50e177154254ef83a2e0690c693aeb4dc776 packages/xai-web-settings-appearance/src/styles.css=1b17d1f442905e255eae53e4e16a01c02b4a912ed6a1482231e8db5e50d5927c packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/xai-web-shell/src/Topbar.tsx=70ba299e4d8a088ba0d085272fbc4cfe95933265bd6066fb59ae5cdae3de5297 packages/xai-web-shell/src/Shell.tsx=7d46423f40adc5412f54b701c2c93ab4f7529e329dc22766f387d78f614f8df0 packages/xai-web-shell/src/types.ts=92b68b2ba5da830bd8dcdfe33652b2b440eaef72b8665ccd868d5f49d82b73de apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] retry-all.test.tsx: include=docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-Yrgyo8/appearance-sol-retry-all-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-Yrgyo8/.report-retry-all-0.json vitest_exit=1 cases=47 passed=1 failed=46 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=47 numPassedTests=1 numFailedTests=46
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] retry-all.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-Yrgyo8
+
+stdout | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > PC-BEFORE §12 with no fault the harness drives the current bottom button: at 5cd63ff 'Save & apply' writes the four root keys with today's exact bytes; after the caller it is replaced by Retry all
+SOL-OBS PC-BEFORE Save & apply {"writes":["set:xai_pref_lang=\"en\"","set:xai_pref_theme=\"light\"","set:xai_pref_density=\"comfortable\"","set:xai_pref_font_scale=1"],"flash":true}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > PC-BEFORE §12 with no fault the harness drives the current bottom button: at 5cd63ff 'Save & apply' writes the four root keys with today's exact bytes; after the caller it is replaced by Retry all 177ms
+stdout | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H17 en > H17 A2.2 en: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes
+SOL-OBS H17 en clean-state activation {"label":"Save & apply","ariaDisabled":null,"disabledAttr":false,"writes":["set:xai_pref_lang=\"en\"","set:xai_pref_theme=\"light\"","set:xai_pref_density=\"comfortable\"","set:xai_pref_font_scale=1"],"bytes":{"lang":"\"en\"","theme":"\"light\"","density":"\"comfortable\"","accentHue":null,"bgTone":null,"railPos":null,"fontScale":"1"},"flashImmediately":true,"flashAfter1900ms":false}
+
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H17 en > H17 A2.2 en: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes 2023ms
+   → H17 A2.2: a disabled Retry all; zero storage attempts; no bytes change; no 'Saved' flash: expected { label: 'Save & apply', …(6) } to strictly equal { label: 'Retry all', …(6) }
+stdout | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H17 zh > H17 A2.2 zh: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes
+SOL-OBS H17 zh clean-state activation {"label":"保存生效","ariaDisabled":null,"disabledAttr":false,"writes":["set:xai_pref_lang=\"zh\"","set:xai_pref_theme=\"light\"","set:xai_pref_density=\"comfortable\"","set:xai_pref_font_scale=1"],"bytes":{"lang":"\"zh\"","theme":"\"light\"","density":"\"comfortable\"","accentHue":null,"bgTone":null,"railPos":null,"fontScale":"1"},"flashImmediately":true,"flashAfter1900ms":false}
+
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H17 zh > H17 A2.2 zh: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes 2025ms
+   → H17 A2.2: a disabled Retry all; zero storage attempts; no bytes change; no 'Saved' flash: expected { label: '保存生效', …(6) } to strictly equal { label: '全部重试', …(6) }
+stdout | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H15 en > H15 en: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes
+SOL-OBS H15 en activation after denied writes {"label":"Save & apply","writesByKey":{"lang":["\"en\""],"theme":["\"light\""],"density":["\"comfortable\""],"accentHue":[],"bgTone":[],"railPos":[],"fontScale":["1!"]},"themeDisplayed":{"pane":"light","topbar":"light","doc":"light"},"flashImmediately":true,"flashAfter1900ms":false,"fontFaultFired":1}
+
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H15 en > H15 en: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes 2110ms
+   → H15: one attempt per failed field (accent, theme), nothing else, no lock ignored, the Topbar choice kept, no flash: expected { label: 'Save & apply', …(4) } to strictly equal { label: 'Retry all', …(4) }
+stdout | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H15 zh > H15 zh: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes
+SOL-OBS H15 zh activation after denied writes {"label":"保存生效","writesByKey":{"lang":["\"zh\""],"theme":["\"light\""],"density":["\"comfortable\""],"accentHue":[],"bgTone":[],"railPos":[],"fontScale":["1!"]},"themeDisplayed":{"pane":"light","topbar":"light","doc":"light"},"flashImmediately":true,"flashAfter1900ms":false,"fontFaultFired":1}
+
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H15 zh > H15 zh: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes 2099ms
+   → H15: one attempt per failed field (accent, theme), nothing else, no lock ignored, the Topbar choice kept, no flash: expected { label: '保存生效', …(4) } to strictly equal { label: '全部重试', …(4) }
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > A2.2 disabled clean > H16 H17 A2.2 clean: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus 85ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > A2.2 disabled pending-only > H16 H17 A2.2 pending-only: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus 106ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > A2.2 disabled source-only > H16 H17 A2.2 source-only: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus 68ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 §5.9 the clean-state status line is empty and the disabled button never references it 70ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 A2.4 one failed field enables Retry all, described by the count line (EN) 91ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 one failed field in Chinese: 1 项外观更改未保存。 and the label 全部重试 103ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 A2.4 all seven failed fields enable Retry all with the count 7; one activation attempts each once in display order 286ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 set drafts from the pane and the Topbar: exactly one write each in display order, none elsewhere; then disabled with no description 124ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H13 H16 A2.3 a background choice with both writes failing is two members; with only the tone failing it is one 84ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a slider stream's latest value queued behind a failed predecessor: one attempt per activation while denied; then the predecessor once and the latest as its own attempt 102ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H9 H16 A2.3 §6 failed Reset items: one removal each, never a write; 'Defaults restored.' after the reset-only pass 121ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a valid edit over malformed bytes is refused again and kept; a conflict is kept and never overwritten 138ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 an uncertain write reconciles with exactly one total write 89ms
+   → §5.6: the unverified write is not saved: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a failed predecessor with a queued latest: the predecessor once, then the latest's own attempt 98ms
+   → H8: both wait behind the held lock: expected '295' to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H8 H16 A2.3 exclusions: pending, source-only and draft-free fields get zero attempts 151ms
+   → H8: the theme write is pending: expected '"dark"' to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a same-turn double activation attempts each member once 118ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H8 H16 A2.3 A2.5 an activation while members are pending (click, Enter, Space) adds zero attempts; focus stays on the disabled button 88ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.6 a per-field Retry during a pass and a Retry all during a per-field Retry add zero attempts 128ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a pane edit supersedes a held member; the old completion never makes the newer choice look saved 95ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 host row q: a Topbar choice supersedes a held theme member; after release the final bytes equal the Topbar choice 91ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a background choice supersedes a held accent member 92ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.6 Reset during a pass supersedes members on its six fields; a language member continues 137ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a late completion after Discard during an open pass changes nothing 95ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 A2.6 Discard all during an open pass detaches every member; late completions change nothing; focus goes to Reset 109ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §7.4 A2.6 sign-out during an open pass: Cancel lets the pass settle; OK detaches the members with zero writes by the step 93ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §7.6 unmount during an open pass detaches the members; the late completion writes nothing 93ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 REL-09 a forced App remount during an open pass detaches the members; the remounted pane shows the committed bytes 91ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 1 wins while a pass is open, even when a member already failed again; the button is enabled and described (EN) 110ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 1 in Chinese: 正在重试未保存的外观更改… 91ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 2: a failed Export while a draft exists shows the export-failure line; the next pane action clears it 88ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 a keyboard Retry all that fully succeeds keeps focus on the now-disabled button, never on <body> or Reset 92ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 a partial result keeps focus on the enabled button; Space starts exactly one pass 117ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 host row s: a member held behind the real lock with a write fault armed fails on release; the button becomes enabled, focus stays and the count line becomes its description 102ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 host row o: a failed Topbar theme, a failed pane accent and a failed Reset item; one Retry all writes or removes each failed key once; the Topbar status hides during the pass and stays absent; unload removed 165ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 host row p: a partial Retry all keeps one key unresolved: the count line, the Topbar status returns, unload warns, Export contains only the unresolved entry, focus stays 115ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §8 an export during an open pass includes the pending members as their latest unresolved intents 91ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §5.9 two passes: the second retries only the field that failed after the first began 93ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §5.9 a member fails again, then its per-field Retry succeeds 89ms
+   → H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H8 H16 §5.9 §6 Retry all during a Reset batch with one failed item and others pending retries only the failed item 105ms
+   → H8: the held theme removal is pending: expected '"light"' to be '"dark"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.1 no 'Save & apply'/'保存生效' control and no 'Saved'/'已保存' flash in the failure and success states 120ms
+   → A2.1: no old button with a draft: expected [ Array(1) ] to deeply equal []
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > R5 fu2-retry-all-theme: in-flight set + Reset + set failure, recovered by Retry all: the failed set, one re-write of the superseded value, then one removal; final verified absence and 'Defaults restored.' 88ms
+   → R5 fu2-retry-all-theme step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected '"dark"' to be '"system"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > R5 fu2-retry-all-railPos: in-flight set + Reset + set failure, recovered by Retry all: the failed set, one re-write of the superseded value, then one removal; final verified absence and 'Defaults restored.' 89ms
+   → R5 fu2-retry-all-railPos step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected 'right' to be 'bottom' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  46 failed | 1 passed (47)
+   Start at  20:26:20
+   Duration  16.21s (transform 1.88s, setup 37ms, collect 2.83s, tests 12.94s, environment 187ms, prepare 56ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-Yrgyo8/.report-retry-all-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H15 en > H15 en: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H15 zh > H15 zh: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 A2.4 one failed field enables Retry all, described by the count line (EN)
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 one failed field in Chinese: 1 项外观更改未保存。 and the label 全部重试
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 A2.4 all seven failed fields enable Retry all with the count 7; one activation attempts each once in display order
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 A2.4 all seven failed fields enable Retry all with the count 7; one activation attempts each once in display order
+[plugin-web-storage] quota exceeded for xai_bg_tone.
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 A2.4 all seven failed fields enable Retry all with the count 7; one activation attempts each once in display order
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 set drafts from the pane and the Topbar: exactly one write each in display order, none elsewhere; then disabled with no description
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H13 H16 A2.3 a background choice with both writes failing is two members; with only the tone failing it is one
+[plugin-web-storage] quota exceeded for xai_bg_tone.
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a failed predecessor with a queued latest: the predecessor once, then the latest's own attempt
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H8 H16 A2.3 exclusions: pending, source-only and draft-free fields get zero attempts
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a same-turn double activation attempts each member once
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a same-turn double activation attempts each member once
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H8 H16 A2.3 A2.5 an activation while members are pending (click, Enter, Space) adds zero attempts; focus stays on the disabled button
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.6 a per-field Retry during a pass and a Retry all during a per-field Retry add zero attempts
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.6 a per-field Retry during a pass and a Retry all during a per-field Retry add zero attempts
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a pane edit supersedes a held member; the old completion never makes the newer choice look saved
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a background choice supersedes a held accent member
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a late completion after Discard during an open pass changes nothing
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 A2.6 Discard all during an open pass detaches every member; late completions change nothing; focus goes to Reset
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 A2.6 Discard all during an open pass detaches every member; late completions change nothing; focus goes to Reset
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §7.4 A2.6 sign-out during an open pass: Cancel lets the pass settle; OK detaches the members with zero writes by the step
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §7.6 unmount during an open pass detaches the members; the late completion writes nothing
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 REL-09 a forced App remount during an open pass detaches the members; the remounted pane shows the committed bytes
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 1 wins while a pass is open, even when a member already failed again; the button is enabled and described (EN)
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 1 wins while a pass is open, even when a member already failed again; the button is enabled and described (EN)
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 1 in Chinese: 正在重试未保存的外观更改…
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 2: a failed Export while a draft exists shows the export-failure line; the next pane action clears it
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 a keyboard Retry all that fully succeeds keeps focus on the now-disabled button, never on <body> or Reset
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 a partial result keeps focus on the enabled button; Space starts exactly one pass
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 a partial result keeps focus on the enabled button; Space starts exactly one pass
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 host row o: a failed Topbar theme, a failed pane accent and a failed Reset item; one Retry all writes or removes each failed key once; the Topbar status hides during the pass and stays absent; unload removed
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 host row p: a partial Retry all keeps one key unresolved: the count line, the Topbar status returns, unload warns, Export contains only the unresolved entry, focus stays
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §8 an export during an open pass includes the pending members as their latest unresolved intents
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §5.9 two passes: the second retries only the field that failed after the first began
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §5.9 a member fails again, then its per-field Retry succeeds
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.1 no 'Save & apply'/'保存生效' control and no 'Saved'/'已保存' flash in the failure and success states
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 46 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H17 en > H17 A2.2 en: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes
+AssertionError: H17 A2.2: a disabled Retry all; zero storage attempts; no bytes change; no 'Saved' flash: expected { label: 'Save & apply', …(6) } to strictly equal { label: 'Retry all', …(6) }
+
+- Expected
++ Received
+
+  {
+-   "ariaDisabled": "true",
++   "ariaDisabled": null,
+    "bytes": {
+      "accentHue": null,
+      "bgTone": null,
+-     "density": null,
+-     "fontScale": null,
+-     "lang": null,
++     "density": "\"comfortable\"",
++     "fontScale": "1",
++     "lang": "\"en\"",
+      "railPos": null,
+-     "theme": null,
++     "theme": "\"light\"",
+    },
+    "disabledAttr": false,
+    "flashAfter1900ms": false,
+-   "flashImmediately": false,
+-   "label": "Retry all",
+-   "writes": [],
++   "flashImmediately": true,
++   "label": "Save & apply",
++   "writes": [
++     "set:xai_pref_lang=\"en\"",
++     "set:xai_pref_theme=\"light\"",
++     "set:xai_pref_density=\"comfortable\"",
++     "set:xai_pref_font_scale=1",
++   ],
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:119:117
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H17 zh > H17 A2.2 zh: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes
+AssertionError: H17 A2.2: a disabled Retry all; zero storage attempts; no bytes change; no 'Saved' flash: expected { label: '保存生效', …(6) } to strictly equal { label: '全部重试', …(6) }
+
+- Expected
++ Received
+
+  {
+-   "ariaDisabled": "true",
++   "ariaDisabled": null,
+    "bytes": {
+      "accentHue": null,
+      "bgTone": null,
+-     "density": null,
+-     "fontScale": null,
++     "density": "\"comfortable\"",
++     "fontScale": "1",
+      "lang": "\"zh\"",
+      "railPos": null,
+-     "theme": null,
++     "theme": "\"light\"",
+    },
+    "disabledAttr": false,
+    "flashAfter1900ms": false,
+-   "flashImmediately": false,
+-   "label": "全部重试",
+-   "writes": [],
++   "flashImmediately": true,
++   "label": "保存生效",
++   "writes": [
++     "set:xai_pref_lang=\"zh\"",
++     "set:xai_pref_theme=\"light\"",
++     "set:xai_pref_density=\"comfortable\"",
++     "set:xai_pref_font_scale=1",
++   ],
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:119:117
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H15 en > H15 en: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes
+AssertionError: H15: one attempt per failed field (accent, theme), nothing else, no lock ignored, the Topbar choice kept, no flash: expected { label: 'Save & apply', …(4) } to strictly equal { label: 'Retry all', …(4) }
+
+- Expected
++ Received
+
+  {
+    "flashAfter1900ms": false,
+-   "flashImmediately": false,
+-   "label": "Retry all",
++   "flashImmediately": true,
++   "label": "Save & apply",
+    "themeDisplayed": {
+-     "doc": "dark",
+-     "pane": "dark",
+-     "topbar": "dark",
++     "doc": "light",
++     "pane": "light",
++     "topbar": "light",
+    },
+    "writesByKey": {
+-     "accentHue": [
+-       "230",
+-     ],
++     "accentHue": [],
+      "bgTone": [],
+-     "density": [],
+-     "fontScale": [],
+-     "lang": [],
++     "density": [
++       "\"comfortable\"",
++     ],
++     "fontScale": [
++       "1!",
++     ],
++     "lang": [
++       "\"en\"",
++     ],
+      "railPos": [],
+      "theme": [
+-       "\"dark\"",
++       "\"light\"",
+      ],
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:149:143
+    147|     observe(`H15 ${lang} activation after denied writes`, { ...observa…
+    148|     await densityLock.release();
+    149|     expect(observation, "H15: one attempt per failed field (accent, th…
+       |                                                                                                                                               ^
+    150|       label: W[lang].retryAll,
+    151|       writesByKey: { lang: [], theme: [JSON.stringify("dark")], densit…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H15 zh > H15 zh: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes
+AssertionError: H15: one attempt per failed field (accent, theme), nothing else, no lock ignored, the Topbar choice kept, no flash: expected { label: '保存生效', …(4) } to strictly equal { label: '全部重试', …(4) }
+
+- Expected
++ Received
+
+  {
+    "flashAfter1900ms": false,
+-   "flashImmediately": false,
+-   "label": "全部重试",
++   "flashImmediately": true,
++   "label": "保存生效",
+    "themeDisplayed": {
+-     "doc": "dark",
+-     "pane": "dark",
+-     "topbar": "dark",
++     "doc": "light",
++     "pane": "light",
++     "topbar": "light",
+    },
+    "writesByKey": {
+-     "accentHue": [
+-       "230",
+-     ],
++     "accentHue": [],
+      "bgTone": [],
+-     "density": [],
+-     "fontScale": [],
+-     "lang": [],
++     "density": [
++       "\"comfortable\"",
++     ],
++     "fontScale": [
++       "1!",
++     ],
++     "lang": [
++       "\"zh\"",
++     ],
+      "railPos": [],
+      "theme": [
+-       "\"dark\"",
++       "\"light\"",
+      ],
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:149:143
+    147|     observe(`H15 ${lang} activation after denied writes`, { ...observa…
+    148|     await densityLock.release();
+    149|     expect(observation, "H15: one attempt per failed field (accent, th…
+       |                                                                                                                                               ^
+    150|       label: W[lang].retryAll,
+    151|       writesByKey: { lang: [], theme: [JSON.stringify("dark")], densit…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > A2.2 disabled clean > H16 H17 A2.2 clean: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > A2.2 disabled pending-only > H16 H17 A2.2 pending-only: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > A2.2 disabled source-only > H16 H17 A2.2 source-only: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:173:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 §5.9 the clean-state status line is empty and the disabled button never references it
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:206:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 A2.4 one failed field enables Retry all, described by the count line (EN)
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:214:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 one failed field in Chinese: 1 项外观更改未保存。 and the label 全部重试
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:225:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 A2.4 all seven failed fields enable Retry all with the count 7; one activation attempts each once in display order
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:236:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 set drafts from the pane and the Topbar: exactly one write each in display order, none elsewhere; then disabled with no description
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:258:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H13 H16 A2.3 a background choice with both writes failing is two members; with only the tone failing it is one
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:280:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a slider stream's latest value queued behind a failed predecessor: one attempt per activation while denied; then the predecessor once and the latest as its own attempt
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:303:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H9 H16 A2.3 §6 failed Reset items: one removal each, never a write; 'Defaults restored.' after the reset-only pass
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:332:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a valid edit over malformed bytes is refused again and kept; a conflict is kept and never overwritten
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:349:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 an uncertain write reconciles with exactly one total write
+AssertionError: §5.6: the unverified write is not saved: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:366:81
+    364|   choose(ACCENT, 230);
+    365|   await flush();
+    366|   expect(says(msg.notSaved(ACCENT)), "§5.6: the unverified write is no…
+       |                                                                                 ^
+    367|   fired(readback, "post-write read");
+    368|   fireEvent.click(RA());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a failed predecessor with a queued latest: the predecessor once, then the latest's own attempt
+AssertionError: H8: both wait behind the held lock: expected '295' to be null
+
+- Expected: 
+null
+
++ Received: 
+"295"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:381:63
+    379|   choose(ACCENT, 295);
+    380|   await flush();
+    381|   expect(bytes(ACCENT), "H8: both wait behind the held lock").toBeNull…
+       |                                                               ^
+    382|   await lock.release();
+    383|   fired(failFirst, "predecessor write");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H8 H16 A2.3 exclusions: pending, source-only and draft-free fields get zero attempts
+AssertionError: H8: the theme write is pending: expected '"dark"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"dark\""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:402:58
+    400|   choose(THEME, "dark");
+    401|   await flush();
+    402|   expect(bytes(THEME), "H8: the theme write is pending").toBeNull();
+       |                                                          ^
+    403|   const from = mark();
+    404|   fireEvent.click(RA());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a same-turn double activation attempts each member once
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:423:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H8 H16 A2.3 A2.5 an activation while members are pending (click, Enter, Space) adds zero attempts; focus stays on the disabled button
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:435:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.6 a per-field Retry during a pass and a Retry all during a per-field Retry add zero attempts
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:461:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a pane edit supersedes a held member; the old completion never makes the newer choice look saved
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:490:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 host row q: a Topbar choice supersedes a held theme member; after release the final bytes equal the Topbar choice
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:510:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a background choice supersedes a held accent member
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:529:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.6 Reset during a pass supersedes members on its six fields; a language member continues
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:544:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a late completion after Discard during an open pass changes nothing
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:559:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 A2.6 Discard all during an open pass detaches every member; late completions change nothing; focus goes to Reset
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:577:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §7.4 A2.6 sign-out during an open pass: Cancel lets the pass settle; OK detaches the members with zero writes by the step
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:597:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §7.6 unmount during an open pass detaches the members; the late completion writes nothing
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:624:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 REL-09 a forced App remount during an open pass detaches the members; the remounted pane shows the committed bytes
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:639:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 1 wins while a pass is open, even when a member already failed again; the button is enabled and described (EN)
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:665:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 1 in Chinese: 正在重试未保存的外观更改…
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:682:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 2: a failed Export while a draft exists shows the export-failure line; the next pane action clears it
+AssertionError: H12: Export Appearance draft: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:694:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 a keyboard Retry all that fully succeeds keeps focus on the now-disabled button, never on <body> or Reset
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:706:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 a partial result keeps focus on the enabled button; Space starts exactly one pass
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:721:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 host row s: a member held behind the real lock with a write fault armed fails on release; the button becomes enabled, focus stays and the count line becomes its description
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:739:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 host row o: a failed Topbar theme, a failed pane accent and a failed Reset item; one Retry all writes or removes each failed key once; the Topbar status hides during the pass and stays absent; unload removed
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:767:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 host row p: a partial Retry all keeps one key unresolved: the count line, the Topbar status returns, unload warns, Export contains only the unresolved entry, focus stays
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:786:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §8 an export during an open pass includes the pending members as their latest unresolved intents
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:805:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §5.9 two passes: the second retries only the field that failed after the first began
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:820:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §5.9 a member fails again, then its per-field Retry succeeds
+AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ RA docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:63:58
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:835:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H8 H16 §5.9 §6 Retry all during a Reset batch with one failed item and others pending retries only the failed item
+AssertionError: H8: the held theme removal is pending: expected '"light"' to be '"dark"' // Object.is equality
+
+Expected: ""dark""
+Received: ""light""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:853:65
+    851|   clickReset(true);
+    852|   await flush(24);
+    853|   expect(bytes(THEME), "H8: the held theme removal is pending").toBe(J…
+       |                                                                 ^
+    854|   fired(refusal, "rail removal");
+    855|   refusal.off();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.1 no 'Save & apply'/'保存生效' control and no 'Saved'/'已保存' flash in the failure and success states
+AssertionError: A2.1: no old button with a draft: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   <button
++     class="btn primary pane-save"
++     data-testid="settings-footer-save"
++     type="button"
++   >
++     Save & apply
++   </button>,
++ ]
+
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:869:60
+    867|   await mountApp();
+    868|   const quota = await failPane(ACCENT, 230);
+    869|   expect(oldButtons(), "A2.1: no old button with a draft").toEqual([]);
+       |                                                            ^
+    870|   quota.off();
+    871|   fireEvent.click(RA());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > R5 fu2-retry-all-theme: in-flight set + Reset + set failure, recovered by Retry all: the failed set, one re-write of the superseded value, then one removal; final verified absence and 'Defaults restored.'
+AssertionError: R5 fu2-retry-all-theme step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected '"dark"' to be '"system"' // Object.is equality
+
+Expected: ""system""
+Received: ""dark""
+
+ ❯ Module.runRuling5 docs/reviews/web-appearance-recovery-sol/fixture.tsx:1293:120
+    1291|   fireEvent.click(control);
+    1292|   await flush();
+    1293|   expect(bytes(field), `R5 ${spec.name} step 1 (H8): while the per-key…
+       |                                                                                                                        ^
+    1294|   expect(writesOn(start, field), `R5 ${spec.name} step 1: zero set or …
+    1295|   expect(says(msg.saving(field)), `R5 ${spec.name} step 1 (H12): "${ms…
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:881:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/46]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > R5 fu2-retry-all-railPos: in-flight set + Reset + set failure, recovered by Retry all: the failed set, one re-write of the superseded value, then one removal; final verified absence and 'Defaults restored.'
+AssertionError: R5 fu2-retry-all-railPos step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected 'right' to be 'bottom' // Object.is equality
+
+Expected: "bottom"
+Received: "right"
+
+ ❯ Module.runRuling5 docs/reviews/web-appearance-recovery-sol/fixture.tsx:1293:120
+    1291|   fireEvent.click(control);
+    1292|   await flush();
+    1293|   expect(bytes(field), `R5 ${spec.name} step 1 (H8): while the per-key…
+       |                                                                                                                        ^
+    1294|   expect(writesOn(start, field), `R5 ${spec.name} step 1: zero set or …
+    1295|   expect(says(msg.saving(field)), `R5 ${spec.name} step 1 (H12): "${ms…
+ ❯ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:885:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/46]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-Yrgyo8","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-Yrgyo8/.appearance-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-Yrgyo8/packages/xai-web-settings-appearance/vitest.setup.ts"],"include":["docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=621 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=7 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=47 passed=1 failed=46 skipped=0 precondition_failures=0
+harness PASS [retry-all.test.tsx] JSON report parsed
+harness PASS [retry-all.test.tsx] reported files equal the requested include
+harness PASS [retry-all.test.tsx] config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-appearance/vitest.setup.ts], root = archive)
+harness PASS [retry-all.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [retry-all.test.tsx] required product modules loaded from the archive (22)
+harness PASS [retry-all.test.tsx] no test-file suite error
+case 001 PASSED | PC-BEFORE §12 with no fault the harness drives the current bottom button: at 5cd63ff 'Save & apply' writes the four root keys with today's exact bytes; after the caller it is replaced by Retry all
+case 002 FAILED | H17 en H17 A2.2 en: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes
+    first: AssertionError: H17 A2.2: a disabled Retry all; zero storage attempts; no bytes change; no 'Saved' flash: expected { label: 'Save & apply', …(6) } to strictly equal { label: 'Retry all', …(6) }
+case 003 FAILED | H17 zh H17 A2.2 zh: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes
+    first: AssertionError: H17 A2.2: a disabled Retry all; zero storage attempts; no bytes change; no 'Saved' flash: expected { label: '保存生效', …(6) } to strictly equal { label: '全部重试', …(6) }
+case 004 FAILED | H15 en H15 en: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes
+    first: AssertionError: H15: one attempt per failed field (accent, theme), nothing else, no lock ignored, the Topbar choice kept, no flash: expected { label: 'Save & apply', …(4) } to strictly equal { label: 'Retry all', …(4) }
+case 005 FAILED | H15 zh H15 zh: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes
+    first: AssertionError: H15: one attempt per failed field (accent, theme), nothing else, no lock ignored, the Topbar choice kept, no flash: expected { label: '保存生效', …(4) } to strictly equal { label: '全部重试', …(4) }
+case 006 FAILED | A2.2 disabled clean H16 H17 A2.2 clean: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 007 FAILED | A2.2 disabled pending-only H16 H17 A2.2 pending-only: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 008 FAILED | A2.2 disabled source-only H16 H17 A2.2 source-only: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 009 FAILED | H16 A2.2 §5.9 the clean-state status line is empty and the disabled button never references it
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 010 FAILED | H16 A2.2 A2.4 one failed field enables Retry all, described by the count line (EN)
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 011 FAILED | H16 A2.4 one failed field in Chinese: 1 项外观更改未保存。 and the label 全部重试
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 012 FAILED | H16 A2.2 A2.4 all seven failed fields enable Retry all with the count 7; one activation attempts each once in display order
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 013 FAILED | H16 A2.3 set drafts from the pane and the Topbar: exactly one write each in display order, none elsewhere; then disabled with no description
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 014 FAILED | H13 H16 A2.3 a background choice with both writes failing is two members; with only the tone failing it is one
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 015 FAILED | H16 A2.3 a slider stream's latest value queued behind a failed predecessor: one attempt per activation while denied; then the predecessor once and the latest as its own attempt
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 016 FAILED | H9 H16 A2.3 §6 failed Reset items: one removal each, never a write; 'Defaults restored.' after the reset-only pass
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 017 FAILED | H16 A2.3 a valid edit over malformed bytes is refused again and kept; a conflict is kept and never overwritten
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 018 FAILED | H16 A2.3 an uncertain write reconciles with exactly one total write
+    first: AssertionError: §5.6: the unverified write is not saved: expected false to be true // Object.is equality
+case 019 FAILED | H16 A2.3 a failed predecessor with a queued latest: the predecessor once, then the latest's own attempt
+    first: AssertionError: H8: both wait behind the held lock: expected '295' to be null
+case 020 FAILED | H8 H16 A2.3 exclusions: pending, source-only and draft-free fields get zero attempts
+    first: AssertionError: H8: the theme write is pending: expected '"dark"' to be null
+case 021 FAILED | H16 A2.3 a same-turn double activation attempts each member once
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 022 FAILED | H8 H16 A2.3 A2.5 an activation while members are pending (click, Enter, Space) adds zero attempts; focus stays on the disabled button
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 023 FAILED | H16 A2.6 a per-field Retry during a pass and a Retry all during a per-field Retry add zero attempts
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 024 FAILED | H16 A2.3 a pane edit supersedes a held member; the old completion never makes the newer choice look saved
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 025 FAILED | H16 A2.3 host row q: a Topbar choice supersedes a held theme member; after release the final bytes equal the Topbar choice
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 026 FAILED | H16 A2.3 a background choice supersedes a held accent member
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 027 FAILED | H16 A2.6 Reset during a pass supersedes members on its six fields; a language member continues
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 028 FAILED | H16 A2.3 a late completion after Discard during an open pass changes nothing
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 029 FAILED | H16 A2.5 A2.6 Discard all during an open pass detaches every member; late completions change nothing; focus goes to Reset
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 030 FAILED | H16 §7.4 A2.6 sign-out during an open pass: Cancel lets the pass settle; OK detaches the members with zero writes by the step
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 031 FAILED | H16 §7.6 unmount during an open pass detaches the members; the late completion writes nothing
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 032 FAILED | H16 REL-09 a forced App remount during an open pass detaches the members; the remounted pane shows the committed bytes
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 033 FAILED | H16 A2.4 rule 1 wins while a pass is open, even when a member already failed again; the button is enabled and described (EN)
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 034 FAILED | H16 A2.4 rule 1 in Chinese: 正在重试未保存的外观更改…
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 035 FAILED | H16 A2.4 rule 2: a failed Export while a draft exists shows the export-failure line; the next pane action clears it
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 036 FAILED | H16 A2.5 a keyboard Retry all that fully succeeds keeps focus on the now-disabled button, never on <body> or Reset
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 037 FAILED | H16 A2.5 a partial result keeps focus on the enabled button; Space starts exactly one pass
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 038 FAILED | H16 A2.5 host row s: a member held behind the real lock with a write fault armed fails on release; the button becomes enabled, focus stays and the count line becomes its description
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 039 FAILED | H16 host row o: a failed Topbar theme, a failed pane accent and a failed Reset item; one Retry all writes or removes each failed key once; the Topbar status hides during the pass and stays absent; unload removed
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 040 FAILED | H16 host row p: a partial Retry all keeps one key unresolved: the count line, the Topbar status returns, unload warns, Export contains only the unresolved entry, focus stays
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 041 FAILED | H16 §8 an export during an open pass includes the pending members as their latest unresolved intents
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 042 FAILED | H16 §5.9 two passes: the second retries only the field that failed after the first began
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 043 FAILED | H16 §5.9 a member fails again, then its per-field Retry succeeds
+    first: AssertionError: H16/H17: Retry all is always rendered while the pane is mounted (A2.2): expected null not to be null
+case 044 FAILED | H8 H16 §5.9 §6 Retry all during a Reset batch with one failed item and others pending retries only the failed item
+    first: AssertionError: H8: the held theme removal is pending: expected '"light"' to be '"dark"' // Object.is equality
+case 045 FAILED | H16 A2.1 no 'Save & apply'/'保存生效' control and no 'Saved'/'已保存' flash in the failure and success states
+    first: AssertionError: A2.1: no old button with a draft: expected [ Array(1) ] to deeply equal []
+case 046 FAILED | R5 fu2-retry-all-theme: in-flight set + Reset + set failure, recovered by Retry all: the failed set, one re-write of the superseded value, then one removal; final verified absence and 'Defaults restored.'
+    first: AssertionError: R5 fu2-retry-all-theme step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected '"dark"' to be '"system"' // Object.is equality
+case 047 FAILED | R5 fu2-retry-all-railPos: in-flight set + Reset + set failure, recovered by Retry all: the failed set, one re-write of the superseded value, then one removal; final verified absence and 'Defaults restored.'
+    first: AssertionError: R5 fu2-retry-all-railPos step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected 'right' to be 'bottom' // Object.is equality

@@ -1,0 +1,212 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+mode=settings-shell-test
+suffix=features-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-final/verify-packages.mjs f359be6 all features-final-v1
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=cde91389f0a0baca69d266f5b6a6c5ff8098ac1f
+runner_sha256=f7758f28fd98cba97f2a04ba8a85b8410a381749f4aa8e8d1b6cca6a45653c05
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/plugin-web-settings-shell (packages/plugin-web-settings-shell) kind=vitest script=test: "vitest run"
+archive_file_sha256 packages/plugin-web-settings-shell/package.json=0cad1417448239cec5560648dddbef57e2399f7a078342136e70253837d474e5 packages/plugin-web-settings-shell/tsconfig.json=8264895f6ff844446cf042a6ea81db1464d3187dd69095537b215e6634a6c9c7 packages/plugin-web-settings-shell/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 packages/plugin-web-settings-shell/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/plugin-web-settings-shell/eslint.config.js=e5fd80cab496575b6978b55d18244da722c48ad0e917a1a1149337612ae14bb3
+package_tree=8fe33026603bdbf50676b25ce99ba78a444ead34 features_package_tree=074659c050fadd11ed3ff99274e441b48771b490
+node_modules_links third_party=448 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus @repo/xai-web-shell->packages/xai-web-shell
+tsconfig_extends_checked=46 unresolved=none own=@repo/plugin-web-settings-shell:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-settings-shell/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-YODbb1/packages/plugin-web-settings-shell/final-settings-shell-test.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-YODbb1/.final-guard/report-settings-shell-test.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+tool_exit=0
+harness_checks=PASS (8/8)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-YODbb1/packages/plugin-web-settings-shell
+
+ ✓ src/__tests__/index-barrel.test.ts > index barrel — P3 final surface > B1: full surface present (components + atoms + registration + utilities) 1ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel — P3 final surface > B2: paneRegistry length is 14 (13 baseline + 'ai' from row #2 ai-chat-real-llm-adapter) 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel — P3 final surface > B3: internal helpers + sub-components not exposed 1ms
+ ✓ src/__tests__/paneRegistry.test.tsx > paneRegistry > P1: length is 14 (13 baseline + 'ai' from row #2) 1ms
+ ✓ src/__tests__/paneRegistry.test.tsx > paneRegistry > P2: id order matches DESIGN.md §4.12 sequence + row #2 'ai' insertion 0ms
+ ✓ src/__tests__/paneRegistry.test.tsx > paneRegistry > P3: each render({ lang: 'en' }) returns the EN placeholder text 16ms
+ ✓ src/__tests__/SettingRow.test.tsx > <SettingRow> > SR1: label rendered in .sr-label 15ms
+ ✓ src/__tests__/SettingRow.test.tsx > <SettingRow> > SR2: desc rendered in .sr-desc only when provided 3ms
+ ✓ src/__tests__/SettingRow.test.tsx > <SettingRow> > SR3: children rendered in .sr-ctrl 3ms
+ ✓ src/__tests__/SettingRow.test.tsx > <SettingRow> > SR4: style prop applied to root .setting-row 2ms
+ ✓ src/__tests__/registration.test.tsx > settingsShellWebModuleRegistration (RG) > RG1: satisfies WebModuleSlotRegistration + moduleId='settings', icon='sliders', railOrder=99, showInRail=false 1ms
+ ✓ src/__tests__/registration.test.tsx > settingsShellWebModuleRegistration (RG) > RG2: defaultChildPath='' + 2 children both with render functions 1ms
+ ✓ src/__tests__/registration.test.tsx > settingsShellWebModuleRegistration (RG) > RG3: label='Settings' + i18nKey='nav.settings' 0ms
+ ✓ src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R1: removes registered xai_* keys from localStorage 3ms
+ ✓ src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R2: preserves non-xai_* keys 1ms
+ ✓ src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R3: emits exactly 7 events on web:settings:preference-changed 1ms
+ ✓ src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R4: each emit has a changedAt ISO string 1ms
+ ✓ src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R5: emit payload keys are exactly the 7 canonical WebPreferenceKey values 1ms
+ ✓ src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R6: emit values match the compile-time defaults 1ms
+ ✓ src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R7: idempotent — calling twice yields end state with 14 total emits 1ms
+ ✓ src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R8: a proposed-true entry is skipped (no removePref call for it) 0ms
+ ✓ src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> > F1: renders EN labels Reset to defaults + Save & apply 16ms
+ ✓ src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> > F2: renders ZH labels 恢复默认 + 保存生效 3ms
+ ✓ src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> > F3: Save click calls props.onSave once 5ms
+ ✓ src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> > F4: Save click with theme change emits 1 event with payload + changedAt 2ms
+ ✓ src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> > F5: Save click with empty array — 0 events but still flashes Saved 3ms
+ ✓ src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> > F6: After Save, button shows Saved then reverts after 1800ms 4ms
+ ✓ src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> > F7: Reset click with window.confirm=false — no resetAllPrefs / no onReset 1ms
+ ✓ src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> > F8: Reset click with confirm=true and no onReset — calls default resetAllPrefs 1ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M1: renders root .module.module-settings > .settings-shell.panel 25ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M2: renders 13 sidebar list-row entries 4ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M3: sidebar entries grouped into 4 .settings-group containers 3ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M4: default active pane is 'account' (data-active=true on first row) 5ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M5: clicking the appearance entry switches active 8ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M6: detail container renders the active pane's render output 3ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M7: clicking through all 13 entries switches active each time without errors 19ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M8: EN labels — first sidebar entry is 'Account' 4ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M9: switching lang en → zh re-renders ZH labels 4ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M10: settings title shows I18N.<lang>.settings.title 5ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M11 (codex C3-CHROME-1): /app/settings/ai deep link selects AI pane on mount 2ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M12 (codex C3-CHROME-1): /app/settings/integrations deep link selects Integrations pane 2ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M13 (codex C3-CHROME-1): /app/settings/premium deep link selects Premium pane 2ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M14 (codex C3-CHROME-1): unknown pane id (/app/settings/bogus) falls back to account 2ms
+ ✓ src/__tests__/SettingsModule.test.tsx > <SettingsModule> > M15 (codex C3-CHROME-1): /app/settings (no splat) defaults to account 2ms
+ ✓ src/__tests__/confirmAction.test.ts > confirmAction > C1: returns true when window.confirm returns true 1ms
+ ✓ src/__tests__/confirmAction.test.ts > confirmAction > C2: returns false when window.confirm returns false 0ms
+ ✓ src/__tests__/types-paneIds.test.ts > types — SettingsPaneId order parity > T1: paneRegistry order matches the 13-pane DESIGN.md sequence + row #2 'ai' insertion 1ms
+ ✓ src/__tests__/types-paneIds.test.ts > types — SettingsPaneId order parity > T2: paneRegistry length is exactly 14 (13 baseline + 'ai' from row #2) 0ms
+ ✓ src/__tests__/SectionBlock.test.tsx > <SectionBlock> > SB1: children rendered in .setting-block 15ms
+ ✓ src/__tests__/SectionBlock.test.tsx > <SectionBlock> > SB2: style prop passed to root 3ms
+ ✓ src/__tests__/Toggle.test.tsx > <Toggle> > TG1: on=false renders aria-checked=false and no `on` class 37ms
+ ✓ src/__tests__/Toggle.test.tsx > <Toggle> > TG2: on=true renders aria-checked=true and `on` class 3ms
+ ✓ src/__tests__/Toggle.test.tsx > <Toggle> > TG3: click invokes onChange once with no args 5ms
+ ✓ src/__tests__/Toggle.test.tsx > <Toggle> > TG4: role=switch is present (a11y) 2ms
+
+ Test Files  11 passed (11)
+      Tests  54 passed (54)
+   Start at  08:45:09
+   Duration  1.80s (transform 664ms, setup 1.07s, collect 2.52s, tests 253ms, environment 4.34s, prepare 740ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-YODbb1/.final-guard/report-settings-shell-test.json
+
+---- stderr ----
+stderr | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R1: removes registered xai_* keys from localStorage
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R2: preserves non-xai_* keys
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R3: emits exactly 7 events on web:settings:preference-changed
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R4: each emit has a changedAt ISO string
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R5: emit payload keys are exactly the 7 canonical WebPreferenceKey values
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R6: emit values match the compile-time defaults
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R7: idempotent — calling twice yields end state with 14 total emits
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs > R8: a proposed-true entry is skipped (no removePref call for it)
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+
+---- runner summary ----
+harness PASS archive package.json script "test" is "vitest run" (found "vitest run")
+harness PASS JSON report parsed
+harness PASS reported test files equal the expected set (11 files, from the archive by the package include)
+harness PASS required test file ran: src/__tests__/SettingsFooter.test.tsx
+harness PASS package config in effect (environment jsdom, globals true, setupFiles [vitest.setup.ts], include ["src/__tests__/**/*.{test,spec}.{ts,tsx}"], root = archive package)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (3 present of 3 listed)
+harness PASS no test-file suite error
+required_tests_absent_from_archive=none
+json_report=success=true numTotalTestSuites=22 numTotalTests=54 numPassedTests=54 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals files=11 tests=54 passed=54 failed=0 other=0 suite_errors=0 unhandled_error_lines=0
+file src/__tests__/confirmAction.test.ts status=passed tests=2 passed=2 failed=0
+file src/__tests__/index-barrel.test.ts status=passed tests=3 passed=3 failed=0
+file src/__tests__/paneRegistry.test.tsx status=passed tests=3 passed=3 failed=0
+file src/__tests__/registration.test.tsx status=passed tests=3 passed=3 failed=0
+file src/__tests__/resetAllPrefs.test.ts status=passed tests=8 passed=8 failed=0
+file src/__tests__/SectionBlock.test.tsx status=passed tests=2 passed=2 failed=0
+file src/__tests__/SettingRow.test.tsx status=passed tests=4 passed=4 failed=0
+file src/__tests__/SettingsFooter.test.tsx status=passed tests=8 passed=8 failed=0
+file src/__tests__/SettingsModule.test.tsx status=passed tests=15 passed=15 failed=0
+file src/__tests__/Toggle.test.tsx status=passed tests=4 passed=4 failed=0
+file src/__tests__/types-paneIds.test.ts status=passed tests=2 passed=2 failed=0
+case 001 PASSED | src/__tests__/SectionBlock.test.tsx > <SectionBlock> SB1: children rendered in .setting-block
+case 002 PASSED | src/__tests__/SectionBlock.test.tsx > <SectionBlock> SB2: style prop passed to root
+case 003 PASSED | src/__tests__/SettingRow.test.tsx > <SettingRow> SR1: label rendered in .sr-label
+case 004 PASSED | src/__tests__/SettingRow.test.tsx > <SettingRow> SR2: desc rendered in .sr-desc only when provided
+case 005 PASSED | src/__tests__/SettingRow.test.tsx > <SettingRow> SR3: children rendered in .sr-ctrl
+case 006 PASSED | src/__tests__/SettingRow.test.tsx > <SettingRow> SR4: style prop applied to root .setting-row
+case 007 PASSED | src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> F1: renders EN labels Reset to defaults + Save & apply
+case 008 PASSED | src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> F2: renders ZH labels 恢复默认 + 保存生效
+case 009 PASSED | src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> F3: Save click calls props.onSave once
+case 010 PASSED | src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> F4: Save click with theme change emits 1 event with payload + changedAt
+case 011 PASSED | src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> F5: Save click with empty array — 0 events but still flashes Saved
+case 012 PASSED | src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> F6: After Save, button shows Saved then reverts after 1800ms
+case 013 PASSED | src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> F7: Reset click with window.confirm=false — no resetAllPrefs / no onReset
+case 014 PASSED | src/__tests__/SettingsFooter.test.tsx > <SettingsFooter> F8: Reset click with confirm=true and no onReset — calls default resetAllPrefs
+case 015 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M1: renders root .module.module-settings > .settings-shell.panel
+case 016 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M2: renders 13 sidebar list-row entries
+case 017 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M3: sidebar entries grouped into 4 .settings-group containers
+case 018 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M4: default active pane is 'account' (data-active=true on first row)
+case 019 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M5: clicking the appearance entry switches active
+case 020 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M6: detail container renders the active pane's render output
+case 021 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M7: clicking through all 13 entries switches active each time without errors
+case 022 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M8: EN labels — first sidebar entry is 'Account'
+case 023 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M9: switching lang en → zh re-renders ZH labels
+case 024 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M10: settings title shows I18N.<lang>.settings.title
+case 025 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M11 (codex C3-CHROME-1): /app/settings/ai deep link selects AI pane on mount
+case 026 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M12 (codex C3-CHROME-1): /app/settings/integrations deep link selects Integrations pane
+case 027 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M13 (codex C3-CHROME-1): /app/settings/premium deep link selects Premium pane
+case 028 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M14 (codex C3-CHROME-1): unknown pane id (/app/settings/bogus) falls back to account
+case 029 PASSED | src/__tests__/SettingsModule.test.tsx > <SettingsModule> M15 (codex C3-CHROME-1): /app/settings (no splat) defaults to account
+case 030 PASSED | src/__tests__/Toggle.test.tsx > <Toggle> TG1: on=false renders aria-checked=false and no `on` class
+case 031 PASSED | src/__tests__/Toggle.test.tsx > <Toggle> TG2: on=true renders aria-checked=true and `on` class
+case 032 PASSED | src/__tests__/Toggle.test.tsx > <Toggle> TG3: click invokes onChange once with no args
+case 033 PASSED | src/__tests__/Toggle.test.tsx > <Toggle> TG4: role=switch is present (a11y)
+case 034 PASSED | src/__tests__/confirmAction.test.ts > confirmAction C1: returns true when window.confirm returns true
+case 035 PASSED | src/__tests__/confirmAction.test.ts > confirmAction C2: returns false when window.confirm returns false
+case 036 PASSED | src/__tests__/index-barrel.test.ts > index barrel — P3 final surface B1: full surface present (components + atoms + registration + utilities)
+case 037 PASSED | src/__tests__/index-barrel.test.ts > index barrel — P3 final surface B2: paneRegistry length is 14 (13 baseline + 'ai' from row #2 ai-chat-real-llm-adapter)
+case 038 PASSED | src/__tests__/index-barrel.test.ts > index barrel — P3 final surface B3: internal helpers + sub-components not exposed
+case 039 PASSED | src/__tests__/paneRegistry.test.tsx > paneRegistry P1: length is 14 (13 baseline + 'ai' from row #2)
+case 040 PASSED | src/__tests__/paneRegistry.test.tsx > paneRegistry P2: id order matches DESIGN.md §4.12 sequence + row #2 'ai' insertion
+case 041 PASSED | src/__tests__/paneRegistry.test.tsx > paneRegistry P3: each render({ lang: 'en' }) returns the EN placeholder text
+case 042 PASSED | src/__tests__/registration.test.tsx > settingsShellWebModuleRegistration (RG) RG1: satisfies WebModuleSlotRegistration + moduleId='settings', icon='sliders', railOrder=99, showInRail=false
+case 043 PASSED | src/__tests__/registration.test.tsx > settingsShellWebModuleRegistration (RG) RG2: defaultChildPath='' + 2 children both with render functions
+case 044 PASSED | src/__tests__/registration.test.tsx > settingsShellWebModuleRegistration (RG) RG3: label='Settings' + i18nKey='nav.settings'
+case 045 PASSED | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs R1: removes registered xai_* keys from localStorage
+case 046 PASSED | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs R2: preserves non-xai_* keys
+case 047 PASSED | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs R3: emits exactly 7 events on web:settings:preference-changed
+case 048 PASSED | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs R4: each emit has a changedAt ISO string
+case 049 PASSED | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs R5: emit payload keys are exactly the 7 canonical WebPreferenceKey values
+case 050 PASSED | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs R6: emit values match the compile-time defaults
+case 051 PASSED | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs R7: idempotent — calling twice yields end state with 14 total emits
+case 052 PASSED | src/__tests__/resetAllPrefs.test.ts > resetAllPrefs R8: a proposed-true entry is skipped (no removePref call for it)
+case 053 PASSED | src/__tests__/types-paneIds.test.ts > types — SettingsPaneId order parity T1: paneRegistry order matches the 13-pane DESIGN.md sequence + row #2 'ai' insertion
+case 054 PASSED | src/__tests__/types-paneIds.test.ts > types — SettingsPaneId order parity T2: paneRegistry length is exactly 14 (13 baseline + 'ai' from row #2)
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-YODbb1/packages/plugin-web-settings-shell","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-YODbb1/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["./vitest.setup.ts"],"include":["src/__tests__/**/*.{test,spec}.{ts,tsx}"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/plugin-web-settings-shell/src/SettingsFooter.tsx packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts packages/plugin-web-settings-shell/src/Toggle.tsx
+pin_required_provenance_missing=none
+pin_modules=69 by package: packages/plugin-web-settings-shell=26 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-shell=9

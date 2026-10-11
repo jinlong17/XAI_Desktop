@@ -1,0 +1,51 @@
+{
+  "id": "POMO-04/PREPARE-CORRECT2",
+  "workflow": "C",
+  "module": "web",
+  "role": "fresh independent bounded lifecycle contract corrector; no product or runner repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "d39d8a9a32bf9e66310535c8622355daefb6b280",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "0f2f5c1a155f8fda127758f7986010dd57335f21",
+    "59dae0b524e19e6d0c273174488b84d68fb323f3"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-pomo04-preparation-r2/contract.md",
+    "docs/reviews/audit-parallel-pomo04-preparation-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full2914 reviewinputs/2900original/15P04/11conditionalpaths/106logs/fullcanonicalr2G1/312fields39labels939evidence/formal13,3,3,293 retained. CompleteStopResetdeparture/no silentlylost savedhistory originalacceptance. Author2/3 one static; review1retainedfreshreview2 mandatory. CurrenttwoADD docs only.",
+    "Correct precisely reviewR1 six requirements. Separate Reset undispatched decision capture scope/id/revision/one-shot/lifetime/initiatingfocus CancelEscape/disposal/replacement beforedispatch from actual alreadyissued durable command waitinglock. Same-account route teardown doesnotcancel accepted accountownedEnd/Reset/Retry; account/generation/tombstone invalidation usesexisting rules. Postawait UI stalecallbackfence separate from durableack; neverretroactivelycancel orrollback savedrecord.",
+    "Preserve exact existing identity/revision rules including same-id pendingrevisionexception/alreadyrecordedidnoop, EndissuedAt/expiry/pendingprecedence/lockWALorder. SplitP04-03/09 finitecases invalidbeforedispatch/sameaccountqueuedUIteardown/accountinvalidqueued/replacementidrevision/pendingexpiry/settledoldid/postawaitstaleUI/freshliveness; compare naturalreconciliationtimecontrol andattributedoldintent notblanket Abytesban. Reconcile\u00a74/\u00a76/oracles,11pathceiling onlystatusidentity/resultexposure, no new underlock cancellation mechanism orscopegrant.",
+    "Existingrulesfirst noownerquestion; genuinecontradiction requiresimmutablebothcitations forfreshreview. Allotheroracles/exports/preferences/durabletruth/sourceavailability/budgets/before/qualifiedmachinery/actualnativefocus/vendor/freshfullacceptance/rootreconcile/inventory remain. No product/tests/runner ororiginalproposal edits."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/sharedCSS/storage/schema/account/host/config/lockfile",
+    "all original contracts/runners/failures/evidence",
+    "globalcontrols/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "preparation_iteration": 2,
+    "preparation_cap": 3
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported producttradeoff or weakeningstandards",
+    "runtime orprotectedwrite need"
+  ],
+  "no_children": true
+}

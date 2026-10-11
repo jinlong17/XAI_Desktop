@@ -1,0 +1,729 @@
+Scope: 12 of 64 workspace projects
+packages/plugin-web-time-tracker test$ vitest run "--maxWorkers=2"
+packages/plugin-web-pomodoro test$ vitest run "--maxWorkers=2"
+packages/plugin-web-time-tracker test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-time-tracker
+packages/plugin-web-pomodoro test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-pomodoro
+packages/plugin-web-time-tracker test:  ✓ src/__tests__/registration.test.tsx (1 test) 6ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/eventEmit.integration.test.tsx (6 tests) 481ms
+packages/plugin-web-time-tracker test:  ✓ src/__tests__/time.test.ts (3 tests) 4ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/FocusRecordList.test.tsx (8 tests) 152ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/PomodoroModule.test.tsx (21 tests) 1842ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/PomodoroOverview.test.tsx (7 tests) 177ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/useTimerTick.test.tsx (8 tests) 159ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/validate.test.ts (11 tests) 9ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/TimerRing.test.tsx (4 tests) 189ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/sessionsReducer.test.ts (7 tests) 5ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/index-barrel.test.ts (5 tests) 5ms
+packages/plugin-web-time-tracker test:  ✓ src/__tests__/TimeTrackerModule.test.tsx (24 tests) 8614ms
+packages/plugin-web-time-tracker test:    ✓ TimeTrackerModule > renders bilingual module title and default categories  361ms
+packages/plugin-web-time-tracker test:    ✓ TimeTrackerModule > opens a fullscreen focus view from an active session and keeps timer actions intact  684ms
+packages/plugin-web-time-tracker test:    ✓ TimeTrackerModule > collapses and restores day record details  338ms
+packages/plugin-web-time-tracker test:    ✓ TimeTrackerModule > adjusts a completed record time with inline hour minute second controls  321ms
+packages/plugin-web-time-tracker test:    ✓ TimeTrackerModule > collapses and restores subcategory cards per category  481ms
+packages/plugin-web-time-tracker test:    ✓ TimeTrackerModule > keeps parent category totals when tracking a subcategory  421ms
+packages/plugin-web-time-tracker test:    ✓ TimeTrackerModule > saves subcategory color and icon from the category editor  496ms
+packages/plugin-web-time-tracker test:    ✓ TimeTrackerModule > adds a subcategory from the category card quick action  1342ms
+packages/plugin-web-time-tracker test:    ✓ TimeTrackerModule > opens a subcategory dialog from category settings before appending the row  1049ms
+packages/plugin-web-time-tracker test:    ✓ TimeTrackerModule > renders detailed insight hover metadata after tracking time  310ms
+packages/plugin-web-time-tracker test:  Test Files  3 passed (3)
+packages/plugin-web-time-tracker test:       Tests  28 passed (28)
+packages/plugin-web-time-tracker test:    Start at  16:17:01
+packages/plugin-web-time-tracker test:    Duration  10.20s (transform 773ms, setup 356ms, collect 1.29s, tests 8.62s, environment 1.40s, prepare 340ms)
+packages/plugin-web-time-tracker test: Done
+packages/xai-web-meditation test$ vitest run "--maxWorkers=2"
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/nextMode.test.ts (10 tests) 5ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/formatRecordDate.test.ts (8 tests) 8ms
+packages/xai-web-meditation test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-meditation
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/computeRemainingMs.test.ts (8 tests) 5ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/derivedCounters.test.ts (15 tests) 10ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/formatLocalTime.test.ts (3 tests) 4ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/registration.test.tsx (3 tests) 4ms
+packages/plugin-web-pomodoro test:  ✓ src/__tests__/formatDuration.test.ts (5 tests) 4ms
+packages/plugin-web-pomodoro test:  Test Files  16 passed (16)
+packages/plugin-web-pomodoro test:       Tests  129 passed (129)
+packages/plugin-web-pomodoro test:    Start at  16:17:01
+packages/plugin-web-pomodoro test:    Duration  13.25s (transform 752ms, setup 1.54s, collect 2.60s, tests 3.06s, environment 13.28s, prepare 1.40s)
+packages/xai-web-meditation test: stderr | src/__tests__/MeditationModule.persist.test.tsx > MeditationModule persistence > AC-PERSIST-4: corrupted JSON falls back to defaults without throwing
+packages/xai-web-meditation test: [plugin-web-storage] decode failed for xai_meditation_prefs: Error: Cannot decode "{not valid json" with codec "json"
+packages/xai-web-meditation test:     at getPref (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/storage.ts:126:7)
+packages/xai-web-meditation test:     at /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/usePref.ts:100:20
+packages/xai-web-meditation test:     at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+packages/xai-web-meditation test:     at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+packages/xai-web-meditation test:     at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+packages/xai-web-meditation test:     at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+packages/xai-web-meditation test:     at usePrefBrowser (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/usePref.ts:109:37)
+packages/xai-web-meditation test:     at usePref (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/usePref.ts:73:10)
+packages/xai-web-meditation test:     at useMeditationPrefs (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-meditation/src/internal/useMeditationPrefs.ts:22:25)
+packages/xai-web-meditation test:     at MeditationModule (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-meditation/src/MeditationModule.tsx:119:29)
+packages/plugin-web-pomodoro test: Done
+packages/plugin-web-countdown test$ vitest run "--maxWorkers=2"
+packages/xai-web-meditation test:  ✓ src/__tests__/MeditationModule.render.test.tsx (14 tests) 1100ms
+packages/plugin-web-countdown test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-countdown
+packages/xai-web-meditation test:  ✓ src/__tests__/MeditationModule.persist.test.tsx (10 tests) 1715ms
+packages/xai-web-meditation test:    ✓ MeditationModule persistence > AC-PERSIST-3: cold mount applies DEFAULT_PREFS (ocean/split/water/15)  302ms
+packages/xai-web-meditation test:    ✓ MeditationModule persistence > saves, selects, edits, and deletes a custom scene  392ms
+packages/xai-web-meditation test:  ✓ src/__tests__/MeditationModule.pick.test.tsx (6 tests) 951ms
+packages/xai-web-meditation test:    ✓ MeditationModule pick interactions > AC-PICK-4: clicking a clock card updates preview clock variant  318ms
+packages/xai-web-meditation test:  ✓ src/__tests__/MeditationPlayer.test.tsx (18 tests) 817ms
+packages/plugin-web-countdown test:  ✓ src/__tests__/CountdownEditDialog.test.tsx (17 tests) 849ms
+packages/xai-web-meditation test:  ✓ src/__tests__/ClockDisplay.test.tsx (14 tests) 179ms
+packages/xai-web-meditation test:  ✓ src/__tests__/getScene.test.ts (2 tests) 4ms
+packages/plugin-web-countdown test:  ✓ src/__tests__/CountdownCardView.test.tsx (11 tests) 389ms
+packages/xai-web-meditation test:  ✓ src/__tests__/validate.test.ts (12 tests) 5ms
+packages/xai-web-meditation test:  ✓ src/__tests__/styles.css.tokens.test.ts (5 tests) 3ms
+packages/plugin-web-countdown test:  ✓ src/__tests__/AddCountdownCard.test.tsx (4 tests) 183ms
+packages/xai-web-meditation test:  ✓ src/__tests__/computeAnalogAngles.test.ts (5 tests) 15ms
+packages/xai-web-meditation test:  ✓ src/__tests__/formatRemaining.test.ts (7 tests) 3ms
+packages/plugin-web-countdown test:  ✓ src/__tests__/CountdownModule.test.tsx (11 tests) 4289ms
+packages/plugin-web-countdown test:    ✓ CountdownModule — M2 add card > M2: clicking AddCountdownCard opens modal and saving persists card  847ms
+packages/plugin-web-countdown test:    ✓ CountdownModule — M3 edit card > M3: clicking an existing card opens modal pre-filled; saving persists patch  686ms
+packages/plugin-web-countdown test:    ✓ CountdownModule — M4 delete > M4: deleting a card hides it from active view and stores history state  882ms
+packages/plugin-web-countdown test:    ✓ CountdownModule — V2 interaction polish > keeps overview and view tabs available in subviews and can return to board  640ms
+packages/plugin-web-countdown test:  ✓ src/__tests__/useDaysUntil.test.tsx (6 tests) 54ms
+packages/xai-web-meditation test:  ✓ src/__tests__/registration.test.tsx (7 tests) 6ms
+packages/xai-web-meditation test:  ✓ src/__tests__/index-barrel.test.ts (5 tests) 21ms
+packages/plugin-web-countdown test: stderr | src/__tests__/validate.test.ts > isCountdownCard > V2: rejects missing id
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — id missing or empty {
+packages/plugin-web-countdown test:   id: '',
+packages/plugin-web-countdown test:   title: { en: 'Weekend', zh: '周末' },
+packages/plugin-web-countdown test:   target_date: '2026-05-30',
+packages/plugin-web-countdown test:   variant: 'image',
+packages/plugin-web-countdown test:   cover_url: 'preset:dusk'
+packages/plugin-web-countdown test: }
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — id missing or empty {
+packages/plugin-web-countdown test:   id: undefined,
+packages/plugin-web-countdown test:   title: { en: 'Weekend', zh: '周末' },
+packages/plugin-web-countdown test:   target_date: '2026-05-30',
+packages/plugin-web-countdown test:   variant: 'image',
+packages/plugin-web-countdown test:   cover_url: 'preset:dusk'
+packages/plugin-web-countdown test: }
+packages/plugin-web-countdown test: stderr | src/__tests__/validate.test.ts > isCountdownCard > V3: rejects missing title.en
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — title.en or title.zh missing {
+packages/plugin-web-countdown test:   id: 'cd_test01',
+packages/plugin-web-countdown test:   title: { zh: '周末' },
+packages/plugin-web-countdown test:   target_date: '2026-05-30',
+packages/plugin-web-countdown test:   variant: 'image',
+packages/plugin-web-countdown test:   cover_url: 'preset:dusk'
+packages/plugin-web-countdown test: }
+packages/plugin-web-countdown test: stderr | src/__tests__/validate.test.ts > isCountdownCard > V4: rejects missing title.zh
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — title.en or title.zh missing {
+packages/plugin-web-countdown test:   id: 'cd_test01',
+packages/plugin-web-countdown test:   title: { en: 'Weekend' },
+packages/plugin-web-countdown test:   target_date: '2026-05-30',
+packages/plugin-web-countdown test:   variant: 'image',
+packages/plugin-web-countdown test:   cover_url: 'preset:dusk'
+packages/plugin-web-countdown test: }
+packages/plugin-web-countdown test: stderr | src/__tests__/validate.test.ts > isCountdownCard > V5: rejects missing / invalid target_date
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — target_date invalid {
+packages/plugin-web-countdown test:   id: 'cd_test01',
+packages/plugin-web-countdown test:   title: { en: 'Weekend', zh: '周末' },
+packages/plugin-web-countdown test:   target_date: '',
+packages/plugin-web-countdown test:   variant: 'image',
+packages/plugin-web-countdown test:   cover_url: 'preset:dusk'
+packages/plugin-web-countdown test: }
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — target_date invalid {
+packages/plugin-web-countdown test:   id: 'cd_test01',
+packages/plugin-web-countdown test:   title: { en: 'Weekend', zh: '周末' },
+packages/plugin-web-countdown test:   target_date: '2026/05/30',
+packages/plugin-web-countdown test:   variant: 'image',
+packages/plugin-web-countdown test:   cover_url: 'preset:dusk'
+packages/plugin-web-countdown test: }
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — target_date invalid {
+packages/plugin-web-countdown test:   id: 'cd_test01',
+packages/plugin-web-countdown test:   title: { en: 'Weekend', zh: '周末' },
+packages/plugin-web-countdown test:   target_date: 'not-a-date',
+packages/plugin-web-countdown test:   variant: 'image',
+packages/plugin-web-countdown test:   cover_url: 'preset:dusk'
+packages/plugin-web-countdown test: }
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — target_date invalid {
+packages/plugin-web-countdown test:   id: 'cd_test01',
+packages/plugin-web-countdown test:   title: { en: 'Weekend', zh: '周末' },
+packages/plugin-web-countdown test:   target_date: undefined,
+packages/plugin-web-countdown test:   variant: 'image',
+packages/plugin-web-countdown test:   cover_url: 'preset:dusk'
+packages/plugin-web-countdown test: }
+packages/plugin-web-countdown test: stderr | src/__tests__/validate.test.ts > isCountdownCard > V6: rejects variant=image with null cover_url
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — variant=image requires non-null string cover_url {
+packages/plugin-web-countdown test:   id: 'cd_test01',
+packages/plugin-web-countdown test:   title: { en: 'Weekend', zh: '周末' },
+packages/plugin-web-countdown test:   target_date: '2026-05-30',
+packages/plugin-web-countdown test:   variant: 'image',
+packages/plugin-web-countdown test:   cover_url: null
+packages/plugin-web-countdown test: }
+packages/plugin-web-countdown test: stderr | src/__tests__/validate.test.ts > isCountdownCard > V7: rejects variant=light with non-null cover_url
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — variant=light requires cover_url=null {
+packages/plugin-web-countdown test:   id: 'cd_test03',
+packages/plugin-web-countdown test:   title: { en: 'Spring Festival', zh: '春节' },
+packages/plugin-web-countdown test:   target_date: '2027-02-06',
+packages/plugin-web-countdown test:   variant: 'light',
+packages/plugin-web-countdown test:   cover_url: 'preset:dusk'
+packages/plugin-web-countdown test: }
+packages/plugin-web-countdown test: stderr | src/__tests__/validate.test.ts > isCountdownCard > rejects null
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — not an object null
+packages/plugin-web-countdown test: stderr | src/__tests__/validate.test.ts > isCountdownCard > rejects non-object primitives
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — not an object 42
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — not an object string
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — not an object undefined
+packages/plugin-web-countdown test: stderr | src/__tests__/validate.test.ts > isCountdownCard > rejects wrong variant value
+packages/plugin-web-countdown test: [plugin-web-countdown] isCountdownCard: dropped entry — variant=light requires cover_url=null {
+packages/plugin-web-countdown test:   id: 'cd_test01',
+packages/plugin-web-countdown test:   title: { en: 'Weekend', zh: '周末' },
+packages/plugin-web-countdown test:   target_date: '2026-05-30',
+packages/plugin-web-countdown test:   variant: 'dark',
+packages/plugin-web-countdown test:   cover_url: 'preset:dusk'
+packages/plugin-web-countdown test: }
+packages/plugin-web-countdown test:  ✓ src/__tests__/validate.test.ts (12 tests) 10ms
+packages/plugin-web-countdown test:  ✓ src/__tests__/cardsReducer.test.ts (16 tests) 7ms
+packages/xai-web-meditation test:  ✓ src/__tests__/registry-presence.test.ts (7 tests) 3ms
+packages/xai-web-meditation test:  Test Files  13 passed (13)
+packages/xai-web-meditation test:       Tests  112 passed (112)
+packages/xai-web-meditation test:    Start at  16:17:12
+packages/xai-web-meditation test:    Duration  10.43s (transform 506ms, setup 2.27s, collect 1.48s, tests 4.82s, environment 7.28s, prepare 922ms)
+packages/plugin-web-countdown test:  ✓ src/__tests__/computeDaysUntil.test.ts (14 tests) 6ms
+packages/xai-web-meditation test: Done
+packages/xai-web-tasks test$ vitest run "--maxWorkers=2"
+packages/plugin-web-countdown test:  ✓ src/__tests__/index-barrel.test.ts (8 tests) 8ms
+packages/xai-web-tasks test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-tasks
+packages/plugin-web-countdown test:  ✓ src/__tests__/formatTargetLabel.test.ts (7 tests) 4ms
+packages/plugin-web-countdown test:  ✓ src/__tests__/registration.test.tsx (5 tests) 222ms
+packages/plugin-web-countdown test:  ✓ src/__tests__/presets.test.ts (5 tests) 17ms
+packages/plugin-web-countdown test:  ✓ src/__tests__/presetCards.test.ts (2 tests) 5ms
+packages/plugin-web-countdown test:  Test Files  13 passed (13)
+packages/plugin-web-countdown test:       Tests  118 passed (118)
+packages/plugin-web-countdown test:    Start at  16:17:15
+packages/plugin-web-countdown test:    Duration  10.94s (transform 666ms, setup 1.10s, collect 1.67s, tests 6.04s, environment 8.58s, prepare 1.07s)
+packages/plugin-web-countdown test: Done
+packages/xai-web-habits test$ vitest run "--maxWorkers=2"
+packages/xai-web-habits test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-habits
+packages/xai-web-tasks test:  ✓ src/__tests__/persistence.test.tsx (10 tests) 3139ms
+packages/xai-web-tasks test:    ✓ TasksModule persistence > T-PER-1: empty localStorage → renders seed (Overdue column has 10 cards)  317ms
+packages/xai-web-tasks test:    ✓ TasksModule persistence > T-PER-2: after DnD move, localStorage xai_task_cols is a JSON array with updated cols  336ms
+packages/xai-web-tasks test:    ✓ TasksModule create flow + persistence (T-CR) > T-CR-1: create card → appears at top of target column + localStorage round-trips it  605ms
+packages/xai-web-tasks test:    ✓ TasksModule create flow + persistence (T-CR) > T-CR-2: create card → card prepended and column count +1  590ms
+packages/xai-web-tasks test:    ✓ TasksModule create flow + persistence (T-CR) > T-CR-3: created card survives unmount + re-mount (simulates page reload)  697ms
+packages/xai-web-tasks test:  ✓ src/__tests__/TasksModule.test.tsx (15 tests) 3558ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-MOD-1 EN column headers > T-MOD-1: renders 4 column headers in correct order for lang=en  444ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-MOD-3 checkbox toggle > T-MOD-3: clicking checkbox toggles is-completed class on card  362ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-MOD-4 DnD overdue → nodate > T-MOD-4: dragging a card from overdue to nodate strips its date element  349ms
+packages/xai-web-tasks test:    ✓ TasksModule — T-MOD-5 drop-target highlight > T-MOD-5: while dragging over later column, it has drop-target class  564ms
+packages/xai-web-tasks test:    ✓ TasksModule — collection overview boards > can switch an All lists overview back to time buckets  368ms
+packages/xai-web-habits test:  ✓ src/__tests__/HabitsModule.i18n.test.tsx (9 tests) 657ms
+packages/xai-web-habits test:  ✓ src/__tests__/HabitsModule.views.test.tsx (5 tests) 710ms
+packages/xai-web-tasks test:  ✓ src/__tests__/TaskComposer.test.tsx (11 tests) 507ms
+packages/xai-web-tasks test:  ✓ src/__tests__/TasksSidebar.test.tsx (6 tests) 355ms
+packages/xai-web-habits test:  ✓ src/__tests__/HabitsModule.events.test.tsx (7 tests) 837ms
+packages/xai-web-habits test:  ✓ src/__tests__/HabitsModule.toggle.test.tsx (5 tests) 750ms
+packages/xai-web-tasks test:  ✓ src/__tests__/aiCreateSubscriber.test.tsx (7 tests) 381ms
+packages/xai-web-tasks test:  ✓ src/__tests__/registration.test.tsx (5 tests) 976ms
+packages/xai-web-tasks test:    ✓ tasksWebModuleRegistration — T-REG-2 RTL render > T-REG-2: TasksModuleRoute inside WebShellProvider renders EN Tasks heading  961ms
+packages/xai-web-tasks test:  ✓ src/__tests__/aiMutateSubscriber.test.tsx (8 tests) 185ms
+packages/xai-web-habits test: stderr | src/__tests__/HabitsModule.persist.test.tsx > HabitsModule persistence > AC-PERSIST-4: corrupted JSON in localStorage falls back gracefully
+packages/xai-web-habits test: [plugin-web-storage] decode failed for xai_habits_state: Error: Cannot decode "not-json" with codec "json"
+packages/xai-web-habits test:     at getPref (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/storage.ts:126:7)
+packages/xai-web-habits test:     at /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/usePref.ts:100:20
+packages/xai-web-habits test:     at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+packages/xai-web-habits test:     at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+packages/xai-web-habits test:     at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+packages/xai-web-habits test:     at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+packages/xai-web-habits test:     at usePrefBrowser (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/usePref.ts:109:37)
+packages/xai-web-habits test:     at usePref (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/usePref.ts:73:10)
+packages/xai-web-habits test:     at usePersistedHabits (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-habits/src/internal/usePersistedHabits.ts:31:41)
+packages/xai-web-habits test:     at HabitsModule (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-habits/src/HabitsModule.tsx:38:31)
+packages/xai-web-tasks test:  ✓ src/__tests__/tasksReducer.test.ts (29 tests) 40ms
+packages/xai-web-habits test:  ✓ src/__tests__/HabitsModule.persist.test.tsx (6 tests) 1408ms
+packages/xai-web-habits test:    ✓ HabitsModule persistence > AC-PERSIST-1: toggle writes to localStorage  479ms
+packages/xai-web-habits test:  ✓ src/__tests__/HabitsModule.render.test.tsx (9 tests) 2082ms
+packages/xai-web-habits test:    ✓ HabitsModule render > AC-RENDER-1: renders both left-pane and right-pane sections  373ms
+packages/xai-web-habits test:    ✓ HabitsModule render > AC-RENDER-8: tooltip renders in a top-level layer outside clipped panels  698ms
+packages/xai-web-tasks test:  ✓ src/__tests__/seed.test.ts (4 tests) 12ms
+packages/xai-web-tasks test:  ✓ src/__tests__/filterCardsByList.test.ts (26 tests) 12ms
+packages/xai-web-tasks test:  ✓ src/__tests__/taskLink.test.ts (7 tests) 8ms
+packages/xai-web-habits test:  ✓ src/__tests__/MonthCalendar.test.tsx (8 tests) 464ms
+packages/xai-web-habits test:  ✓ src/__tests__/HabitsModule.add.test.tsx (2 tests) 855ms
+packages/xai-web-habits test:    ✓ HabitsModule add-habit flow > AC-ADD-1: clicking the + button opens the dialog  534ms
+packages/xai-web-habits test:    ✓ HabitsModule add-habit flow > AC-ADD-2: saving a new habit appends it to the list and closes the dialog  320ms
+packages/xai-web-tasks test:  ✓ src/__tests__/dateForCol.test.ts (5 tests) 35ms
+packages/xai-web-tasks test:  ✓ src/__tests__/index-barrel.test.ts (11 tests) 4ms
+packages/xai-web-habits test:  ✓ src/__tests__/StatCard.test.tsx (3 tests) 53ms
+packages/xai-web-habits test:  ✓ src/__tests__/AddHabitDialog.test.tsx (5 tests) 398ms
+packages/xai-web-tasks test:  ✓ src/__tests__/ids.test.ts (2 tests) 16ms
+packages/xai-web-tasks test:  ✓ src/__tests__/validate.test.ts (9 tests) 9ms
+packages/xai-web-tasks test:  Test Files  15 passed (15)
+packages/xai-web-tasks test:       Tests  155 passed (155)
+packages/xai-web-tasks test:    Start at  16:17:23
+packages/xai-web-tasks test:    Duration  18.59s (transform 983ms, setup 4.08s, collect 2.76s, tests 9.24s, environment 13.52s, prepare 2.18s)
+packages/xai-web-tasks test: Done
+packages/xai-web-matrix test$ vitest run "--maxWorkers=2"
+packages/xai-web-habits test:  ✓ src/__tests__/dateKeys.test.ts (16 tests) 4ms
+packages/xai-web-habits test:  ✓ src/__tests__/DiaryCard.test.tsx (5 tests) 77ms
+packages/xai-web-matrix test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-matrix
+packages/xai-web-habits test:  ✓ src/__tests__/validate.test.ts (10 tests) 5ms
+packages/xai-web-habits test:  ✓ src/__tests__/registry-presence.test.ts (3 tests) 3ms
+packages/xai-web-habits test:  ✓ src/__tests__/styles.css.tokens.test.ts (7 tests) 2ms
+packages/xai-web-habits test:  ✓ src/__tests__/index-barrel.test.ts (2 tests) 2ms
+packages/xai-web-matrix test:  ✓ src/__tests__/MatrixModule.edge.test.tsx (3 tests) 264ms
+packages/xai-web-matrix test:  ✓ src/__tests__/MatrixModule.create.test.tsx (7 tests) 740ms
+packages/xai-web-habits test:  ✓ src/__tests__/computeStreak.test.ts (7 tests) 7ms
+packages/xai-web-habits test:  ✓ src/__tests__/toggle.test.ts (5 tests) 6ms
+packages/xai-web-matrix test:  ✓ src/__tests__/MatrixModule.kbd.test.tsx (6 tests) 454ms
+packages/xai-web-habits test:  ✓ src/__tests__/registration.test.tsx (4 tests) 3ms
+packages/xai-web-matrix test: stderr | src/__tests__/MatrixModule.persist.test.tsx > MatrixModule persistence > AC-PERSIST-4: corrupted JSON falls back to default (no exception)
+packages/xai-web-matrix test: [plugin-web-storage] decode failed for xai_matrix_state: Error: Cannot decode "not-valid-json{{{" with codec "json"
+packages/xai-web-matrix test:     at getPref (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/storage.ts:126:7)
+packages/xai-web-matrix test:     at /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/usePref.ts:100:20
+packages/xai-web-matrix test:     at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+packages/xai-web-matrix test:     at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+packages/xai-web-matrix test:     at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+packages/xai-web-matrix test:     at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+packages/xai-web-matrix test:     at usePrefBrowser (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/usePref.ts:109:37)
+packages/xai-web-matrix test:     at usePref (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/usePref.ts:73:10)
+packages/xai-web-matrix test:     at usePersistedMatrix (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-matrix/src/internal/usePersistedMatrix.ts:40:41)
+packages/xai-web-matrix test:     at MatrixModule (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-matrix/src/MatrixModule.tsx:37:40)
+packages/xai-web-habits test:  ✓ src/__tests__/computeStats.test.ts (7 tests) 4ms
+packages/xai-web-habits test:  Test Files  20 passed (20)
+packages/xai-web-habits test:       Tests  125 passed (125)
+packages/xai-web-habits test:    Start at  16:17:27
+packages/xai-web-habits test:    Duration  19.81s (transform 973ms, setup 3.59s, collect 4.14s, tests 8.33s, environment 15.74s, prepare 2.02s)
+packages/xai-web-matrix test:  ✓ src/__tests__/MatrixModule.persist.test.tsx (6 tests) 402ms
+packages/xai-web-habits test: Done
+packages/plugin-web-statistics test$ vitest run "--maxWorkers=2"
+packages/plugin-web-statistics test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-statistics
+packages/xai-web-matrix test:  ✓ src/__tests__/MatrixModule.events.test.tsx (5 tests) 533ms
+packages/xai-web-matrix test:  ✓ src/__tests__/MatrixComposer.test.tsx (9 tests) 386ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/KpiCard.test.tsx (5 tests) 52ms
+packages/xai-web-matrix test:  ✓ src/__tests__/MatrixModule.i18n.test.tsx (6 tests) 309ms
+packages/xai-web-matrix test:  ✓ src/__tests__/MatrixModule.dnd.test.tsx (5 tests) 341ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/Heatmap.test.tsx (3 tests) 214ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/StatisticsModule.test.tsx (16 tests) 990ms
+packages/xai-web-matrix test:  ✓ src/__tests__/MatrixModule.render.test.tsx (4 tests) 242ms
+packages/xai-web-matrix test:  ✓ src/__tests__/create.test.ts (8 tests) 4ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/HabitRank.test.tsx (4 tests) 49ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/HourBar.test.tsx (5 tests) 95ms
+packages/xai-web-matrix test:  ✓ src/__tests__/move.test.ts (5 tests) 3ms
+packages/xai-web-matrix test:  ✓ src/__tests__/ids.test.ts (3 tests) 6ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/LineChart.test.tsx (4 tests) 44ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/InsightCallout.test.tsx (2 tests) 28ms
+packages/xai-web-matrix test:  ✓ src/__tests__/index-barrel.test.ts (3 tests) 2ms
+packages/xai-web-matrix test:  ✓ src/__tests__/registration.test.ts (4 tests) 3ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/RingChart.test.tsx (3 tests) 29ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/BarChart.test.tsx (4 tests) 74ms
+packages/xai-web-matrix test:  ✓ src/__tests__/registry-presence.test.ts (3 tests) 89ms
+packages/xai-web-matrix test:  ✓ src/__tests__/matrix.css.tokens.test.ts (5 tests) 2ms
+packages/xai-web-matrix test:  Test Files  16 passed (16)
+packages/xai-web-matrix test:       Tests  82 passed (82)
+packages/xai-web-matrix test:    Start at  16:17:43
+packages/xai-web-matrix test:    Duration  12.02s (transform 564ms, setup 2.62s, collect 3.05s, tests 3.78s, environment 9.33s, prepare 1.36s)
+packages/xai-web-matrix test: Done
+packages/plugin-web-board-core test$ vitest run "--maxWorkers=2"
+packages/plugin-web-statistics test:  ✓ src/__tests__/aggregators.test.ts (26 tests) 25ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/rangeWindow.test.ts (13 tests) 24ms
+packages/plugin-web-board-core test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-core
+packages/plugin-web-statistics test:  ✓ src/__tests__/heatmapCells.test.ts (8 tests) 29ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/countDoneTasks.test.ts (7 tests) 6ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/BoardList.test.tsx (18 tests) 410ms
+packages/plugin-web-board-core test: stderr | src/__tests__/BoardModule.test.tsx > BoardModule > BM1 first mount with empty localStorage renders boards[0].name.en
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: stderr | src/__tests__/BoardModule.test.tsx > BoardModule > BM3 add-card via composer persists to xai_boards_v2; unmount/remount renders new card
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-statistics test:  ✓ src/__tests__/isPomodoroSession.test.ts (8 tests) 4ms
+packages/plugin-web-board-core test: stderr | src/__tests__/BoardModule.test.tsx > BoardModule > BM4 lang flip re-renders bilingual title
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: stderr | src/__tests__/BoardModule.test.tsx > BoardModule > BM6 mount with stale xai_active_board id resolves to boards[0]
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-statistics test:  ✓ src/__tests__/registration.test.tsx (4 tests) 4ms
+packages/plugin-web-board-core test: stderr | src/__tests__/BoardModule.test.tsx > BoardModule > BM7 add-list via composer appends a new list
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test: An update to BoardModule inside a test was not wrapped in act(...).
+packages/plugin-web-board-core test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-core test: act(() => {
+packages/plugin-web-board-core test:   /* fire events that update state */
+packages/plugin-web-board-core test: });
+packages/plugin-web-board-core test: /* assert on the output */
+packages/plugin-web-board-core test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-core test:  ✓ src/__tests__/BoardModule.test.tsx (9 tests) 574ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/trendPercent.test.ts (9 tests) 2ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/BoardView.test.tsx (12 tests) 134ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/narrowTaskCols.test.ts (8 tests) 7ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/BoardCard.test.tsx (13 tests) 140ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/isHabitsStateRecord.test.ts (8 tests) 2ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/persistence.test.ts (11 tests) 6ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/insightCopy.test.ts (10 tests) 4ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/boardData.test.ts (12 tests) 5ms
+packages/plugin-web-statistics test:  ✓ src/__tests__/index-barrel.test.ts (3 tests) 3ms
+packages/plugin-web-statistics test:  Test Files  20 passed (20)
+packages/plugin-web-statistics test:       Tests  150 passed (150)
+packages/plugin-web-statistics test:    Start at  16:17:48
+packages/plugin-web-statistics test:    Duration  12.79s (transform 931ms, setup 2.09s, collect 2.59s, tests 1.68s, environment 12.18s, prepare 1.64s)
+packages/plugin-web-board-core test:  ✓ src/__tests__/exportImport.test.ts (8 tests) 7ms
+packages/plugin-web-statistics test: Done
+packages/plugin-web-board-core test:  ✓ src/__tests__/automationLite.test.ts (4 tests) 7ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/storageContract.test.ts (8 tests) 7ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/boardOps.test.ts (37 tests) 8ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/boardVisibility.test.ts (4 tests) 3ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/index-barrel.test.ts (2 tests) 7ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/isBoardArray.test.ts (27 tests) 5ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/registration.test.tsx (8 tests) 2ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/activityEntries.test.ts (3 tests) 4ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/catalogs.test.ts (8 tests) 5ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/integrationAdapters.test.ts (5 tests) 4ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/types.test.ts (6 tests) 3ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/dateModel.test.ts (7 tests) 8ms
+packages/plugin-web-board-core test:  ✓ src/__tests__/listColors.test.ts (4 tests) 6ms
+packages/plugin-web-board-core test:  Test Files  20 passed (20)
+packages/plugin-web-board-core test:       Tests  206 passed (206)
+packages/plugin-web-board-core test:    Start at  16:17:56
+packages/plugin-web-board-core test:    Duration  10.97s (transform 948ms, setup 1.78s, collect 2.76s, tests 1.35s, environment 9.03s, prepare 1.64s)
+packages/plugin-web-board-core test: Done
+packages/plugin-web-board-views test$ vitest run "--maxWorkers=2"
+packages/xai-web-calendar test$ vitest run "--maxWorkers=2"
+packages/xai-web-calendar test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-calendar
+packages/plugin-web-board-views test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-views
+packages/plugin-web-board-views test:  ✓ src/__tests__/TimelineView.test.tsx (19 tests) 618ms
+packages/plugin-web-board-views test:  ✓ src/__tests__/BoardModule.test.tsx (8 tests) 1057ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.render.test.tsx (12 tests) 1574ms
+packages/xai-web-calendar test:    ✓ CalendarModule render > AC-TOKENS-EXT-3: .cal-coming-soon class is never rendered (ComingSoonPanel deleted in P4)  308ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.eventcrud.test.tsx (10 tests) 2214ms
+packages/xai-web-calendar test:    ✓ CalendarModule event CRUD integration (P4) > AC-QUICK-CREATE-1: clicking a month date opens day overview, then create composer for that date  702ms
+packages/xai-web-calendar test:    ✓ CalendarModule event CRUD integration (P4) > AC-QUICK-CREATE-2: created event renders on its source date with tag  571ms
+packages/plugin-web-board-views test:  ✓ src/__tests__/TableView.test.tsx (18 tests) 485ms
+packages/plugin-web-board-views test:  ✓ src/__tests__/registration.test.tsx (4 tests) 277ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.nav.test.tsx (6 tests) 2210ms
+packages/xai-web-calendar test:    ✓ CalendarModule nav > AC-NAV-1: > → June 2026  305ms
+packages/xai-web-calendar test:    ✓ CalendarModule nav > AC-NAV-3: year rollover Dec → Jan  538ms
+packages/xai-web-calendar test:    ✓ CalendarModule nav > AC-NAV-4: today button resets to May 2026 anchor  485ms
+packages/xai-web-calendar test:    ✓ CalendarModule nav > AC-NAV-5: nav clears focusedDate  338ms
+packages/plugin-web-board-views test: stderr | src/__tests__/BoardCalendarView.test.tsx > BoardCalendarView > BC7 dragover on a cell calls preventDefault (DnD spec compliance)
+packages/plugin-web-board-views test: An update to BoardCalendarView inside a test was not wrapped in act(...).
+packages/plugin-web-board-views test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-views test: act(() => {
+packages/plugin-web-board-views test:   /* fire events that update state */
+packages/plugin-web-board-views test: });
+packages/plugin-web-board-views test: /* assert on the output */
+packages/plugin-web-board-views test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-views test:  ✓ src/__tests__/filter-view-integration.test.tsx (6 tests) 490ms
+packages/plugin-web-board-views test:  ✓ src/__tests__/BoardCalendarView.test.tsx (13 tests) 723ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.viewtoggle.test.tsx (11 tests) 3945ms
+packages/xai-web-calendar test:    ✓ CalendarModule view toggle > AC-TOGGLE-1: toggling Month→Week→Day→Month preserves activeDate  510ms
+packages/xai-web-calendar test:    ✓ CalendarModule view toggle > AC-TOGGLE-2: tab aria-selected flips correctly  302ms
+packages/xai-web-calendar test:    ✓ CalendarModule view toggle > AC-PERSIST-YEAR-1: reload restores year view (mocked usePref returns "year")  440ms
+packages/xai-web-calendar test:    ✓ Nav arrows step by view (AC-NAV-EXT-1..3) > AC-NAV-YEAR-1: when view=year, prev/next step ±1 year  1495ms
+packages/xai-web-calendar test:    ✓ Nav arrows step by view (AC-NAV-EXT-1..3) > AC-ACTIVEDATE-3: today reset resets to MAY_2026_ANCHOR_TODAY  364ms
+packages/plugin-web-board-views test: stderr | src/__tests__/MapView.test.tsx > MapView > MAP-1 mounts outer panel container with data-testid='board-map'
+packages/plugin-web-board-views test: An update to MapView inside a test was not wrapped in act(...).
+packages/plugin-web-board-views test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-views test: act(() => {
+packages/plugin-web-board-views test:   /* fire events that update state */
+packages/plugin-web-board-views test: });
+packages/plugin-web-board-views test: /* assert on the output */
+packages/plugin-web-board-views test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-views test: stderr | src/__tests__/MapView.test.tsx > MapView > MAP-2 renders map-container div for Leaflet to attach to
+packages/plugin-web-board-views test: An update to MapView inside a test was not wrapped in act(...).
+packages/plugin-web-board-views test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-views test: act(() => {
+packages/plugin-web-board-views test:   /* fire events that update state */
+packages/plugin-web-board-views test: });
+packages/plugin-web-board-views test: /* assert on the output */
+packages/plugin-web-board-views test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-views test: stderr | src/__tests__/MapView.test.tsx > MapView > MAP-3 shows loading indicator before Leaflet resolves
+packages/plugin-web-board-views test: An update to MapView inside a test was not wrapped in act(...).
+packages/plugin-web-board-views test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/plugin-web-board-views test: act(() => {
+packages/plugin-web-board-views test:   /* fire events that update state */
+packages/plugin-web-board-views test: });
+packages/plugin-web-board-views test: /* assert on the output */
+packages/plugin-web-board-views test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/plugin-web-board-views test:  ✓ src/__tests__/MapView.test.tsx (15 tests) 643ms
+packages/plugin-web-board-views test:  ✓ src/__tests__/BoardDashboardView.test.tsx (12 tests) 403ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.deeplink.test.tsx (7 tests) 2122ms
+packages/xai-web-calendar test:    ✓ CalendarModule deep-link > AC-DEEPLINK-1: focusDate sets focusedDate (same month)  548ms
+packages/xai-web-calendar test:    ✓ CalendarModule deep-link > AC-DEEPLINK-2: matching cell receives data-focused=true  497ms
+packages/xai-web-calendar test:    ✓ CalendarModule deep-link > AC-DEEPLINK-5: cross-month focusDate navigates displayedMonth  402ms
+packages/plugin-web-board-views test:  ✓ src/__tests__/location.test.ts (6 tests) 3ms
+packages/plugin-web-board-views test:  ✓ src/__tests__/ViewPicker.test.tsx (5 tests) 350ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.recurrence.test.tsx (6 tests) 1553ms
+packages/xai-web-calendar test:    ✓ CalendarModule recurrence integration (P4) > AC-RECUR-1: daily recurring event over Week view renders 7 blocks  457ms
+packages/xai-web-calendar test:    ✓ CalendarModule recurrence integration (P4) > AC-RECUR-6: editing a recurring event updates all rendered instances  525ms
+packages/plugin-web-board-views test:  ✓ src/__tests__/index-barrel.test.ts (4 tests) 24ms
+packages/plugin-web-board-views test:  ✓ src/__tests__/filter.test.ts (15 tests) 5ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.dst-recurrence.test.tsx (2 tests) 1148ms
+packages/xai-web-calendar test:    ✓ CalendarModule DST x recurrence integration (P4) > AC-DST-RECUR-1: daily 09:30 recurrence is stable across Mar 7/8/9 around spring-forward  870ms
+packages/plugin-web-board-views test:  ✓ src/__tests__/dateOps.test.ts (8 tests) 6ms
+packages/xai-web-calendar test:  ✓ src/__tests__/EventComposer.test.tsx (21 tests) 533ms
+packages/plugin-web-board-views test:  ✓ src/__tests__/dueShortcuts.test.ts (8 tests) 12ms
+packages/plugin-web-board-views test:  Test Files  14 passed (14)
+packages/plugin-web-board-views test:       Tests  141 passed (141)
+packages/plugin-web-board-views test:    Start at  16:18:08
+packages/plugin-web-board-views test:    Duration  16.99s (transform 1.37s, setup 2.83s, collect 6.57s, tests 5.10s, environment 12.43s, prepare 1.68s)
+packages/plugin-web-board-views test: Done
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.activedate.test.tsx (5 tests) 654ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.i18n.test.tsx (6 tests) 593ms
+packages/xai-web-calendar test:  ✓ src/__tests__/WeekView.test.tsx (14 tests) 494ms
+packages/xai-web-calendar test:  ✓ src/__tests__/TimeGrid.test.tsx (8 tests) 285ms
+packages/xai-web-calendar test:  ✓ src/__tests__/boardCalendarFeed.test.ts (6 tests) 6ms
+packages/xai-web-calendar test:  ✓ src/__tests__/YearView.test.tsx (5 tests) 755ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.weekstart.test.tsx (4 tests) 1063ms
+packages/xai-web-calendar test:    ✓ CalendarModule weekStart preference > AC-WEEKSTART-1: default Sun-first  526ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.events.test.tsx (6 tests) 453ms
+packages/xai-web-calendar test:  ✓ src/__tests__/useUserCalEvents.test.tsx (8 tests) 41ms
+packages/xai-web-calendar test:  ✓ src/__tests__/DayView.test.tsx (10 tests) 320ms
+packages/xai-web-calendar test:  ✓ src/__tests__/eventStore.test.ts (13 tests) 36ms
+packages/xai-web-calendar test:  ✓ src/__tests__/aiCreateSubscriber.test.tsx (5 tests) 17ms
+packages/xai-web-calendar test:  ✓ src/__tests__/perfBudget.eventcrud.test.ts (1 test) 23ms
+packages/xai-web-calendar test:  ✓ src/__tests__/events.test.ts (3 tests) 22ms
+packages/xai-web-calendar test:  ✓ src/__tests__/aiMutateSubscriber.test.tsx (6 tests) 48ms
+packages/xai-web-calendar test:  ✓ src/__tests__/parseDateKey.test.ts (15 tests) 8ms
+packages/xai-web-calendar test:  ✓ src/__tests__/placeEventBlocks.test.ts (12 tests) 7ms
+packages/xai-web-calendar test:  ✓ src/__tests__/monthGridCells.test.ts (9 tests) 11ms
+packages/xai-web-calendar test:  ✓ src/__tests__/timeGridMath.test.ts (16 tests) 7ms
+packages/xai-web-calendar test:  ✓ src/__tests__/sampleEvents.test.ts (10 tests) 17ms
+packages/xai-web-calendar test:  ✓ src/__tests__/perfBudget.test.ts (1 test) 6ms
+packages/xai-web-calendar test:  ✓ src/__tests__/index-barrel.test.ts (9 tests) 3ms
+packages/xai-web-calendar test:  ✓ src/__tests__/weekWindow.test.ts (8 tests) 4ms
+packages/xai-web-calendar test:  ✓ src/__tests__/styles.css.tokens.test.ts (11 tests) 6ms
+packages/xai-web-calendar test:  ✓ src/__tests__/validators.test.ts (11 tests) 10ms
+packages/xai-web-calendar test:  ✓ src/__tests__/expandRecurrence.test.ts (12 tests) 5ms
+packages/xai-web-calendar test:  ✓ src/__tests__/holidays.test.ts (4 tests) 5ms
+packages/xai-web-calendar test:  ✓ src/__tests__/CalendarModule.boardfeed.test.tsx (3 tests) 214ms
+packages/xai-web-calendar test:  ✓ src/__tests__/formatMonth.test.ts (3 tests) 2ms
+packages/xai-web-calendar test:  ✓ src/__tests__/ids.test.ts (4 tests) 45ms
+packages/xai-web-calendar test:  ✓ src/__tests__/mergeEventsForViewport.test.ts (10 tests) 7ms
+packages/xai-web-calendar test:  ✓ src/__tests__/registration.test.tsx (2 tests) 8ms
+packages/xai-web-calendar test:  ✓ src/__tests__/registry-presence.test.ts (4 tests) 2ms
+packages/xai-web-calendar test:  ✓ src/__tests__/dateKeys.test.ts (7 tests) 4ms
+packages/xai-web-calendar test:  ✓ src/__tests__/weekdays.test.ts (3 tests) 3ms
+packages/xai-web-calendar test:  ✓ src/__tests__/isoWeekNumber.test.ts (6 tests) 2ms
+packages/xai-web-calendar test:  Test Files  44 passed (44)
+packages/xai-web-calendar test:       Tests  335 passed (335)
+packages/xai-web-calendar test:    Start at  16:18:08
+packages/xai-web-calendar test:    Duration  36.67s (transform 1.54s, setup 6.56s, collect 8.51s, tests 20.49s, environment 22.95s, prepare 3.89s)
+packages/xai-web-calendar test: Done
+packages/plugin-web-board-workspaces test$ vitest run "--maxWorkers=2"
+packages/plugin-web-board-workspaces test:  RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-workspaces
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/BoardSwitcher.test.tsx (16 tests) 353ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/BoardCreator.test.tsx (10 tests) 1163ms
+packages/plugin-web-board-workspaces test:    ✓ BoardCreator (BC1..BC10) > BC1: renders 3 template cards  457ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/PlannerPanel.test.tsx (15 tests) 920ms
+packages/plugin-web-board-workspaces test:    ✓ PlannerPanel (PP1..PP12) > PP1: renders header + date + 12 hour rows  543ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/FilterPopover.test.tsx (12 tests) 919ms
+packages/plugin-web-board-workspaces test:    ✓ FilterPopover > FP-1 renders three facet sections  432ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/CardDetailDialog.test.tsx (16 tests) 1004ms
+packages/plugin-web-board-workspaces test:    ✓ CardDetailDialog (CDD-1..CDD-8) > CDD-4: backdrop click (target === dialog element) calls onClose  433ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/ShareModal.test.tsx (10 tests) 264ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/StatusOverviewBanner.test.tsx (10 tests) 134ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/InboxPanel.test.tsx (12 tests) 306ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/BoardWorkspacesModule.test.tsx (84 tests) 27910ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM1: first render with empty localStorage seeds boards + renders header + bottom switcher  668ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM2: defensive seed persists makeDefaultBoards on mount with null prefs  782ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM4: clicking '+ New board' in switcher closes switcher + opens creator  736ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM5: submitting creator adds + activates a board, closes both modals  602ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM7: deleting a board via dialog confirm removes it (B-12 new confirmation flow)  772ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM8: toggling Inbox panel persists to xai_board_panels (length-1 array)  458ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM9: clicking 'Board' alone toggles board off → invariant forces it back on  568ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM10: Inbox + Planner both open → container has board-panels-multi class  1084ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM11: only Board open → container has board-panels-single class  430ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM12: PM template board + overview toggle mounts StatusOverviewBanner  695ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM16: malformed xai_board_inbox → renders seed inbox when inbox opened  313ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-EXT-2: Click Filter button opens FilterPopover  447ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-EXT-6: changing filters persists the active board filter without mutating boards  545ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-SAVED-FILTER-2: board switch restores each board's own saved filter  363ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-SAVED-FILTER-3: Clear persists the active board reset  380ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-EXT-3: Selecting a label in the popover narrows the visible card count in BoardView  394ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-DETAIL-2: title and description edits persist through xai_boards_v2  452ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-DETAIL-3: labels, members, checklist, attachments, and dates persist as detail fields  850ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-INTEGRATIONS-1: provider link attachments persist integration metadata  411ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-COMMENTS-1: card detail adds comment entries with author metadata  819ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-COMMENTS-2: existing note entries remain valid timeline rows  424ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-DETAIL-6: Calendar view card opens the shared card detail modal  584ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-DATE-1: detail modal preserves startDate > dueDate without auto-swap or clamp  364ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-DATE-2: ambiguous legacy due reload opens detail without fabricated dueDate  366ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-CHECKLIST-1: toggling, editing, and removing checklist rows persists derived progress  693ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-TASK-2: unlink clears only the board-side taskLink  532ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-LIST-1: first-run keyed kanban list rename persists customName without clearing key  924ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-LIST-3: archive manager restores and permanently deletes archived lists  540ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-CARD-2: move down reorders within the same active list  396ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-CARD-3: archive manager restores archived cards  391ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-28) > BW-Del-Board-1: click trash in BoardSwitcher → BoardDeleteConfirmDialog mounts with mode='board'  319ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-28) > BW-Del-Board-2: Cancel from dialog → dialog unmounts + board still present  481ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-28) > BW-Del-Board-4: re-opening BoardSwitcher after confirm shows board absent  356ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5) > BW-Open-5 (Map): clicking pin in MapView triggers handleOpenCard via onSelectCard  468ms
+packages/plugin-web-board-workspaces test:    ✓ BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5) > BW-Open-Close: closing dialog via onClose unmounts CardDetailDialog (conditional mount)  552ms
+packages/plugin-web-board-workspaces test:    ✓ BWM-CAT — label/member catalogs + priority > BWM-CAT-2: creating a label materializes board.labels (defaults + new) and the label is assignable  554ms
+packages/plugin-web-board-workspaces test:    ✓ BWM-CAT — label/member catalogs + priority > BWM-CAT-3: deleting a label removes it from the catalog AND strips it from cards  349ms
+packages/plugin-web-board-workspaces test:    ✓ BWM-CAT — label/member catalogs + priority > BWM-CAT-4: creating a member persists to board.members and the member is assignable  322ms
+packages/plugin-web-board-workspaces test:    ✓ BWM-SET — board settings + priority filter > BWM-SET-2: icon + description persist; icon renders in the header title  351ms
+packages/plugin-web-board-workspaces test:    ✓ BWM-WS — workspace CRUD > BWM-WS-1: creating a workspace persists it (seed + new) and renders its group  317ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/BoardDeleteConfirmDialog.test.tsx (11 tests) 214ms
+packages/plugin-web-board-workspaces test: stderr | src/__tests__/shareUrl.test.ts > generateShareUrl > SU-6 crypto.subtle === undefined fallback returns boardId.slice(0,8)
+packages/plugin-web-board-workspaces test: [shareUrl] SubtleCrypto unavailable; using boardId slice fallback
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/shareUrl.test.ts (6 tests) 15ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/ringMath.test.ts (16 tests) 41ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/registration.test.tsx (6 tests) 6ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/types.test.ts (3 tests) 4ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/panelOps.test.ts (19 tests) 9ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/shareContract.test.ts (3 tests) 8ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/index-barrel.test.ts (4 tests) 5ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/responsiveStyles.test.ts (3 tests) 6ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/savedFilters.test.ts (5 tests) 7ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/filterState.test.ts (8 tests) 54ms
+packages/plugin-web-board-workspaces test:  ✓ src/__tests__/guards.test.ts (12 tests) 4ms
+packages/plugin-web-board-workspaces test:  Test Files  21 passed (21)
+packages/plugin-web-board-workspaces test:       Tests  281 passed (281)
+packages/plugin-web-board-workspaces test:    Start at  16:18:46
+packages/plugin-web-board-workspaces test:    Duration  54.20s (transform 4.79s, setup 6.99s, collect 18.08s, tests 33.35s, environment 30.69s, prepare 4.75s)
+packages/plugin-web-board-workspaces test: Done

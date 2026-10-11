@@ -1,0 +1,11 @@
+revision=HEAD
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d1-p4gBZu
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-shared-writer.test.tsx (8 tests) 23ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  16:25:01
+   Duration  789ms (transform 121ms, setup 0ms, collect 212ms, tests 23ms, environment 261ms, prepare 65ms)

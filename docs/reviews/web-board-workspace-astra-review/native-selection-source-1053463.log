@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"1053463","scope":"invalid board source must not correct active selection from defaults"}
+{"name":"selection-with-invalid-source","boardBytesPreserved":true,"expectedActive":"valuable-board","activeAfter":"b-default","pass":false}

@@ -1,12 +1,23 @@
 {
-  "schema_version": 1,
-  "source": "docs/adr/0013-branch-sync-governance.md#d2--branch-topology",
+  "schema_version": 2,
+  "source": "docs/adr/0013-branch-sync-governance.md D2 + D6",
   "adr_status": "Accepted",
   "drift_model": "Drift is evaluated by whether share-required changes are parked without D3 classification, not by commit-count size.",
   "current_gate_status": {
     "d3": "manual receipt required before any cross-line promotion",
     "merge": "operator-gated; no automatic merge",
     "release": "operator-gated; no automatic release judgment"
+  },
+  "multi_machine_collaboration": {
+    "authority": "docs/workflow/project/multi-machine-development.md",
+    "source_of_truth": "GitHub remote refs plus an external secure secret channel",
+    "writable_branch_ownership": "one active machine/worktree per short branch; use sibling branches for parallel work",
+    "start_gate": "git fetch --all --prune --tags before writing",
+    "handoff_gate": "pnpm git:sync-check -- --fetch",
+    "deep_gate": "pnpm git:sync-check -- --fetch --deep before migration, worktree deletion, or cleanup",
+    "stash_policy": "stash is local-temporary only; cross-machine work must be a pushed WIP branch or secret-scanned archive ref",
+    "secret_policy": "never commit secret values; track names-only .env.example and restore values securely",
+    "long_lived_force_push": "forbidden"
   },
   "long_lived_branches": [
     {

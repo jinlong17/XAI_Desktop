@@ -161,6 +161,8 @@ describe("AC-REG-7: Default type matches codec", () => {
 // Each W2 row that owns persisted state appends one entry here following the
 // §S8 owner-row registration pattern; the count grows as those rows ship.
 const OWNER_ROW_ADDITIONS = [
+  "xai_pomodoro_active",      // POMO-01 durable active/pending session (2026-09-09)
+  "xai_meditation_active",    // MED-01 durable account-scoped execution state (2026-09-09)
   "xai_matrix_state",         // xai-web-matrix #13
   "xai_habits_state",         // xai-web-habits #15
   "xai_pref_week_start",      // xai-web-calendar #12 (first consumer of xai_pref_* family)
@@ -234,6 +236,8 @@ const OWNER_ROW_ADDITIONS = [
   "xai_dashboard_stickies",
   // xai-web-dashboard-weather-mail extension 2026-05-29 — weather persistence
   "xai_dashboard_weather",
+  // plugin-web-board-workspaces W3 2026-06-09 — workspace directory CRUD
+  "xai_board_workspaces",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {

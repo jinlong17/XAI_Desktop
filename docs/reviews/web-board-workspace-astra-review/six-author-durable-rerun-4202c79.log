@@ -1,0 +1,11 @@
+revision=4202c79
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-subscribers-5kgyWm
+
+ ✓ docs/reviews/web-ai-canonical-subscribers-sol-fix/durable-subscriber-replay.test.tsx (10 tests) 361ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  16:34:51
+   Duration  1.74s (transform 319ms, setup 0ms, collect 616ms, tests 361ms, environment 411ms, prepare 91ms)

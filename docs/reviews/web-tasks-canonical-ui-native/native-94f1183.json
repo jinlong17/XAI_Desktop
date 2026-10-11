@@ -1,0 +1,31 @@
+{
+  "requestedRef": "94f1183",
+  "revision": "94f1183299c10de92b3e789d3713919a83f14dd7",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "startup",
+      "pass": false,
+      "error": "Error: Absent Tasks failed to initialize"
+    },
+    {
+      "name": "retry-conflict",
+      "pass": true
+    },
+    {
+      "name": "composer-retry",
+      "pass": true
+    }
+  ],
+  "checkpoint": {
+    "retry-conflict": {
+      "raw": "{\"format\":\"xai-command-state\",\"version\":1,\"revision\":2,\"data\":[{\"id\":\"overdue\",\"key\":\"overdue\",\"count\":0,\"tasks\":[]},{\"id\":\"next7\",\"key\":\"next_7_days\",\"count\":0,\"tasks\":[]},{\"id\":\"later\",\"key\":\"later\",\"count\":0,\"tasks\":[]},{\"id\":\"nodate\",\"key\":\"no_date\",\"count\":1,\"tasks\":[{\"id\":\"existing\",\"title\":{\"en\":\"External newer task\",\"zh\":\"External newer task\"},\"tag\":\"work\",\"tags\":[\"work\"],\"priority\":\"normal\",\"listId\":\"inbox\"}]}],\"receipts\":{\"prior\":{\"operationVersion\":1,\"signature\":\"existing\",\"result\":{\"ok\":true,\"targetId\":\"existing\"},\"committedAt\":\"2026-09-09T00:00:00Z\"}}}"
+    },
+    "composer-retry": {
+      "raw": "{\"format\":\"xai-command-state\",\"version\":1,\"revision\":2,\"data\":[{\"id\":\"overdue\",\"key\":\"overdue\",\"count\":0,\"tasks\":[]},{\"id\":\"next7\",\"key\":\"next_7_days\",\"count\":1,\"tasks\":[{\"id\":\"08d31b59-eb97-4bfe-838e-535a0198cb13\",\"title\":{\"en\":\"Latest preserved draft\",\"zh\":\"Latest preserved draft\"},\"listId\":\"inbox\",\"priority\":\"normal\"}]},{\"id\":\"later\",\"key\":\"later\",\"count\":0,\"tasks\":[]},{\"id\":\"nodate\",\"key\":\"no_date\",\"count\":0,\"tasks\":[]}],\"receipts\":{\"prior\":{\"operationVersion\":1,\"signature\":\"existing\",\"result\":{\"ok\":true,\"targetId\":\"existing\"},\"committedAt\":\"2026-09-09T00:00:00Z\"}}}"
+    }
+  },
+  "scope": "Actual TasksModule/native storage, isolated account/profile, explicit activation; no production or visual-style acceptance"
+}

@@ -1,0 +1,24 @@
+revision=8ab38ed
+overlay=review tests plus d1-web-locks-fixture.ts; product and named scheduler from archive
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-67QICY
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > present corrupt Board source null must refuse before initial intent
+board-initial {"raw":"null","result":{"ok":false,"phase":"intent","message":"Board data needs recovery; original bytes were preserved."},"preserved":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > present corrupt Board source {bad must refuse before initial intent
+board-initial {"raw":"{bad","result":{"ok":false,"phase":"intent","message":"Expected property name or '}' in JSON at position 1 (line 1 column 2)"},"preserved":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > after task commit, changed same-ID pending must not be acknowledged or erased
+changed-pending-after-task {"result":{"ok":false,"phase":"acknowledgement","message":"Task saved; Board acknowledgement is pending. Retry to finish. The link changed while saving. Review the current card."},"stored":{"source":"xai-web-tasks","taskId":"bt-b-default-bc1","createdAt":"2026-09-10T02:26:46.607Z","pending":{"title":{"en":"Newer pending request","zh":"新的请求"},"dueDate":"2026-10-20"}},"task":{"id":"bt-b-default-bc1","title":{"en":"Onboarding flow concepts","zh":"新人引导流程概念"},"tag":"todo","inbox":true,"source":{"type":"board-card","boardId":"b-default","listId":"b-backlog","cardId":"bc1"}}}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > a settled link failure belongs to its card and must not appear on a newly opened card
+new-card-error undefined
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx (15 tests) 484ms
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  19:26:44
+   Duration  2.60s (transform 901ms, setup 0ms, collect 1.40s, tests 484ms, environment 288ms, prepare 94ms)

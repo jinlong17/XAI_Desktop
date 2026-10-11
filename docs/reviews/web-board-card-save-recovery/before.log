@@ -1,0 +1,394 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stderr | docs/reviews/web-board-card-save-recovery/save-contract.test.tsx > retains a new card draft and reports failure when canonical board storage rejects the write
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+ ❯ docs/reviews/web-board-card-save-recovery/save-contract.test.tsx (1 test | 1 failed) 172ms
+   × retains a new card draft and reports failure when canonical board storage rejects the write 172ms
+     → Unable to find an element by: [data-testid="card-composer-input"]
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"board-module board-workspaces-module"[39m
+      [33mdata-testid[39m=[32m"board-workspaces-module"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"board-toolbar"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ws-chip"[39m
+          [33mdata-testid[39m=[32m"ws-chip"[39m
+          [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+        [36m>[39m
+          [0mPe[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-title-wrap"[39m
+          [33mdata-testid[39m=[32m"board-title-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mMy Project Board[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m▾[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Board settings"[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"board-settings-btn"[39m
+          [33mtitle[39m=[32m"Board settings"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m✎[0m
+        [36m</button>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"view-picker-wrap"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Switch view"[39m
+            [33mclass[39m=[32m"view-picker"[39m
+            [33mdata-testid[39m=[32m"view-picker"[39m
+            [33mrole[39m=[32m"toolbar"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"vp-btn active"[39m
+              [33mdata-testid[39m=[32m"vp-btn-board"[39m
+              [33mdata-view[39m=[32m"board"[39m
+              [33mtitle[39m=[32m"Board"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-kanban"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mBoard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-table"[39m
+              [33mdata-view[39m=[32m"table"[39m
+              [33mtitle[39m=[32m"Table"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-grid"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTable[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+              [33mdata-view[39m=[32m"calendar"[39m
+              [33mtitle[39m=[32m"Calendar"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-calendar"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mCalendar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+              [33mdata-view[39m=[32m"dashboard"[39m
+              [33mtitle[39m=[32m"Dashboard"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-barchart"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mDashboard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+              [33mdata-view[39m=[32m"timeline"[39m
+              [33mtitle[39m=[32m"Timeline"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-gantt"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTimeline[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-map"[39m
+              [33mdata-view[39m=[32m"map"[39m
+              [33mtitle[39m=[32m"Map"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-globe"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mMap[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"board-count"[39m
+        [36m>[39m
+          [0m14[0m
+          [0m [0m
+          [0mcards[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"board-members"[39m
+          [33mdata-testid[39m=[32m"board-members"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"overview-toggle"[39m
+          [33mdisabled[3...
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-card-save-recovery/save-contract.test.tsx > retains a new card draft and reports failure when canonical board storage rejects the write
+TestingLibraryElementError: Unable to find an element by: [data-testid="card-composer-input"]
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"board-module board-workspaces-module"[39m
+      [33mdata-testid[39m=[32m"board-workspaces-module"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"board-toolbar"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ws-chip"[39m
+          [33mdata-testid[39m=[32m"ws-chip"[39m
+          [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+        [36m>[39m
+          [0mPe[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-title-wrap"[39m
+          [33mdata-testid[39m=[32m"board-title-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mMy Project Board[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m▾[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Board settings"[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"board-settings-btn"[39m
+          [33mtitle[39m=[32m"Board settings"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m✎[0m
+        [36m</button>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"view-picker-wrap"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Switch view"[39m
+            [33mclass[39m=[32m"view-picker"[39m
+            [33mdata-testid[39m=[32m"view-picker"[39m
+            [33mrole[39m=[32m"toolbar"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"vp-btn active"[39m
+              [33mdata-testid[39m=[32m"vp-btn-board"[39m
+              [33mdata-view[39m=[32m"board"[39m
+              [33mtitle[39m=[32m"Board"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-kanban"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mBoard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-table"[39m
+              [33mdata-view[39m=[32m"table"[39m
+              [33mtitle[39m=[32m"Table"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-grid"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTable[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+              [33mdata-view[39m=[32m"calendar"[39m
+              [33mtitle[39m=[32m"Calendar"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-calendar"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mCalendar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+              [33mdata-view[39m=[32m"dashboard"[39m
+              [33mtitle[39m=[32m"Dashboard"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-barchart"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mDashboard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+              [33mdata-view[39m=[32m"timeline"[39m
+              [33mtitle[39m=[32m"Timeline"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-gantt"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTimeline[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-map"[39m
+              [33mdata-view[39m=[32m"map"[39m
+              [33mtitle[39m=[32m"Map"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-globe"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mMap[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"board-count"[39m
+        [36m>[39m
+          [0m14[0m
+          [0m [0m
+          [0mcards[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"board-members"[39m
+          [33mdata-testid[39m=[32m"board-members"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"overview-toggle"[39m
+          [33mdisabled[3...
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-board-card-save-recovery/save-contract.test.tsx:25:16
+     23|  expect(rejected).toBeGreaterThan(0);
+     24|  expect(localStorage.getItem(key)).toBe(originalRaw);
+     25|  expect(screen.getByTestId('card-composer-input')).toHaveValue('Unsave…
+       |                ^
+     26|  expect(screen.getByRole('alert').textContent).toMatch(/not saved|unsa…
+     27| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  14:08:22
+   Duration  2.32s (transform 650ms, setup 286ms, collect 784ms, tests 172ms, environment 727ms, prepare 82ms)
+

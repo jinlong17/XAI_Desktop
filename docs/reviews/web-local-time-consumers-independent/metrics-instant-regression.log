@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-metric-tracker
+
+ ✓ src/__tests__/MetricTrackerModule.test.tsx (6 tests | 4 skipped) 411ms
+   ✓ editing keeps absolute measurement instants > retains 2026-11-01T09:30:00.000Z when only weight changes  320ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed | 4 skipped (6)
+   Start at  13:41:49
+   Duration  2.66s (transform 582ms, setup 652ms, collect 429ms, tests 411ms, environment 403ms, prepare 154ms)
+

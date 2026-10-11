@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"2962b49","browser":"Chrome/152.0.7977.83"}
+{"name":"departure","pass":false,"error":"AssertionError [ERR_ASSERTION]: Keyboard activation did not open Header editor"}

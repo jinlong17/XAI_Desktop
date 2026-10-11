@@ -1,0 +1,50 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full original-obligation reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "5ebbdd57f1b02e5cab36751bbefe6129ee97d2ae",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 1,
+    "review_cap": 3,
+    "prior_source_author_used": 1,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "POMO-04/CONTRACT-REVIEW",
+  "source_inputs": [
+    "59dae0b524e19e6d0c273174488b84d68fb323f3"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-pomo04-contract-review-r1/review.md",
+    "docs/reviews/audit-parallel-pomo04-contract-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full2900 immutable identities/exact2ADD/fixedparent876552e/original312 fields/order/39reversiblemodulelabels/933+6 evidence939/formal13,3,3,293. OriginalcompleteStop Reset departure savingmeaning/no silentlylostapparentlysavedrecord retained; acceptedpreference slice never closeswholePOMO04.",
+    "Apply established durable4868d0a/POMO03partialrecords/2962b49preference departure rules first; verify no genuineowner question. StopEnd early incomplete elapsedrecord excludingpausedtime; Reset unexpireddiscardscurrentonly, pending/expiredsettlement precedesdiscard, originalhistory untouched; normalaway runningdeadline/pausedelapsed/privateowner keep existingrules. New consequenceconfirmation identity/revision/epoch revalidation and postawaitdisposal/lateowner behavior mustbefinite technicalproposal notnewsettlementalgorithm.",
+    "Complete15 P04 businessoracles/11finiteconditionalpaths andprotectedactivehistorykeys/schema/sessionprotocol/accountmigration/Gates/host/coordinator/readonlydisplay. C1memoryEndvsC2durablependingvsC3historysavedcleanuperror truthful; allnormal/fullscreen ENZH actions/resetCancelzeroeffects+focus/pendingwording/nofalseempty/exporterrors/actualdisk/preclickscope/forceclose limits and alloriginalguardbehaviors. Missingpublicsource availability technicaldependency no implicitsharedscopegrant.",
+    "Full106 originalartifact census process/mode grouping/formal-probeunknown/permanentcap3 no reset/newpurpose justification; sourcebound exactacceptedruntime equivalence reuse, no duplicate rerun. FullcanonicalClockr2G1 E1-E25/E24/copies/before/qualification/independentimplementation/fixed/native/actualvendor/freshfullacceptance/rootreconcile/inventory and usablemethod/prerequisite gates preserved. ConditionalAPPROVED proposal or exactboundedREVISE nextauthor2, no runtime/repair/adoption/callerformalclosure."
+  ]
+}

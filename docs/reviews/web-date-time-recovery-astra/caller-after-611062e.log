@@ -1,0 +1,11 @@
+revision=611062e fixed_commit=611062ee2eb80727440c731c62a09626ca87d8eb
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-zMYyEE
+
+ ✓ docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx (4 tests) 306ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  01:39:26
+   Duration  2.03s (transform 415ms, setup 446ms, collect 311ms, tests 306ms, environment 474ms, prepare 146ms)

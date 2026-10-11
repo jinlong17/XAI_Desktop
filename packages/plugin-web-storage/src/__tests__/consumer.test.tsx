@@ -1,3 +1,4 @@
+import { testStorage } from "./accountTestHarness.js";
 /**
  * Consumer smoke tests — AC-E2E-1..3
  * Validates that downstream W2 rows can import and use the package.

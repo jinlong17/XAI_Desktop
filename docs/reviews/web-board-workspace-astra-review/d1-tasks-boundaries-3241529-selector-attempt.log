@@ -1,0 +1,3299 @@
+revision=3241529
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=false
+stale-detail {"failed":false,"preserved":false,"actual":"My unsaved title"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=true
+stale-detail {"failed":true,"preserved":false,"actual":"My unsaved title"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > queued missing detail target leaves the failed draft visibly recoverable
+missing-detail {"panel":false,"alert":false,"draftVisible":false}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx (16 tests | 6 failed) 1245ms
+   ✓ valid empty envelope remains empty, retains receipts, and avoids seed writes 59ms
+   ✓ invalid present null refuses normalization without loss 116ms
+   ✓ invalid present {bad refuses normalization without loss 78ms
+   ✓ invalid present {"bad":"shape"} refuses normalization without loss 71ms
+   ✓ invalid present {"format":"xai-command-state","version":1,"revision":1,"data":null,"receipts":{}} refuses normalization without loss 50ms
+   × detail stale draft must not overwrite observed newer target; prior quota=false 86ms
+     → expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+     → expected null not to be null
+   × detail stale draft must not overwrite observed newer target; prior quota=true 102ms
+     → expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+     → expected null not to be null
+   ✓ queued detail save checks its baseline, keeps latest form, and refuses external change 86ms
+   × queued missing detail target leaves the failed draft visibly recoverable 55ms
+     → expected null not to be null
+   ✓ actual detail duplicate save is pending once and preserves receipts 70ms
+   × old pending create completion keeps a newly opened composer draft 74ms
+     → Unable to find an accessible element with the role "button" and name "Save"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "New task":
+  [36m<h2[39m
+    [33mclass[39m=[32m"task-composer__title"[39m
+    [33mid[39m=[32m"task-composer-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Title":
+  [36m<input[39m
+    [33maria-required[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer__input"[39m
+    [33mid[39m=[32m"task-composer-title-input"[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m"Old create"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  radiogroup:
+
+  Name "Tag":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Tag"[39m
+    [33mclass[39m=[32m"task-composer__radio-row"[39m
+    [33mrole[39m=[32m"radiogroup"[39m
+  [36m/>[39m
+
+  Name "Bucket":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Bucket"[39m
+    [33mclass[39m=[32m"task-composer__radio-row"[39m
+    [33mrole[39m=[32m"radiogroup"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  radio:
+
+  Name "None":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Study":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Work":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Personal":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "TO-DO":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Other":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Overdue":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Next 7 Days":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Later":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "No Date":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "List":
+  [36m<select[39m
+    [33mclass[39m=[32m"task-composer__input"[39m
+    [33mid[39m=[32m"task-composer-list"[39m
+  [36m/>[39m
+
+  Name "Priority":
+  [36m<select[39m
+    [33mclass[39m=[32m"task-composer__input"[39m
+    [33mid[39m=[32m"task-composer-priority"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Inbox":
+  [36m<option[39m
+    [33mvalue[39m=[32m"inbox"[39m
+  [36m/>[39m
+
+  Name "Research Papers":
+  [36m<option[39m
+    [33mvalue[39m=[32m"research"[39m
+  [36m/>[39m
+
+  Name "Personal Life":
+  [36m<option[39m
+    [33mvalue[39m=[32m"personal"[39m
+  [36m/>[39m
+
+  Name "Career Planning":
+  [36m<option[39m
+    [33mvalue[39m=[32m"career"[39m
+  [36m/>[39m
+
+  Name "Reminders":
+  [36m<option[39m
+    [33mvalue[39m=[32m"reminders"[39m
+  [36m/>[39m
+
+  Name "Low":
+  [36m<option[39m
+    [33mvalue[39m=[32m"low"[39m
+  [36m/>[39m
+
+  Name "Normal":
+  [36m<option[39m
+    [33mvalue[39m=[32m"normal"[39m
+  [36m/>[39m
+
+  Name "High":
+  [36m<option[39m
+    [33mvalue[39m=[32m"high"[39m
+  [36m/>[39m
+
+  Name "Urgent":
+  [36m<option[39m
+    [33mvalue[39m=[32m"urgent"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  checkbox:
+
+  Name "Add a date":
+  [36m<input[39m
+    [33mid[39m=[32m"task-composer-with-date"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Cancel":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Add":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-composer__btn task-composer__btn--primary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<dialog[39m
+  [33maria-labelledby[39m=[32m"task-composer-title"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"task-composer"[39m
+  [33mopen[39m=[32m""[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"task-composer__content"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mclass[39m=[32m"task-composer__title"[39m
+      [33mid[39m=[32m"task-composer-title"[39m
+    [36m>[39m
+      [0mNew task[0m
+    [36m</h2>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__field"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"task-composer__label"[39m
+        [33mfor[39m=[32m"task-composer-title-input"[39m
+      [36m>[39m
+        [0mTitle[0m
+      [36m</label>[39m
+      [36m<input[39m
+        [33maria-required[39m=[32m"true"[39m
+        [33mclass[39m=[32m"task-composer__input"[39m
+        [33mid[39m=[32m"task-composer-title-input"[39m
+        [33mtype[39m=[32m"text"[39m
+        [33mvalue[39m=[32m"Old create"[39m
+      [36m/>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__field"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"task-composer__label"[39m
+      [36m>[39m
+        [0mTag[0m
+      [36m</span>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Tag"[39m
+        [33mclass[39m=[32m"task-composer__radio-row"[39m
+        [33mrole[39m=[32m"radiogroup"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mNone[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mStudy[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mWork[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mPersonal[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mTO-DO[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mOther[0m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__field"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"task-composer__label"[39m
+        [33mfor[39m=[32m"task-composer-list"[39m
+      [36m>[39m
+        [0mList[0m
+      [36m</label>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"task-composer__input"[39m
+        [33mid[39m=[32m"task-composer-list"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"inbox"[39m
+        [36m>[39m
+          [0mInbox[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"research"[39m
+        [36m>[39m
+          [0mResearch Papers[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"personal"[39m
+        [36m>[39m
+          [0mPersonal Life[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"career"[39m
+        [36m>[39m
+          [0mCareer Planning[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"reminders"[39m
+        [36m>[39m
+          [0mReminders[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__field"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"task-composer__label"[39m
+        [33mfor[39m=[32m"task-composer-priority"[39m
+      [36m>[39m
+        [0mPriority[0m
+      [36m</label>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"task-composer__input"[39m
+        [33mid[39m=[32m"task-composer-priority"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"low"[39m
+        [36m>[39m
+          [0mLow[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"normal"[39m
+        [36m>[39m
+          [0mNormal[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"high"[39m
+        [36m>[39m
+          [0mHigh[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"urgent"[39m
+        [36m>[39m
+          [0mUrgent[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__field"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"task-composer__label"[39m
+      [36m>[39m
+        [0mBucket[0m
+      [36m</span>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Bucket"[39m
+        [33mclass[39m=[32m"task-composer__radio-row"[39m
+        [33mrole[39m=[32m"radiogroup"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mOverdue[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mNext 7 Days[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mLater[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mNo Date[0m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__field task-composer__field--inline"[39m
+    [36m>[39m
+      [36m<input[39m
+        [33mid[39m=[32m"task-composer-with-date"[39m
+        [33mtype[39m=[32m"checkbox"[39m
+      [36m/>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"task-composer__label"[39m
+        [33mfor[39m=[32m"task-composer-with-date"[39m
+      [36m>[39m
+        [0mAdd a date[0m
+      [36m</label>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"task-composer__btn"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mCancel[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"task-composer__btn task-composer__btn--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mAdd[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</dialog>[39m
+   × composer catches actual rejected Promise and retains retryable draft 26ms
+     → Unable to find an accessible element with the role "button" and name "Save"
+
+Here are the accessible roles:
+
+  dialog:
+
+  Name "New task":
+  [36m<dialog[39m
+    [33maria-labelledby[39m=[32m"task-composer-title"[39m
+    [33maria-modal[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer"[39m
+    [33mopen[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "New task":
+  [36m<h2[39m
+    [33mclass[39m=[32m"task-composer__title"[39m
+    [33mid[39m=[32m"task-composer-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Title":
+  [36m<input[39m
+    [33maria-required[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer__input"[39m
+    [33mid[39m=[32m"task-composer-title-input"[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m"Retained"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  radiogroup:
+
+  Name "Tag":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Tag"[39m
+    [33mclass[39m=[32m"task-composer__radio-row"[39m
+    [33mrole[39m=[32m"radiogroup"[39m
+  [36m/>[39m
+
+  Name "Bucket":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Bucket"[39m
+    [33mclass[39m=[32m"task-composer__radio-row"[39m
+    [33mrole[39m=[32m"radiogroup"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  radio:
+
+  Name "None":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Study":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Work":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Personal":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "TO-DO":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Other":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Overdue":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Next 7 Days":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Later":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "No Date":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "List":
+  [36m<select[39m
+    [33mclass[39m=[32m"task-composer__input"[39m
+    [33mid[39m=[32m"task-composer-list"[39m
+  [36m/>[39m
+
+  Name "Priority":
+  [36m<select[39m
+    [33mclass[39m=[32m"task-composer__input"[39m
+    [33mid[39m=[32m"task-composer-priority"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Inbox":
+  [36m<option[39m
+    [33mvalue[39m=[32m"inbox"[39m
+  [36m/>[39m
+
+  Name "Research Papers":
+  [36m<option[39m
+    [33mvalue[39m=[32m"research"[39m
+  [36m/>[39m
+
+  Name "Personal Life":
+  [36m<option[39m
+    [33mvalue[39m=[32m"personal"[39m
+  [36m/>[39m
+
+  Name "Career Planning":
+  [36m<option[39m
+    [33mvalue[39m=[32m"career"[39m
+  [36m/>[39m
+
+  Name "Reminders":
+  [36m<option[39m
+    [33mvalue[39m=[32m"reminders"[39m
+  [36m/>[39m
+
+  Name "Low":
+  [36m<option[39m
+    [33mvalue[39m=[32m"low"[39m
+  [36m/>[39m
+
+  Name "Normal":
+  [36m<option[39m
+    [33mvalue[39m=[32m"normal"[39m
+  [36m/>[39m
+
+  Name "High":
+  [36m<option[39m
+    [33mvalue[39m=[32m"high"[39m
+  [36m/>[39m
+
+  Name "Urgent":
+  [36m<option[39m
+    [33mvalue[39m=[32m"urgent"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Cancel":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Add":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-composer__btn task-composer__btn--primary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<dialog[39m
+      [33maria-labelledby[39m=[32m"task-composer-title"[39m
+      [33maria-modal[39m=[32m"true"[39m
+      [33mclass[39m=[32m"task-composer"[39m
+      [33mopen[39m=[32m""[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"task-composer__content"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"task-composer__title"[39m
+          [33mid[39m=[32m"task-composer-title"[39m
+        [36m>[39m
+          [0mNew task[0m
+        [36m</h2>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"task-composer__field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"task-composer__label"[39m
+            [33mfor[39m=[32m"task-composer-title-input"[39m
+          [36m>[39m
+            [0mTitle[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33maria-required[39m=[32m"true"[39m
+            [33mclass[39m=[32m"task-composer__input"[39m
+            [33mid[39m=[32m"task-composer-title-input"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Retained"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"task-composer__field"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"task-composer__label"[39m
+          [36m>[39m
+            [0mTag[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Tag"[39m
+            [33mclass[39m=[32m"task-composer__radio-row"[39m
+            [33mrole[39m=[32m"radiogroup"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNone[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mStudy[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mWork[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mPersonal[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTO-DO[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mOther[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"task-composer__field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"task-composer__label"[39m
+            [33mfor[39m=[32m"task-composer-list"[39m
+          [36m>[39m
+            [0mList[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"task-composer__input"[39m
+            [33mid[39m=[32m"task-composer-list"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"inbox"[39m
+            [36m>[39m
+              [0mInbox[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"research"[39m
+            [36m>[39m
+              [0mResearch Papers[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"personal"[39m
+            [36m>[39m
+              [0mPersonal Life[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"career"[39m
+            [36m>[39m
+              [0mCareer Planning[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"reminders"[39m
+            [36m>[39m
+              [0mReminders[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"task-composer__field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"task-composer__label"[39m
+            [33mfor[39m=[32m"task-composer-priority"[39m
+          [36m>[39m
+            [0mPriority[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"task-composer__input"[39m
+            [33mid[39m=[32m"task-composer-priority"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"low"[39m
+            [36m>[39m
+              [0mLow[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"normal"[39m
+            [36m>[39m
+              [0mNormal[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"high"[39m
+            [36m>[39m
+              [0mHigh[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"urgent"[39m
+            [36m>[39m
+              [0mUrgent[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"task-composer__field"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"task-composer__label"[39m
+          [36m>[39m
+            [0mBucket[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Bucket"[39m
+            [33mclass[39m=[32m"task-composer__radio-row"[39m
+            [33mrole[39m=[32m"radiogroup"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mOverdue[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNext 7 Days[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mLater[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNo Date[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"task-composer__actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"task-composer__btn"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mCancel[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"task-composer__btn task-composer__btn--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAdd[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</dialog>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   ✓ queued old-owner detail save refuses both account records 59ms
+   ✓ actual list cascade waits for Task write and preserves metadata on failure 85ms
+   ✓ actual tag cascade waits for Task write and preserves metadata on failure 85ms
+   × old bulk-delete completion must preserve newer selection and detail session 140ms
+     → Unable to find an accessible element with the role "button" and name "Select task"
+
+Here are the accessible roles:
+
+  navigation:
+
+  Name "All":
+  [36m<nav[39m
+    [33maria-label[39m=[32m"All"[39m
+    [33mclass[39m=[32m"module-sidebar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "All 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Today 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Tomorrow 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Next 7 Days 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Inbox 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Summary 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "New list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"New list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "All lists 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "inbox Inbox 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #64748b;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "book Research Papers 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #3b82f6;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "home Personal Life 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #f97316;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "briefcase Career Planning 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #14b8a6;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "bell Reminders 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #8b5cf6;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "New tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"New tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "All tags 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Study 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #3b82f6;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Work 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #14b8a6;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Personal 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #f97316;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "TO-DO 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #8b5cf6;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Other 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #64748b;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Completed":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Won't Do":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Trash":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "New task":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-primary-action"[39m
+  [36m/>[39m
+
+  Name "All 2":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-smart-chip"[39m
+    [33mdata-active[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "Today 0":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-smart-chip"[39m
+    [33mdata-active[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Tomorrow 0":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-smart-chip"[39m
+    [33mdata-active[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Next few days 0":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-smart-chip"[39m
+    [33mdata-active[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Inbox 2":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-smart-chip"[39m
+    [33mdata-active[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Overview 2":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-smart-chip"[39m
+    [33mdata-active[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Select task Original Study inbox Inbox":
+  [36m<div[39m
+    [33mclass[39m=[32m"task-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Select task Second Study inbox Inbox":
+  [36m<div[39m
+    [33mclass[39m=[32m"task-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"tasks-main"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"module-head tasks-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"task-col-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"task-col-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"task-col-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"task-col-head"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "All tasks":
+  [36m<h1[39m
+    [33mclass[39m=[32m"module-title"[39m
+  [36m/>[39m
+
+  Name "Today / Overdue":
+  [36m<h2 />[39m
+
+  Name "Next 7 Days":
+  [36m<h2 />[39m
+
+  Name "Later":
+  [36m<h2 />[39m
+
+  Name "No Date":
+  [36m<h2 />[39m
+
+  --------------------------------------------------
+  checkbox:
+
+  Name "":
+  [36m<span[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"cbx"[39m
+    [33mrole[39m=[32m"checkbox"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Select task":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Select task"[39m
+    [33mclass[39m=[32m"task-select"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<span[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"cbx"[39m
+    [33mrole[39m=[32m"checkbox"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Select task":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Select task"[39m
+    [33mclass[39m=[32m"task-select"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"module module-tasks"[39m
+    [36m>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"All"[39m
+        [33mclass[39m=[32m"module-sidebar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"sidebar-section"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"true"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h7v2H2v-2z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mAll[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M5 1a1 1 0 011 1v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 012-2h1V2a1 1 0 011-1zm7 4H4v7h8V5z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mToday[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 1a7 7 0 100 14A7 7 0 008 1zm1 4a1 1 0 10-2 0v3.586L5.707 10.293a1 1 0 001.414 1.414l2-2A1 1 0 009 9V5z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mTomorrow[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3a1 1 0 000 2h9.586L11.293 6.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414L12.586 3H3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mNext 7 Days[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 3a1 1 0 011-1h10a1 1 0 011 1v6.586l-1.293-1.293a1 1 0 00-1.414 1.414L14 12.414V14H2v-1.586l2.707-2.707a1 1 0 00-1.414-1.414L2 9.586V3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mInbox[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 11h12v2H2v-2zm0-4h8v2H2V7zm0-4h12v2H2V3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mSummary[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+     ...
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 10 passed (16)
+   Start at  17:08:37
+   Duration  2.29s (transform 222ms, setup 0ms, collect 375ms, tests 1.24s, environment 231ms, prepare 54ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > invalid present null refuses normalization without loss
+[plugin-web-storage] decode failed for xai_task_cols: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/plugin-web-storage/src/internal/storage.ts:107:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at TasksModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/xai-web-tasks/src/TasksModule.tsx:74:21)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > invalid present {bad refuses normalization without loss
+[plugin-web-storage] decode failed for xai_task_cols: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/plugin-web-storage/src/internal/storage.ts:107:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at TasksModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/xai-web-tasks/src/TasksModule.tsx:74:21)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > invalid present {"bad":"shape"} refuses normalization without loss
+[plugin-web-tasks] usePref('xai_task_cols') returned non-array shape — falling back to seed.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > invalid present {"format":"xai-command-state","version":1,"revision":1,"data":null,"receipts":{}} refuses normalization without loss
+[plugin-web-storage] decode failed for xai_task_cols: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/plugin-web-storage/src/internal/storage.ts:107:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at TasksModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-92o5Ha/packages/xai-web-tasks/src/TasksModule.tsx:74:21)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=false
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=true
+AssertionError: expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+
+Expected: "{"format":"xai-command-state","version":1,"revision":9,"data":[{"id":"overdue","key":"overdue","count":0,"tasks":[]},{"id":"next7","key":"next_7_days","count":0,"tasks":[]},{"id":"later","key":"later","count":0,"tasks":[]},{"id":"nodate","key":"no_date","count":2,"tasks":[{"id":"t1","title":{"en":"External title","zh":"External title"},"tag":"study","tags":["study"],"priority":"normal","listId":"inbox"},{"id":"t2","title":{"en":"Second","zh":"Second"},"tag":"study","tags":["study"],"priority":"normal","listId":"inbox"}]}],"receipts":{"prior":{"operationVersion":1,"signature":"retained","result":{"ok":true,"targetId":"t1"},"committedAt":"2026-09-09T00:00:00Z"}}}"
+Received: "{"format":"xai-command-state","version":1,"revision":10,"data":[{"id":"overdue","key":"overdue","count":0,"tasks":[]},{"id":"next7","key":"next_7_days","count":0,"tasks":[]},{"id":"later","key":"later","count":0,"tasks":[]},{"id":"nodate","key":"no_date","count":2,"tasks":[{"id":"t1","title":{"en":"My unsaved title","zh":"My unsaved title"},"tag":"study","tags":["study"],"priority":"normal","listId":"inbox","done":false,"notes":""},{"id":"t2","title":{"en":"Second","zh":"Second"},"tag":"study","tags":["study"],"priority":"normal","listId":"inbox"}]}],"receipts":{"prior":{"operationVersion":1,"signature":"retained","result":{"ok":true,"targetId":"t1"},"committedAt":"2026-09-09T00:00:00Z"}}}"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:30:357
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=false
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=true
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:30:416
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > queued missing detail target leaves the failed draft visibly recoverable
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:33:602
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > old pending create completion keeps a newly opened composer draft
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Save"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "New task":
+  [36m<h2[39m
+    [33mclass[39m=[32m"task-composer__title"[39m
+    [33mid[39m=[32m"task-composer-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Title":
+  [36m<input[39m
+    [33maria-required[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer__input"[39m
+    [33mid[39m=[32m"task-composer-title-input"[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m"Old create"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  radiogroup:
+
+  Name "Tag":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Tag"[39m
+    [33mclass[39m=[32m"task-composer__radio-row"[39m
+    [33mrole[39m=[32m"radiogroup"[39m
+  [36m/>[39m
+
+  Name "Bucket":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Bucket"[39m
+    [33mclass[39m=[32m"task-composer__radio-row"[39m
+    [33mrole[39m=[32m"radiogroup"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  radio:
+
+  Name "None":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Study":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Work":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Personal":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "TO-DO":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Other":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Overdue":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Next 7 Days":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Later":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "No Date":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "List":
+  [36m<select[39m
+    [33mclass[39m=[32m"task-composer__input"[39m
+    [33mid[39m=[32m"task-composer-list"[39m
+  [36m/>[39m
+
+  Name "Priority":
+  [36m<select[39m
+    [33mclass[39m=[32m"task-composer__input"[39m
+    [33mid[39m=[32m"task-composer-priority"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Inbox":
+  [36m<option[39m
+    [33mvalue[39m=[32m"inbox"[39m
+  [36m/>[39m
+
+  Name "Research Papers":
+  [36m<option[39m
+    [33mvalue[39m=[32m"research"[39m
+  [36m/>[39m
+
+  Name "Personal Life":
+  [36m<option[39m
+    [33mvalue[39m=[32m"personal"[39m
+  [36m/>[39m
+
+  Name "Career Planning":
+  [36m<option[39m
+    [33mvalue[39m=[32m"career"[39m
+  [36m/>[39m
+
+  Name "Reminders":
+  [36m<option[39m
+    [33mvalue[39m=[32m"reminders"[39m
+  [36m/>[39m
+
+  Name "Low":
+  [36m<option[39m
+    [33mvalue[39m=[32m"low"[39m
+  [36m/>[39m
+
+  Name "Normal":
+  [36m<option[39m
+    [33mvalue[39m=[32m"normal"[39m
+  [36m/>[39m
+
+  Name "High":
+  [36m<option[39m
+    [33mvalue[39m=[32m"high"[39m
+  [36m/>[39m
+
+  Name "Urgent":
+  [36m<option[39m
+    [33mvalue[39m=[32m"urgent"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  checkbox:
+
+  Name "Add a date":
+  [36m<input[39m
+    [33mid[39m=[32m"task-composer-with-date"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Cancel":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Add":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-composer__btn task-composer__btn--primary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<dialog[39m
+  [33maria-labelledby[39m=[32m"task-composer-title"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"task-composer"[39m
+  [33mopen[39m=[32m""[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"task-composer__content"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mclass[39m=[32m"task-composer__title"[39m
+      [33mid[39m=[32m"task-composer-title"[39m
+    [36m>[39m
+      [0mNew task[0m
+    [36m</h2>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__field"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"task-composer__label"[39m
+        [33mfor[39m=[32m"task-composer-title-input"[39m
+      [36m>[39m
+        [0mTitle[0m
+      [36m</label>[39m
+      [36m<input[39m
+        [33maria-required[39m=[32m"true"[39m
+        [33mclass[39m=[32m"task-composer__input"[39m
+        [33mid[39m=[32m"task-composer-title-input"[39m
+        [33mtype[39m=[32m"text"[39m
+        [33mvalue[39m=[32m"Old create"[39m
+      [36m/>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__field"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"task-composer__label"[39m
+      [36m>[39m
+        [0mTag[0m
+      [36m</span>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Tag"[39m
+        [33mclass[39m=[32m"task-composer__radio-row"[39m
+        [33mrole[39m=[32m"radiogroup"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mNone[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mStudy[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mWork[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mPersonal[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mTO-DO[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mOther[0m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__field"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"task-composer__label"[39m
+        [33mfor[39m=[32m"task-composer-list"[39m
+      [36m>[39m
+        [0mList[0m
+      [36m</label>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"task-composer__input"[39m
+        [33mid[39m=[32m"task-composer-list"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"inbox"[39m
+        [36m>[39m
+          [0mInbox[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"research"[39m
+        [36m>[39m
+          [0mResearch Papers[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"personal"[39m
+        [36m>[39m
+          [0mPersonal Life[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"career"[39m
+        [36m>[39m
+          [0mCareer Planning[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"reminders"[39m
+        [36m>[39m
+          [0mReminders[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__field"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"task-composer__label"[39m
+        [33mfor[39m=[32m"task-composer-priority"[39m
+      [36m>[39m
+        [0mPriority[0m
+      [36m</label>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"task-composer__input"[39m
+        [33mid[39m=[32m"task-composer-priority"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"low"[39m
+        [36m>[39m
+          [0mLow[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"normal"[39m
+        [36m>[39m
+          [0mNormal[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"high"[39m
+        [36m>[39m
+          [0mHigh[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"urgent"[39m
+        [36m>[39m
+          [0mUrgent[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__field"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"task-composer__label"[39m
+      [36m>[39m
+        [0mBucket[0m
+      [36m</span>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Bucket"[39m
+        [33mclass[39m=[32m"task-composer__radio-row"[39m
+        [33mrole[39m=[32m"radiogroup"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mOverdue[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mNext 7 Days[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mLater[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33mclass[39m=[32m"task-composer__btn"[39m
+          [33mrole[39m=[32m"radio"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mNo Date[0m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__field task-composer__field--inline"[39m
+    [36m>[39m
+      [36m<input[39m
+        [33mid[39m=[32m"task-composer-with-date"[39m
+        [33mtype[39m=[32m"checkbox"[39m
+      [36m/>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"task-composer__label"[39m
+        [33mfor[39m=[32m"task-composer-with-date"[39m
+      [36m>[39m
+        [0mAdd a date[0m
+      [36m</label>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"task-composer__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"task-composer__btn"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mCancel[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"task-composer__btn task-composer__btn--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mAdd[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</dialog>[39m
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:35:377
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > composer catches actual rejected Promise and retains retryable draft
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Save"
+
+Here are the accessible roles:
+
+  dialog:
+
+  Name "New task":
+  [36m<dialog[39m
+    [33maria-labelledby[39m=[32m"task-composer-title"[39m
+    [33maria-modal[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer"[39m
+    [33mopen[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "New task":
+  [36m<h2[39m
+    [33mclass[39m=[32m"task-composer__title"[39m
+    [33mid[39m=[32m"task-composer-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Title":
+  [36m<input[39m
+    [33maria-required[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer__input"[39m
+    [33mid[39m=[32m"task-composer-title-input"[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m"Retained"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  radiogroup:
+
+  Name "Tag":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Tag"[39m
+    [33mclass[39m=[32m"task-composer__radio-row"[39m
+    [33mrole[39m=[32m"radiogroup"[39m
+  [36m/>[39m
+
+  Name "Bucket":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Bucket"[39m
+    [33mclass[39m=[32m"task-composer__radio-row"[39m
+    [33mrole[39m=[32m"radiogroup"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  radio:
+
+  Name "None":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Study":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Work":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Personal":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "TO-DO":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Other":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Overdue":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Next 7 Days":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Later":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "No Date":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "List":
+  [36m<select[39m
+    [33mclass[39m=[32m"task-composer__input"[39m
+    [33mid[39m=[32m"task-composer-list"[39m
+  [36m/>[39m
+
+  Name "Priority":
+  [36m<select[39m
+    [33mclass[39m=[32m"task-composer__input"[39m
+    [33mid[39m=[32m"task-composer-priority"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Inbox":
+  [36m<option[39m
+    [33mvalue[39m=[32m"inbox"[39m
+  [36m/>[39m
+
+  Name "Research Papers":
+  [36m<option[39m
+    [33mvalue[39m=[32m"research"[39m
+  [36m/>[39m
+
+  Name "Personal Life":
+  [36m<option[39m
+    [33mvalue[39m=[32m"personal"[39m
+  [36m/>[39m
+
+  Name "Career Planning":
+  [36m<option[39m
+    [33mvalue[39m=[32m"career"[39m
+  [36m/>[39m
+
+  Name "Reminders":
+  [36m<option[39m
+    [33mvalue[39m=[32m"reminders"[39m
+  [36m/>[39m
+
+  Name "Low":
+  [36m<option[39m
+    [33mvalue[39m=[32m"low"[39m
+  [36m/>[39m
+
+  Name "Normal":
+  [36m<option[39m
+    [33mvalue[39m=[32m"normal"[39m
+  [36m/>[39m
+
+  Name "High":
+  [36m<option[39m
+    [33mvalue[39m=[32m"high"[39m
+  [36m/>[39m
+
+  Name "Urgent":
+  [36m<option[39m
+    [33mvalue[39m=[32m"urgent"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Cancel":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-composer__btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Add":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-composer__btn task-composer__btn--primary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<dialog[39m
+      [33maria-labelledby[39m=[32m"task-composer-title"[39m
+      [33maria-modal[39m=[32m"true"[39m
+      [33mclass[39m=[32m"task-composer"[39m
+      [33mopen[39m=[32m""[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"task-composer__content"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"task-composer__title"[39m
+          [33mid[39m=[32m"task-composer-title"[39m
+        [36m>[39m
+          [0mNew task[0m
+        [36m</h2>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"task-composer__field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"task-composer__label"[39m
+            [33mfor[39m=[32m"task-composer-title-input"[39m
+          [36m>[39m
+            [0mTitle[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33maria-required[39m=[32m"true"[39m
+            [33mclass[39m=[32m"task-composer__input"[39m
+            [33mid[39m=[32m"task-composer-title-input"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Retained"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"task-composer__field"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"task-composer__label"[39m
+          [36m>[39m
+            [0mTag[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Tag"[39m
+            [33mclass[39m=[32m"task-composer__radio-row"[39m
+            [33mrole[39m=[32m"radiogroup"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNone[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mStudy[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mWork[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mPersonal[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTO-DO[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mOther[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"task-composer__field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"task-composer__label"[39m
+            [33mfor[39m=[32m"task-composer-list"[39m
+          [36m>[39m
+            [0mList[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"task-composer__input"[39m
+            [33mid[39m=[32m"task-composer-list"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"inbox"[39m
+            [36m>[39m
+              [0mInbox[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"research"[39m
+            [36m>[39m
+              [0mResearch Papers[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"personal"[39m
+            [36m>[39m
+              [0mPersonal Life[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"career"[39m
+            [36m>[39m
+              [0mCareer Planning[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"reminders"[39m
+            [36m>[39m
+              [0mReminders[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"task-composer__field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"task-composer__label"[39m
+            [33mfor[39m=[32m"task-composer-priority"[39m
+          [36m>[39m
+            [0mPriority[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"task-composer__input"[39m
+            [33mid[39m=[32m"task-composer-priority"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"low"[39m
+            [36m>[39m
+              [0mLow[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"normal"[39m
+            [36m>[39m
+              [0mNormal[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"high"[39m
+            [36m>[39m
+              [0mHigh[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"urgent"[39m
+            [36m>[39m
+              [0mUrgent[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"task-composer__field"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"task-composer__label"[39m
+          [36m>[39m
+            [0mBucket[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Bucket"[39m
+            [33mclass[39m=[32m"task-composer__radio-row"[39m
+            [33mrole[39m=[32m"radiogroup"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mOverdue[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNext 7 Days[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mLater[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33mclass[39m=[32m"task-composer__btn task-composer__btn--selected"[39m
+              [33mrole[39m=[32m"radio"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNo Date[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"task-composer__actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"task-composer__btn"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mCancel[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"task-composer__btn task-composer__btn--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAdd[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</dialog>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:36:438
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > old bulk-delete completion must preserve newer selection and detail session
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Select task"
+
+Here are the accessible roles:
+
+  navigation:
+
+  Name "All":
+  [36m<nav[39m
+    [33maria-label[39m=[32m"All"[39m
+    [33mclass[39m=[32m"module-sidebar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "All 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Today 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Tomorrow 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Next 7 Days 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Inbox 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Summary 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "New list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"New list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "All lists 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "inbox Inbox 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #64748b;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "book Research Papers 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #3b82f6;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "home Personal Life 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #f97316;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "briefcase Career Planning 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #14b8a6;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "bell Reminders 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #8b5cf6;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete list":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete list"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "New tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"New tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "All tags 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Study 2":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #3b82f6;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Work 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #14b8a6;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Personal 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #f97316;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "TO-DO 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #8b5cf6;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Other 0":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row manageable-row has-row-accent"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mstyle[39m=[32m"--row-accent: #64748b;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Edit tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edit tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Delete tag":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete tag"[39m
+    [33mclass[39m=[32m"sidebar-mini-btn"[39m
+  [36m/>[39m
+
+  Name "Completed":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Won't Do":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Trash":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "New task":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-primary-action"[39m
+  [36m/>[39m
+
+  Name "All 2":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-smart-chip"[39m
+    [33mdata-active[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "Today 0":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-smart-chip"[39m
+    [33mdata-active[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Tomorrow 0":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-smart-chip"[39m
+    [33mdata-active[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Next few days 0":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-smart-chip"[39m
+    [33mdata-active[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Inbox 2":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-smart-chip"[39m
+    [33mdata-active[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Overview 2":
+  [36m<button[39m
+    [33mclass[39m=[32m"task-smart-chip"[39m
+    [33mdata-active[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Select task Original Study inbox Inbox":
+  [36m<div[39m
+    [33mclass[39m=[32m"task-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Select task Second Study inbox Inbox":
+  [36m<div[39m
+    [33mclass[39m=[32m"task-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"tasks-main"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"module-head tasks-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"task-col-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"task-col-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"task-col-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"task-col-head"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "All tasks":
+  [36m<h1[39m
+    [33mclass[39m=[32m"module-title"[39m
+  [36m/>[39m
+
+  Name "Today / Overdue":
+  [36m<h2 />[39m
+
+  Name "Next 7 Days":
+  [36m<h2 />[39m
+
+  Name "Later":
+  [36m<h2 />[39m
+
+  Name "No Date":
+  [36m<h2 />[39m
+
+  --------------------------------------------------
+  checkbox:
+
+  Name "":
+  [36m<span[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"cbx"[39m
+    [33mrole[39m=[32m"checkbox"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Select task":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Select task"[39m
+    [33mclass[39m=[32m"task-select"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<span[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33mclass[39m=[32m"cbx"[39m
+    [33mrole[39m=[32m"checkbox"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Select task":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Select task"[39m
+    [33mclass[39m=[32m"task-select"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"module module-tasks"[39m
+    [36m>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"All"[39m
+        [33mclass[39m=[32m"module-sidebar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"sidebar-section"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"true"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h7v2H2v-2z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mAll[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M5 1a1 1 0 011 1v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 012-2h1V2a1 1 0 011-1zm7 4H4v7h8V5z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mToday[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 1a7 7 0 100 14A7 7 0 008 1zm1 4a1 1 0 10-2 0v3.586L5.707 10.293a1 1 0 001.414 1.414l2-2A1 1 0 009 9V5z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mTomorrow[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3a1 1 0 000 2h9.586L11.293 6.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414L12.586 3H3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mNext 7 Days[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 3a1 1 0 011-1h10a1 1 0 011 1v6.586l-1.293-1.293a1 1 0 00-1.414 1.414L14 12.414V14H2v-1.586l2.707-2.707a1 1 0 00-1.414-1.414L2 9.586V3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mInbox[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 11h12v2H2v-2zm0-4h8v2H2V7zm0-4h12v2H2V3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mSummary[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+     ...
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:41:130
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯

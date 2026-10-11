@@ -1,0 +1,100 @@
+{
+  "id": "AI-05/SOURCE-DISCOVERY1",
+  "workflow": "B",
+  "module": "web",
+  "role": "fresh bounded readonly complete AI05 attachment and voice capability discovery, no contract decision or implementation",
+  "model": "gpt-6-luna",
+  "fixed_input": "ed5b9ad6789beebfe1b1df4e7d554312c208dafb",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "ed5b9ad6789beebfe1b1df4e7d554312c208dafb",
+    "acd21f9b15a735e2202ca9553aff54b3e3b46e17"
+  ],
+  "original_item": {
+    "id": "AI-05",
+    "priority": "P2",
+    "kind": "文档",
+    "action": "附件和语音未闭环时禁用或标明未支持",
+    "acceptance": "文件chip不暗示内容已发送；真实实现转JOB，不把metadata当附件处理",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "03-web-data-ai-settings.md;05-visual-ux-audit.md",
+    "primary_workflow": "B",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "AI-05",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [],
+    "source_section": "AI",
+    "acceptance_evidence": {
+      "business_acceptance": "文件chip不暗示内容已发送；真实实现转JOB，不把metadata当附件处理",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "AI-05/prepare",
+      "AI-05/contract-review",
+      "AI-05/before",
+      "AI-05/implement",
+      "AI-05/verify",
+      "AI-05/accept",
+      "AI-05/reconcile",
+      "AI-05/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  },
+  "allowed_files": [
+    "docs/reviews/audit-parallel-ai05-source-discovery-r1/discovery.md",
+    "docs/reviews/audit-parallel-ai05-source-discovery-r1/inputs.sha256"
+  ],
+  "protected": [
+    "all nonallowed files",
+    "product/tests/runner/CSS/storage/schema/account/host/config/lockfile",
+    "all original contracts/methods/hashes/failurelogs/evidence",
+    "globalcontroller/ledgers/inventory/otherwts",
+    "secrets/credentials/privateuserdata",
+    "push/merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "source_discovery_iteration": 1,
+    "source_discovery_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "productbehavior without existing rule",
+    "runtime/privatecredential/protectedwrite need"
+  ],
+  "no_children": true,
+  "acceptance": [
+    "Preserve entire original AI-05 action/acceptance and evidence obligations: unsupported attachment/voice must be disabled or truthfully unsupported; filenames metadata never imply contents sent; real implementation stays JOB gated. Do NOTinvent multimodal/upload/voice/BYOK/provider/retention decision. Discovery source-only not valid runtime before/contract/fullacceptance. Existing acceptedcaller evidence not rerun. Moduleweb notadmin/app/sync/pausedplugin.",
+    "Read whole actual AI package source and owning PRD/test/dev_log; follow actual import/call chain from fileinput/attach metadata/chip/draft/recovery/export/message persist/request builder/provider adapter/response rendering to prove exact source capabilities and omissions, plus voice preference/button handler, actual microphone/recording/transcription/upload support or absence. Distinguish browser local filecontent, name metadata, recoveryexport, provider request payload and actual consumption; no provider/API invocation or credentials. Include language/accessibility/error/disabled states and meaningful finite candidate future files/affected boundaries; clarify actual filenames survive/export compatibility without changing storage schema. Existing device/account/generation/save/departure/confirmation and conversation history source clauses retain all policies. Related AI02 ownership/REL06/AI04/AI06/AI07/AI08 dependencies listed, not repaired or ownership merged.",
+    "Provide exact fixed SHA/path/line/code evidence, complete source and relevant existing test/fixture/history inventory, current vs historical report labels, and any missing source/credentials/product decisions as unknown/minimumquestion candidates rather than inventing answer. Finite next contract/independent review/fullvalid before/implementation/fixedintegratedaffected/nativeUI/trustedkeys/visual/G1/actualvendor/fulloriginalcalleraccept/rootappendinventory plan only; no grants or old-purpose budgetreset. Keep known historical unit/refusal/probe counts; unknown older counts not0. No implementing measurement/runner/code or changing formal312states.",
+    "All required inputs and complete source-output MDs at EVERYaccessed source/integration/fixed/actualdispatchparent SHA explicitly prebound BEFORE concludingchecker access. Actual-parent taskcard/globalmetadata distinct from frozen product/evidence. Exact原312orderedrows/originalninefields/39literal reversiblelabels/939refs/13,3,3,293 retained; normalizedmodule versus original_module distinct; nonemptygate150 vs118gatedpolicy not an inventedguard. P0 runtime unchanged vs fourTT08 accepted owningdocs separately.",
+    "One meaningful source-discovery integrity/coverage static1, not whitespace masquerade; source-derived hash/schema/trace coverage no guessed cardinality/minsize. Readvalidate ALLinputs and construct BOTHcompletebuffers BEFOREANYwrite. ActualstaticfailureSTOP/no retry/independent nextactor within cap; pretool/read-only discovery errors disclosed distinct. Ownedprocess stdin/EOF/stdoutstderr/thread cleanup evenfail and fullactualsessionexitdrain. ExacttwoNEWADD only, one exact-staged hook-disabled realnewline Why/What/Scope/Risk/Docs/Tests commit, cleanHandoff SHA/parent/hashes/process/commands/cost/unrun. Nochildren/push/fetch/sync/runtime."
+  ]
+}

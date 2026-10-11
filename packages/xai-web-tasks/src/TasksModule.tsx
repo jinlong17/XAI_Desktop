@@ -1,3 +1,6 @@
+import { TaskSaveFailure } from "./TaskSaveFailure.js";
+import { groupTasksByDueDate } from "./internal/groupTasksByDueDate.js";
+import { useLocalDayClock } from "@repo/plugin-web-tokens";
 /**
  * TasksModule — root component for the Tasks module.
  *
@@ -5,7 +8,7 @@
  * stored separately in xai_pref_task_lists and xai_pref_task_tags.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type {
   BucketId,
   NewTaskDraft,
@@ -20,7 +23,7 @@ import type {
   TasksModuleProps,
 } from "./types.js";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { getPrefAutosave, setPrefAutosave, usePref } from "@repo/plugin-web-storage";
+import { accountScope, getPrefAutosave, mutateCanonicalDataset, setPrefAutosave, usePref } from "@repo/plugin-web-storage";
 import { SEED_TASK_COLS } from "./internal/seed/tasksMock.js";
 import { isTaskColsArray } from "./internal/validate.js";
 import {
@@ -58,14 +61,23 @@ interface LocatedTask {
   colId: BucketId;
 }
 
+interface TaskDetailSession {
+  token: number;
+  baseline: TaskCol[];
+  located: LocatedTask;
+}
+
 const SMART_FILTERS: readonly SmartListId[] = ["all", "today", "tomorrow", "next7", "inbox", "summary"];
 const PRIORITIES: readonly TaskPriority[] = ["low", "normal", "high", "urgent"];
 type CollectionBoardMode = "grouped" | "time";
 
 export function TasksModule({ lang }: TasksModuleProps) {
   const { s } = useI18n(lang);
+  const owner = useRef(accountScope.capture()).current;
+  const [failedSave, setFailedSave] = useState<{ kind: "tasks" | "lists" | "tags"; value: TaskCol[] | TaskListMeta[] | TaskTagMeta[]; baseline?: TaskCol[] } | null>(null);
+  const { now } = useLocalDayClock();
 
-  const [rawCols, setRawCols] = usePref("xai_task_cols");
+  const [rawCols] = usePref("xai_task_cols");
   const [lists, setLists] = useState<TaskListMeta[]>(() =>
     readTaskMeta("task_lists", DEFAULT_TASK_LISTS, isTaskListArray),
   );
@@ -83,26 +95,43 @@ export function TasksModule({ lang }: TasksModuleProps) {
     return SEED_TASK_COLS as TaskCol[];
   }, [rawCols]);
 
-  const taskCols = useMemo<TaskCol[]>(() => hydrateTaskCols(baseCols), [baseCols]);
+  const taskCols = useMemo<TaskCol[]>(() => groupTasksByDueDate(hydrateTaskCols(baseCols), now), [baseCols, now]);
+
+  const persistLists = useCallback((next: TaskListMeta[]) => {
+    const ok = accountScope.isReady(owner) && setPrefAutosave("task_lists", next, { scope: owner });
+    if (ok) { setLists(next); setFailedSave(null); }
+    else setFailedSave({ kind: "lists", value: next });
+    return ok;
+  }, [owner]);
+
+  const persistTags = useCallback((next: TaskTagMeta[]) => {
+    const ok = accountScope.isReady(owner) && setPrefAutosave("task_tags", next, { scope: owner });
+    if (ok) { setTags(next); setFailedSave(null); }
+    else setFailedSave({ kind: "tags", value: next });
+    return ok;
+  }, [owner]);
+
+  const persistCols = useCallback(async (next: TaskCol[], baseline: TaskCol[] = taskCols) => {
+    if (!accountScope.isReady(owner)) {
+      setFailedSave({ kind: "tasks", value: next, baseline });
+      return false;
+    }
+    const result = await mutateCanonicalDataset({
+      key: "xai_task_cols", scope: owner, validate: isTaskColsArray,
+      initialize: () => baseline,
+      mutate: current => JSON.stringify(current) === JSON.stringify(baseline)
+        ? ({ ok: true as const, data: next })
+        : ({ ok: false as const, reason: "conflict" }),
+    });
+    if (result.ok) { setFailedSave(null); return true; }
+    setFailedSave({ kind: "tasks", value: next, baseline });
+    return false;
+  }, [owner, taskCols]);
 
   useEffect(() => {
     if (isTaskColsArray(rawCols) && JSON.stringify(rawCols) === JSON.stringify(taskCols)) return;
-    setRawCols(taskCols as unknown as Parameters<typeof setRawCols>[0]);
-  }, [rawCols, setRawCols, taskCols]);
-
-  const persistLists = useCallback((next: TaskListMeta[]) => {
-    setLists(next);
-    setPrefAutosave("task_lists", next);
-  }, []);
-
-  const persistTags = useCallback((next: TaskTagMeta[]) => {
-    setTags(next);
-    setPrefAutosave("task_tags", next);
-  }, []);
-
-  const persistCols = useCallback((next: TaskCol[]) => {
-    setRawCols(next as unknown as Parameters<typeof setRawCols>[0]);
-  }, [setRawCols]);
+    void persistCols(taskCols, isTaskColsArray(rawCols) ? rawCols as TaskCol[] : taskCols);
+  }, [rawCols, taskCols, persistCols]);
 
   const completedIds = useMemo<ReadonlySet<string>>(() => {
     const ids = new Set<string>();
@@ -117,18 +146,19 @@ export function TasksModule({ lang }: TasksModuleProps) {
   const [activeView, setActiveView] = useState<TaskViewSelection>({ kind: "smart", id: "all" });
   const [collectionBoardMode, setCollectionBoardMode] = useState<CollectionBoardMode>("grouped");
   const [selectedIds, setSelectedIds] = useState<ReadonlySet<string>>(new Set());
-  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const detailSessionSequence = useRef(0);
+  const [detailSession, setDetailSession] = useState<TaskDetailSession | null>(null);
   const [metaEditor, setMetaEditor] = useState<MetaEditorState | null>(null);
 
   const activeTasks = useMemo(() => taskCols.flatMap((col) => col.tasks), [taskCols]);
-  const smartCounts = useMemo(() => getSmartCounts(taskCols), [taskCols]);
+  const smartCounts = useMemo(() => getSmartCounts(taskCols, now), [taskCols, now]);
   const listCounts = useMemo(() => countByList(activeTasks), [activeTasks]);
   const tagCounts = useMemo(() => countByTag(activeTasks), [activeTasks]);
   const taskOrigins = useMemo(() => getTaskOrigins(taskCols), [taskCols]);
 
   const filteredCols = useMemo<TaskCol[]>(
-    () => filterColsByView(taskCols, activeView),
-    [taskCols, activeView],
+    () => filterColsByView(taskCols, activeView, now),
+    [taskCols, activeView, now],
   );
 
   const overviewActive =
@@ -151,7 +181,19 @@ export function TasksModule({ lang }: TasksModuleProps) {
   const [dragging, setDragging] = useState<{ taskId: string; fromColId: BucketId } | null>(null);
   const [overColId, setOverColId] = useState<BucketId | null>(null);
 
-  const editingTask = editingTaskId ? findTask(taskCols, editingTaskId) : null;
+  const editingTask = detailSession
+    ? findTask(taskCols, detailSession.located.task.id) ?? detailSession.located
+    : null;
+
+  const handleOpenTask = useCallback((taskId: string) => {
+    const located = findTask(taskCols, taskId);
+    if (!located) return;
+    setDetailSession({
+      token: ++detailSessionSequence.current,
+      baseline: taskCols,
+      located,
+    });
+  }, [taskCols]);
 
   function selectSmartView(id: SmartListId) {
     setActiveView({ kind: "smart", id });
@@ -167,8 +209,8 @@ export function TasksModule({ lang }: TasksModuleProps) {
     if (id === "all") setCollectionBoardMode("grouped");
   }
 
-  const handleToggle = useCallback((taskId: string) => {
-    persistCols(toggleComplete(taskCols, taskId));
+  const handleToggle = useCallback(async (taskId: string) => {
+    await persistCols(toggleComplete(taskCols, taskId));
   }, [taskCols, persistCols]);
 
   const handleSelectTask = useCallback((taskId: string) => {
@@ -206,13 +248,13 @@ export function TasksModule({ lang }: TasksModuleProps) {
     setOverColId((o) => (o === colId ? null : o));
   }
 
-  function handleDrop(e: React.DragEvent<HTMLElement>, toColId: BucketId) {
+  async function handleDrop(e: React.DragEvent<HTMLElement>, toColId: BucketId) {
     e.preventDefault();
     const data = readTaskPayload(e);
     setOverColId(null);
     setDragging(null);
     if (!data || data.fromColId === toColId) return;
-    persistCols(moveCard(taskCols, data.taskId, data.fromColId, toColId));
+    await persistCols(moveCard(taskCols, data.taskId, data.fromColId, toColId));
   }
 
   const [composer, setComposer] = useState<{ open: boolean; bucket: BucketId }>({
@@ -224,23 +266,25 @@ export function TasksModule({ lang }: TasksModuleProps) {
     setComposer({ open: true, bucket: bucketId });
   }
 
-  function handleComposerSave(draft: NewTaskDraft, targetBucket: BucketId) {
-    persistCols(addCard(taskCols, draft, targetBucket));
-    setComposer((c) => ({ ...c, open: false }));
+  async function handleComposerSave(draft: NewTaskDraft, targetBucket: BucketId) {
+    const operation = composer;
+    const ok = await persistCols(addCard(taskCols, draft, targetBucket));
+    if (ok) setComposer(current => current === operation ? { ...current, open: false } : current);
+    return ok;
   }
 
   function handleComposerClose() {
     setComposer((c) => ({ ...c, open: false }));
   }
 
-  function handleTaskDropToList(taskId: string, listId: string) {
+  async function handleTaskDropToList(taskId: string, listId: string) {
     const ids = selectedIds.has(taskId) ? selectedIds : new Set([taskId]);
-    persistCols(updateCards(taskCols, ids, { listId }));
+    await persistCols(updateCards(taskCols, ids, { listId }));
   }
 
-  function handleTaskDropToTag(taskId: string, tagId: string) {
+  async function handleTaskDropToTag(taskId: string, tagId: string) {
     const ids = selectedIds.has(taskId) ? selectedIds : new Set([taskId]);
-    persistCols(addTagToTasks(taskCols, ids, tagId));
+    await persistCols(addTagToTasks(taskCols, ids, tagId));
   }
 
   function handleReorderList(fromId: string, toId: string) {
@@ -260,81 +304,95 @@ export function TasksModule({ lang }: TasksModuleProps) {
   }
 
   function handleSaveMeta(next: TaskListMeta | TaskTagMeta) {
-    if (!metaEditor) return;
+    if (!metaEditor) return false;
     if (metaEditor.kind === "list") {
       const list = next as TaskListMeta;
       const updated = metaEditor.mode === "edit"
         ? lists.map((item) => item.id === list.id ? list : item)
         : [...lists, list];
-      persistLists(updated);
+      if (!persistLists(updated)) return false;
       selectListView(list.id);
     } else {
       const tag = next as TaskTagMeta;
       const updated = metaEditor.mode === "edit"
         ? tags.map((item) => item.id === tag.id ? tag : item)
         : [...tags, tag];
-      persistTags(updated);
+      if (!persistTags(updated)) return false;
       selectTagView(tag.id);
     }
     setMetaEditor(null);
+    return true;
   }
 
-  function handleDeleteList(listId: string) {
+  async function handleDeleteList(listId: string) {
     if (lists.length <= 1) return;
     const fallback = lists.find((list) => list.id !== listId)?.id ?? "inbox";
-    persistLists(lists.filter((list) => list.id !== listId));
-    persistCols(updateCards(taskCols, new Set(activeTasks.filter((task) => task.listId === listId).map((task) => task.id)), { listId: fallback }));
+    if (!await persistCols(reassignTaskList(taskCols, listId, fallback))) return;
+    if (!persistLists(lists.filter((list) => list.id !== listId))) return;
     if (activeView.kind === "list" && activeView.id === listId) selectListView("all");
   }
 
-  function handleDeleteTag(tagId: string) {
-    persistTags(tags.filter((tag) => tag.id !== tagId));
-    persistCols(removeTagFromTasks(taskCols, tagId));
+  async function handleDeleteTag(tagId: string) {
+    if (!await persistCols(removeTagFromTasks(taskCols, tagId))) return;
+    if (!persistTags(tags.filter((tag) => tag.id !== tagId))) return;
     if (activeView.kind === "tag" && activeView.id === tagId) selectTagView("all");
   }
 
-  function handleBulkComplete() {
-    persistCols(updateCards(taskCols, selectedIds, { done: true }));
+  async function handleBulkComplete() {
+    await persistCols(updateCards(taskCols, selectedIds, { done: true }));
   }
 
-  function handleBulkDelete() {
-    persistCols(deleteCards(taskCols, selectedIds));
-    setSelectedIds(new Set());
-    if (editingTaskId && selectedIds.has(editingTaskId)) setEditingTaskId(null);
+  async function handleBulkDelete() {
+    const operationIds = new Set(selectedIds);
+    const operationDetailToken = detailSession?.token;
+    if (!await persistCols(deleteCards(taskCols, operationIds))) return;
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      for (const id of operationIds) next.delete(id);
+      return next;
+    });
+    setDetailSession((current) => current
+      && current.token === operationDetailToken
+      && operationIds.has(current.located.task.id)
+      ? null
+      : current);
   }
 
-  function handleBulkList(listId: string) {
+  async function handleBulkList(listId: string) {
     if (!listId) return;
-    persistCols(updateCards(taskCols, selectedIds, { listId }));
+    await persistCols(updateCards(taskCols, selectedIds, { listId }));
   }
 
-  function handleBulkTag(tagId: string) {
+  async function handleBulkTag(tagId: string) {
     if (!tagId) return;
-    persistCols(updateCards(taskCols, selectedIds, { tags: [tagId], tag: tagId as TaskTagId }));
+    await persistCols(updateCards(taskCols, selectedIds, { tags: [tagId], tag: tagId as TaskTagId }));
   }
 
-  function handleBulkBucket(bucketId: BucketId | "") {
+  async function handleBulkBucket(bucketId: BucketId | "") {
     if (!bucketId) return;
-    persistCols(moveManyToBucket(taskCols, selectedIds, bucketId));
+    await persistCols(moveManyToBucket(taskCols, selectedIds, bucketId));
   }
 
-  function handleBulkPriority(priority: TaskPriority | "") {
+  async function handleBulkPriority(priority: TaskPriority | "") {
     if (!priority) return;
-    persistCols(updateCards(taskCols, selectedIds, { priority }));
+    await persistCols(updateCards(taskCols, selectedIds, { priority }));
   }
 
-  function handleDetailSave(id: string, patch: {
+  async function handleDetailSave(id: string, patch: {
     title: string;
     bucket: BucketId;
     listId: string;
     tags: string[];
     priority: TaskPriority;
     notes: string;
+    dueDate?: string | null;
     done: boolean;
   }) {
-    const located = findTask(taskCols, id);
-    if (!located) return;
-    let next = taskCols;
+    const session = detailSession;
+    if (!session || session.located.task.id !== id) return false;
+    const located = findTask(session.baseline, id);
+    if (!located) return false;
+    let next = session.baseline;
     if (located.colId !== patch.bucket) {
       next = moveCard(next, id, located.colId, patch.bucket);
     }
@@ -345,25 +403,44 @@ export function TasksModule({ lang }: TasksModuleProps) {
       tag: patch.tags[0] ? (patch.tags[0] as TaskTagId) : null,
       priority: patch.priority,
       notes: patch.notes,
+      ...(patch.dueDate !== undefined ? { dueDate: patch.dueDate } : {}),
       done: patch.done,
     });
-    persistCols(next);
+    const ok = await persistCols(next, session.baseline);
+    if (ok) {
+      setDetailSession((current) => {
+        if (!current || current.token !== session.token) return current;
+        const updated = findTask(next, id);
+        return updated ? { ...current, baseline: next, located: updated } : current;
+      });
+    }
+    return ok;
   }
 
-  function handleDetailDelete(id: string) {
-    persistCols(deleteCard(taskCols, id));
-    setEditingTaskId(null);
+  async function handleDetailDelete(id: string) {
+    const session = detailSession;
+    if (!session || session.located.task.id !== id) return false;
+    if (!await persistCols(deleteCard(session.baseline, id), session.baseline)) return false;
     setSelectedIds((prev) => {
       const next = new Set(prev);
       next.delete(id);
       return next;
     });
+    return true;
   }
 
   const mainTitle = titleForView(activeView, lists, tags, lang, s("tasks.all"));
 
   return (
     <div className="module module-tasks">
+      {failedSave && !composer.open && !detailSession && !metaEditor && <div>
+        <TaskSaveFailure lang={lang} owner={owner} draft={failedSave} />
+        <button onClick={() => {
+          if (failedSave.kind === "tasks") void persistCols(failedSave.value as TaskCol[], failedSave.baseline ?? taskCols);
+          else if (failedSave.kind === "lists") persistLists(failedSave.value as TaskListMeta[]);
+          else persistTags(failedSave.value as TaskTagMeta[]);
+        }}>{lang === "zh" ? "重试保存" : "Retry save"}</button>
+      </div>}
       <TasksSidebar
         lang={lang}
         activeView={activeView}
@@ -393,7 +470,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
             <h1 className="module-title">{mainTitle}</h1>
             {dragging && (
               <span className="drag-hint" style={{ marginLeft: 8 }}>
-                {lang === "zh" ? "拖到时间列、清单或标签以更新任务" : "Drop on a column, list, or tag to update the task"}
+                {lang === "zh" ? "时间列设为今天、明天、8 天后或无日期；清单和标签不改日期" : "Time columns set today, tomorrow, +8 days, or no date; lists and tags keep the date"}
               </span>
             )}
           </div>
@@ -469,7 +546,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
             completedIds={completedIds}
             selectedIds={selectedIds}
             onToggle={handleToggle}
-            onOpenTask={setEditingTaskId}
+            onOpenTask={handleOpenTask}
             onSelectTask={handleSelectTask}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
@@ -493,7 +570,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
                 tags={tags}
                 filterActive={!overviewActive}
                 onToggle={handleToggle}
-                onOpenTask={setEditingTaskId}
+                onOpenTask={handleOpenTask}
                 onSelectTask={handleSelectTask}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
@@ -525,7 +602,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
         tags={tags}
         onSave={handleDetailSave}
         onDelete={handleDetailDelete}
-        onClose={() => setEditingTaskId(null)}
+        onClose={() => setDetailSession(null)}
       />
 
       <MetaEditorDialog
@@ -540,8 +617,8 @@ export function TasksModule({ lang }: TasksModuleProps) {
 
 function hydrateTaskCols(cols: TaskCol[]): TaskCol[] {
   return cols.map((col) => {
-    const tasks = col.tasks.map(hydrateTask);
-    const completed = col.completed?.map((task) => ({ ...hydrateTask(task), done: true }));
+    const tasks = [...col.tasks.map(hydrateTask), ...(col.completed ?? []).filter(task => task.done === false).map(hydrateTask)];
+    const completed = col.completed?.filter(task => task.done !== false).map((task) => ({ ...hydrateTask(task), done: true }));
     return {
       ...col,
       tasks,
@@ -588,8 +665,8 @@ function isTaskTagArray(value: unknown): value is TaskTagMeta[] {
   );
 }
 
-function filterColsByView(cols: TaskCol[], view: TaskViewSelection): TaskCol[] {
-  if (view.kind === "smart") return filterCardsByList(cols, view.id);
+function filterColsByView(cols: TaskCol[], view: TaskViewSelection, now: Date): TaskCol[] {
+  if (view.kind === "smart") return filterCardsByList(cols, view.id, now);
   if (view.kind === "list" && view.id === "all") return cols;
   return cols.map((col) => {
     const tasks = col.tasks.filter((task) => {
@@ -611,16 +688,16 @@ function filterColsByView(cols: TaskCol[], view: TaskViewSelection): TaskCol[] {
   });
 }
 
-function getSmartCounts(cols: TaskCol[]): Record<SmartListId, number> {
-  const byBucket = (bucket: BucketId) => cols.find((col) => col.id === bucket)?.tasks.length ?? 0;
+function getSmartCounts(cols: TaskCol[], now: Date): Record<SmartListId, number> {
+  const count = (id: SmartListId) => filterCardsByList(cols, id, now).reduce((n, col) => n + col.tasks.length, 0);
   const total = cols.reduce((sum, col) => sum + col.tasks.length, 0);
   const inbox = cols.reduce((sum, col) => sum + col.tasks.filter((task) => task.inbox === true || task.listId === "inbox").length, 0);
   return {
     all: total,
     summary: total,
-    today: byBucket("overdue"),
-    tomorrow: byBucket("next7"),
-    next7: byBucket("next7"),
+    today: count("today"),
+    tomorrow: count("tomorrow"),
+    next7: count("next7"),
     inbox,
   };
 }
@@ -700,7 +777,7 @@ function addTagToTasks(cols: TaskCol[], ids: ReadonlySet<string>, tagId: string)
 function removeTagFromTasks(cols: TaskCol[], tagId: string): TaskCol[] {
   return cols.map((col) => {
     let changed = false;
-    const tasks = col.tasks.map((task) => {
+    const removeTag = (task: TaskCard) => {
       const current = task.tags ?? (task.tag ? [task.tag] : []);
       if (!current.includes(tagId) && task.tag !== tagId) return task;
       const nextTags = current.filter((id) => id !== tagId);
@@ -710,8 +787,24 @@ function removeTagFromTasks(cols: TaskCol[], tagId: string): TaskCol[] {
         tags: nextTags,
         ...(nextTags[0] ? { tag: nextTags[0] as TaskTagId } : { tag: undefined }),
       };
-    });
-    return changed ? { ...col, tasks } : col;
+    };
+    const tasks = col.tasks.map(removeTag);
+    const completed = col.completed?.map(removeTag);
+    return changed ? { ...col, tasks, ...(completed ? { completed } : {}) } : col;
+  });
+}
+
+function reassignTaskList(cols: TaskCol[], fromListId: string, toListId: string): TaskCol[] {
+  return cols.map((col) => {
+    let changed = false;
+    const reassign = (task: TaskCard) => {
+      if (task.listId !== fromListId) return task;
+      changed = true;
+      return { ...task, listId: toListId };
+    };
+    const tasks = col.tasks.map(reassign);
+    const completed = col.completed?.map(reassign);
+    return changed ? { ...col, tasks, ...(completed ? { completed } : {}) } : col;
   });
 }
 
@@ -1164,7 +1257,7 @@ function BulkToolbar({
         <option value="">{lang === "zh" ? "修改日期" : "Set date"}</option>
         <option value="overdue">{lang === "zh" ? "今天/过期" : "Today/overdue"}</option>
         <option value="next7">{lang === "zh" ? "明天/最近几天" : "Tomorrow/next days"}</option>
-        <option value="later">{lang === "zh" ? "以后" : "Later"}</option>
+        <option value="later">{lang === "zh" ? "以后（8 天后）" : "Later (+8 days)"}</option>
         <option value="nodate">{lang === "zh" ? "无日期" : "No date"}</option>
       </select>
       <select aria-label={lang === "zh" ? "批量调整优先级" : "Change priority"} defaultValue="" onChange={(e) => onPriority(e.target.value as TaskPriority | "")}>
@@ -1196,11 +1289,17 @@ function TaskDetailPanel({
     tags: string[];
     priority: TaskPriority;
     notes: string;
+    dueDate?: string | null;
     done: boolean;
-  }) => void;
-  onDelete: (id: string) => void;
+  }) => Promise<boolean>;
+  onDelete: (id: string) => Promise<boolean>;
   onClose: () => void;
 }) {
+  const owner = useRef(accountScope.capture()).current;
+  const [saveFailed, setSaveFailed] = useState(false);
+  const [pending, setPending] = useState(false);
+  const pendingRef = useRef(false);
+  const sessionRef = useRef(0);
   const task = located?.task;
   const [title, setTitle] = useState("");
   const [bucket, setBucket] = useState<BucketId>("next7");
@@ -1208,20 +1307,86 @@ function TaskDetailPanel({
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [priority, setPriority] = useState<TaskPriority>("normal");
   const [notes, setNotes] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [dateEdited, setDateEdited] = useState(false);
+  const openedTask = useRef<string | null>(null);
   const [done, setDone] = useState(false);
+  const doneEditVersion = useRef(0);
 
   useEffect(() => {
-    if (!located) return;
+    if (!located) {
+      openedTask.current = null;
+      sessionRef.current += 1;
+      pendingRef.current = false;
+      setPending(false);
+      return;
+    }
+    const identity = located.task.id;
+    if (openedTask.current === identity) return;
+    openedTask.current = identity;
+    sessionRef.current += 1;
+    pendingRef.current = false;
+    setPending(false);
+    setSaveFailed(false);
     setTitle(lang === "zh" ? located.task.title.zh : located.task.title.en);
     setBucket(located.colId);
     setListId(located.task.listId ?? lists[0]?.id ?? "inbox");
     setTagIds([...(located.task.tags ?? (located.task.tag ? [located.task.tag] : []))]);
     setPriority(located.task.priority ?? "normal");
     setNotes(located.task.notes ?? "");
+    setDueDate(located.task.dueDate ?? "");
+    setDateEdited(false);
     setDone(located.task.done === true);
+    doneEditVersion.current = 0;
   }, [located, lang, lists]);
 
   if (!task || !located) return null;
+
+  const save = async (nextDone: boolean) => {
+    if (pendingRef.current) return;
+    const session = sessionRef.current;
+    const submittedDoneVersion = doneEditVersion.current;
+    pendingRef.current = true;
+    setPending(true);
+    let ok = false;
+    try {
+      ok = await onSave(task.id, {
+        title: title.trim() || (lang === "zh" ? task.title.zh : task.title.en),
+        bucket,
+        listId,
+        tags: tagIds,
+        priority,
+        notes,
+        ...(dateEdited ? { dueDate: dueDate || null } : {}),
+        done: nextDone,
+      });
+    } catch {
+      ok = false;
+    }
+    if (session !== sessionRef.current) return;
+    pendingRef.current = false;
+    setPending(false);
+    setSaveFailed(!ok);
+    if (ok && submittedDoneVersion === doneEditVersion.current) setDone(nextDone);
+  };
+
+  const remove = async () => {
+    if (pendingRef.current) return;
+    const session = sessionRef.current;
+    pendingRef.current = true;
+    setPending(true);
+    let ok = false;
+    try {
+      ok = await onDelete(task.id);
+    } catch {
+      ok = false;
+    }
+    if (session !== sessionRef.current) return;
+    pendingRef.current = false;
+    setPending(false);
+    setSaveFailed(!ok);
+    if (ok) onClose();
+  };
 
   return (
     <aside className="task-detail-panel" aria-label={lang === "zh" ? "任务详情" : "Task details"}>
@@ -1234,17 +1399,24 @@ function TaskDetailPanel({
         <input value={title} onChange={(e) => setTitle(e.target.value)} />
       </label>
       <label className="task-detail-check">
-        <input type="checkbox" checked={done} onChange={(e) => setDone(e.target.checked)} />
+        <input type="checkbox" checked={done} onChange={(e) => {
+          doneEditVersion.current += 1;
+          setDone(e.target.checked);
+        }} />
         <span>{lang === "zh" ? "标记完成" : "Mark complete"}</span>
       </label>
       <label>
-        <span>{lang === "zh" ? "日期" : "Date"}</span>
+        <span>{lang === "zh" ? "时间分组（移动会设置日期）" : "Time group (moving schedules a date)"}</span>
         <select value={bucket} onChange={(e) => setBucket(e.target.value as BucketId)}>
           <option value="overdue">{lang === "zh" ? "今天/过期" : "Today/overdue"}</option>
           <option value="next7">{lang === "zh" ? "明天/最近几天" : "Tomorrow/next days"}</option>
-          <option value="later">{lang === "zh" ? "以后" : "Later"}</option>
+          <option value="later">{lang === "zh" ? "以后（8 天后）" : "Later (+8 days)"}</option>
           <option value="nodate">{lang === "zh" ? "无日期" : "No date"}</option>
         </select>
+      </label>
+      <label>
+        <span>{lang === "zh" ? "截止日期" : "Due date"}</span>
+        <input type="date" value={dueDate} onChange={e => { setDueDate(e.target.value); setDateEdited(true); }} />
       </label>
       <label>
         <span>{lang === "zh" ? "清单" : "List"}</span>
@@ -1281,21 +1453,19 @@ function TaskDetailPanel({
         <span>{lang === "zh" ? "备注" : "Notes"}</span>
         <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} />
       </label>
+      {saveFailed && <TaskSaveFailure lang={lang} owner={owner} draft={{ id: task.id, title, bucket, listId, tags: tagIds, priority, notes, dueDate, dateEdited, done }} />}
       <footer>
         <button
           className="task-composer__btn task-composer__btn--primary"
-          onClick={() => {
-            if (title.trim()) {
-              onSave(task.id, { title: title.trim(), bucket, listId, tags: tagIds, priority, notes, done });
-            }
-          }}
+          disabled={pending || !title.trim()}
+          onClick={() => { void save(done); }}
         >
           {lang === "zh" ? "保存" : "Save"}
         </button>
-        <button className="task-composer__btn" onClick={() => onSave(task.id, { title: title.trim() || (lang === "zh" ? task.title.zh : task.title.en), bucket, listId, tags: tagIds, priority, notes, done: true })}>
+        <button className="task-composer__btn" disabled={pending} onClick={() => { void save(true); }}>
           {lang === "zh" ? "完成" : "Complete"}
         </button>
-        <button className="task-composer__btn task-danger-btn" onClick={() => onDelete(task.id)}>
+        <button className="task-composer__btn task-danger-btn" disabled={pending} onClick={() => { void remove(); }}>
           {lang === "zh" ? "删除" : "Delete"}
         </button>
       </footer>
@@ -1311,9 +1481,11 @@ function MetaEditorDialog({
 }: {
   lang: "en" | "zh";
   editor: MetaEditorState | null;
-  onSave: (item: TaskListMeta | TaskTagMeta) => void;
+  onSave: (item: TaskListMeta | TaskTagMeta) => boolean;
   onCancel: () => void;
 }) {
+  const owner = useRef(accountScope.capture()).current;
+  const [saveFailed, setSaveFailed] = useState(false);
   const [nameEn, setNameEn] = useState("");
   const [nameZh, setNameZh] = useState("");
   const [color, setColor] = useState("#3b82f6");
@@ -1321,6 +1493,7 @@ function MetaEditorDialog({
 
   useEffect(() => {
     if (!editor) return;
+    setSaveFailed(false);
     setNameEn(editor.item?.name.en ?? (editor.kind === "list" ? "New list" : "New tag"));
     setNameZh(editor.item?.name.zh ?? (editor.kind === "list" ? "新清单" : "新标签"));
     setColor(editor.item?.color ?? "#3b82f6");
@@ -1351,6 +1524,7 @@ function MetaEditorDialog({
             <input value={icon} onChange={(e) => setIcon(e.target.value)} />
           </label>
         )}
+        {saveFailed && <TaskSaveFailure lang={lang} owner={owner} draft={{ kind: editor.kind, id: editor.item?.id, name: { en: nameEn, zh: nameZh }, color, icon }} />}
         <footer>
           <button className="task-composer__btn" onClick={onCancel}>{lang === "zh" ? "取消" : "Cancel"}</button>
           <button
@@ -1358,9 +1532,9 @@ function MetaEditorDialog({
             onClick={() => {
               const id = editor.item?.id ?? `${editor.kind}-${Date.now().toString(36)}`;
               if (editor.kind === "list") {
-                onSave({ id, name: { en: nameEn.trim() || "New list", zh: nameZh.trim() || "新清单" }, color, icon: icon.trim() || "list" });
+                setSaveFailed(!onSave({ id, name: { en: nameEn.trim() || "New list", zh: nameZh.trim() || "新清单" }, color, icon: icon.trim() || "list" }));
               } else {
-                onSave({ id, name: { en: nameEn.trim() || "New tag", zh: nameZh.trim() || "新标签" }, color });
+                setSaveFailed(!onSave({ id, name: { en: nameEn.trim() || "New tag", zh: nameZh.trim() || "新标签" }, color }));
               }
             }}
           >

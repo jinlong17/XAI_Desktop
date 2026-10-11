@@ -1,0 +1,4 @@
+{"commit":"762778c33226b072c2ca2030aa0a7051a7dbe952","scenario":"first-write-denied","ok":true,"serverCalls":0,"dataRetained":true}
+{"commit":"762778c33226b072c2ca2030aa0a7051a7dbe952","scenario":"response-lost","ok":true,"serverCalls":1,"unknownAfterReload":true,"BPreserved":true,"tokenAbsent":true}
+{"commit":"762778c33226b072c2ca2030aa0a7051a7dbe952","scenario":"receipt-write-denied","ok":true,"serverCalls":1,"unknownAfterReload":true,"BPreserved":true,"tokenAbsent":true}
+{"commit":"762778c33226b072c2ca2030aa0a7051a7dbe952","scenario":"retry-unauthorized","ok":false,"error":"Error: first uncertain deletion must survive subsequent unauthorized retry\n    at assert (http://127.0.0.1:61326/?case=retry-unauthorized:44533:17)\n    at http://127.0.0.1:61326/?case=retry-unauthorized:44606:5","serverCalls":2,"remainingIntent":null}

@@ -1,0 +1,51 @@
+{
+  "id": "BRD-12/PREPARE-CORRECT2",
+  "workflow": "C",
+  "module": "web",
+  "role": "fresh concrete technical contract corrector, independent of prior author andreviewer",
+  "model": "gpt-6-astra",
+  "fixed_input": "42ca98c92e12c10772f496b72da7653f20a61be1",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "5d1f28a0f81ae01155a213fac93133730f7bad51",
+    "bb08478d692091e6362926e2b75c1d0c34fc0ca2"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-brd12-preparation-r2/contract.md",
+    "docs/reviews/audit-parallel-brd12-preparation-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "FullR1-01: distinguish immutable pre-mount raw preimage/missinghistorical rowinformation fromcanonical authorizedautomatic deltas andexplicit genuine userconversion. Exact fielddelta/count/manualflags/completedAt/urgent/sort/othercards attribution, consistent B01B02B05B06B07/R01R02R05. Preserve allknownmount/day/manual/move triggers, no suppressautomation oracle conflict",
+    "FullR1-02: concrete bounded truthfullostaggregate/realarray precedence/migration preservation and exact operation identity/preimage/delta/commit/ack/inverse technical proposal underexisting nofabrication/data-preservation/reversible rules. QL/QU unproven ownerquestions removed asautomatic gates. No arbitrary lifetime/expiry/permanentpromise oralreadyapprovedschema; additive layout explicitproposal subjectfreshreview. Prove boundaries deterministic multi-card/manualtrue/autofalse/legacy/existingcompletedAt/ambiguousprovenance/latereditadddelete/conflict/retryreadback/accountgeneration/departurereload/successortrigger cases. Onlyirreducible provenconflictingownertradeoff escalates, no newdefault",
+    "Preserve full original BRD12 action/acceptance/B01-B12/R01-R12/exact24 conditionalpaths/Desktop/sharedstorage/CSS/hostprotection/fullcanonicalClockr2G1 E1-E25/E24subrows/judgingcopies/qualification/before/account/nativevisual/vendor/freshacceptance/reconcile/inventory. Original synthetic-rowtests require reviewedversionedcorrectingcopies notoverwrite/weaken",
+    "Complete sourceboundpermanent actual invocation histories/cap3/refusals includingseven retained originalappendartifacts (not six), distinctprocess roots vs assertions/formal/probe classificationunknown. Newloss/provenance/inverse semanticnovelty distinguishedfromold reuseddriver/package/nativeunits; noreset orunknown0. All312originalfieldswith39reversiblenormalizations/original_module and933+6evidence939/formal13/3/3/293 unchanged. Versionedcompleteproposal/sourceinputs explicit namespaces/rawtreeobjects/goalhash; priorauthor1/review1 immutable"
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "original contracts/evidence/logs/runners/methods",
+    "globalcontrol/threeledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "preparation_author_iteration": 2,
+    "preparation_author_cap": 3,
+    "prior_contract_review_used": 1,
+    "contract_review_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "hash/dirty/scope drift",
+    "need protectedwrite/runtime or weakstandard",
+    "irreducible productconflict withproof; freeze only affecteddescendants"
+  ],
+  "no_children": true
+}

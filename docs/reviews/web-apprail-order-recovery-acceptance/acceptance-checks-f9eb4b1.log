@@ -1,0 +1,197 @@
+acceptance-checks=f9eb4b1
+head=82d505756d39535b623f9437abcbdc9635ba7318
+node=v24.16.0
+## A. Fixed points
+PASS [A1 fixed resolves] f9eb4b1f207bc4b46f547b90afc250424b3c8695
+PASS [A2 fixed tree] 
+PASS [A3 docs head equals fixed product] git diff --name-only f9eb4b1 HEAD -- apps packages package.json pnpm-lock.yaml is empty
+PASS [A4 lockfile unchanged] df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+PASS [A5 contract r1 hash at HEAD] b9e407b3867ec41b2c380ac09f9efba71747c81b63d24e8263a64b7ee7095cde
+PASS [A6 contract r1 hash at f7726d7] 
+PASS [A7 contract history is r1 only] f7726d7
+PASS [A8 E1-E5 commits precede Terra] d6ea500, 6e9ec9c, 04ee6a2 are ancestors of f9eb4b1
+PASS [A9 Terra parent] f9eb4b1^ = 145b073
+PASS [A10 E6 run record parent] 
+## B. Product diff, §11 and protected paths
+PASS [B1 product diff = 19 §11 files] 19 files
+PASS [B2 full diff outside docs/ = same 19] 
+PASS [B3 f9eb4b1 commit touches only the 19 files] 
+PASS [B4 +2960/-76] 19 files changed, 2960 insertions(+), 76 deletions(-)
+PASS [B5 at most four new internal modules] packages/xai-web-shell/src/internal/RailOrderStatus.tsx, packages/xai-web-shell/src/internal/railOrderController.tsx, packages/xai-web-shell/src/internal/railOrderCopy.ts, packages/xai-web-shell/src/internal/railOrderModel.ts
+PASS [B6 protected packages/plugin-web-storage] 
+PASS [B6 protected packages/plugin-web-settings-shell] 
+PASS [B6 protected packages/plugin-web-tokens] 
+PASS [B6 protected packages/core] 
+PASS [B6 protected packages/xai-web-event-bus] 
+PASS [B6 protected packages/xai-web-pet] 
+PASS [B6 protected packages/xai-web-cmdk] 
+PASS [B6 protected packages/xai-web-settings-appearance] 
+PASS [B6 protected packages/xai-web-settings-features-panel] 
+PASS [B6 protected packages/plugin-web-settings-rest] 
+PASS [B6 protected packages/xai-web-dashboard-grid] 
+PASS [B6 protected packages/xai-web-dashboard-widgets] 
+PASS [B6 protected package.json] 
+PASS [B6 protected pnpm-lock.yaml] 
+PASS [B7 every changed xai-web-shell path is §11] 17 changed
+PASS [B8 apps/ changes only App.tsx + App.railorder test] 
+PASS [B9 Topbar.test.tsx additive only] 25	0	packages/xai-web-shell/src/__tests__/Topbar.test.tsx
+PASS [B10 every pre-existing shell/web test byte-identical (except additive Topbar)] 22 files checked
+PASS [B11 unchanged packages/xai-web-shell/src/internal/dnd.ts] 
+PASS [B11 unchanged packages/xai-web-shell/src/registry.tsx] 
+PASS [B11 unchanged packages/xai-web-shell/src/AvatarMenu.tsx] 
+PASS [B11 unchanged packages/xai-web-shell/src/SignOutConfirmDialog.tsx] 
+PASS [B11 unchanged apps/web/src/routes/modules/departureCoordinator.tsx] 
+PASS [B11 unchanged packages/plugin-web-storage/src/internal/registry.ts] 
+PASS [B11 unchanged packages/plugin-web-tokens/src/layout.css] 
+## C. Evidence immutability since 419e56d
+PASS [C1 only control-plane/ledger files were modified; every evidence file is an addition] 19 M/D/R entries, all under 20260908-full-product-audit/
+PASS [C2 E18-E25 commit is additions only (143)] 143 entries
+## D. E25 hash log re-derivation
+PASS [D1 every hash in the E25 hash log re-derived] 456 hashes, 0 mismatches 
+## E. E1-E25 principal artifacts (path, producing commit, SHA-256, receipt)
+PASS [E E1 web-apprail-order-recovery-sol/verify-fixed.mjs] sha256=e944cb226e3fa342727c913547ff5084e0ad38fad5293ed306cb512bf9f5a4e8 added_once_in=d6ea500 last=d6ea500 receipt(README.md)=full
+PASS [E E1 web-apprail-order-recovery-sol/features-downstream.c-rd1.test.tsx] sha256=6c57164ef5040444dad96fbf5933e90b095d465c64bdd6e8e5f3dcb6be2d1c7a added_once_in=d6ea500 last=d6ea500 receipt(README.md)=full
+PASS [E E1 web-apprail-order-recovery-sol/merge.test.tsx] sha256=05f6e01081156e2d32076606f2b4f314f33246d6b96b0ab7ffa644a9de8d377a added_once_in=d6ea500 last=d6ea500 receipt(README.md)=full
+PASS [E E2 web-apprail-order-recovery-sol/bytes-before1-419e56d.log] sha256=94c87889a14f0a6097b6ad2c70fa92dd145f654d0fa53f0449aa86e4c7ffcc1b added_once_in=d6ea500 last=d6ea500 receipt(README.md)=full
+PASS [E E2 web-apprail-order-recovery-sol/merge-before2-419e56d.log] sha256=9f6b774e883776ee9d73ffc9fc18ae27c642bf72130033e8d473cd1b77e2057e added_once_in=d6ea500 last=d6ea500 receipt(README.md)=full
+PASS [E E2 web-apprail-order-recovery-sol/features-sol-downstream-c-rd1-before1-419e56d.log] sha256=c8f5ff44c2ca25c6560d6a0321bb96c3a002e7389a4e013f09f7c3c0bf687a4b added_once_in=d6ea500 last=d6ea500 receipt(README.md)=full
+PASS [E E3 web-apprail-order-recovery-independent/host-before1-419e56d.log] sha256=ee5f6e1d2aaafabec04f961ab5f1d091a1bb5ad47fe1794e8e6fa1a96812ebb3 added_once_in=6e9ec9c last=6e9ec9c receipt(README.md)=full
+PASS [E E4 web-apprail-order-recovery-native/native-419e56d-before1-h1.log] sha256=a222683d5b706d7129c70dabe3aa1b948d97bf5029fddd2d6c22493bbdd83d6f added_once_in=04ee6a2 last=04ee6a2 receipt(before-419e56d.md)=full
+PASS [E E4 web-apprail-order-recovery-native/before-419e56d.md] sha256=8253c075f386f07128a0e630fe51409ba9edd8cd3428b0a0e1734a4e3a5b1c2e added_once_in=04ee6a2 last=04ee6a2 receipt(hashes-apprail-final-v1.log)=full
+PASS [E E5 web-apprail-order-recovery-f1/f1-419e56d-railorder-before1.log] sha256=3108774b08a066e8aa1584e576d97e154c892a92513006f6cc8c1b5902f064cd added_once_in=04ee6a2 last=04ee6a2 receipt(before-419e56d.md)=full
+PASS [E E6 web-apprail-order-recovery-terra/shell-test-f9eb4b1.log] sha256=72876c4e194de93f91e11d0197d7ea6ff1b270c862b8ab044c4c580d39ab92fa added_once_in=0d440ca last=0d440ca receipt(implementation.md)=full
+PASS [E E6 web-apprail-order-recovery-terra/web-test-f9eb4b1.log] sha256=98f9673a134bc49f20b6f4bd3c849d32f065daf9e509683d86a1656c0855bbd3 added_once_in=0d440ca last=0d440ca receipt(implementation.md)=full
+PASS [E E6 web-apprail-order-recovery-terra/implementation.md] sha256=fe7bc377e09e9088163411a29fe3f2b81771bc07a5c00ac718f5880865d09086 added_once_in=0d440ca last=0d440ca receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E7 web-apprail-order-recovery-sol/bytes-apprail-fixed1-f9eb4b1.log] sha256=68faf686902a88131d48adee20efe26b873a1c12fe670f6b2cbdc70eaf18a442 added_once_in=94b12ba last=94b12ba receipt(fixed-f9eb4b1.md)=full
+PASS [E E7 web-apprail-order-recovery-sol/fixed-f9eb4b1.md] sha256=e49a8fd8b2d1c8c07fd2c0654a2b18e0f8e30e29100ff200da6c330b0384f990 added_once_in=94b12ba last=94b12ba receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E8 web-apprail-order-recovery-independent/host-apprail-fixed1-f9eb4b1.log] sha256=ba3c1bd4da61e26e14b7baa7ed8cf0717b29a79df610884c9f60a5b7199d86e5 added_once_in=94b12ba last=94b12ba receipt(fixed-f9eb4b1.md)=full
+PASS [E E9 web-apprail-order-recovery-native/native-f9eb4b1-fixed1-controls.log] sha256=c416cf3f1d9daa26238bb6fa43486b34cd0319cb0e827c0d8b0ca66f0ad281bf added_once_in=ae7b69e last=ae7b69e receipt(review-controls-protection-export-f9eb4b1.md)=full
+PASS [E E10 web-apprail-order-recovery-native/native-f9eb4b1-fixed1-protection.log] sha256=6dc38387527ebb2b6f5da71c189cd6142b0c3a1fcd12ef0b4846607cc93288d2 added_once_in=ae7b69e last=ae7b69e receipt(review-controls-protection-export-f9eb4b1.md)=full
+PASS [E E11 web-apprail-order-recovery-native/native-f9eb4b1-fixed1-export.log] sha256=0172a752fa5da085a9d9a01681679ab6c8842a48473cef7c13642948be6aaa02 added_once_in=ae7b69e last=ae7b69e receipt(review-controls-protection-export-f9eb4b1.md)=full
+PASS [E E12 web-apprail-order-recovery-native/native-f9eb4b1-fixed1-downstream.log] sha256=0da57fcf6c0ba55a1b224904bf454cab8dc46011bce7364ff3440b13a923d789 added_once_in=55cf1e9 last=55cf1e9 receipt(review-downstream-visual-f9eb4b1.md)=full
+PASS [E E13 web-apprail-order-recovery-native/native-f9eb4b1-fixed1-visual-en.log] sha256=3c42c0a1efcc9b509d1422aaa2ef3c76a8b376dc2317b5d8394722526da78345 added_once_in=55cf1e9 last=55cf1e9 receipt(review-downstream-visual-f9eb4b1.md)=full
+PASS [E E14 web-apprail-order-recovery-native/native-f9eb4b1-fixed1-keyboard-en.log] sha256=b5414fcd713a7db5865b7db8c68384c5177c32f8ac1cee90387c8249dbfdfdf3 added_once_in=5c6bcd2 last=5c6bcd2 receipt(review-keyboard-f9eb4b1.md)=full
+PASS [E E15 web-sticky-recovery-f1/f1-f9eb4b1-sticky-apprail-fixed1.log] sha256=dd7e7eb0c9c898c93ac8130a8a9e8782efe51ec61d9be92f6609133fbebf7848 added_once_in=94b12ba last=94b12ba receipt(fixed-f9eb4b1.md)=full
+PASS [E E16 web-apprail-order-recovery-f1/f1-f9eb4b1-railorder-apprail-fixed1.log] sha256=d4aae5fdf2a93b7dda8908ab7122d19a43d51865e244f5d75d6de40bd6a8e4b5 added_once_in=94b12ba last=94b12ba receipt(fixed-f9eb4b1.md)=full
+PASS [E E17 web-native-keyinput-k1/f1-f9eb4b1-appearance-apprail-fixed1.log] sha256=5e7667df608159d5374a58bf21fc3fecc45c0f7ab4dba04f4f0bf3ea62698104 added_once_in=94b12ba last=94b12ba receipt(fixed-f9eb4b1.md)=full
+PASS [E E18 web-apprail-order-recovery-final/search-apprail-final-v1-f9eb4b1.log] sha256=368ba9e6a5bd58f7182736395932febc1d55e748b47af83c0f132ef138ade3b3 added_once_in=ee60b48 last=ee60b48 receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E19 web-apprail-order-recovery-final/protected-diff-apprail-final-v1-f9eb4b1.log] sha256=5a0ef354a8a08573ee071b3b0625985e95b030d7522342c2b65244dc7075b729 added_once_in=ee60b48 last=ee60b48 receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E20 web-features-recovery-final/storage-check-types-apprail-final-v1-f9eb4b1.log] sha256=a0b00ec439810bbfb8cd8e5c6305325ff610249eda6f8168893f37ae708273eb added_once_in=ee60b48 last=ee60b48 receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E20 web-apprail-order-recovery-sol/bytes-apprail-final-v1-f9eb4b1.log] sha256=6a9d290f0f3d8f321caca0070beda1d6110762cd219569ebdeb8552a88c49fe5 added_once_in=ee60b48 last=ee60b48 receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E21 web-apprail-order-recovery-final/shell-test-apprail-final-v1-f9eb4b1.log] sha256=4aa2586c4bafb3788b03bf934bfdfa4f3deab0fd5207d1efbc5a9603c663e7b8 added_once_in=ee60b48 last=ee60b48 receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E22 web-apprail-order-recovery-final/web-test-apprail-final-v1-f9eb4b1.log] sha256=8560b7e54374b72c4538b5750841a5097c96541b34fc8ab986d8c458f573dd44 added_once_in=ee60b48 last=ee60b48 receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E23 web-apprail-order-recovery-sol/features-sol-downstream-c-rd1-apprail-final-v1-f9eb4b1.log] sha256=a2428179491794154bbed3bfa133b4e2ea8a15de4bc5f34d24ccf1d85f8f0730 added_once_in=ee60b48 last=ee60b48 receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E23 web-apprail-order-recovery-final/compare-accepted-apprail-final-v1.log] sha256=aef27ba00afd51a34948b5dc8df62e4dd9d8dbcc3ef0bb79630bea6a35556cab added_once_in=ee60b48 last=ee60b48 receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E24 web-apprail-order-recovery-final/native-f9eb4b1-apprail-final-v1-host.log] sha256=20f6273e43758aa8f7f84994f5839bba99e2139570b1c98a9a4ab8bed15e0522 added_once_in=ee60b48 last=ee60b48 receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E24 web-apprail-order-recovery-final/native-f9eb4b1-apprail-final-v1-downstream.log] sha256=4efcab6bc4c3a5222e2c34ad2c91bc6033b1121aa5914f835ecd1e14e91a7c55 added_once_in=ee60b48 last=ee60b48 receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E25 web-apprail-order-recovery-final/hashes-apprail-final-v1.log] sha256=5e8fa755d0a7e0fd06470cc13ec7eb2aa3550d2de9054d4d0dc1a993fd18d84d added_once_in=ee60b48 last=ee60b48 receipt(review-final-regressions-f9eb4b1.md)=full
+PASS [E E6 product: 19 §11 blobs at f9eb4b1 found in the E19 log] 19/19
+PASS [E E6 AppRail.tsx] fe789078fecc60936d3e6c5fc2b203001a15490aecf30f3a0ca301da1399fb44
+PASS [E E25 receipt added once in ee60b48 and unchanged] review-final-regressions-f9eb4b1.md sha256=ab269a055b122f90c808752c5d130455d17470c0aaf5d097303b0a67d4f0689d
+PASS [E E25 enumerates E1-E25 once each, in order] E1,E2,E3,E4,E5,E6,E7,E8,E9,E10,E11,E12,E13,E14,E15,E16,E17,E18,E19,E20,E21,E22,E23,E24,E25
+PASS [E every ID E1-E25 has at least one re-derived principal artifact] missing: none
+## F. Outcomes parsed from raw logs
+PASS [F Sol bytes before (before1)] 21/26 PRECONDITION=0
+PASS [F Sol bytes fixed1] 26/26 exit=0
+PASS [F Sol domain before (before2)] 1/31 PRECONDITION=0
+PASS [F Sol domain fixed1] 31/31 exit=0
+PASS [F Sol merge before (before2)] 4/21 PRECONDITION=0
+PASS [F Sol merge fixed1] 21/21 exit=0
+PASS [F Sol drag before (before2)] 8/18 PRECONDITION=0
+PASS [F Sol drag fixed1] 18/18 exit=0
+PASS [F Sol field before (before2)] 1/24 PRECONDITION=0
+PASS [F Sol field fixed1] 24/24 exit=0
+PASS [F Sol continuity-export before (before1)] 4/22 PRECONDITION=0
+PASS [F Sol continuity-export fixed1] 22/22 exit=0
+PASS [F Sol host before (before2)] 7/33 PRECONDITION=0
+PASS [F Sol host fixed1] 33/33 exit=0
+PASS [F Sol original before (before1)] 121/121 PRECONDITION=0
+PASS [F Sol original fixed1] 123/123 exit=0
+PASS [F parent host before (E3)] 7 pass / 24 fail, PRECONDITION=0
+PASS [F parent host fixed (E8)] 31/31
+PASS [F native before h1 (E4)] harnessValid=true hypothesis rows 14 all failing correctly; controls 1 hold; checks=341
+PASS [F native before drag (E4)] harnessValid=true hypothesis rows 8 all failing correctly; controls 2 hold; checks=233
+PASS [F native before h8 (E4)] harnessValid=true hypothesis rows 4 all failing correctly; controls 1 hold; checks=59
+PASS [F native before h9 (E4)] harnessValid=true hypothesis rows 6 all failing correctly; controls 1 hold; checks=143
+PASS [F native before r1 (E4)] harnessValid=true hypothesis rows 5 all failing correctly; controls 1 hold; checks=107
+PASS [F native before h11 (E4)] harnessValid=true hypothesis rows 0 all failing correctly; controls 5 hold; checks=97
+PASS [F native fixed controls] productChecks=1024/1024 rows=162 runtimeErrors=1 (non-prelude, non-419e56d samples: 0) nonLocal=0
+PASS [F native fixed protection] productChecks=134/134 rows=28 runtimeErrors=1 (non-prelude, non-419e56d samples: 0) nonLocal=0
+PASS [F native fixed export] productChecks=68/68 rows=9 runtimeErrors=1 (non-prelude, non-419e56d samples: 0) nonLocal=0
+PASS [F native fixed downstream] productChecks=1081/1081 rows=156 runtimeErrors=1 (non-prelude, non-419e56d samples: 0) nonLocal=0
+PASS [F native fixed visual-en] productChecks=538/538 rows=61 runtimeErrors=5 (non-prelude, non-419e56d samples: 0) nonLocal=0
+PASS [F native fixed visual-zh] productChecks=529/529 rows=60 runtimeErrors=5 (non-prelude, non-419e56d samples: 0) nonLocal=0
+PASS [F native fixed keyboard-en] productChecks=167/167 rows=4 runtimeErrors=1 (non-prelude, non-419e56d samples: 0) nonLocal=0
+PASS [F native fixed keyboard-zh] productChecks=167/167 rows=4 runtimeErrors=1 (non-prelude, non-419e56d samples: 0) nonLocal=0
+PASS [F rail F1 railorder before (E5)] ["before-no-rail-step","before-unprotected","before-pass-control"]
+PASS [F rail F1 railorder fixed (E16)] checks=104
+PASS [F rail F1 f3 released exactly once, one commit, zero non-live] releases=1 commits=1
+PASS [F rail F1 selfcheck before] 
+PASS [F rail F1 selfcheck fixed] 
+PASS [F Appearance F1-shape via K-1 copy (E17)] checks=123
+PASS [F E15 twelve frozen F1 invocations pass, no Invalid blocker state transition] 12/12
+PASS [F §13 downstream-apprail-final-v1-419e56d.log] 14/15 failing=012
+PASS [F §13 downstream-apprail-final-v1-f9eb4b1.log] 13/15 failing=012,014
+PASS [F §13 features-sol-downstream-corrected-apprail-final-v1-419e56d.log] 15/15 failing=none
+PASS [F §13 features-sol-downstream-corrected-apprail-final-v1-f9eb4b1.log] 14/15 failing=014
+PASS [F §13 features-sol-downstream-c-rd1-apprail-final-v1-419e56d.log] 15/15 failing=none
+PASS [F §13 features-sol-downstream-c-rd1-apprail-final-v1-f9eb4b1.log] 15/15 failing=none
+PASS [F E23 compare-accepted 85 MATCH / 0 DIFF] 
+PASS [F E21 shell test] 
+PASS [F E22 web test fixed] 
+PASS [F E22 web test 419e56d control] 
+PASS [F E18/E19 static] 
+PASS [F E24 Features native host via copy] checks=751 product=341
+PASS [F E24 Features native downstream via copy] checks=344 product=140
+PASS [F E24 harness copy differs from the accepted Appearance copy only in the delta precondition] 3 removed / 13 added non-comment lines; one precondition replaced
+PASS [F E23 host-suite copy smart-lists-recovery-astra: only buffer and root changed] -const root = fileURLToPath(new URL('../../../', import.meta.url)); | +const root = fileURLToPath(new URL('../../../../../', import.meta.url)); // E23 copy, change 2: two levels deeper | - execFileSync('tar', ['-x', '-C', dir], { input: execFileSync('git', ['archive', commit], { cwd: root, maxBuffer: 100 * 1024 * 1024 }) }); | + execFileSync('tar', ['-x', '-C', dir], { input: execFileSync('git', ['archive', commit], { cwd: root, maxBuffer: 1024 * 1024 * 1024 /* E23 copy, change 1: was 100 * 1024 * 1024 */ }) });
+PASS [F E23 host-suite copy collaborate-recovery-independent: only buffer and root changed] -const root = fileURLToPath(new URL('../../../', import.meta.url)); | +const root = fileURLToPath(new URL('../../../../../', import.meta.url)); // E23 copy, change 2: two levels deeper | - execFileSync('tar', ['-x', '-C', dir], { input: execFileSync('git', ['archive', commit], { cwd: root, maxBuffer: 100 * 1024 * 1024 }) }); | + execFileSync('tar', ['-x', '-C', dir], { input: execFileSync('git', ['archive', commit], { cwd: root, maxBuffer: 1024 * 1024 * 1024 /* E23 copy, change 1: was 100 * 1024 * 1024 */ }) });
+PASS [F E23 host-suite copy pomodoro-departure-independent: only buffer and root changed] -const root = fileURLToPath(new URL('../../../', import.meta.url)); | +const root = fileURLToPath(new URL('../../../../../', import.meta.url)); // E23 copy, change 2: two levels deeper | - execFileSync('tar', ['-x', '-C', dir], { input: execFileSync('git', ['archive', commit], { cwd: root, maxBuffer: 100 * 1024 * 1024 }) }); | + execFileSync('tar', ['-x', '-C', dir], { input: execFileSync('git', ['archive', commit], { cwd: root, maxBuffer: 1024 * 1024 * 1024 /* E23 copy, change 1: was 100 * 1024 * 1024 */ }) });
+PASS [F E23 host-suite copy dashboard-header-departure-independent: only buffer and root changed] -const root = fileURLToPath(new URL('../../../', import.meta.url)); | +const root = fileURLToPath(new URL('../../../../../', import.meta.url)); // E23 copy, change 2: two levels deeper | - execFileSync('tar', ['-x', '-C', dir], { input: execFileSync('git', ['archive', commit], { cwd: root, maxBuffer: 100 * 1024 * 1024 }) }); | + execFileSync('tar', ['-x', '-C', dir], { input: execFileSync('git', ['archive', commit], { cwd: root, maxBuffer: 1024 * 1024 * 1024 /* E23 copy, change 1: was 100 * 1024 * 1024 */ }) });
+## G. Source checks at f9eb4b1
+PASS [G1 shell product source has no localStorage] 
+PASS [G1 shell product source has no usePref(] 
+PASS [G1 shell product source has no setPref(] 
+PASS [G1 shell product source has no removePref(] 
+PASS [G1 shell product source has no new StorageEvent] 
+PASS [G1 shell product source has no dispatchEvent(] 
+PASS [G2 AppRail imports no storage package] 
+PASS [G3 App.tsx has no xai_rail_order or usePref(] 
+PASS [G4 App.tsx localStorage line count unchanged] 4 -> 4
+PASS [G5 readLocalPref byte-identical] 72fe20dc3114704fa2e1ef4653cc4c7dbc9efed1fbe659abed2385233b0aafd1
+PASS [G6 sign-out order in both branches: rail, Appearance, coordinator] confirmRailOrderSignOut > confirmAppearanceSignOut > requestSettingsDeparture > confirmRailOrderSignOut > confirmAppearanceSignOut > requestSettingsDeparture
+PASS [G7 coordinator capture check precedes the rail step] 
+PASS [G8 exactly one useRailOrderController in App.tsx and it is inside AppInner] 
+PASS [G9 Shell wrapped in RailOrderProvider and the status passed] 
+PASS [G10 Topbar slot order: premiumBadge < appearanceStatus < railOrderStatus < .topbar-pref] 
+PASS [G11 every selector begins with .rail-order-status] 18 selectors; 1 @media
+PASS [G12 new controls have a non-none :focus-visible outline] 
+PASS [G13 status never uses topbar-pref-option or the disabled attribute] 
+PASS [G14 stable selector data-testid="rail-order-status"] 
+PASS [G14 stable selector aria-controls={PANEL_ID}] 
+PASS [G14 stable selector data-testid="rail-order-panel"] 
+PASS [G14 stable selector role="dialog"] 
+PASS [G14 stable selector data-testid="rail-order-message"] 
+PASS [G14 stable selector data-testid="rail-order-retry"] 
+PASS [G14 stable selector data-testid="rail-order-discard"] 
+PASS [G14 stable selector data-testid="rail-order-export"] 
+PASS [G14 stable selector data-testid="rail-order-reload"] 
+PASS [G14 stable selector const PANEL_ID = "rail-order-panel"] 
+PASS [G15 every normative EN/ZH string of contract §5 appears verbatim in railOrderCopy.ts] 36 strings; missing: none
+PASS [G16 controller uses the registered binding and absolute edits only] 
+PASS [G17 controller touches no account machinery] 
+PASS [G18 export filename and envelope] 
+PASS [G19 beforeunload only while a draft exists] 
+PASS [G20 dragstart/dragenter/dragover/dragend handlers never call the controller] 
+PASS [G21 exactly one controller.drop call, inside onItemsDrop, after the same-order and external-drag guards] 
+PASS [G22 status renders nothing without a failed draft or a source issue (A8)] 
+PASS [G23 a focused status that unmounts moves focus to .topbar-pref-trigger] 
+## H. Pure model properties (railOrderModel.ts at f9eb4b1, imported by type stripping)
+PASS [H1 every §5 item 2 decoded value is outside the strict domain] 15 values
+PASS [H2 in-domain seeds are valid] 
+PASS [H3 P1-P7, display reconcile and non-permutation refusal hold] 462 generated cases + 8 P7 cases; violations {"P1":0,"P2":0,"P3":0,"P4":0,"P5":0,"P6":0,"P7":0,"nonperm":0,"display":0}
+PASS [H4 invalid stored order refuses to merge] 
+PASS [H5 R-1 example: board keeps index 2 and returns there] ["calendar","tasks","board","dashboard","matrix"]
+## Result
+checks=183 pass=183 fail=0
+exit=0

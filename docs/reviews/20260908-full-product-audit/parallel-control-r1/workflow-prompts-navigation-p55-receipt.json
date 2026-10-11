@@ -1,0 +1,34 @@
+{
+  "input": "56fe7e8e4eae4d3d46efa1aed0fcea23e6d3cc50",
+  "changes": [
+    {
+      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/goal-A.md",
+      "original_sha": "56fe7e8e4eae4d3d46efa1aed0fcea23e6d3cc50",
+      "before_sha256": "1aef0516f107ee451977642978c4a5d066aedd1b8e17a552b1cbe62bb41e21ed",
+      "after_sha256": "8f57a074ddfa98dd1dab1e53d6b91d7fef49784e5547f645fad57623ae0c3ab0",
+      "scope": "mechanical current-entry navigation only; original fullscope/thresholds/independence/budgets/acceptance unchanged"
+    },
+    {
+      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/goal-B.md",
+      "original_sha": "56fe7e8e4eae4d3d46efa1aed0fcea23e6d3cc50",
+      "before_sha256": "a1c5dd197762eaa63e4cb782a27197bbc01ab5110cb885b3366ff42644cef72a",
+      "after_sha256": "a5f8bf40ce822d7f4cca32a5d3640368489b6377f9f7dca098b04cad20f3d974",
+      "scope": "mechanical current-entry navigation only; original fullscope/thresholds/independence/budgets/acceptance unchanged"
+    },
+    {
+      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/goal-C.md",
+      "original_sha": "56fe7e8e4eae4d3d46efa1aed0fcea23e6d3cc50",
+      "before_sha256": "5779af54c51856bbcc41c778ad791923b189f5b8200f0b56ca50d9ffbf70e671",
+      "after_sha256": "dc272d54df7539aae7d561525b873a4aca9aa0112d9862cbeee237629f8ece3a",
+      "scope": "mechanical current-entry navigation only; original fullscope/thresholds/independence/budgets/acceptance unchanged"
+    },
+    {
+      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/goal-D.md",
+      "original_sha": "56fe7e8e4eae4d3d46efa1aed0fcea23e6d3cc50",
+      "before_sha256": "2a3eb16b5cd3dabf4520570502f654550e1a9c6cb58cf87eff9efaa0698eaea9",
+      "after_sha256": "b01c6813c307ad12dee3ba5f5d3369f12c75b402d112466bf9b3e745a4cb7524",
+      "scope": "mechanical current-entry navigation only; original fullscope/thresholds/independence/budgets/acceptance unchanged"
+    }
+  ],
+  "no_scope_or_standard_change": true
+}

@@ -1,0 +1,11 @@
+revision=f359be6 fixed_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-IaWmBp
+
+ ✓ docs/reviews/web-dashboard-header-departure-independent/followon.test.tsx (2 tests) 422ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  22:06:07
+   Duration  3.50s (transform 1.81s, setup 0ms, collect 2.64s, tests 422ms, environment 199ms, prepare 43ms)

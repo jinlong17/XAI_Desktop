@@ -1,0 +1,52 @@
+{
+  "id": "CD-03/SOURCE-MACHINERY-IMPACT1",
+  "workflow": "A",
+  "module": "web",
+  "role": "fresh complete CD source machinery and protected dependency technical impact author; no repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "04797e39f0a6c42051601207f0429deef3300a6a",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "2a35488361bfbad596473fc355bd18d8feb5b164",
+    "fda069eb300704f24384eccacfd74ffc147aef37"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-cd03-source-machinery-impact-r1/impact.md",
+    "docs/reviews/audit-parallel-cd03-source-machinery-impact-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full3351reviewinputs/full3326sourceinputs/originalCD03 action+acceptance/all14CDrows/11conditionalpaths/fullcanonicalr2G1 E1-E25/E24/Rules/allactualhistoricalREL05processes/commands/duplicates/refusals/probes/unknownpermanentcap3 preserved. Root adopted full conditionaldocbasis only/no productgrant/noownerquestion/no recurrence/reminder/newdatesemantics. Original939evidence/formal13,3,3,293/39reversible rawlabels unchanged, exact4TT08docs baseline vsactualruntimeparity separate.",
+    "Technicallyfeasible complete machinery design for actualpublicCountdown route/managedpublicAppProviders/startup/SDK/localHTTP realauxiliary/accountscopes/generations/prefphysicalkeys/nativefocus/realzoom/reload/strictpassivefirstframe/attributedwrites/departure/export/download/rootterminalquiescence and fullcase-emittermatrix. Existing REL05validbefore/fixedreuse applicability exactrows notwholeCD; no fakefixture/mockauth/privateprovider/sourceactivation/deepowner imports. SharednativehostfocusimpactcurrentlyPROPOSED/pendingreview remains explicitdependency not assumedadopted. No sourcewriter/qualification/businessrun now.",
+    "CD03-08/10 complete sourceavailability readtruth: actualusePref/useCountdownSaveRecovery fallback vs publicraw APIs/barrels/scopedcapturedkey/owner/tombstone/epoch/codecs/currentfullrequiredrecordvalidation/absent/malformed/denied/currentcontrolleddraft honesty. DASHsessions-only readonlyobserver draft is notCD-key APIgrant or existingowner default0 proof; sourcegrounded finite alternatives and exactprotectedextension candidates if required, no genericstorageengine/schema/account rewrite. CD03-07/09 actualexportownerchange duringURL/Blob/append/click/latedownload/ownerbinding/rawsnapshot/errorUI/revoke+actualdiskack/failure retention/forcedloss limits/sourceerror guards; exactlocalorpublic finiteproposedpaths independentlyreviewable no product policy/credentialfiction.",
+    "Full14oracles before/fixed/affected/integrated/native/trustedkeyboard/rastercopies/fullG1/actualvendor/freshoriginalacceptance/rootreconcile/inventory representedby exactsource roles/outputs/modes/causal pairedpositive-negativecontrols/terminalartifacts/realstreams/exactarchive-copyclosure andcommand identities. Map each actualnewassertion-purpose againstfullhistoricalrunningunitspids/modes/lowerbounds/unknowncap3, no caller0/actorpathreset or exhaustedClockborrow. Genuine new-source machinery bounds finite onlyproposal, freshimpactreview thenexplicitexactscope/sourcewriter/review/qualification/fullvalidbefore; no A1partialscope closes originalCD03.",
+    "APPROVAL sought onlycomplete sourcegrounded technicalbasis withfiniteexceptions/productscopeunchanged; no implementation/runner edit/runtime grant. Allinputsvalidated andbothbuffersconstructed beforewrites. One static1/impact1cap3; deterministicencoding-safe transport and exactoriginalmodulelabelsavoidknownbadliteralcomparison. Failedchecker stops/no semanticrerun; reviewerassesses failed/unrun truth notreplacePASS. Freshfullindependentreview obligatory."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/sharedCSS/storage/schema/account/host/config/lockfile",
+    "all original contracts/runners/failures/evidence",
+    "globalcontrols/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "technical_impact_iteration": 1,
+    "technical_impact_cap": 3
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported producttradeoff or weakeningstandards",
+    "runtime orprotectedwrite need"
+  ],
+  "no_children": true
+}

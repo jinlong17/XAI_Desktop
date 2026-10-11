@@ -1,0 +1,78 @@
+revision=c201a1d
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-W5CtBq
+
+ ❯ docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx (3 tests | 3 failed) 215ms
+   × checklist: rejected canonical write preserves editable draft and reports failure 122ms
+     → expect(element).toHaveValue(Unsaved valuable checklist)
+
+Expected the element to have value:
+  Unsaved valuable checklist
+Received:
+
+   × attachment: rejected canonical write preserves editable draft and reports failure 44ms
+     → expect(element).toHaveValue(https://example.com/valuable-spec)
+
+Expected the element to have value:
+  https://example.com/valuable-spec
+Received:
+
+   × activity: rejected canonical write preserves editable draft and reports failure 49ms
+     → expect(element).toHaveValue(Unsaved valuable activity)
+
+Expected the element to have value:
+  Unsaved valuable activity
+Received:
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  17:57:56
+   Duration  1.78s (transform 546ms, setup 261ms, collect 676ms, tests 215ms, environment 335ms, prepare 57ms)
+
+
+stderr | docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > checklist: rejected canonical write preserves editable draft and reports failure
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > attachment: rejected canonical write preserves editable draft and reports failure
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > activity: rejected canonical write preserves editable draft and reports failure
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > checklist: rejected canonical write preserves editable draft and reports failure
+Error: expect(element).toHaveValue(Unsaved valuable checklist)
+
+Expected the element to have value:
+  Unsaved valuable checklist
+Received:
+
+ ❯ docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx:19:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > attachment: rejected canonical write preserves editable draft and reports failure
+Error: expect(element).toHaveValue(https://example.com/valuable-spec)
+
+Expected the element to have value:
+  https://example.com/valuable-spec
+Received:
+
+ ❯ docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx:19:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > activity: rejected canonical write preserves editable draft and reports failure
+Error: expect(element).toHaveValue(Unsaved valuable activity)
+
+Expected the element to have value:
+  Unsaved valuable activity
+Received:
+
+ ❯ docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx:19:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯

@@ -1,0 +1,8 @@
+{"name":"baseline","head":"650f59ce183ce875b20c44c99a45e27b98d4a477","requestedRef":"650f59c","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":1440}
+{"name":"actual-json-download","filename":"ai-chat-unsaved.json"}
+{"name":"layout","recovery":{"top":609.046875,"bottom":716.0625,"height":107.015625},"composer":{"top":724.0625,"bottom":844,"height":119.9375},"buttons":[44,44,44]}
+{"name":"seed-latest-stable-retry-and-send","pass":true}
+{"name":"delete-failure-keeps-transcript-until-retry","pass":true}
+{"name":"actual-conflict-download","filename":"ai-chat-unsaved.json"}
+{"name":"conflict-and-owner","pass":true}
+{"name":"PASS","scope":"independent replay plus delete retry, actual module/native Storage/downloaded JSON; synthetic stream only"}

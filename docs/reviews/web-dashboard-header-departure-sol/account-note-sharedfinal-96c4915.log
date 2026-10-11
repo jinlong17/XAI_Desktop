@@ -1,0 +1,11 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-zBOPkC
+
+ ✓ docs/reviews/web-d2-dashboard-note-astra/contracts.test.tsx (11 tests) 263ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  01:33:30
+   Duration  1.04s (transform 192ms, setup 264ms, collect 57ms, tests 263ms, environment 224ms, prepare 66ms)

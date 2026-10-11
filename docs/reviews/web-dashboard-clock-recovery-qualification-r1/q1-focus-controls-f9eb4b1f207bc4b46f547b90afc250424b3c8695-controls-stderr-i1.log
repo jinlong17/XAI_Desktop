@@ -1,0 +1,22 @@
+node:fs:1193
+  binding.rmdir(path);
+          ^
+
+Error: ENOTEMPTY: directory not empty, rmdir '/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-q1-inert-profile-WW9hzT/Default'
+    at Object.rmdirSync (node:fs:1193:11)
+    at _rmdirSync (node:internal/fs/rimraf:261:21)
+    at rimrafSync (node:internal/fs/rimraf:194:7)
+    at node:internal/fs/rimraf:254:9
+    at Array.forEach (<anonymous>)
+    at _rmdirSync (node:internal/fs/rimraf:251:7)
+    at rimrafSync (node:internal/fs/rimraf:194:7)
+    at rmSync (node:fs:1239:10)
+    at Object.close (file:///Users/lijinlong/.codex/worktrees/audit-clock-qualification-q1-20261010/XAI_Desktop/docs/reviews/web-dashboard-clock-recovery-qualification-r1/verify-qualification.mjs:149:160)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  errno: -66,
+  code: 'ENOTEMPTY',
+  syscall: 'rmdir',
+  path: '/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-q1-inert-profile-WW9hzT/Default'
+}
+
+Node.js v22.23.3

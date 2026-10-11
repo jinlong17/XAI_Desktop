@@ -1,0 +1,2540 @@
+{
+  "objective": "请按顺序去全部执行和检查和 commit",
+  "baseline": "b7623a1",
+  "total": 312,
+  "completion_rule": "每项须有当前实现、匹配验收范围的独立验证和提交证据；不自动关闭关联项。",
+  "items": [
+    {
+      "id": "REL-01",
+      "status": "completed",
+      "evidence": [
+        "commit:2f04bd4",
+        "../web-local-time-contract/20260909-bug-diagnose.md",
+        "commit:337d2b8",
+        "../web-local-time-contract/20260909-parent-verification.md",
+        "commit:8edd51d",
+        "commit:ca70f6f",
+        "../web-local-time-contract/20260909-independent-verification.md",
+        "commit:58e2757",
+        "commit:9149778",
+        "../web-local-time-contract/20260909-tt-idle-rollover-fix.md",
+        "commit:c02a09a",
+        "../web-local-time-consumers-independent/20260909-review.md"
+      ]
+    },
+    {
+      "id": "REL-02",
+      "status": "verification_pending",
+      "evidence": [
+        "../web-auth-device-session/20260909-rel02-verification.md",
+        "../web-auth-device-session/verify-browser-idb.mjs",
+        "commit:0141ecb",
+        "commit:f578ae8",
+        "commit:f15aceb",
+        "../web-auth-device-session/rel02-queue-review.test.ts",
+        "commit:5803e86",
+        "../web-auth-store-independent/20260909-review.md"
+      ],
+      "functional_status": "passed",
+      "workflow_status": "cross_tool_verification_pending"
+    },
+    {
+      "id": "REL-03",
+      "status": "verification_pending",
+      "evidence": [
+        "commit:44fa05c",
+        "../web-account-data-isolation/20260909-rel03-diagnosis.md",
+        "commit:ebb91c2",
+        "commit:85451f6",
+        "commit:e1cbe5c",
+        "commit:575cfd9",
+        "commit:fae9398",
+        "commit:5ae7b7a",
+        "commit:23b83e4",
+        "commit:96d1914",
+        "../web-account-data-isolation/20260909-host-integration.md",
+        "commit:992f688",
+        "commit:9638dbe",
+        "../web-account-data-isolation/20260909-joint-independent-review.md",
+        "commit:f02ca28",
+        "../web-account-scope-current-independent/20260909-review.md"
+      ],
+      "functional_status": "passed",
+      "workflow_status": "cross_tool_verification_pending"
+    },
+    {
+      "id": "REL-04",
+      "status": "verification_pending",
+      "evidence": [
+        "commit:d266ab8",
+        "commit:55d826e",
+        "commit:60a1b6e",
+        "../web-data-lifecycle-registry/20260909-rel04-diagnosis.md",
+        "commit:d01b671",
+        "commit:f6b1d00",
+        "../web-data-lifecycle-registry/20260909-timer-lifecycle-check.md",
+        "commit:adf7485"
+      ]
+    },
+    {
+      "id": "REL-05",
+      "status": "in_progress",
+      "evidence": [
+        "commit:3399f88",
+        "../web-storage-write-results/20260909-rel05-diagnosis.md",
+        "commit:aff8175",
+        "../web-storage-write-results/independent-write-failure.test.tsx",
+        "commit:dd744f5",
+        "commit:9222519",
+        "commit:7102f22",
+        "commit:15be421",
+        "commit:a61f92d",
+        "commit:45d0665",
+        "commit:9c974e7",
+        "commit:8c88842",
+        "../web-save-recovery-independent/20260909-joint-verification.md",
+        "../web-metrics-save-independent/20260909-verification.md",
+        "commit:6fa451f",
+        "commit:da35b3b",
+        "../web-save-consumer-inventory/20260909-inventory.md",
+        "../../../packages/xai-web-meditation/docs/test.md",
+        "commit:28fe049",
+        "../web-save-consumer-inventory/20260909-med-after.md",
+        "commit:9ebc48c",
+        "commit:8e50d8f",
+        "../web-matrix-independent/20260909-independent-verification.md",
+        "commit:a452d40",
+        "../web-calendar-save-recovery/20260909-diagnosis-and-fix.md",
+        "commit:3cd8870",
+        "../web-calendar-independent/20260909-independent-verification.md",
+        "commit:45a2a06",
+        "../web-habits-save-recovery/20260909-diagnosis-and-fix.md",
+        "commit:394efad",
+        "../web-pomodoro-preference-recovery/20260909-fix.md",
+        "commit:179e6d5",
+        "commit:407259d",
+        "commit:91f544e",
+        "../web-countdown-independent/20260909-review.md",
+        "commit:dc86983",
+        "commit:88108ed",
+        "../web-pomodoro-prefs-independent/20260909-independent.md",
+        "commit:0b16605",
+        "commit:bc57f1f",
+        "../web-habits-save-independent/review.md",
+        "commit:885a111",
+        "commit:0223180",
+        "commit:8eb163d",
+        "commit:88fd5c1",
+        "../web-ai-save-recovery/20260909-diagnosis.md",
+        "commit:996199b",
+        "commit:81f5623",
+        "../web-board-card-save-recovery/20260909-diagnosis.md",
+        "commit:279a7f5",
+        "commit:dea0af6",
+        "commit:ec81440",
+        "../web-board-composer-independent/review.md",
+        "commit:d8fb98d",
+        "commit:650f59c",
+        "commit:81a2346",
+        "commit:3491540",
+        "../web-ai-save-independent/review.md",
+        "../web-ai-preference-discard/review.md",
+        "commit:72296ec",
+        "commit:33723a1",
+        "commit:187225e",
+        "../web-dashboard-grid-independent/review.md",
+        "commit:8865d17",
+        "commit:53854f4",
+        "../web-ai-toolbar-independent/review.md",
+        "commit:1277086",
+        "../web-ai-preference-independent/review.md",
+        "commit:32023cf",
+        "commit:e1e3697",
+        "../web-board-workspace-astra-review/20260909-astra-review.md",
+        "commit:1053463",
+        "commit:38c056e",
+        "commit:ac0e090",
+        "../web-board-workspace-astra-review/20260909-1053463-rereview.md",
+        "commit:a8774fd",
+        "../web-board-detail-save-diagnosis/review.md",
+        "commit:034ef46",
+        "commit:a81234e",
+        "commit:8045d5d",
+        "../web-board-workspace-astra-review/20260909-034ef46-rereview.md",
+        "commit:b353cbb",
+        "commit:944c5ef",
+        "commit:501feb7",
+        "../web-board-workspace-astra-review/20260909-b353cbb-acceptance.md",
+        "commit:863e738",
+        "commit:f764731",
+        "commit:e407967",
+        "../web-board-workspace-astra-review/20260909-d1-f764731-rereview.md",
+        "commit:db1eddc",
+        "commit:adc1202",
+        "commit:d8412d3",
+        "commit:c58a647",
+        "../web-board-workspace-astra-review/20260909-d1-d8412d3-reset-acceptance.md",
+        "commit:5c0f46d",
+        "commit:51338e0",
+        "commit:66a8488",
+        "commit:74565a6",
+        "commit:4584ceb",
+        "commit:35b4964",
+        "../web-tasks-canonical-ui-independent/review.md",
+        "commit:0a294bc",
+        "commit:8503b71",
+        "../web-tasks-canonical-ui-independent/tasks-ui-retry-35b4964.log",
+        "commit:1998df3",
+        "commit:9a7e66b",
+        "../web-calendar-d1-fixture-repair/20260909-calendar-fixture-repair.md",
+        "commit:1829c3a",
+        "../web-board-canonical-link-independent/review.md",
+        "commit:56f1aaf",
+        "commit:1660df9",
+        "../web-board-workspace-astra-review/20260909-calendar-fixtures-9a7e66b-acceptance.md",
+        "commit:b899396",
+        "../web-tasks-canonical-ui-native/review.md",
+        "commit:6a1adac",
+        "../web-board-canonical-link-independent/board-link-6a1adac.log",
+        "commit:3241529",
+        "commit:2ca5b93",
+        "commit:b4344a4",
+        "../web-board-workspace-astra-review/20260909-board-d1-6a1adac-review.md",
+        "commit:728822d",
+        "commit:ab3a150",
+        "commit:2fed984",
+        "commit:7f19aec",
+        "commit:0143952",
+        "../web-board-workspace-astra-review/20260909-tasks-d1-3241529-review.md",
+        "commit:0b3a043",
+        "commit:bf2935b",
+        "commit:4e9ff08",
+        "commit:54b422c",
+        "commit:170c526",
+        "commit:a4f6369",
+        "commit:8d1fb07",
+        "commit:f3a519c",
+        "commit:e9ff409",
+        "commit:45b83b6",
+        "commit:0c4b6b4",
+        "commit:aa747d4",
+        "commit:080f86b",
+        "commit:e9fb5e7",
+        "commit:40e4adb",
+        "commit:c201a1d",
+        "commit:96aa7b1",
+        "commit:dbc2e69",
+        "commit:33832b1",
+        "commit:ec8f86e",
+        "commit:0203c56",
+        "commit:ea5ba0b",
+        "commit:c5a4347",
+        "commit:fe2aa90",
+        "commit:8679232",
+        "commit:51ae929",
+        "commit:10c208e",
+        "commit:051d7fa",
+        "commit:a6ad06d",
+        "commit:cc70314",
+        "commit:c35898f",
+        "commit:95afb81",
+        "commit:3472b69",
+        "../web-board-workspace-astra-review/20260909-settings-a6ad06d-review.md",
+        "commit:f43dff6",
+        "commit:5adf530",
+        "commit:b152399",
+        "commit:8105cc9",
+        "commit:b484a6e",
+        "commit:a1f73c9",
+        "commit:0eec9a7",
+        "commit:5a97d53",
+        "commit:ce92c78",
+        "../web-board-workspace-astra-review/20260909-settings-a1f73c9-acceptance.md",
+        "commit:8ab38ed",
+        "commit:61f8fa5",
+        "commit:e5eb23f",
+        "commit:25dc196",
+        "commit:a82efa0",
+        "commit:99c02a3",
+        "commit:6b3f09b",
+        "../web-board-tasklink-astra-final/review.md",
+        "commit:5ed9329",
+        "commit:04d036b",
+        "commit:1becb16",
+        "commit:838396c",
+        "commit:825a926",
+        "commit:20da766",
+        "commit:2c5dc31",
+        "commit:242b75d",
+        "commit:6e21e48",
+        "../web-d2-async-pref-contract/acceptance-status.md",
+        "commit:35b4d0e",
+        "commit:3abca42",
+        "commit:6504589",
+        "commit:01fba63",
+        "commit:e75d5b3",
+        "commit:d6184ee",
+        "commit:8c49657",
+        "../web-d2-async-pref-native/parent-d6184ee-review.md",
+        "commit:2bd330a",
+        "../web-d2-async-pref-astra-hooks/review.md",
+        "commit:9557005",
+        "../web-d2-dashboard-note-independent/review.md",
+        "commit:69c8318",
+        "commit:d15aec5",
+        "commit:725d719",
+        "../web-d2-async-pref-dynamic-independent/review.md",
+        "commit:20a4591",
+        "commit:2c375a0",
+        "commit:41950a7",
+        "commit:a85fc9b",
+        "../web-d2-async-pref-native/parent-20a4591-review.md",
+        "commit:a25423c",
+        "../web-d2-async-pref-astra-hooks/review-20a4591.md",
+        "commit:f532ad5",
+        "commit:124cdc3",
+        "../web-d2-dashboard-note-native/native-f532ad5-final.json",
+        "commit:53fb95d",
+        "commit:d129950",
+        "commit:662ef40",
+        "commit:4a66e86",
+        "../web-d2-dashboard-note-astra/review-d129950.md",
+        "commit:56fe1de",
+        "commit:0320995",
+        "commit:9f1b20a",
+        "commit:9693b3e",
+        "commit:47e625b",
+        "../web-d2-device-autosave-contract/contract.md",
+        "commit:d79670f",
+        "commit:76edb0c",
+        "commit:546410d",
+        "commit:083d83d",
+        "../web-d2-device-offset-native/review.md",
+        "commit:b0b3016",
+        "commit:68ea7a3",
+        "commit:40e64af",
+        "commit:6265892",
+        "commit:830dd2b",
+        "commit:a6b50c3",
+        "commit:9424081",
+        "commit:1a99a2a",
+        "commit:0027a6c",
+        "commit:db5041f",
+        "../web-d2-device-offset-astra/review-830dd2b.md",
+        "commit:2b666ed",
+        "commit:6ff1a8d",
+        "commit:6c7e0fd",
+        "commit:6981111",
+        "commit:dfe0fce",
+        "../web-d2-pomo-controls-native/review.md",
+        "../web-d2-pomo-export-native/review.md",
+        "commit:7785e92",
+        "commit:ba9affc",
+        "commit:6f4140c",
+        "commit:03b0363",
+        "../web-d2-pomo-device-astra/review-7785e9.md",
+        "commit:b3ecc69",
+        "commit:d633e22",
+        "../web-d2-smart-lists-native/review.md",
+        "commit:1666f42",
+        "commit:40ffbe1",
+        "commit:aadf2a7",
+        "commit:c30c938",
+        "commit:1267f50",
+        "../web-d2-smart-lists-contract/contract.md",
+        "commit:a663891",
+        "commit:07bf394",
+        "commit:8565ca6",
+        "commit:26f8156",
+        "commit:ef97c1f",
+        "commit:6bf02de",
+        "commit:78bb812",
+        "../web-smart-lists-recovery-contract/contract.md",
+        "../web-d2-smart-lists-astra/review-40ffbe1.md",
+        "../web-d2-smart-lists-draft-native/review.md",
+        "../web-d2-smart-lists-host-native/review.md",
+        "commit:b18939e",
+        "commit:f27c6d1",
+        "../web-d2-async-pref-contract/caller-recovery-matrix.md",
+        "commit:286bcc7",
+        "../web-smart-lists-recovery-astra/review-6bf02de.md",
+        "commit:115efb2",
+        "commit:32862d5",
+        "commit:dc90d44",
+        "commit:6b3c044",
+        "commit:3e05d1b",
+        "../web-smart-lists-recovery-sol/review-115efb2.md",
+        "commit:3ddd9ff",
+        "commit:a3b3928",
+        "../web-smart-lists-recovery-astra/review-115efb2.md",
+        "commit:a2c0fe0",
+        "commit:4103ebf",
+        "commit:348a095",
+        "commit:3667985",
+        "../web-collaborate-recovery-native/review.md",
+        "../web-smart-lists-recovery-sol/review-a2c0fe0.md",
+        "commit:75aa0e8",
+        "commit:8d654ed",
+        "commit:5f4c4ff",
+        "../web-smart-lists-recovery-astra/review-a2c0fe0.md",
+        "../web-collaborate-recovery-contract/contract.md",
+        "commit:2bbc696",
+        "commit:2b02dd3",
+        "commit:394a4ba",
+        "commit:cdde1d0",
+        "commit:ae2d233",
+        "../web-collaborate-recovery-independent/review.md",
+        "../web-collaborate-recovery-terra/author-report.md",
+        "commit:977369e",
+        "commit:e08cd8c",
+        "commit:1e81df0",
+        "commit:2a536c1",
+        "commit:9f0385f",
+        "commit:c604951",
+        "commit:53a4d96",
+        "../web-collaborate-recovery-independent/acceptance-c604951.md",
+        "../web-pomodoro-departure-independent/review.md",
+        "../web-pomodoro-departure-contract/contract.md",
+        "commit:ad689dd",
+        "commit:f46b4b8",
+        "commit:6254cb4",
+        "commit:af32234",
+        "../web-collaborate-recovery-astra-final/acceptance-ad689dd.md",
+        "../web-departure-coordinator-independent/review-af32234.md",
+        "commit:ba7f0da",
+        "commit:0d7f885",
+        "commit:b01b67c",
+        "commit:e1a69fb",
+        "commit:6844ce1",
+        "commit:528ab18",
+        "../web-departure-coordinator-astra/review-af32234.md",
+        "../web-pomodoro-departure-native/review.md",
+        "commit:990ac52",
+        "commit:d504664",
+        "commit:00900dc",
+        "../web-pomodoro-departure-astra/review-e1a69fb.md",
+        "commit:2962b49",
+        "commit:f966da3",
+        "commit:2ae8272",
+        "commit:711ddbd",
+        "commit:051212a",
+        "../web-pomodoro-departure-astra/acceptance-2962b49.md",
+        "commit:ef722d8",
+        "commit:a62d8a2",
+        "commit:e4a32a1",
+        "../web-dashboard-header-departure-contract/contract.md",
+        "../web-dashboard-header-departure-independent/review.md",
+        "commit:45a1c15",
+        "commit:0f2d5a0",
+        "commit:3e11013",
+        "commit:1c2506b",
+        "commit:d6ac266",
+        "commit:772b702",
+        "../web-dashboard-header-departure-native/review.md",
+        "commit:41fb4d1",
+        "commit:17144da",
+        "commit:e6c52e1",
+        "commit:ddc1ff8",
+        "../web-dashboard-header-departure-sol/review-41fb4d1.md",
+        "commit:9193353",
+        "commit:4aecaa6",
+        "commit:9ba8655",
+        "commit:fd0e740",
+        "commit:b8cb6e4",
+        "../web-dashboard-header-departure-astra/coverage-41fb4d1.md",
+        "../web-dashboard-header-departure-native/supplemental-review.md",
+        "commit:c9a388d",
+        "commit:f6e1ff5",
+        "commit:1bdc844",
+        "commit:9fe3fad",
+        "commit:73b4eb9",
+        "commit:106f1d8",
+        "commit:c79ac8f",
+        "commit:3595cbd",
+        "commit:934430a",
+        "commit:4600368",
+        "commit:ccf72e3",
+        "commit:2ea710f",
+        "../web-dashboard-header-departure-astra/acceptance-73b4eb9.md",
+        "../web-dashboard-header-departure-sol/review-73b4eb9.md",
+        "commit:3638e21",
+        "commit:8c05c85",
+        "../web-date-time-recovery-contract/contract.md",
+        "../web-date-time-recovery-contract/remaining-writers.md",
+        "../web-date-time-recovery-independent/review.md",
+        "commit:2c09719",
+        "commit:e9213fb",
+        "commit:34cff59",
+        "commit:8407ab8",
+        "../web-date-time-recovery-native/review.md",
+        "commit:611062e",
+        "commit:3df3199",
+        "commit:6b0694b",
+        "commit:da6950a",
+        "../web-date-time-recovery-independent/current-611062e.md",
+        "commit:d0d934d",
+        "../web-date-time-recovery-astra/acceptance-d9d9fdd.md",
+        "../web-date-time-recovery-astra/next-notifications-contract.md",
+        "../web-notifications-recovery-independent/before-d9d9fdd.md",
+        "commit:f130cb0",
+        "commit:7ce03a5",
+        "commit:a41cd1d",
+        "commit:ad223a2",
+        "../web-notifications-recovery-astra/acceptance-afbfb24.md",
+        "../web-notifications-recovery-astra/next-more-contract.md",
+        "commit:fc56d5e",
+        "commit:f73b85f",
+        "../web-more-recovery-independent/before-afbfb24.md",
+        "commit:27efbf2",
+        "commit:f4c3c62",
+        "commit:982ab68",
+        "commit:7b216a3",
+        "../web-more-recovery-terra/implementation.md",
+        "commit:8e12334",
+        "../web-more-recovery-sol/README.md",
+        "../web-more-recovery-sol/review-7b216a3.md",
+        "commit:fe08254",
+        "../web-more-recovery-independent/fixed-7b216a3.md",
+        "commit:443be31",
+        "commit:8c07b57",
+        "commit:a6c7b57",
+        "commit:a9921b9",
+        "../web-more-recovery-native/review-controls-reset-7b216a3.md",
+        "../web-more-recovery-native/review-host-7b216a3.md",
+        "../web-more-recovery-native/review-recovery-owner-7b216a3.md",
+        "../web-more-recovery-native/review-visual-7b216a3.md",
+        "commit:7b9ef87",
+        "../web-more-recovery-final/review-final-regressions-7b216a3.md",
+        "commit:5ac1244",
+        "../web-more-recovery-astra/blocked-7b216a3.md",
+        "commit:c0c9ec5",
+        "../web-more-recovery-evidence/completion-7b216a3.md",
+        "commit:27adb10",
+        "../web-more-recovery-acceptance/acceptance-7b216a3.md",
+        "commit:019f451",
+        "../web-sticky-recovery-native/review-host-210abdf.md",
+        "commit:0ba68d7",
+        "../web-sticky-recovery-f1/impact-review.md",
+        "commit:e3db4e0",
+        "../web-sticky-recovery-f1/before-callers-210abdf.md",
+        "commit:f359be6",
+        "commit:3ea0310",
+        "../web-sticky-recovery-f1/post-f359be6.md",
+        "commit:f3a3c82",
+        "../web-sticky-recovery-f1/affected-callers-f359be6.md",
+        "commit:70ff46a",
+        "../web-sticky-recovery-contract/contract.md",
+        "commit:4e21e6d",
+        "../web-sticky-recovery-sol/README.md",
+        "commit:07784c4",
+        "../web-sticky-recovery-independent/before-2023526.md",
+        "commit:210abdf",
+        "commit:7ee8de6",
+        "../web-sticky-recovery-sol/fixed-210abdf.md",
+        "../web-sticky-recovery-independent/fixed-210abdf.md",
+        "commit:bc92561",
+        "../web-sticky-recovery-native/review-controls-export-210abdf.md",
+        "../web-sticky-recovery-sol/post-f359be6.md",
+        "../web-sticky-recovery-independent/post-f359be6.md",
+        "../web-sticky-recovery-native/post-f359be6.md",
+        "commit:98125c5",
+        "../web-sticky-recovery-native/review-visual-f359be6.md",
+        "commit:d7358b9",
+        "../web-sticky-recovery-final/review-final-regressions-f359be6.md",
+        "commit:47bbd58",
+        "../web-sticky-recovery-acceptance/blocked-f359be6.md",
+        "commit:3debd91",
+        "../web-sticky-recovery-final/widgets-f359be6.md",
+        "commit:699f6e6",
+        "../web-sticky-recovery-acceptance/acceptance-f359be6.md",
+        "commit:6ded3dc",
+        "../web-next-caller-selection/selection-f359be6.md",
+        "../web-features-recovery-contract/contract.md",
+        "commit:11e0afb",
+        "../web-features-recovery-sol/README.md",
+        "commit:b732c27",
+        "../web-features-recovery-independent/before-f359be6.md",
+        "commit:4c5323f",
+        "../web-features-recovery-native/before-f359be6.md",
+        "../web-features-recovery-f1/before-f359be6.md",
+        "commit:5cd63ff",
+        "commit:eb37a59",
+        "../web-features-recovery-sol/fixed-5cd63ff.md",
+        "../web-features-recovery-independent/fixed-5cd63ff.md",
+        "../web-features-recovery-f1/fixed-5cd63ff.md",
+        "commit:58a93ef",
+        "../web-features-recovery-native/review-controls-reset-export-5cd63ff.md",
+        "commit:312b27c",
+        "../web-features-recovery-native/review-host-downstream-5cd63ff.md",
+        "commit:5905e37",
+        "../web-features-recovery-native/review-visual-keyboard-5cd63ff.md",
+        "commit:0056299",
+        "../web-features-recovery-final/review-final-regressions-5cd63ff.md",
+        "commit:05b21f4",
+        "../web-more-recovery-fb002/review-fb002.md",
+        "commit:ec55f9e",
+        "../web-features-recovery-acceptance/acceptance-5cd63ff.md",
+        "commit:e9fbdb7",
+        "../web-next-caller-selection/selection-5cd63ff.md",
+        "../web-appearance-recovery-contract/contract.md",
+        "commit:b2e5eb2",
+        "commit:706c9a3",
+        "commit:bd09456",
+        "../web-appearance-recovery-sol/README.md",
+        "commit:b997235",
+        "../web-appearance-recovery-independent/README.md",
+        "commit:72538d1",
+        "../web-appearance-recovery-native/before-5cd63ff.md",
+        "../web-appearance-recovery-f1/before-5cd63ff.md",
+        "commit:24073b5",
+        "commit:4874170",
+        "../web-appearance-recovery-terra/implementation.md",
+        "commit:26cfce8",
+        "../web-appearance-recovery-oracle-erratum/review-oe.md",
+        "commit:31d6335",
+        "../web-appearance-recovery-sol/fixed-24073b5.md",
+        "commit:3419542",
+        "../web-appearance-recovery-native/review-controls-reset-export-24073b5.md",
+        "commit:6b9f0ee",
+        "../web-native-keyinput-k1/review-k1.md",
+        "commit:32e6753",
+        "../web-appearance-recovery-native/review-host-downstream-retryall-24073b5.md",
+        "commit:5307b6f",
+        "../web-appearance-recovery-native/review-visual-keyboard-24073b5.md",
+        "commit:5bbf473",
+        "commit:0d34bf2",
+        "../web-appearance-recovery-terra/implementation-r2.md",
+        "commit:bacdbbc",
+        "../web-appearance-recovery-native/review-visual-keyboard-5bbf473.md",
+        "commit:419e56d",
+        "commit:5766c1e",
+        "../web-appearance-recovery-terra/implementation-r3.md",
+        "commit:2696855",
+        "../web-appearance-recovery-native/review-visual-keyboard-419e56d.md",
+        "commit:c6d1ed4",
+        "../web-appearance-recovery-final/review-final-regressions-419e56d.md",
+        "commit:a560863",
+        "../web-appearance-recovery-acceptance/acceptance-419e56d.md",
+        "commit:2c35fee",
+        "../web-next-caller-selection/selection-419e56d.md",
+        "commit:f7726d7",
+        "../web-apprail-order-recovery-contract/contract.md",
+        "commit:d6ea500",
+        "../web-apprail-order-recovery-sol/README.md",
+        "commit:6e9ec9c",
+        "../web-apprail-order-recovery-independent/README.md",
+        "commit:04ee6a2",
+        "../web-apprail-order-recovery-native/before-419e56d.md",
+        "../web-apprail-order-recovery-f1/before-419e56d.md",
+        "commit:f9eb4b1",
+        "commit:0d440ca",
+        "../web-apprail-order-recovery-terra/implementation.md",
+        "commit:94b12ba",
+        "../web-apprail-order-recovery-sol/fixed-f9eb4b1.md",
+        "commit:ae7b69e",
+        "../web-apprail-order-recovery-native/review-controls-protection-export-f9eb4b1.md",
+        "commit:55cf1e9",
+        "../web-apprail-order-recovery-native/review-downstream-visual-f9eb4b1.md",
+        "commit:5c6bcd2",
+        "../web-apprail-order-recovery-native/review-keyboard-f9eb4b1.md",
+        "commit:ee60b48",
+        "../web-apprail-order-recovery-final/review-final-regressions-f9eb4b1.md",
+        "commit:efe05ea",
+        "../web-apprail-order-recovery-acceptance/acceptance-f9eb4b1.md"
+      ]
+    },
+    {
+      "id": "REL-06",
+      "status": "in_progress",
+      "evidence": [
+        "commit:27b8925",
+        "commit:a1ed33a",
+        "commit:762778c",
+        "commit:35d7b11",
+        "../../../packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx",
+        "commit:23bd23c",
+        "commit:65e87b7",
+        "../web-account-deletion-reliability/20260909-legacy-wipe-verification.md",
+        "commit:c0af11b",
+        "../web-auth-session-cleanup/20260909-rel06-independent-diagnosis.md",
+        "commit:2cec3c5",
+        "../web-auth-session-cleanup/20260909-generation-foundation.md",
+        "commit:498ceb9",
+        "commit:faecd79",
+        "commit:3d39533",
+        "../web-auth-session-cleanup/20260909-generation-client.md",
+        "commit:d801f5e",
+        "commit:4001170",
+        "commit:d895b0b",
+        "commit:23c3423",
+        "commit:cfc2d6d",
+        "commit:e1c3b01",
+        "../web-auth-session-cleanup/20260909-host-integration.md",
+        "commit:3637866",
+        "commit:10a90ce",
+        "commit:d8501f3",
+        "../web-auth-host-independent/20260909-independent-review.md",
+        "commit:ab8c35a",
+        "../web-account-deletion-auth-receipt/20260909-fix.md",
+        "commit:2274185",
+        "../web-account-deletion-auth-independent/20260909-review.md",
+        "commit:0ed1582",
+        "../web-canonical-migration-write-race/review.md",
+        "commit:fa90dae",
+        "commit:0203c56",
+        "commit:ea5ba0b",
+        "commit:c5a4347",
+        "commit:fe2aa90",
+        "commit:8679232",
+        "commit:51ae929",
+        "commit:10c208e",
+        "commit:051d7fa",
+        "commit:a6ad06d",
+        "commit:cc70314",
+        "commit:c35898f",
+        "commit:95afb81",
+        "commit:3472b69",
+        "../web-board-workspace-astra-review/20260909-settings-a6ad06d-review.md",
+        "commit:f43dff6",
+        "commit:5adf530",
+        "commit:b152399",
+        "commit:8105cc9",
+        "commit:b484a6e",
+        "commit:a1f73c9",
+        "commit:0eec9a7",
+        "commit:5a97d53",
+        "commit:ce92c78",
+        "../web-board-workspace-astra-review/20260909-settings-a1f73c9-acceptance.md"
+      ]
+    },
+    {
+      "id": "REL-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "REL-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "REL-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "REL-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "REL-11",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "REL-12",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "TT-01",
+      "status": "completed",
+      "evidence": [
+        "commit:6cd137e",
+        "commit:c5b08a7",
+        "../web-time-tracker-window-accounting/20260909-tt01-diagnosis.md",
+        "../web-time-tracker-window-accounting/20260909-fix.md",
+        "commit:8d951e9",
+        "../web-time-window-independent/20260909-verification.md"
+      ]
+    },
+    {
+      "id": "TT-02",
+      "status": "completed",
+      "evidence": [
+        "commit:ba20658",
+        "commit:64caa5a",
+        "commit:082766b",
+        "../web-time-tracker-session-independent/20260909-report.md"
+      ]
+    },
+    {
+      "id": "TT-03",
+      "status": "completed",
+      "evidence": [
+        "commit:c5b08a7",
+        "../web-time-tracker-window-accounting/20260909-fix.md",
+        "commit:8d951e9",
+        "../web-time-window-independent/20260909-verification.md",
+        "../web-time-hour-independent/20260909-review.md"
+      ]
+    },
+    {
+      "id": "TT-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "TT-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "TT-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "TT-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "TT-08",
+      "status": "pending",
+      "evidence": [
+        "commit:c5874e5f6e803aa391ef2e5fb677e4bab592f4ef",
+        "../audit-parallel-tt08-final-acceptance-r1/acceptance.md",
+        "sha256:1c2d4b8ec5cf22d8a97c2519adba4cb4078b4500a9be2d94ee2889c3c46a68ca",
+        "commit:f475cf5d0598dcb18e0e75e2e025969e7c16b056",
+        "../audit-parallel-tt08-vendor-verification-r3/receipt.md",
+        "commit:b4c33120bde198214bbe3bf76ead543b5f139c3a"
+      ]
+    },
+    {
+      "id": "POMO-01",
+      "status": "completed",
+      "evidence": [
+        "commit:b6cf0ee",
+        "../web-pomodoro-durable-session/20260909-diagnosis.md",
+        "commit:ce4b767",
+        "../web-pomodoro-durable-session/20260909-fix.md",
+        "commit:4868d0a",
+        "commit:53eda1b",
+        "../web-pomodoro-independent/20260909-independent-review.md"
+      ]
+    },
+    {
+      "id": "POMO-02",
+      "status": "completed",
+      "evidence": [
+        "commit:b6cf0ee",
+        "../web-pomodoro-durable-session/20260909-diagnosis.md",
+        "commit:ce4b767",
+        "../web-pomodoro-durable-session/20260909-fix.md",
+        "commit:4868d0a",
+        "commit:53eda1b",
+        "../web-pomodoro-independent/20260909-independent-review.md"
+      ]
+    },
+    {
+      "id": "POMO-03",
+      "status": "completed",
+      "evidence": [
+        "commit:2b1759b",
+        "../web-statistics-time-contract/20260909-stat01-fix.md",
+        "commit:ab94f84",
+        "commit:666171d",
+        "commit:e747076",
+        "../web-statistics-time-independent/20260909-independent-review.md"
+      ]
+    },
+    {
+      "id": "POMO-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "POMO-05",
+      "status": "pending",
+      "evidence": [
+        "commit:353e418",
+        "commit:40079c7",
+        "commit:03b0363",
+        "../web-d2-pomo-recovery-visual/review.md"
+      ]
+    },
+    {
+      "id": "MED-01",
+      "status": "completed",
+      "evidence": [
+        "commit:6887879",
+        "../web-meditation-durable/20260909-author-verification.md",
+        "commit:797b4b4",
+        "../web-meditation-independent/20260909-independent-verification.md"
+      ]
+    },
+    {
+      "id": "MED-02",
+      "status": "completed",
+      "evidence": [
+        "commit:6887879",
+        "../web-meditation-durable/20260909-author-verification.md",
+        "commit:797b4b4",
+        "../web-meditation-independent/20260909-independent-verification.md"
+      ]
+    },
+    {
+      "id": "MED-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "MED-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "TASK-01",
+      "status": "completed",
+      "evidence": [
+        "commit:0a3a944",
+        "../web-tasks-date-independent/20260909-report.md"
+      ]
+    },
+    {
+      "id": "TASK-02",
+      "status": "completed",
+      "evidence": [
+        "commit:1b7c0e0",
+        "commit:d7d1733",
+        "commit:f3a75f1",
+        "commit:3c8e24f",
+        "commit:58f4076",
+        "../web-task-link-independent/20260909-review.md"
+      ]
+    },
+    {
+      "id": "TASK-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "TASK-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "TASK-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "TASK-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "TASK-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "HAB-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "HAB-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "HAB-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "HAB-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "HAB-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CAL-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CAL-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CAL-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CAL-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CAL-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "MAT-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "MAT-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "MAT-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CD-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CD-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CD-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "STAT-01",
+      "status": "completed",
+      "evidence": [
+        "commit:ed7009f",
+        "commit:2b1759b",
+        "../web-statistics-time-contract/20260909-stat01-fix.md",
+        "commit:ab94f84",
+        "commit:666171d",
+        "commit:e747076",
+        "../web-statistics-time-independent/20260909-independent-review.md"
+      ]
+    },
+    {
+      "id": "STAT-02",
+      "status": "completed",
+      "evidence": [
+        "commit:ed7009f",
+        "../web-statistics-time-contract/20260909-diagnosis.md",
+        "commit:580bbde",
+        "../web-statistics-time-contract/20260909-stat02-consumer.md",
+        "commit:dafaf9e",
+        "commit:1b7c0e0",
+        "commit:b700096",
+        "commit:905abb7",
+        "../web-statistics-completion-independent/20260909-review.md"
+      ]
+    },
+    {
+      "id": "STAT-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "STAT-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-06",
+      "status": "pending",
+      "evidence": [
+        "commit:5c6ed8e",
+        "commit:99c36b0",
+        "commit:14b044c",
+        "commit:c0cc12d",
+        "commit:97f89da",
+        "../web-board-detail-astra-final/review.md"
+      ],
+      "partial_scope": "Three append recovery operations accepted; full card field patch and per-character whole-board rewrite requirement remains open."
+    },
+    {
+      "id": "BRD-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-11",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-12",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-13",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-14",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-15",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-16",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-17",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-18",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-19",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-20",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-21",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-22",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-23",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-24",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-25",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-26",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-27",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-28",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BRD-29",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DASH-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DASH-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DASH-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DASH-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DASH-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DASH-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DASH-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DASH-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DASH-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DASH-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DASH-11",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DASH-12",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "AI-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "AI-02",
+      "status": "in_progress",
+      "evidence": [
+        "commit:bce7fc8",
+        "../web-ai-tool-write-receipts/20260909-create-retry-fix.md",
+        "commit:e45f78e",
+        "commit:c353e71",
+        "commit:daff8ef",
+        "../web-ai-tool-receipt-fix/handoff.md",
+        "commit:905b116",
+        "../web-canonical-receipt-migration-inventory/review.md",
+        "commit:dd10cb8",
+        "../web-ai-calendar-invalid-date/review.md",
+        "commit:9df552e",
+        "../web-ai-tool-receipt-astra-review/review.md",
+        "commit:e50ca1c",
+        "../web-ai-calendar-validation-fix/review.md",
+        "commit:afd10ff",
+        "commit:2d74022",
+        "../web-ai-tool-receipt-sol-independent/review.md",
+        "commit:8bcd1d6",
+        "commit:fd1dce1",
+        "commit:20a0748",
+        "commit:ecb588c",
+        "commit:a9b88ba",
+        "commit:8045d5d",
+        "../web-board-workspace-astra-review/20260909-a1-astra-entry-gate.md",
+        "commit:3241ffd",
+        "../web-canonical-preflight-current/CHECKLIST.md",
+        "commit:1364de5",
+        "commit:501feb7",
+        "../web-board-workspace-astra-review/20260909-canonical-old-client-rollout-gate.md",
+        "commit:fb3ae2f",
+        "../web-ai-canonical-receipts-fix/20260909-b1-compatibility.md",
+        "commit:1831585",
+        "../web-canonical-remove-read-failure/review.md",
+        "commit:7c59d3f",
+        "commit:7b584b3",
+        "commit:96df149",
+        "commit:de3bf16",
+        "../web-board-workspace-astra-review/20260909-b1-decoder-review.md",
+        "commit:5c13fec",
+        "../web-ai-canonical-receipts-fix/20260909-b2-compatibility-callers.md",
+        "commit:b20c7ea",
+        "../web-board-workspace-astra-review/20260909-b2-compatibility-review.md",
+        "commit:aca0193",
+        "commit:19cfee4",
+        "../web-board-workspace-astra-review/20260909-b2-aca0193-acceptance.md",
+        "commit:0ed1582",
+        "../web-canonical-migration-write-race/review.md",
+        "commit:fa90dae",
+        "commit:946ded3",
+        "../web-board-workspace-astra-review/20260909-c-primitive-test-preparation.md",
+        "commit:37252bc",
+        "../web-ai-canonical-primitive-sol-fix/review.md",
+        "commit:782f7b7",
+        "commit:7d41627",
+        "../web-canonical-primitive-native/review.md",
+        "commit:7b95133",
+        "../web-board-workspace-astra-review/20260909-d1-ordinary-writer-contract.md",
+        "commit:113e12f",
+        "../web-canonical-primitive-browser-reopen/review.md",
+        "commit:3a764a1",
+        "commit:06e4a1b",
+        "../web-canonical-ordinary-writer-review/review.md",
+        "commit:151982b",
+        "commit:3e0b611",
+        "commit:496039f",
+        "commit:4c3832c",
+        "commit:a246836",
+        "../web-board-workspace-astra-review/20260909-d1-496039f-review.md",
+        "commit:863e738",
+        "commit:f764731",
+        "commit:e407967",
+        "../web-board-workspace-astra-review/20260909-d1-f764731-rereview.md",
+        "commit:db1eddc",
+        "commit:adc1202",
+        "commit:d8412d3",
+        "commit:4202c79",
+        "../web-ai-canonical-subscribers-sol-fix/review.md",
+        "commit:d24c564",
+        "commit:1d7773a",
+        "commit:646a539",
+        "../web-canonical-six-subscriber-native/review.md",
+        "../web-ai-canonical-continuation-native/review.md",
+        "commit:c58a647",
+        "../web-board-workspace-astra-review/20260909-d1-d8412d3-reset-acceptance.md",
+        "commit:5c0f46d",
+        "commit:51338e0",
+        "commit:66a8488",
+        "commit:74565a6",
+        "commit:4584ceb",
+        "commit:35b4964",
+        "../web-tasks-canonical-ui-independent/review.md",
+        "commit:45c74c3",
+        "../web-board-workspace-astra-review/20260909-six-subscribers-4202c79-review.md",
+        "commit:0a294bc",
+        "commit:8503b71",
+        "../web-tasks-canonical-ui-independent/tasks-ui-retry-35b4964.log",
+        "commit:6efba71",
+        "commit:1998df3",
+        "commit:9a7e66b",
+        "../web-calendar-d1-fixture-repair/20260909-calendar-fixture-repair.md",
+        "commit:1829c3a",
+        "../web-board-canonical-link-independent/review.md",
+        "commit:56f1aaf",
+        "commit:1660df9",
+        "../web-board-workspace-astra-review/20260909-calendar-fixtures-9a7e66b-acceptance.md",
+        "commit:b899396",
+        "../web-tasks-canonical-ui-native/review.md",
+        "commit:6a1adac",
+        "../web-board-canonical-link-independent/board-link-6a1adac.log",
+        "commit:3241529",
+        "commit:2ca5b93",
+        "commit:b4344a4",
+        "../web-board-workspace-astra-review/20260909-board-d1-6a1adac-review.md",
+        "commit:728822d",
+        "commit:ab3a150",
+        "commit:2fed984",
+        "commit:7f19aec",
+        "commit:0143952",
+        "../web-board-workspace-astra-review/20260909-tasks-d1-3241529-review.md",
+        "commit:0b3a043",
+        "commit:bf2935b",
+        "commit:4e9ff08",
+        "commit:54b422c",
+        "commit:170c526",
+        "commit:a4f6369",
+        "commit:8d1fb07",
+        "commit:f3a519c",
+        "commit:e9ff409",
+        "commit:45b83b6",
+        "commit:0c4b6b4",
+        "commit:aa747d4",
+        "commit:080f86b",
+        "commit:e9fb5e7",
+        "commit:40e4adb",
+        "commit:c201a1d",
+        "commit:96aa7b1",
+        "commit:dbc2e69",
+        "commit:33832b1",
+        "commit:ec8f86e",
+        "commit:0203c56",
+        "commit:ea5ba0b",
+        "commit:c5a4347",
+        "commit:fe2aa90",
+        "commit:8679232",
+        "commit:51ae929",
+        "commit:10c208e",
+        "commit:051d7fa",
+        "commit:a6ad06d",
+        "commit:cc70314"
+      ]
+    },
+    {
+      "id": "AI-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "AI-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "AI-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "AI-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "AI-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "AI-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "AI-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BK-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BK-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BK-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BK-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BK-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BK-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BK-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BK-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BK-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BK-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BK-11",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "BK-12",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "MET-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "MET-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "MET-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "MET-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "MET-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-02",
+      "status": "pending",
+      "evidence": [
+        "commit:2f728f1",
+        "commit:51db323",
+        "../web-appearance-recovery-contract/contract.md",
+        "commit:a560863",
+        "../web-appearance-recovery-acceptance/acceptance-419e56d.md"
+      ]
+    },
+    {
+      "id": "SET-03",
+      "status": "pending",
+      "evidence": [
+        "commit:eabd47f",
+        "commit:f7726d7",
+        "../web-apprail-order-recovery-contract/contract.md",
+        "commit:ae7b69e",
+        "../web-apprail-order-recovery-native/review-controls-protection-export-f9eb4b1.md",
+        "commit:efe05ea",
+        "../web-apprail-order-recovery-acceptance/acceptance-f9eb4b1.md"
+      ]
+    },
+    {
+      "id": "SET-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-11",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-12",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-13",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-14",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SET-15",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SHELL-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SHELL-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SHELL-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SHELL-04",
+      "status": "pending",
+      "evidence": [
+        "commit:72538d1",
+        "../web-appearance-recovery-native/before-5cd63ff.md",
+        "commit:32e6753",
+        "../web-appearance-recovery-native/review-host-downstream-retryall-24073b5.md",
+        "commit:a560863",
+        "../web-appearance-recovery-acceptance/acceptance-419e56d.md",
+        "commit:04ee6a2",
+        "../web-apprail-order-recovery-native/before-419e56d.md",
+        "commit:55cf1e9",
+        "../web-apprail-order-recovery-native/review-downstream-visual-f9eb4b1.md",
+        "commit:efe05ea",
+        "../web-apprail-order-recovery-acceptance/acceptance-f9eb4b1.md"
+      ]
+    },
+    {
+      "id": "SHELL-05",
+      "status": "pending",
+      "evidence": [
+        "commit:5905e37",
+        "../web-features-recovery-native/review-visual-keyboard-5cd63ff.md",
+        "commit:ec55f9e",
+        "../web-features-recovery-acceptance/acceptance-5cd63ff.md"
+      ]
+    },
+    {
+      "id": "SHELL-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SHELL-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "UX-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "UX-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "UX-03",
+      "status": "pending",
+      "evidence": [
+        "commit:5905e37",
+        "../web-features-recovery-native/review-visual-keyboard-5cd63ff.md",
+        "commit:ec55f9e",
+        "../web-features-recovery-acceptance/acceptance-5cd63ff.md"
+      ]
+    },
+    {
+      "id": "UX-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "UX-05",
+      "status": "pending",
+      "evidence": [
+        "commit:bacdbbc",
+        "../web-appearance-recovery-native/review-visual-keyboard-5bbf473.md",
+        "commit:5766c1e",
+        "../web-appearance-recovery-terra/implementation-r3.md",
+        "commit:2696855",
+        "../web-appearance-recovery-native/review-visual-keyboard-419e56d.md",
+        "commit:55cf1e9",
+        "../web-apprail-order-recovery-native/review-downstream-visual-f9eb4b1.md",
+        "commit:5c6bcd2",
+        "../web-apprail-order-recovery-native/review-keyboard-f9eb4b1.md",
+        "commit:efe05ea",
+        "../web-apprail-order-recovery-acceptance/acceptance-f9eb4b1.md"
+      ]
+    },
+    {
+      "id": "UX-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "UX-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DEP-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DEP-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DEP-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DEP-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DEP-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DEP-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DEP-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DEP-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DEP-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DEP-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DEP-11",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "DEP-12",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "JOB-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "JOB-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "JOB-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "JOB-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "JOB-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "JOB-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "JOB-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "JOB-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "JOB-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "JOB-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-11",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-12",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-13",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-14",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-15",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "GOV-16",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-11",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-12",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-13",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SK-14",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-11",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-12",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-13",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-14",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-15",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-16",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-17",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-18",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-19",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-20",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-21",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "APP-22",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLAT-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLAT-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLAT-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLAT-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLAT-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLAT-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLAT-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLAT-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLAT-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLAT-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLUG-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLUG-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLUG-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLUG-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLUG-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "PLUG-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-11",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-12",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-13",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-14",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-15",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-16",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-17",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-18",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SYN-19",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-11",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-12",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-13",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-14",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-15",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-16",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-17",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-18",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-19",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-20",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-21",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "CRY-22",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-09",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-10",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-11",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-12",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-13",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-14",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-15",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "ADM-16",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SITE-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SITE-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SITE-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "SITE-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "QA-01",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "QA-02",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "QA-03",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "QA-04",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "QA-05",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "QA-06",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "QA-07",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "QA-08",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "QA-09",
+      "status": "pending",
+      "evidence": []
+    }
+  ]
+}

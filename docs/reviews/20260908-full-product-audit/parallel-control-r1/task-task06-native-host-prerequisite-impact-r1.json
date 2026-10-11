@@ -1,0 +1,53 @@
+{
+  "id": "TASK-06/NATIVE-HOST-PREREQUISITE-IMPACT1",
+  "workflow": "A",
+  "module": "web",
+  "role": "fresh independent native host and frozen focus environment technical impact; never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "5fd4139ec3ed2977a4fa0e3a5655eb6be77ddd21",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "cd7be1409e6198e5032dceb85bad8cca2182c3ae",
+    "f8821c1bb99a51f07a3e6d077bc3391affde7a99",
+    "624e016359a0b48662828ffc9cc15db453792278",
+    "476b89f43ddbf07c7122a4ffb4b2b3335568de25"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-task06-native-host-prerequisite-impact-r1/impact.md",
+    "docs/reviews/audit-parallel-task06-native-host-prerequisite-impact-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Bind complete TASKreview2 477 input corpus/12 source2 outputs and sourceparents, exactfrozenfullmethod/block/function+surroundingoriginalnativeprobes; METsource2 full2636 identities and M5/M8 SOURCEUNQUALIFIED as sharedcompatibility inputs, no later moving METreview2 draft. Preserve all originalTASK111cases4440history64visual/add1125072/59 declarations and complete tenrowcontract/canonicalr2G1/standard/fullgoal.",
+    "Independently resolve feasibility of actual public managed-generation testaccount/transport boundary and production AppProviders/AccountDeletionRecovery/DeviceSession/TodoRuntime bridges via source fixtures only, actual canonical mutation activation prerequisite without activating protected productiongate, before queued actual writer/accountrevocation/firstframe source. No legacy config=null substitutes, fake scalar or mockcredentials claim. Inventory existing public APIs and exact allowed sourcefixture alternatives, explicit externalconditions if genuinelyunavailable.",
+    "Original Appearance nonfocusable anchor/centre hit/full tabbablecensus/settle/animation+full frozen meaningfulselftests context and Metrics repeatedtarget identity aliasing; native screenshot raster vs CSS at actual Retina DPR/genuine200% zoom, menuforeground window/tab ownership, source-bound explicitcalibration or non-weakened versionedmeasurementcopy qualification. Preserve all originalhashes/fullblock/logs, no fakehue/CSSinjection/skip/thresholdrelax/forcedfocus/droppedstops/oracle substitution, no borrowing Clockretentionbudget or fourthrun. Actualmobile dialog acquisition throughvisibleproductroute and originalexpectedfailure mapping.",
+    "Give finite technicallyviable complete source-only finalTASKauthor3 path under12 proposedr3 ADDs or exact independentlyreviewable additional technicalscope/methodcopy. Technical impact is not qualification/runtime or productdecision. Preserve originalactualfamily actorindependence/role/adoption/sourcebindings/cap3 andunknown/exhausted histories; no budget reset or intentionallyincomplete finalauthor skeleton. Fullsource lifecycle/control/artifact remedy staysmandatory. Fresh independentimpactreview required beforerootscopeadoption, no implementation/runner repair here."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/sharedCSS/storage/schema/account/host/config/lockfile",
+    "all original contracts/runners/failures/evidence",
+    "globalcontrols/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "impact_iteration": 1,
+    "impact_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported producttradeoff or weakeningstandards",
+    "runtime orprotectedwrite need"
+  ],
+  "no_children": true
+}

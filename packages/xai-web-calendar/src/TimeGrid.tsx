@@ -1,3 +1,4 @@
+import { useLocalDayClock, startOfLocalDay } from "@repo/plugin-web-tokens";
 /**
  * TimeGrid — shared 24-row scaffold for Week and Day views.
  *
@@ -52,9 +53,7 @@ export function TimeGrid({
   lang,
   onUserEventClick,
 }: TimeGridProps): JSX.Element {
-  // Build hour labels for the first column (representative day for DST table)
-  // For a week view, each day may technically have different DST, but our table
-  // only has 2026-03-08 and 2026-11-01 as special days. We use per-day labels.
+  // Each displayed civil day has its own actual local elapsed-hour rows.
   const hourLabelsByDay = useMemo(() => {
     return dayKeys.map((dk) => buildHourLabels(dk));
   }, [dayKeys]);
@@ -78,11 +77,8 @@ export function TimeGrid({
   }, [dayKeys, events, eventsByDateKey]);
 
   // Now-line position: current hour + minute offset for today
-  const nowLineTopPx = useMemo(() => {
-    const now = new Date();
-    const fractionalRow = now.getHours() + now.getMinutes() / 60;
-    return fractionalRow * HOUR_HEIGHT_PX;
-  }, []);
+  const { now } = useLocalDayClock();
+  const nowLineTopPx = (now.getTime() - startOfLocalDay(now).getTime()) / 3_600_000 * HOUR_HEIGHT_PX;
 
   const gridCols = `repeat(${dayKeys.length}, 1fr)`;
 
@@ -121,8 +117,9 @@ export function TimeGrid({
               <div
                 key={i}
                 className={`cal-hour-label${label.isDst ? " dst" : ""}`}
+                style={{ height: `${HOUR_HEIGHT_PX * (label.durationHours ?? 1)}px` }}
               >
-                {label.isDst ? "" : label.label}
+                {label.label}
               </div>
             ))}
           </div>

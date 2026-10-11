@@ -1,0 +1,41 @@
+revision=f64ad44 fixed_commit=f64ad44e9e13f56db243471c206cea7a63271b2a
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-astra-FG10IW
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx (12 tests | 1 failed) 264ms
+   ✓ discard failed note neither reads nor writes its saved sibling 94ms
+   ✓ discard failed offset neither reads nor writes its saved sibling 20ms
+   ✓ source-only offset Reload cannot reread or discard a failed note and its original Retry 28ms
+   ✓ blob export failure cleans resources without changing draft or sources 14ms
+   ✓ url export failure cleans resources without changing draft or sources 18ms
+   ✓ append export failure cleans resources without changing draft or sources 13ms
+   ✓ inline append-time epoch change cancels download and preserves current device recovery 8ms
+   ✓ fresh locked device export reads no account or device storage and emits empty note 16ms
+   ✓ preflight-failed newer gesture settles according to its own Retry=none outcome 9ms
+   ✓ preflight-failed newer gesture settles according to its own Retry=success outcome 11ms
+   ✓ preflight-failed newer gesture settles according to its own Retry=quota outcome 12ms
+   × unchanged uncertain Retry retains its original verification token across a transient Retry preflight read denial 21ms
+     → expected true to be false // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+   Start at  00:57:13
+   Duration  1.15s (transform 180ms, setup 236ms, collect 65ms, tests 264ms, environment 231ms, prepare 51ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx > unchanged uncertain Retry retains its original verification token across a transient Retry preflight read denial
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx:134:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

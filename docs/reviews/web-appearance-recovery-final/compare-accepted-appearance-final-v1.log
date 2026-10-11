@@ -1,0 +1,211 @@
+comparison=appearance-final-v1
+## A. Sticky Sol and host (existing runners) vs accepted post1 logs at f359be6 (E24 Sticky Sol 109, original 10, host 28)
+MATCH sticky bytes: 13/13 vs accepted 13/13 (contract count 13)
+      new web-sticky-recovery-sol/bytes-appearance-final-v1-419e56d.log sha256=748d5d832d6c45cac18cab789bcab2192198dc7cca1db6427a816a32b1b70871 exit=0 tests="13 passed (13)" console_blocks=0 preconditions=0
+      accepted web-sticky-recovery-sol/bytes-post1-f359be6.log sha256=422d61b3bbe2a86b11cbfb94947c0d13560f26b99d5a8ed9754ffbde39c2dffe exit=0 tests="13 passed (13)" console_blocks=0 preconditions=0
+      ordered test titles equal=true (13); oracle_sha256 header equal=true
+MATCH sticky fields: 47/47 vs accepted 47/47 (contract count 47)
+      new web-sticky-recovery-sol/fields-appearance-final-v1-419e56d.log sha256=563e7de6700f29e41b3ab1b5b1a3e177f18cfaf4f93247bcd93588b1b7d647e6 exit=0 tests="47 passed (47)" console_blocks=0 preconditions=0
+      accepted web-sticky-recovery-sol/fields-post1-f359be6.log sha256=75cfd385b7ec452ab169fab2bfa6be82444a14495116a89301b137c2efddec89 exit=0 tests="47 passed (47)" console_blocks=0 preconditions=0
+      ordered test titles equal=true (47); oracle_sha256 header equal=true
+MATCH sticky queues: 27/27 vs accepted 27/27 (contract count 27)
+      new web-sticky-recovery-sol/queues-appearance-final-v1-419e56d.log sha256=9fbc33b699ef56cdd0daabf48fff68b7fb1715798b12d19e2b9d5fca46cf0ebf exit=0 tests="27 passed (27)" console_blocks=0 preconditions=0
+      accepted web-sticky-recovery-sol/queues-post1-f359be6.log sha256=4b378cc5df7a49996abf2c27bc2b147430081b0f7d9ce62cbf8a5f98e8a505f0 exit=0 tests="27 passed (27)" console_blocks=0 preconditions=0
+      ordered test titles equal=true (27); oracle_sha256 header equal=true
+MATCH sticky continuity-export: 22/22 vs accepted 22/22 (contract count 22)
+      new web-sticky-recovery-sol/continuity-export-appearance-final-v1-419e56d.log sha256=af29370482e4888f53ba6fde4440428944fd2c73af39d3fd0b4aaa8bd4c9e810 exit=0 tests="22 passed (22)" console_blocks=0 preconditions=0
+      accepted web-sticky-recovery-sol/continuity-export-post1-f359be6.log sha256=850af870007d4712c63293e753fac872b4ac12d5dc3ae61f9dfd85331f94a96c exit=0 tests="22 passed (22)" console_blocks=0 preconditions=0
+      ordered test titles equal=true (22); oracle_sha256 header equal=true
+MATCH sticky original: 10/10 vs accepted 10/10 (contract count 10)
+      new web-sticky-recovery-sol/original-appearance-final-v1-419e56d.log sha256=33d49939f9e8c153db550984b3a6f1f1b76e39d85a31e57f04295c1fe6a05be6 exit=0 tests="10 passed (10)" console_blocks=0 preconditions=0
+      accepted web-sticky-recovery-sol/original-post1-f359be6.log sha256=743ae8d842060e1ebf65de044ae4c2d8452fc10df12490e12785dba053c7b0db exit=0 tests="10 passed (10)" console_blocks=0 preconditions=0
+      ordered test titles equal=true (10); oracle_sha256 header equal=true
+MATCH sticky host: 28/28 vs accepted 28/28 (contract count 28)
+      new web-sticky-recovery-independent/host-appearance-final-v1-419e56d.log sha256=ec948594e9ea8f5b8efe6608460693fca69f9c1e763a8a6965b912bd5a495c5f exit=0 tests="28 passed (28)" console_blocks=0 preconditions=0
+      accepted web-sticky-recovery-independent/host-post1-f359be6.log sha256=9f108542cc616587ba9f9059b6e2efe1211d7fcbbf567a6e04e409cd8e9d6443 exit=0 tests="28 passed (28)" console_blocks=0 preconditions=0
+      ordered test titles equal=true (28); oracle_sha256 header equal=true
+## B. Features accepted suites (E24 Features: Sol bytes 17, fields 49, reset 31, queues 40, continuity-export 26, downstream 15, original 6; host 40; package 45)
+MATCH features-sol bytes: 17/17 vs accepted 17/17 (contract count 17)
+      new web-features-recovery-sol/bytes-appearance-final-v1-419e56d.log sha256=1b578329deba12bb1763620b4fa031608d64704aaebfb23ca25065d29b86abcd exit=0 tests="17 passed (17)" console_blocks=0 preconditions=0
+      accepted web-features-recovery-sol/bytes-fixed1-5cd63ff.log sha256=4d11dba35115be267792648fae4a9778f5ee1c5014c79573be0e64938b5c0899 exit=0 tests="17 passed (17)" console_blocks=0 preconditions=0
+      case names equal=true statuses equal=true oracle_sha256 header equal=true
+MATCH features-sol fields: 49/49 vs accepted 49/49 (contract count 49)
+      new web-features-recovery-sol/fields-appearance-final-v1-419e56d.log sha256=eed4822d5ebba7ab8ee4a2d01a4a5430ed666a4290b85db819749a25359ceb8e exit=0 tests="49 passed (49)" console_blocks=0 preconditions=0
+      accepted web-features-recovery-sol/fields-fixed1-5cd63ff.log sha256=aacb34b45d2708a9079883aec1d3be603d01ba1046812f7599060bf96ac4e011 exit=0 tests="49 passed (49)" console_blocks=0 preconditions=0
+      case names equal=true statuses equal=true oracle_sha256 header equal=true
+MATCH features-sol reset: 31/31 vs accepted 31/31 (contract count 31)
+      new web-features-recovery-sol/reset-appearance-final-v1-419e56d.log sha256=d225025ce443e861475d70749ecc18f17cc6c3daf5219e162928686a42423ce3 exit=0 tests="31 passed (31)" console_blocks=0 preconditions=0
+      accepted web-features-recovery-sol/reset-fixed1-5cd63ff.log sha256=921b37e892573b23f34ffd5680b9d0e3a8371f1d66880bb7ae94098c23526b39 exit=0 tests="31 passed (31)" console_blocks=0 preconditions=0
+      case names equal=true statuses equal=true oracle_sha256 header equal=true
+MATCH features-sol queues: 40/40 vs accepted 40/40 (contract count 40)
+      new web-features-recovery-sol/queues-appearance-final-v1-419e56d.log sha256=c2eceefd3f9e165f8aaef2b69501f99d851aa38dbf1e809f9561a573adc4925e exit=0 tests="40 passed (40)" console_blocks=0 preconditions=0
+      accepted web-features-recovery-sol/queues-fixed1-5cd63ff.log sha256=0e63151160923c96abdb3663352a6e6770d0bd8af4fb23623642a452687e76b1 exit=0 tests="40 passed (40)" console_blocks=0 preconditions=0
+      case names equal=true statuses equal=true oracle_sha256 header equal=true
+MATCH features-sol continuity-export: 26/26 vs accepted 26/26 (contract count 26)
+      new web-features-recovery-sol/continuity-export-appearance-final-v1-419e56d.log sha256=5075920292da74a7a7e3d1051b3fc6f223c14407e442cf526dc3891519aeed0b exit=0 tests="26 passed (26)" console_blocks=0 preconditions=0
+      accepted web-features-recovery-sol/continuity-export-fixed1-5cd63ff.log sha256=95b7fe30662ee1b1db8f4272ecfc71953b27a8eaa8d57f695b7c40454490076b exit=0 tests="26 passed (26)" console_blocks=0 preconditions=0
+      case names equal=true statuses equal=true oracle_sha256 header equal=true
+DIFF  features-sol downstream: 14/15 vs accepted 15/15 (contract count 15)
+      new web-features-recovery-sol/downstream-appearance-final-v1-419e56d.log sha256=647ce30c112fb4192b03bf5f9d3d448d78c9c00d686f6f95835c53dcbbbf4b8f exit=1 tests="1 failed | 14 passed (15)" console_blocks=31 preconditions=4
+      accepted web-features-recovery-sol/downstream-fixed1-5cd63ff.log sha256=8c8beec7e825754ea530f979b7d66700133bc65599fe37e6a181d2d7199eafd0 exit=0 tests="15 passed (15)" console_blocks=31 preconditions=0
+      case names equal=true statuses equal=false oracle_sha256 header equal=true
+      differs: FAILED PRECONDITION | H6 §10.5 after a full reset the App's accent hue, background tone, rail position, AppRail order and DesktopPet id and position, and their bytes, are unchanged
+MATCH features-sol original: 6/6 vs accepted 6/6 (contract count 6)
+      new web-features-recovery-sol/original-appearance-final-v1-419e56d.log sha256=80ef943098f07f31e70ba130c4ed2f78f1751c27ed8f61baab5d1a214a8196a7 exit=0 tests="6 passed (6)" console_blocks=0 preconditions=0
+      accepted web-features-recovery-sol/original-fixed1-5cd63ff.log sha256=8a9d7dd2603c0dceffc8593cc104f26492a07068c04789a37afd998b10b84801 exit=0 tests="6 passed (6)" console_blocks=0 preconditions=0
+      case names equal=true statuses equal=true oracle_sha256 header equal=true
+MATCH F-FD1 frozen downstream downstream-appearance-final-v1-419e56d.log: 14/15; the only non-pass is case 012's precondition (observed bgTone null for the seeded out-of-domain "sage"; every other display field as seeded)
+      run web-features-recovery-sol/downstream-appearance-final-v1-419e56d.log sha256=647ce30c112fb4192b03bf5f9d3d448d78c9c00d686f6f95835c53dcbbbf4b8f exit=1 tests="1 failed | 14 passed (15)" console_blocks=31 preconditions=4
+      FAILED PRECONDITION | H6 §10.5 after a full reset the App's accent hue, background tone, rail position, AppRail order and DesktopPet id and position, and their bytes, are unchanged
+MATCH F-FD1 frozen downstream downstream-appearance-final-v2-419e56d.log: 14/15; the only non-pass is case 012's precondition (observed bgTone null for the seeded out-of-domain "sage"; every other display field as seeded)
+      run web-features-recovery-sol/downstream-appearance-final-v2-419e56d.log sha256=07597a7a3ad4a150107ccbb90dea989a7f34e54d229974ca57cce3756419cd4e exit=1 tests="1 failed | 14 passed (15)" console_blocks=31 preconditions=4
+      FAILED PRECONDITION | H6 §10.5 after a full reset the App's accent hue, background tone, rail position, AppRail order and DesktopPet id and position, and their bytes, are unchanged
+MATCH F-FD1 frozen downstream downstream-appearance-final-v1-24073b5.log: 14/15; the only non-pass is case 012's precondition (observed bgTone null for the seeded out-of-domain "sage"; every other display field as seeded)
+      run web-features-recovery-sol/downstream-appearance-final-v1-24073b5.log sha256=0257de07bc3ec487cefec4895692050e27eda0ac32001095f02d64fa0e197a86 exit=1 tests="1 failed | 14 passed (15)" console_blocks=31 preconditions=4
+      FAILED PRECONDITION | H6 §10.5 after a full reset the App's accent hue, background tone, rail position, AppRail order and DesktopPet id and position, and their bytes, are unchanged
+MATCH F-FD1 diagnostic corrected copy @419e56d: 15/15; names equal to the accepted log
+      diagnostic web-appearance-recovery-final/diagnostics/features-sol-downstream-corrected-appearance-final-v1-419e56d.log sha256=618e0f435704dfa51d69634d198b99a7718bf02aed00bda68b2607873384ce66 exit=0 tests="15 passed (15)" console_blocks=31 preconditions=0
+      diagnostic_runner_sha256=cfe596be41218d288362a34ccd06c63a5d3c7c99ec7a625c4f6d06d611950810 corrected_oracle_staged_as=docs/reviews/web-features-recovery-sol/downstream.test.tsx corrected_oracle_sha256=7bb5ad3cda8fec7957e999c2aa62956212b52934be20b942df72e286e90959e1 (oracle_sha256 below lists the frozen files read; downstream.test.tsx there is the frozen hash, replaced in the run)
+MATCH F-FD1 diagnostic corrected copy @5cd63ff: 15/15; names equal to the accepted log
+      diagnostic web-appearance-recovery-final/diagnostics/features-sol-downstream-corrected-appearance-final-v1-5cd63ff.log sha256=92d355911ed796056a8f875daa8b38144e36db8445edf473142b5d798f9aad9a exit=0 tests="15 passed (15)" console_blocks=31 preconditions=0
+      diagnostic_runner_sha256=cfe596be41218d288362a34ccd06c63a5d3c7c99ec7a625c4f6d06d611950810 corrected_oracle_staged_as=docs/reviews/web-features-recovery-sol/downstream.test.tsx corrected_oracle_sha256=7bb5ad3cda8fec7957e999c2aa62956212b52934be20b942df72e286e90959e1 (oracle_sha256 below lists the frozen files read; downstream.test.tsx there is the frozen hash, replaced in the run)
+MATCH features host: 40/40 vs accepted 40/40 (contract count 40)
+      new web-features-recovery-independent/host-appearance-final-v1-419e56d.log sha256=1c91a0a8ad9faccdb369617b9952553f0f9bb79f8b64b227fa0aae8331c9e14d exit=0 tests="40 passed (40)" console_blocks=5 preconditions=0
+      accepted web-features-recovery-independent/host-fixed1-5cd63ff.log sha256=244f7dd7498ba49c6f466d030380581ae0db903876c7be02ef03a77294117f80 exit=0 tests="40 passed (40)" console_blocks=5 preconditions=0
+MATCH features package: files=7 tests=45 passed=45 vs accepted 7 files / 45 (per-file equal=true)
+      new web-features-recovery-final/features-test-appearance-final-v1-419e56d.log sha256=fc4ea3738e168b994fd604ca62b0d828d1b5ac8736d30d89a98d96ded4f116a3 exit=0 tests="45 passed (45)" console_blocks=0 preconditions=0
+      accepted web-features-recovery-final/features-test-features-final-v1-5cd63ff.log sha256=9064c0690e9147c3e694043feb19294379c420c93bda641a045820364b7cb398 exit=0 tests="45 passed (45)" console_blocks=0 preconditions=0
+      files src/__tests__/DisabledFeatureFallback.test.tsx=3 src/__tests__/FeaturesPane.test.tsx=6 src/__tests__/featuresPaneEntry.test.tsx=3 src/__tests__/FeaturesPaneRecovery.test.tsx=22 src/__tests__/filterModulesByFeaturePrefs.test.ts=4 src/__tests__/useFeaturePrefs.test.tsx=3 src/__tests__/withDisabledFallback.test.tsx=4
+## C. More, Notifications and Date & Time suites (verify-callers.mjs, frozen) vs accepted logs; More boundaries frozen and corrected
+MATCH more-fields @419e56d: 22/22 vs accepted 22/22 (contract count 22)
+      new web-features-recovery-final/more-fields-appearance-final-v1-419e56d.log sha256=adff9ea4d35b224d4a9423fcd980a8e10a5623a005acfcc7498a6e50fd02502c exit=0 tests="22 passed (22)" console_blocks=0 preconditions=0
+      accepted web-more-recovery-sol/fields-sticky-final-v1-f359be6.log sha256=507c5254eb95c2e058675774e37f1bfdce9b0a1f6f00973f790ae75a92573daa exit=0 tests="22 passed (22)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/fields.test.tsx=22); console blocks new/accepted=0/0; case names equal to web-features-recovery-final/more-fields-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH more-reset @419e56d: 20/20 vs accepted 20/20 (contract count 20)
+      new web-features-recovery-final/more-reset-appearance-final-v1-419e56d.log sha256=76f05f0a4c41366841c0356270efd1f2ecee3ff90a86d41bf83918b1108c3e06 exit=0 tests="20 passed (20)" console_blocks=18 preconditions=0
+      accepted web-more-recovery-sol/reset-sticky-final-v1-f359be6.log sha256=d326bc9281415c7dcedb359f69ca6b6938e132cc0586499d42cffc979d9312ab exit=0 tests="20 passed (20)" console_blocks=18 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/reset.test.tsx=20); console blocks new/accepted=18/18; case names equal to web-features-recovery-final/more-reset-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH more-queues @419e56d: 14/14 vs accepted 14/14 (contract count 14)
+      new web-features-recovery-final/more-queues-appearance-final-v1-419e56d.log sha256=7867d6f5c2b88fd6ba5e943cc1a4403b29cd9bea8df2259ae323d53ce7130ff3 exit=0 tests="14 passed (14)" console_blocks=3 preconditions=0
+      accepted web-more-recovery-sol/queues-sticky-final-v1-f359be6.log sha256=90f1ae424a624b42b6133a2caac167941c979c7db498074b242ca1d3896d233f exit=0 tests="14 passed (14)" console_blocks=3 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/queues.test.tsx=14); console blocks new/accepted=3/3; case names equal to web-features-recovery-final/more-queues-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH more-boundaries @419e56d: 10/10 vs accepted 10/10 (contract count 10) [frozen oracle, recorded as it falls; nondeterministic per F-B002]
+      new web-features-recovery-final/more-boundaries-appearance-final-v1-419e56d.log sha256=ab59784d6af3270ea2c4b7be5d31b4cc7972fc143587c19b542428e35350d866 exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      accepted web-more-recovery-sol/boundaries-sticky-final-v1-f359be6.log sha256=ce688dd7c404d664f6fb08e365dec10eed42a104e66bcee9a40f46b7ca70bb05 exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/boundaries.test.tsx=10); console blocks new/accepted=8/8; case names equal to web-features-recovery-final/more-boundaries-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true; frozen outcome 10/10 exit=0
+MATCH more-owner-export @419e56d: 13/13 vs accepted 13/13 (contract count 13)
+      new web-features-recovery-final/more-owner-export-appearance-final-v1-419e56d.log sha256=6357d1e817dd0b51ce7113627ffdfc5defac1c51ec74c7528294045cf02a5f9d exit=0 tests="13 passed (13)" console_blocks=13 preconditions=0
+      accepted web-more-recovery-sol/owner-export-sticky-final-v1-f359be6.log sha256=f596560b654fbe6d5aca543ee9b0702a6dfa33ce229f590404dc4fc95fb45d59 exit=0 tests="13 passed (13)" console_blocks=13 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/owner-export.test.tsx=13); console blocks new/accepted=13/13; case names equal to web-features-recovery-final/more-owner-export-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH more-original @419e56d: 15/15 vs accepted 15/15 (contract count 15)
+      new web-features-recovery-final/more-original-appearance-final-v1-419e56d.log sha256=c009da759897952eb9a79a88ed00ed2bc6e2f3413a66256f62805a705fcddd32 exit=0 tests="15 passed (15)" console_blocks=0 preconditions=0
+      accepted web-more-recovery-sol/original-sticky-final-v1-f359be6.log sha256=ddf638b464303f04109aae63a3ba339cd21d34a9a06f8b9e14f7d2ee3d2d7b62 exit=0 tests="15 passed (15)" console_blocks=0 preconditions=0
+      per-file counts equal=true (packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx=15); console blocks new/accepted=0/0; case names equal to web-features-recovery-final/more-original-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH more-host @419e56d: 11/11 vs accepted 11/11 (contract count 11)
+      new web-features-recovery-final/more-host-appearance-final-v1-419e56d.log sha256=0d81d7c5f9947273bd3f32cb398ebeaa1c8acceae8058f73f1b9901ee1d574af exit=0 tests="11 passed (11)" console_blocks=0 preconditions=0
+      accepted web-more-recovery-independent/host-sticky-final-v1-f359be6.log sha256=bad00c8b82c03183ba5da0d27dc3a2742f200ea07f3f90b788d5ffd4ccc5b1c7 exit=0 tests="11 passed (11)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-independent/host.test.tsx=11); console blocks new/accepted=0/0; case names equal to web-features-recovery-final/more-host-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH notifications-core @419e56d: 11/11 vs accepted 11/11 (contract count 11)
+      new web-features-recovery-final/notifications-core-appearance-final-v1-419e56d.log sha256=ad6e084c928aec36cbda85285f57b8d7698f7b8cd37d1c6c0c7b88f1de51e160 exit=0 tests="11 passed (11)" console_blocks=0 preconditions=0
+      accepted web-notifications-recovery-sol/core-sticky-final-v1-f359be6.log sha256=b9461a3dca829f96c8ca8a00efc9476f44a4356435224d00fb38c8ba04ac5369 exit=0 tests="11 passed (11)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/core.test.tsx=11); console blocks new/accepted=0/0; case names equal to web-features-recovery-final/notifications-core-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH notifications-recovery @419e56d: 3/3 vs accepted 3/3 (contract count 3)
+      new web-features-recovery-final/notifications-recovery-appearance-final-v1-419e56d.log sha256=87dcf77955857cb6e216a93fc52f80157060b904690771df5855e6a006d1c99e exit=0 tests="3 passed (3)" console_blocks=2 preconditions=0
+      accepted web-notifications-recovery-sol/recovery-sticky-final-v1-f359be6.log sha256=e85c5916fbc9d559d49a2e8c7a9af90193443c48e01320508beb40f9a0350874 exit=0 tests="3 passed (3)" console_blocks=2 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/recovery.test.tsx=3); console blocks new/accepted=2/2; case names equal to web-features-recovery-final/notifications-recovery-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH notifications-operations @419e56d: 2/2 vs accepted 2/2 (contract count 2)
+      new web-features-recovery-final/notifications-operations-appearance-final-v1-419e56d.log sha256=08e815df02f7c52c9d05b37af1e7907c9749088ecafb63f9623ae89040029264 exit=0 tests="2 passed (2)" console_blocks=2 preconditions=0
+      accepted web-notifications-recovery-sol/operations-sticky-final-v1-f359be6.log sha256=f9bbe2972e1483090ec1ef01a2b6503542005881bf2e388cb249ba69c74bd450 exit=0 tests="2 passed (2)" console_blocks=2 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/operations.test.tsx=2); console blocks new/accepted=2/2; case names equal to web-features-recovery-final/notifications-operations-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH notifications-boundaries @419e56d: 4/4 vs accepted 4/4 (contract count 4)
+      new web-features-recovery-final/notifications-boundaries-appearance-final-v1-419e56d.log sha256=ea21d24ad5aa706d2fdd99ec21eba305251a095c6e9d570d70240ea6649eac6c exit=0 tests="4 passed (4)" console_blocks=1 preconditions=0
+      accepted web-notifications-recovery-sol/boundaries-sticky-final-v1-f359be6.log sha256=5cab7c4cc1f325cc59ae1bc1d8fd63c7491feb6072d5cacf06be168409f57f9d exit=0 tests="4 passed (4)" console_blocks=1 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/boundaries.test.tsx=4); console blocks new/accepted=1/1; case names equal to web-features-recovery-final/notifications-boundaries-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH notifications-extended @419e56d: 10/10 vs accepted 10/10 (contract count 10)
+      new web-features-recovery-final/notifications-extended-appearance-final-v1-419e56d.log sha256=bf03979dd7cbcfada64306facdcfae1afbffbab667dcb22895413e14ccbb966c exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      accepted web-notifications-recovery-sol/extended-sticky-final-v1-f359be6.log sha256=c826d6fbcae93dfceddd4a6a92236738703591cb00f7b6a1fef441b56abf7a07 exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/extended.test.tsx=10); console blocks new/accepted=8/8; case names equal to web-features-recovery-final/notifications-extended-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH notifications-original @419e56d: 11/11 vs accepted 11/11 (contract count 11)
+      new web-features-recovery-final/notifications-original-appearance-final-v1-419e56d.log sha256=eeddefa60665c61b8b3aa8447eba9e32f02041f15c987b6e52133142382ec6e2 exit=0 tests="11 passed (11)" console_blocks=1 preconditions=0
+      accepted web-notifications-recovery-sol/original-sticky-final-v1-f359be6.log sha256=1dd7bc31946974c0bf6d2981202aa2a206859312b3bd793db675f0ebb1ef58e3 exit=0 tests="11 passed (11)" console_blocks=1 preconditions=0
+      per-file counts equal=true (packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx=11); console blocks new/accepted=1/1; case names equal to web-features-recovery-final/notifications-original-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH notifications-astra-boundaries @419e56d: 24/24 vs accepted 24/24 (contract count 24)
+      new web-features-recovery-final/notifications-astra-boundaries-appearance-final-v1-419e56d.log sha256=917804b5f684e9000cda2551d195b7217ccbfe1a099e3558ac45ad843a143a2a exit=0 tests="24 passed (24)" console_blocks=2 preconditions=0
+      accepted web-notifications-recovery-astra/boundaries-sticky-final-v1-f359be6.log sha256=983ea49eb71739d344a941b5f5c5d54a0cc431f566e0ca9b9ce68aae584f4a87 exit=0 tests="24 passed (24)" console_blocks=2 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-astra/boundaries.test.tsx=24); console blocks new/accepted=2/2; case names equal to web-features-recovery-final/notifications-astra-boundaries-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH notifications-astra-host @419e56d: 15/15 vs accepted 15/15 (contract count 15)
+      new web-features-recovery-final/notifications-astra-host-appearance-final-v1-419e56d.log sha256=9fe2e31f5ff44d7948ecb05e0fdd456211e869e06cafabf3eae051038223e0d3 exit=0 tests="15 passed (15)" console_blocks=0 preconditions=0
+      accepted web-notifications-recovery-astra/host-sticky-final-v1-f359be6.log sha256=57166dc4ac8c6378ff1268489054008f9cedd4dd3f3cc4d92005b78156a5ceb3 exit=0 tests="15 passed (15)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-astra/host.test.tsx=15); console blocks new/accepted=0/0; case names equal to web-features-recovery-final/notifications-astra-host-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH notifications-parent-host @419e56d: 12/12 vs accepted 12/12 (contract count 12)
+      new web-features-recovery-final/notifications-parent-host-appearance-final-v1-419e56d.log sha256=6f6ba35e1b7f54a727d23606026154291710ea7b3f5e10591953e63e37bf8155 exit=0 tests="12 passed (12)" console_blocks=0 preconditions=0
+      accepted web-notifications-recovery-independent/host-sticky-final-v1-f359be6.log sha256=78dfff1b7b2f85837212de82289b1c7874809ba353673cceeab14a120f84eb3c exit=0 tests="12 passed (12)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-independent/host.test.tsx=12); console blocks new/accepted=0/0; case names equal to web-features-recovery-final/notifications-parent-host-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH datetime @419e56d: 7/7 vs accepted 7/7 (contract count 7)
+      new web-features-recovery-final/datetime-appearance-final-v1-419e56d.log sha256=540f9efde01df20c51e51bb8884207a2d9efca3e4b6868a3f4fab31349dc9f03 exit=0 tests="7 passed (7)" console_blocks=0 preconditions=0
+      accepted web-notifications-recovery-astra/datetime-sticky-final-v1-f359be6.log sha256=b43909f4d4a073bdf7e30e6b9a094237bf024f6922acd7b8d011a5e72fc93461 exit=0 tests="7 passed (7)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx=7); console blocks new/accepted=0/0; case names equal to web-features-recovery-final/datetime-features-final-v1-5cd63ff.log (Features final @5cd63ff)=true
+MATCH more-boundaries corrected oracle (C-FB002) @419e56d: 10/10, RangeError cases/lines 0/0; names equal to batch 31 @5cd63ff
+      new web-more-recovery-fb002/logs/corrected-full-appearance-final-v1-419e56d.log sha256=6ea3eb542a95866636856d42735ff7cf2da2d9ff2597efe08cc41d08a4412cb4 exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      batch-31 web-more-recovery-fb002/logs/corrected-full-v1r01-5cd63ff.log sha256=859cbf7e44c9bf14ca07b2c7131608c40c549306a549192598fc16f05cc56b7d exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      runner_sha256=d2150cd4794f7a51a5b72d9a7260dd8b7996a5c35adaa655da85719bfaf936a4
+## D. E20 and the E24 package suites (frozen ../web-features-recovery-final/verify-packages.mjs)
+MATCH settings-rest-test: files=44 tests=314 passed=314 vs accepted 44 files / 314 (per-file equal=true)
+      new web-features-recovery-final/settings-rest-test-appearance-final-v1-419e56d.log sha256=863283f39d93164ac34363538904497913577de7078522b432991e7c162a0d88 exit=0 tests="314 passed (314)" console_blocks=1 preconditions=0
+      accepted web-notifications-recovery-astra/package-sticky-final-v1-f359be6.log sha256=d32f45bb390157a7827a880bd5dadd3026ce494ae61c543b81b0426fd22ba614 exit=0 tests="314 passed (314)" console_blocks=1 preconditions=0
+MATCH settings-shell-test: files=11 tests=54 passed=54 vs 11 files / 54 (Features final @5cd63ff; no accepted independent receipt exists) per-file equal=true
+      new web-features-recovery-final/settings-shell-test-appearance-final-v1-419e56d.log sha256=f63be7fac4cbe7400366abf87d057a0a47f5bfe205c0cf4cf05ce1d8da4d2f66 exit=0 tests="54 passed (54)" console_blocks=8 preconditions=0
+      previous web-features-recovery-final/settings-shell-test-features-final-v1-5cd63ff.log sha256=c684b28662db1e7478f8eac01c432888effe087eaec1342beed09526066e179f exit=0 tests="54 passed (54)" console_blocks=8 preconditions=0
+MATCH storage-check-types (E20): exit=0 tsc_exit=0 diagnostics_lines=0; program files 315/46/269/0/0 vs Features final @5cd63ff 315/46/269/0/0; accepted exit=0
+      new web-features-recovery-final/storage-check-types-appearance-final-v1-419e56d.log sha256=ae923a15e1a42085d7014a541eb9f05728d23d73b2b75b035c67afad40039896
+      accepted web-more-recovery-final/storage-check-types-sticky-final-v1-f359be6.log sha256=b43e6b54d301790890cf3b0c4de9e1b8134af9e276cb8b8044fba10f3f2b5cf4
+      previous web-features-recovery-final/storage-check-types-features-final-v1-5cd63ff.log sha256=df76f1e83868c79cccf3e9f0fb1fd5d0c7790466d9037d5cd89747ab3e13baf2
+MATCH E20 Sol lifecycle assertion (bytes.test.tsx L271-277, case 006): PASSED at 419e56d; bytes-fixed1-24073b5.log PASSED; bytes-before3-5cd63ff.log PASSED
+      new web-appearance-recovery-sol/bytes-appearance-final-v1-419e56d.log sha256=cf616e933931eda06ffa7cd08e886de74322a8573e28cfee13b3d26fe11bcfbf harness_checks=PASS (6/6)
+## E. E21–E23 package gates (verify-packages.mjs of this directory) vs Terra's records and the 5cd63ff controls
+MATCH E21 appearance-test: files=11 tests=137 passed=137 vs Terra r3 137 passed (137) (per-file equal=true)
+      new web-appearance-recovery-final/appearance-test-appearance-final-v1-419e56d.log sha256=4b986489a694c22f3c49e1bbab18f789e94ed081dbb6307e6dbff70f3773f934 exit=0 tests="137 passed (137)" console_blocks=9 preconditions=0
+      terra web-appearance-recovery-terra/r3-appearance-test.log sha256=539cb4bb5f662dc9ad547366a25a6524646a84850e5280989c06cecfc50972c2 exit=0
+      files src/__tests__/AppearanceController.test.tsx=49 src/__tests__/appearanceDefaults.test.ts=9 src/__tests__/AppearancePane.bilingual.test.tsx=4 src/__tests__/AppearancePane.focus-ring.test.tsx=4 src/__tests__/AppearancePane.live-binding.test.tsx=8 src/__tests__/appearancePane.registry.test.ts=4 src/__tests__/AppearancePane.rendering.test.tsx=8 src/__tests__/AppearancePane.save-reset.test.tsx=8 src/__tests__/AppearancePane.selected-focus.test.tsx=7 src/__tests__/AppearanceRetryAll.test.tsx=27 src/__tests__/constants.test.ts=9
+MATCH appearance-unchanged-files: 22 executed at 419e56d vs 22 at 5cd63ff (before control); executed names and statuses equal=true
+      fixed web-appearance-recovery-final/appearance-unchanged-files-appearance-final-v1-419e56d.log sha256=cd392439a3314a71e7a7e7522fd5e48115cf2208d6ee7b23bed3189bd162bdde exit=0 tests="22 passed (22)" console_blocks=9 preconditions=0
+      before web-appearance-recovery-final/appearance-unchanged-files-appearance-final-v1-5cd63ff.log sha256=9bdafdf4b5ea4aa5346ec0d261ae54a35f6a92668ebbb33098f8abf544455fa5 exit=0 tests="22 passed (22)" console_blocks=9 preconditions=0
+      name_filter=none (whole files)
+MATCH appearance-unchanged-cases: 9 executed at 419e56d vs 9 at 5cd63ff (before control); executed names and statuses equal=true
+      fixed web-appearance-recovery-final/appearance-unchanged-cases-appearance-final-v1-419e56d.log sha256=c3dbdf5552edba8fe4d4419d464e0b788ded7a62878d7a825c5f7a93e1a7759c exit=0 tests="9 passed | 3 skipped (12)" console_blocks=0 preconditions=0
+      before web-appearance-recovery-final/appearance-unchanged-cases-appearance-final-v1-5cd63ff.log sha256=7da93e6d5b923419cc201dd5e7d102bf432ccdc1511c88b7829cdcf165faaa08 exit=0 tests="9 passed | 3 skipped (12)" console_blocks=0 preconditions=0
+      name_filter="AC-(RENDER-[124567]|I18N-[123]):" executed=9 filtered_out=3 expected=9 missing=none stray=none
+MATCH shell-unchanged-files: 91 executed at 419e56d vs 91 at 5cd63ff (before control); executed names and statuses equal=true
+      fixed web-appearance-recovery-final/shell-unchanged-files-appearance-final-v1-419e56d.log sha256=2feab553f0d064c0cb0df8d1348040cc73fa39b6cfca5f7f3cdf82198405108b exit=0 tests="91 passed (91)" console_blocks=37 preconditions=0
+      before web-appearance-recovery-final/shell-unchanged-files-appearance-final-v1-5cd63ff.log sha256=9bb6a97e89b720568c1fdb322f6eed56dcc1c146ec5fd5da8cd90607f61cecc5 exit=0 tests="91 passed (91)" console_blocks=37 preconditions=0
+      name_filter=none (whole files)
+MATCH shell-topbar-unchanged: 15 executed at 419e56d vs 15 at 5cd63ff (before control); executed names and statuses equal=true
+      fixed web-appearance-recovery-final/shell-topbar-unchanged-appearance-final-v1-419e56d.log sha256=484e7bf3a7a8acfc75cad7a929becf7e5d30ee843202625873f1b00255401d44 exit=0 tests="15 passed | 9 skipped (24)" console_blocks=0 preconditions=0
+      before web-appearance-recovery-final/shell-topbar-unchanged-appearance-final-v1-5cd63ff.log sha256=5996321eda99f6fe5a5b67b6c2d7f5e07e8956d8aaf053fae934a3bef92b0d2b exit=0 tests="15 passed | 8 skipped (23)" console_blocks=0 preconditions=0
+      name_filter="^Topbar (TP[0-7][a-c]? —|TB-PREMIUM-1 —)" executed=15 filtered_out=9 expected=15 missing=none stray=none
+MATCH E22 shell-test: files=9 tests=115 passed=115 vs Terra r1 115 passed (115) (per-file equal=true)
+      new web-appearance-recovery-final/shell-test-appearance-final-v1-419e56d.log sha256=ea8348139704afd4176c926e66e8ae716d96e5fae8cde306c4de01a622caa220 exit=0 tests="115 passed (115)" console_blocks=37 preconditions=0
+      terra web-appearance-recovery-terra/shell-test.log sha256=59a9d0bb7cc1b1ec2af45409ce364729c63b6062b38f88dbab684473e7515ee4 exit=0
+      files src/__tests__/AppRail.test.tsx=25 src/__tests__/AvatarMenu.test.tsx=18 src/__tests__/event-emit.test.tsx=6 src/__tests__/index-barrel.test.ts=9 src/__tests__/internal/dnd.test.ts=9 src/__tests__/registry.test.tsx=7 src/__tests__/Shell.smoke.test.tsx=9 src/__tests__/SignOutConfirmDialog.test.tsx=8 src/__tests__/Topbar.test.tsx=24
+MATCH E23 web-test: 178/178 in 29 files at 419e56d vs control 156/156 in 28 files at 5cd63ff; delta = added src/__tests__/App.appearance.test.tsx(22), changed counts none
+      fixed web-appearance-recovery-final/web-test-appearance-final-v1-419e56d.log sha256=9c8c470225bbae25f2503804bed47af0666a4eee20cd79570d585022ec916c58 exit=0 tests="178 passed (178)" console_blocks=2 preconditions=0
+      control web-appearance-recovery-final/web-test-appearance-final-v1-5cd63ff.log sha256=e0ac51066b09a9e08044e13ebdb375345baf59dea4543d63ab7b0c460adeecd1 exit=0 tests="156 passed (156)" console_blocks=2 preconditions=0
+      accepted web-features-recovery-final/web-test-features-final-v1-5cd63ff.log sha256=c70646978dad479295ed334c0269c5b2d0b42828966a68ccd34b803ab4cc716c exit=0 tests="156 passed (156)" console_blocks=2 preconditions=0
+      terra web-appearance-recovery-terra/r3-web-test.log sha256=0adfb87352250db6fb11f706ead2f94bbf7bcc3fb228c4867e4ccb22d851d246 178 passed (178)
+      control per-file equal to the Features final @5cd63ff=true; fixed per-file equal to Terra r3=true; App.lazy-init 8 (APP-LP1–5 + 3 readLocalPref), App.signout 7
+      fixed files deploy/security/cspEndpoint.test.ts=1 deploy/security/headers.test.ts=2 deploy/security/rumEndpoint.test.ts=1 src/__tests__/App.appearance.test.tsx=22 src/__tests__/App.lazy-init.test.tsx=8 src/__tests__/App.signout.test.tsx=7 src/__tests__/build-manifest.test.ts=2 src/__tests__/cmdkIntegration.test.tsx=5 src/__tests__/csp.test.ts=9 src/__tests__/event-bus.smoke.test.tsx=4 src/__tests__/settingsPaneComposition.appearance.test.ts=4 src/__tests__/settingsPaneComposition.rest.test.ts=3 src/__tests__/shell.smoke.test.tsx=5 src/__tests__/shell.theme.test.tsx=4 src/host/capabilities.test.ts=3 src/observability/controller.test.ts=3 src/observability/privacy.test.ts=4 src/observability/routeGroup.test.ts=4 src/observability/sentry.test.ts=2 src/observability/transport.test.ts=2 src/routes/__tests__/router-modules.integration.test.tsx=38 src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx=10 src/routes/modules/__tests__/railFeatureFilter.test.tsx=3 src/routes/modules/__tests__/settingsPaneComposition.test.tsx=3 src/routes/modules/__tests__/shellRegistrations.integration.test.tsx=11 src/routes/modules/buildModuleRoutes.test.ts=6 src/routes/router.integration.test.tsx=6 src/security/cspReport.test.ts=2 src/security/nonce.test.ts=4
+MATCH appearance-typecheck @419e56d: exit=0 tsc_exit=0 diagnostics_lines=0
+      new web-appearance-recovery-final/appearance-typecheck-appearance-final-v1-419e56d.log sha256=f80cfbc7dfab19a1cd1793798940648c5494f6c284c909c9be969e6a9b50dbb2 harness_checks=PASS (6/6) program_files=384 archive=85 store=299 elsewhere=0 forbidden=0
+MATCH appearance-lint @419e56d: exit=0 eslint_exit=0 files=25 errors=0 warnings=0 fatal=0
+      new web-appearance-recovery-final/appearance-lint-appearance-final-v1-419e56d.log sha256=f073633fe2642c8ecfe234912b42d2a10d9524017ab38d8e8930945de52be646 harness_checks=PASS (6/6) 
+MATCH shell-check-types @419e56d: exit=0 tsc_exit=0 diagnostics_lines=0
+      new web-appearance-recovery-final/shell-check-types-appearance-final-v1-419e56d.log sha256=95786d585df12a21d2498e2802f80f5366f888e8877bf723b2374db880ffffb1 harness_checks=PASS (6/6) program_files=355 archive=60 store=295 elsewhere=0 forbidden=0
+MATCH shell-lint @419e56d: exit=0 eslint_exit=0 files=24 errors=0 warnings=0 fatal=0
+      new web-appearance-recovery-final/shell-lint-appearance-final-v1-419e56d.log sha256=f594583559f95763c021d5a62ad1da782f4c0298cd45422d2afeea41cedd8372 harness_checks=PASS (6/6) 
+MATCH web-check-types @419e56d: exit=0 tsc_exit=0 diagnostics_lines=0
+      new web-appearance-recovery-final/web-check-types-appearance-final-v1-419e56d.log sha256=1de3385dc590dd11a3f417affd252e27808d0dfcc842ea28e61f915adcf64921 harness_checks=PASS (6/6) program_files=1384 archive=667 store=717 elsewhere=0 forbidden=0
+MATCH web-lint @419e56d: exit=0 eslint_exit=0 files=83 errors=0 warnings=0 fatal=0
+      new web-appearance-recovery-final/web-lint-appearance-final-v1-419e56d.log sha256=223ab8e398cb507d8a68d9b06381f816f30641e4cdd1b7e9fcb2befcf7040e84 harness_checks=PASS (6/6) 
+## Summary: 54 MATCH, 1 DIFF
+DIFF features-sol downstream: 14/15 vs accepted 15/15 (contract count 15)
+exit=1

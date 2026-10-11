@@ -1,0 +1,57 @@
+revision=f64ad44 fixed_commit=f64ad44e9e13f56db243471c206cea7a63271b2a
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-astra-SFFb5d
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/source-copy.test.tsx (6 tests | 4 failed) 138ms
+   × en: frozen A-only recovery cannot falsely report a healthy position source unavailable 86ms
+     → a frozen account note does not imply broken position storage: expected <p></p> to be null
+   × en: note-only read failure identifies note recovery without falsely blaming healthy position 9ms
+     → only note reads failed: expected <p></p> to be null
+   ✓ en: actual position source failure retains the established localized message and read-only action 7ms
+   × zh: frozen A-only recovery cannot falsely report a healthy position source unavailable 22ms
+     → a frozen account note does not imply broken position storage: expected <p></p> to be null
+   × zh: note-only read failure identifies note recovery without falsely blaming healthy position 7ms
+     → only note reads failed: expected <p></p> to be null
+   ✓ zh: actual position source failure retains the established localized message and read-only action 6ms
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 2 passed (6)
+   Start at  00:57:46
+   Duration  1.01s (transform 217ms, setup 238ms, collect 107ms, tests 138ms, environment 213ms, prepare 46ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/source-copy.test.tsx > en: frozen A-only recovery cannot falsely report a healthy position source unavailable
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/source-copy.test.tsx > zh: frozen A-only recovery cannot falsely report a healthy position source unavailable
+AssertionError: a frozen account note does not imply broken position storage: expected <p></p> to be null
+
+- Expected: 
+null
+
++ Received: 
+<p>
+  The saved note position source is unavailable. Reload it; this is not a new unsaved draft.
+</p>
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/source-copy.test.tsx:18:109
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/source-copy.test.tsx > en: note-only read failure identifies note recovery without falsely blaming healthy position
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/source-copy.test.tsx > zh: note-only read failure identifies note recovery without falsely blaming healthy position
+AssertionError: only note reads failed: expected <p></p> to be null
+
+- Expected: 
+null
+
++ Received: 
+<p>
+  The saved note position source is unavailable. Reload it; this is not a new unsaved draft.
+</p>
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/source-copy.test.tsx:26:114
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯

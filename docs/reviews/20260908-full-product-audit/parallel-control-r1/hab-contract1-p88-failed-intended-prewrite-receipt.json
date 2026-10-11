@@ -1,0 +1,56 @@
+{
+  "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/TECHNICAL-CONTRACT1",
+  "actor": "/root/parallel_c_hab01_hab05_whole_technical_contract_r1",
+  "parent": "0d62992ef39a6075281c0bbe83e4c7318ab3598e",
+  "fixed_input": "6102651bcfc108914992f3caef5b1e97ac618042",
+  "result": "FAILED_INTENDED_PREWRITE_PYTHON_DECODE_BODY_UNRUN",
+  "family_iteration": 1,
+  "family_cap": 3,
+  "concluding_invocations": 1,
+  "numeric_exit": 1,
+  "tool_chunk": "039b74",
+  "tool_wall_seconds": 1.1833e-05,
+  "pid": "UNKNOWN",
+  "session": "UNKNOWN",
+  "outer_stream_split_EOF_drain": "UNKNOWN",
+  "inner_static": "UNRUN",
+  "intended_outer_script_includes": "inputs/buffers/checker/PASSthenmaterialization notpuretransport",
+  "original_error": "SyntaxError: Non-UTF-8 code starting with '\\xe2' in file <stdin> on line 3, but no encoding declared",
+  "earlier_checker0_claim": "WITHDRAWN actual intended invocation failurecounts1",
+  "pretool_JS_parse_errors": 1,
+  "root_pause_prevented_retry": true,
+  "subsequent_exec_before_pause": 0,
+  "filesystem_writes": 0,
+  "materializations": 0,
+  "retries": 0,
+  "commits": 0,
+  "root_metadata_confirmed_clean_parent_alloutputs_absent": true,
+  "unvalidated_contract_draft": "originalstorecall108 preservedINERT not deliveredcontract/admitted",
+  "original_raw_tool_provenance": {
+    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/hab-contract1-p88-original-failed-tool-records.json",
+    "sha256": "24fd9e76904b2d792ce687f893ac409ff64e422c95616e60f88f66f3e893cd91",
+    "response": {
+      "type": "custom_tool_call_output",
+      "id": "ctco_01a12766-2ef1-7e23-9207-6713e7dbd2c7",
+      "call_id": "call_42b14d59546d47b5a9a4a6875b5a660b",
+      "output": [
+        {
+          "type": "input_text",
+          "text": "Script completed\nWall time 0.1 seconds\nOutput:\n"
+        },
+        {
+          "type": "input_text",
+          "text": "{\"chunk_id\":\"039b74\",\"wall_time_seconds\":0.000011833,\"exit_code\":1,\"original_token_count\":39,\"output\":\"SyntaxError: Non-UTF-8 code starting with '\\\\xe2' in file <stdin> on line 3, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details\\n\"}"
+        }
+      ],
+      "internal_chat_message_metadata_passthrough": {
+        "turn_id": "01a1275f-c10f-7832-8ca2-dd36874a70ff",
+        "create_time": 1791662370.545402
+      }
+    },
+    "call_id": "call_42b14d59546d47b5a9a4a6875b5a660b"
+  },
+  "source_discovery_family": "2/3",
+  "source_review_family": "2/3",
+  "new_budget_grant": []
+}

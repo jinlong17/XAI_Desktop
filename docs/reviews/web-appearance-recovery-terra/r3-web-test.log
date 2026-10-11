@@ -1,0 +1,67 @@
+$ pnpm --filter @repo/web run test
+# cwd: /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4249842bc08beeb0
+# HEAD: 419e56de9f23e4467fea806fbd4a990e1f429941
+# started: 2026-10-05T18:12:39Z
+
+
+> @repo/web@0.1.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4249842bc08beeb0/apps/web
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4249842bc08beeb0/apps/web
+
+ ✓ src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx (10 tests) 1258ms
+ ✓ src/__tests__/shell.smoke.test.tsx (5 tests) 691ms
+   ✓ Shell cross-package smoke (A1..A4) > A1 — App renders Shell with Topbar (search button present, xai-web-cmdk P4)  304ms
+ ✓ src/__tests__/App.lazy-init.test.tsx (8 tests) 776ms
+   ✓ App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP4 — localStorage empty → three dims use fallback (en/light/comfortable)  374ms
+ ✓ src/__tests__/App.signout.test.tsx (7 tests) 806ms
+ ✓ src/__tests__/cmdkIntegration.test.tsx (5 tests) 841ms
+ ✓ src/routes/router.integration.test.tsx (6 tests) 971ms
+   ✓ web host router integration > renders authenticated module deep links and survives remount refresh  340ms
+ ✓ src/observability/privacy.test.ts (4 tests) 4ms
+ ✓ deploy/security/cspEndpoint.test.ts (1 test) 3ms
+ ✓ src/__tests__/event-bus.smoke.test.tsx (4 tests) 86ms
+ ✓ deploy/security/headers.test.ts (2 tests) 4ms
+stderr | src/__tests__/build-manifest.test.ts > Vite build manifest — MapView chunk budget (HC5) > BM-BUNDLE-1: MapView chunk exists as a separate JS file in the build manifest
+BM-BUNDLE-1 SKIPPED: dist/.vite/manifest.json not found. Run `pnpm --filter @repo/web build` first.
+
+stderr | src/__tests__/build-manifest.test.ts > Vite build manifest — MapView chunk budget (HC5) > BM-BUNDLE-2: MapView chunk file size is below 80 KB budget
+BM-BUNDLE-2 SKIPPED: dist/.vite/manifest.json not found. Run `pnpm --filter @repo/web build` first.
+
+ ✓ src/__tests__/build-manifest.test.ts (2 tests) 9ms
+ ✓ src/security/cspReport.test.ts (2 tests) 4ms
+ ✓ src/security/nonce.test.ts (4 tests) 11ms
+ ✓ deploy/security/rumEndpoint.test.ts (1 test) 3ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx (38 tests) 3751ms
+   ✓ AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) > AC-W6-FIX-1: /app/tasks renders <div class="module module-tasks"> (no W6 placeholder text)  984ms
+ ✓ src/__tests__/shell.theme.test.tsx (4 tests) 212ms
+ ✓ src/observability/transport.test.ts (2 tests) 23ms
+ ✓ src/routes/modules/__tests__/railFeatureFilter.test.tsx (3 tests) 29ms
+ ✓ src/observability/controller.test.ts (3 tests) 3ms
+ ✓ src/__tests__/csp.test.ts (9 tests) 4ms
+ ✓ src/observability/sentry.test.ts (2 tests) 19ms
+ ✓ src/host/capabilities.test.ts (3 tests) 2ms
+ ✓ src/routes/modules/buildModuleRoutes.test.ts (6 tests) 2ms
+ ✓ src/__tests__/settingsPaneComposition.appearance.test.ts (4 tests) 3ms
+ ✓ src/observability/routeGroup.test.ts (4 tests) 1ms
+ ✓ src/__tests__/settingsPaneComposition.rest.test.ts (3 tests) 4ms
+ ✓ src/routes/modules/__tests__/settingsPaneComposition.test.tsx (3 tests) 2ms
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx (11 tests) 3ms
+ ✓ src/__tests__/App.appearance.test.tsx (22 tests) 6500ms
+   ✓ Topbar persistence at App level (replaces TP1-Persist … TP3b-Persist) > APP-AP1 — every Topbar choice persists today's exact bytes through the controller; mounting writes nothing  1664ms
+   ✓ Topbar persistence at App level (replaces TP1-Persist … TP3b-Persist) > APP-AP2 — a failing Topbar write keeps the choice checked and applied and shows the Topbar status (replaces TP-Persist-Quota-Safe)  701ms
+   ✓ Topbar persistence at App level (replaces TP1-Persist … TP3b-Persist) > APP-AP2b — a Topbar write held behind the real per-key lock shows no status and keeps the options enabled; after release exactly one write  553ms
+   ✓ one App-scoped controller > APP-AP3 — a pane edit is visible in the Topbar and a Topbar edit in the pane in the same act  417ms
+   ✓ one App-scoped controller > APP-AP4 — Review on the Topbar status emits the shortcut event once and navigates once to the pane, which shows the field message  626ms
+   ✓ one App-scoped controller > APP-AP5 — the Settings sidebar is never held by Appearance drafts (no route guard); the draft survives the round trip  328ms
+   ✓ the sign-out step before requestSettingsDeparture > APP-AP6 — fallback branch without drafts: zero confirm and the existing sequence completes  359ms
+   ✓ the sign-out step before requestSettingsDeparture > APP-AP7 — fallback branch with a failed draft: one confirm; Cancel keeps identity, draft, status and warning; OK discards with zero writes and continues  418ms
+
+ Test Files  29 passed (29)
+      Tests  178 passed (178)
+   Start at  11:12:39
+   Duration  13.34s (transform 4.31s, setup 0ms, collect 43.47s, tests 16.03s, environment 17.56s, prepare 2.92s)
+
+
+# exit: 0

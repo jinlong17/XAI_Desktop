@@ -1,0 +1,789 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+features_package_tree=074659c050fadd11ed3ff99274e441b48771b490
+mode=reset
+suffix=before2
+include=docs/reviews/web-features-recovery-sol/reset.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-sol/verify-fixed.mjs f359be6 all before2
+runner_checkout_head=4a54f7648cbed30d884f9e6976ece93a42ac92f6
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-features-panel/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/features-sol-reset.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.report-reset.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=f0b5d272695026f8e60df6dd2dbf5889790b3d2e834256259e86bb0432050ef8 bytes.test.tsx=904cb0de88eb5047365309df501ebbb8cb725a485963d23df022e7bbd26aba14 fields.test.tsx=506d54cbc39d0b69c53e7f45d4e3fa90ae77ae99f2ea68beb23d7540f08c0bc4 reset.test.tsx=dc4ee31e52a5800f30e7dbd924834e25f6f8a77dd5e88c8262443e1c322ac8e9 queues.test.tsx=d58160748187b7d7a7aeabfc620b694e7bc1e2714d37491aa99dbf8d8cb16f2b continuity-export.test.tsx=1e3066f963edc15ba161937d26cbee949cb2886f1c3122740fd4c7c143c5a55a downstream.test.tsx=88cf89c821b5f51abf2e4f373d1047304d51bb8817b33a1d7b8094516d38624d verify-fixed.mjs=b5ac75fa1bc5ff65352afb5b598dc7309fb7435aa9ca96518dfd1d7ffb2f2f16
+archive_file_sha256 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx=987c38250554f05eee185073f92fdfafc504b5e3f9c183658fc5aeb583ce50ea packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx=14053daaffeee27f151221a197756ae043a2de3a8823d15342722eea5855e993 packages/xai-web-settings-features-panel/src/types.ts=bd6b35990e4f9de9719303ff528630b17a1c6ed02bbb06dfd96c5878cf727c53 packages/xai-web-settings-features-panel/src/styles.css=db4a5f24bfbb922571a5528b4d863be79bda2c8586eb4f2427f281803b13027e packages/xai-web-settings-features-panel/src/index.ts=cf89e7454252927a457f48f9e4bcf9190219b94862d896240999626a1b097c68 packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx=2d42bdc3ef69ab9bcdc2d1770a34aba45463e44550f0c6ece4a9ecd31f18a4c6 packages/xai-web-settings-features-panel/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-features-panel/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+vitest_exit=1
+harness_checks=PASS (6/6)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS
+
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H7 the en reset confirmation states the normative text, with no theme or layout claim 80ms
+   → H7: the normative en confirmation text: expected 'Reset every preference to defaults? T…' to be 'Turn all 8 modules back on? This only…' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H7 the zh reset confirmation states the normative text, with no theme or layout claim 33ms
+   → H7: the normative zh confirmation text: expected '确定恢复所有设置为默认值？这会清除保存的主题、布局和模块开关。' to be '将全部 8 个模块恢复为开启？这只改变显示哪些模块，数据会保留。' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 D3 Reset to defaults is a Features-local control, not the shared SettingsFooter 33ms
+   → §6/D3: the Features-local control carries data-testid features-reset-defaults: expected 'settings-footer-reset' to be 'features-reset-defaults' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H9 §6 an accepted reset reaches verified absence for all 8, never writes, and reports Defaults restored 67ms
+   → H9: the truthful 'Defaults restored.' status after all 8 completed: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > D2 §10.5 Reset to defaults dispatches no StorageEvent of any kind 74ms
+   → D2: zero StorageEvents with key === null: expected 1 to be +0 // Object.is equality
+ ✓ docs/reviews/web-features-recovery-sol/reset.test.tsx > INV §6 §10.6 a full reset leaves every key other than the 8 byte-identical (snapshot comparison) 65ms
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H6 (hook layer) mounted legacy usePref readers of accent hue, background tone, rail position, rail order and pet keep their stored values through Reset to defaults 70ms
+   → H6: no legacy reader is repainted to its default; each keeps showing its stored value: expected { hue: 165, tone: 'default', …(4) } to strictly equal { hue: 210, tone: 'sage', …(4) }
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 an already-absent reset completes through verified no-ops: zero removes, zero writes, Defaults restored 58ms
+   → §6: already-absent keys complete through the engine's verified no-op; nothing is removed or seeded: expected [ …(8) ] to deeply equal []
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'tasks' > H5 tasks: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true 64ms
+   → H5: "Tasks was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'board' > H5 board: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true 66ms
+   → H5: "Boards was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'dashboard' > H5 dashboard: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true 65ms
+   → H5: "Dashboard was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'calendar' > H5 calendar: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true 66ms
+   → H5: "Calendar was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'matrix' > H5 matrix: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true 63ms
+   → H5: "Matrix was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'pomodoro' > H5 pomodoro: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true 66ms
+   → H5: "Pomodoro was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'habits' > H5 habits: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true 65ms
+   → H5: "Habits was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'meditation' > H5 meditation: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true 69ms
+   → H5: "Meditation was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 (reader layer) with Calendar's removal refused, the real useFeaturePrefs rail input restores the other 7 and keeps Calendar off 65ms
+   → H5: readers reflect committed bytes only; Calendar stays off while the other 7 are restored: expected [ 'tasks', 'board', 'dashboard', …(5) ] to deeply equal [ 'tasks', 'board', 'dashboard', …(4) ]
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 partial reset: only unresolved fields remain drafts, export entries and guard reasons; Retry targets only them 63ms
+   → H5: Boards failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H3 §6 a duplicate Reset to defaults while the batch is pending enqueues no duplicate removes 44ms
+   → H3: the held per-key lock keeps the pending Calendar removal from running: expected null to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 REL-07 an invalid source refuses the reset and keeps the reset intent; Reset never purges malformed bytes 58ms
+   → §6: Reset is never authority to purge malformed bytes: expected null to be 'yes' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 an unavailable source refuses the reset and keeps the reset intent; Discard returns to Reload-only 60ms
+   → §6: an unreadable source is never removed blindly: expected null to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 a removal whose readback is denied stays a reset draft; Retry verifies absence with exactly one total remove 58ms
+   → §6: Reset verifies absence by reading the key back: expected +0 to be 1 // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H3 §6 a conflict during a held reset preserves the external bytes and the reset draft; Retry never removes them 45ms
+   → H3: the held per-key lock keeps the pending removal from running: expected null to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 an unrelated field still saves while another field's reset recovery is blocked 60ms
+   → H5: Habits failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > H9 §6 Defaults restored appears only when all 8 resets completed; a held reset reports it is being reset 44ms
+   → H3: the held per-key lock keeps the pending removal from running: expected null to be 'false' // Object.is equality
+ ✓ docs/reviews/web-features-recovery-sol/reset.test.tsx > INV §6 §7 Reset to defaults needs no active account: it removes all 8 while the account scope is locked 81ms
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > §5.7 one field's set fails while another field's reset succeeds; each settles independently 79ms
+   → H1: the failed set keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > §5.7 one field's reset fails while another field's set succeeds; each settles independently 60ms
+   → H5: Boards failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 repeating an unchanged failed reset keeps its refusal; it never rebases or writes 59ms
+   → H5: Calendar failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 a clean completed batch may later receive a fresh reset; an intervening edit is a new intent 56ms
+   → H9: Defaults restored after the first batch: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/reset.test.tsx > §5 ZH reset wording: pending, not reset and Defaults restored 41ms
+   → ZH pending reset feedback: expected false to be true // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  29 failed | 2 passed (31)
+   Start at  02:39:14
+   Duration  2.72s (transform 244ms, setup 35ms, collect 360ms, tests 1.88s, environment 191ms, prepare 42ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.report-reset.json
+
+---- stderr ----
+stderr | docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 REL-07 an invalid source refuses the reset and keeps the reset intent; Reset never purges malformed bytes
+[plugin-web-storage] decode failed for xai_pref_features_tasks: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/reset.test.tsx > §5.7 one field's set fails while another field's reset succeeds; each settles independently
+[plugin-web-storage] quota exceeded for xai_pref_features_tasks.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 29 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H7 the en reset confirmation states the normative text, with no theme or layout claim
+AssertionError: H7: the normative en confirmation text: expected 'Reset every preference to defaults? T…' to be 'Turn all 8 modules back on? This only…' // Object.is equality
+
+Expected: "Turn all 8 modules back on? This only changes which modules are shown; your data is kept."
+Received: "Reset every preference to defaults? This clears saved theme, layout, and module toggles."
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:69:66
+     67|   await flush();
+     68|   const [message] = clickReset(ui, false);
+     69|   expect(message, `H7: the normative ${lang} confirmation text`).toBe(…
+       |                                                                  ^
+     70| });
+     71| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H7 the zh reset confirmation states the normative text, with no theme or layout claim
+AssertionError: H7: the normative zh confirmation text: expected '确定恢复所有设置为默认值？这会清除保存的主题、布局和模块开关。' to be '将全部 8 个模块恢复为开启？这只改变显示哪些模块，数据会保留。' // Object.is equality
+
+Expected: "将全部 8 个模块恢复为开启？这只改变显示哪些模块，数据会保留。"
+Received: "确定恢复所有设置为默认值？这会清除保存的主题、布局和模块开关。"
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:69:66
+     67|   await flush();
+     68|   const [message] = clickReset(ui, false);
+     69|   expect(message, `H7: the normative ${lang} confirmation text`).toBe(…
+       |                                                                  ^
+     70| });
+     71| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 D3 Reset to defaults is a Features-local control, not the shared SettingsFooter
+AssertionError: §6/D3: the Features-local control carries data-testid features-reset-defaults: expected 'settings-footer-reset' to be 'features-reset-defaults' // Object.is equality
+
+Expected: "features-reset-defaults"
+Received: "settings-footer-reset"
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:76:128
+     74|   await flush();
+     75|   const control = resetButton(ui);
+     76|   expect(control.getAttribute("data-testid"), "§6/D3: the Features-loc…
+       |                                                                                                                                ^
+     77|   expect(button(ui, "Save & apply"), "D3: no shared Save & apply").toB…
+     78| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H9 §6 an accepted reset reaches verified absence for all 8, never writes, and reports Defaults restored
+AssertionError: H9: the truthful 'Defaults restored.' status after all 8 completed: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:92:101
+     90|   expect(shownAll(ui), "all 8 display the default on").toStrictEqual(a…
+     91|   expect(attempts(from, KEYS, ["set"]).length, "Reset never writes tru…
+     92|   expect(says(W.en.restored), "H9: the truthful 'Defaults restored.' s…
+       |                                                                                                     ^
+     93|   for (const field of FIELDS) {
+     94|     expect(retryOf(ui, field), `${field.id}: no recovery after a verif…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > D2 §10.5 Reset to defaults dispatches no StorageEvent of any kind
+AssertionError: D2: zero StorageEvents with key === null: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:110:79
+    108|   await flush(24);
+    109|   pre(bytesAll().tasks === null, "the reset ran");
+    110|   expect(nullStorageEvents(from), "D2: zero StorageEvents with key ===…
+       |                                                                               ^
+    111|   expect(dispatched.length - from, "D2: the Features package dispatche…
+    112| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H6 (hook layer) mounted legacy usePref readers of accent hue, background tone, rail position, rail order and pet keep their stored values through Reset to defaults
+AssertionError: H6: no legacy reader is repainted to its default; each keeps showing its stored value: expected { hue: 165, tone: 'default', …(4) } to strictly equal { hue: 210, tone: 'sage', …(4) }
+
+- Expected
++ Received
+
+  {
+-   "hue": 210,
++   "hue": 165,
+    "order": [
+-     "statistics",
+-     "countdown",
+-     "meditation",
+-     "habits",
+-     "timetrack",
+-     "pomodoro",
++     "tasks",
++     "board",
++     "dashboard",
++     "calendar",
+      "matrix",
+-     "calendar",
+-     "dashboard",
+-     "board",
+-     "tasks",
++     "pomodoro",
++     "timetrack",
++     "habits",
++     "meditation",
++     "countdown",
+      "ai",
++     "statistics",
+    ],
+-   "petId": "pip",
++   "petId": "mochi",
+    "petPos": {
+-     "x": 300,
+-     "y": 200,
++     "x": 24,
++     "y": 24,
+    },
+-   "railPos": "right",
+-   "tone": "sage",
++   "railPos": "left",
++   "tone": "default",
+  }
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:143:128
+    141|   await flush(24);
+    142|   pre(bytesAll().board === null, "the reset ran");
+    143|   expect(probe("sol-legacy-readers"), "H6: no legacy reader is repaint…
+       |                                                                                                                                ^
+    144| });
+    145| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 an already-absent reset completes through verified no-ops: zero removes, zero writes, Defaults restored
+AssertionError: §6: already-absent keys complete through the engine's verified no-op; nothing is removed or seeded: expected [ …(8) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "remove:xai_pref_features_tasks",
++   "remove:xai_pref_features_board",
++   "remove:xai_pref_features_dashboard",
++   "remove:xai_pref_features_calendar",
++   "remove:xai_pref_features_matrix",
++   "remove:xai_pref_features_pomodoro",
++   "remove:xai_pref_features_habits",
++   "remove:xai_pref_features_meditation",
++ ]
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:152:133
+    150|   clickReset(ui, true);
+    151|   await flush(24);
+    152|   expect(featureWrites(from), "§6: already-absent keys complete throug…
+       |                                                                                                                                     ^
+    153|   expect(bytesAll()).toStrictEqual(allOf(null));
+    154|   expect(shownAll(ui)).toStrictEqual(allOf(true));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'tasks' > H5 tasks: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+AssertionError: H5: "Tasks was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:173:88
+    171|     expect(bytesAll(), "only the refused key keeps its bytes").toStric…
+    172|     expect(shown(ui, field), "the reset draft displays the intended de…
+    173|     expect(says(msg.notReset(field)), `H5: "${msg.notReset(field)}" fa…
+       |                                                                                        ^
+    174|     const retry = need(retryOf(ui, field), `H5/H9: Retry ${field.label…
+    175|     need(discardOf(ui, field), `H9: Discard ${field.label}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'board' > H5 board: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+AssertionError: H5: "Boards was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:173:88
+    171|     expect(bytesAll(), "only the refused key keeps its bytes").toStric…
+    172|     expect(shown(ui, field), "the reset draft displays the intended de…
+    173|     expect(says(msg.notReset(field)), `H5: "${msg.notReset(field)}" fa…
+       |                                                                                        ^
+    174|     const retry = need(retryOf(ui, field), `H5/H9: Retry ${field.label…
+    175|     need(discardOf(ui, field), `H9: Discard ${field.label}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'dashboard' > H5 dashboard: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+AssertionError: H5: "Dashboard was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:173:88
+    171|     expect(bytesAll(), "only the refused key keeps its bytes").toStric…
+    172|     expect(shown(ui, field), "the reset draft displays the intended de…
+    173|     expect(says(msg.notReset(field)), `H5: "${msg.notReset(field)}" fa…
+       |                                                                                        ^
+    174|     const retry = need(retryOf(ui, field), `H5/H9: Retry ${field.label…
+    175|     need(discardOf(ui, field), `H9: Discard ${field.label}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'calendar' > H5 calendar: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+AssertionError: H5: "Calendar was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:173:88
+    171|     expect(bytesAll(), "only the refused key keeps its bytes").toStric…
+    172|     expect(shown(ui, field), "the reset draft displays the intended de…
+    173|     expect(says(msg.notReset(field)), `H5: "${msg.notReset(field)}" fa…
+       |                                                                                        ^
+    174|     const retry = need(retryOf(ui, field), `H5/H9: Retry ${field.label…
+    175|     need(discardOf(ui, field), `H9: Discard ${field.label}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'matrix' > H5 matrix: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+AssertionError: H5: "Matrix was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:173:88
+    171|     expect(bytesAll(), "only the refused key keeps its bytes").toStric…
+    172|     expect(shown(ui, field), "the reset draft displays the intended de…
+    173|     expect(says(msg.notReset(field)), `H5: "${msg.notReset(field)}" fa…
+       |                                                                                        ^
+    174|     const retry = need(retryOf(ui, field), `H5/H9: Retry ${field.label…
+    175|     need(discardOf(ui, field), `H9: Discard ${field.label}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'pomodoro' > H5 pomodoro: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+AssertionError: H5: "Pomodoro was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:173:88
+    171|     expect(bytesAll(), "only the refused key keeps its bytes").toStric…
+    172|     expect(shown(ui, field), "the reset draft displays the intended de…
+    173|     expect(says(msg.notReset(field)), `H5: "${msg.notReset(field)}" fa…
+       |                                                                                        ^
+    174|     const retry = need(retryOf(ui, field), `H5/H9: Retry ${field.label…
+    175|     need(discardOf(ui, field), `H9: Discard ${field.label}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'habits' > H5 habits: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+AssertionError: H5: "Habits was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:173:88
+    171|     expect(bytesAll(), "only the refused key keeps its bytes").toStric…
+    172|     expect(shown(ui, field), "the reset draft displays the intended de…
+    173|     expect(says(msg.notReset(field)), `H5: "${msg.notReset(field)}" fa…
+       |                                                                                        ^
+    174|     const retry = need(retryOf(ui, field), `H5/H9: Retry ${field.label…
+    175|     need(discardOf(ui, field), `H9: Discard ${field.label}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 'meditation' > H5 meditation: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+AssertionError: H5: "Meditation was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:173:88
+    171|     expect(bytesAll(), "only the refused key keeps its bytes").toStric…
+    172|     expect(shown(ui, field), "the reset draft displays the intended de…
+    173|     expect(says(msg.notReset(field)), `H5: "${msg.notReset(field)}" fa…
+       |                                                                                        ^
+    174|     const retry = need(retryOf(ui, field), `H5/H9: Retry ${field.label…
+    175|     need(discardOf(ui, field), `H9: Discard ${field.label}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H5 (reader layer) with Calendar's removal refused, the real useFeaturePrefs rail input restores the other 7 and keeps Calendar off
+AssertionError: H5: readers reflect committed bytes only; Calendar stays off while the other 7 are restored: expected [ 'tasks', 'board', 'dashboard', …(5) ] to deeply equal [ 'tasks', 'board', 'dashboard', …(4) ]
+
+- Expected
++ Received
+
+  [
+    "tasks",
+    "board",
+    "dashboard",
++   "calendar",
+    "matrix",
+    "pomodoro",
+    "habits",
+    "meditation",
+  ]
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:213:130
+    211|   fired(refusal, "calendar remove");
+    212|   expect(bytes(calendar), "Calendar's bytes stay false").toBe("false");
+    213|   expect(probe("sol-rail-input"), "H5: readers reflect committed bytes…
+       |                                                                                                                                  ^
+    214|   expect(shown(ui, calendar), "the pane shows the Calendar reset draft…
+    215| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 partial reset: only unresolved fields remain drafts, export entries and guard reasons; Retry targets only them
+AssertionError: H5: Boards failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:229:68
+    227|   fired(habitsRefusal, "habits remove");
+    228|   expect(bytesAll(), "only the two refused keys keep their bytes").toS…
+    229|   expect(says(msg.notReset(board)), "H5: Boards failure feedback").toB…
+       |                                                                    ^
+    230|   expect(says(msg.notReset(habits)), "H5: Habits failure feedback").to…
+    231|   for (const field of FIELDS.filter(entry => entry !== board && entry …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H3 §6 a duplicate Reset to defaults while the batch is pending enqueues no duplicate removes
+AssertionError: H3: the held per-key lock keeps the pending Calendar removal from running: expected null to be 'false' // Object.is equality
+
+- Expected: 
+"false"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:268:104
+    266|   clickReset(ui, true);
+    267|   await flush();
+    268|   expect(bytes(calendar), "H3: the held per-key lock keeps the pending…
+       |                                                                                                        ^
+    269|   expect(says(msg.resetting(calendar)), `pending feedback "${msg.reset…
+    270|   const again = resetButtons(ui);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 REL-07 an invalid source refuses the reset and keeps the reset intent; Reset never purges malformed bytes
+AssertionError: §6: Reset is never authority to purge malformed bytes: expected null to be 'yes' // Object.is equality
+
+- Expected: 
+"yes"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:290:81
+    288|   clickReset(ui, true);
+    289|   await flush(24);
+    290|   expect(bytes(tasks), "§6: Reset is never authority to purge malforme…
+       |                                                                                 ^
+    291|   expect(bytes(board), "the valid sibling is removed").toBeNull();
+    292|   expect(says(msg.notReset(tasks)), "the refused reset is reported").t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 an unavailable source refuses the reset and keeps the reset intent; Discard returns to Reload-only
+AssertionError: §6: an unreadable source is never removed blindly: expected null to be 'false' // Object.is equality
+
+- Expected: 
+"false"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:325:82
+    323|   clickReset(ui, true);
+    324|   await flush(24);
+    325|   expect(bytes(meditation), "§6: an unreadable source is never removed…
+       |                                                                                  ^
+    326|   expect(says(msg.notReset(meditation)), "the refused reset is reporte…
+    327|   need(retryOf(ui, meditation), "H9: Retry Meditation");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 a removal whose readback is denied stays a reset draft; Retry verifies absence with exactly one total remove
+AssertionError: §6: Reset verifies absence by reading the key back: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:346:80
+    344|   await flush(24);
+    345|   pre(readback.armed && removesOn(from, dashboard) === 1 && bytes(dash…
+    346|   expect(readback.fired, "§6: Reset verifies absence by reading the ke…
+       |                                                                                ^
+    347|   expect(shown(ui, dashboard)).toBe(true);
+    348|   expect(says(msg.notReset(dashboard)), "an unverified removal is repo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H3 §6 a conflict during a held reset preserves the external bytes and the reset draft; Retry never removes them
+AssertionError: H3: the held per-key lock keeps the pending removal from running: expected null to be 'false' // Object.is equality
+
+- Expected: 
+"false"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:367:95
+    365|   clickReset(ui, true);
+    366|   await flush();
+    367|   expect(bytes(pomodoro), "H3: the held per-key lock keeps the pending…
+       |                                                                                               ^
+    368|   nativeSet.call(localStorage, pomodoro.key, "true");
+    369|   await lock.release();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 an unrelated field still saves while another field's reset recovery is blocked
+AssertionError: H5: Habits failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:392:69
+    390|   await flush(24);
+    391|   fired(refusal, "habits remove");
+    392|   expect(says(msg.notReset(habits)), "H5: Habits failure feedback").to…
+       |                                                                     ^
+    393|   toggle(ui, tasks);
+    394|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > H9 §6 Defaults restored appears only when all 8 resets completed; a held reset reports it is being reset
+AssertionError: H3: the held per-key lock keeps the pending removal from running: expected null to be 'false' // Object.is equality
+
+- Expected: 
+"false"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:408:97
+    406|   clickReset(ui, true);
+    407|   await flush();
+    408|   expect(bytes(meditation), "H3: the held per-key lock keeps the pendi…
+       |                                                                                                 ^
+    409|   expect(says(msg.resetting(meditation)), `pending feedback "${msg.res…
+    410|   expect(says(W.en.restored), "no Defaults restored while one reset is…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > §5.7 one field's set fails while another field's reset succeeds; each settles independently
+AssertionError: H1: the failed set keeps the latest choice: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:442:74
+    440|   await flush();
+    441|   fired(quota, "tasks write");
+    442|   expect(shown(ui, tasks), "H1: the failed set keeps the latest choice…
+       |                                                                          ^
+    443|   expect(says(msg.notSaved(tasks))).toBe(true);
+    444|   expect(says(msg.notReset(board))).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > §5.7 one field's reset fails while another field's set succeeds; each settles independently
+AssertionError: H5: Boards failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:463:68
+    461|   await flush(24);
+    462|   fired(refusal, "board remove");
+    463|   expect(says(msg.notReset(board)), "H5: Boards failure feedback").toB…
+       |                                                                    ^
+    464|   toggle(ui, tasks);
+    465|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 repeating an unchanged failed reset keeps its refusal; it never rebases or writes
+AssertionError: H5: Calendar failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:486:73
+    484|   await flush(24);
+    485|   fired(refusal, "calendar remove");
+    486|   expect(says(msg.notReset(calendar)), "H5: Calendar failure feedback"…
+       |                                                                         ^
+    487|   const from = mark();
+    488|   fireEvent.click(need(retryOf(ui, calendar), "H9: Retry Calendar"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > §6 a clean completed batch may later receive a fresh reset; an intervening edit is a new intent
+AssertionError: H9: Defaults restored after the first batch: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:509:78
+    507|   await flush(24);
+    508|   expect(bytes(board)).toBeNull();
+    509|   expect(says(W.en.restored), "H9: Defaults restored after the first b…
+       |                                                                              ^
+    510|   toggle(ui, board);
+    511|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/29]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/reset.test.tsx > §5 ZH reset wording: pending, not reset and Defaults restored
+AssertionError: ZH pending reset feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/reset.test.tsx:532:74
+    530|   await flush();
+    531|   fired(refusal, "habits remove");
+    532|   expect(says(msg.resetting(matrix, "zh")), "ZH pending reset feedback…
+       |                                                                          ^
+    533|   expect(says(msg.notReset(habits, "zh")), "ZH not-reset feedback").to…
+    534|   const retry = need(button(ui, "重试 习惯"), "ZH Retry action");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/29]⎯
+
+
+---- runner summary ----
+json_report=success=false numTotalTests=31 numPassedTests=2 numFailedTests=29 numPendingTests=0 numTodoTests=0
+totals cases=31 passed=2 failed=29 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-features-panel/vitest.setup.ts], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (7)
+harness PASS no test-file suite error
+case 001 FAILED | H7 the en reset confirmation states the normative text, with no theme or layout claim
+    first: AssertionError: H7: the normative en confirmation text: expected 'Reset every preference to defaults? T…' to be 'Turn all 8 modules back on? This only…' // Object.is equality
+case 002 FAILED | H7 the zh reset confirmation states the normative text, with no theme or layout claim
+    first: AssertionError: H7: the normative zh confirmation text: expected '确定恢复所有设置为默认值？这会清除保存的主题、布局和模块开关。' to be '将全部 8 个模块恢复为开启？这只改变显示哪些模块，数据会保留。' // Object.is equality
+case 003 FAILED | §6 D3 Reset to defaults is a Features-local control, not the shared SettingsFooter
+    first: AssertionError: §6/D3: the Features-local control carries data-testid features-reset-defaults: expected 'settings-footer-reset' to be 'features-reset-defaults' // Object.is equality
+case 004 FAILED | H9 §6 an accepted reset reaches verified absence for all 8, never writes, and reports Defaults restored
+    first: AssertionError: H9: the truthful 'Defaults restored.' status after all 8 completed: expected false to be true // Object.is equality
+case 005 FAILED | D2 §10.5 Reset to defaults dispatches no StorageEvent of any kind
+    first: AssertionError: D2: zero StorageEvents with key === null: expected 1 to be +0 // Object.is equality
+case 006 PASSED | INV §6 §10.6 a full reset leaves every key other than the 8 byte-identical (snapshot comparison)
+case 007 FAILED | H6 (hook layer) mounted legacy usePref readers of accent hue, background tone, rail position, rail order and pet keep their stored values through Reset to defaults
+    first: AssertionError: H6: no legacy reader is repainted to its default; each keeps showing its stored value: expected { hue: 165, tone: 'default', …(4) } to strictly equal { hue: 210, tone: 'sage', …(4) }
+case 008 FAILED | §6 an already-absent reset completes through verified no-ops: zero removes, zero writes, Defaults restored
+    first: AssertionError: §6: already-absent keys complete through the engine's verified no-op; nothing is removed or seeded: expected [ …(8) ] to deeply equal []
+case 009 FAILED | H5 'tasks' H5 tasks: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+    first: AssertionError: H5: "Tasks was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 010 FAILED | H5 'board' H5 board: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+    first: AssertionError: H5: "Boards was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 011 FAILED | H5 'dashboard' H5 dashboard: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+    first: AssertionError: H5: "Dashboard was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 012 FAILED | H5 'calendar' H5 calendar: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+    first: AssertionError: H5: "Calendar was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 013 FAILED | H5 'matrix' H5 matrix: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+    first: AssertionError: H5: "Matrix was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 014 FAILED | H5 'pomodoro' H5 pomodoro: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+    first: AssertionError: H5: "Pomodoro was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 015 FAILED | H5 'habits' H5 habits: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+    first: AssertionError: H5: "Habits was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 016 FAILED | H5 'meditation' H5 meditation: a refused removal keeps a reset draft that displays on with failure feedback, Retry, Discard, Export and guard; Retry removes only that key and never writes true
+    first: AssertionError: H5: "Meditation was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 017 FAILED | H5 (reader layer) with Calendar's removal refused, the real useFeaturePrefs rail input restores the other 7 and keeps Calendar off
+    first: AssertionError: H5: readers reflect committed bytes only; Calendar stays off while the other 7 are restored: expected [ 'tasks', 'board', 'dashboard', …(5) ] to deeply equal [ 'tasks', 'board', 'dashboard', …(4) ]
+case 018 FAILED | §6 partial reset: only unresolved fields remain drafts, export entries and guard reasons; Retry targets only them
+    first: AssertionError: H5: Boards failure feedback: expected false to be true // Object.is equality
+case 019 FAILED | H3 §6 a duplicate Reset to defaults while the batch is pending enqueues no duplicate removes
+    first: AssertionError: H3: the held per-key lock keeps the pending Calendar removal from running: expected null to be 'false' // Object.is equality
+case 020 FAILED | §6 REL-07 an invalid source refuses the reset and keeps the reset intent; Reset never purges malformed bytes
+    first: AssertionError: §6: Reset is never authority to purge malformed bytes: expected null to be 'yes' // Object.is equality
+case 021 FAILED | §6 an unavailable source refuses the reset and keeps the reset intent; Discard returns to Reload-only
+    first: AssertionError: §6: an unreadable source is never removed blindly: expected null to be 'false' // Object.is equality
+case 022 FAILED | §6 a removal whose readback is denied stays a reset draft; Retry verifies absence with exactly one total remove
+    first: AssertionError: §6: Reset verifies absence by reading the key back: expected +0 to be 1 // Object.is equality
+case 023 FAILED | H3 §6 a conflict during a held reset preserves the external bytes and the reset draft; Retry never removes them
+    first: AssertionError: H3: the held per-key lock keeps the pending removal from running: expected null to be 'false' // Object.is equality
+case 024 FAILED | §6 an unrelated field still saves while another field's reset recovery is blocked
+    first: AssertionError: H5: Habits failure feedback: expected false to be true // Object.is equality
+case 025 FAILED | H9 §6 Defaults restored appears only when all 8 resets completed; a held reset reports it is being reset
+    first: AssertionError: H3: the held per-key lock keeps the pending removal from running: expected null to be 'false' // Object.is equality
+case 026 PASSED | INV §6 §7 Reset to defaults needs no active account: it removes all 8 while the account scope is locked
+case 027 FAILED | §5.7 one field's set fails while another field's reset succeeds; each settles independently
+    first: AssertionError: H1: the failed set keeps the latest choice: expected true to be false // Object.is equality
+case 028 FAILED | §5.7 one field's reset fails while another field's set succeeds; each settles independently
+    first: AssertionError: H5: Boards failure feedback: expected false to be true // Object.is equality
+case 029 FAILED | §6 repeating an unchanged failed reset keeps its refusal; it never rebases or writes
+    first: AssertionError: H5: Calendar failure feedback: expected false to be true // Object.is equality
+case 030 FAILED | §6 a clean completed batch may later receive a fresh reset; an intervening edit is a new intent
+    first: AssertionError: H9: Defaults restored after the first batch: expected false to be true // Object.is equality
+case 031 FAILED | §5 ZH reset wording: pending, not reset and Defaults restored
+    first: AssertionError: ZH pending reset feedback: expected false to be true // Object.is equality
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.features-sol-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/vitest.setup.ts"],"include":["docs/reviews/web-features-recovery-sol/reset.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-features-panel/src/FeaturesPane.tsx packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts
+pin_modules=70 by package: docs/reviews=2 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-settings-features-panel=11 packages/xai-web-shell=9

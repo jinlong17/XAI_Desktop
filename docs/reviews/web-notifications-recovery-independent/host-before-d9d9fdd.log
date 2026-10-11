@@ -1,0 +1,133 @@
+revision=d9d9fdd fixed_commit=d9d9fdde211e19fc258f97e7184a8ee77338d80c
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-TgHLUa
+
+ ❯ docs/reviews/web-notifications-recovery-independent/host.test.tsx (12 tests | 11 failed) 660ms
+   × actual pane retains failed latest 'enabled' 114ms
+     → expected true to be false // Object.is equality
+   × actual pane retains failed latest 'done_sound' 47ms
+     → expected 'subtle' to be 'chime' // Object.is equality
+   × actual pane retains failed latest 'push_task' 42ms
+     → expected true to be false // Object.is equality
+   × actual pane retains failed latest 'push_pomo' 42ms
+     → expected true to be false // Object.is equality
+   × actual pane retains failed latest 'push_habit' 40ms
+     → expected false to be true // Object.is equality
+   × actual pane retains failed latest 'quiet' 45ms
+     → expected true to be false // Object.is equality
+   × actual pane retains failed latest 'quiet_start' 38ms
+     → expected '22:00' to be '23:15' // Object.is equality
+   × actual pane retains failed latest 'quiet_end' 39ms
+     → expected '07:00' to be '06:30' // Object.is equality
+   × actual route holds failed notification work 69ms
+     → expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+   × actual signout holds failed hidden times after quiet disabled 69ms
+     → expected true to be 'pending' // Object.is equality
+   × reenabling quiet reveals both retained latest failed times 67ms
+     → expected '22:00' to be '23:15' // Object.is equality
+   ✓ clean notifications permits departure with zero seeded writes 46ms
+
+ Test Files  1 failed (1)
+      Tests  11 failed | 1 passed (12)
+   Start at  05:23:08
+   Duration  4.72s (transform 2.15s, setup 0ms, collect 3.27s, tests 660ms, environment 420ms, prepare 93ms)
+
+
+stderr | docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'enabled'
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'enabled'
+ FAIL  docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'push_task'
+ FAIL  docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'push_pomo'
+ FAIL  docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'quiet'
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-notifications-recovery-independent/host.test.tsx:32:280
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'done_sound'
+AssertionError: expected 'subtle' to be 'chime' // Object.is equality
+
+Expected: "chime"
+Received: "subtle"
+
+ ❯ docs/reviews/web-notifications-recovery-independent/host.test.tsx:32:280
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'push_habit'
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-notifications-recovery-independent/host.test.tsx:32:280
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'quiet_start'
+AssertionError: expected '22:00' to be '23:15' // Object.is equality
+
+Expected: "23:15"
+Received: "22:00"
+
+ ❯ docs/reviews/web-notifications-recovery-independent/host.test.tsx:32:280
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'quiet_end'
+AssertionError: expected '07:00' to be '06:30' // Object.is equality
+
+Expected: "06:30"
+Received: "07:00"
+
+ ❯ docs/reviews/web-notifications-recovery-independent/host.test.tsx:32:280
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual route holds failed notification work
+AssertionError: expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/settings/date_time"
+
+ ❯ docs/reviews/web-notifications-recovery-independent/host.test.tsx:33:231
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual signout holds failed hidden times after quiet disabled
+AssertionError: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-notifications-recovery-independent/host.test.tsx:34:449
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-independent/host.test.tsx > reenabling quiet reveals both retained latest failed times
+AssertionError: expected '22:00' to be '23:15' // Object.is equality
+
+Expected: "23:15"
+Received: "22:00"
+
+ ❯ docs/reviews/web-notifications-recovery-independent/host.test.tsx:35:223
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯

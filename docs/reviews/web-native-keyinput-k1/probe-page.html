@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>K-1 key probe</title>
+<style>
+  body { font: 14px system-ui, sans-serif; margin: 16px; }
+  .row { margin: 8px 0; display: flex; gap: 8px; align-items: center; }
+  #pad { width: 200px; height: 40px; background: #eee; }
+  #pop, #deptrap { border: 1px solid #888; padding: 8px; display: inline-flex; gap: 8px; }
+</style>
+</head>
+<body>
+<!--
+  CP-APPEARANCE-01 batch 44 (K-1). A product-free probe page: no application code, no storage use.
+  A document-level capture recorder logs every keyboard, input and activation event with isTrusted. The
+  focus contexts mirror the contexts in which the three frozen runners send keys:
+    body      nothing focused (the Topbar popover unmounts on Escape, so focus falls to <body>)
+    button    a plain focused button
+    text      a focused text input
+    range     a focused range slider (the font-scale slider, driven by ArrowRight)
+    select    a focused <select> with English options (Date & Time start-week typeahead "s")
+    selectzh  a focused <select> with Chinese options (Date & Time visual-zh typeahead "周")
+    popover   role=dialog popover; its document keydown handler removes it on Escape WITHOUT preventDefault and
+              the focused menuitemradio leaves the DOM (Topbar.tsx:79-81 / AvatarMenu.tsx:55-57 at 5cd63ff)
+    popover-prevent   the same, but the handler calls preventDefault
+    dialog    a native modal <dialog> opened with showModal() and a focused button (SignOutConfirmDialog shape)
+    deptrap   a role=dialog div with the departureCoordinator.tsx:260-285 keydown shape (Escape: preventDefault
+              and close; Tab: wrap at the edges with preventDefault)
+    tablast   focus on the last focusable element of the document (a Tab leaves the document)
+-->
+<div class="row"><div id="pad" aria-hidden="true"></div></div>
+<div class="row">
+  <button id="first" type="button">First</button>
+  <button id="btn" type="button">Plain button</button>
+  <input id="text" type="text" value="" aria-label="Text">
+  <input id="range" type="range" min="0" max="100" step="1" value="50" aria-label="Range">
+</div>
+<div class="row">
+  <select id="sel" aria-label="Start week (EN)"><option value="monday" selected>Monday</option><option value="sunday">Sunday</option><option value="saturday">Saturday</option></select>
+  <select id="selzh" aria-label="Start week (ZH)"><option value="monday" selected>周一</option><option value="sunday">周日</option><option value="saturday">周六</option></select>
+</div>
+<div class="row" id="poprow"></div>
+<div class="row" id="traprow"></div>
+<dialog id="dlg"><p>Modal dialog</p><button id="dlgbtn" type="button">Stay</button> <button id="dlgok" type="button">Confirm</button></dialog>
+<div class="row"><button id="last" type="button">Last</button></div>
+<script>
+(function () {
+  "use strict";
+  var t0 = performance.now();
+  var describe = function (node) {
+    if (!node || node === document) return "document";
+    if (node === window) return "window";
+    if (!(node instanceof Element)) return String(node && node.nodeName);
+    return node.tagName.toLowerCase() + (node.id ? "#" + node.id : "");
+  };
+  var k = {
+    t0: t0,
+    seq: 0,
+    detail: [],          // first DETAIL_LIMIT events in full
+    counts: {},          // aggregated per type/key/code/keyCode/trusted
+    byTarget: {},        // keyboard events per type@target (for attribution to the focused element)
+    perType: {},         // per type totals
+    times: [],           // receipt times (ms since t0) of keyboard events, capped
+    effects: { clicks: {}, inputs: {}, changes: {}, beforeinputs: 0, cancels: 0, closes: 0, focusins: [] },
+    preventStray: false, // when true, a capture listener calls preventDefault on keydowns whose key is Unidentified
+    log: [],
+  };
+  var DETAIL_LIMIT = 400, TIMES_LIMIT = 200000;
+  var keyboard = { keydown: 1, keypress: 1, keyup: 1 };
+  var record = function (event) {
+    k.seq += 1;
+    var now = performance.now() - t0;
+    var type = event.type;
+    k.perType[type] = (k.perType[type] || 0) + 1;
+    if (keyboard[type]) {
+      var id = [type, event.key, event.code, event.keyCode, event.isTrusted ? "trusted" : "untrusted"].join("|");
+      k.counts[id] = (k.counts[id] || 0) + 1;
+      var at = type + "@" + describe(event.target);
+      k.byTarget[at] = (k.byTarget[at] || 0) + 1;
+      if (k.times.length < TIMES_LIMIT) k.times.push(Math.round(now * 10) / 10);
+    }
+    if (type === "click") { var c = describe(event.target); k.effects.clicks[c] = (k.effects.clicks[c] || 0) + 1; }
+    if (type === "input") { var i = describe(event.target); k.effects.inputs[i] = (k.effects.inputs[i] || 0) + 1; }
+    if (type === "change") { var g = describe(event.target); k.effects.changes[g] = (k.effects.changes[g] || 0) + 1; }
+    if (type === "beforeinput") k.effects.beforeinputs += 1;
+    if (type === "cancel") k.effects.cancels += 1;
+    if (type === "close") k.effects.closes += 1;
+    if (type === "focusin" && k.effects.focusins.length < 50) k.effects.focusins.push({ t: Math.round(now), target: describe(event.target) });
+    if (k.detail.length < DETAIL_LIMIT) {
+      k.detail.push({ seq: k.seq, t: Math.round(now * 10) / 10, type: type, key: event.key, code: event.code, keyCode: event.keyCode,
+        charCode: event.charCode, repeat: event.repeat, trusted: event.isTrusted, timeStamp: Math.round(event.timeStamp * 10) / 10,
+        target: describe(event.target), active: describe(document.activeElement),
+        value: event.target && "value" in event.target ? String(event.target.value) : undefined });
+    }
+  };
+  ["keydown", "keypress", "keyup", "beforeinput", "input", "change", "click", "cancel", "close", "focusin"].forEach(function (type) {
+    document.addEventListener(type, record, true);
+  });
+  // Optional: a page handler that consumes stray keydowns (used only by the stop-condition probe).
+  document.addEventListener("keydown", function (event) {
+    if (k.preventStray && event.key === "Unidentified") event.preventDefault();
+  }, true);
+  // Records whether each keydown ended default-prevented (window bubble phase, registered last).
+  window.addEventListener("keydown", function (event) {
+    if (k.log.length < 50) k.log.push({ key: event.key, code: event.code, prevented: event.defaultPrevented, t: Math.round(performance.now() - t0) });
+  }, false);
+
+  var focusEl = function (id) { var el = document.getElementById(id); el.focus(); return describe(document.activeElement); };
+  k.setup = function (ctx) {
+    var pr = document.getElementById("poprow"), tr = document.getElementById("traprow");
+    pr.textContent = ""; tr.textContent = "";
+    if (ctx === "body") { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); return describe(document.activeElement); }
+    if (ctx === "button") return focusEl("btn");
+    if (ctx === "text") return focusEl("text");
+    if (ctx === "range") return focusEl("range");
+    if (ctx === "select") return focusEl("sel");
+    if (ctx === "selectzh") return focusEl("selzh");
+    if (ctx === "tablast") return focusEl("last");
+    if (ctx === "popover" || ctx === "popover-prevent") {
+      var trigger = document.createElement("button"); trigger.id = "trigger"; trigger.type = "button"; trigger.textContent = "Preferences";
+      var pop = document.createElement("div"); pop.id = "pop"; pop.setAttribute("role", "dialog");
+      var item = document.createElement("button"); item.id = "popbtn"; item.type = "button"; item.setAttribute("role", "menuitemradio"); item.textContent = "Dark";
+      pop.appendChild(item); pr.appendChild(trigger); pr.appendChild(pop);
+      var prevent = ctx === "popover-prevent";
+      var handler = function (event) {
+        if (event.key === "Escape") {
+          if (prevent) event.preventDefault();
+          document.removeEventListener("keydown", handler);
+          pop.remove();
+        }
+      };
+      document.addEventListener("keydown", handler);
+      return focusEl("popbtn");
+    }
+    if (ctx === "dialog") {
+      var dlg = document.getElementById("dlg");
+      if (!dlg.open) dlg.showModal();
+      return focusEl("dlgbtn");
+    }
+    if (ctx === "deptrap") {
+      var d = document.createElement("div"); d.id = "deptrap"; d.setAttribute("role", "dialog"); d.setAttribute("aria-modal", "true"); d.tabIndex = -1;
+      ["Stay", "Export current draft", "Discard local changes and leave"].forEach(function (label, index) {
+        var b = document.createElement("button"); b.type = "button"; b.id = "trap" + index; b.textContent = label; d.appendChild(b);
+      });
+      d.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") { event.preventDefault(); d.remove(); return; }
+        if (event.key !== "Tab") return;
+        var controls = Array.prototype.slice.call(d.querySelectorAll("button"));
+        var first = controls[0], last = controls[controls.length - 1];
+        if (event.shiftKey && (document.activeElement === first || document.activeElement === d)) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      });
+      tr.appendChild(d);
+      return focusEl("trap0");
+    }
+    throw new Error("unknown context " + ctx);
+  };
+  k.state = function () {
+    var dlg = document.getElementById("dlg");
+    return {
+      active: describe(document.activeElement),
+      text: document.getElementById("text").value,
+      range: document.getElementById("range").value,
+      sel: document.getElementById("sel").value,
+      selzh: document.getElementById("selzh").value,
+      dialogOpen: dlg.open,
+      popoverPresent: !!document.getElementById("pop"),
+      deptrapPresent: !!document.getElementById("deptrap"),
+      focusVisible: document.activeElement && document.activeElement !== document.body ? document.activeElement.matches(":focus-visible") : false,
+      userActivation: navigator.userActivation ? { isActive: navigator.userActivation.isActive, hasBeenActive: navigator.userActivation.hasBeenActive } : null,
+    };
+  };
+  k.snapshot = function () {
+    return { seq: k.seq, perType: k.perType, counts: k.counts, effects: k.effects, state: k.state(), detail: k.detail.slice(0, 60), log: k.log.slice(0, 20), timesTotal: k.times.length };
+  };
+  k.windowCount = function (fromMs, toMs) {
+    var n = 0;
+    for (var i = 0; i < k.times.length; i += 1) if (k.times[i] >= fromMs && k.times[i] < toMs) n += 1;
+    return n;
+  };
+  k.now = function () { return performance.now() - t0; };
+  Object.defineProperty(window, "__k1", { value: k });
+})();
+</script>
+</body>
+</html>

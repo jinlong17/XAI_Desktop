@@ -34,7 +34,21 @@ const QUADRANT_DEFS = [
 
 export function MatrixModule({ lang }: MatrixModuleProps) {
   const { s } = useI18n(lang);
-  const { state, moveCard, addCard } = usePersistedMatrix();
+  const { state, moveCard, addCard, recovery } = usePersistedMatrix();
+
+  const [exportFailed, setExportFailed] = useState(false);
+  const saveError = recovery.failure ? (lang === 'zh'
+    ? (recovery.failure === 'conflict' ? '已有较新的数据，未覆盖。请导出草稿后放弃此次更改。' : recovery.failure === 'account' ? '账户已更改，未保存。请返回原账户恢复。' : '尚未保存。请重试或导出草稿。')
+    : (recovery.failure === 'conflict' ? 'Newer stored data was preserved. Export the draft and discard this change.' : recovery.failure === 'account' ? 'Account changed. Not saved; return to the original account to recover.' : 'Not saved. Retry or export the draft.')) : null;
+  const exportDraft = (draft?: NewMatrixCardDraft, target?: QuadrantId) => {
+    try {
+      const value = { recovery: recovery.snapshot(), latestDraft: draft, target };
+      const url = URL.createObjectURL(new Blob([JSON.stringify(value, null, 2)], { type: 'application/json' }));
+      const link = document.createElement('a'); link.href = url; link.download = 'matrix-unsaved-change.json'; document.body.append(link);
+      try { link.click(); } finally { link.remove(); window.setTimeout(() => URL.revokeObjectURL(url), 1000); }
+      setExportFailed(false);
+    } catch { setExportFailed(true); }
+  };
 
   // Composer state — lifted into MatrixModule (no web:* channel needed; QE-D)
   const [composerOpen, setComposerOpen] = useState(false);
@@ -53,13 +67,12 @@ export function MatrixModule({ lang }: MatrixModuleProps) {
   }, []);
 
   const handleComposerSave = useCallback((draft: NewMatrixCardDraft, target: QuadrantId) => {
-    addCard(draft, target);
-    setComposerOpen(false);
+    if (addCard(draft, target)) { setComposerOpen(false); setExportFailed(false); }
   }, [addCard]);
 
   const handleComposerClose = useCallback(() => {
-    setComposerOpen(false);
-  }, []);
+    if (!recovery.failure) setComposerOpen(false);
+  }, [recovery.failure]);
 
   return (
     <div className="module module-matrix">
@@ -70,6 +83,7 @@ export function MatrixModule({ lang }: MatrixModuleProps) {
           type="button"
           className="icon-btn"
           aria-label={lang === "zh" ? "添加" : "Add"}
+          disabled={!!recovery.failure}
           onClick={handleHeaderAdd}
         >
           <PlusIcon size={16} />
@@ -79,6 +93,13 @@ export function MatrixModule({ lang }: MatrixModuleProps) {
         </button>
       </header>
 
+      {saveError && !composerOpen && <div className="matrix-save-recovery" role="alert">
+        <p>{saveError}</p>
+        <button type="button" onClick={() => recovery.retry()}>{lang === 'zh' ? '重试保存' : 'Retry save'}</button>
+        <button type="button" onClick={() => exportDraft()}>{lang === 'zh' ? '导出草稿' : 'Export draft'}</button>
+        <button type="button" onClick={() => { recovery.discard(); setExportFailed(false); }}>{lang === 'zh' ? '放弃此次更改' : 'Discard change'}</button>
+        {exportFailed && <p>{lang === 'zh' ? '导出失败，请检查账户和存储权限。' : 'Export failed. Check account and storage access.'}</p>}
+      </div>}
       <div className="matrix-grid">
         {QUADRANT_DEFS.map((q) => (
           <Quadrant
@@ -89,7 +110,7 @@ export function MatrixModule({ lang }: MatrixModuleProps) {
             cards={state[q.id]}
             lang={lang}
             onCardDropped={moveCard}
-            onAddCard={handleQuadrantAdd}
+            onAddCard={(quadrant) => { if (!recovery.failure) handleQuadrantAdd(quadrant); }}
           />
         ))}
       </div>
@@ -99,6 +120,10 @@ export function MatrixModule({ lang }: MatrixModuleProps) {
         lang={lang}
         defaultQuadrant={composerQuadrant}
         onSave={handleComposerSave}
+        saveError={saveError}
+        exportFailed={exportFailed}
+        onExportDraft={exportDraft}
+        onDiscard={() => { recovery.discard(); setExportFailed(false); setComposerOpen(false); }}
         onClose={handleComposerClose}
       />
     </div>

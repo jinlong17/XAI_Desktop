@@ -5,7 +5,8 @@
  * fullscreen overlay when `active` is true.
  */
 
-import { useMemo, useState, type JSX } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type JSX } from "react";
+import { accountScope } from "@repo/plugin-web-storage";
 import { useI18n } from "@repo/plugin-web-tokens";
 import type {
   AmbientSoundId,
@@ -17,6 +18,7 @@ import type {
   Duration,
   DurationMode,
   MeditationModuleProps,
+  MeditationPrefs,
   PresetDuration,
   Scene,
   SceneAnimation,
@@ -30,6 +32,7 @@ import { Icon } from "./internal/icons.js";
 import { SCENES, sceneFromCustom } from "./internal/scenes.js";
 import { getScene } from "./internal/getScene.js";
 import { useMeditationPrefs } from "./internal/useMeditationPrefs.js";
+import { createMeditationController } from "./internal/sessionController.js";
 import { useAmbientAudio } from "./internal/useAmbientAudio.js";
 
 const CLOCK_VARIANTS: readonly ClockVariant[] = [
@@ -116,7 +119,18 @@ function draftFromCurrent(scene: Scene, prefs: ReturnType<typeof useMeditationPr
 
 export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   const { s } = useI18n(lang);
-  const [prefs, setPrefs] = useMeditationPrefs();
+  const [prefs, persistPrefs, recovery] = useMeditationPrefs();
+  const pendingAction = useRef<'preferences' | 'scene' | 'delete' | null>(null);
+  const [exportFailed, setExportFailed] = useState(false);
+  const setPrefs = (next: MeditationPrefs, action: 'preferences' | 'scene' | 'delete' = 'preferences'): boolean => {
+    if (pendingAction.current && (pendingAction.current !== action || action !== 'scene')) return false;
+    const saved = persistPrefs(next, pendingAction.current === 'scene');
+    pendingAction.current = saved ? null : action;
+    return saved;
+  };
+  const [controller] = useState(createMeditationController);
+  const session = useSyncExternalStore(controller.subscribe, controller.getSnapshot, controller.getSnapshot);
+  useEffect(() => controller.retain(), [controller]);
   const [active, setActive] = useState<boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(true);
   const [fixedDraft, setFixedDraft] = useState<string>("60");
@@ -124,6 +138,7 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   const [editingSceneId, setEditingSceneId] = useState<CustomSceneId | "new">("new");
   const [draft, setDraft] = useState<CustomSceneDraft>(() => draftFromCurrent(scene, prefs));
   const ambient = useAmbientAudio();
+  useEffect(() => accountScope.subscribe(() => setActive(false)), []);
 
   const allScenes = useMemo(
     () => [...SCENES, ...prefs.customScenes.map(sceneFromCustom)] as readonly Scene[],
@@ -145,8 +160,7 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   };
 
   const setVolume = (volume: number): void => {
-    setPrefs({ ...prefs, volume });
-    ambient.setVolume(volume);
+    if (setPrefs({ ...prefs, volume })) ambient.setVolume(volume);
   };
 
   const applyCustomScene = (custom: CustomScene): void => {
@@ -177,7 +191,8 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   };
 
   const onPickSound = (sound: AmbientSoundId): void => {
-    setPrefs({ ...prefs, sound });
+    if (!setPrefs({ ...prefs, sound })) return;
+    if (session.active) { ambient.pause(); return; }
     if (sound === "none") {
       ambient.pause();
       return;
@@ -201,7 +216,7 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
     const customFixedDurations = isBuiltIn || exists
       ? prefs.customFixedDurations
       : [...prefs.customFixedDurations, minutes].sort((a, b) => a - b);
-    setPrefs({ ...prefs, customFixedDurations, duration: minutes, durationMode: "preset" });
+    if (!setPrefs({ ...prefs, customFixedDurations, duration: minutes, durationMode: "preset" })) return;
     setFixedDraft(String(minutes));
   };
 
@@ -220,27 +235,41 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
     setPrefs({ ...prefs, customDuration, durationMode: "custom" });
   };
 
-  const onStart = (): void => {
+  const onStart = async (): Promise<void> => {
+    if (pendingAction.current) return;
     ambient.pause();
+    if (!await controller.command('start', prefs)) return;
     setSettingsOpen(false);
     setActive(true);
   };
 
-  const onExit = (): void => {
-    setActive(false);
+  const onExit = async (): Promise<void> => {
+    if (await controller.command(session.active?.phase === 'ended' ? 'dismiss' : 'end')) setActive(false);
   };
+  const exportSession = (): void => {
+    try {
+      const url = URL.createObjectURL(new Blob([controller.exportRecovery()], { type: 'application/json' }));
+      const link = document.createElement('a'); link.href = url; link.download = 'meditation-session-recovery.json';
+      document.body.append(link); try { link.click(); } finally { link.remove(); window.setTimeout(() => URL.revokeObjectURL(url), 1000); }
+    } catch { setExportFailed(true); }
+  };
+  const playingPrefs = session.active?.prefs ?? prefs;
+  const playingScene = getScene(playingPrefs.scene, playingPrefs.customScenes);
 
   const startNewScene = (): void => {
+    if (pendingAction.current) return;
     setEditingSceneId("new");
     setDraft(draftFromCurrent(scene, prefs));
   };
 
   const editCustomScene = (custom: CustomScene): void => {
+    if (pendingAction.current) return;
     setEditingSceneId(custom.id);
     setDraft({ ...custom });
   };
 
   const saveCustomScene = (): void => {
+    if (pendingAction.current && pendingAction.current !== 'scene') return;
     const id = editingSceneId === "new" ? makeCustomSceneId() : editingSceneId;
     const nextScene: CustomScene = {
       id,
@@ -261,24 +290,67 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
       editingSceneId === "new"
         ? [...prefs.customScenes, nextScene]
         : prefs.customScenes.map((item) => (item.id === id ? nextScene : item));
-    setPrefs({ ...prefs, customScenes, scene: id });
+    if (!setPrefs({ ...prefs, customScenes, scene: id }, 'scene')) return;
     setEditingSceneId(id);
     setDraft({ ...nextScene });
   };
 
   const deleteCustomScene = (id: CustomSceneId): void => {
     const customScenes = prefs.customScenes.filter((item) => item.id !== id);
-    setPrefs({
+    if (!setPrefs({
       ...prefs,
       customScenes,
       scene: prefs.scene === id ? "ocean" : prefs.scene,
-    });
+    }, 'delete')) return;
     startNewScene();
   };
 
+  const retrySave = (): void => {
+    if (pendingAction.current === 'scene') { saveCustomScene(); return; }
+    const action = pendingAction.current;
+    if (!recovery.retry()) return;
+    pendingAction.current = null;
+    if (action === 'delete') startNewScene();
+  };
+  const exportDraft = (): void => {
+    try {
+      const snapshot = recovery.snapshot();
+      if (!snapshot) throw new Error('No pending draft');
+      const blob = new Blob([JSON.stringify({ version: 1, kind: 'meditation-unsaved-draft', snapshot, sceneDraft: draft, fixedDurationDraft: fixedDraft }, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url; link.download = 'meditation-unsaved-draft.json';
+      document.body.append(link);
+      try { link.click(); } finally { link.remove(); window.setTimeout(() => URL.revokeObjectURL(url), 1000); }
+      setExportFailed(false);
+    } catch { setExportFailed(true); }
+  };
+
   return (
-    <div className={"module module-meditation" + (active ? " is-playing" : "")}>
-      {!active && (
+    <div className={"module module-meditation" + (active && session.active ? " is-playing" : "")}>
+      {session.error && <div role="alert" className="med-save-recovery">
+        <p>{lang === 'zh' ? '冥想状态未能保存。原始数据已保留，请重试或导出恢复数据。' : session.error}</p>
+        <button type="button" onClick={() => { void controller.retry(); }}>{lang === 'zh' ? '重试会话保存' : 'Retry session save'}</button>
+        <button type="button" onClick={exportSession}>{lang === 'zh' ? '导出会话数据' : 'Export session data'}</button>
+        {exportFailed && <p>{lang === 'zh' ? '导出失败' : 'Export failed'}</p>}
+      </div>}
+      {session.conflict && <p role="status">{lang === 'zh' ? '会话已在另一个页面更改，请根据最新状态继续。' : 'This session changed in another tab. Continue from its current state.'}</p>}
+      {!active && session.active && <div className="med-save-recovery" role="status">
+        <p>{session.active.phase === 'ended' ? (lang === 'zh' ? '冥想已结束。' : 'Meditation ended.') : (lang === 'zh' ? '已恢复冥想计时。运行中的计时继续计算离开时间；暂停的计时保持暂停。音频需点击后恢复。' : 'Saved meditation recovered. Running time includes time away; paused time stays paused. Open it to resume audio.')}</p>
+        {session.active.phase !== 'ended' && <button type="button" onClick={() => { ambient.pause(); setActive(true); }}>{lang === 'zh' ? '打开已保存的冥想' : 'Open saved meditation'}</button>}
+        <button type="button" onClick={() => { void onExit(); }}>{session.active.phase === 'ended' ? (lang === 'zh' ? '关闭记录' : 'Dismiss ended session') : (lang === 'zh' ? '结束冥想' : 'End saved meditation')}</button>
+      </div>}
+      {ambient.state.error && !active && <p role="alert">{lang === 'zh' ? '音频播放失败，请检查浏览器声音权限后重新点击声音。' : ambient.state.error}</p>}
+      {recovery.failure && <div className="med-save-recovery" role="alert">
+        <p>{lang === 'zh' ? '尚未保存。请重试、导出草稿或放弃此次更改后继续。' : 'Not saved. Retry, export the draft, or discard this change before continuing.'}</p>
+        {recovery.failure === 'conflict' && <p>{lang === 'zh' ? '已有较新的数据，未覆盖。请先导出草稿。' : 'Newer stored data was preserved. Export your draft first.'}</p>}
+        <p>{lang === 'zh' ? '导出包含设置、自定义场景和未保存编辑；仅供手动恢复，当前不支持导入。' : 'Export includes settings, custom scenes and unsaved edits for manual recovery. Import is not supported.'}</p>
+        <button type="button" onClick={retrySave}>{lang === 'zh' ? '重试保存' : 'Retry save'}</button>
+        <button type="button" onClick={exportDraft}>{lang === 'zh' ? '导出草稿' : 'Export draft'}</button>
+        <button type="button" onClick={() => { recovery.discard(); pendingAction.current = null; setExportFailed(false); }}>{lang === 'zh' ? '放弃此次更改' : 'Discard change'}</button>
+        {exportFailed && <p>{lang === 'zh' ? '导出失败，请检查账户和存储访问权限。' : 'Export failed. Check account and storage access.'}</p>}
+      </div>}
+      {(!active || !session.active) && (
       <div className="med-config">
         <header className="module-head">
           <h1 className="module-title">
@@ -321,7 +393,7 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
                 {durationLabel(prefs.durationMode, prefs.duration, prefs.customDuration, s)}
               </span>
             </div>
-            <button className="btn primary med-start" type="button" onClick={onStart}>
+            <button className="btn primary med-start" type="button" disabled={!!session.active || !!session.error || session.busy} onClick={() => { void onStart(); }}>
               <Icon name="play" size={14} /> {s("meditation.start")}
             </button>
           </div>
@@ -638,20 +710,21 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
       </div>
       )}
 
-      {active && (
+      {active && session.active && (
         <MeditationPlayer
-          scene={scene}
-          sceneLabel={sceneName(scene, s)}
-          clock={prefs.clock}
-          clockScale={prefs.clockScale}
-          clockColors={prefs.clockColors}
-          sound={prefs.sound}
+          scene={playingScene}
+          sceneLabel={sceneName(playingScene, s)}
+          clock={playingPrefs.clock}
+          clockScale={playingPrefs.clockScale}
+          clockColors={playingPrefs.clockColors}
+          sound={playingPrefs.sound}
           volume={prefs.volume}
-          duration={prefs.duration}
-          durationMode={prefs.durationMode}
-          customDuration={prefs.customDuration}
+          duration={playingPrefs.duration}
+          durationMode={playingPrefs.durationMode}
+          customDuration={playingPrefs.customDuration}
           lang={lang}
-          onExit={onExit}
+          sessionControl={{ row: session.active, now: session.now, error: session.error, busy: session.busy, pause: () => { void controller.command('pause'); }, resume: () => controller.command('resume') }}
+          onExit={() => { void onExit(); }}
           onVolumeChange={setVolume}
         />
       )}

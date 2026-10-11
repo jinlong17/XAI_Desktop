@@ -1,0 +1,16 @@
+import {prefMutationLockName} from './packages/plugin-web-storage/src/internal/prefMutation';
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {accountScope,generationMarkerKey} from './packages/plugin-web-storage/src/index';
+import {DashHeader} from './packages/xai-web-dashboard-grid/src/DashHeader';
+import './packages/plugin-web-tokens/src/tokens.css';
+import './packages/plugin-web-tokens/src/layout.css';
+import './packages/xai-web-dashboard-grid/src/styles.css';
+accountScope.activate(accountScope.lock('independent-A'),'A');localStorage.setItem(generationMarkerKey('independent-A'),JSON.stringify({generation:'A',migrationId:'fixture',previous:null}));const key=accountScope.physicalKey('xai_pref_dashboard_header_note');localStorage.setItem(key,'Original note');const nativeSet=Storage.prototype.setItem;
+(window as any).verify={key,denyOffset(){Storage.prototype.setItem=function(k,v){if(k==='xai_pref_dashboard_header_note_x')throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}},deny(){Storage.prototype.setItem=function(k,v){if(k===key)throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}},restore(){Storage.prototype.setItem=nativeSet},switch(){accountScope.activate(accountScope.lock('independent-B'),'B');return accountScope.physicalKey('xai_pref_dashboard_header_note')}};
+createRoot(document.getElementById('app')!).render(<div className="module-dashboard" style={{padding:16}}><DashHeader lang="en" now={new Date()}/></div>);
+
+Object.assign((window as any).verify,{
+ async holdOffset(){let release!:()=>void,entered!:()=>void;const gate=new Promise<void>(r=>release=r),ready=new Promise<void>(r=>entered=r);const held=navigator.locks.request(prefMutationLockName('xai_pref_dashboard_header_note_x'),{mode:'exclusive'},async()=>{entered();await gate;});(window as any).verify.releaseOffset=async()=>{release();await held;};await ready;},
+ switchDeviceAccount(){localStorage.setItem(generationMarkerKey('independent-B'),JSON.stringify({generation:'B',migrationId:'fixture',previous:null}));accountScope.activate(accountScope.lock('independent-B'),'B');}
+});

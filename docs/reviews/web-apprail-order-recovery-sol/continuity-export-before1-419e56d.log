@@ -1,0 +1,528 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=continuity-export
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-apprail-order-recovery-sol/verify-fixed.mjs 419e56d continuity-export before1
+runner_checkout_head=1094d96776b26c020632823eb84fdb7e8768b489
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-shell/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=07c4f87674e5a14d7cbeffc4cd8ae18d0c9d725cfe052ce45b55fb631720c236 bytes.test.tsx=d4827472827f284178944dd621198a39d7b7ffc34be19781714e61f91103d6cd domain.test.tsx=9dc5784b574768b1f71c13260aa68aabed9a80322497224e689ebe3cb316b989 merge.test.tsx=dd6961f6463db641601a369d5dd135e135d99b888dfee8bbbdc77cb42b50d2c6 drag.test.tsx=8a8da1134fceb5a90ec7de7c7453d617d6ffe496ce42c6f953903d31a2e54f17 field.test.tsx=440f08929d625558d14dbd3084d22a26e3e899214071419a51dad8f1832c67fc continuity-export.test.tsx=b92790b3f989e66b5e3b549995c58abcaee88d5acb700e7f2c31af577f5dd5fc host.test.tsx=e9b64c02373c552775d64ba603572a2467c4b4d909930682cfcbaf13aa7c2bc3 verify-fixed.mjs=e944cb226e3fa342727c913547ff5084e0ad38fad5293ed306cb512bf9f5a4e8
+archive_file_sha256 packages/xai-web-shell/src/AppRail.tsx=6312caa162a7d194774bf95282c203ddc633ccc54068edcd2854dfbfd4633f67 packages/xai-web-shell/src/internal/dnd.ts=a538b51f119f9cedbed3421f8cd21549f1730d0ede9059257402bee9a63deaf9 packages/xai-web-shell/src/registry.tsx=b621abbecfda785a5d7da628465925dacdb3249638b181cc3ca074687b734c1e packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0 packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a packages/xai-web-shell/src/index.ts=c404a9713dee4d821ba3ec6b5c7591f984da3c92b5fb1a62d88fbab5cec368ed packages/xai-web-shell/src/__tests__/AppRail.test.tsx=cbe4179146b7f9565cb038027f004520b46917db3da6c0e9f653cf319b309e8f packages/xai-web-shell/src/__tests__/Topbar.test.tsx=b3a068eab6bbb95e62cb2ec73f8a715921a48549f090bf7237e8d8c0dabfcb12 apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] continuity-export.test.tsx: include=docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-0HE2z9/apprail-sol-continuity-export-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-0HE2z9/.report-continuity-export-0.json vitest_exit=1 cases=22 passed=4 failed=18 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=22 numPassedTests=4 numFailedTests=18
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] continuity-export.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-0HE2z9
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H6 §7 Sol layer: a draft and a held operation survive A→B 100ms
+   → H6 A→B: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H6 §7 Sol layer: a draft and a held operation survive A→locked 52ms
+   → H6 A→locked: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H6 §7 Sol layer: a draft and a held operation survive locked→A 54ms
+   → H6 locked→A: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H6 §7 Sol layer: a draft and a held operation survive a same-account epoch change 47ms
+   → H6 epoch: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H6 §7.6 Sol layer: unmount while held — old callbacks refuse on release, based on live disposal state 46ms
+   → H6: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ ✓ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > PC §7 an unrelated held account lifecycle lock never delays a rail write 196ms
+stdout | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > PC §7 the rail never touches account machinery: no account or demo physical key, no account lifecycle lock, only its own per-key lock
+SOL-OBS product lock names during rail operations []
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > PC §7 the rail never touches account machinery: no account or demo physical key, no account lifecycle lock, only its own per-key lock 177ms
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 1: a failed drop with every module visible exports the A2 merge in the set envelope 115ms
+   → H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 2: a failed drop with Boards hidden exports a value that keeps `board` at its stored index 107ms
+   → H2: the failed drop stays displayed: expected [ 'calendar', 'tasks', 'ai', …(10) ] to deeply equal [ 'tasks', 'ai', 'dashboard', …(10) ]
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H1 §8 shape 3: a failed drop over `{}` exports the merge over DEFAULT_RAIL_ORDER 40ms
+   → H1: no route error: expected 'Route Error (app): prefOrder is not i…' to be null
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 4: an export while a Retry is held behind the real per-key lock 129ms
+   → H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 5: an export after navigating to another route and back (App lifetime) 141ms
+   → H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ ✓ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > PC §8 Export is offered only while a draft exists: no status in a clean state 113ms
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a blob setup failure shows the localized export error, keeps the draft, warning and status, and cleans up 105ms
+   → H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a url setup failure shows the localized export error, keeps the draft, warning and status, and cleans up 107ms
+   → H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a append setup failure shows the localized export error, keeps the draft, warning and status, and cleans up 101ms
+   → H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a click setup failure shows the localized export error, keeps the draft, warning and status, and cleans up 103ms
+   → H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a setup failure in Chinese shows 导出失败，请重试。; the next panel action clears the line 103ms
+   → H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 an unmount during blob setup cancels the click and cleans up 100ms
+   → H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 an unmount during url setup cancels the click and cleans up 101ms
+   → H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 an unmount during append setup cancels the click and cleans up 142ms
+   → H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+ Test Files  1 failed (1)
+      Tests  18 failed | 4 passed (22)
+   Start at  02:40:28
+   Duration  5.40s (transform 1.86s, setup 63ms, collect 2.73s, tests 2.18s, environment 200ms, prepare 42ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-0HE2z9/.report-continuity-export-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 1: a failed drop with every module visible exports the A2 merge in the set envelope
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 2: a failed drop with Boards hidden exports a value that keeps `board` at its stored index
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 2: a failed drop with Boards hidden exports a value that keeps `board` at its stored index
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[plugin-web-storage] quota exceeded for xai_rail_order.
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H1 §8 shape 3: a failed drop over `{}` exports the merge over DEFAULT_RAIL_ORDER
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-0HE2z9/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-0HE2z9/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 4: an export while a Retry is held behind the real per-key lock
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 5: an export after navigating to another route and back (App lifetime)
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a blob setup failure shows the localized export error, keeps the draft, warning and status, and cleans up
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a url setup failure shows the localized export error, keeps the draft, warning and status, and cleans up
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a append setup failure shows the localized export error, keeps the draft, warning and status, and cleans up
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a click setup failure shows the localized export error, keeps the draft, warning and status, and cleans up
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a setup failure in Chinese shows 导出失败，请重试。; the next panel action clears the line
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 an unmount during blob setup cancels the click and cleans up
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 an unmount during url setup cancels the click and cleans up
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 an unmount during append setup cancels the click and cleans up
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 18 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H6 §7 Sol layer: a draft and a held operation survive A→B
+AssertionError: H6 A→B: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ heldAcross docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:72:79
+     70|   const from = mark();
+     71|   const order = await drag(X, [Y1]);
+     72|   expect(raw(), `H6 ${tag}: the held per-key lock keeps the bytes unch…
+       |                                                                               ^
+     73|   expect(railIds(), `${tag}: the draft displays`).toEqual(order);
+     74|   transition();
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:84:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/18]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H6 §7 Sol layer: a draft and a held operation survive A→locked
+AssertionError: H6 A→locked: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ heldAcross docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:72:79
+     70|   const from = mark();
+     71|   const order = await drag(X, [Y1]);
+     72|   expect(raw(), `H6 ${tag}: the held per-key lock keeps the bytes unch…
+       |                                                                               ^
+     73|   expect(railIds(), `${tag}: the draft displays`).toEqual(order);
+     74|   transition();
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:88:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/18]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H6 §7 Sol layer: a draft and a held operation survive locked→A
+AssertionError: H6 locked→A: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ heldAcross docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:72:79
+     70|   const from = mark();
+     71|   const order = await drag(X, [Y1]);
+     72|   expect(raw(), `H6 ${tag}: the held per-key lock keeps the bytes unch…
+       |                                                                               ^
+     73|   expect(railIds(), `${tag}: the draft displays`).toEqual(order);
+     74|   transition();
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:92:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/18]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H6 §7 Sol layer: a draft and a held operation survive a same-account epoch change
+AssertionError: H6 epoch: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ heldAcross docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:72:79
+     70|   const from = mark();
+     71|   const order = await drag(X, [Y1]);
+     72|   expect(raw(), `H6 ${tag}: the held per-key lock keeps the bytes unch…
+       |                                                                               ^
+     73|   expect(railIds(), `${tag}: the draft displays`).toEqual(order);
+     74|   transition();
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:96:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/18]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H6 §7.6 Sol layer: unmount while held — old callbacks refuse on release, based on live disposal state
+AssertionError: H6: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:104:72
+    102|   const lock = await hold(LOCK);
+    103|   await drag(X, [Y1]);
+    104|   expect(raw(), "H6: the held per-key lock keeps the bytes unchanged")…
+       |                                                                        ^
+    105|   view.unmount();
+    106|   const from = mark();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/18]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 1: a failed drop with every module visible exports the A2 merge in the set envelope
+AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:160:60
+    158|   const { order, quota } = await failedDrop(X, [Y1]);
+    159|   fired(quota, "the rail write");
+    160|   expect(railIds(), "H2: the failed drop stays displayed").toEqual(ord…
+       |                                                            ^
+    161|   await exportUnderDenial("shape 1", merge(REVERSED, RAIL_IDS, order)!…
+    162|   expect(raw(), "Export never saves").toBe(encode(REVERSED));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/18]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 2: a failed drop with Boards hidden exports a value that keeps `board` at its stored index
+AssertionError: H2: the failed drop stays displayed: expected [ 'calendar', 'tasks', 'ai', …(10) ] to deeply equal [ 'tasks', 'ai', 'dashboard', …(10) ]
+
+- Expected
++ Received
+
+@@ -1,11 +1,11 @@
+  [
++   "calendar",
+    "tasks",
+    "ai",
+    "dashboard",
+    "matrix",
+-   "calendar",
+    "pomodoro",
+    "timetrack",
+    "bookkeeping",
+    "metrics",
+    "habits",
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:171:60
+    169|   const shown = railIds();
+    170|   const { order } = await failedDrop(shown[0]!, [shown[4]!]);
+    171|   expect(railIds(), "H2: the failed drop stays displayed").toEqual(ord…
+       |                                                            ^
+    172|   const expected = merge(BOARD_AT_2, visible(["board"]), order)!;
+    173|   pre(expected[2] === "board", "the expected value keeps board at inde…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/18]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H1 §8 shape 3: a failed drop over `{}` exports the merge over DEFAULT_RAIL_ORDER
+AssertionError: H1: no route error: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:180:46
+    178|   seedMalformed("{}");
+    179|   await mountApp("/app/tasks");
+    180|   expect(routeError(), "H1: no route error").toBeNull();
+       |                                              ^
+    181|   const shown = railIds();
+    182|   const order = await drag(shown[0]!, [shown[2]!]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/18]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 4: an export while a Retry is held behind the real per-key lock
+AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:192:60
+    190|   await mountApp("/app/tasks");
+    191|   const { order, quota } = await failedDrop(X, [Y1]);
+    192|   expect(railIds(), "H2: the failed drop stays displayed").toEqual(ord…
+       |                                                            ^
+    193|   quota.off();
+    194|   const lock = await hold(LOCK);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/18]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 shape 5: an export after navigating to another route and back (App lifetime)
+AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:206:60
+    204|   const app = await mountApp("/app/tasks");
+    205|   const { order } = await failedDrop(X, [Y1]);
+    206|   expect(railIds(), "H2: the failed drop stays displayed").toEqual(ord…
+       |                                                            ^
+    207|   await go(app, "/app/calendar");
+    208|   need(statusNamed("draft"), "§7: the status shows on /app/calendar");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/18]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a blob setup failure shows the localized export error, keeps the draft, warning and status, and cleans up
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a url setup failure shows the localized export error, keeps the draft, warning and status, and cleans up
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a append setup failure shows the localized export error, keeps the draft, warning and status, and cleans up
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a click setup failure shows the localized export error, keeps the draft, warning and status, and cleans up
+AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:226:62
+    224|     await mountApp("/app/tasks");
+    225|     const { order } = await failedDrop(X, [Y1]);
+    226|     expect(railIds(), "H2: the failed drop stays displayed").toEqual(o…
+       |                                                              ^
+    227|     const control = panelAction("export", `${stage} failure`);
+    228|     const NativeBlob = globalThis.Blob;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/18]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 a setup failure in Chinese shows 导出失败，请重试。; the next panel action clears the line
+AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:260:60
+    258|   pre(uiLang() === "zh", "the UI is in Chinese");
+    259|   const { order } = await failedDrop(X, [Y1]);
+    260|   expect(railIds(), "H2: the failed drop stays displayed").toEqual(ord…
+       |                                                            ^
+    261|   const control = panelAction("export", "ZH export", "zh");
+    262|   const harness = download();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/18]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 an unmount during blob setup cancels the click and cleans up
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 an unmount during url setup cancels the click and cleans up
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx > H2 §8 an unmount during append setup cancels the click and cleans up
+AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx:279:62
+    277|     const app = await mountApp("/app/tasks");
+    278|     const { order } = await failedDrop(X, [Y1]);
+    279|     expect(railIds(), "H2: the failed drop stays displayed").toEqual(o…
+       |                                                              ^
+    280|     const control = panelAction("export", `unmount during ${stage}`);
+    281|     const harness = download();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/18]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-0HE2z9","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-0HE2z9/.apprail-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-0HE2z9/packages/xai-web-shell/src/__tests__/setup.ts"],"include":["docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/registry.tsx packages/xai-web-shell/src/internal/dnd.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=625 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=10 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=22 passed=4 failed=18 skipped=0 precondition_failures=0
+harness PASS [continuity-export.test.tsx] JSON report parsed
+harness PASS [continuity-export.test.tsx] reported files equal the requested include
+harness PASS [continuity-export.test.tsx] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-shell/src/__tests__/setup.ts], root = archive)
+harness PASS [continuity-export.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [continuity-export.test.tsx] required product modules loaded from the archive (27)
+harness PASS [continuity-export.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 FAILED | H6 §7 Sol layer: a draft and a held operation survive A→B
+    first: AssertionError: H6 A→B: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 003 FAILED | H6 §7 Sol layer: a draft and a held operation survive A→locked
+    first: AssertionError: H6 A→locked: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 004 FAILED | H6 §7 Sol layer: a draft and a held operation survive locked→A
+    first: AssertionError: H6 locked→A: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 005 FAILED | H6 §7 Sol layer: a draft and a held operation survive a same-account epoch change
+    first: AssertionError: H6 epoch: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 006 FAILED | H6 §7.6 Sol layer: unmount while held — old callbacks refuse on release, based on live disposal state
+    first: AssertionError: H6: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 007 PASSED | PC §7 an unrelated held account lifecycle lock never delays a rail write
+case 008 PASSED | PC §7 the rail never touches account machinery: no account or demo physical key, no account lifecycle lock, only its own per-key lock
+case 009 FAILED | H2 §8 shape 1: a failed drop with every module visible exports the A2 merge in the set envelope
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 010 FAILED | H2 §8 shape 2: a failed drop with Boards hidden exports a value that keeps `board` at its stored index
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'calendar', 'tasks', 'ai', …(10) ] to deeply equal [ 'tasks', 'ai', 'dashboard', …(10) ]
+case 011 FAILED | H1 §8 shape 3: a failed drop over `{}` exports the merge over DEFAULT_RAIL_ORDER
+    first: AssertionError: H1: no route error: expected 'Route Error (app): prefOrder is not i…' to be null
+case 012 FAILED | H2 §8 shape 4: an export while a Retry is held behind the real per-key lock
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 013 FAILED | H2 §8 shape 5: an export after navigating to another route and back (App lifetime)
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 014 PASSED | PC §8 Export is offered only while a draft exists: no status in a clean state
+case 015 FAILED | H2 §8 a blob setup failure shows the localized export error, keeps the draft, warning and status, and cleans up
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 016 FAILED | H2 §8 a url setup failure shows the localized export error, keeps the draft, warning and status, and cleans up
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 017 FAILED | H2 §8 a append setup failure shows the localized export error, keeps the draft, warning and status, and cleans up
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 018 FAILED | H2 §8 a click setup failure shows the localized export error, keeps the draft, warning and status, and cleans up
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 019 FAILED | H2 §8 a setup failure in Chinese shows 导出失败，请重试。; the next panel action clears the line
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 020 FAILED | H2 §8 an unmount during blob setup cancels the click and cleans up
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 021 FAILED | H2 §8 an unmount during url setup cancels the click and cleans up
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 022 FAILED | H2 §8 an unmount during append setup cancels the click and cleans up
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]

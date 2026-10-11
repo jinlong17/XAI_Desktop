@@ -17,6 +17,15 @@
 | Pattern reference | `packages/xai-web-ai-chat/docs/design.md` §"2026-05-25 Extension" (new-package + EventMap-extension pattern) |
 | Last Updated | 2026-05-25 |
 
+## 2026-06-09 Extension — Metrics Adapter
+
+The metric tracker row adds a twelfth bundled adapter for the new `metrics`
+rail module. It indexes the metric tracker state from
+`xai_metric_tracker_state_v1`, returning a module jump for weight/BMI/goal
+aliases and entity hits for matching record notes. The original 2026-05-25
+frozen assumptions below describe the initial 11-adapter launch scope; the
+current package ships 12 bundled adapters.
+
 ## Frozen assumptions (lock at plan acceptance)
 
 1. **Package name + path.** `@repo/xai-web-cmdk` at `packages/xai-web-cmdk/`. Follows `xai-web-*` convention (shell, event-bus, tokens shims).

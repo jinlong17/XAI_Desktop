@@ -174,3 +174,28 @@ Rules:
 - Re-running auth callback handling must not duplicate device registration side effects from the browser perspective.
 - Re-running ordinary sign-out should be safe and local-only.
 - Revoked-device cleanup may invalidate and rotate local `device.id`; ordinary sign-out should not.
+
+## REL-02 IndexedDB lifecycle contract (2026-09-09)
+
+`createIndexedDbStore({ dbName?, storeName? })` keeps its existing promise-based get/set/remove API. Default database: `xai-web-auth`; default store: `session`. Both default auth/device stores are initialized together at minimum version 2, without deleting v1 records. Custom names remain valid and custom stores are added using schema upgrades. Get returns null for absent keys; write/delete resolve on transaction completion.
+
+Open/transaction failures reject the operation; callers may retry. A blocked schema upgrade rejects with `InvalidStateError` describing that another tab must close before retry. Version-change notifications release cached connections, including for database deletion. No auth token or device identifier is logged or migrated outside the owning database. PKCE routing to sessionStorage is unchanged.
+
+### REL-02 warm-schema concurrency follow-up
+
+Store operations sharing a database are queued through completion of the idb-keyval callback promise. A schema extension waits for prior operations to finish before closing the connection; callers already awaiting a warm connection cannot receive a closed database. Rejected operations release the queue so later retries remain possible. This serialization is scoped to one IDBFactory/database and does not serialize unrelated databases.
+
+### REL-03 identity lifecycle
+
+`WebAuthSessionProvider.onIdentityChange(accountId)` is synchronous and runs before a different identity is published. Hosts use it to revoke account-local handles; do not call async auth APIs from this callback. Same-user token refresh does not invalidate identity. Session refresh uses a revision guard: a newer auth event, explicit setSession/clear, unmount or replacement client invalidates earlier pending reads. `clearSessionStorage` revokes identity before awaiting storage.
+
+Account-scoped deletion passes `DeleteAccountOptions.accessToken` from the initiating session and `signOutAfterDelete: false`. This freezes the server request identity and lets the caller clear only the still-current initiating account. It prevents a delayed deletion result from signing out a replacement account through a shared client.
+
+## REL-06 404 boundary (2026-09-09)
+
+`deleteAccount` treats every HTTP failure, including 404 with an unverified `already_deleted` body, as failure. HTTP status uses SDK `response.status`, then `error.context.status`, with legacy adapter status fallback. The deployed account-delete handler is not present in this repository and no business-code schema is verified; no 404 payload is currently accepted as deletion proof. Successful existing invocations are preserved. The `already_deleted` error type remains for source compatibility but this helper does not emit it. Local cleanup is allowed only after resolution, and account callers retain captured token / `signOutAfterDelete:false` semantics. This does not establish complete persistent auth/cache removal.
+
+
+## REL-06 legacy database reset result contract
+
+`wipeRegisteredIDB(): Promise<void>` is deprecated as an origin-wide legacy reset, not an account cleanup participant. The historical database list is not a current ownership registry and must not be expanded. Success requires every deletion request to report success. Missing IndexedDB throws; blocked, synchronous and request failures reject with AggregateError containing named database errors. Native deleteDatabase cannot be cancelled: a blocked deletion may complete later, so rejection means unconfirmed completion, not guaranteed rollback.

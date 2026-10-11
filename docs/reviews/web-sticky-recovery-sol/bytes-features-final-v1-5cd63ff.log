@@ -1,0 +1,35 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+mode=bytes
+suffix=features-final-v1
+include=docs/reviews/web-sticky-recovery-sol/bytes.test.tsx
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=8cc5993a08b4ccee7ff557601d2fe9085cd7f6e041940d5eeba64b3b62e390ca bytes.test.tsx=3774dfa9703578ae22fed8d862441481226b0bf28c704cab0cc20672dfdf5da9 fields.test.tsx=2bf42fb6ddbe83bf54c574926fc8a7272bb6cdf073c746efea93012bbbd401bb queues.test.tsx=258aec9e5247f7c75c8a5b997683c7b5aa58c8a8b98117dc86df9ffa975c4983 continuity-export.test.tsx=78f140f50306b91ff22eb116bc587ce30b2cac57390dcefc948e1f3e44ce828d verify-fixed.mjs=3fba4b3b181d13431db9fe632fd68b70a4e51c6357168ec29aa89dd7977864c3
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-hTQKsk
+
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > FIXTURE storage injector logs every get/set/remove attempt before delegating; faults fire, count, arm and disarm 2ms
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > FIXTURE Web Lock fixture is exclusive, asynchronous and observable; deny and missing capability are explicit 25ms
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > FIXTURE real accountScope transitions keep Sticky keys unscoped; the host registry and download harness observe 12ms
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > PC §2/§10 registry codec, default, schema, category, device ownership, lifecycle and unscoped key for all five 2ms
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > PC §10.1 'color' > PC §10.1 color: every domain value persists exact codec bytes at the unscoped device key 293ms
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > PC §10.1 'font' > PC §10.1 font: every domain value persists exact codec bytes at the unscoped device key 94ms
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > PC §10.1 'pin_default' > PC §10.1 pin_default: every domain value persists exact codec bytes at the unscoped device key 89ms
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > PC §10.1 'restore_size' > PC §10.1 restore_size: every domain value persists exact codec bytes at the unscoped device key 63ms
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > PC §10.1 'grid_spacing' > PC §10.1 grid_spacing: every domain value persists exact codec bytes at the unscoped device key 95ms
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > PC §5.1 absent sources: registry defaults displayed, zero set/remove attempts on mount and rerenders, clean state 140ms
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > PC §5.1 valid non-default sources, including the random sentinel, display exactly with zero set/remove attempts 84ms
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > PC §5.4 choosing a value equal to the registry default stores it and never converts it to removal 82ms
+ ✓ docs/reviews/web-sticky-recovery-sol/bytes.test.tsx > PC §9 a standalone render({lang}) without a guard still renders and edits 40ms
+
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+   Start at  09:09:09
+   Duration  2.01s (transform 245ms, setup 212ms, collect 223ms, tests 1.02s, environment 321ms, prepare 70ms)
+
+
+---- stderr ----

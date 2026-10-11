@@ -1,0 +1,84 @@
+$ pnpm --filter @repo/plugin-web-settings-appearance run test
+# cwd: /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4249842bc08beeb0
+# HEAD: 419e56de9f23e4467fea806fbd4a990e1f429941
+# started: 2026-10-05T18:12:24Z
+
+
+> @repo/plugin-web-settings-appearance@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4249842bc08beeb0/packages/xai-web-settings-appearance
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4249842bc08beeb0/packages/xai-web-settings-appearance
+
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx (8 tests) 296ms
+ ✓ src/__tests__/AppearancePane.bilingual.test.tsx (4 tests) 988ms
+   ✓ AppearancePane bilingual > AC-I18N-1: lang='zh' shows Chinese strings in segmented controls  375ms
+   ✓ AppearancePane bilingual > AC-I18N-4: the pane-local Reset shows 恢复默认 in ZH (CP-APPEARANCE-01: no SettingsFooter)  512ms
+ ✓ src/__tests__/AppearancePane.selected-focus.test.tsx (7 tests) 1166ms
+   ✓ F-APP-2 selected accent swatch focus ring > without :focus-visible the selector reaches exactly the selected swatch, whichever is selected  321ms
+   ✓ batch 49 same-class audit: pane controls and the Topbar status > after a failed write (recovery Retry/Discard, Retry all enabled, Export, Discard all, Topbar status) nothing else masks the ring  330ms
+ ✓ src/__tests__/AppearancePane.live-binding.test.tsx (8 tests) 1883ms
+   ✓ AppearancePane live binding > AC-LIVE-1: clicking Dark theme card sets data-theme='dark'  411ms
+   ✓ AppearancePane live binding > AC-LIVE-2: clicking Compact density sets data-density='compact'  333ms
+ ✓ src/__tests__/AppearancePane.save-reset.test.tsx (8 tests) 2044ms
+   ✓ AppearancePane Retry all (replaces Save & apply) > AC-SAVE-1: with no settled unsuccessful draft Retry all is rendered disabled (aria-disabled only), no 'Save & apply' or 'Saved', and one activation makes zero storage attempts  358ms
+   ✓ AppearancePane Retry all (replaces Save & apply) > AC-SAVE-2: with a failed draft Retry all is enabled and one activation re-attempts exactly the failed field once; no Saved claim without a genuine latest success  475ms
+ ✓ src/__tests__/AppearancePane.focus-ring.test.tsx (4 tests) 85ms
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-7: appearanceDefaults does NOT contain a lang key
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-8: appearanceDefaults is frozen
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs()
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+ ✓ src/__tests__/appearanceDefaults.test.ts (9 tests) 10ms
+ ✓ src/__tests__/constants.test.ts (9 tests) 4ms
+ ✓ src/__tests__/appearancePane.registry.test.ts (4 tests) 2ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx (27 tests) 5354ms
+   ✓ A2.2 render and enabled state > RA1 clean: rendered with aria-disabled="true" (never disabled), no description, a Tab stop between the font slider and Reset; activation is inert  400ms
+   ✓ A2.2 render and enabled state > RA2 pending only (write held behind the real per-key lock): disabled, not described, inert  509ms
+   ✓ A2.2 render and enabled state > RA5 ZH: label 全部重试 in every state and the ZH count line for one and two fields  326ms
+   ✓ A2.2 render and enabled state > RA6 an open pass with E empty: disabled, described by the in-flight line, inert; it settles to disabled with no description  354ms
+   ✓ A2.2 render and enabled state > RA7 an open pass plus a newly failed field: enabled again; the second activation retries only that field  314ms
+   ✓ A2.3 scope and attempts > RA8 set drafts: exactly one write per member in display order and none elsewhere  325ms
+ ✓ src/__tests__/AppearanceController.test.tsx (49 tests) 6435ms
+   ✓ A3 the controller and its views > AC1 a fresh mount displays and applies the stored values with zero writes (ruling 3)  384ms
+   ✓ A3 the controller and its views > AC2 a pane edit is visible to every view of the same controller in the same frame, and vice versa  638ms
+   ✓ A6 strict domains > AC4 xai_pref_lang="en" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept  335ms
+
+ Test Files  11 passed (11)
+      Tests  137 passed (137)
+   Start at  11:12:25
+   Duration  8.59s (transform 991ms, setup 1.55s, collect 5.81s, tests 18.27s, environment 7.98s, prepare 1.54s)
+
+
+# exit: 0

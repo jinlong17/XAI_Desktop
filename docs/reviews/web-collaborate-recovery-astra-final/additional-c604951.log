@@ -1,0 +1,34 @@
+revision=c604951 fixed_commit=c604951acda9adb48c51e00dba6255757b1f2afc
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-6QeC6U
+
+ ❯ docs/reviews/web-collaborate-recovery-astra-final/additional.test.tsx (3 tests | 2 failed) 109ms
+   × does not show aggregate Saved while the avatars source remains invalid after a sibling save 62ms
+     → expected 'Show collaborator avatarsSaved value …' to match /source|unavailable/i
+   × does not show aggregate Saved while the avatars source remains unavailable after a sibling save 12ms
+     → expected 'Show collaborator avatarsSaved value …' to match /source|unavailable/i
+   ✓ clears failed export feedback on a new valid edit while preserving current draft and exact retry value 34ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  23:32:08
+   Duration  1.15s (transform 276ms, setup 0ms, collect 462ms, tests 109ms, environment 259ms, prepare 56ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-collaborate-recovery-astra-final/additional.test.tsx > does not show aggregate Saved while the avatars source remains invalid after a sibling save
+ FAIL  docs/reviews/web-collaborate-recovery-astra-final/additional.test.tsx > does not show aggregate Saved while the avatars source remains unavailable after a sibling save
+AssertionError: expected 'Show collaborator avatarsSaved value …' to match /source|unavailable/i
+
+- Expected: 
+/source|unavailable/i
+
++ Received: 
+"Show collaborator avatarsSaved value needs recovery. Repair storage, then reload.Reload"
+
+ ❯ docs/reviews/web-collaborate-recovery-astra-final/additional.test.tsx:19:49
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯

@@ -6,6 +6,7 @@
  */
 
 import type { Lang } from "@repo/plugin-web-tokens";
+import type { PaneDepartureGuardRegistration } from "@repo/plugin-web-settings-shell";
 import type { FeatureId } from "./featureIds.js";
 
 export type { FeatureId };
@@ -16,6 +17,12 @@ export type FeaturePrefs = Readonly<Record<FeatureId, boolean>>;
 export interface FeaturesPaneProps {
   /** Active language. Threaded via `featuresPane.render({ lang })`. */
   readonly lang: Lang;
+  /**
+   * Optional host departure-guard bridge, forwarded by `featuresPane.render`.
+   * The pane registers whenever the host provides it and blocks only while
+   * unresolved drafts exist.
+   */
+  readonly registerDepartureGuard?: PaneDepartureGuardRegistration;
 }
 
 export interface DisabledFeatureFallbackProps {

@@ -1,0 +1,11 @@
+revision=990ac52 fixed_commit=990ac52cac4aae9e72d1db84d52f6c9093294195
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-il5Gr4
+
+ ✓ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx (10 tests) 561ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  23:56:09
+   Duration  3.09s (transform 670ms, setup 0ms, collect 1.13s, tests 561ms, environment 542ms, prepare 172ms)

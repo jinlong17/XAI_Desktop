@@ -1,10 +1,15 @@
 /**
  * NF1..NF9 — notificationsPane tests (test.md §3 P2)
  */
-import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { notificationsPane } from "../panes/notificationsPane.js";
 import { getPref } from "@repo/plugin-web-storage";
+
+beforeEach(() => {
+  vi.stubGlobal("navigator", { locks: { request: async (_name: string, optionsOrRun: unknown, maybeRun?: () => Promise<unknown>) => (typeof optionsOrRun === "function" ? optionsOrRun as () => Promise<unknown> : maybeRun!)() } });
+});
+afterEach(() => vi.unstubAllGlobals());
 
 describe("notificationsPane", () => {
   it("NF1: renders without error", () => {
@@ -41,14 +46,14 @@ describe("notificationsPane", () => {
     expect(timeInputs.length).toBe(2);
   });
 
-  it("NF6: toggling enabled toggle flips xai_pref_notif_enabled pref", () => {
+  it("NF6: toggling enabled toggle flips xai_pref_notif_enabled pref", async () => {
     const { container } = render(notificationsPane.render({ lang: "en" }));
     expect(getPref("xai_pref_notif_enabled")).toBe(true);
     const toggle = container.querySelector<HTMLButtonElement>(
       'button[aria-label="Enable notifications"]',
     );
     fireEvent.click(toggle!);
-    expect(getPref("xai_pref_notif_enabled")).toBe(false);
+    await waitFor(() => expect(getPref("xai_pref_notif_enabled")).toBe(false));
   });
 
   it("NF7: sound select has 5 options (none/subtle/chime/bell/pop)", () => {
@@ -60,18 +65,57 @@ describe("notificationsPane", () => {
     expect(sel!.options.length).toBe(5);
   });
 
-  it("NF8: changing sound select persists xai_pref_notif_done_sound", () => {
+  it("NF8: changing sound select persists xai_pref_notif_done_sound", async () => {
     const { container } = render(notificationsPane.render({ lang: "en" }));
     const sel = container.querySelector<HTMLSelectElement>(
       'select[aria-label="Sound"]',
     );
     fireEvent.change(sel!, { target: { value: "chime" } });
-    expect(getPref("xai_pref_notif_done_sound")).toBe("chime");
+    await waitFor(() => expect(getPref("xai_pref_notif_done_sound")).toBe("chime"));
   });
 
   it("NF9: pane id, icon, i18nKey are correct", () => {
     expect(notificationsPane.id).toBe("notifications");
     expect(notificationsPane.icon).toBe("bell");
     expect(notificationsPane.i18nKey).toBe("settings.notifications");
+  });
+
+  it("NF10: a failed hidden quiet-start draft stays recoverable until its own Retry succeeds", async () => {
+    const guardRef: { current: { isBlocking: () => boolean } | null } = { current: null };
+    const nativeSet = Storage.prototype.setItem;
+    const failure = vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (this: Storage, key: string, value: string) {
+      if (key === "xai_pref_notif_quiet_start") throw new Error("quota");
+      nativeSet.call(this, key, value);
+    });
+    const { container } = render(notificationsPane.render({ lang: "en", registerDepartureGuard: next => { guardRef.current = next; return () => {}; } }));
+    fireEvent.click(container.querySelector<HTMLButtonElement>('button[aria-label="Enable quiet hours"]')!);
+    await waitFor(() => expect(container.querySelectorAll('input[type="time"]')).toHaveLength(2));
+    fireEvent.change(screen.getByLabelText("Quiet hours start"), { target: { value: "23:15" } });
+    await waitFor(() => expect(screen.getByRole("button", { name: "Retry Quiet hours start" })).toBeInTheDocument());
+    fireEvent.click(container.querySelector<HTMLButtonElement>('button[aria-label="Enable quiet hours"]')!);
+    await waitFor(() => expect(container.querySelectorAll('input[type="time"]')).toHaveLength(0));
+    expect(guardRef.current?.isBlocking()).toBe(true);
+    expect(screen.getByRole("button", { name: "Export Notifications draft" })).toBeInTheDocument();
+    failure.mockRestore();
+    fireEvent.click(screen.getByRole("button", { name: "Retry Quiet hours start" }));
+    await waitFor(() => expect(getPref("xai_pref_notif_quiet_start")).toBe("23:15"));
+    await waitFor(() => expect(guardRef.current?.isBlocking()).toBe(false));
+  });
+
+  it("NF11: invalid quiet-time feedback belongs to each field until that field is corrected", async () => {
+    const { container } = render(notificationsPane.render({ lang: "en" }));
+    fireEvent.click(container.querySelector<HTMLButtonElement>('button[aria-label="Enable quiet hours"]')!);
+    await waitFor(() => expect(container.querySelectorAll('input[type="time"]')).toHaveLength(2));
+    fireEvent.change(screen.getByLabelText("Quiet hours start"), { target: { value: "7:00" } });
+    fireEvent.change(screen.getByLabelText("Quiet hours end"), { target: { value: "24:00" } });
+    expect(screen.getByText("Quiet hours start has an invalid format.")).toBeInTheDocument();
+    expect(screen.getByText("Quiet hours end has an invalid format.")).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Sound"), { target: { value: "chime" } });
+    await waitFor(() => expect(getPref("xai_pref_notif_done_sound")).toBe("chime"));
+    expect(screen.getByText("Quiet hours start has an invalid format.")).toBeInTheDocument();
+    expect(screen.getByText("Quiet hours end has an invalid format.")).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Quiet hours start"), { target: { value: "23:15" } });
+    await waitFor(() => expect(screen.queryByText("Quiet hours start has an invalid format.")).toBeNull());
+    expect(screen.getByText("Quiet hours end has an invalid format.")).toBeInTheDocument();
   });
 });

@@ -1,3 +1,4 @@
+import { resetAccountFixture } from "./accountTestSetup.js";
 /**
  * claudeAdapter — completeChat tests (A1..A8).
  *
@@ -23,7 +24,7 @@ describe("claudeAdapter (A)", () => {
     // Clear keys with real timers first (IDB is async).
     await aiKeyStorage.clearKey("anthropic");
     await aiKeyStorage.clearKey("openai-compatible");
-    localStorage.clear();
+    resetAccountFixture();
     // Only fake setTimeout — do NOT fake queueMicrotask/Promise/setImmediate
     // so that idb-keyval's internal IDB event dispatch still works.
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });

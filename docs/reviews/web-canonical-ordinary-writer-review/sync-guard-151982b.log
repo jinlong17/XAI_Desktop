@@ -1,0 +1,74 @@
+revision=151982b
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-ordinary-review-tCN61d
+
+ ❯ docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts (4 tests | 3 failed) 7ms
+   × activated synchronous setter must refuse physical absence without writing 5ms
+     → expected true to be false // Object.is equality
+     → expected '{"inserted":{"id":"inserted","title":…' to be null // Object.is equality
+   × activated synchronous setter must refuse legacy domain without writing 1ms
+     → expected true to be false // Object.is equality
+     → expected '{"inserted":{"id":"inserted","title":…' to be '{}' // Object.is equality
+   × activated synchronous removal must refuse legacy domain 0ms
+     → expected null to be '{}' // Object.is equality
+   ✓ disabled protocol retains the existing legacy setter positive control 0ms
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed (4)
+   Start at  16:09:09
+   Duration  725ms (transform 70ms, setup 0ms, collect 77ms, tests 7ms, environment 325ms, prepare 92ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts > activated synchronous setter must refuse physical absence without writing
+ FAIL  docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts > activated synchronous setter must refuse legacy domain without writing
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts:17:57
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts > activated synchronous setter must refuse physical absence without writing
+AssertionError: expected '{"inserted":{"id":"inserted","title":…' to be null // Object.is equality
+
+- Expected: 
+null
+
++ Received: 
+"{\"inserted\":{\"id\":\"inserted\",\"title\":\"Bypass\",\"startISO\":\"2026-09-09T09:00\",\"endISO\":\"2026-09-09T10:00\",\"colorPreset\":\"mint\",\"recurrence\":null,\"createdAt\":\"2026-09-09T00:00:00Z\",\"updatedAt\":\"2026-09-09T00:00:00Z\"}}"
+
+ ❯ docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts:18:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts > activated synchronous setter must refuse legacy domain without writing
+AssertionError: expected '{"inserted":{"id":"inserted","title":…' to be '{}' // Object.is equality
+
+Expected: "{}"
+Received: "{"inserted":{"id":"inserted","title":"Bypass","startISO":"2026-09-09T09:00","endISO":"2026-09-09T10:00","colorPreset":"mint","recurrence":null,"createdAt":"2026-09-09T00:00:00Z","updatedAt":"2026-09-09T00:00:00Z"}}"
+
+ ❯ docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts:18:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts > activated synchronous removal must refuse legacy domain
+AssertionError: expected null to be '{}' // Object.is equality
+
+- Expected: 
+"{}"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts:23:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯

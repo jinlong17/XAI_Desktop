@@ -1,0 +1,72 @@
+{
+  "requestedRef": "7785e92",
+  "revision": "7785e9227a7888d2db02fc3db457d55ce0727bc8",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 84552,
+  "reopenedPid": 84626,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "absent-six-keys",
+        "pass": true
+      },
+      {
+        "name": "held-device-mute",
+        "pass": true
+      },
+      {
+        "name": "held-device-preset",
+        "pass": true
+      },
+      {
+        "name": "held-device-theme",
+        "pass": true
+      },
+      {
+        "name": "cross-document-theme",
+        "pass": true
+      }
+    ],
+    "checkpoint": {
+      "snapshot": {
+        "xai_pref_pomodoro_preset": "\"focus-25\"",
+        "xai_pref_pomodoro_custom_minutes": "45",
+        "xai_pref_pomodoro_display_style": "\"apple\"",
+        "xai_pref_pomodoro_theme": "\"blue\"",
+        "xai_pref_pomodoro_sound": "\"soft-chime\"",
+        "xai_pref_pomodoro_muted": "false"
+      }
+    },
+    "scope": "Actual Pomodoro preferences, real native Web Locks, isolated synthetic account, idle timer byte controls only; CSS omitted"
+  },
+  "after": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "six-device-keys-after-process-reopen",
+        "pass": true,
+        "actual": {
+          "xai_pref_pomodoro_preset": "\"focus-25\"",
+          "xai_pref_pomodoro_custom_minutes": "45",
+          "xai_pref_pomodoro_display_style": "\"apple\"",
+          "xai_pref_pomodoro_theme": "\"blue\"",
+          "xai_pref_pomodoro_sound": "\"soft-chime\"",
+          "xai_pref_pomodoro_muted": "false"
+        },
+        "expected": {
+          "xai_pref_pomodoro_preset": "\"focus-25\"",
+          "xai_pref_pomodoro_custom_minutes": "45",
+          "xai_pref_pomodoro_display_style": "\"apple\"",
+          "xai_pref_pomodoro_theme": "\"blue\"",
+          "xai_pref_pomodoro_sound": "\"soft-chime\"",
+          "xai_pref_pomodoro_muted": "false"
+        }
+      }
+    ],
+    "scope": "Final saved six-key device checkpoint after process reopen; not six independent cases or unsaved draft recovery"
+  }
+}

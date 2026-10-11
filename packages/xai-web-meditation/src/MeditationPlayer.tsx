@@ -35,6 +35,7 @@ import { Icon } from "./internal/icons.js";
 import { PARTICLE_COUNT } from "./internal/scenes.js";
 import { formatRemaining } from "./internal/formatRemaining.js";
 import { formatElapsed, resolveDurationSeconds } from "./internal/duration.js";
+import { elapsedAt, type MeditationSession } from "./internal/sessionController.js";
 import { useAmbientAudio } from "./internal/useAmbientAudio.js";
 
 export interface MeditationPlayerProps {
@@ -51,6 +52,7 @@ export interface MeditationPlayerProps {
   customDuration: number;
   lang: Lang;
   onExit: () => void;
+  sessionControl?: { row: MeditationSession; now: number; error: string | null; busy: boolean; pause: () => void; resume: () => Promise<boolean> };
   onVolumeChange?: (volume: number) => void;
 }
 
@@ -68,10 +70,16 @@ export function MeditationPlayer({
   lang,
   onExit,
   onVolumeChange,
+  sessionControl,
 }: MeditationPlayerProps): JSX.Element {
   const { s } = useI18n(lang);
-  const [elapsed, setElapsed] = useState<number>(0);
-  const [paused, setPaused] = useState<boolean>(false);
+  const [localPaused, setPaused] = useState(false);
+  const [now, setNow] = useState(Date.now);
+  const timing = useRef({ accumulated: 0, started: Date.now() });
+  const total = sessionControl ? (sessionControl.row.durationMs === null ? null : sessionControl.row.durationMs / 1000) : resolveDurationSeconds(durationMode, duration, customDuration);
+  const elapsed = sessionControl ? Math.floor(elapsedAt(sessionControl.row, sessionControl.now) / 1000) : Math.floor((timing.current.accumulated + (localPaused ? 0 : Math.max(0, now - timing.current.started))) / 1000);
+  const ended = sessionControl ? sessionControl.row.phase === 'ended' || total !== null && elapsed >= total : total !== null && elapsed >= total;
+  const paused = sessionControl ? sessionControl.row.phase === 'paused' : localPaused;
   const [controlsOpen, setControlsOpen] = useState<boolean>(false);
   const [controlsVisible, setControlsVisible] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
@@ -99,13 +107,15 @@ export function MeditationPlayer({
   }, [scheduleControlsHide]);
 
   useEffect(() => {
-    if (paused) return;
-    const id = setInterval(() => setElapsed((e) => e + 1), 1000);
-    return () => clearInterval(id);
-  }, [paused]);
+    if (paused || ended || sessionControl) return;
+    const tick = () => setNow(Date.now());
+    const id = setInterval(tick, 250);
+    window.addEventListener('pageshow', tick); document.addEventListener('visibilitychange', tick);
+    return () => { clearInterval(id); window.removeEventListener('pageshow', tick); document.removeEventListener('visibilitychange', tick); };
+  }, [paused, ended, sessionControl]);
 
   useEffect(() => {
-    void ambient.play(sound, volume);
+    if (!paused && !ended && !sessionControl?.error) void ambient.play(sound, volume);
     return () => ambient.pause();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -142,7 +152,12 @@ export function MeditationPlayer({
     scheduleControlsHide();
   }, [clearControlsHideTimer, controlsOpen, paused, scheduleControlsHide]);
 
-  const total = resolveDurationSeconds(durationMode, duration, customDuration);
+  const audioDeadline = sessionControl ? sessionControl.row.deadline : total === null ? null : timing.current.started + total * 1000 - timing.current.accumulated;
+  const setAudioDeadline = ambient.setDeadline;
+  useEffect(() => { setAudioDeadline(audioDeadline); }, [audioDeadline, setAudioDeadline]);
+  const stopAudio = ambient.pause;
+  useEffect(() => { if (ended || paused || sessionControl?.error) stopAudio(); }, [ended, paused, sessionControl?.error, stopAudio]);
+
   const remaining = total === null ? null : Math.max(0, total - elapsed);
   const timeLabel = remaining === null ? formatElapsed(elapsed) : (() => {
     const { mm, ss } = formatRemaining(remaining);
@@ -153,19 +168,22 @@ export function MeditationPlayer({
   const focusClockVariant: ClockVariant = clock.startsWith("analog") || clock === "breathRing" ? "digital" : clock;
   const soundPlaying = ambient.state.playing && ambient.state.sound === sound;
   const soundToggleLabel = soundPlaying ? s("meditation.pause_sound") : s("meditation.play_sound");
-  const controlsShouldShow = controlsVisible || controlsOpen || paused;
+  const controlsShouldShow = controlsVisible || controlsOpen || paused || ended || !!ambient.state.error || !!sessionControl?.error;
   const pauseSession = (): void => {
-    setPaused(true);
+    if (sessionControl) sessionControl.pause();
+    else { timing.current.accumulated += Math.max(0, Date.now() - timing.current.started); setNow(Date.now()); setPaused(true); }
     ambient.pause();
   };
   const resumeSession = (): void => {
-    setPaused(false);
+    if (ended || sessionControl?.error) return;
+    if (sessionControl) { void sessionControl.resume().then(ok => { if (ok && sound !== 'none') void ambient.play(sound, volume); }); return; }
+    else { timing.current.started = Date.now(); setNow(Date.now()); setPaused(false); }
     if (sound !== "none") {
       void ambient.play(sound, volume);
     }
   };
   const toggleSound = (): void => {
-    if (sound === "none") return;
+    if (sound === "none" || ended || paused || sessionControl?.error) return;
     if (soundPlaying) {
       ambient.pause();
     } else {
@@ -208,6 +226,8 @@ export function MeditationPlayer({
       onFocus={revealControls}
     >
       <div className="med-player-bg" />
+      {ended && <p className="med-player-notice" role="status">{lang === 'zh' ? '冥想已结束' : 'Meditation ended'}</p>}
+      {ambient.state.error && <div className="med-player-notice" role="alert">{lang === 'zh' ? '音频播放失败，请检查浏览器声音权限并重试。' : ambient.state.error}<button type="button" onClick={toggleSound} disabled={ended || paused || !!sessionControl?.error}>{lang === 'zh' ? '重试播放' : 'Retry audio'}</button></div>}
 
       {/* Ambient rising particles — compositor-only animation */}
       <div className={particleClass} aria-hidden="true">
@@ -250,6 +270,7 @@ export function MeditationPlayer({
           <button
             className="mp-primary-control"
             type="button"
+            disabled={ended || !!sessionControl?.error || sessionControl?.busy}
             data-control="session"
             onClick={paused ? resumeSession : pauseSession}
             aria-label={paused ? s("meditation.resume") : s("meditation.pause")}
@@ -290,7 +311,7 @@ export function MeditationPlayer({
             className="mp-sound-toggle"
             type="button"
             onClick={toggleSound}
-            disabled={sound === "none"}
+            disabled={sound === "none" || ended || paused || !!sessionControl?.error}
             aria-pressed={soundPlaying}
             aria-label={soundToggleLabel}
             title={soundToggleLabel}

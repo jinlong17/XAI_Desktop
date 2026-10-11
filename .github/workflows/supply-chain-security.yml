@@ -2,7 +2,7 @@
 # First CI workflow in this repo.
 # Contract: packages/crypto-deps-lockdown/docs/api.md §1
 #
-# Three BLOCKING jobs:
+# Four BLOCKING jobs:
 #   rust-pins   — assert all 7 crypto crates use =x.y.z exact pins;
 #                 assert Cargo.lock is in sync (--locked);
 #                 assert no forbidden non-strict ed25519 verify pattern.
@@ -79,6 +79,17 @@ jobs:
         with:
           toolchain: stable
 
+      - name: Install Linux Tauri system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libglib2.0-dev \
+            libgtk-3-dev \
+            libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            patchelf
+
       - name: Install pnpm
         run: |
           corepack enable
@@ -117,13 +128,14 @@ jobs:
         uses: EmbarkStudios/cargo-deny-action@0105f7c440bc8084c17cad47fe92e63049519458  # v2.0.18 pinned SHA
         with:
           command: check advisories bans licenses sources
-          arguments: --manifest-path apps/desktop/src-tauri/Cargo.toml --all-features
+          manifest-path: apps/desktop/src-tauri/Cargo.toml
+          arguments: --all-features
 
   # ── Job 3: osv-scanner ────────────────────────────────────────────────────
   # Asserts: zero OSV.dev advisories for npm/JS packages (pnpm-lock.yaml)
   # and Rust packages (Cargo.lock).
-  # fail-on-vuln: true ensures any advisory = non-zero exit = job fails.
-  # Pinned to commit SHA (reviewer recommendation for supply-chain hygiene).
+  # The scanner binary is version-pinned and SHA256-verified because the
+  # upstream GitHub Action wrapper has changed shape across releases.
   osv-scanner:
     name: OSV scanner (npm + Cargo)
     runs-on: ubuntu-latest
@@ -133,11 +145,20 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Install OSV scanner
+        env:
+          OSV_SCANNER_VERSION: v2.3.8
+          OSV_SCANNER_SHA256: bc98e15319ed0d515e3f9235287ba53cdc5535d576d24fd573978ecfe9ab92dc
+        run: |
+          set -euo pipefail
+          curl -sSfL "https://github.com/google/osv-scanner/releases/download/${OSV_SCANNER_VERSION}/osv-scanner_linux_amd64" -o osv-scanner
+          echo "${OSV_SCANNER_SHA256}  osv-scanner" | sha256sum -c -
+          chmod +x osv-scanner
+          sudo install -m 0755 osv-scanner /usr/local/bin/osv-scanner
+
       - name: Run OSV scanner
-        uses: google/osv-scanner-action@9a498708959aeaef5ef730655706c5a1df1edbc2  # v2.3.8 pinned SHA
-        with:
-          # fail-on-vuln: true → non-zero exit on any advisory = job fails
-          fail-on-vuln: true
-          scan-args: |-
-            --lockfile=pnpm-lock.yaml
+        run: |
+          osv-scanner scan source \
+            --config=scripts/ci/osv-scanner.toml \
+            --lockfile=pnpm-lock.yaml \
             --lockfile=apps/desktop/src-tauri/Cargo.lock

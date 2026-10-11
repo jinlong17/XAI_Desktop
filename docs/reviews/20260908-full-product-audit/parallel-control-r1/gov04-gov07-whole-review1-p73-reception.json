@@ -1,0 +1,54 @@
+{
+  "source": "1e0a9f9fdf03062b206a11ae41a8219322ac27f9",
+  "parent": "cfbed9bfe6e480eed8062ee9248be48f32c57c9d",
+  "integration": "5cc7f5e6c940016aa5f414127213d219f21ea5a2",
+  "archive_ref": "codex/archive/parallel-gov04-gov07-review1-20261010",
+  "input_hashes_checked": 222,
+  "outputs": {
+    "docs/reviews/audit-parallel-gov04-gov07-status-source-discovery-review-r1/review.md": "455b3d9bce33d25c70335287dafdef45c6efaa4cefb03ffea27e4c638be88c87",
+    "docs/reviews/audit-parallel-gov04-gov07-status-source-discovery-review-r1/inputs.sha256": "bd3bbbc07836af496ccf611ab4c26306f4a6c4d31a752d95e3e3c30fde5ea63c"
+  },
+  "verdict": "WHOLE_REVISE",
+  "findings": [
+    "R1originalshell157+otherstaleStable/iterationcategories omitted",
+    "R2syncdriver/cache documentaryanchors andSHIPPED-vsPENDING truth omitted"
+  ],
+  "static": {
+    "invocations": 1,
+    "result": "PASS",
+    "checks": 1377,
+    "source_bindings": 165,
+    "actual_inputs": 222,
+    "corpus_bytes": 13355846,
+    "elapsed_ms": 244,
+    "checker_process_pid": "UNKNOWN in-memoryNodegate",
+    "numeric_checker_exit": "UNKNOWN notinferredfrompass:true",
+    "session": "UNKNOWN",
+    "chunk": "UNKNOWN",
+    "Git_PIDs": [
+      96897,
+      96909,
+      96921
+    ],
+    "Git_exit": 0,
+    "Git_stdout_stderr_EOF_and_close": true
+  },
+  "finalization": {
+    "commit_pid": 97040,
+    "numeric_exit": 0,
+    "EOF_close": true,
+    "elapsed_ms": 45,
+    "reported_partial_node_wall_seconds": 312.279,
+    "totalwall": "UNKNOWN excludinginitialacquisition",
+    "receipt_print_error": "staticReceipt is notdefined AFTERvalidchecks/commit/readbacks; readonlyrecovery no validationretry/additionalwrite/amend",
+    "recovery_pids": [
+      97109,
+      97121,
+      97133,
+      97145
+    ],
+    "recovery_numeric_exit": 0,
+    "recovery_EOF_close": true,
+    "clean": true
+  }
+}

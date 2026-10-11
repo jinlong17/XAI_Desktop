@@ -1,0 +1,9 @@
+file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-auth-session-cleanup/verify-native-generation-coordinator.mjs:26
+ if(typeof result!=='string'||!result.startsWith('{')||!JSON.parse(result).pass)throw Error(String(result));
+                                                                                      ^
+
+Error: {"pass":false,"error":"Error: peer timed out","stack":"Error: peer timed out\n    at http://127.0.0.1:51244/:21874:18"}
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-auth-session-cleanup/verify-native-generation-coordinator.mjs:26:87
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v24.16.0

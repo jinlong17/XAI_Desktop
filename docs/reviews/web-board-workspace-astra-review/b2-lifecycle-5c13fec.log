@@ -1,0 +1,11 @@
+revision=5c13fec
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-b2-uKVij0
+
+ ✓ packages/plugin-web-storage/src/__tests__/accountDataLifecycle.test.ts (7 tests) 4ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  15:30:56
+   Duration  524ms (transform 62ms, setup 0ms, collect 74ms, tests 4ms, environment 215ms, prepare 67ms)

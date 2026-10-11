@@ -8,7 +8,11 @@
  *      State is lifted into BoardWorkspacesModule and reset on activeBoard.id change.
  */
 
-import type { BoardCardData, BoardListData } from "@repo/plugin-web-board-core";
+import type {
+  BoardCardData,
+  BoardCardPriority,
+  BoardListData,
+} from "@repo/plugin-web-board-core";
 import { getBoardCardDateMeta } from "@repo/plugin-web-board-core";
 
 export interface FilterState {
@@ -16,6 +20,8 @@ export interface FilterState {
   labels: ReadonlySet<string>;
   /** Empty Set = no member filter (all members pass). */
   members: ReadonlySet<string>;
+  /** Empty Set = no priority filter (all priorities incl. none pass). */
+  priorities: ReadonlySet<BoardCardPriority>;
   /** 'all' = no due filter. */
   dueRange: "all" | "overdue" | "today" | "week";
 }
@@ -23,6 +29,7 @@ export interface FilterState {
 export const EMPTY_FILTER: FilterState = Object.freeze({
   labels: new Set<string>(),
   members: new Set<string>(),
+  priorities: new Set<BoardCardPriority>(),
   dueRange: "all",
 });
 
@@ -48,10 +55,15 @@ export function applyFilter(
 ): BoardListData[] {
   if (!Array.isArray(lists)) return [];
 
-  const { labels, members, dueRange } = filter;
+  const { labels, members, priorities, dueRange } = filter;
 
   // Fast-path: empty filter = identity
-  if (labels.size === 0 && members.size === 0 && dueRange === "all") {
+  if (
+    labels.size === 0 &&
+    members.size === 0 &&
+    priorities.size === 0 &&
+    dueRange === "all"
+  ) {
     return lists.map((l) => ({ ...l, cards: [...l.cards] }));
   }
 
@@ -73,6 +85,13 @@ export function applyFilter(
           Array.isArray(card.members) &&
           card.members.some((m: string) => members.has(m));
         if (!hasMatchingMember) return false;
+      }
+
+      // --- Priority facet (cards without a priority fail a non-empty filter) ---
+      if (priorities.size > 0) {
+        if (card.priority === undefined || !priorities.has(card.priority)) {
+          return false;
+        }
       }
 
       // --- Due range facet ---

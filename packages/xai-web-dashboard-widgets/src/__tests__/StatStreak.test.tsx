@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * StatStreak — real-data tests (§F rewrite).
  *
@@ -17,7 +18,7 @@ import { render, screen } from "@testing-library/react";
 import { StatStreak } from "../widgets/StatStreak.js";
 
 function seedHabitsState(store: unknown) {
-  localStorage.setItem("xai_habits_state", JSON.stringify(store));
+  localStorage.setItem(accountScope.physicalKey("xai_habits_state"), JSON.stringify(store));
 }
 
 beforeEach(() => {

@@ -1,0 +1,53 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent whole shared technical impact reviewer; never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "711cfd8d7a587468d4ff133eb6d5911ad4dd79ef",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 1,
+    "review_cap": 3,
+    "prior_source_author_used": 1,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "BRD-12/WRITER-LIFECYCLE-IMPACT-REVIEW1",
+  "source_inputs": [
+    "11d6527709a5a735200151768296a312a3a30314",
+    "cdb8820b434aa7f2adb9cc5ad5f14118eb24230c",
+    "5fa4cccb106d10e16562e0a8d6f3b103495607b1"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-brd12-writer-lifecycle-impact-review-r1/review.md",
+    "docs/reviews/audit-parallel-brd12-writer-lifecycle-impact-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full25632immutableidentities includingall20349reviewinputs/fullsourceproposal/fullB01-B12/R01-R12/24originalconditionalpaths/fullcanonicalr2G1/historicalactualrunningunit counts/unknowns/cap3. Authorstatic1FAILED supplementarysections.itemsvsactualtasks beforecomparison; no rerun, UTF8prewriteconstructionfailure also retained; reviewer independentlyassess allunrunpreservation assertions notretroauthorPASS. Newcompletework no runtimequalification or scopegrant.",
+    "Challenge exhaustive W01-W21 writerinventory actual allraw Boardwriters/canonicaltasklinkpostawait/sharedscopedhelpers/savetree/globalresetdelete/exportimport/migration and proposed global account-before-dataset lockordering/reentrancy/two-phase taskLink/nativefallback/marker/generation/postawaitadoption/incarnation/fieldwriter/metadata lossless updates. Every participantreachablepath orsourceprovenunreachable, no localhooklock or capsuletoken alone fencesolduncooperativeclients; verifiedalloldclientsquiescence explicitexternal admission condition.",
+    "Exact capsuleversion/immutableX+separateUterminal/wholearraymetadata/counters/unknownfields/historycapacity/importretirement/foreignhistoricalvs livecapability/tokens/incarnations/signed? noinvented authenticity/realarrayprecedence/manualT0/textnewrows/wholeinverseconflict/currentderivedcounts/X-U-normalY/sourceuncertainreadback/projection+receiptatomicity. Import/export/dryrunrollback/migration/ordinarywriters mustretainmetadata orrefuse no silentcapsuleloss/reactivation. Fullconditional24paths vsminimalexactnewprotectedextensions proposedwithinweb, no permissionfromdoc.",
+    "Actualroute/accountglobaldelete/reset/import departurebeforeunmount/firstintent unresolvedhistory/exportverifiedack/durablepermission/no destructivepolicyinvention. Gate manage locks/unmount, App signoutsettingsdelegate only, resetAllPrefs ignoresrefusal, serverdelete precedeslocalwipe: proposedpreintentguards andaboveaccount-remountedsubtree ownership technicallyfeasible/sourcegrounded/exactallowedpath+allbranchcoverage. Forcedlosslimits genuine vsguaranteeddeadprocesshistory impossible. QL/QUexistingproductrules not reopened, no new ownerchoice or standardswaiver.",
+    "Approve explicit finite technicalbasis T1-T4 only or preciseREVISEimpact2; no schema/API/capsule/key/productgrant or implementationadoption. Rootfresh exactcontractamendment/review/scopeadoption+sourcequalifiedfullvalidbefore/implementation/fixed/integrated/native/fullG1/actualvendor/freshoriginalacceptance/rootappend/inventory remain. Reviewer neverrepair/static1/allruntime0/cap3 unchanged; current4TTdocs baseline distinction and39rawmodulelabels accounted."
+  ]
+}

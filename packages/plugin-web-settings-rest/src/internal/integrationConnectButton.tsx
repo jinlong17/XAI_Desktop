@@ -17,10 +17,11 @@
  */
 
 import * as React from "react";
+import { accountScope } from "@repo/plugin-web-storage";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { localI18n } from "./localI18n.js";
 import type { IntegrationProvider } from "./integrationProviders.js";
-import { startOAuth } from "./oauthState.js";
+import { startOAuth, assertPendingOAuthCurrent } from "./oauthState.js";
 import { buildAuthorizeUrl } from "./buildAuthorizeUrl.js";
 
 interface IntegrationConnectButtonProps {
@@ -33,21 +34,26 @@ export function IntegrationConnectButton({
   lang,
 }: IntegrationConnectButtonProps): React.ReactElement {
   const t = localI18n(lang);
+  const [scope] = React.useState(() => accountScope.capture());
+  const [failed, setFailed] = React.useState(false);
 
   const handleConnect = async (
     e: React.MouseEvent<HTMLButtonElement>,
   ): Promise<void> => {
     e.preventDefault();
     try {
-      const pendingState = await startOAuth(provider.id);
+      setFailed(false);
+      const pendingState = await startOAuth(provider.id, scope);
       const url = await buildAuthorizeUrl(provider, pendingState);
+      assertPendingOAuthCurrent(pendingState, scope);
       window.location.assign(url);
     } catch {
-      // Silent failure in stub mode — connect attempt failed; no UX needed here.
+      setFailed(true);
     }
   };
 
   return (
+    <>
     <button
       type="button"
       className="int-connect-btn"
@@ -56,5 +62,7 @@ export function IntegrationConnectButton({
     >
       {t("int.btn.connect")}
     </button>
+    {failed && <span role="alert">{lang === "zh" ? "连接未完成，请确认当前账户后重试。" : "Connection did not complete. Check the current account and retry."}</span>}
+    </>
   );
 }

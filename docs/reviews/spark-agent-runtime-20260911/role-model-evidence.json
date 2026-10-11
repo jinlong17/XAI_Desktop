@@ -1,0 +1,46 @@
+[
+  {
+    "session_file": "rollout-2026-09-11T05-16-54-01a09066-3bc6-7b71-8380-2092eb3c1fae.jsonl",
+    "type": "turn_context",
+    "model": "gpt-5.3-codex-spark",
+    "effort": "medium"
+  },
+  {
+    "session_file": "rollout-2026-09-11T05-16-44-01a09066-15cc-7631-9f4e-be2236af26d4.jsonl",
+    "type": "turn_context",
+    "model": "gpt-5.3-codex-spark",
+    "effort": "medium"
+  },
+  {
+    "session_file": "rollout-2026-09-11T05-16-44-01a09066-15cc-7631-9f4e-be2236af26d4.jsonl",
+    "type": "spawn_agent",
+    "arguments": {
+      "agent_type": "spark-explorer",
+      "fork_turns": "none",
+      "task_name": "check_spark_model",
+      "message": "Read the spark-explorer.toml model setting and report it; do not modify files."
+    }
+  },
+  {
+    "session_file": "rollout-2026-09-11T05-17-31-01a09066-cdfb-7b60-80a8-0bc6b8bc7f1e.jsonl",
+    "type": "turn_context",
+    "model": "gpt-5.3-codex-spark",
+    "effort": "medium"
+  },
+  {
+    "session_file": "rollout-2026-09-11T05-17-25-01a09066-b538-73e3-8a0a-08396f42078f.jsonl",
+    "type": "turn_context",
+    "model": "gpt-5.3-codex-spark",
+    "effort": "medium"
+  },
+  {
+    "session_file": "rollout-2026-09-11T05-17-25-01a09066-b538-73e3-8a0a-08396f42078f.jsonl",
+    "type": "spawn_agent",
+    "arguments": {
+      "agent_type": "spark-ui-fixer",
+      "fork_turns": "none",
+      "task_name": "smoke_fixture_css_fix",
+      "message": "Execute only within /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-spark-ui-smoke-odx2vbzn with no network/commits. Open git status and verify target file. Edit ONLY fixture.css: replace every occurrence of literal string \"32px\" with \"44px\" while preserving all other bytes/contents exactly. After edit, verify file content and rerun git status to confirm only fixture.css changed. Do not touch product code or other files. Report success/failure and exact diff path."
+    }
+  }
+]

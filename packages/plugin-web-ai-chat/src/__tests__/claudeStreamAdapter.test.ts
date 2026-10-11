@@ -1,3 +1,5 @@
+import { accountScope } from "@repo/plugin-web-storage";
+import { resetAccountFixture } from "./accountTestSetup.js";
 /**
  * claudeStreamAdapter tests — CS1..CS10.
  *
@@ -27,9 +29,9 @@ function anthropicDelta(text: string) {
 }
 
 beforeEach(async () => {
-  localStorage.clear();
+  resetAccountFixture();
   // Set provider back to anthropic
-  localStorage.setItem("xai_ai_provider", JSON.stringify("anthropic"));
+  localStorage.setItem(accountScope.physicalKey("xai_ai_provider"), JSON.stringify("anthropic"));
   // Set a fake key so tests that need a key get one.
   await aiKeyStorage.saveKey("anthropic", "sk-ant-test-adapter");
   vi.restoreAllMocks();
@@ -64,8 +66,8 @@ describe("claudeStreamAdapter streamCompleteChat (CS)", () => {
   });
 
   it("CS2: happy path OpenAI-compatible — yields 2 chunks then done", async () => {
-    localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
-    localStorage.setItem("xai_ai_base_url", JSON.stringify("https://api.groq.com/openai/v1"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_provider"), JSON.stringify("openai-compatible"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_base_url"), JSON.stringify("https://api.groq.com/openai/v1"));
     await aiKeyStorage.saveKey("openai-compatible", "oai-test-key");
 
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
@@ -230,7 +232,7 @@ describe("claudeStreamAdapter streamCompleteChat (CS)", () => {
   });
 
   it("CS9: streaming disabled — parses non-streaming provider JSON", async () => {
-    localStorage.setItem("xai_ai_streaming", JSON.stringify(false));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_streaming"), JSON.stringify(false));
 
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(

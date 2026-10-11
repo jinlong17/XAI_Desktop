@@ -1,0 +1,49 @@
+{
+  "requestedRef": "40ffbe1",
+  "revision": "40ffbe1667e0e7391c390c04b533ff6343e0e8ad",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 99710,
+  "reopenedPid": 99767,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "absent-map",
+        "pass": true
+      },
+      {
+        "name": "held-account",
+        "pass": true
+      },
+      {
+        "name": "held-key",
+        "pass": true
+      },
+      {
+        "name": "two-document-conflict",
+        "pass": true
+      },
+      {
+        "name": "quota-latest-retry",
+        "pass": true
+      }
+    ],
+    "checkpoint": {
+      "raw": "{\"all\":\"hide\",\"today\":\"if-not-empty\",\"extension\":\"future-value\"}"
+    },
+    "scope": "Actual Smart Lists pane handlers, native Web Locks, isolated complete synthetic account; CSS omitted; five representative controls not full12 producer acceptance"
+  },
+  "after": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "saved-map-and-actual-selects-after-process-reopen",
+        "pass": true
+      }
+    ],
+    "scope": "One saved final account map plus actual re-rendered selections; not durable unsaved drafts"
+  }
+}

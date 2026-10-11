@@ -1,0 +1,72 @@
+{
+  "id": "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT2",
+  "workflow": "A",
+  "module": "web",
+  "role": "fresh source-only bounded supplementary impact for newly exhausted GOV05 and parser provenance while preserving previously reviewed five pending decisions",
+  "model": "gpt-6-astra",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "a9b22ebbec423028960f3c7332a6526f9c04ff45",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "allowed_files": [
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-r2/impact.md",
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-r2/inputs.sha256"
+  ],
+  "protected": [
+    "ALL nonallowed paths",
+    "all product/runner/tests/fixtures/old contracts/failurelogs/original evidence",
+    "globalcontrol/ledgers/otherwts",
+    "all original purposecaps/thresholds/acceptedproductdecisions",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "impact_iteration": 2,
+    "impact_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0
+  },
+  "no_children": true,
+  "stop": [
+    "input/hash/dirty/protected-scope drift",
+    "actualchecker failure STOP no retry/materialization/commit/amend",
+    "need oldbusinesschecker/measurement/method run or grant"
+  ],
+  "acceptance": [
+    "This is independently reviewed budget/provenance proposal for human-decision preparation, NOT rerunning any exhausted unit, not source/contract correction or adopting new budget. Read originalgoalcap3/human paralleloverlay/rootstate/taskcards/immutablefailure and actual acceptedfullreview receipts. Whole specific units: shared source-byte collection/review exhausted; outerfullreview3 exhausted; BRD12 technicalauthor3 FAILED; CD03 sourceauthor2 available but fullreview3 REVISE/exhausted; DASH availabilityauthor3FAILED; AI05 threeactualPython failures +prohibitedmaterialization/exhausted. Trace exactcaller/unit/purpose/phase actualcounts source/currentfixedSHA/receiptIDs/UNKNOWN gaps/no missing0. Distinguish real semanticfinding vs checker normalization/count/transport/guard/materialization faults and validdocumentaryacceptedbases; no absentlogs invented.",
+    "Review precise minimum lawful continuation perunit and whether extra one bounded author or reviewer would suffice vs fundamentalmissingfixture/sourceboundary/credential/unknownhistory. If ownerexception needed due explicit originalcap, produce concrete limited one-time cumulative extension proposal per exact unit with original3/3 retained, newi4 labeled4/4 not reset; independentfreshactor/wholeexistingacceptance/allowedfinitefiles/validinput/costwall/strictfailurefreezecaps and independentreview/adoption. Not all units needi4 or feasibility; keep infeasibleBLOCKED. No autoapprove/no newunit rename to dodgecaps, no generic unlimitedretry. Scopeextra author/review ONLYdocumentary/source-read validation, no actualqualification/native/visual/vendor/businessbefore unless separatelyalreadyauthorized lawfulcounts. Source and measurement qualification/validbefore/fullG1/actualvendor/freshacceptance still required.",
+    "Do NOT duplicate or assume answers to pending Clockretentioni4 / REL02+03V1 provenanceexception / WorldU1 / CALlineage / BKminimum / goalpanelresume requests. Clockvisual/native/retention and M8RELUNKNOWN histories outside proposed new exception and unchanged; budget alone cannot supply admitted actualReact/Vite/SDKfixture, lawful sourceallocation, clocks before, externalquiescence, creds. Explicit necessaryownerdecisions vs independenttechnicalchoice and actualreviewed evidence, no productpolicy/threshold/module weakening. Proposal-only root must inspect and ask minimum decision once if indispensable; otherreadywork continues.",
+    "Do not recursively rerun failed businessassertions/hash-corruption qualification or reproduce oldrunner. Fullread complete relevant accepted review documents/oldgoal/failure/taskcard metadata at exactusedSHAs, only hashbindthese immutableinputs and validate own wholeproposal coverage beforewrite. Existing bigmatrix failures notsourcecorruption and unvalidateddrafts notacceptedverdict. No oldsemanticstatic verifier imported/executed. Original full312 mapping/formal13,3,3,293/939 counts retained.",
+    "ALL relevantinputchecks+BOTH completebuffers BEFOREANYwrite; sole meaningfuldocumentary static1/staticfailureSTOP. Actualmanifestgrammars beforelaunch no guessedheadline/minsize/count/P0auditdoc parity guards. CompactJSONsafeUTF8/chr(10)/Python3.9API no newlinekeyword. Keepraw numericexit/PID/session/chunk/EOFdrain. Exact2ADD onehookdisabledcommit realnewlineWhyWhatScopeRiskDocsTests clean/noamendpush. EOFblankverbatimformat residual P56disposition may be disclosed withoutsourcebytechange; no actualsemanticfailedchecker continuation.",
+    "SUPPLEMENT2 is fresh independent impact author2/3 of originaldocumentarybudgetimpact purpose, NOT exhaustedGOV05/census author4 or retry and NOT goal completion. Read whole alreadyaccepted120161byteimpact1/fullreview1 and five exactapproved-for-owner-consideration rows, preserve allfive original caps/failedchecks/overruns/futureconditions and currentoneconsolidatedquestionpending; do not ask/answer/alter/extend that question or record anybudgetgrant. New two cumulative units: GOV05author1 prewritefailed reportedconcluding0 with raworiginalprocessUNKNOWN, author2static0099exit1, author3static5721bbPID69805exit1/nooutput; sourcecensus1staticFAILED rawPIDexitUNKNOWN, sourcecensus2preparation6e6e89exit1Git128/concluding0, sourcecensus3staticdce6d1exit1PIDUNKNOWN/nooutput. Do not erase anyphase, renameunit, retroapprovefaulty/inmemorydrafts or reinterpret3/3 away. Permanent failure scopes and actualnumericreceiptgaps separatefromsourceintegrity/productverdict. Currentparsercounts/purposeadmissionUNKNOWN independentofsourcecontract2technicalDOCUMENTadoption, no qualification/before admission or measured19/3/167 from docs.",
+    "Independently assess minimum lawful options without launchingcorrection/census/businesschecker: zeroextension leaves twoheld andotherready workcontinues; if fullgoal documentary chains require exception propose atmostONEnewGOV05samepurposeauthor4/4 pairedfreshwhole auditreview1 existingcap3 andONEnewcensus4/4 pairedfreshwholecensusreview1 existingcap3. No fourthreview exception ifreview0unused. Exactfinite2ADD paths, unchangedwholenineGOV05Sourcerequirements/currentTT08acceptedDOC/history rawpreservation; completepurposefamilies/provenance/UNKNOWN preservation forparsercensus, no runtimeauthority. Sourcepath/SHA/manifestgrammar/ownliteralchecks faults onlycanimprovewithinrequestedopportunity, neverfactualweakening. If no finiteviablefullscope path stateBLOCKED no additionalgrant. Extra i4 requires newWHOLEindependentreview2/3 then minimumexplicitownerdecision; currentfive question notcoversnewtwo. No userquestion byworker.",
+    "Atmostfour new potentialdispatchopportunities twoauthors+twoexistinglawfulfullreviews each<=30minwall/static1<=120sec/drain<=30sec; 120min/8min/2min proposedallocations notparallelactual/billing; noautomaticextension/fifth/optionalOuter/collector/shareddesign grant. ALLruntime/test/build/lint/native/browser/generator/parser/vendor/network/moduleimports0; no childagents. Exactfinite fullactuallyusedsourcebindings atactualSHA/fullMDs, oldmanifests opaquecompletebound notrequalifiedunlessexplicitownclaimedacquisition. ALLinputs and BOTHbuffers BEFORE ANYwrite; meaningfuloneownstaticactualhashes/grammar/fulloldfiveconservation+newtworequirements, no inventedword/count/minsize/P0docs parity. RawPID/session/chunk/numericexit/EOF/drain UNKNOWNnot0; actualfailureSTOP no retry/materialization/commit. Python3.9safeAPIUTF8realnewlines. Singlehooksdisabled exact2ADD commit noamend/nopush. Root onlylater considersreviewedproposal, allcap3 untilexplicitowner."
+  ],
+  "previous_source_proposal": "eb69c0bef221f15500824ab72d1db1ee4f86df8e",
+  "previous_whole_review": "1603f5d650466f6d2cf5285e1f811d8c99746826",
+  "supplementary_subjects": [
+    "GOV05nine-dossier author1prematurewrite/author2staticFAILED/author3staticFAILED EXHAUSTED3/3",
+    "GOV01+02parserpurpose census1staticFAILED/census2acquisitionFAILEDconcluding0/census3staticFAILED EXHAUSTED3/3"
+  ],
+  "read_paths": [
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-r1/impact.md",
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-r1/inputs.sha256",
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-review-r1/review.md",
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-review-r1/inputs.sha256",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/minimum-documentary-budget-decision-p64.json",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov05-prewrite-failure-p62-preservation-receipt.json",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov05-author2-p65-failure-receipt.json",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov05-author3-p67-final-failure-receipt.json",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov06-review1-and-parser-census1-p65-failure-receipt.json",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov-parser-census2-p66-acquisition-failure-receipt.json",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov-parser-census3-p68-final-failure-receipt.json"
+  ]
+}

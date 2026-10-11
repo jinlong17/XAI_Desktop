@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-calendar
+
+ ✓ src/__tests__/aiMutateSubscriber.test.tsx (6 tests) 60ms
+ ✓ src/__tests__/aiCalendarInputValidation.test.tsx (14 tests) 92ms
+ ✓ src/__tests__/aiCreateSubscriber.test.tsx (5 tests) 112ms
+
+ Test Files  3 passed (3)
+      Tests  25 passed (25)
+   Start at  16:26:30
+   Duration  5.80s (transform 1.40s, setup 4.05s, collect 2.31s, tests 264ms, environment 5.94s, prepare 1.80s)

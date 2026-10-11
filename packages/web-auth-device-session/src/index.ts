@@ -76,3 +76,12 @@ export type { WebAuthPageProps } from "./components/WebAuthPage";
 
 export { DeviceSessionBridge, useDeviceBoundFetch } from "./components/DeviceSessionBridge";
 export type { DeviceSessionBridgeProps } from "./components/DeviceSessionBridge";
+
+export { createAuthGenerationStore, AuthGenerationStorageError } from './auth-generation-store';
+export { createAuthGenerationClient, AuthGenerationClientStorageError, AUTH_GENERATION_SESSION_KEY } from './auth-generation-client';
+export type { AuthGenerationClientOptions } from './auth-generation-client';
+export type {
+  AuthGenerationLease, ActiveAuthGeneration, AuthGenerationFailure,
+  AuthGenerationMutationResult, AuthGenerationRecovery, AuthGenerationStore,
+  CreateAuthGenerationStoreOptions, PublishAuthGenerationOptions, ImportLegacyAuthGenerationOptions
+} from './auth-generation-store';

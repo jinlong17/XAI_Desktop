@@ -1,0 +1,18 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {accountScope,generationMarkerKey} from './packages/plugin-web-storage/src/index';
+import {DashHeader} from './packages/xai-web-dashboard-grid/src/DashHeader';
+import './packages/plugin-web-tokens/src/tokens.css';
+import './packages/plugin-web-tokens/src/layout.css';
+import './packages/xai-web-dashboard-grid/src/styles.css';
+const sourceMode=new URLSearchParams(location.search).get('source');
+const deviceKey='xai_pref_dashboard_header_note_x';
+const originalGet=Storage.prototype.getItem,originalSet=Storage.prototype.setItem;
+originalSet.call(localStorage,deviceKey,sourceMode==='unavailable'?'70':'null');
+let denyRead=sourceMode==='unavailable',appWrites=0;
+Storage.prototype.getItem=function(k){if(k===deviceKey&&denyRead)throw new DOMException('probe read denied','SecurityError');return originalGet.call(this,k);};
+Storage.prototype.setItem=function(k,v){if(k===deviceKey)appWrites++;originalSet.call(this,k,v);};
+(window as any).sourceProbe={raw:()=>originalGet.call(localStorage,deviceKey),writes:()=>appWrites,repair:()=>{denyRead=false;originalSet.call(localStorage,deviceKey,'80');}};
+accountScope.activate(accountScope.lock('independent-A'),'A');localStorage.setItem(generationMarkerKey('independent-A'),JSON.stringify({generation:'A',migrationId:'fixture',previous:null}));const key=accountScope.physicalKey('xai_pref_dashboard_header_note');localStorage.setItem(key,'Original note');const nativeSet=Storage.prototype.setItem;
+(window as any).verify={key,deny(){Storage.prototype.setItem=function(k,v){if(k===key)throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}},restore(){Storage.prototype.setItem=nativeSet},switch(){accountScope.activate(accountScope.lock('independent-B'),'B');return accountScope.physicalKey('xai_pref_dashboard_header_note')}};
+createRoot(document.getElementById('app')!).render(<div className="module-dashboard" style={{padding:16}}><DashHeader lang="en" now={new Date()}/></div>);

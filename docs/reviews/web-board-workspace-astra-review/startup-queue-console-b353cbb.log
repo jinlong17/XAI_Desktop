@@ -1,0 +1,9 @@
+startup-and-queue exit=0
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-ACwieZ
+
+ ✓ docs/reviews/web-board-workspace-astra-review/startup-and-queue.test.tsx (7 tests) 302ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  15:13:20
+   Duration  3.57s (transform 1.26s, setup 607ms, collect 1.65s, tests 302ms, environment 689ms, prepare 102ms)

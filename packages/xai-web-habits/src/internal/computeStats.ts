@@ -15,7 +15,7 @@ export function computeMonthlyCount(
   habitCheckIns: Readonly<Record<DateKey, true>>,
   ref: Date,
 ): number {
-  const prefix = `${ref.getUTCFullYear()}-${pad2(ref.getUTCMonth() + 1)}-`;
+  const prefix = `${ref.getFullYear()}-${pad2(ref.getMonth() + 1)}-`;
   return Object.keys(habitCheckIns).filter((k) => k.startsWith(prefix)).length;
 }
 
@@ -28,7 +28,7 @@ export function computeMonthlyRate(
   ref: Date,
 ): number {
   const checks = computeMonthlyCount(habitCheckIns, ref);
-  const daysSoFar = ref.getUTCDate(); // 1..31
+  const daysSoFar = ref.getDate(); // 1..31
   if (daysSoFar === 0) return 0;
   return Math.round((checks / daysSoFar) * 100);
 }
@@ -42,7 +42,7 @@ export function compute365(
   habitCheckIns: Readonly<Record<DateKey, true>>,
   ref: Date,
 ): { numerator: number; denominator: 365 | 366 } {
-  const year = ref.getUTCFullYear();
+  const year = ref.getFullYear();
   const prefix = `${year}-`;
   const numerator = Object.keys(habitCheckIns).filter((k) => k.startsWith(prefix)).length;
   const denominator: 365 | 366 = isLeapYear(year) ? 366 : 365;

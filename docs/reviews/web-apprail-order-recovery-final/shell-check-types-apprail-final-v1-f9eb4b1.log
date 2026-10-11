@@ -1,0 +1,76 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+mode=shell-check-types
+suffix=apprail-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc node docs/reviews/web-apprail-order-recovery-final/verify-packages.mjs f9eb4b1 shell-check-types apprail-final-v1
+output_dir=docs/reviews/web-apprail-order-recovery-final
+runner_checkout_head=9aeec39ecc3d9da70837e97b9660837fe887b765
+runner_sha256=fd9d9988c8c38c904555c4a539836db62aceda005098919d02bba4daf53dde15
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/xai-web-shell (packages/xai-web-shell) kind=tsc script=check-types: "tsc --noEmit"
+archive_file_sha256 packages/xai-web-shell/package.json=af4bcd1decf7542296ee89b648ec714efec94cdb3591b91bdb18cf85a0111376 packages/xai-web-shell/tsconfig.json=d6ed012dbb7ba814d3ad10969827e9e91ca33dc1c5a292550967032d367dca1a packages/xai-web-shell/vitest.config.ts=4ce52c49da38a9e12b08433dcfbff33e192e53d9d73d37430d6a5e47d7766a0c packages/xai-web-shell/eslint.config.js=79fded991853b3cfcad93ce8fe1312d993926017697438ddc2bb5ea770a6f55f
+package_tree=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 web_tree=61ddf71751eaa9f1a456897ecb7fbe23e708be4b
+node_modules_links third_party=449 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus
+tsconfig_extends_checked=46 unresolved=none own=@repo/xai-web-shell:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages/xai-web-shell/node_modules/.bin/tsc
+args=--noEmit --listFiles
+typescript=node_modules/.pnpm/typescript@5.9.2/node_modules/typescript@5.9.2
+tool_exit=0
+harness_checks=PASS (6/6)
+exit=0
+---- stdout ----
+[--listFiles output: 363 paths, summarised in the runner summary]
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS archive package.json script "check-types" is "tsc --noEmit" (found "tsc --noEmit")
+harness PASS program file list parsed (--listFiles)
+harness PASS no program file from a checkout's packages/, apps/ or docs/
+harness PASS every program file is inside the archive or the dependency store node_modules/.pnpm
+harness PASS required product files in the type program (14 present of 14 listed)
+harness PASS own tsconfig extends resolves inside the archive (@repo/xai-web-shell:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json)
+tsc_exit=0 diagnostics_lines=0
+program_files=363 archive=68 store=295 elsewhere=0 forbidden=0
+archive_files_by_package packages/core=5 packages/plugin-web-storage=22 packages/plugin-web-tokens=6 packages/xai-web-event-bus=5 packages/xai-web-shell=30
+archive_file_list_sha256=13128273a355e2fd381acd63c1b04019c4774134d0f401050510d049a0e9e363
+pin_required_provenance packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/internal/railOrderController.tsx packages/xai-web-shell/src/internal/railOrderModel.ts packages/xai-web-shell/src/internal/RailOrderStatus.tsx packages/xai-web-shell/src/internal/railOrderCopy.ts packages/xai-web-shell/src/types.ts packages/xai-web-shell/src/index.ts packages/xai-web-shell/src/__tests__/Topbar.test.tsx packages/xai-web-shell/src/__tests__/AppRail.railorder.test.tsx packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx packages/xai-web-shell/src/__tests__/railOrderModel.test.ts packages/xai-web-shell/src/__tests__/railOrderFixture.tsx
+pin_required_provenance_missing=none
+program packages/xai-web-shell/src/AppRail.tsx
+program packages/xai-web-shell/src/AvatarMenu.tsx
+program packages/xai-web-shell/src/Shell.tsx
+program packages/xai-web-shell/src/SignOutConfirmDialog.tsx
+program packages/xai-web-shell/src/Topbar.tsx
+program packages/xai-web-shell/src/__fixtures__/ShellFixture.tsx
+program packages/xai-web-shell/src/__tests__/AppRail.railorder.test.tsx
+program packages/xai-web-shell/src/__tests__/AppRail.test.tsx
+program packages/xai-web-shell/src/__tests__/AvatarMenu.test.tsx
+program packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx
+program packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx
+program packages/xai-web-shell/src/__tests__/SignOutConfirmDialog.test.tsx
+program packages/xai-web-shell/src/__tests__/Topbar.test.tsx
+program packages/xai-web-shell/src/__tests__/event-emit.test.tsx
+program packages/xai-web-shell/src/__tests__/index-barrel.test.ts
+program packages/xai-web-shell/src/__tests__/internal/dnd.test.ts
+program packages/xai-web-shell/src/__tests__/railOrderFixture.tsx
+program packages/xai-web-shell/src/__tests__/railOrderModel.test.ts
+program packages/xai-web-shell/src/__tests__/registry.test.tsx
+program packages/xai-web-shell/src/__tests__/setup.ts
+program packages/xai-web-shell/src/icons.tsx
+program packages/xai-web-shell/src/index.ts
+program packages/xai-web-shell/src/internal/RailOrderStatus.tsx
+program packages/xai-web-shell/src/internal/dnd.ts
+program packages/xai-web-shell/src/internal/popoverGeometry.ts
+program packages/xai-web-shell/src/internal/railOrderController.tsx
+program packages/xai-web-shell/src/internal/railOrderCopy.ts
+program packages/xai-web-shell/src/internal/railOrderModel.ts
+program packages/xai-web-shell/src/registry.tsx
+program packages/xai-web-shell/src/types.ts

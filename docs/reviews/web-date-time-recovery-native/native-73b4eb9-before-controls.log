@@ -1,0 +1,7 @@
+{"name":"baseline","commit":"73b4eb9","browser":"Chrome/152.0.7977.83"}
+{"name":"field-0","pass":false,"state":{"week":"monday","toggles":["true","true","true","true"]},"raw":["monday","true","true","true","true"],"error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'monday' !== 'sunday'\n"}
+{"name":"field-1","pass":false,"state":{"week":"monday","toggles":["true","true","true","true"]},"raw":["monday","true","true","true","true"],"error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'true' !== 'false'\n"}
+{"name":"field-2","pass":false,"state":{"week":"monday","toggles":["true","true","true","true"]},"raw":["monday","true","true","true","true"],"error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'true' !== 'false'\n"}
+{"name":"field-3","pass":false,"state":{"week":"monday","toggles":["true","true","true","true"]},"raw":["monday","true","true","true","true"],"error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'true' !== 'false'\n"}
+{"name":"field-4","pass":false,"state":{"week":"monday","toggles":["true","true","true","true"]},"raw":["monday","true","true","true","true"],"error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'true' !== 'false'\n"}
+{"name":"native","pass":false,"mode":"controls","error":"AssertionError [ERR_ASSERTION]: Native controls lost latest draft\n\n5 !== 0\n","runtimeErrors":[]}

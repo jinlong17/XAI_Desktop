@@ -1,0 +1,51 @@
+revision=4202c79
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-subscribers-tuRA2R
+
+stdout | docs/reviews/web-board-workspace-astra-review/six-subscriber-independent.test.tsx > Tasks queued mutation must use the validated semantic snapshot recorded in its receipt
+queued-payload {"signature":"{\"id\":\"target\",\"patch\":{\"bucket\":\"later\",\"tag\":\"work\",\"title\":\"Tool edit\"}}","actualBucket":"nodate","actualTag":"personal"}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/six-subscriber-independent.test.tsx (11 tests | 1 failed) 1466ms
+   ✓ tasks:create retains original business oracle after remount and real ordinary human edit 173ms
+   ✓ tasks:update retains original business oracle after remount and real ordinary human edit 160ms
+   ✓ tasks:delete retains original business oracle after remount and real ordinary human edit 215ms
+   ✓ calendar:create retains original business oracle after remount and real ordinary human edit 161ms
+   ✓ calendar:update retains original business oracle after remount and real ordinary human edit 161ms
+   ✓ calendar:delete retains original business oracle after remount and real ordinary human edit 211ms
+   ✓ tasks:create waits for the lock without an early receipt; queued owner invalidation refuses 55ms
+   ✓ calendar:create waits for the lock without an early receipt; queued owner invalidation refuses 54ms
+   ✓ tasks:create quota refusal commits no receipt and corrected retry writes once 108ms
+   ✓ calendar:create quota refusal commits no receipt and corrected retry writes once 107ms
+   × Tasks queued mutation must use the validated semantic snapshot recorded in its receipt 61ms
+     → expected 'nodate' to be 'later' // Object.is equality
+     → expected 'personal' to be 'work' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  16:34:35
+   Duration  2.42s (transform 168ms, setup 0ms, collect 328ms, tests 1.47s, environment 334ms, prepare 80ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/six-subscriber-independent.test.tsx > Tasks queued mutation must use the validated semantic snapshot recorded in its receipt
+AssertionError: expected 'nodate' to be 'later' // Object.is equality
+
+Expected: "later"
+Received: "nodate"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/six-subscriber-independent.test.tsx:41:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/six-subscriber-independent.test.tsx > Tasks queued mutation must use the validated semantic snapshot recorded in its receipt
+AssertionError: expected 'personal' to be 'work' // Object.is equality
+
+Expected: "work"
+Received: "personal"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/six-subscriber-independent.test.tsx:41:55
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯

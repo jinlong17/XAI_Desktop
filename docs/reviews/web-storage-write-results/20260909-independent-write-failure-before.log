@@ -1,0 +1,54 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stdout | docs/reviews/web-storage-write-results/independent-write-failure.test.tsx > Tasks retains the open composer and draft when native Storage rejects its write
+REL05 Tasks observed {"persistedUnchanged":true,"composerOpen":false,"draft":"","visibleFailure":false}
+
+stderr | docs/reviews/web-storage-write-results/independent-write-failure.test.tsx > Tasks retains the open composer and draft when native Storage rejects its write
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stdout | docs/reviews/web-storage-write-results/independent-write-failure.test.tsx > Bookkeeping does not publish proposed business state when its canonical native write fails
+REL05 Bookkeeping observed {"persistedBudget":100,"renderedBudget":200,"deviceView":"overview"}
+
+ ❯ docs/reviews/web-storage-write-results/independent-write-failure.test.tsx (2 tests | 2 failed) 237ms
+   × Tasks retains the open composer and draft when native Storage rejects its write 232ms
+     → Failed Save must keep editor open: expected false to be true // Object.is equality
+   × Bookkeeping does not publish proposed business state when its canonical native write fails 4ms
+     → Failed write must not be published as committed balance: expected 200 to be 100 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-storage-write-results/independent-write-failure.test.tsx > Tasks retains the open composer and draft when native Storage rejects its write
+AssertionError: Failed Save must keep editor open: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-storage-write-results/independent-write-failure.test.tsx:22:75
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-storage-write-results/independent-write-failure.test.tsx > Bookkeeping does not publish proposed business state when its canonical native write fails
+AssertionError: Failed write must not be published as committed balance: expected 200 to be 100 // Object.is equality
+
+- Expected
++ Received
+
+- 100
++ 200
+
+ ❯ docs/reviews/web-storage-write-results/independent-write-failure.test.tsx:30:98
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  11:43:38
+   Duration  1.93s (transform 306ms, setup 0ms, collect 521ms, tests 237ms, environment 802ms, prepare 93ms)
+

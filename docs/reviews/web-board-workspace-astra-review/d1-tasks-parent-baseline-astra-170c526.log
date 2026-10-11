@@ -1,0 +1,18 @@
+revision=170c526
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-ercdR8
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-parent-baseline.test.tsx > queued checkbox refuses a changed target without overwriting newer external bytes
+queued-target {"preserved":true}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-tasks-parent-baseline.test.tsx (8 tests) 451ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  17:24:22
+   Duration  1.48s (transform 206ms, setup 0ms, collect 360ms, tests 451ms, environment 338ms, prepare 103ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-parent-baseline.test.tsx > render and checkbox do not repair a present invalid domain by overwriting it with demo tasks
+[plugin-web-tasks] usePref('xai_task_cols') returned non-array shape — falling back to seed.

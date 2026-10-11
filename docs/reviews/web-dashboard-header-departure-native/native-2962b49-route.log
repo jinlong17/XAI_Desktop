@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"2962b49","browser":"Chrome/152.0.7977.83"}
+{"name":"departure","pass":false,"error":"Error: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":42,\"scriptId\":\"7\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"7\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":42}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"TypeError\",\"description\":\"TypeError: Cannot read properties of null (reading 'select')\\n    at <anonymous>:1:43\",\"objectId\":\"5424074579841732397.2.2\"}}"}

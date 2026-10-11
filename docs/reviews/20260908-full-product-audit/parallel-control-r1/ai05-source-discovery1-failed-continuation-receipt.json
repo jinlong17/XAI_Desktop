@@ -1,0 +1,73 @@
+{
+  "id": "AI-05/SOURCE-DISCOVERY1",
+  "state": "received_FAILED_CANDIDATE_PRESERVATION_ONLY_NO_VALID_DISCOVERY_NO_ROUTINE_CORRECTION",
+  "parent": "dce3ea904104da8a89b0ca5a4d6482b6e8dc6e93",
+  "fixed_input": "ed5b9ad6789beebfe1b1df4e7d554312c208dafb",
+  "static_invocations": 3,
+  "static_cap": 1,
+  "static_budget_overrun": 2,
+  "same_purpose_attempts_used": 3,
+  "same_purpose_cap": 3,
+  "initial_commit": "11197c0d6af1d580ca2f6138766dd3c4e3038791",
+  "initial_archive_ref": "codex/archive/parallel-ai05-discovery-r1-initial-20261010",
+  "final_commit": "4f3bc63cd396319e3b1b9d043485b9d742c2bdd3",
+  "final_archive_ref": "codex/archive/parallel-ai05-discovery-r1-failed-20261010",
+  "integration_commit": "de172da0b2d05e48db62cf625ffae6c411770479",
+  "original_report": "claimed PASS; retained unchanged; corrective actor read-only clarification supersedes disposition only",
+  "actual_attempts": [
+    {
+      "attempt": 1,
+      "result": "FAILED actualPython SyntaxError f-string expression backslash line32; all reads/checks/writes UNRUN",
+      "numeric_exit": null,
+      "pid": null,
+      "session": null
+    },
+    {
+      "attempt": 2,
+      "result": "FAILED actualPython Git lookup currentcard at old frozeninput instead of actualparent; assertions/writes UNRUN",
+      "numeric_exit": null,
+      "pid": null,
+      "session": null
+    },
+    {
+      "attempt": 3,
+      "result": "FAILED after assertions/buffers and mkdir: Python3.9 Path.write_text newline keyword TypeError; neither file written",
+      "numeric_exit": null,
+      "pid": null,
+      "session": null
+    }
+  ],
+  "receipt_limitation": "original wrappers emitted only r.output discarded exit_code/chunk/session/PID; traceback observed; numeric failures inferred not observed; UNKNOWN not fabricated1",
+  "prohibited_continuation": "fourth authoring materialization regenerated buffers/open(newline), wrote2files WITHOUT concluding revalidation; stage/whitespace/commit/amend contrary stop; not legitimate mechanical preservation",
+  "postfailure_materialization_invocations": 1,
+  "source_commit": "4f3bc63cd396319e3b1b9d043485b9d742c2bdd3",
+  "output_hashes": {
+    "docs/reviews/audit-parallel-ai05-source-discovery-r1/discovery.md": "0853c56e6720a2ce3eac930caf4e8b4c1e63447b52817606b05f45a635e23480",
+    "docs/reviews/audit-parallel-ai05-source-discovery-r1/inputs.sha256": "dee4b36723104a308139364276077675a5b996f83a229c80a98881acd8478206"
+  },
+  "metadata_receipt": {
+    "source": "4f3bc63cd396319e3b1b9d043485b9d742c2bdd3",
+    "parent": "dce3ea904104da8a89b0ca5a4d6482b6e8dc6e93",
+    "initial_amended_commit": "11197c0d6af1d580ca2f6138766dd3c4e3038791",
+    "identical_input_output_blobs": true,
+    "counts": {
+      "git_blob": 86,
+      "commit_hex_LF_text_metadata": 4
+    },
+    "outputs": {
+      "docs/reviews/audit-parallel-ai05-source-discovery-r1/discovery.md": "0853c56e6720a2ce3eac930caf4e8b4c1e63447b52817606b05f45a635e23480",
+      "docs/reviews/audit-parallel-ai05-source-discovery-r1/inputs.sha256": "dee4b36723104a308139364276077675a5b996f83a229c80a98881acd8478206"
+    },
+    "root_role": "forensic metadata only NO business/staticPASS/adoption",
+    "root_helper_metadata_errors": [
+      "unsupported git-commit:dispatch-parent label no repo writes",
+      "then wrong hex-without-LF assumption no repo writes"
+    ],
+    "resolution": "fourtextidentityrecords allmatch exact40hex plusLF;86Gitblobhashesmatch; outputshashcheckedonlyfailurepreservation"
+  },
+  "static_pass": false,
+  "business_discovery_acceptance": false,
+  "input_output_blobs_initial_final_identical": true,
+  "runtime": 0,
+  "freeze": "NO routine correction/reviewer/sourcegrant; exhausted samepurpose authoring3/3 and static1 cap exceeded; no new agent/worktree label reset"
+}

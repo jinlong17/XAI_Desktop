@@ -1,0 +1,38 @@
+{
+  "requestedRef": "2820917",
+  "revision": "2820917e94dd1f1b53192cc25b6226cd616f260f",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "held-account-lock",
+      "pass": true
+    },
+    {
+      "name": "quota-retains-latest-draft",
+      "pass": true
+    },
+    {
+      "name": "two-document-functional",
+      "pass": true
+    },
+    {
+      "name": "account-switch-pending",
+      "pass": false,
+      "error": "Error: Account storage is locked or the operation belongs to a previous account."
+    }
+  ],
+  "checkpoint": {
+    "held-account-lock": {
+      "raw": "edit"
+    },
+    "quota-retains-latest-draft": {
+      "raw": "edit"
+    },
+    "two-document-functional": {
+      "raw": "2"
+    }
+  },
+  "scope": "Actual Collaborate select, native account WebLocks and physical preference string in isolated synthetic profile; no other settings or full writer activation claim"
+}

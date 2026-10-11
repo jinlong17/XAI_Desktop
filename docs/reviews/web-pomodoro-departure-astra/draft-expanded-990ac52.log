@@ -1,0 +1,52 @@
+revision=990ac52 fixed_commit=990ac52cac4aae9e72d1db84d52f6c9093294195
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-fbi5aA
+
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx (16 tests | 2 failed) 1238ms
+   ✓ preset: discard clears only its actual failed draft, preserving successful siblings and timer bytes 67ms
+   ✓ custom_minutes: discard clears only its actual failed draft, preserving successful siblings and timer bytes 58ms
+   ✓ display_style: discard clears only its actual failed draft, preserving successful siblings and timer bytes 27ms
+   ✓ theme: discard clears only its actual failed draft, preserving successful siblings and timer bytes 25ms
+   ✓ sound: discard clears only its actual failed draft, preserving successful siblings and timer bytes 32ms
+   ✓ muted: discard clears only its actual failed draft, preserving successful siblings and timer bytes 43ms
+   ✓ same-value successor failure stays a real draft after an earlier matching value committed 117ms
+   ✓ Retry during a predecessor pending save cannot attribute its success to a newer failed choice 57ms
+   ✓ readback uncertainty unchanged: departure tracks the actual token outcome without duplicate settlement 43ms
+   ✓ readback uncertainty changed: departure tracks the actual token outcome without duplicate settlement 46ms
+   ✓ source-only repair is clean while repairing one source leaves another actual failed draft guarded 68ms
+   ✓ old epoch and disposed discard capabilities cannot clear surviving or successor device choices 40ms
+   × revoked epoch capabilities cease blocking while the fresh capability still guards surviving device drafts 30ms
+     → a revoked decision cannot claim current departure authority: expected true to be false // Object.is equality
+   × targeted conflict discard preserves another latest quota-failed choice and its Retry 33ms
+     → preserve the accepted explicit conflict-only recovery choice alongside other unsaved drafts: expected null not to be null
+   ✓ running timer is not a preference draft and preference discard leaves its actual active record untouched 18ms
+   ✓ completion-driven failed next preset is a draft; successful retry releases it without replaying history or event  533ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 14 passed (16)
+   Start at  23:56:18
+   Duration  2.48s (transform 337ms, setup 0ms, collect 531ms, tests 1.24s, environment 282ms, prepare 96ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > revoked epoch capabilities cease blocking while the fresh capability still guards surviving device drafts
+AssertionError: a revoked decision cannot claim current departure authority: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx:110:91
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > targeted conflict discard preserves another latest quota-failed choice and its Retry
+AssertionError: preserve the accepted explicit conflict-only recovery choice alongside other unsaved drafts: expected null not to be null
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx:124:119
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯

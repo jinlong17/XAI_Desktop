@@ -1,0 +1,5 @@
+Scope: 2 of 64 workspace projects
+packages/xai-web-calendar lint$ eslint --max-warnings 0 .
+packages/xai-web-tasks lint$ eslint --max-warnings 0 .
+packages/xai-web-tasks lint: Done
+packages/xai-web-calendar lint: Done

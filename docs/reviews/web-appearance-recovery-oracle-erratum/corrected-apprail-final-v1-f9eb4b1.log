@@ -1,0 +1,113 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 web_app_tree=61ddf71751eaa9f1a456897ecb7fbe23e708be4b
+mode=corrected
+suffix=apprail-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc node docs/reviews/web-appearance-recovery-oracle-erratum/verify-erratum.mjs f9eb4b1 corrected apprail-final-v1
+runner_checkout_head=9aeec39ecc3d9da70837e97b9660837fe887b765
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+frozen_inputs_sha256 docs/reviews/web-appearance-recovery-sol/fixture.tsx=acd26ad860c90e1a688232db2f8da4b2d016b7a537d53afb3fea528f584666e3 docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx=776da524f7479e03d067c2426345df1fb30e518581c7bbfd33a0f1d0838e79ce docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+erratum_sha256 verify-erratum.mjs=354c220b0cddb6997486a52afe88182c11d622d490d00da7fd2cabd3fddf81d8 continuity-export.corrected.test.tsx=6e9c7def13a5128534a245653c90414c805a5af7597e7a12644189a258a5909a continuity-export.corrected.diff=354bf6561db0ba238212f554597e1a9c23065a2b8e6a36d053f8c13cd2b030c1 oe-replay.test.tsx=6261aa76d3b934d2d614876ecf7b96c0900388d76778875b2606d181b796ce18
+staged docs/reviews/web-appearance-recovery-sol/fixture.tsx->docs/reviews/web-appearance-recovery-oracle-erratum/fixture.tsx=acd26ad860c90e1a688232db2f8da4b2d016b7a537d53afb3fea528f584666e3 docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx->docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx=6e9c7def13a5128534a245653c90414c805a5af7597e7a12644189a258a5909a
+corrected_diff_check patch=/usr/bin/patch patch_exit=0 patched_sha256=6e9c7def13a5128534a245653c90414c805a5af7597e7a12644189a258a5909a corrected_sha256=6e9c7def13a5128534a245653c90414c805a5af7597e7a12644189a258a5909a EQUAL
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=0818f7ee1cb9b525e6fac603ba4958b175dd401e0fd754d05ed3ac7d88e27c8f packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=40a72a058ba1e4b64f40afe8a31d590935d800e786d065248a8030f3137eeae3 packages/xai-web-settings-appearance/src/index.ts=9113e85cab3eee31e1f54e5220b87e8d8eac69a48f73b2697a8662dac1d5caef packages/xai-web-settings-appearance/src/styles.css=cd95e4a921e334d7ac47fc7e808ffa3e79b664c45fbf754049be33f649f250ce packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=f644e78ec482c0b9b66f9702407eb34e1dcd110e837293e4a736964bfe7ac408 packages/xai-web-shell/src/Topbar.tsx=aa5ac56e7b6a7652df70e82ed4d83dc81b44558181bfb48a30eb40b157d43c0e packages/xai-web-shell/src/Shell.tsx=38e25c6b20f6413c9362f53e9be7e2aa121001170898a6097e29fccabf22e432 packages/xai-web-shell/src/types.ts=d18f637e9bec8c05f305fb29467acfd3fdcf2649e83ad2b28b877389752139c0 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9 packages/xai-web-settings-appearance/src/internal/appearanceController.tsx=64d6c8b74f689bc989bc8d1bcfa85bb333b068826829269f1e31d97cd2878e5a
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=449 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] continuity-export.corrected.test.tsx: include=docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-erratum-P6tSwk/appearance-erratum-corrected.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-erratum-P6tSwk/.report-corrected.json vitest_exit=0 cases=26 passed=26 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=26 numPassedTests=26 numFailedTests=0
+exit=0
+harness_checks=PASS (8/8)
+==== run[0] continuity-export.corrected.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-erratum-P6tSwk
+
+stdout | docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H1 H8 §7 A→B→locked→A: a failed registered draft and a held device operation survive every transition; the held write completes exactly once; Retry still saves 287ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H8 H12 §7 a same-account epoch change keeps a held root-field operation; it writes exactly once after release 98ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H8 H9 §7 an admitted reset batch with a held removal and a refused removal continues across A→B 155ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > INV §7 edits and a reset across A→B never touch account keys, markers or account lifecycle locks 191ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > INV §7 an unrelated held account lifecycle lock never delays a device edit or a reset 120ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > §7.3 §7.6 unmount removes the unload listener and detaches old callbacks; committed writes and removals are never undone 177ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H3 H12 §8 shape 1: a sparse set left by a Topbar failure (theme) 132ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H1 H12 §8 shape 2: a sparse registered set (accent) 118ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H1 H12 §8 shape 3: a background choice with both writes failing exports both entries 115ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H9 H12 §8 shape 4: mixed set and reset entries 169ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H8 H12 §8 shape 5: all six pending resets behind held locks 225ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H1 H2 H12 §8 shape 6: all seven sets including language 326ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H8 H12 §8 shape 7: an export while one operation is held behind a real lock includes it and saves, retries or discards nothing 125ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H1 H12 §8 shape 8: an export after navigating away from the pane and back (App-lifetime drafts) 242ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H12 §8 the export excludes saved, default and source-only fields 142ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > INV §8 without an actual draft there is no Export and no Discard all control 103ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H12 §8 a blob setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up 129ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H12 §8 a url setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up 127ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H12 §8 a append setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up 136ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H12 §8 a click setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up 159ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H12 §8 a setup failure in Chinese shows 导出失败，请重试。 117ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H12 §8 an unmount during blob cancels the click and cleans up (standalone controller) 74ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H12 §8 an unmount during url cancels the click and cleans up (standalone controller) 71ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H12 §8 an unmount during append cancels the click and cleans up (standalone controller) 71ms
+ ✓ docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx > H12 §8 an export after an A→B transition (standalone controller) still exports the surviving device draft 92ms
+
+ Test Files  1 passed (1)
+      Tests  26 passed (26)
+   Start at  07:56:15
+   Duration  7.07s (transform 1.90s, setup 46ms, collect 2.91s, tests 3.71s, environment 200ms, prepare 49ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-erratum-P6tSwk/.report-corrected.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-erratum-P6tSwk","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-erratum-P6tSwk/.appearance-erratum-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-erratum-P6tSwk/packages/xai-web-settings-appearance/vitest.setup.ts"],"include":["docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=630 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=11 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=14 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=26 passed=26 failed=0 skipped=0 precondition_failures=0
+harness PASS [continuity-export.corrected.test.tsx] JSON report parsed
+harness PASS [continuity-export.corrected.test.tsx] reported files equal the requested include
+harness PASS [continuity-export.corrected.test.tsx] config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-appearance/vitest.setup.ts], root = archive)
+harness PASS [continuity-export.corrected.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [continuity-export.corrected.test.tsx] required product modules loaded from the archive (22)
+harness PASS [continuity-export.corrected.test.tsx] no test-file suite error
+harness PASS [continuity-export.corrected.test.tsx] staged fixture is the frozen fixture (acd26ad860c9…) and was loaded from the archive
+harness PASS [continuity-export.corrected.test.tsx] the corrected file equals the frozen file with the committed diff applied
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 PASSED | H1 H8 §7 A→B→locked→A: a failed registered draft and a held device operation survive every transition; the held write completes exactly once; Retry still saves
+case 003 PASSED | H8 H12 §7 a same-account epoch change keeps a held root-field operation; it writes exactly once after release
+case 004 PASSED | H8 H9 §7 an admitted reset batch with a held removal and a refused removal continues across A→B
+case 005 PASSED | INV §7 edits and a reset across A→B never touch account keys, markers or account lifecycle locks
+case 006 PASSED | INV §7 an unrelated held account lifecycle lock never delays a device edit or a reset
+case 007 PASSED | §7.3 §7.6 unmount removes the unload listener and detaches old callbacks; committed writes and removals are never undone
+case 008 PASSED | H3 H12 §8 shape 1: a sparse set left by a Topbar failure (theme)
+case 009 PASSED | H1 H12 §8 shape 2: a sparse registered set (accent)
+case 010 PASSED | H1 H12 §8 shape 3: a background choice with both writes failing exports both entries
+case 011 PASSED | H9 H12 §8 shape 4: mixed set and reset entries
+case 012 PASSED | H8 H12 §8 shape 5: all six pending resets behind held locks
+case 013 PASSED | H1 H2 H12 §8 shape 6: all seven sets including language
+case 014 PASSED | H8 H12 §8 shape 7: an export while one operation is held behind a real lock includes it and saves, retries or discards nothing
+case 015 PASSED | H1 H12 §8 shape 8: an export after navigating away from the pane and back (App-lifetime drafts)
+case 016 PASSED | H12 §8 the export excludes saved, default and source-only fields
+case 017 PASSED | INV §8 without an actual draft there is no Export and no Discard all control
+case 018 PASSED | H12 §8 a blob setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+case 019 PASSED | H12 §8 a url setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+case 020 PASSED | H12 §8 a append setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+case 021 PASSED | H12 §8 a click setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+case 022 PASSED | H12 §8 a setup failure in Chinese shows 导出失败，请重试。
+case 023 PASSED | H12 §8 an unmount during blob cancels the click and cleans up (standalone controller)
+case 024 PASSED | H12 §8 an unmount during url cancels the click and cleans up (standalone controller)
+case 025 PASSED | H12 §8 an unmount during append cancels the click and cleans up (standalone controller)
+case 026 PASSED | H12 §8 an export after an A→B transition (standalone controller) still exports the surviving device draft

@@ -1,0 +1,11 @@
+> @repo/plugin-web-calendar@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-calendar
+> vitest run "--run" "src/__tests__/aiCalendarInputValidation.test.tsx"
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-calendar
+
+ ✓ src/__tests__/aiCalendarInputValidation.test.tsx (14 tests) 21ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  15:02:03
+   Duration  1.12s (transform 136ms, setup 225ms, collect 34ms, tests 21ms, environment 443ms, prepare 97ms)

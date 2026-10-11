@@ -1,0 +1,15 @@
+INDEPENDENT ASTRA product=650458908342013acffd7a43fc5161f7d687fea2
+runner=python3 docs/reviews/web-d2-async-pref-astra-engine/run.py 650458908342013acffd7a43fc5161f7d687fea2 repair-boundaries.test.ts
+test_sha256=dd1560de7e743f1d08801bc21b95e55a9adf03fdb2d7da395516fb475b421f7e
+
+ ✓ registered default validation cannot be bypassed by the new dynamic-absence flag
+ ✓ throwing default validator resolves typed refusal instead of escaping the new prevalidation boundary
+ ✓ registered same-codec autosave reset publishes its validated registry default to the same-key subscriber
+ ✓ open-ended string codec refuses object input rather than coercing the public generic value
+ ✓ control: legitimate registered string/boolean and dynamic JSON create/reset still work
+ ✓ control: observed external replacement clears uncertain attribution and stale raw-baseline retry refuses
+ ✓ control: uncertain reconciliation checks generation admission and publishes only once on valid same-owner retry
+
+Test Files  1 passed (1)
+     Tests  7 passed (7)
+EXIT_CODE=0

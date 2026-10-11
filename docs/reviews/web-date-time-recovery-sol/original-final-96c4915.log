@@ -1,0 +1,11 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-OtJ4JV
+
+ ✓ packages/plugin-web-settings-rest/src/__tests__/dateTimePane.test.tsx (6 tests) 256ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  01:31:52
+   Duration  5.85s (transform 1.82s, setup 1.49s, collect 1.50s, tests 256ms, environment 1.14s, prepare 534ms)

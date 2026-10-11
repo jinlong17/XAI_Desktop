@@ -1,0 +1,155 @@
+comparison=appearance-final-v1
+## E7: Sol fixed reruns at 419e56d vs 24073b5 (fixed1, batch 42)
+MATCH E7 bytes: 65/65 at 419e56d vs 65/65 at 24073b5; case by case
+      fresh web-appearance-recovery-sol/bytes-appearance-final-v1-419e56d.log sha256=cf616e933931eda06ffa7cd08e886de74322a8573e28cfee13b3d26fe11bcfbf exit=0 harness_checks=PASS (6/6)
+      earlier web-appearance-recovery-sol/bytes-fixed1-24073b5.log sha256=a4588ba5b38a77291fd75d02487db209c3a18a7e5e7402077269a01fd04decf3 exit=0 harness_checks=PASS (6/6)
+      ordered names equal=true statuses equal=true oracle_sha256 line equal=true PRECONDITION=0
+MATCH E7 fields: 89/89 at 419e56d vs 89/89 at 24073b5; case by case
+      fresh web-appearance-recovery-sol/fields-appearance-final-v1-419e56d.log sha256=91b4164c8a832aa7d4f29a8fe7616bf8ffa39da1203ead0b991c23760782d067 exit=0 harness_checks=PASS (6/6)
+      earlier web-appearance-recovery-sol/fields-fixed1-24073b5.log sha256=dc35680f9fb72c72ca34a598b144a4554ca7a86b5226dcc547546ebbcfc0aeef exit=0 harness_checks=PASS (6/6)
+      ordered names equal=true statuses equal=true oracle_sha256 line equal=true PRECONDITION=0
+MATCH E7 reset: 34/34 at 419e56d vs 34/34 at 24073b5; case by case
+      fresh web-appearance-recovery-sol/reset-appearance-final-v1-419e56d.log sha256=81aaf11d19688ea07b705f43ac26c270e078a7efa7d4eda85907ea95228e8545 exit=0 harness_checks=PASS (6/6)
+      earlier web-appearance-recovery-sol/reset-fixed1-24073b5.log sha256=5a72a30ba575346348c202880bf422479c115a335b7f99eb5548ed2fc7c0b61b exit=0 harness_checks=PASS (6/6)
+      ordered names equal=true statuses equal=true oracle_sha256 line equal=true PRECONDITION=0
+MATCH E7 queues: 56/56 at 419e56d vs 56/56 at 24073b5; case by case
+      fresh web-appearance-recovery-sol/queues-appearance-final-v1-419e56d.log sha256=c5b9b2b2e51b88ce3b4922f27b1589775e6f144d53b797dd893b7b0083ff3b59 exit=0 harness_checks=PASS (6/6)
+      earlier web-appearance-recovery-sol/queues-fixed1-24073b5.log sha256=b7ec55fe24cc9211b8c34699b42ecccf168b1d6f9c28147594e8cb29487a1710 exit=0 harness_checks=PASS (6/6)
+      ordered names equal=true statuses equal=true oracle_sha256 line equal=true PRECONDITION=0
+MATCH E7 host: 33/33 at 419e56d vs 33/33 at 24073b5; case by case
+      fresh web-appearance-recovery-sol/host-appearance-final-v1-419e56d.log sha256=65142e3d18e53d7a0e21a8405edd3df39e153b646a407b7e54661f0d70803662 exit=0 harness_checks=PASS (6/6)
+      earlier web-appearance-recovery-sol/host-fixed1-24073b5.log sha256=d4c13cf8f289f97ae3b4dc29136be4dc3b37c4bf0060a84d98c26822edc439c5 exit=0 harness_checks=PASS (6/6)
+      ordered names equal=true statuses equal=true oracle_sha256 line equal=true PRECONDITION=0
+MATCH E7 retry-all: 48/48 at 419e56d vs 48/48 at 24073b5; case by case
+      fresh web-appearance-recovery-sol/retry-all-appearance-final-v1-419e56d.log sha256=e87c05693358d7d368ac66bc5be73f6e7af638cfbae3fc546635bf65ff2370e4 exit=0 harness_checks=PASS (6/6)
+      earlier web-appearance-recovery-sol/retry-all-fixed1-24073b5.log sha256=4a20985a777208bd885e3345732a14e4db291475e1f3ee98be5fbc803dae714f exit=0 harness_checks=PASS (6/6)
+      ordered names equal=true statuses equal=true oracle_sha256 line equal=true PRECONDITION=0
+MATCH E7 continuity-export (frozen): 24/26; failures exactly 006 (OE-1) and 007 (OE-2) with the 24073b5 first lines
+      fresh web-appearance-recovery-sol/continuity-export-appearance-final-v1-419e56d.log sha256=ecb2cf50a2916f82d638e93dbca72a8433f31e4f3bef26476381b98f8387df23 exit=1 harness_checks=PASS (6/6)
+      earlier web-appearance-recovery-sol/continuity-export-fixed1-24073b5.log sha256=bcff6ee006ce448b11ec0f1104bc8cc506912ec445b97bdc11a810646a33de95 exit=1 harness_checks=PASS (6/6)
+      failed=006,007
+      006 first: AssertionError: §7: a device reset is not serialized behind an unrelated account lock: expected { accent: null, rail: 'top', …(1) } to strictly equal { accent: null, rail: null, bg: null }
+      007 first: AssertionError: unmount never undoes committed writes: expected '230' to be '295' // Object.is equality
+      first lines equal to 24073b5=true
+MATCH E7 continuity-export (corrected copy, OE ruling): 26/26 at 419e56d vs 26/26 at 24073b5; adjudicated 006/007 PASSED/PASSED
+      fresh web-appearance-recovery-oracle-erratum/corrected-appearance-final-v1-419e56d.log sha256=d2ce51d322271487a45e421e93693763d7faf81e365fc3a22bad292348a19bfa exit=0 harness_checks=PASS (8/8)
+      earlier web-appearance-recovery-oracle-erratum/corrected-fixed1-24073b5.log sha256=4c0f405102ce26b7a4bbda94b141aa36e74234216e253d48d926bb1bb2ee47ba exit=0 harness_checks=PASS (8/8)
+      case names equal to the frozen file's=true; corrected_diff_check patch=/usr/bin/patch patch_exit=0 patched_sha256=6e9c7def13a5128534a245653c90414c805a5af7597e7a12644189a258a5909a corrected_sha256=6e9c7def
+MATCH E7 original: 185/185 at 419e56d vs 174/174 at 24073b5: all 174 earlier names present; 11 extra = the two guard test files' 11 cases: true
+      fresh web-appearance-recovery-sol/original-appearance-final-v1-419e56d.log sha256=946c8481a9c353178b3cae89dde1f258dba85079872984305f91ed1182b13837 exit=0 harness_checks=PASS (18/18)
+      earlier web-appearance-recovery-sol/original-fixed1-24073b5.log sha256=595b96ed49289490e5398fec447732a4861cb51dcfe62447654a3b80b1255365 exit=0 harness_checks=PASS (18/18)
+      extra PASSED [appearance-package] F-APP-1 Font scale slider focus ring styles.css has one top-level rule for the focused Font scale slider that declares only the ring
+      extra PASSED [appearance-package] F-APP-1 Font scale slider focus ring the ring equals the global input:focus-visible ring in tokens.css
+      extra PASSED [appearance-package] F-APP-1 Font scale slider focus ring its selector outranks every layout.css rule that sets the outline of the range input in .slider-row
+      extra PASSED [appearance-package] F-APP-1 Font scale slider focus ring without :focus-visible the selector reaches exactly the Font scale slider
+      extra PASSED [appearance-package] F-APP-2 selected accent swatch focus ring styles.css has one top-level rule for the focused selected swatch: the global ring further out, the selection ring as a box-shadow
+      extra PASSED [appearance-package] F-APP-2 selected accent swatch focus ring its outline is the global button:focus-visible ring, and its box-shadow repeats the selection ring inside it
+      extra PASSED [appearance-package] F-APP-2 selected accent swatch focus ring its selector outranks every rule that sets a swatch's outline or box-shadow; none of those uses !important or sets a box-shadow
+      extra PASSED [appearance-package] F-APP-2 selected accent swatch focus ring without :focus-visible the selector reaches exactly the selected swatch, whichever is selected
+      extra PASSED [appearance-package] batch 49 same-class audit: pane controls and the Topbar status clean pane: the only outline rules at or above the global ring are the two known roots, each outranked by its pane fix
+      extra PASSED [appearance-package] batch 49 same-class audit: pane controls and the Topbar status after a failed write (recovery Retry/Discard, Retry all enabled, Export, Discard all, Topbar status) nothing else masks the ring
+      extra PASSED [appearance-package] batch 49 same-class audit: pane controls and the Topbar status with an unreadable stored value (Reload only) nothing else masks the ring
+## E8: parent host at 419e56d vs 24073b5
+MATCH E8 host: 33/33 vs 33/33; case by case
+      fresh web-appearance-recovery-independent/host-appearance-final-v1-419e56d.log sha256=e010516873a940f6e61b997a1086a97b4a2b0b1e62beb1c81e43c492c6eae334 exit=0 harness_checks=PASS (6/6)
+      earlier web-appearance-recovery-independent/host-fixed1-24073b5.log sha256=b2425a58806178d0f89a1966a19ce78996191ac759e6e5a99a306b2725b1c4b1 exit=0 harness_checks=PASS (6/6)
+      oracle_sha256 host-fixture.tsx=ba137f5856f7c0bf145af88def08af442ba92fcb0bcc611ea834569ac60ad52f host.test.tsx=27589cb660b55105c289f916edd6bfe14283897245115ef58c7a587346cb38cf verify-fixed.mjs=6aac3563
+## E16: the 12 frozen F1 invocations at 419e56d vs 24073b5 (fixed1)
+MATCH E16 sticky sticky: 62 checks vs 62; sequence equal=true; verdict pass vs pass
+      fresh web-sticky-recovery-f1/f1-419e56d-sticky-appearance-final-v1.log sha256=b610ed8c76af343b523e4616607a9b53de55989edb53d3750566063b8b506e8e
+      earlier web-sticky-recovery-f1/f1-24073b5-sticky-fixed1.log sha256=2d72ef3dabc4613557a65712c2f6508da0a1f0dc20f98469938e235cb43455c1
+      outcomes equal (staleCommits/guardVersions excluded, as batch 42)=true; Invalid-blocker-transition mentions=0; runtimeErrors=0; deferredFailures=[]
+      recorded product file hashes equal=true (9 files); bundle inputs 635 -> 635
+      logged bundle JS 5afac0334edf2640 -> e877b2b8ff4a9535, CSS aac59bc1240d304c -> 0064b89629604658; depth diagnostic for verify-f1.mjs: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9; runner 816bd261a6bb6d72
+MATCH E16 sticky more: 62 checks vs 62; sequence equal=true; verdict pass vs pass
+      fresh web-sticky-recovery-f1/f1-419e56d-more-appearance-final-v1.log sha256=4cc60e653c067e06327fc1c3e19b3ccc6740aee51e03973c0210d42a1cb3e847
+      earlier web-sticky-recovery-f1/f1-24073b5-more-fixed1.log sha256=884a494e1c8c05bb082732be136f4aaa0890a770d1f8bf17ac772efa17eccdac
+      outcomes equal (staleCommits/guardVersions excluded, as batch 42)=true; Invalid-blocker-transition mentions=0; runtimeErrors=0; deferredFailures=[]
+      recorded product file hashes equal=true (9 files); bundle inputs 635 -> 635
+      logged bundle JS 5afac0334edf2640 -> e877b2b8ff4a9535, CSS aac59bc1240d304c -> 0064b89629604658; depth diagnostic for verify-f1.mjs: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9; runner 816bd261a6bb6d72
+MATCH E16 sticky collaborate: 62 checks vs 62; sequence equal=true; verdict pass vs pass
+      fresh web-sticky-recovery-f1/f1-419e56d-collaborate-appearance-final-v1.log sha256=b747c3ae819e5b83a39378eeabaafb3b908a14e1c59eb82d029d1f57c357e331
+      earlier web-sticky-recovery-f1/f1-24073b5-collaborate-fixed1.log sha256=e8e557eb7c222f7996d5e413046a37be92d576a2849f72a25c49dd9b11ef33ef
+      outcomes equal (staleCommits/guardVersions excluded, as batch 42)=true; Invalid-blocker-transition mentions=0; runtimeErrors=0; deferredFailures=[]
+      recorded product file hashes equal=true (9 files); bundle inputs 635 -> 635
+      logged bundle JS 5afac0334edf2640 -> e877b2b8ff4a9535, CSS aac59bc1240d304c -> 0064b89629604658; depth diagnostic for verify-f1.mjs: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9; runner 816bd261a6bb6d72
+MATCH E16 sticky selfcheck: 31 checks vs 31; sequence equal=true; verdict harness-valid vs harness-valid
+      fresh web-sticky-recovery-f1/f1-419e56d-selfcheck-appearance-final-v1.log sha256=e1f20cb38d560751608d3183f595ad28b2115d87ec81dc3192a10f9ca8b8ea50
+      earlier web-sticky-recovery-f1/f1-24073b5-selfcheck-fixed1.log sha256=1433c941445dff10234bd0f6ce1df8a9aaef050d10cc107cec47e66eac043804
+      outcomes equal (staleCommits/guardVersions excluded, as batch 42)=true; Invalid-blocker-transition mentions=0; runtimeErrors=0; deferredFailures=[]
+      recorded product file hashes equal=true (17 files); bundle inputs 635 -> 635
+      logged bundle JS 67e86caddda9e99a -> 03ad822e74f71378, CSS aac59bc1240d304c -> 0064b89629604658; depth diagnostic for verify-f1-callers.mjs: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9; runner 88ccca3ddd7a9910
+MATCH E16 sticky notifications: 72 checks vs 72; sequence equal=true; verdict refuted vs refuted
+      fresh web-sticky-recovery-f1/f1-419e56d-notifications-appearance-final-v1.log sha256=eed75144fcdaa0c4b16c48e4e5872f461c35237fc2edbbc07006a2f7f9f77e1d
+      earlier web-sticky-recovery-f1/f1-24073b5-notifications-fixed1.log sha256=505f6e14649fc107f69d5b11f8060443e1b4fb83cac70c182e6e44681340ad54
+      outcomes equal (staleCommits/guardVersions excluded, as batch 42)=true; Invalid-blocker-transition mentions=0; runtimeErrors=0; deferredFailures=[]
+      recorded product file hashes equal=true (17 files); bundle inputs 635 -> 635
+      logged bundle JS 67e86caddda9e99a -> 03ad822e74f71378, CSS aac59bc1240d304c -> 0064b89629604658; depth diagnostic for verify-f1-callers.mjs: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9; runner 88ccca3ddd7a9910
+MATCH E16 sticky date-time: 72 checks vs 72; sequence equal=true; verdict refuted vs refuted
+      fresh web-sticky-recovery-f1/f1-419e56d-date-time-appearance-final-v1.log sha256=cdb97f8cb0220985a5ae1b93a3f3c7dd70586981a61af9de91b5d79dccc4cb2b
+      earlier web-sticky-recovery-f1/f1-24073b5-date-time-fixed1.log sha256=ab7eb9a5d9d55a295b83f22961df56283878fbb68c79aaf6de52b953d2036b3f
+      outcomes equal (staleCommits/guardVersions excluded, as batch 42)=true; Invalid-blocker-transition mentions=0; runtimeErrors=0; deferredFailures=[]
+      recorded product file hashes equal=true (17 files); bundle inputs 635 -> 635
+      logged bundle JS 67e86caddda9e99a -> 03ad822e74f71378, CSS aac59bc1240d304c -> 0064b89629604658; depth diagnostic for verify-f1-callers.mjs: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9; runner 88ccca3ddd7a9910
+MATCH E16 sticky smart-lists: 90 checks vs 90; sequence equal=true; verdict refuted vs refuted
+      fresh web-sticky-recovery-f1/f1-419e56d-smart-lists-appearance-final-v1.log sha256=77bd0d99ad964303cf1d1f9ff3137d3e9cc4c5211fcb83d8f2928d32bfc10471
+      earlier web-sticky-recovery-f1/f1-24073b5-smart-lists-fixed1.log sha256=72c288e4628ad9b5790b7231a8f7f703e6e67a107dd224adbb8f5297bbbf0f4f
+      outcomes equal (staleCommits/guardVersions excluded, as batch 42)=true; Invalid-blocker-transition mentions=0; runtimeErrors=0; deferredFailures=[]
+      recorded product file hashes equal=true (17 files); bundle inputs 635 -> 635
+      logged bundle JS 67e86caddda9e99a -> 03ad822e74f71378, CSS aac59bc1240d304c -> 0064b89629604658; depth diagnostic for verify-f1-callers.mjs: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9; runner 88ccca3ddd7a9910
+MATCH E16 sticky header: 98 checks vs 98; sequence equal=true; verdict refuted vs refuted
+      fresh web-sticky-recovery-f1/f1-419e56d-header-appearance-final-v1.log sha256=0f1d6924dd90e235ccb376c0fec969e4bd51f03361468df6d6a2aa547e6c62fd
+      earlier web-sticky-recovery-f1/f1-24073b5-header-fixed1.log sha256=96abc76d39286633cab8cde22d90b496be6e933a746e4f2908b8e9c28e31ad4a
+      outcomes equal (staleCommits/guardVersions excluded, as batch 42)=true; Invalid-blocker-transition mentions=0; runtimeErrors=0; deferredFailures=[]
+      recorded product file hashes equal=true (17 files); bundle inputs 635 -> 635
+      logged bundle JS 67e86caddda9e99a -> 03ad822e74f71378, CSS aac59bc1240d304c -> 0064b89629604658; depth diagnostic for verify-f1-callers.mjs: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9; runner 88ccca3ddd7a9910
+MATCH E16 sticky pomodoro: 78 checks vs 78; sequence equal=true; verdict refuted vs refuted
+      fresh web-sticky-recovery-f1/f1-419e56d-pomodoro-appearance-final-v1.log sha256=ceadc1659d61e8c4a2b58edecd47931f901f985b09c22c0b1b8b298293aa1700
+      earlier web-sticky-recovery-f1/f1-24073b5-pomodoro-fixed1.log sha256=ba43aa3f812b1c6b9f55b80883080a0b6e8dde7fc05b2d926f00fe557cac69bd
+      outcomes equal (staleCommits/guardVersions excluded, as batch 42)=true; Invalid-blocker-transition mentions=0; runtimeErrors=0; deferredFailures=[]
+      recorded product file hashes equal=true (17 files); bundle inputs 635 -> 635
+      logged bundle JS 67e86caddda9e99a -> 03ad822e74f71378, CSS aac59bc1240d304c -> 0064b89629604658; depth diagnostic for verify-f1-callers.mjs: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9; runner 88ccca3ddd7a9910
+MATCH E16 sticky race: 183 checks vs 183; sequence equal=true; verdict pass vs pass
+      fresh web-sticky-recovery-f1/f1-419e56d-race-appearance-final-v1.log sha256=227ba931b9beb6ca897c60629d7b48c790a432b65215f24bf1526d0894ebd66e
+      earlier web-sticky-recovery-f1/f1-24073b5-race-fixed1.log sha256=64f53e91f62a4416bfc7d4679bad8a0d1193a5d2e22814c263c85d5b46647f3b
+      outcomes equal (staleCommits/guardVersions excluded, as batch 42)=true; Invalid-blocker-transition mentions=0; runtimeErrors=0; deferredFailures=[]
+      recorded product file hashes equal=true (9 files); bundle inputs 635 -> 635
+      logged bundle JS cda97c99cd880b7c -> 80803dd93779bb85, CSS aac59bc1240d304c -> 0064b89629604658; depth diagnostic for verify-f1-race.mjs: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9; runner 3d009ac0b5b1f329
+MATCH E16 features selfcheck: 105 checks vs 105; sequence equal=true; verdict harness-valid vs harness-valid
+      fresh web-features-recovery-f1/f1-419e56d-selfcheck-appearance-final-v1.log sha256=cb2d1eb9247da8768cca8c3d6735b54eae85aa0ba40adbb4f86356d7eac62ac7
+      earlier web-features-recovery-f1/f1-24073b5-selfcheck-fixed1.log sha256=4bd755adb7109fd28c1b8644ea5ee5a5ea7fc66814184643a1aebd04e8bbe875
+      outcomes equal (staleCommits/guardVersions excluded, as batch 42)=true; Invalid-blocker-transition mentions=0; runtimeErrors=0; deferredFailures=[]
+      recorded product file hashes equal=true (12 files); bundle inputs 635 -> 635
+      logged bundle JS a98383f37dc03c3c -> a492a5b02c6eeef4, CSS 5c938cd6e6add62c -> f5ab0aab8a7e3fa9; depth diagnostic for verify-f1-features.mjs: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9; runner (in the baseline file hashes)
+MATCH E16 features features: 102 checks vs 102; sequence equal=true; verdict fixed-pass vs fixed-pass
+      fresh web-features-recovery-f1/f1-419e56d-features-appearance-final-v1.log sha256=68e80ec39c20d976b723e808c70f48c1f6317843be9a4d883083c8ba63ba5e64
+      earlier web-features-recovery-f1/f1-24073b5-features-fixed1.log sha256=3920208e60aee48c1cc1bb68f971351927e84f26f3b6244faf1138d7ae8c96ba
+      outcomes equal (staleCommits/guardVersions excluded, as batch 42)=true; Invalid-blocker-transition mentions=0; runtimeErrors=0; deferredFailures=[]
+      recorded product file hashes equal=true (12 files); bundle inputs 635 -> 635
+      logged bundle JS a98383f37dc03c3c -> a492a5b02c6eeef4, CSS 5c938cd6e6add62c -> f5ab0aab8a7e3fa9; depth diagnostic for verify-f1-features.mjs: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9; runner (in the baseline file hashes)
+## E17: Appearance F1 at 419e56d through the K-1 corrected copy (no nativeVirtualKeyCode, key audit)
+MATCH E17 selfcheck: 135 checks (134 + K-1 audit); verdict harness-valid; vs frozen fixed1 134 checks equal=true; vs k1corr1 equal=true
+      fresh web-native-keyinput-k1/f1-419e56d-selfcheck-appearance-final-v1.log sha256=b5ed382d94ed40c4e1c1d89e7d4a043d307839a5928dd972b25b920cd6c7ea8e
+      frozen web-appearance-recovery-f1/f1-24073b5-selfcheck-fixed1.log sha256=14aa082e831fabdc7b251cbd875434eb6904694a06874683b65abe7ac71f9440
+      k1corr1 web-native-keyinput-k1/f1-24073b5-selfcheck-k1corr1.log sha256=e7056176972d53fd185aa0bc46f7552cc07640746aafe60cb2d91f1d981aa9e2
+      outcomes ["pc1-sidebar-release:","pc2-back-release:","pc3-signout-held-stay:","pc4-signout-proceeds:"]; runtimeErrors=0
+      logged bundle JS 0f9e44db065f00e9 -> a4214950fa065f82, CSS d58dfc44acd68008 -> f31c566420b66098; depth diagnostic: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9
+      key audit record: {"name":"observation","id":"k1:keyboard-audit","dispatch":"rawKeyDown + keyUp with key, code and windowsVirtualKeyCode only (no nativeVirtualKeyCode)","documents":5,"runnerPresses":2,"keydowns":2,"keyups":2,"keypresses":0,"mismatches":[],"perDocument":[{"reason":"Page.navigate","afterCheck":"selfche
+MATCH E17 appearance: 123 checks (122 + K-1 audit); verdict fixed-pass; vs frozen fixed1 122 checks equal=true; vs k1corr1 equal=true
+      fresh web-native-keyinput-k1/f1-419e56d-appearance-appearance-final-v1.log sha256=ef30c1d8b415962d842360b02a2011b90e791303f73d56892e3b742a6ad5e326
+      frozen web-appearance-recovery-f1/f1-24073b5-appearance-fixed1.log sha256=815196e8533fd70fe7104866d7de96215696e8ac708f2d13715c555e2ff0346e
+      k1corr1 web-native-keyinput-k1/f1-24073b5-appearance-k1corr1.log sha256=7244ec851aa3ad309aacb00fb707b32d620153882b1416d92e041c8eabbf58dd
+      outcomes ["a1:fixed-pass","a2:fixed-pass","a3:fixed-pass","a4:fixed-pass"]; runtimeErrors=0
+      logged bundle JS 0f9e44db065f00e9 -> a4214950fa065f82, CSS d58dfc44acd68008 -> f31c566420b66098; depth diagnostic: EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9
+      key audit record: {"name":"observation","id":"k1:keyboard-audit","dispatch":"rawKeyDown + keyUp with key, code and windowsVirtualKeyCode only (no nativeVirtualKeyCode)","documents":5,"runnerPresses":3,"keydowns":3,"keyups":3,"keypresses":0,"mismatches":[],"perDocument":[{"reason":"Page.navigate","afterCheck":"baselin
+## E25: Features native downstream at 419e56d
+MATCH E25 frozen runner (unchanged, 82df2961…/harness 499fca4c…): harness-invalid at exactly the caller-bound precondition baseline:fixed-delta-only-in-features-package, every earlier precondition PASS
+      frozen web-features-recovery-native/native-419e56d-appearance-final-v1-downstream.log sha256=273ecc123a38f277a657f5625ae6214b7afc82e36307b738a0f782224caa0fb7
+      checks baseline:docs-head-product-tree-equals-fixed=true baseline:lockfile-gate=true baseline:guard-no-module-from-a-checkout=true baseline:every-required-module-bundled-from-archive=true baseline:fixed-delta-only-in-features-package=false
+      fixedDelta recorded=37 files
+MATCH E25 copy (runner/fixture/prelude byte-identical; harness: one precondition generalized + K-1 audit): 344 checks, 140 product (accepted 343/140); sequence equal after mapping=true
+      copy web-appearance-recovery-final/native-419e56d-appearance-final-v1-downstream.log sha256=937572d82d950c00af92b7c496924915a988850a64a736941d7a849a551a76d3
+      accepted web-features-recovery-native/native-5cd63ff-fixed1-downstream.log sha256=fefe8af14dfec7bb906404a329de3c0ec4bea806c20f9e34eaabe53f9f748fd6
+      K-1 audit: pressed=7 keydowns=7 keyups=7 keypresses=0 ok=true; dialogs 3 vs 3; runtimeErrors=0 consoleWarnings=0
+## Summary: 26 MATCH, 0 DIFF
+exit=0

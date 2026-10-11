@@ -1,0 +1,11 @@
+revision=76edb0c
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-Ee2QfA
+
+ ✓ docs/reviews/web-d2-device-offset-independent/contracts.test.tsx (3 tests) 58ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  20:44:04
+   Duration  2.88s (transform 412ms, setup 0ms, collect 705ms, tests 58ms, environment 1.71s, prepare 187ms)

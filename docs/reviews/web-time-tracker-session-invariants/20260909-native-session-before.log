@@ -1,0 +1,6 @@
+{"name":"baseline","head":"28fe049706c828d93e5611e227f31bd2a62660a4","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":1440}
+{"name":"two-tab-replayed-resume","expectedOpenCount":1,"actualOpenCount":2,"pass":false}
+{"name":"two-tab-end","done":true,"remainingOpen":1,"before":1206250,"after":1207250,"expectedGrowth":0,"actualGrowth":1000,"pass":false}
+{"name":"note-only-source-edit","before":[{"start":1780333200125,"end":1780333800875},{"start":1780336800250,"end":1780337400750}],"after":[{"start":1780333200000,"end":1780337400000}],"pass":false,"durationBefore":1201250,"durationAfter":4200000}
+{"name":"single-mode-two-tab-start-buttons","expectedRunning":1,"actualRunning":2,"pass":false}
+{"name":"BLOCKED","scope":"actual two-tab storage+hook replay and actual module source editor","findings":4}

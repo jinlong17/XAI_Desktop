@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"115efb2","browser":"Chrome/152.0.7977.83"}
+{"name":"actual-host-departure","pass":false,"error":"AssertionError [ERR_ASSERTION]: Later same-turn route replaced first intent\n+ actual - expected\n\n+ '/app/settings/appearance'\n- '/app/settings/notifications'\n                 ^\n"}

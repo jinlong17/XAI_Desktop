@@ -1,27 +1,52 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   BOARD_INTEGRATION_PROVIDERS,
-  BOARD_MEMBER_OPTIONS,
-  PM_LABELS,
-  createBoardCardComment,
-  createBoardIntegrationAttachment,
+  BOARD_LABEL_PALETTE,
+  BOARD_PRIORITIES,
+  memberInitials,
 } from "@repo/plugin-web-board-core";
 import type {
   BoardCardAttachmentLink,
   BoardCardData,
+  BoardCardPriority,
   BoardChecklistItem,
   BoardIntegrationProviderId,
+  BoardLabel,
+  BoardMemberOption,
 } from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/strings.js";
+import type {
+  BoardDetailAppendDraft,
+  BoardDetailSaveRecoveryState,
+} from "./internal/useBoardDetailSaveRecovery.js";
 
 export interface BoardCardDetailModalProps {
   card: BoardCardData;
   listName: string;
   lang: Lang;
   taskLinkStatus?: BoardCardTaskLinkStatus;
+  taskLinkError?: string | null;
+  taskLinkPending?: boolean;
+  /** Board label catalog (assignment options + manager source). */
+  labelCatalog: readonly BoardLabel[];
+  /** Board member directory (assignment options + manager source). */
+  memberCatalog: readonly BoardMemberOption[];
+  onCreateLabel?: (name: string, color: string) => void;
+  onUpdateLabel?: (id: string, patch: { name?: string; color?: string }) => void;
+  onDeleteLabel?: (id: string) => void;
+  onCreateMember?: (name: string) => void;
+  onUpdateMember?: (id: string, name: string) => void;
+  onDeleteMember?: (id: string) => void;
   onCreateLinkedTask?: () => void;
   onUnlinkTask?: () => void;
   onPatchCard: (patch: Partial<BoardCardData>) => void;
+  appendRecovery?: BoardDetailSaveRecoveryState | null;
+  appendRecoveryError?: string | null;
+  onSubmitAppend: (draft: BoardDetailAppendDraft) => boolean;
+  onUpdateAppendDraft: (draft: BoardDetailAppendDraft) => void;
+  onRetryAppend: () => boolean;
+  onExportAppend: () => boolean;
+  onDiscardAppend: () => void;
   onClose: () => void;
 }
 
@@ -36,8 +61,16 @@ export interface BoardCardTaskLinkStatus {
 const STR = {
   close: { en: "Close", zh: "关闭" },
   description: { en: "Description", zh: "描述" },
+  priority: { en: "Priority", zh: "优先级" },
+  noPriority: { en: "None", zh: "无" },
   labels: { en: "Labels", zh: "标签" },
   members: { en: "Members", zh: "成员" },
+  manage: { en: "Manage", zh: "管理" },
+  done: { en: "Done", zh: "完成" },
+  newLabel: { en: "New label name", zh: "新标签名称" },
+  newMember: { en: "New member name", zh: "新成员名称" },
+  add: { en: "Add", zh: "添加" },
+  recolor: { en: "Change color", zh: "更改颜色" },
   dates: { en: "Dates", zh: "日期" },
   start: { en: "Start", zh: "开始" },
   due: { en: "Due", zh: "截止" },
@@ -60,11 +93,15 @@ const STR = {
   you: { en: "You", zh: "我" },
   empty: { en: "No items yet", zh: "暂无内容" },
   remove: { en: "Remove", zh: "移除" },
+  saveFailed: {
+    en: "This addition was not saved. Your latest draft is retained.",
+    zh: "此次添加未保存，最新草稿已保留。",
+  },
+  retrySave: { en: "Retry save", zh: "重试保存" },
+  exportDraft: { en: "Export draft", zh: "导出草稿" },
+  discardDraft: { en: "Discard draft", zh: "放弃草稿" },
+  exportFailed: { en: "The draft could not be exported.", zh: "草稿无法导出。" },
 };
-
-function makeId(prefix: string): string {
-  return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-}
 
 function patchTitle(value: string): BoardCardData["title"] {
   return { en: value, zh: value };
@@ -94,17 +131,74 @@ export function BoardCardDetailSurface({
   listName,
   lang,
   taskLinkStatus,
+  taskLinkError,
+  taskLinkPending = false,
+  labelCatalog,
+  memberCatalog,
+  onCreateLabel,
+  onUpdateLabel,
+  onDeleteLabel,
+  onCreateMember,
+  onUpdateMember,
+  onDeleteMember,
   onCreateLinkedTask,
   onUnlinkTask,
   onPatchCard,
+  appendRecovery = null,
+  appendRecoveryError = null,
+  onSubmitAppend,
+  onUpdateAppendDraft,
+  onRetryAppend,
+  onExportAppend,
+  onDiscardAppend,
   onClose,
 }: BoardCardDetailSurfaceProps) {
-  const [checklistText, setChecklistText] = useState("");
+  const recoveryDraft = appendRecovery?.draft;
+  const [checklistText, setChecklistText] = useState(
+    recoveryDraft?.kind === "checklist" ? recoveryDraft.text : "",
+  );
   const [integrationProviderId, setIntegrationProviderId] =
-    useState<BoardIntegrationProviderId>("link");
-  const [attachmentUrl, setAttachmentUrl] = useState("");
-  const [attachmentTitle, setAttachmentTitle] = useState("");
-  const [activityText, setActivityText] = useState("");
+    useState<BoardIntegrationProviderId>(
+      recoveryDraft?.kind === "attachment" ? recoveryDraft.providerId : "link",
+    );
+  const [attachmentUrl, setAttachmentUrl] = useState(
+    recoveryDraft?.kind === "attachment" ? recoveryDraft.url : "",
+  );
+  const [attachmentTitle, setAttachmentTitle] = useState(
+    recoveryDraft?.kind === "attachment" ? recoveryDraft.title : "",
+  );
+  const [activityText, setActivityText] = useState(
+    recoveryDraft?.kind === "activity" ? recoveryDraft.body : "",
+  );
+  const [exportFailed, setExportFailed] = useState(false);
+  const [labelEditorOpen, setLabelEditorOpen] = useState(false);
+  const [memberEditorOpen, setMemberEditorOpen] = useState(false);
+  const [newLabelName, setNewLabelName] = useState("");
+  const [newLabelColor, setNewLabelColor] = useState<string>(BOARD_LABEL_PALETTE[0]!);
+  const [newMemberName, setNewMemberName] = useState("");
+
+  const cyclePaletteColor = (color: string): string => {
+    const idx = BOARD_LABEL_PALETTE.indexOf(color);
+    return BOARD_LABEL_PALETTE[(idx + 1) % BOARD_LABEL_PALETTE.length]!;
+  };
+
+  const submitNewLabel = () => {
+    const name = newLabelName.trim();
+    if (!name || !onCreateLabel) return;
+    onCreateLabel(name, newLabelColor);
+    setNewLabelName("");
+    setNewLabelColor(cyclePaletteColor(newLabelColor));
+  };
+
+  const submitNewMember = () => {
+    const name = newMemberName.trim();
+    if (!name || !onCreateMember) return;
+    onCreateMember(name);
+    setNewMemberName("");
+  };
+
+  const labelsEditable = Boolean(onCreateLabel && onUpdateLabel && onDeleteLabel);
+  const membersEditable = Boolean(onCreateMember && onUpdateMember && onDeleteMember);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -129,42 +223,49 @@ export function BoardCardDetailSurface({
   const addChecklistItem = () => {
     const text = checklistText.trim();
     if (!text) return;
-    replaceChecklistItems([
-      ...checklistItems,
-      { id: makeId("chk"), text, done: false },
-    ]);
-    setChecklistText("");
+    const saved = onSubmitAppend({ kind: "checklist", text: checklistText });
+    if (saved) setChecklistText("");
   };
 
   const addAttachment = () => {
-    const result = createBoardIntegrationAttachment({
-      id: makeId("att"),
+    const saved = onSubmitAppend({
+      kind: "attachment",
       providerId: integrationProviderId,
       url: attachmentUrl,
       title: attachmentTitle,
     });
-    if (result.status !== "valid") return;
-    onPatchCard({
-      attachments: [
-        ...attachments,
-        result.attachment,
-      ],
-    });
-    setAttachmentUrl("");
-    setAttachmentTitle("");
+    if (saved) {
+      setAttachmentUrl("");
+      setAttachmentTitle("");
+    }
   };
 
   const addActivityComment = () => {
-    const result = createBoardCardComment({
-      id: makeId("act"),
+    if (!activityText.trim()) return;
+    const saved = onSubmitAppend({
+      kind: "activity",
       body: activityText,
-      createdAt: new Date().toISOString(),
-      authorId: "local-user",
       authorName: STR.you[lang],
     });
-    if (result.status !== "valid") return;
-    onPatchCard({ activity: [result.entry, ...activity] });
-    setActivityText("");
+    if (saved) setActivityText("");
+  };
+
+  const clearRecoveredDraft = () => {
+    if (appendRecovery?.draft.kind === "checklist") setChecklistText("");
+    if (appendRecovery?.draft.kind === "attachment") {
+      setAttachmentUrl("");
+      setAttachmentTitle("");
+    }
+    if (appendRecovery?.draft.kind === "activity") setActivityText("");
+  };
+
+  const retryRecoveredDraft = () => {
+    if (onRetryAppend()) clearRecoveredDraft();
+  };
+
+  const discardRecoveredDraft = () => {
+    clearRecoveredDraft();
+    onDiscardAppend();
   };
 
   return (
@@ -191,6 +292,26 @@ export function BoardCardDetailSurface({
           </button>
         </header>
 
+        {appendRecovery && appendRecoveryError ? (
+          <section className="cd-save-recovery" role="alert" data-testid="card-detail-save-recovery">
+            <p>{STR.saveFailed[lang]} {appendRecoveryError}</p>
+            <div className="cd-save-recovery-actions">
+              <button type="button" className="btn" onClick={retryRecoveredDraft} data-testid="card-detail-retry-save">
+                {STR.retrySave[lang]}
+              </button>
+              <button type="button" className="btn" data-testid="card-detail-export-draft" onClick={() => {
+                setExportFailed(onExportAppend() !== true);
+              }}>
+                {STR.exportDraft[lang]}
+              </button>
+              <button type="button" className="btn" onClick={discardRecoveredDraft} data-testid="card-detail-discard-draft">
+                {STR.discardDraft[lang]}
+              </button>
+            </div>
+            {exportFailed ? <p>{STR.exportFailed[lang]}</p> : null}
+          </section>
+        ) : null}
+
         <div className="cd-body">
           <section className="cd-section">
             <h3>{STR.description[lang]}</h3>
@@ -203,9 +324,53 @@ export function BoardCardDetailSurface({
           </section>
 
           <section className="cd-section">
-            <h3>{STR.labels[lang]}</h3>
+            <h3>{STR.priority[lang]}</h3>
+            <div className="cd-priority-row" data-testid="card-detail-priority">
+              {BOARD_PRIORITIES.map((p) => {
+                const on = card.priority === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    className={"cd-priority-choice" + (on ? " active" : "")}
+                    style={on ? { borderColor: p.color, color: p.color } : undefined}
+                    onClick={() =>
+                      onPatchCard({ priority: on ? undefined : (p.id as BoardCardPriority) })
+                    }
+                    data-testid={`card-detail-priority-${p.id}`}
+                  >
+                    <span className="cd-priority-dot" style={{ background: p.color }} />
+                    {p.name[lang]}
+                  </button>
+                );
+              })}
+              <button
+                type="button"
+                className={"cd-priority-choice cd-priority-none" + (!card.priority ? " active" : "")}
+                onClick={() => onPatchCard({ priority: undefined })}
+                data-testid="card-detail-priority-none"
+              >
+                {STR.noPriority[lang]}
+              </button>
+            </div>
+          </section>
+
+          <section className="cd-section">
+            <div className="cd-section-head">
+              <h3>{STR.labels[lang]}</h3>
+              {labelsEditable ? (
+                <button
+                  type="button"
+                  className="cd-link-btn"
+                  onClick={() => setLabelEditorOpen((open) => !open)}
+                  data-testid="card-detail-labels-manage"
+                >
+                  {labelEditorOpen ? STR.done[lang] : STR.manage[lang]}
+                </button>
+              ) : null}
+            </div>
             <div className="cd-chip-grid">
-              {PM_LABELS.map((label) => {
+              {labelCatalog.map((label) => {
                 const on = (card.labels ?? []).includes(label.id);
                 return (
                   <button
@@ -223,19 +388,90 @@ export function BoardCardDetailSurface({
                     }}
                     data-testid={`card-detail-label-${label.id}`}
                   >
-                    <span className="bc-label" style={{ background: label.color }}>
+                    <span className="bc-label is-resolved" style={{ background: label.color }}>
                       {label.name[lang]}
                     </span>
                   </button>
                 );
               })}
             </div>
+            {labelEditorOpen && labelsEditable ? (
+              <div className="cd-catalog-editor" data-testid="card-detail-label-editor">
+                {labelCatalog.map((label) => (
+                  <div key={label.id} className="cd-catalog-row">
+                    <button
+                      type="button"
+                      className="cd-swatch"
+                      style={{ background: label.color }}
+                      onClick={() => onUpdateLabel?.(label.id, { color: cyclePaletteColor(label.color) })}
+                      aria-label={STR.recolor[lang]}
+                      title={STR.recolor[lang]}
+                    />
+                    <input
+                      className="cd-catalog-name"
+                      value={label.name[lang]}
+                      onChange={(event) => onUpdateLabel?.(label.id, { name: event.target.value })}
+                      data-testid={`card-detail-label-name-${label.id}`}
+                    />
+                    <button
+                      type="button"
+                      className="icon-btn danger"
+                      onClick={() => onDeleteLabel?.(label.id)}
+                      aria-label={STR.remove[lang]}
+                      data-testid={`card-detail-label-delete-${label.id}`}
+                    >
+                      x
+                    </button>
+                  </div>
+                ))}
+                <div className="cd-catalog-new">
+                  <button
+                    type="button"
+                    className="cd-swatch"
+                    style={{ background: newLabelColor }}
+                    onClick={() => setNewLabelColor(cyclePaletteColor(newLabelColor))}
+                    aria-label={STR.recolor[lang]}
+                    title={STR.recolor[lang]}
+                  />
+                  <input
+                    className="cd-catalog-name"
+                    value={newLabelName}
+                    placeholder={STR.newLabel[lang]}
+                    onChange={(event) => setNewLabelName(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") submitNewLabel();
+                    }}
+                    data-testid="card-detail-label-new-name"
+                  />
+                  <button
+                    type="button"
+                    className="btn primary"
+                    onClick={submitNewLabel}
+                    data-testid="card-detail-label-new-add"
+                  >
+                    {STR.add[lang]}
+                  </button>
+                </div>
+              </div>
+            ) : null}
           </section>
 
           <section className="cd-section">
-            <h3>{STR.members[lang]}</h3>
+            <div className="cd-section-head">
+              <h3>{STR.members[lang]}</h3>
+              {membersEditable ? (
+                <button
+                  type="button"
+                  className="cd-link-btn"
+                  onClick={() => setMemberEditorOpen((open) => !open)}
+                  data-testid="card-detail-members-manage"
+                >
+                  {memberEditorOpen ? STR.done[lang] : STR.manage[lang]}
+                </button>
+              ) : null}
+            </div>
             <div className="cd-chip-grid">
-              {BOARD_MEMBER_OPTIONS.map((member) => {
+              {memberCatalog.map((member) => {
                 const on = (card.members ?? []).includes(member.id);
                 return (
                   <button
@@ -252,13 +488,59 @@ export function BoardCardDetailSurface({
                     }}
                     data-testid={`card-detail-member-${member.id}`}
                   >
-                    <span className="bc-member" style={{ background: member.color }}>
-                      {member.name}
+                    <span className="bc-member" style={{ background: member.color, color: "#fff" }}>
+                      {memberInitials(member.name)}
                     </span>
+                    <span className="cd-member-name">{member.name}</span>
                   </button>
                 );
               })}
             </div>
+            {memberEditorOpen && membersEditable ? (
+              <div className="cd-catalog-editor" data-testid="card-detail-member-editor">
+                {memberCatalog.map((member) => (
+                  <div key={member.id} className="cd-catalog-row">
+                    <span className="cd-swatch" style={{ background: member.color }} aria-hidden="true" />
+                    <input
+                      className="cd-catalog-name"
+                      value={member.name}
+                      onChange={(event) => onUpdateMember?.(member.id, event.target.value)}
+                      data-testid={`card-detail-member-name-${member.id}`}
+                    />
+                    <button
+                      type="button"
+                      className="icon-btn danger"
+                      onClick={() => onDeleteMember?.(member.id)}
+                      aria-label={STR.remove[lang]}
+                      data-testid={`card-detail-member-delete-${member.id}`}
+                    >
+                      x
+                    </button>
+                  </div>
+                ))}
+                <div className="cd-catalog-new">
+                  <span className="cd-swatch cd-swatch-ghost" aria-hidden="true" />
+                  <input
+                    className="cd-catalog-name"
+                    value={newMemberName}
+                    placeholder={STR.newMember[lang]}
+                    onChange={(event) => setNewMemberName(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") submitNewMember();
+                    }}
+                    data-testid="card-detail-member-new-name"
+                  />
+                  <button
+                    type="button"
+                    className="btn primary"
+                    onClick={submitNewMember}
+                    data-testid="card-detail-member-new-add"
+                  >
+                    {STR.add[lang]}
+                  </button>
+                </div>
+              </div>
+            ) : null}
           </section>
 
           <section className="cd-section">
@@ -291,6 +573,11 @@ export function BoardCardDetailSurface({
 
           <section className="cd-section" data-testid="card-detail-task-section">
             <h3>{STR.task[lang]}</h3>
+            {taskLinkError && <p role="alert">{taskLinkError}</p>}
+            {card.taskLink?.pending && <div role="status">
+              <p>{lang === "zh" ? "任务链接尚未全部保存。原始创建意图已保留，请重试完成。" : "Task linking is not fully saved. The original request is retained; retry to finish."}</p>
+              <button type="button" className="btn task-link-retry" onClick={onCreateLinkedTask} disabled={taskLinkPending} data-testid="card-detail-retry-task">{lang === "zh" ? "重试链接" : "Retry linking"}</button>
+            </div>}
             {card.taskLink ? (
               <div className="cd-task-link-row">
                 <div className="cd-task-link-main">
@@ -321,7 +608,7 @@ export function BoardCardDetailSurface({
                 type="button"
                 className="btn primary"
                 onClick={onCreateLinkedTask}
-                disabled={!onCreateLinkedTask}
+                disabled={!onCreateLinkedTask || taskLinkPending}
                 data-testid="card-detail-create-task"
               >
                 {STR.createTask[lang]}
@@ -389,7 +676,11 @@ export function BoardCardDetailSurface({
             <div className="cd-inline-form">
               <input
                 value={checklistText}
-                onChange={(event) => setChecklistText(event.target.value)}
+                onChange={(event) => {
+                  const text = event.target.value;
+                  setChecklistText(text);
+                  onUpdateAppendDraft({ kind: "checklist", text });
+                }}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") addChecklistItem();
                 }}
@@ -446,9 +737,16 @@ export function BoardCardDetailSurface({
             <div className="cd-attachment-form">
               <select
                 value={integrationProviderId}
-                onChange={(event) =>
-                  setIntegrationProviderId(event.target.value as BoardIntegrationProviderId)
-                }
+                onChange={(event) => {
+                  const providerId = event.target.value as BoardIntegrationProviderId;
+                  setIntegrationProviderId(providerId);
+                  onUpdateAppendDraft({
+                    kind: "attachment",
+                    providerId,
+                    url: attachmentUrl,
+                    title: attachmentTitle,
+                  });
+                }}
                 aria-label={STR.integrationProvider[lang]}
                 data-testid="card-detail-integration-provider"
               >
@@ -460,13 +758,31 @@ export function BoardCardDetailSurface({
               </select>
               <input
                 value={attachmentUrl}
-                onChange={(event) => setAttachmentUrl(event.target.value)}
+                onChange={(event) => {
+                  const url = event.target.value;
+                  setAttachmentUrl(url);
+                  onUpdateAppendDraft({
+                    kind: "attachment",
+                    providerId: integrationProviderId,
+                    url,
+                    title: attachmentTitle,
+                  });
+                }}
                 placeholder={STR.url[lang]}
                 data-testid="card-detail-attachment-url"
               />
               <input
                 value={attachmentTitle}
-                onChange={(event) => setAttachmentTitle(event.target.value)}
+                onChange={(event) => {
+                  const title = event.target.value;
+                  setAttachmentTitle(title);
+                  onUpdateAppendDraft({
+                    kind: "attachment",
+                    providerId: integrationProviderId,
+                    url: attachmentUrl,
+                    title,
+                  });
+                }}
                 placeholder={STR.title[lang]}
                 data-testid="card-detail-attachment-title"
               />
@@ -486,7 +802,11 @@ export function BoardCardDetailSurface({
             <div className="cd-inline-form">
               <input
                 value={activityText}
-                onChange={(event) => setActivityText(event.target.value)}
+                onChange={(event) => {
+                  const body = event.target.value;
+                  setActivityText(body);
+                  onUpdateAppendDraft({ kind: "activity", body, authorName: STR.you[lang] });
+                }}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") addActivityComment();
                 }}

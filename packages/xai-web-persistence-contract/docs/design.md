@@ -127,3 +127,11 @@ Inherited verbatim from `docs/reviews/xai-web-persistence-contract/20260523-disc
 - Telemetry / `Sentry.captureException` on storage errors (deferred to a future row).
 - BroadcastChannel cross-tab fan-out (deferred to a future row).
 - Debouncing of writes (deferred to a future row as opt-in `usePrefDebounced`).
+
+## REL-03 ownership and migration
+
+The runtime starts locked until authentication and committed generation resolution complete. Mounted account hooks capture the current immutable scope and cannot write after it changes. The host mounts `AccountDataGate`; its presentation belongs to the storage package. Unowned data is never automatically assigned to the next login. Empty/import/postpone are explicit choices, with raw archives, candidate journals and rollback. The generation marker is the sole visibility commit after local and encrypted-store verification. This implements local account isolation only and does not unfreeze account cloud sync.
+
+## REL-04 export declaration
+
+The ownership map remains the single concrete-key source. A derived lifecycle declaration groups independent Time Tracker, Bookkeeping and Metrics keys with the registered feature keys without duplicating the 114-key inventory. Account export remains current-generation-only. Device export includes authoritative presentation preferences such as Bookkeeping's four layout overrides and Time Tracker mode, with independent opt-ins for unassigned originals and archives. Potentially mixed-owner recovery history never acquires account ownership through export. Omissions are visible metadata, and an archive that cannot be safely classified stays intact on the device. This change adds export capability and honest scope reporting, not file restoration or account-sync activation.

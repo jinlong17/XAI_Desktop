@@ -1,0 +1,185 @@
+revision=982ab68 fixed_commit=982ab682eb924ec8fc349aa884d092052245575d
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-more-sol-DGWQTf
+
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx (10 tests | 2 failed) 1914ms
+   ✓ missing and rejected Web Locks retain exact device/account edit and reset intents  378ms
+   × invalid and unavailable sources retain requested reset intents without purging raw bytes 410ms
+     → expected { Object (version, kind, ...) } to deeply equal { Object (version, kind, ...) }
+   ✓ missing committed marker lets device resets settle but retains both private reset intents 165ms
+   × deleted tombstone lets device resets settle but retains both private reset intents 146ms
+     → expected 'study' to be null
+   ✓ a held account lifecycle lock leaves device reset independent and private reset pending 134ms
+   ✓ setting an exact registry default stores bytes while Reset Default removes them 115ms
+   ✓ a same-field source Reload cannot erase an actual failed edit draft 99ms
+   ✓ targeted discard rereads only its field with zero mutations and preserves a failed sibling 141ms
+   ✓ an external conflict coexists with an unrelated quota failure and Retry preserves external bytes 192ms
+   ✓ all-discard visits only current drafts and a later same-field reset survives old completion 134ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  06:16:30
+   Duration  4.95s (transform 616ms, setup 684ms, collect 432ms, tests 1.91s, environment 621ms, prepare 155ms)
+
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > missing and rejected Web Locks retain exact device/account edit and reset intents
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > invalid and unavailable sources retain requested reset intents without purging raw bytes
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > missing committed marker lets device resets settle but retains both private reset intents
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > deleted tombstone lets device resets settle but retains both private reset intents
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > targeted discard rereads only its field with zero mutations and preserves a failed sibling
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > an external conflict coexists with an unrelated quota failure and Retry preserves external bytes
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > all-discard visits only current drafts and a later same-field reset survives old completion
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > invalid and unavailable sources retain requested reset intents without purging raw bytes
+AssertionError: expected { Object (version, kind, ...) } to deeply equal { Object (version, kind, ...) }
+
+- Expected
++ Received
+
+@@ -7,10 +7,19 @@
+      },
+      "device": {
+        "launch_at_login": {
+          "operation": "reset",
+        },
++       "remove_date_text": {
++         "operation": "reset",
++       },
++       "remove_tags": {
++         "operation": "reset",
++       },
++       "url_parse": {
++         "operation": "reset",
++       },
+      },
+    },
+    "kind": "more-draft",
+    "version": 1,
+  }
+
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:21:78
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > deleted tombstone lets device resets settle but retains both private reset intents
+AssertionError: expected 'study' to be null
+
+- Expected: 
+null
+
++ Received: 
+"study"
+
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:35:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯

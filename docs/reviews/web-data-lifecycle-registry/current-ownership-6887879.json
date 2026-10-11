@@ -1,0 +1,589 @@
+{
+  "revision": "6887879",
+  "total": 116,
+  "account": 40,
+  "device": 76,
+  "scope": "Ownership declaration snapshot only; does not prove migration, all cleanup participants or production acceptance.",
+  "rows": [
+    {
+      "key": "xai:web:observability-consent",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:4"
+    },
+    {
+      "key": "xai_accent_hue",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:5"
+    },
+    {
+      "key": "xai_active_board",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:6"
+    },
+    {
+      "key": "xai_ai_base_url",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:7"
+    },
+    {
+      "key": "xai_ai_convos",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:8"
+    },
+    {
+      "key": "xai_ai_insights",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:9"
+    },
+    {
+      "key": "xai_ai_model_default",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:10"
+    },
+    {
+      "key": "xai_ai_provider",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:11"
+    },
+    {
+      "key": "xai_ai_streaming",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:12"
+    },
+    {
+      "key": "xai_ai_voice",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:13"
+    },
+    {
+      "key": "xai_bg_tone",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:14"
+    },
+    {
+      "key": "xai_bk_calendar_mode",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:15"
+    },
+    {
+      "key": "xai_bk_dash_order",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:16"
+    },
+    {
+      "key": "xai_bk_dash_split",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:17"
+    },
+    {
+      "key": "xai_bk_state_v2",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:18"
+    },
+    {
+      "key": "xai_bk_view",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:19"
+    },
+    {
+      "key": "xai_board_filter_by_id",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:20"
+    },
+    {
+      "key": "xai_board_inbox",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:21"
+    },
+    {
+      "key": "xai_board_panels",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:22"
+    },
+    {
+      "key": "xai_board_view_by_id",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:23"
+    },
+    {
+      "key": "xai_board_workspaces",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:24"
+    },
+    {
+      "key": "xai_boards_v2",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:25"
+    },
+    {
+      "key": "xai_calendar_events",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:26"
+    },
+    {
+      "key": "xai_calendar_view",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:27"
+    },
+    {
+      "key": "xai_clock_style",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:28"
+    },
+    {
+      "key": "xai_clock_tz",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:29"
+    },
+    {
+      "key": "xai_countdowns",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:30"
+    },
+    {
+      "key": "xai_dash_order",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:31"
+    },
+    {
+      "key": "xai_dashboard_stickies",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:32"
+    },
+    {
+      "key": "xai_dashboard_weather",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:33"
+    },
+    {
+      "key": "xai_habits_state",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:34"
+    },
+    {
+      "key": "xai_matrix_state",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:35"
+    },
+    {
+      "key": "xai_meditation_active",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:36"
+    },
+    {
+      "key": "xai_meditation_prefs",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:37"
+    },
+    {
+      "key": "xai_metric_tracker_state_v1",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:38"
+    },
+    {
+      "key": "xai_pet_id",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:39"
+    },
+    {
+      "key": "xai_pet_pos",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:40"
+    },
+    {
+      "key": "xai_pomodoro_sessions",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:41"
+    },
+    {
+      "key": "xai_pomodoro_active",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:42"
+    },
+    {
+      "key": "xai_pref_collab_default_share",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:43"
+    },
+    {
+      "key": "xai_pref_collab_mention_notify",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:44"
+    },
+    {
+      "key": "xai_pref_collab_show_avatars",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:45"
+    },
+    {
+      "key": "xai_pref_dashboard_header_note",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:46"
+    },
+    {
+      "key": "xai_pref_dashboard_header_note_x",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:47"
+    },
+    {
+      "key": "xai_pref_density",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:48"
+    },
+    {
+      "key": "xai_pref_dt_holidays",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:49"
+    },
+    {
+      "key": "xai_pref_dt_lunar",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:50"
+    },
+    {
+      "key": "xai_pref_dt_start_week",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:51"
+    },
+    {
+      "key": "xai_pref_dt_timezone",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:52"
+    },
+    {
+      "key": "xai_pref_dt_week_numbers",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:53"
+    },
+    {
+      "key": "xai_pref_features_board",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:54"
+    },
+    {
+      "key": "xai_pref_features_calendar",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:55"
+    },
+    {
+      "key": "xai_pref_features_dashboard",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:56"
+    },
+    {
+      "key": "xai_pref_features_habits",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:57"
+    },
+    {
+      "key": "xai_pref_features_matrix",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:58"
+    },
+    {
+      "key": "xai_pref_features_meditation",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:59"
+    },
+    {
+      "key": "xai_pref_features_pomodoro",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:60"
+    },
+    {
+      "key": "xai_pref_features_tasks",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:61"
+    },
+    {
+      "key": "xai_pref_font_scale",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:62"
+    },
+    {
+      "key": "xai_pref_integrations_connected_gcal",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:63"
+    },
+    {
+      "key": "xai_pref_integrations_connected_linear",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:64"
+    },
+    {
+      "key": "xai_pref_integrations_connected_notion",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:65"
+    },
+    {
+      "key": "xai_pref_lang",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:66"
+    },
+    {
+      "key": "xai_pref_more_add_to",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:67"
+    },
+    {
+      "key": "xai_pref_more_date_recognition",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:68"
+    },
+    {
+      "key": "xai_pref_more_default_date",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:69"
+    },
+    {
+      "key": "xai_pref_more_default_list",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:70"
+    },
+    {
+      "key": "xai_pref_more_default_pri",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:71"
+    },
+    {
+      "key": "xai_pref_more_default_rem_all",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:72"
+    },
+    {
+      "key": "xai_pref_more_default_rem_due",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:73"
+    },
+    {
+      "key": "xai_pref_more_default_tag",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:74"
+    },
+    {
+      "key": "xai_pref_more_launch_at_login",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:75"
+    },
+    {
+      "key": "xai_pref_more_minimize_on_launch",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:76"
+    },
+    {
+      "key": "xai_pref_more_overdue_at",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:77"
+    },
+    {
+      "key": "xai_pref_more_remove_date_text",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:78"
+    },
+    {
+      "key": "xai_pref_more_remove_tags",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:79"
+    },
+    {
+      "key": "xai_pref_more_url_parse",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:80"
+    },
+    {
+      "key": "xai_pref_more_win_type",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:81"
+    },
+    {
+      "key": "xai_pref_notif_done_sound",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:82"
+    },
+    {
+      "key": "xai_pref_notif_enabled",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:83"
+    },
+    {
+      "key": "xai_pref_notif_push_habit",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:84"
+    },
+    {
+      "key": "xai_pref_notif_push_pomo",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:85"
+    },
+    {
+      "key": "xai_pref_notif_push_task",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:86"
+    },
+    {
+      "key": "xai_pref_notif_quiet",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:87"
+    },
+    {
+      "key": "xai_pref_notif_quiet_end",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:88"
+    },
+    {
+      "key": "xai_pref_notif_quiet_start",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:89"
+    },
+    {
+      "key": "xai_pref_pomodoro_custom_minutes",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:90"
+    },
+    {
+      "key": "xai_pref_pomodoro_display_style",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:91"
+    },
+    {
+      "key": "xai_pref_pomodoro_muted",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:92"
+    },
+    {
+      "key": "xai_pref_pomodoro_preset",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:93"
+    },
+    {
+      "key": "xai_pref_pomodoro_sound",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:94"
+    },
+    {
+      "key": "xai_pref_pomodoro_theme",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:95"
+    },
+    {
+      "key": "xai_pref_premium_started_at",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:96"
+    },
+    {
+      "key": "xai_pref_premium_tier",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:97"
+    },
+    {
+      "key": "xai_pref_smart_lists",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:98"
+    },
+    {
+      "key": "xai_pref_sticky_color",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:99"
+    },
+    {
+      "key": "xai_pref_sticky_font",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:100"
+    },
+    {
+      "key": "xai_pref_sticky_grid_spacing",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:101"
+    },
+    {
+      "key": "xai_pref_sticky_pin_default",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:102"
+    },
+    {
+      "key": "xai_pref_sticky_restore_size",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:103"
+    },
+    {
+      "key": "xai_pref_theme",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:104"
+    },
+    {
+      "key": "xai_pref_week_start",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:105"
+    },
+    {
+      "key": "xai_rail_order",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:106"
+    },
+    {
+      "key": "xai_rail_pos",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:107"
+    },
+    {
+      "key": "xai_task_cols",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:108"
+    },
+    {
+      "key": "xai_tt_categories_v2",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:109"
+    },
+    {
+      "key": "xai_tt_category_collapsed_v1",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:110"
+    },
+    {
+      "key": "xai_tt_day_records_collapsed_v1",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:111"
+    },
+    {
+      "key": "xai_tt_entries_v2",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:112"
+    },
+    {
+      "key": "xai_tt_insights_v1",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:113"
+    },
+    {
+      "key": "xai_tt_mode",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:114"
+    },
+    {
+      "key": "xai_tt_sidebar_insights_hidden_v1",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:115"
+    },
+    {
+      "key": "xai_tt_time_status_cards_v1",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:116"
+    },
+    {
+      "key": "xai_tt_time_status_custom_cards_v1",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:117"
+    },
+    {
+      "key": "xai_tt_time_status_hidden_v1",
+      "ownership": "device",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:118"
+    },
+    {
+      "key": "xai_zones",
+      "ownership": "account",
+      "source": "packages/plugin-web-storage/src/internal/accountOwnership.ts:119"
+    }
+  ]
+}

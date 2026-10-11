@@ -1,5 +1,5 @@
 /**
- * AC-SHELL-3: webShellModuleRegistrations has 14 entries with
+ * AC-SHELL-3: webShellModuleRegistrations has 15 entries with
  * moduleId="matrix" at index 5 (railOrder 6).
  *
  * Verifies that the matrix placeholder was swapped for the real registration.
@@ -8,8 +8,8 @@ import { describe, it, expect } from "vitest";
 import { webShellModuleRegistrations } from "../shellRegistrations.js";
 
 describe("shellRegistrations integration", () => {
-  it("AC-SHELL-3: has exactly 14 entries", () => {
-    expect(webShellModuleRegistrations).toHaveLength(14);
+  it("AC-SHELL-3: has exactly 15 entries", () => {
+    expect(webShellModuleRegistrations).toHaveLength(15);
   });
 
   it("AC-SHELL-3: matrix registration is at index 5 with moduleId='matrix'", () => {
@@ -25,7 +25,7 @@ describe("shellRegistrations integration", () => {
     expect(matrixReg.children[0]!.render.name).not.toBe("ModuleRoutePlaceholderPage");
   });
 
-  it("AC-SHELL-3: all 14 entries have a moduleId", () => {
+  it("AC-SHELL-3: all 15 entries have a moduleId", () => {
     for (const reg of webShellModuleRegistrations) {
       expect(typeof reg.moduleId).toBe("string");
       expect(reg.moduleId.length).toBeGreaterThan(0);
@@ -58,6 +58,16 @@ describe("shellRegistrations integration", () => {
     expect(bookkeeping!.showInRail).toBe(true);
     expect(bookkeeping!.i18nKey).toBe("nav.bookkeeping");
     expect(bookkeeping!.children[0]!.render.name).not.toBe("ModuleRoutePlaceholderPage");
+  });
+
+  it("AC-METRICS: metrics slot is registered after bookkeeping", () => {
+    const metrics = webShellModuleRegistrations.find((r) => r.moduleId === "metrics");
+    expect(metrics).toBeDefined();
+    expect(metrics!.icon).toBe("target");
+    expect(metrics!.railOrder).toBe(7.7);
+    expect(metrics!.showInRail).toBe(true);
+    expect(metrics!.i18nKey).toBe("nav.metrics");
+    expect(metrics!.children[0]!.render.name).not.toBe("ModuleRoutePlaceholderPage");
   });
 
   // AC-HOST-1..4 (dashboard-grid row #10)

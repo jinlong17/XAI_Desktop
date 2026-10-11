@@ -1,0 +1,126 @@
+{
+  "id": "BRD-24/SOURCE-DISCOVERY1",
+  "workflow": "C",
+  "primary_workflow": "B",
+  "module": "web",
+  "role": "fresh independent bounded whole Board Map original item source discovery1/3",
+  "model": "gpt-6-luna",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "a68c2295c1aa0db359b0a62cb38317b29168c24c",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "no_children": true,
+  "budgets": {
+    "discovery_iteration": 1,
+    "discovery_cap": 3,
+    "static_pass": 1,
+    "total_wall_minutes": 30,
+    "static_seconds": 120,
+    "owned_process_drain_seconds": 30,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "network": 0,
+    "children": 0
+  },
+  "original_items": [
+    {
+      "id": "BRD-24",
+      "priority": "P2",
+      "kind": "修复",
+      "action": "Map支持当前语言、tile失败、离线和重试",
+      "acceptance": "地图不可用时有位置列表；保留视角且可取消加载",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "BRD-24",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "BRD",
+      "acceptance_evidence": {
+        "business_acceptance": "地图不可用时有位置列表；保留视角且可取消加载",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "BRD-24/prepare",
+        "BRD-24/contract-review",
+        "BRD-24/before",
+        "BRD-24/implement",
+        "BRD-24/verify",
+        "BRD-24/accept",
+        "BRD-24/reconcile",
+        "BRD-24/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    }
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-brd24-source-discovery-r1/discovery.md",
+    "docs/reviews/audit-parallel-brd24-source-discovery-r1/inputs.sha256"
+  ],
+  "protected": [
+    "ALLnonallowed files/source/contracts/runner/evidence/failurelogs",
+    "globalcontrol/ledgers/otherworktrees/canonicaldocs/skills/generator/registry",
+    "module/ownerdecisions/caps/measurementstandards",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "logical_locks": {
+    "write": [
+      "new_brd24_source_report_only"
+    ],
+    "read": [
+      "actual Web Board map view, view state, map provider/tile adapter and fallback owners"
+    ],
+    "future_writer": "all actual shared module/storage/host components locked until separate exact single writer grant"
+  },
+  "stop": [
+    "actualinput/dirty/hash/protecteddrift",
+    "need new undecidedproductrule or unauthorizedexec",
+    "actual concluding staticFAIL immediatelyfreeze no retry/materialization/commit"
+  ],
+  "read_paths": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "docs/workflow/project/workflow.md",
+    "docs/workflow/project/multi-machine-development.md",
+    "docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/authority-overlay.md",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/scope-map.json",
+    "docs/reviews/20260908-full-product-audit/02-tasks-time-boards.md",
+    "docs/reviews/20260908-full-product-audit/05-visual-ux-audit.md"
+  ],
+  "source_roots": [
+    "actual Web Board map view, view state, map provider/tile adapter and fallback owners"
+  ],
+  "acceptance": [
+    "WHOLE original BRD24 action and acceptance: current language, tile failure, offline and retry, location list fallback when map unavailable, retained viewport and cancellable loading. Actual source facts distinguished from business requirements, capability/provider/environment limitations UNKNOWN without external probes.",
+    "Actual finite Git tree FIRST resolves map view, imported provider/tile/style/locale/state/network/cancel/fallback data producers, local view preferences/account lifecycle, owning docs and fixtures at immutable SHAs. State/cache/abort-generation/stale completion/language switch/load failure/offline/retry/view preservation and accessible mobile/desktop list candidate evidence, exact finite future files and locked shared Board/storage/date/host/provider seams. Read-only docs/source no tile requests/provider SDK imports/server/browser/build/runtime or credentials access. Source discovery proposal not real offline/network/native evidence. This distinct leaf item does not redo BRD12 writer impact, BRD28 documentation trace, or Board shared caller exhausted units; all such original histories and locks retained.",
+    "Full per-original-item matrix requirements origin/current static facts/gaps/exact finite candidate writer paths+logical locks/contract+before+future fixture/source qualification/fixed/affected regressions/full G1/native/independent business acceptance/ledger/inventory gates, phase budgets missing history UNKNOWN not0. Existing owning decisions FIRST; unresolved minimum policy recorded without choice or user question; continue independent rows. Formal312unique13/3/3/293299unclosed939refs unchanged no product or release grant.",
+    "ALL actually used complete inputs individually exact immutable SHA/file hashbound; finite actual Git inventory first, parse actual card nested structures and manifest grammar, ignore manifest comments; no guessed filenames/prose/headline/minsize/count/P0docsparity. ALL input checks AND BOTH entire final buffers validated+hashed IN MEMORY BEFORE ANY filesystem writes including interim draft/index. One own meaningful static <=120s, wall30min, owneddrain30s. Safe UTF8 literal/base64 transport no JS-template newline conversion. Popen actualPID not CompletedProcess.pid; capture numeric exit/stdoutstderr EOF/drain/sessionchunk before printing, UNKNOWNnot0; every readonly Git child accounted separately. Actual meaningful FAIL/UNKNOWN freezes no retry/materialization/commit. Runtime/tests/build/lint/browser/native/server/businessparser/generator/productimports/qualification/probes/vendor/network/delegation0. Exact2ADD single hooksdisabled conventional commit realnewline Why/What/Scope/Risk/Docs/Tests clean; no amend/push/sync/cleanup. Independent fresh WHOLE review required before source-only adoption; root alone serial reception/global state."
+  ],
+  "source_admission": "proposal source-only no canonical/before/qualification/code grant",
+  "future_execution": "separate exact independent impact/contract/before/admission and writer grant required"
+}

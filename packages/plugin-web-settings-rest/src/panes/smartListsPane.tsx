@@ -9,29 +9,19 @@
  */
 
 import * as React from "react";
-import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
+import type { Pane, PaneDepartureGuard, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { usePref } from "@repo/plugin-web-storage";
-import type { WebPrefKey } from "@repo/plugin-web-storage";
+import { accountScope, usePrefAutosaveAsync } from "@repo/plugin-web-storage";
 import { localI18n } from "../internal/localI18n.js";
-import type { SmartListId, SmartListVisibility } from "../types.js";
-
-type SmartListsMap = Readonly<Record<SmartListId, SmartListVisibility>>;
-
-const DEFAULT_MAP: SmartListsMap = {
-  all: "show",
-  today: "show",
-  tomorrow: "show",
-  next7: "show",
-  assigned: "if-not-empty",
-  inbox: "show",
-  summary: "show",
-  tags: "show",
-  filters: "show",
-  completed: "show",
-  wont_do: "if-not-empty",
-  trash: "show",
-} as const;
+import {
+  isSmartListVisibility,
+  isSmartListsMap,
+  SMART_LIST_VISIBILITIES,
+  smartListVisibilityFor,
+  type SmartListsMap,
+  withSmartListVisibility,
+} from "../internal/smartListsPreference.js";
+import type { SmartListId } from "../types.js";
 
 interface SectionDef {
   readonly groupKey: "smartLists.defaultLists" | "smartLists.organize" | "smartLists.others";
@@ -68,26 +58,144 @@ const SECTIONS: readonly SectionDef[] = [
   },
 ] as const;
 
-const VISIBILITY_KEYS: readonly SmartListVisibility[] = [
-  "show",
-  "if-not-empty",
-  "hide",
-] as const;
+function sameMap(left: SmartListsMap, right: SmartListsMap): boolean {
+  const leftKeys = Object.keys(left);
+  const rightKeys = Object.keys(right);
+  return leftKeys.length === rightKeys.length
+    && leftKeys.every(key => Object.hasOwn(right, key) && left[key] === right[key]);
+}
 
-function SmartListsPaneContent({ lang }: PaneRenderProps): React.ReactElement {
+function SmartListsPaneContent({ lang, registerDepartureGuard }: PaneRenderProps): React.ReactElement {
   const { s } = useI18n(lang);
   const t = localI18n(lang);
+  const smartListsSave = usePrefAutosaveAsync("xai_pref_smart_lists", { validate: isSmartListsMap });
+  const editSmartLists = smartListsSave.edit;
+  const reloadSmartLists = smartListsSave.meta.reload;
+  const scope = React.useSyncExternalStore(accountScope.subscribe, accountScope.capture, accountScope.capture);
+  const latestModesRef = React.useRef<SmartListsMap>(smartListsSave.value);
+  const sessionEpochRef = React.useRef(scope.epoch);
+  const bindingRef = React.useRef<{ readonly token: object; readonly scope: typeof scope }>({ token: {}, scope });
+  const draftRef = React.useRef<{ readonly token: object; readonly values: SmartListsMap } | null>(null);
+  const [hasDraft, setHasDraft] = React.useState(false);
+  const [exportFailed, setExportFailed] = React.useState(false);
 
-  const [modes, setModes] = usePref(
-    "xai_pref_smart_lists" as WebPrefKey,
-  ) as readonly [SmartListsMap, (v: SmartListsMap) => void, unknown];
+  // A caller draft is session-bound: it never carries A's desired map into B.
+  if (sessionEpochRef.current !== scope.epoch) {
+    sessionEpochRef.current = scope.epoch;
+    bindingRef.current = { token: {}, scope };
+    latestModesRef.current = smartListsSave.value;
+    draftRef.current = null;
+  }
+  React.useLayoutEffect(() => {
+    sessionEpochRef.current = scope.epoch;
+    if (draftRef.current?.token !== bindingRef.current.token) {
+      draftRef.current = null;
+      setHasDraft(false);
+      setExportFailed(false);
+    }
+    if (smartListsSave.meta.status === "idle" || smartListsSave.meta.status === "saved") {
+      latestModesRef.current = smartListsSave.value;
+    }
+  }, [scope, smartListsSave.meta.status, smartListsSave.value]);
 
-  const currentModes: SmartListsMap =
-    modes && typeof modes === "object" ? (modes as SmartListsMap) : DEFAULT_MAP;
+  React.useEffect(() => {
+    const draft = draftRef.current;
+    if (draft && smartListsSave.meta.status === "saved" && sameMap(draft.values, smartListsSave.value)) {
+      draftRef.current = null;
+      setHasDraft(false);
+    }
+  }, [smartListsSave.meta.status, smartListsSave.value]);
+
+  const editable = smartListsSave.meta.source === "absent" || smartListsSave.meta.source === "valid";
+  const changeVisibility = React.useCallback((id: SmartListId, value: string) => {
+    if (!editable || !isSmartListVisibility(value)) return;
+    const next = withSmartListVisibility(latestModesRef.current, id, value);
+    if (!isSmartListsMap(next)) return;
+    latestModesRef.current = next;
+    draftRef.current = { token: bindingRef.current.token, values: next };
+    setHasDraft(true);
+    setExportFailed(false);
+    void editSmartLists(next);
+  }, [editable, editSmartLists]);
+  const needsRecovery = smartListsSave.meta.status === "error" || smartListsSave.meta.status === "conflict";
+  const binding = bindingRef.current;
+  const isCurrentBinding = React.useCallback(() => (
+    bindingRef.current.token === binding.token && accountScope.capture() === binding.scope
+  ), [binding]);
+  const hasCurrentDraft = React.useCallback(() => {
+    const draft = draftRef.current;
+    return isCurrentBinding() && draft !== null && draft.token === binding.token && isSmartListsMap(draft.values);
+  }, [binding, isCurrentBinding]);
+  const exportDraft = React.useCallback(() => {
+    const draft = draftRef.current;
+    if (!isCurrentBinding() || !draft || draft.token !== binding.token || !isSmartListsMap(draft.values)) return;
+    let url: string | null = null;
+    let anchor: HTMLAnchorElement | null = null;
+    try {
+      const payload = JSON.stringify({ version: 1, kind: "smart-lists-draft", values: draft.values });
+      const blob = new Blob([payload], { type: "application/json" });
+      url = URL.createObjectURL(blob);
+      if (!isCurrentBinding() || draftRef.current?.token !== binding.token) throw new Error("stale-owner");
+      anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = "smart-lists-draft.json";
+      anchor.style.display = "none";
+      document.body.appendChild(anchor);
+      if (!isCurrentBinding() || draftRef.current?.token !== binding.token) throw new Error("stale-owner");
+      anchor.click();
+      setExportFailed(false);
+    } catch {
+      if (isCurrentBinding() && draftRef.current?.token === binding.token) setExportFailed(true);
+    } finally {
+      try { anchor?.remove(); } catch { /* no state change for cleanup failure */ }
+      try { if (url) URL.revokeObjectURL(url); } catch { /* no state change for cleanup failure */ }
+    }
+  }, [binding, isCurrentBinding]);
+  const discardDraft = React.useCallback(() => {
+    if (!isCurrentBinding() || draftRef.current?.token !== binding.token) return;
+    draftRef.current = null;
+    setHasDraft(false);
+    reloadSmartLists();
+  }, [binding, isCurrentBinding, reloadSmartLists]);
+  const guard = React.useMemo<PaneDepartureGuard>(() => ({
+    token: binding.token,
+    isBlocking: hasCurrentDraft,
+    isCurrent: isCurrentBinding,
+    exportDraft,
+    discardDraft,
+  }), [binding, discardDraft, exportDraft, hasCurrentDraft, isCurrentBinding]);
+  React.useEffect(() => registerDepartureGuard?.(guard), [guard, hasDraft, registerDepartureGuard, smartListsSave.meta.status]);
+  React.useEffect(() => {
+    if (!hasDraft) return;
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!hasCurrentDraft()) return;
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [hasCurrentDraft, hasDraft]);
 
   return (
     <div className="smart-lists-pane">
       <h3 className="pane-title">{s("settings.smart_lists")}</h3>
+      {(smartListsSave.meta.status === "pending" || smartListsSave.meta.status === "saved") && (
+        <p className="smart-lists-save-status" role="status" aria-live="polite">
+          {smartListsSave.meta.status === "pending" ? t("smartLists.saving") : t("smartLists.saved")}
+        </p>
+      )}
+      {needsRecovery && (
+        <div className="smart-lists-recovery" role="alert">
+          <p>{smartListsSave.meta.status === "conflict" ? t("smartLists.conflict") : t("smartLists.notSaved")}</p>
+          {smartListsSave.meta.status === "error" && (smartListsSave.meta.source === "invalid" || smartListsSave.meta.source === "unavailable") && <p>{t("smartLists.sourceUnavailable")}</p>}
+          <div className="smart-lists-recovery-actions">
+            <button type="button" onClick={() => void smartListsSave.retry()}>{t("smartLists.retry")}</button>
+            {hasDraft && <button type="button" onClick={exportDraft}>{t("smartLists.export")}</button>}
+            {smartListsSave.meta.status === "conflict" ? <button type="button" onClick={discardDraft}>{t("smartLists.discardAndReload")}</button> : (smartListsSave.meta.source === "invalid" || smartListsSave.meta.source === "unavailable") ? <button type="button" onClick={smartListsSave.meta.reload}>{t("smartLists.reload")}</button> : null}
+          </div>
+          {exportFailed && <p>{t("smartLists.exportFailed")}</p>}
+        </div>
+      )}
       {SECTIONS.map((section) => (
         <div key={section.groupKey} className="sl-section">
           <div className="sl-group">{t(section.groupKey)}</div>
@@ -98,16 +206,12 @@ function SmartListsPaneContent({ lang }: PaneRenderProps): React.ReactElement {
                 <span className="grow" />
                 <select
                   className="sl-select"
-                  value={currentModes[item.id] ?? "show"}
-                  onChange={(e) =>
-                    setModes({
-                      ...currentModes,
-                      [item.id]: e.target.value as SmartListVisibility,
-                    })
-                  }
+                  value={smartListVisibilityFor(smartListsSave.value, item.id)}
+                  onChange={(e) => changeVisibility(item.id, e.target.value)}
                   aria-label={t(item.nameKey)}
+                  disabled={!editable}
                 >
-                  {VISIBILITY_KEYS.map((v) => (
+                  {SMART_LIST_VISIBILITIES.map((v) => (
                     <option key={v} value={v}>
                       {t(`smartLists.${v}`)}
                     </option>

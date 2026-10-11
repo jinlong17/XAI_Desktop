@@ -1,0 +1,680 @@
+diff --git a/docs/reviews/web-appearance-recovery-native/verify-visual-keyboard-5bbf473.mjs b/docs/reviews/web-appearance-recovery-native/verify-visual-keyboard-419e56d.mjs
+index 6ab9e1a..801a875 100644
+--- a/docs/reviews/web-appearance-recovery-native/verify-visual-keyboard-5bbf473.mjs
++++ b/docs/reviews/web-appearance-recovery-native/verify-visual-keyboard-419e56d.mjs
+@@ -1,4 +1,26 @@
+ /**
++ * BATCH 50 COPY (CP-APPEARANCE-01, fixed 419e56d, the F-APP-1 and F-APP-2 repairs). A new file: a copy of the frozen
++ * batch 48 runner ./verify-visual-keyboard-5bbf473.mjs (SHA-256 5450891880f5c2ac998310c2b2960f067da6c6514d2f1eba215084368b8167e4,
++ * unchanged and hash-checked by this copy), committed with a unified diff against it. Independent visual and keyboard
++ * verifier (not the batch 46 or 48 executor); verification only. Changes against the batch 48 runner:
++ *   SHA-specific (control plane batch 50): the expected fixed delta is the 26 product files relative to 5cd63ff (the 25
++ *     of batch 48 plus packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx); the
++ *     labels name the fixed revision (419e56d) instead of 5bbf473; the runner's own file name.
++ *   Additive (required by the batch 50 task, the F-APP-2 ruling "修复后的 E15" and the F-APP-3 ruling; no batch 48 check
++ *   is removed or weakened, and no existing line changes except the SHA-specific ones above):
++ *     - the batch 48 runner (the diff base) is hash-checked;
++ *     - progress lines on stderr at section boundaries (the log is unchanged), so no run is silent for minutes;
++ *     - E14: an audit of the two focus rules (F-APP-1, F-APP-2) and of the 24073b5 -> fixed stylesheet increment; the
++ *       pre-existing Topbar controls in the clean state compared with 5cd63ff at every width (44x44 ruling: no regression);
++ *     - E15 selection walks: per-stop pixel focus walks (the batch 48 oracle, unchanged) with every option group on a
++ *       non-default selection, both sliders at non-default values, in the clean, failed-write and source-issue states,
++ *       with the Topbar status, in the light (system) and dark themes;
++ *     - E15 selected swatch: focused+selected against selected+unfocused by pixels, and the selection ring measured as
++ *       still visible while focused (radial colour bands), with a focused non-selected swatch as the control; light and
++ *       dark;
++ *     - F-APP-3 observation (not gated): the Topbar popover's checked and unchecked menuitemradio options focused against
++ *       moved on, by pixels, with their computed outline and background, in the light and dark themes.
++ *
+  * BATCH 48 COPY (CP-APPEARANCE-01, fixed 5bbf473, the F-APP-1 repair). A new file: a copy of the frozen batch 46 runner
+  * ./verify-visual-keyboard.mjs (SHA-256 ac268a0af6263772c9e3976d30b7bc2f3502d52c3973de4daa976734aead0781, unchanged and
+  * hash-checked by this copy), committed with a unified diff against it. Independent visual and keyboard verifier (not the
+@@ -40,7 +62,7 @@
+  *
+  * Usage, from the root of a worktree whose HEAD carries this directory:
+  *   XAI_DEPS_ROOT=<checkout with node_modules> [XAI_NATIVE_TMPDIR=<scratch dir>] \
+- *     node docs/reviews/web-appearance-recovery-native/verify-visual-keyboard-5bbf473.mjs <fixed revision> <mode> <suffix>
++ *     node docs/reviews/web-appearance-recovery-native/verify-visual-keyboard-419e56d.mjs <fixed revision> <mode> <suffix>
+  *
+  * Modes (one language each; the UI language is the user's stored xai_pref_lang, seeded on a product-free page):
+  *   visual-en, visual-zh     E14: five widths (375x812 and 414x896 with mobile emulation, 768x1024, 1024x768,
+@@ -105,12 +127,14 @@ const FROZEN = {
+   e4h14: { file: "native-5cd63ff-before1-h14.log", sha256: "3d1f5763d11207e6e4e24fc2678177aae0960a91fb933985c061b08bde54e02f" },
+ };
+ const PROBES = "native-visual-keyboard-probes.js";
+-const RUNNER = "verify-visual-keyboard-5bbf473.mjs";
++const RUNNER = "verify-visual-keyboard-419e56d.mjs";
+ /** Batch 48: the frozen batch 46 probes are reused read-only, and the frozen batch 46 runner is the diff base of this copy. */
+ const FROZEN_BATCH46 = {
+   probes: { file: PROBES, sha256: "4df16575470d739d1655f32cd1bb0101c2b772552439f3ecfefded4f87bc02c4" },
+   runner: { file: "verify-visual-keyboard.mjs", sha256: "ac268a0af6263772c9e3976d30b7bc2f3502d52c3973de4daa976734aead0781" },
+ };
++/** Batch 50: the batch 48 runner is the diff base of this copy (read only, hash-checked). */
++const FROZEN_BATCH48 = { runner: { file: "verify-visual-keyboard-5bbf473.mjs", sha256: "5450891880f5c2ac998310c2b2960f067da6c6514d2f1eba215084368b8167e4" } };
+ const root = fileURLToPath(new URL("../../../", import.meta.url));
+ const output = fileURLToPath(new URL("./", import.meta.url));
+ const evidenceDir = process.env.XAI_NATIVE_EVIDENCE_DIR ?? output;
+@@ -178,6 +202,9 @@ const checkDeferred = (id, condition, details = {}) => {
+   return pass;
+ };
+ const observe = (id, details = {}) => record("observation", { id, ...details });
++/** Batch 50 addition: progress lines on stderr (the evidence log is unchanged), so no run is silent for minutes. */
++const runStarted = Date.now();
++const progress = (message) => process.stderr.write(`[${new Date().toISOString()}] +${Math.round((Date.now() - runStarted) / 1000)}s ${mode} checks=${checks} ${message}\n`);
+ 
+ // ---------------------------------------------------------------------------------------------------
+ // Consistency gate and provenance inputs
+@@ -204,8 +231,8 @@ const contractSha256 = sha256(execFileSync("git", ["show", `HEAD:${CONTRACT_PATH
+ const versionOf = (name) => {
+   try { return JSON.parse(readFileSync(join(dependencyRoot, "apps/web/node_modules", name, "package.json"), "utf8")).version; } catch { return null; }
+ };
+-/** The 25 product files of the fixed revision 5bbf473 relative to 5cd63ff: the 24 Terra files (contract r3 §11; control
+- *  plane E6 row) plus the batch 47 F-APP-1 guard test (control plane "F-APP-1 修复（批次 47）"). */
++/** The 26 product files of the fixed revision 419e56d relative to 5cd63ff: the 24 Terra files (contract r3 §11; control
++ *  plane E6 row), the batch 47 F-APP-1 guard test and the batch 49 F-APP-2 guard test (control plane batch 50). */
+ const EXPECTED_FIXED_DELTA = [
+   "apps/web/src/App.tsx",
+   "apps/web/src/__tests__/App.appearance.test.tsx",
+@@ -218,6 +245,7 @@ const EXPECTED_FIXED_DELTA = [
+   "packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx",
+   "packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx",
+   "packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx",
++  "packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx",
+   "packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx",
+   "packages/xai-web-settings-appearance/src/__tests__/appearanceLockFixture.ts",
+   "packages/xai-web-settings-appearance/src/index.ts",
+@@ -1175,6 +1203,50 @@ function bundleCssAudit(sourceAudit) {
+   }
+   return result;
+ }
++/**
++ * Batch 50 addition (E14 selector audit, "including both focus rules"): the fixed stylesheet is the 24073b5 one followed
++ * by the F-APP-1 increment (= the 5bbf473 file) and the F-APP-2 increment, each append-only and outside any at-rule; each
++ * focus rule is pane-scoped and draws the global ring of tokens.css (`button:focus-visible`, ...): the same outline
++ * shorthand; F-APP-1 at the global offset; F-APP-2 2 px further out, keeping the selection as a box-shadow ring in
++ * var(--text-1); only outline and box-shadow properties (no layout property).
++ */
++const REV_24073B5 = "24073b522262d8b4bec0abfa29347db28adbdd9e";
++const REV_5BBF473 = "5bbf473872073472188957f430057412e8798131";
++function cssFocusRulesAudit() {
++  const id = "css:focus-rules";
++  const fixed = git(["show", `${resolved}:${APPEARANCE_CSS}`]);
++  const at24073b5 = git(["show", `${REV_24073B5}:${APPEARANCE_CSS}`]);
++  const at5bbf473 = git(["show", `${REV_5BBF473}:${APPEARANCE_CSS}`]);
++  const fApp1Increment = at5bbf473.slice(at24073b5.length);
++  const fApp2Increment = fixed.slice(at5bbf473.length);
++  const parsed1 = cssRules(fApp1Increment);
++  const parsed2 = cssRules(fApp2Increment);
++  const tokensCss = git(["show", `${resolved}:packages/plugin-web-tokens/src/tokens.css`]);
++  const globalRule = cssRules(tokensCss).rules.find((rule) => rule.selectors.includes("button:focus-visible")) ?? null;
++  const decl = (rule, property) => rule?.declarations.find((entry) => entry.property === property)?.value ?? null;
++  const globalOutline = decl(globalRule, "outline");
++  const describeRules = (parsed) => parsed.rules.map((rule) => ({ selectors: rule.selectors, within: rule.within, declarations: rule.declarations.map((entry) => `${entry.property}: ${entry.value}`) }));
++  const auditRecord = {
++    bytes: { "24073b5": Buffer.byteLength(at24073b5), "5bbf473": Buffer.byteLength(at5bbf473), fixed: Buffer.byteLength(fixed) },
++    sha256: { "24073b5": sha256(at24073b5), "5bbf473": sha256(at5bbf473), fixed: sha256(fixed) },
++    prefixChain: { "24073b5-prefix-of-5bbf473": at5bbf473.startsWith(at24073b5), "5bbf473-prefix-of-fixed": fixed.startsWith(at5bbf473) },
++    fApp1: { addedBytes: Buffer.byteLength(fApp1Increment), addedLines: fApp1Increment.split("\n").length - 1, balanced: parsed1.balanced, atRules: parsed1.atRules, rules: describeRules(parsed1) },
++    fApp2: { addedBytes: Buffer.byteLength(fApp2Increment), addedLines: fApp2Increment.split("\n").length - 1, balanced: parsed2.balanced, atRules: parsed2.atRules, rules: describeRules(parsed2) },
++    globalRing: globalRule ? { selectors: globalRule.selectors, outline: globalOutline, outlineOffset: decl(globalRule, "outline-offset") } : null,
++  };
++  record("css-focus-rules-audit", auditRecord);
++  checkDeferred(`${id}:fixed-stylesheet-is-24073b5-then-the-f-app-1-increment-then-the-f-app-2-increment-each-append-only`, auditRecord.prefixChain["24073b5-prefix-of-5bbf473"] && auditRecord.prefixChain["5bbf473-prefix-of-fixed"]
++    && parsed1.balanced && parsed2.balanced && parsed1.rules.length === 1 && parsed2.rules.length === 1 && parsed1.atRules.length === 0 && parsed2.atRules.length === 0, { bytes: auditRecord.bytes, prefixChain: auditRecord.prefixChain });
++  const r1 = parsed1.rules[0] ?? null;
++  const r2 = parsed2.rules[0] ?? null;
++  checkDeferred(`${id}:global-ring-found-in-tokens-css`, Boolean(globalRule) && /^2px solid /.test(globalOutline ?? "") && decl(globalRule, "outline-offset") === "2px", { globalRing: auditRecord.globalRing });
++  checkDeferred(`${id}:f-app-1-rule-pane-scoped-outside-at-rules-the-global-ring-at-the-global-offset`, Boolean(r1) && isDeepStrictEqual(r1.selectors, ['.appearance-pane .slider-row input[type="range"]:focus-visible']) && r1.within.length === 0
++    && decl(r1, "outline") === globalOutline && decl(r1, "outline-offset") === decl(globalRule, "outline-offset") && r1.declarations.length === 2, { rule: r1 });
++  checkDeferred(`${id}:f-app-2-rule-pane-scoped-outside-at-rules-global-ring-colour-and-width-selection-kept-as-a-text-1-box-shadow-no-layout-property`, Boolean(r2) && isDeepStrictEqual(r2.selectors, [".appearance-pane .accent-sw.active:focus-visible"]) && r2.within.length === 0
++    && decl(r2, "outline") === globalOutline && decl(r2, "box-shadow") === "0 0 0 2px var(--text-1)" && /^\d+px$/.test(decl(r2, "outline-offset") ?? "")
++    && r2.declarations.every((entry) => ["outline", "outline-offset", "box-shadow"].includes(entry.property)), { rule: r2 });
++  return auditRecord;
++}
+ 
+ // ---------------------------------------------------------------------------------------------------
+ // Batch 48 addition: cascade-order audit (control plane F-APP-1 ruling, "对执行者其他问题的裁定" 1; batch 48
+@@ -1783,6 +1855,7 @@ async function gatedRun(id, state, width, { screenshot = null } = {}) {
+   return { lay, probes, retryBox, tb };
+ }
+ async function fixedState(state, width) {
++  progress(`E14 state ${width} ${state}`); // batch 50 addition
+   const id = `${LANG}:${width}:${state}`;
+   const def = STATE_DEFS[state];
+   await seed(def.seeds(), id);
+@@ -1845,6 +1918,7 @@ async function focusRing(id, width) {
+ // ---------------------------------------------------------------------------------------------------
+ const frozenE4 = (id) => e4Records.find((entry) => entry.id === id) ?? null;
+ async function beforeReference(width) {
++  progress(`E14 5cd63ff reference ${width}`); // batch 50 addition
+   const id = `${LANG}:${width}:before-5cd63ff`;
+   await seed(seedsOf({ lang: LANG }), id);
+   await mountApp(id, { width, variant: "before" });
+@@ -1872,6 +1946,7 @@ async function beforeReference(width) {
+   await evaluate("__visual.scrollWindowTo(0)");
+   const tb = await evaluate("__visual.topbar()");
+   record("before-reference", { id, width, pet, geometry: reference.geometry[width], coverage: coverage.filter((entry) => !entry.allHit), topbar: tb.controls.map(compactProbe), scrolledAfterProbes });
++  (reference.topbarBefore ??= {})[width] = Object.fromEntries(tb.controls.map((probe) => [probe.desc, { width: probe.rect.width, height: probe.rect.height }])); // batch 50 addition
+   if (width === 768) {
+     for (const where of ["top", "end"]) {
+       const end = await evaluate(`__visual.scrollSettingsTo(${JSON.stringify(where)})`);
+@@ -1891,6 +1966,7 @@ async function beforeReference(width) {
+ // Topbar status breakpoint (controller ruling: text where the summary is visible, from 768 px; 761–767 icon only)
+ // ---------------------------------------------------------------------------------------------------
+ async function breakpoints() {
++  progress("E14 Topbar breakpoints"); // batch 50 addition
+   const id = `${LANG}:breakpoints`;
+   await seed(seedsOf({ lang: LANG }), id);
+   await mountApp(id, { width: 768 });
+@@ -1916,6 +1992,7 @@ async function breakpoints() {
+ // Disabled Retry all presentation, measured (contract §9; A2.2)
+ // ---------------------------------------------------------------------------------------------------
+ async function presentationLoad(id, stored) {
++  progress(`E14 presentation ${id}`); // batch 50 addition
+   await seed(seedsOf({ lang: LANG, ...stored }), id);
+   await mountApp(id, { width: 1440 });
+   await petOff(id, 1440);
+@@ -1975,6 +2052,7 @@ async function disabledPresentation() {
+ // ---------------------------------------------------------------------------------------------------
+ async function runVisual() {
+   if (selected("css")) bundleCssAudit(cssAudit());
++  if (selected("css")) cssFocusRulesAudit(); // batch 50 addition
+   if (selected("before")) for (const width of DEV_WIDTHS ?? WIDTHS) await beforeReference(width);
+   if (selected("states")) {
+     for (const width of DEV_WIDTHS ?? WIDTHS) {
+@@ -1990,6 +2068,18 @@ async function runVisual() {
+     checkDeferred(`${LANG}:${width}:retry-all-same-box-disabled-clean-and-enabled-all-seven`, Math.abs(disabled.rect.width - enabled.rect.width) <= 0.01 && Math.abs(disabled.rect.height - enabled.rect.height) <= 0.01
+       && ["paddingLeft", "paddingRight", "borderLeftWidth", "borderRightWidth", "borderTopWidth", "borderBottomWidth"].every((key) => disabled.css[key] === enabled.css[key]), { disabled: { rect: disabled.rect, css: disabled.css }, enabled: { rect: enabled.rect, css: enabled.css } });
+   }
++  // Batch 50 addition (control plane F-APP-1 ruling 2 on 44x44: pre-existing Topbar controls are judged by no regression
++  // against 5cd63ff): in the clean state at every width, the fixed Topbar controls are the 5cd63ff set and none is smaller.
++  for (const width of DEV_WIDTHS ?? WIDTHS) {
++    const before = reference.topbarBefore?.[width];
++    const fixed = reference.topbar[width];
++    if (!before || !fixed) continue;
++    const rows = [...new Set([...Object.keys(before), ...Object.keys(fixed)])].map((desc) => ({ desc, before: before[desc] ?? null, fixed: fixed[desc] ?? null }));
++    const regressed = rows.filter((row) => !row.before || !row.fixed || row.fixed.width < row.before.width - 0.01 || row.fixed.height < row.before.height - 0.01);
++    const equal = rows.every((row) => row.before && row.fixed && Math.abs(row.fixed.width - row.before.width) <= 0.01 && Math.abs(row.fixed.height - row.before.height) <= 0.01);
++    record("topbar-no-regression", { lang: LANG, width, height: HEIGHTS[width], equal, rows });
++    checkDeferred(`${LANG}:${width}:topbar:clean-state-pre-existing-controls-are-the-5cd63ff-set-and-none-is-smaller`, rows.length >= 2 && regressed.length === 0, { regressed, rows, equal });
++  }
+   if (selected("breakpoints")) await breakpoints();
+   if (selected("presentation")) await disabledPresentation();
+   record("width-table", { lang: LANG, rows: widthTable });
+@@ -2455,7 +2545,7 @@ async function kbTopbarStatus() {
+ async function kbFocusVisibility() {
+   const rows = [];
+   for (const variant of ["fixed", "before"]) {
+-    const id = `kb:${LANG}:focus-visibility:${variant === "fixed" ? "5bbf473" : "5cd63ff"}`;
++    const id = `kb:${LANG}:focus-visibility:${variant === "fixed" ? "419e56d" : "5cd63ff"}`;
+     await seed(seedsOf({ lang: LANG }), id);
+     await mountApp(id, { width: KEYBOARD_WIDTH, variant });
+     await petOff(id, KEYBOARD_WIDTH);
+@@ -2465,17 +2555,17 @@ async function kbFocusVisibility() {
+       const focused = await evaluate("__visual.focusInfo()");
+       const clipOf = (rect) => ({ x: Math.floor(rect.left) - 10, y: Math.floor(rect.top) - 10, width: Math.ceil(rect.width) + 20, height: Math.ceil(rect.height) + 20 });
+       const focusedClip = clipOf(focused.rect);
+-      const focusedShot = await captureClip(`${variant === "fixed" ? "5bbf473" : "before-5cd63ff"}-${desc}-focused`, focusedClip, { state: `${desc} focused by a trusted Tab (${variant === "fixed" ? "fixed 5bbf473" : "5cd63ff"}, pet hidden)`, focus: focused });
++      const focusedShot = await captureClip(`${variant === "fixed" ? "419e56d" : "before-5cd63ff"}-${desc}-focused`, focusedClip, { state: `${desc} focused by a trusted Tab (${variant === "fixed" ? "fixed 419e56d" : "5cd63ff"}, pet hidden)`, focus: focused });
+       // Context for the manual review: the whole SettingRow around the focused control (still focused).
+       const row = await evaluate(`(() => { const r = document.activeElement.closest(".setting-row").getBoundingClientRect(); return { x: Math.max(0, Math.floor(r.left) - 8), y: Math.max(0, Math.floor(r.top) - 8), width: Math.ceil(r.width) + 16, height: Math.ceil(r.height) + 16 }; })()`);
+-      await captureClip(`${variant === "fixed" ? "5bbf473" : "before-5cd63ff"}-${desc}-focused-row`, row, { state: `the ${desc === "font-slider" ? "Font scale" : "Accent color"} row with ${desc} focused by a trusted Tab (${variant === "fixed" ? "fixed 5bbf473" : "5cd63ff"}, pet hidden)`, focus: await evaluate("__visual.focusInfo()") });
++      await captureClip(`${variant === "fixed" ? "419e56d" : "before-5cd63ff"}-${desc}-focused-row`, row, { state: `the ${desc === "font-slider" ? "Font scale" : "Accent color"} row with ${desc} focused by a trusted Tab (${variant === "fixed" ? "fixed 419e56d" : "5cd63ff"}, pet hidden)`, focus: await evaluate("__visual.focusInfo()") });
+       await press("Tab");
+       let moved = await evaluate(`__visual.probe(${JSON.stringify(desc)}, false)`);
+       if (!moved.inViewport) moved = await evaluate(`__visual.probe(${JSON.stringify(desc)})`);
+       const after = await evaluate("__visual.focusInfo()");
+       const fraction = (value) => Math.round((value - Math.floor(value)) * 100) / 100;
+       pre(`${id}:${desc}:unfocused-capture-is-control-relative-and-the-focus-moved-on`, after.desc !== desc && fraction(moved.rect.left) === fraction(focused.rect.left) && fraction(moved.rect.top) === fraction(focused.rect.top), { focused: focused.rect, moved: moved.rect, after: after.desc });
+-      const unfocusedShot = await captureClip(`${variant === "fixed" ? "5bbf473" : "before-5cd63ff"}-${desc}-unfocused`, clipOf(moved.rect), { state: `${desc} after focus moved on to ${after.desc} (${variant === "fixed" ? "fixed 5bbf473" : "5cd63ff"}, pet hidden)` });
++      const unfocusedShot = await captureClip(`${variant === "fixed" ? "419e56d" : "before-5cd63ff"}-${desc}-unfocused`, clipOf(moved.rect), { state: `${desc} after focus moved on to ${after.desc} (${variant === "fixed" ? "fixed 419e56d" : "5cd63ff"}, pet hidden)` });
+       const identical = focusedShot.sha256 === unfocusedShot.sha256;
+       rows.push({ variant, desc, focusVisible: focused.focusVisible, outline: focused.outline, focusedPng: focusedShot.sha256, unfocusedPng: unfocusedShot.sha256, pixelIdentical: identical });
+       if (variant === "fixed") {
+@@ -2725,6 +2815,7 @@ let pixelSelfTested = false;
+ const pixelWalkLog = [];
+ /** One full Tab cycle from the anchor; every stop focused vs moved on, by decoded pixels in its own outline band. */
+ async function pixelFocusWalk(id, { anchor = `${PANE} .pane-title`, max = 140, expectedStops = null } = {}) {
++  progress(`E15 pixel walk ${id}`); // batch 50 addition
+   pre(`${id}:pixel-walk-helper-installed`, ["installed", "present"].includes(await evaluate(B48_PAGE_HELPER)));
+   if (!pixelSelfTested) {
+     await pixelSelfTests(id);
+@@ -2867,16 +2958,404 @@ async function kbSelectedSwatchFocus() {
+   }
+   record("selected-swatch-focus-table", { lang: LANG, width: KEYBOARD_WIDTH, rows });
+ }
++
++// ---------------------------------------------------------------------------------------------------
++// Batch 50 additions to E15 (control plane batch 50 "E15"; F-APP-2 ruling 2 "修复要求" and 4 "修复后的 E15"; F-APP-3
++// ruling 1). Every user-facing step is trusted input (Tab, Shift+Tab, Enter, clicks); stores, faults and placement are
++// script, as in batch 48. The per-stop oracle is batch 48's pixelFocusWalk, unchanged.
++// ---------------------------------------------------------------------------------------------------
++/** Page helper (a JS global only; no DOM change): pane selection state, computed style facts, colour conversion. */
++const B50_PAGE_HELPER = `(() => {
++  if (window.__b50) return "present";
++  const PANE = ${JSON.stringify(PANE)};
++  const canvas = document.createElement("canvas");
++  canvas.width = 1;
++  canvas.height = 1;
++  const context = canvas.getContext("2d", { willReadFrequently: true });
++  const rgba = (css) => {
++    context.clearRect(0, 0, 1, 1);
++    context.fillStyle = "rgba(0, 0, 0, 0)";
++    context.fillStyle = css;
++    context.fillRect(0, 0, 1, 1);
++    const data = context.getImageData(0, 0, 1, 1).data;
++    return [data[0], data[1], data[2], data[3]];
++  };
++  const factsOf = (element) => {
++    if (!element || !element.isConnected) return null;
++    const style = getComputedStyle(element);
++    const rect = element.getBoundingClientRect();
++    return {
++      focused: document.activeElement === element, focusVisible: element.matches(":focus-visible"),
++      outline: { style: style.outlineStyle, width: style.outlineWidth, color: style.outlineColor, offset: style.outlineOffset },
++      boxShadow: style.boxShadow, backgroundColor: style.backgroundColor, color: style.color, fontWeight: style.fontWeight, borderRadius: style.borderTopLeftRadius, borderWidth: style.borderTopWidth,
++      ariaChecked: element.getAttribute("aria-checked"), ariaSelected: element.getAttribute("aria-selected"), active: element.classList.contains("active"),
++      rect: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height },
++    };
++  };
++  window.__b50 = {
++    /** Selected pane controls (DOM order equals __visual.paneControls()), the slider values and the applied theme. */
++    selection() {
++      const pane = document.querySelector(PANE);
++      if (!pane) return null;
++      const descs = window.__visual.paneControls();
++      const elements = Array.from(pane.querySelectorAll("button, input"));
++      const selected = [];
++      elements.forEach((element, index) => {
++        if (element.classList.contains("active") || element.getAttribute("aria-selected") === "true" || element.getAttribute("aria-checked") === "true" || element.getAttribute("aria-pressed") === "true") selected.push(descs[index]);
++      });
++      const slider = (field) => { const input = pane.querySelector('[data-appearance-control="' + field + '"] input[type="range"]'); return input ? input.value : null; };
++      return { selected, sliders: { hue: slider("accentHue"), font: slider("fontScale") }, aligned: descs.length === elements.length, theme: document.documentElement.getAttribute("data-theme") };
++    },
++    facts(which) { return factsOf(which === "stop" ? window.__b48 && window.__b48.stopElement : document.activeElement); },
++    rgba(css) { return rgba(css); },
++    /** The open Topbar popover's box with a margin, clamped to the viewport (viewport coordinates). */
++    panelClip(margin) {
++      const panel = document.querySelector(".topbar #topbar-pref-panel");
++      if (!panel) return null;
++      const rect = panel.getBoundingClientRect();
++      const x0 = Math.max(0, Math.floor(rect.left) - margin);
++      const y0 = Math.max(0, Math.floor(rect.top) - margin);
++      const x1 = Math.min(innerWidth, Math.ceil(rect.right) + margin);
++      const y1 = Math.min(innerHeight, Math.ceil(rect.bottom) + margin);
++      return { x: x0, y: y0, width: x1 - x0, height: y1 - y0 };
++    },
++  };
++  return "installed";
++})()`;
++async function installB50(id) {
++  pre(`${id}:pixel-helper-installed`, ["installed", "present"].includes(await evaluate(B48_PAGE_HELPER)));
++  pre(`${id}:batch-50-helper-installed`, ["installed", "present"].includes(await evaluate(B50_PAGE_HELPER)));
++}
++/** The visual viewport is unzoomed (scale 1, full width), so every capture shows the page as laid out. */
++async function unzoomedPrecondition(id) {
++  const viewport = await evaluate("({ scale: visualViewport.scale, width: visualViewport.width, innerWidth, pageLeft: visualViewport.pageLeft })");
++  pre(`${id}:visual-viewport-unzoomed`, viewport.scale === 1 && viewport.width === viewport.innerWidth && viewport.pageLeft === 0, { viewport });
++}
++/** The colour part of a computed box-shadow ("<colour> 0px 0px 0px 2px"). */
++const shadowColour = (boxShadow) => (/^(.*?\))\s+-?[\d.]+px/.exec(boxShadow ?? "") ?? [])[1] ?? null;
++/** Pixels of a decoded image in a radial band [from, to] px outside a circle's edge; the fraction within `tolerance` of `rgb`. */
++function radialBand(image, centre, radius, from, to, rgb, tolerance = 28) {
++  let pixels = 0;
++  let near = 0;
++  const sums = [0, 0, 0];
++  for (let y = 0; y < image.height; y += 1) {
++    for (let x = 0; x < image.width; x += 1) {
++      const distance = Math.hypot(x + 0.5 - centre.x, y + 0.5 - centre.y) - radius;
++      if (distance < from || distance > to) continue;
++      const index = (y * image.width + x) * 4;
++      pixels += 1;
++      for (let channel = 0; channel < 3; channel += 1) sums[channel] += image.data[index + channel];
++      if ([0, 1, 2].every((channel) => Math.abs(image.data[index + channel] - rgb[channel]) <= tolerance)) near += 1;
++    }
++  }
++  return { from, to, pixels, near, fraction: pixels ? Math.round((near / pixels) * 1000) / 1000 : 0, mean: sums.map((sum) => (pixels ? Math.round(sum / pixels) : null)) };
++}
++const toLinear255 = (value) => { const channel = value / 255; return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4; };
++const luminance255 = (rgb) => 0.2126 * toLinear255(rgb[0]) + 0.7152 * toLinear255(rgb[1]) + 0.0722 * toLinear255(rgb[2]);
++const contrast255 = (a, b) => { const la = luminance255(a); const lb = luminance255(b); return Math.round(((Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05)) * 1000) / 1000; };
++/** The most frequent colour inside a rectangle of a decoded image (an option's interior), with its share. */
++function modalColour(image, box) {
++  const counts = new Map();
++  let total = 0;
++  for (let y = Math.max(0, Math.ceil(box.top)); y < Math.min(image.height, Math.floor(box.bottom)); y += 1) {
++    for (let x = Math.max(0, Math.ceil(box.left)); x < Math.min(image.width, Math.floor(box.right)); x += 1) {
++      const index = (y * image.width + x) * 4;
++      const key = `${image.data[index]},${image.data[index + 1]},${image.data[index + 2]}`;
++      counts.set(key, (counts.get(key) ?? 0) + 1);
++      total += 1;
++    }
++  }
++  let best = null;
++  for (const [key, count] of counts) if (!best || count > best.count) best = { key, count };
++  return best ? { rgb: best.key.split(",").map(Number), share: Math.round((best.count / total) * 1000) / 1000, pixels: total } : null;
++}
++/**
++ * E15 selection walks: batch 48's per-stop pixel walk (unchanged oracle) with every option group on a NON-DEFAULT
++ * selection (theme, density, accent swatch, background tone, sidebar position; language: the ZH run's selected segment
++ * is the non-default 中文), both sliders at non-default values, in the clean, failed-write (all seven, with the Topbar
++ * status) and source-issue states, in the light (theme "system", rendering light) and dark themes. Before each walk the
++ * exact selection is a precondition; after it, every selected control, both sliders and (failed-write) the Topbar
++ * status must show visible focus by their own pixels (deferred product checks, the per-stop oracle restated per stop).
++ */
++const SELECTION_WALKS = [
++  { name: "sel-light-a", theme: "light", state: "clean", stored: { theme: "system", density: "compact", accentHue: 35, bgTone: "cream", fontScale: 0.9 }, railByClick: "top",
++    selected: ["theme:system", "density:compact", "swatch:2", "tone:cream", "railpos:top"], sliders: { hue: "35", font: "0.9" } },
++  { name: "sel-light-b", theme: "light", state: "clean", stored: { theme: "system", density: "compact", accentHue: 295, bgTone: "lavender", railPos: "bottom", fontScale: 1.1 },
++    selected: ["theme:system", "density:compact", "swatch:4", "tone:lavender", "railpos:bottom"], sliders: { hue: "295", font: "1.1" } },
++  { name: "sel-dark-clean", theme: "dark", state: "clean", stored: { theme: "dark", density: "compact", accentHue: 230, bgTone: "mist", railPos: "right", fontScale: 1.05 },
++    selected: ["theme:dark", "density:compact", "swatch:1", "tone:mist", "railpos:right"], sliders: { hue: "230", font: "1.05" } },
++  { name: "sel-dark-failed", theme: "dark", state: "failed-write", stored: { lang: OPPOSITE[LANG] }, failed: true,
++    selected: ["theme:dark", "density:compact", "swatch:3", "tone:peach", "railpos:top"], sliders: { hue: "355", font: "1.05" } },
++  { name: "sel-dark-source", theme: "dark", state: "source-issue", stored: { theme: "dark", density: "compact", accentHue: 75, bgTone: "graphite", fontScale: 1.15 }, extra: { [KEY.railPos]: "diagonal" },
++    selected: ["theme:dark", "density:compact", "swatch:5", "tone:graphite", "railpos:left"], sliders: { hue: "75", font: "1.15" } },
++];
++const selectionWalkLog = [];
++async function kbSelectionWalks() {
++  for (const walk of SELECTION_WALKS) {
++    const id = `kb:${LANG}:${walk.name}`;
++    progress(`E15 selection walk ${walk.name}`);
++    await kbMount(id, { lang: LANG, ...walk.stored }, walk.extra ?? {});
++    await installB50(id);
++    if (walk.railByClick) {
++      // The sidebar position is chosen by a trusted click once the pet is hidden: a successful autosave, so the state is
++      // still clean. (A STORED top sidebar at 375 px leaves Chrome's mobile visual viewport zoomed after the pet toggle's
++      // 1440 px round trip, a harness artifact seen in development; see unzoomedPrecondition.)
++      const since = await mark();
++      await clickDesc(`railpos:${walk.railByClick}`, `${id}:rail-by-click`);
++      pre(`${id}:rail-chosen-by-click-written-once-and-settled-clean`, await waitUntil(`__native.native.get(${JSON.stringify(KEY.railPos)}) === ${JSON.stringify(walk.railByClick)} && __native.pane().recovery.length === 0`, 6000)
++        && isDeepStrictEqual(sevenMutations((await snap(since)).attempts).map((entry) => `${entry.op}:${entry.key}=${entry.value}:${entry.outcome}`), [`set:${KEY.railPos}=${walk.railByClick}:ok`]), {});
++      await parkMouse();
++      await evaluate("__visual.settle()");
++    }
++    if (walk.failed) {
++      // All seven fail with NON-DEFAULT drafts (the language draft is this run's language over the other stored one);
++      // the background choice comes before the swatch, so the accent draft is the swatch's hue.
++      await evaluate(`__native.denySet(${JSON.stringify(SEVEN)})`);
++      await failPane(`lang:${LANG}`, ["lang"], `${id}:lang`);
++      pre(`${id}:ui-language-now-${LANG}`, (await evaluate("__native.uiLang()")) === LANG);
++      await failPane("theme:dark", ["theme"], `${id}:theme`);
++      await failPane("density:compact", ["density"], `${id}:density`);
++      await failPane("tone:peach", ["bgTone", "accentHue"], `${id}:background`);
++      await failPane("swatch:3", ["accentHue"], `${id}:accent`);
++      await failPane("railpos:top", ["railPos"], `${id}:rail`);
++      await focusSlider("fontScale", `${id}:font`);
++      await press("ArrowRight");
++      pre(`${id}:font:edit-settled-as-a-failed-draft`, await waitUntil(blockIs("fontScale", "not-saved"), 6000));
++      pre(`${id}:all-seven-failed-and-the-topbar-status-shown`, await waitUntil(`${recoveryIs(blocks(Object.fromEntries(FIELDS.map((field) => [field, "not-saved"]))))} && ${topbarStatusIs(true)}`, 6000), { pane: await evaluate("__native.pane()") });
++      await parkMouse();
++      await evaluate("__visual.settle()");
++    }
++    const selection = await evaluate("__b50.selection()");
++    const pane = await evaluate("__native.pane()");
++    const expectedSelected = [`lang:${LANG}`, ...walk.selected];
++    const expectedRecovery = walk.failed ? blocks(Object.fromEntries(FIELDS.map((field) => [field, "not-saved"]))) : walk.extra ? blocks({ railPos: "unavailable" }) : [];
++    pre(`${id}:non-default-selections-sliders-theme-and-state-in-place`, selection.aligned && isDeepStrictEqual([...selection.selected].sort(), [...expectedSelected].sort())
++      && isDeepStrictEqual(selection.sliders, walk.sliders) && selection.theme === walk.theme && isDeepStrictEqual(pane.recovery, expectedRecovery), { selection, expectedSelected, recovery: pane.recovery, expectedRecovery });
++    await unzoomedPrecondition(id);
++    const { stops, inside } = await tabCycle(id);
++    if (walk.failed) check(`${id}:topbar-status-is-a-tab-stop-immediately-before-the-appearance-trigger`, inside.indexOf("topbar:trigger") === inside.indexOf("topbar:status") + 1 && inside.includes("topbar:status"), { around: inside.slice(Math.max(0, inside.indexOf("topbar:status") - 2), inside.indexOf("topbar:status") + 3) });
++    visibleFocusCheck(id, stops);
++    const rows = await pixelFocusWalk(id, { expectedStops: inside });
++    const focal = [...expectedSelected, "hue-slider", "font-slider", ...(walk.failed ? ["topbar:status", "retry-all"] : walk.extra ? ["reload:railPos"] : [])];
++    const focalRows = focal.map((desc) => ({ desc, row: rows.find((row) => row.desc === desc) ?? null }));
++    for (const { desc, row } of focalRows) {
++      checkDeferred(`${id}:${desc}${expectedSelected.includes(desc) ? "-selected" : ""}-focus-visible-by-its-own-pixels`, Boolean(row) && row.visible === true,
++        row ? { outline: row.outline, bandPixels: row.bandPixels, bandDiff: row.bandDiff, ownPixels: row.ownPixels, ownDiff: row.ownDiff, totalDiff: row.totalDiff } : { missing: desc });
++    }
++    selectionWalkLog.push({ id, theme: walk.theme, state: walk.state, selected: expectedSelected, sliders: walk.sliders, stops: rows.length, failed: rows.filter((row) => !row.visible).map((row) => row.desc),
++      focal: focalRows.map(({ desc, row }) => (row ? `${desc}:${row.ownDiff}/${row.ownPixels}` : `${desc}:missing`)) });
++  }
++  record("selection-walk-table", { lang: LANG, width: KEYBOARD_WIDTH, walks: selectionWalkLog });
++}
++/**
++ * E15 selected accent swatch (F-APP-2 ruling 2): focused+selected against selected+unfocused by the swatch's own pixels;
++ * the selection ring stays visible while focused (radial band 0.75–1.25 px outside the swatch edge, the core of the 2 px
++ * box-shadow ring, in its computed --text-1 colour); the focus indicator uses the global ring colour and width; no layout
++ * change. The measurement is validated in every case: the unfocused selected swatch's own selection outline (band
++ * 2.75–3.25 px) is in the same colour, and a focused NON-selected swatch has no such colour in the 0.75–1.25 px band.
++ * Light and dark.
++ */
++async function kbSelectedSwatchRing() {
++  const cases = [
++    { theme: "light", stored: {}, selected: "swatch:0", control: "swatch:1" },
++    { theme: "light", stored: { accentHue: 295 }, selected: "swatch:4", control: "swatch:5" },
++    { theme: "dark", stored: { theme: "dark", accentHue: 230 }, selected: "swatch:1", control: "swatch:2" },
++    { theme: "dark", stored: { theme: "dark" }, selected: "swatch:0", control: "swatch:1" },
++  ];
++  const rows = [];
++  for (const entry of cases) {
++    const tag = `${entry.theme}-${entry.selected.replace(":", "-")}`;
++    const id = `kb:${LANG}:selected-swatch-ring:${tag}`;
++    progress(`E15 selected swatch ring ${tag}`);
++    await kbMount(id, { lang: LANG, ...entry.stored });
++    await installB50(id);
++    await unzoomedPrecondition(id);
++    const selection = await evaluate("__b50.selection()");
++    pre(`${id}:theme-and-selected-swatch-in-place`, selection.theme === entry.theme && selection.selected.includes(entry.selected) && !selection.selected.includes(entry.control), { selection });
++    // 1. The selected swatch focused by trusted Tab; 2. focus moved out of the swatch row by trusted Shift+Tab.
++    await tabUntil(entry.selected, `${id}:${entry.selected}`);
++    await parkMouse();
++    const first = await evaluate(`__b48.placeFocused(${PIXEL_MARGIN})`);
++    const focusedFacts = await evaluate(`__b50.facts("active")`);
++    const focusedShot = await stableViewportClip(first.clip);
++    const rowClip = await evaluate(`(() => { const r = document.activeElement.closest(".setting-row").getBoundingClientRect(); return { x: Math.max(0, Math.floor(r.left) - 8), y: Math.max(0, Math.floor(r.top) - 8), width: Math.ceil(r.width) + 16, height: Math.ceil(r.height) + 16 }; })()`);
++    const rowShot = await stableViewportClip(rowClip);
++    const backPath = [];
++    for (let presses = 0; presses < 7; presses += 1) {
++      await press("ShiftTab");
++      const now = await evaluate("__visual.activeDesc()");
++      backPath.push(now);
++      if (!now.startsWith("swatch:")) break;
++    }
++    const again = await evaluate(`__b48.placeAgain(${PIXEL_MARGIN})`);
++    const unfocusedFacts = await evaluate(`__b50.facts("stop")`);
++    const aligned = first.ok && again.ok && !again.stillFocused && isDeepStrictEqual(again.clip, first.clip) && again.hovered === first.hovered
++      && ["left", "top", "right", "bottom"].every((side) => Math.abs(again.rect[side] - first.rect[side]) < 0.01);
++    pre(`${id}:focus-left-the-swatch-row-by-trusted-shift-tab-and-the-second-capture-is-aligned`, aligned && /^density:/.test(backPath.at(-1) ?? "") && focusedFacts.focused && focusedFacts.focusVisible && !unfocusedFacts.focused, { backPath, first: { rect: first.rect, clip: first.clip }, again: { rect: again.rect, clip: again.clip, stillFocused: again.stillFocused } });
++    const movedShot = await stableViewportClip(again.clip);
++    pre(`${id}:both-captures-are-stable-frames`, focusedShot.stable && movedShot.stable && rowShot.stable, { attempts: [focusedShot.attempts, movedShot.attempts, rowShot.attempts] });
++    // 3. The control: a focused NON-selected swatch (trusted Tab forward from the density segment).
++    await tabUntil(entry.control, `${id}:${entry.control}`, { anchor: null, max: 8 });
++    await parkMouse();
++    const controlFirst = await evaluate(`__b48.placeFocused(${PIXEL_MARGIN})`);
++    const controlFacts = await evaluate(`__b50.facts("active")`);
++    const controlShot = await stableViewportClip(controlFirst.clip);
++    pre(`${id}:control-capture-stable-and-the-control-is-focus-visible-and-not-selected`, controlShot.stable && controlFacts.focusVisible && !controlFacts.active, { controlFacts });
++    // Analysis.
++    const comparison = compareFocusBand(focusedShot.buffer, movedShot.buffer, first, again);
++    const ringCss = shadowColour(focusedFacts.boxShadow);
++    const ringRgb = (await evaluate(`__b50.rgba(${JSON.stringify(ringCss ?? "transparent")})`)).slice(0, 3);
++    const selectionOutlineRgb = (await evaluate(`__b50.rgba(${JSON.stringify(unfocusedFacts.outline.color)})`)).slice(0, 3);
++    const geometry = (placed) => ({ centre: { x: (placed.rect.left + placed.rect.right) / 2 - placed.clip.x, y: (placed.rect.top + placed.rect.bottom) / 2 - placed.clip.y }, radius: (placed.rect.right - placed.rect.left) / 2 });
++    const focusedImage = decodePng(focusedShot.buffer);
++    const movedImage = decodePng(movedShot.buffer);
++    const controlImage = decodePng(controlShot.buffer);
++    const g = geometry(first);
++    const gc = geometry(controlFirst);
++    // Band cores: a pixel spans at most ±0.71 px radially, so a pixel centred 0.75–1.25 px outside the edge lies wholly in
++    // the 0–2 px box-shadow ring (and 2.75–3.25 px wholly in the 2–4 px outline ring; 4.75–5.25 px in the 4–6 px ring),
++    // whatever the swatch's subpixel position.
++    const bands = {
++      focusedSelected: { inner: radialBand(focusedImage, g.centre, g.radius, 0.75, 1.25, ringRgb), middle: radialBand(focusedImage, g.centre, g.radius, 2.75, 3.25, ringRgb), outer: radialBand(focusedImage, g.centre, g.radius, 4.75, 5.25, ringRgb) },
++      unfocusedSelected: { inner: radialBand(movedImage, g.centre, g.radius, 0.75, 1.25, ringRgb), middle: radialBand(movedImage, g.centre, g.radius, 2.75, 3.25, ringRgb) },
++      focusedControl: { inner: radialBand(controlImage, gc.centre, gc.radius, 0.75, 1.25, ringRgb), middle: radialBand(controlImage, gc.centre, gc.radius, 2.75, 3.25, ringRgb) },
++    };
++    const saved = {
++      focused: (await saveShot(`selring-${tag}-focused`, focusedShot.base64, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip: first.clip, pageOffset: focusedShot.offset, state: `${entry.selected} (the selected swatch, ${entry.theme} theme) focused by a trusted Tab (fixed ${short}, pet hidden)`, facts: focusedFacts })).file,
++      row: (await saveShot(`selring-${tag}-focused-row`, rowShot.base64, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip: rowClip, pageOffset: rowShot.offset, state: `the Accent color row with the selected ${entry.selected} focused (${entry.theme} theme, fixed ${short})` })).file,
++      unfocused: (await saveShot(`selring-${tag}-unfocused`, movedShot.base64, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip: again.clip, pageOffset: movedShot.offset, state: `${entry.selected} selected, after trusted Shift+Tab (${backPath.join(" > ")}) moved focus out of the swatch row (${entry.theme} theme, fixed ${short})`, facts: unfocusedFacts })).file,
++      control: (await saveShot(`selring-${tag}-control-${entry.control.replace(":", "-")}-focused`, controlShot.base64, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip: controlFirst.clip, pageOffset: controlShot.offset, state: `${entry.control} (not selected) focused by a trusted Tab, the measurement control (${entry.theme} theme, fixed ${short})`, facts: controlFacts })).file,
++    };
++    const row = { theme: entry.theme, stored: entry.stored, selected: entry.selected, control: entry.control, backPath, focusedFacts, unfocusedFacts, controlFacts, ringCss, ringRgb, selectionOutlineRgb, bands, comparison, saved,
++      png: { focused: sha256(focusedShot.buffer), unfocused: sha256(movedShot.buffer), control: sha256(controlShot.buffer) }, captures: [focusedShot.attempts, movedShot.attempts, controlShot.attempts] };
++    rows.push(row);
++    record("selected-swatch-ring", { id, ...row });
++    pre(`${id}:measurement-valid-the-unfocused-selection-outline-is-the-ring-colour-and-a-focused-non-selected-swatch-has-none-inside`, isDeepStrictEqual(selectionOutlineRgb, ringRgb)
++      && bands.unfocusedSelected.middle.fraction >= 0.8 && bands.unfocusedSelected.inner.fraction <= 0.1 && bands.focusedControl.inner.fraction <= 0.1 && bands.focusedSelected.inner.pixels >= 40, { bands, ringRgb, selectionOutlineRgb });
++    checkDeferred(`${id}:focused-selected-differs-from-selected-unfocused-in-its-own-ring-or-box`, comparison.ownDiff > 0 && comparison.sameSize, { ownDiff: comparison.ownDiff, ownPixels: comparison.ownPixels, bandDiff: comparison.bandDiff, totalDiff: comparison.totalDiff });
++    checkDeferred(`${id}:selection-ring-still-visible-while-focused`, bands.focusedSelected.inner.fraction >= 0.8, { inner: bands.focusedSelected.inner, ringCss, ringRgb });
++    checkDeferred(`${id}:focus-indicator-uses-the-global-ring-colour-and-width-and-the-selection-colour-is-kept`, focusedFacts.outline.style === "solid" && focusedFacts.outline.width === "2px"
++      && focusedFacts.outline.color === controlFacts.outline.color && controlFacts.outline.style === "solid" && controlFacts.outline.width === "2px" && ringCss === unfocusedFacts.outline.color, { focused: focusedFacts.outline, control: controlFacts.outline, ringCss, selectionOutline: unfocusedFacts.outline });
++    checkDeferred(`${id}:no-layout-change-same-box-focused-and-unfocused`, ["left", "top", "right", "bottom"].every((side) => Math.abs(focusedFacts.rect[side] - unfocusedFacts.rect[side]) < 0.01), { focused: focusedFacts.rect, unfocused: unfocusedFacts.rect });
++  }
++  record("selected-swatch-ring-table", { lang: LANG, width: KEYBOARD_WIDTH, rows: rows.map((row) => ({ theme: row.theme, selected: row.selected, control: row.control, ownDiff: row.comparison.ownDiff, ownPixels: row.comparison.ownPixels,
++    focusedInner: row.bands.focusedSelected.inner.fraction, unfocusedMiddle: row.bands.unfocusedSelected.middle.fraction, controlInner: row.bands.focusedControl.inner.fraction, focusedOutline: row.focusedFacts.outline, boxShadow: row.focusedFacts.boxShadow, png: row.png })) });
++}
++/**
++ * F-APP-3 observation (NOT gated; control plane F-APP-3 ruling 1, UX-05 follow-up): the Topbar quick-switch popover's
++ * menuitemradio options. The popover is opened by a trusted Enter on the trigger; trusted Tab walks its options. Each
++ * option is captured focused and again after focus moved on (batch 48 placement, stable frames); recorded: its own-region
++ * pixel change, the computed outline and background focused and unfocused, and the option interior's modal colour in
++ * both captures with their contrast ratio. Checked and unchecked options, light and dark.
++ */
++async function kbPopoverFocusObservation() {
++  const rows = [];
++  const THEME_NEXT = { light: "dark", dark: "system" };
++  for (const theme of ["light", "dark"]) {
++    const id = `kb:${LANG}:popover-focus:${theme}`;
++    progress(`F-APP-3 observation ${theme}`);
++    await kbMount(id, { lang: LANG, theme });
++    await installB50(id);
++    await unzoomedPrecondition(id);
++    pre(`${id}:theme-applied`, (await evaluate("__native.html().theme")) === theme);
++    // The pet toggle's click scrolled its rail button into view (the 1024x768 page scrolls); the Topbar is put back in view.
++    await evaluate("__visual.scrollWindowTo(0)");
++    await clickTopbarBackground(id);
++    const path = await tabUntil("topbar:trigger", id, { anchor: null, max: 6 });
++    pre(`${id}:trigger-reached-by-tab-after-the-search-box`, isDeepStrictEqual(path, ["topbar:search", "topbar:trigger"]), { path });
++    await press("Enter");
++    pre(`${id}:popover-opened-by-enter`, await waitUntil("__native.topbar().open", 3000));
++    await parkMouse();
++    const sectionTheme = labels[LANG].theme;
++    const checkedName = labels[LANG][theme];
++    const uncheckedName = labels[LANG][THEME_NEXT[theme]];
++    const targets = { checked: `topbar:option:${sectionTheme}:${checkedName}`, unchecked: `topbar:option:${sectionTheme}:${uncheckedName}` };
++    const visited = [];
++    let pending = null;
++    for (let index = 0; index < 12; index += 1) {
++      await press("Tab");
++      const now = await evaluate("__visual.focusInfo()");
++      if (pending) {
++        const again = await evaluate(`__b48.placeAgain(${PIXEL_MARGIN})`);
++        const unfocusedFacts = await evaluate(`__b50.facts("stop")`);
++        const aligned = pending.first.ok && again.ok && !again.stillFocused && isDeepStrictEqual(again.clip, pending.first.clip) && again.hovered === pending.first.hovered
++          && ["left", "top", "right", "bottom"].every((side) => Math.abs(again.rect[side] - pending.first.rect[side]) < 0.01);
++        const moved = aligned ? await stableViewportClip(again.clip) : null;
++        pre(`${id}:${pending.desc}:captures-aligned-and-stable`, aligned && Boolean(moved) && moved.stable && pending.shot.stable, { first: { rect: pending.first.rect, clip: pending.first.clip, hovered: pending.first.hovered }, again: { rect: again.rect, clip: again.clip, hovered: again.hovered, stillFocused: again.stillFocused } });
++        const comparison = compareFocusBand(pending.shot.buffer, moved.buffer, pending.first, again);
++        const interior = { left: pending.first.rect.left - pending.first.clip.x + 3, top: pending.first.rect.top - pending.first.clip.y + 3, right: pending.first.rect.right - pending.first.clip.x - 3, bottom: pending.first.rect.bottom - pending.first.clip.y - 3 };
++        const focusedModal = modalColour(decodePng(pending.shot.buffer), interior);
++        const unfocusedModal = modalColour(decodePng(moved.buffer), interior);
++        const kind = pending.desc === targets.checked ? "checked" : pending.desc === targets.unchecked ? "unchecked" : null;
++        const row = {
++          theme, desc: pending.desc, checked: pending.facts.ariaChecked, next: now.isBody ? "body" : now.desc, focusVisible: pending.facts.focusVisible,
++          focused: { outline: pending.facts.outline, backgroundColor: pending.facts.backgroundColor, color: pending.facts.color, fontWeight: pending.facts.fontWeight },
++          unfocused: { outline: unfocusedFacts.outline, backgroundColor: unfocusedFacts.backgroundColor, color: unfocusedFacts.color, fontWeight: unfocusedFacts.fontWeight },
++          pixels: { ownPixels: comparison.ownPixels, ownDiff: comparison.ownDiff, bandPixels: comparison.bandPixels, bandDiff: comparison.bandDiff, interiorDiff: comparison.interiorDiff, totalDiff: comparison.totalDiff, excluded: comparison.excluded },
++          interiorModal: { focused: focusedModal, unfocused: unfocusedModal, contrast: focusedModal && unfocusedModal ? contrast255(focusedModal.rgb, unfocusedModal.rgb) : null },
++          png: { focused: sha256(pending.shot.buffer), movedOn: sha256(moved.buffer) }, captures: [pending.shot.attempts, moved.attempts],
++        };
++        if (kind) {
++          const safe = `${theme}-${kind}`;
++          row.screenshots = [
++            pending.panelFile,
++            (await saveShot(`popover-${safe}-option-focused`, pending.shot.base64, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip: pending.first.clip, pageOffset: pending.shot.offset, state: `F-APP-3 observation: the ${kind} option ${pending.desc} focused by a trusted Tab (${theme} theme, fixed ${short})`, facts: pending.facts })).file,
++            (await saveShot(`popover-${safe}-option-moved-on`, moved.base64, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip: again.clip, pageOffset: moved.offset, state: `F-APP-3 observation: the ${kind} option ${pending.desc} after focus moved on to ${row.next} (${theme} theme, fixed ${short})`, facts: unfocusedFacts })).file,
++          ];
++        }
++        rows.push(row);
++        observe(`${id}:${pending.desc}`, { checked: row.checked, focused: row.focused, unfocused: row.unfocused, pixels: row.pixels, interiorModal: row.interiorModal });
++        pending = null;
++      }
++      if (now.isBody || !now.desc.startsWith("topbar:option:")) break;
++      visited.push(now.desc);
++      const first = await evaluate(`__b48.placeFocused(${PIXEL_MARGIN})`);
++      const facts = await evaluate(`__b50.facts("active")`);
++      const shot = await stableViewportClip(first.clip);
++      let panelFile = null;
++      if (now.desc === targets.checked || now.desc === targets.unchecked) {
++        const kind = now.desc === targets.checked ? "checked" : "unchecked";
++        const panelClip = await evaluate("__b50.panelClip(8)");
++        const panelShot = await stableViewportClip(panelClip);
++        panelFile = (await saveShot(`popover-${theme}-${kind}-focused-panel`, panelShot.base64, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip: panelClip, pageOffset: panelShot.offset, state: `F-APP-3 observation: the Topbar popover with the ${kind} option ${now.desc} focused by a trusted Tab (${theme} theme, fixed ${short})`, stable: panelShot.stable })).file;
++      }
++      pending = { desc: now.desc, focus: now, first, facts, shot, panelFile };
++    }
++    const options = await evaluate("__native.topbar().options");
++    pre(`${id}:every-popover-option-visited-once-in-order-and-the-popover-stayed-open`, (await evaluate("__native.topbar().open")) && visited.length === options.length && options.length === 7
++      && isDeepStrictEqual(visited, options.map((option) => `topbar:option:${option.section}:${option.name}`)) && visited.includes(targets.checked) && visited.includes(targets.unchecked), { visited, options });
++    await press("Escape");
++    pre(`${id}:escape-closed-the-popover`, await waitUntil("!__native.topbar().open", 3000));
++  }
++  const summary = rows.map((row) => ({ theme: row.theme, desc: row.desc, checked: row.checked, ownDiff: row.pixels.ownDiff, ownPixels: row.pixels.ownPixels, focusedOutline: `${row.focused.outline.style} ${row.focused.outline.width}`,
++    focusedBackground: row.focused.backgroundColor, unfocusedBackground: row.unfocused.backgroundColor, interiorContrast: row.interiorModal.contrast }));
++  record("popover-focus-observation-table", { lang: LANG, width: KEYBOARD_WIDTH, gated: false, rows: summary });
++  observe(`kb:${LANG}:popover-focus:f-app-3-summary`, { checkedOptionsWithZeroOwnPixelChange: rows.filter((row) => row.checked === "true" && row.pixels.ownDiff === 0).map((row) => `${row.theme}:${row.desc}`),
++    checkedOptions: rows.filter((row) => row.checked === "true").length, uncheckedOptions: rows.filter((row) => row.checked !== "true").length,
++    focusedOutlineStyles: [...new Set(rows.map((row) => row.focused.outline.style))], uncheckedInteriorContrast: rows.filter((row) => row.checked !== "true").map((row) => row.interiorModal.contrast) });
++}
+ async function runKeyboard() {
++  progress("E15 section focus-visibility"); // batch 50 addition
+   if (selected("focus-visibility")) await kbFocusVisibility();
++  progress("E15 section swatch-focus"); // batch 50 addition
+   if (selected("swatch-focus")) await kbSelectedSwatchFocus(); // batch 48 addition (reproduction)
++  progress("E15 section tab"); // batch 50 addition
+   if (selected("tab")) await kbTabOrder();
++  progress("E15 section activation"); // batch 50 addition
+   if (selected("activation")) await kbActivation();
++  progress("E15 section sliders"); // batch 50 addition
+   if (selected("sliders")) await kbSliders();
++  progress("E15 section reset"); // batch 50 addition
+   if (selected("reset")) await kbReset();
++  progress("E15 section focus targets"); // batch 50 addition
+   if (selected("focus")) await kbFocusTargets();
++  progress("E15 section retry-all"); // batch 50 addition
+   if (selected("retry-all")) await kbRetryAll();
++  progress("E15 section topbar"); // batch 50 addition
+   if (selected("topbar")) await kbTopbarStatus();
++  if (selected("selection-walks")) await kbSelectionWalks(); // batch 50 addition
++  if (selected("swatch-ring")) await kbSelectedSwatchRing(); // batch 50 addition
++  if (selected("popover-focus")) await kbPopoverFocusObservation(); // batch 50 addition (F-APP-3 observation, not gated)
+   if (pixelWalkLog.length) record("pixel-focus-walk-table", { lang: LANG, width: KEYBOARD_WIDTH, walks: pixelWalkLog }); // batch 48 addition
+ }
+ 
+@@ -2888,6 +3367,7 @@ try {
+   const fixedArchive = extractArchive(resolved);
+   const beforeArchive = VARIANTS_BY_MODE[KIND].includes("before") ? extractArchive(BEFORE_REVISION) : null;
+   for (const name of VARIANTS_BY_MODE[KIND]) await buildVariant(name);
++  progress("bundles built"); // batch 50 addition
+   const appPage = (variant) => `<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>XAI Web (Appearance visual/keyboard ${mode}, ${variant})</title><link rel="stylesheet" href="/__native/${variant}/bundle.css"><script src="/__native/prelude.js"></script><script src="/__native/probes.js"></script></head><body><div id="root"></div><script type="module" src="/__native/${variant}/bundle.js"></script></body></html>`;
+   const seedPage = '<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>seed</title><script src="/__native/prelude.js"></script><script src="/__native/probes.js"></script></head><body><p>seed page: instruments and probes only, no product code</p></body></html>';
+   server = createServer((request, response) => {
+@@ -2927,11 +3407,24 @@ try {
+   pre("baseline:lockfile-gate", sha256(dependencyLock) === LOCKFILE_GATE_SHA256 && sha256(fixedLock) === LOCKFILE_GATE_SHA256 && sha256(fixedArchive.extractedLock) === LOCKFILE_GATE_SHA256
+     && (!beforeArchive || sha256(beforeArchive.extractedLock) === LOCKFILE_GATE_SHA256));
+   pre("baseline:contract-r3-hash", contractSha256 === CONTRACT_SHA256, { contractSha256 });
+-  pre("baseline:fixed-delta-is-exactly-the-25-files-terra-24-plus-the-f-app-1-guard-test", isDeepStrictEqual([...fixedDelta].sort(), [...EXPECTED_FIXED_DELTA].sort()), { fixedDelta });
++  pre("baseline:fixed-delta-is-exactly-the-26-files-terra-24-plus-the-f-app-1-and-f-app-2-guard-tests", isDeepStrictEqual([...fixedDelta].sort(), [...EXPECTED_FIXED_DELTA].sort()), { fixedDelta });
+   pre("baseline:frozen-batch-46-probes-reused-read-only-and-frozen-runner-unchanged-hash-checked",
+     sha256(probesSource) === FROZEN_BATCH46.probes.sha256 && sha256(readFileSync(join(output, FROZEN_BATCH46.runner.file))) === FROZEN_BATCH46.runner.sha256, {});
+   pre("baseline:frozen-batch-45-fixture-and-prelude-and-e4-h14-log-reused-read-only-hash-checked",
+     sha256(fixtureSource) === FROZEN.fixture.sha256 && sha256(preludeSource) === FROZEN.prelude.sha256 && sha256(e4Raw) === FROZEN.e4h14.sha256, {});
++  // Batch 50 addition: the batch 48 runner (this copy's diff base) is unchanged, and the fixed product's increment over
++  // 24073b5 (batch 46) and 5bbf473 (batch 48) is exactly the F-APP-1/F-APP-2 stylesheet blocks and their guard tests.
++  const batch48RunnerSha256 = sha256(readFileSync(join(output, FROZEN_BATCH48.runner.file)));
++  const productFiles = (from) => git(["diff", "--name-only", from, resolved, "--", "apps", "packages", "package.json", "pnpm-lock.yaml"]).trim().split("\n").filter(Boolean);
++  const increments = { "24073b5": productFiles("24073b522262d8b4bec0abfa29347db28adbdd9e"), "5bbf473": productFiles("5bbf473872073472188957f430057412e8798131") };
++  record("baseline-batch50", { runner: RUNNER, diffBase: { file: FROZEN_BATCH48.runner.file, sha256: batch48RunnerSha256, expected: FROZEN_BATCH48.runner.sha256 }, productIncrements: increments });
++  pre("baseline:batch-48-runner-diff-base-unchanged-hash-checked", batch48RunnerSha256 === FROZEN_BATCH48.runner.sha256, { batch48RunnerSha256 });
++  pre("baseline:fixed-vs-24073b5-is-the-appearance-stylesheet-and-the-two-guard-tests-and-vs-5bbf473-the-stylesheet-and-the-f-app-2-guard-test",
++    isDeepStrictEqual(increments["24073b5"], [
++      "packages/xai-web-settings-appearance/src/__tests__/AppearancePane.focus-ring.test.tsx",
++      "packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx",
++      APPEARANCE_CSS,
++    ]) && isDeepStrictEqual(increments["5bbf473"], ["packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx", APPEARANCE_CSS]), increments);
+ 
+   if (KIND === "visual") await runVisual();
+   else await runKeyboard();

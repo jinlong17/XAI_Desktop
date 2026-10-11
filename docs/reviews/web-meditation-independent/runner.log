@@ -1,0 +1,78 @@
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    ../../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-O6lzq7/source/packages/plugin-web-tokens/src/i18n.ts:745:17:
+      745 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    ../../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-O6lzq7/source/packages/plugin-web-tokens/src/i18n.ts:745:49:
+      745 │ ....meta !== "undefined" && (import.meta as { env?: { DEV?: boole...
+          ╵                              ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    ../../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-O6lzq7/source/packages/plugin-web-tokens/src/i18n.ts:753:17:
+      753 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    ../../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-O6lzq7/source/packages/plugin-web-tokens/src/i18n.ts:753:49:
+      753 │ ....meta !== "undefined" && (import.meta as { env?: { DEV?: boole...
+          ╵                              ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    ../../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-O6lzq7/source/packages/plugin-web-tokens/src/i18n.ts:761:15:
+      761 │     if (typeof import.meta !== "undefined" && (import.meta as { e...
+          ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    ../../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-O6lzq7/source/packages/plugin-web-tokens/src/i18n.ts:761:47:
+      761 │ ....meta !== "undefined" && (import.meta as { env?: { DEV?: boole...
+          ╵                              ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+{
+  "commit": "6887879",
+  "autoplayBypass": false,
+  "pass": true,
+  "checks": [
+    "Actual start/pause controls persist absolute elapsed without counting paused absence",
+    "Native default autoplay policy: trusted Retry audio starts real AudioContext after visible injected denial",
+    "Actual module unmount stops every native ambient source",
+    "Whole Chrome process close/reopen keeps running deadline and requires explicit audio opening",
+    "Past deadline ends once at deadline, stops native sources and creates no duplicate terminal write",
+    "Native Storage quota preserves original active bytes and explicit retry commits pause",
+    "Native Web Locks: while A stays held, B can start; late A cannot mutate B or erase A",
+    "Two actual pages: stale pause and duplicate start reject without trapping new commands; concurrent end writes terminal once"
+  ],
+  "trustedClicks": [
+    "Open saved meditation",
+    "End",
+    "Start session",
+    "Pause",
+    "Retry session save"
+  ],
+  "nativeAudio": {
+    "starts": 2,
+    "stops": 2
+  },
+  "pids": [
+    50081,
+    50172
+  ]
+}

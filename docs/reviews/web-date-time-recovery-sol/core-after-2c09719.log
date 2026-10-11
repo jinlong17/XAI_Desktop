@@ -1,0 +1,11 @@
+revision=2c09719 fixed_commit=2c097197cc5cff869b875b5e1baa8b7656b5de76
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-9ygEDc
+
+ ✓ docs/reviews/web-date-time-recovery-sol/core.test.tsx (5 tests) 354ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  01:21:04
+   Duration  1.45s (transform 274ms, setup 227ms, collect 274ms, tests 354ms, environment 231ms, prepare 87ms)

@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * MeditationModule — persistence round-trip + corrupted blob recovery.
  */
@@ -34,7 +35,7 @@ describe("MeditationModule persistence", () => {
     const { container } = render(<MeditationModule lang="en" />);
     fireEvent.click(sceneButton(container, "Forest"));
 
-    const raw = localStorage.getItem("xai_meditation_prefs");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_meditation_prefs"));
     expect(raw).not.toBeNull();
     const parsed = JSON.parse(raw!);
     expect(parsed.scene).toBe("forest");
@@ -71,14 +72,14 @@ describe("MeditationModule persistence", () => {
   });
 
   it("AC-PERSIST-4: corrupted JSON falls back to defaults without throwing", () => {
-    localStorage.setItem("xai_meditation_prefs", "{not valid json");
+    localStorage.setItem(accountScope.physicalKey("xai_meditation_prefs"), "{not valid json");
     const { container } = render(<MeditationModule lang="en" />);
     expect(sceneButton(container, "Ocean")).toHaveAttribute("aria-pressed", "true");
   });
 
   it("AC-PERSIST-5: unknown scene 'mars' clamps to ocean; other fields preserved", () => {
     localStorage.setItem(
-      "xai_meditation_prefs",
+      accountScope.physicalKey("xai_meditation_prefs"),
       JSON.stringify({
         schemaVersion: 1,
         scene: "mars",
@@ -99,7 +100,7 @@ describe("MeditationModule persistence", () => {
 
   it("AC-PERSIST-6: schemaVersion mismatch still loads (clamps via validatePrefs)", () => {
     localStorage.setItem(
-      "xai_meditation_prefs",
+      accountScope.physicalKey("xai_meditation_prefs"),
       JSON.stringify({
         schemaVersion: 999,
         scene: "forest",
@@ -137,12 +138,12 @@ describe("MeditationModule persistence", () => {
       customScenes: [],
     });
     // Write to localStorage to mirror what a sibling tab would do.
-    localStorage.setItem("xai_meditation_prefs", newBlob);
+    localStorage.setItem(accountScope.physicalKey("xai_meditation_prefs"), newBlob);
 
     act(() => {
       window.dispatchEvent(
         new StorageEvent("storage", {
-          key: "xai_meditation_prefs",
+          key: accountScope.physicalKey("xai_meditation_prefs"),
           newValue: newBlob,
           storageArea: localStorage,
         }),
@@ -157,12 +158,12 @@ describe("MeditationModule persistence", () => {
     render(<MeditationModule lang="en" />);
     const customInput = screen.getByLabelText("Custom minutes");
     fireEvent.change(customInput, { target: { value: "37" } });
-    let parsed = JSON.parse(localStorage.getItem("xai_meditation_prefs")!);
+    let parsed = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_meditation_prefs"))!);
     expect(parsed.durationMode).toBe("custom");
     expect(parsed.customDuration).toBe(37);
 
     fireEvent.click(screen.getByRole("button", { name: /Infinite mode/i }));
-    parsed = JSON.parse(localStorage.getItem("xai_meditation_prefs")!);
+    parsed = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_meditation_prefs"))!);
     expect(parsed.durationMode).toBe("infinite");
     expect(parsed.duration).toBe(15);
   });
@@ -175,14 +176,14 @@ describe("MeditationModule persistence", () => {
     fireEvent.change(addInput, { target: { value: "60" } });
     fireEvent.click(screen.getByRole("button", { name: "Add fixed duration" }));
 
-    let parsed = JSON.parse(localStorage.getItem("xai_meditation_prefs")!);
+    let parsed = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_meditation_prefs"))!);
     expect(parsed.durationMode).toBe("preset");
     expect(parsed.duration).toBe(60);
     expect(parsed.customFixedDurations).toEqual([60]);
     expect(screen.getByRole("button", { name: /^60/ })).toHaveAttribute("aria-pressed", "true");
 
     fireEvent.click(screen.getByLabelText("Remove fixed duration 60"));
-    parsed = JSON.parse(localStorage.getItem("xai_meditation_prefs")!);
+    parsed = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_meditation_prefs"))!);
     expect(parsed.customFixedDurations).toEqual([]);
     expect(parsed.duration).toBe(15);
   });
@@ -192,7 +193,7 @@ describe("MeditationModule persistence", () => {
     fireEvent.change(screen.getByLabelText("Scene name"), { target: { value: "Deep focus" } });
     fireEvent.click(screen.getByRole("button", { name: /Save scene/i }));
 
-    let parsed = JSON.parse(localStorage.getItem("xai_meditation_prefs")!);
+    let parsed = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_meditation_prefs"))!);
     expect(parsed.customScenes).toHaveLength(1);
     expect(parsed.customScenes[0].name).toBe("Deep focus");
     expect(parsed.scene).toMatch(/^custom:/);
@@ -201,11 +202,11 @@ describe("MeditationModule persistence", () => {
     fireEvent.click(screen.getByLabelText("Edit scene"));
     fireEvent.change(screen.getByLabelText("Scene name"), { target: { value: "Evening calm" } });
     fireEvent.click(screen.getByRole("button", { name: /Save scene/i }));
-    parsed = JSON.parse(localStorage.getItem("xai_meditation_prefs")!);
+    parsed = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_meditation_prefs"))!);
     expect(parsed.customScenes[0].name).toBe("Evening calm");
 
     fireEvent.click(screen.getByLabelText("Delete scene"));
-    parsed = JSON.parse(localStorage.getItem("xai_meditation_prefs")!);
+    parsed = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_meditation_prefs"))!);
     expect(parsed.customScenes).toEqual([]);
     expect(parsed.scene).toBe("ocean");
   });

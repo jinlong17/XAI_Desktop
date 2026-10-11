@@ -1,3 +1,4 @@
+import { testStorage } from "./accountTestHarness.js";
 /**
  * usePref hook tests — AC-HOOK-1..12
  * Environment: jsdom (default, from vitest.config.ts)
@@ -85,7 +86,7 @@ describe("AC-HOOK-1: initial value is registry default when storage empty", () =
 
 describe("AC-HOOK-2: initial value from localStorage when key present", () => {
   it("seeded 200 → value === 200", async () => {
-    localStorage.setItem("xai_accent_hue", "200");
+    testStorage.setItem("xai_accent_hue", "200");
     const { snapshot, Consumer } = createConsumer("xai_accent_hue");
     await act(async () => {
       root.render(createElement(Consumer));
@@ -108,7 +109,7 @@ describe("AC-HOOK-3: setValue updates state and writes localStorage", () => {
       snapshot.setValue(220);
     });
     expect(snapshot.value).toBe(220);
-    expect(localStorage.getItem("xai_accent_hue")).toBe("220");
+    expect(testStorage.getItem("xai_accent_hue")).toBe("220");
   });
 });
 
@@ -179,7 +180,7 @@ describe("AC-HOOK-7: meta.reset restores default and removes localStorage key", 
       snapshot.meta.reset();
     });
     expect(snapshot.value).toBe(165);
-    expect(localStorage.getItem("xai_accent_hue")).toBeNull();
+    expect(testStorage.getItem("xai_accent_hue")).toBeNull();
     expect(snapshot.meta.isDefault).toBe(true);
   });
 });
@@ -215,7 +216,7 @@ describe("AC-HOOK-8: cross-tab storage event updates value", () => {
 
 describe("AC-HOOK-9: storage event with key=null resets to default", () => {
   it("key=null event resets value to 165", async () => {
-    localStorage.setItem("xai_accent_hue", "300");
+    testStorage.setItem("xai_accent_hue", "300");
     const { snapshot, Consumer } = createConsumer("xai_accent_hue");
     await act(async () => {
       root.render(createElement(Consumer));
@@ -301,7 +302,7 @@ describe("AC-HOOK-11: defaultOverride overrides registry default when storage em
 
 describe("AC-HOOK-12: JSON parse failure returns default and logs", () => {
   it("corrupt xai_zones value returns [] and warns", async () => {
-    localStorage.setItem("xai_zones", "{broken");
+    testStorage.setItem("xai_zones", "{broken");
     const warnSpy = vi
       .spyOn(console, "warn")
       .mockImplementation(() => undefined);

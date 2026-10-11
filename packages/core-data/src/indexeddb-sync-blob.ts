@@ -8,7 +8,6 @@ import {
 import type {
   MigrationPlan,
   MigrationResult,
-  Repo,
   RepoListQuery,
   RepoMetadata,
   RepoRecord,
@@ -16,14 +15,11 @@ import type {
 } from "./types";
 import {
   type CreateSyncBlobRepoOptions,
-  type SyncBlobCryptoAdapter,
   type SyncBlobCryptoEncryptInput,
   SyncBlobError,
-  type SyncBlobErrorCode,
   type SyncBlobRepo,
   type PullOptions,
   type SyncBlobDriverState,
-  type SyncBlobFetch,
 } from "./sync-blob";
 
 export const WEB_CACHE_DB_VERSION = 1;
@@ -271,12 +267,6 @@ interface MutationRowContext {
   proposedRevision: string;
 }
 
-const LOCK_REASONS = new Set<WebCacheLockReason>([
-  "manual",
-  "idle",
-  "unload",
-  "error",
-]);
 const SYNC_STATE_SENTINEL = "sentinel";
 const SYNC_STATE_CURSOR = "cursor";
 const SYNC_STATE_ACCOUNT_COMMIT_SEQ = "account_commit_seq";
@@ -418,7 +408,6 @@ export function createIndexedDbSyncBlobRepo<T extends RepoRecord>(
   let initialized = false;
   let initializing: Promise<void> | null = null;
   const syncDbVersion = dbVersion;
-  let dbHandle: IDBDatabase | null = null;
 
   const searchWorker: WebCacheSearchWorker = createSearchWorker({
     getIndexKeys: () => [...mirror.keys()],
@@ -493,14 +482,6 @@ export function createIndexedDbSyncBlobRepo<T extends RepoRecord>(
       }
       throw mapWebError(error, "open");
     }
-  }
-
-  async function getDb(): Promise<IDBDatabase> {
-    if (dbHandle) {
-      return dbHandle;
-    }
-    dbHandle = await openDb();
-    return dbHandle;
   }
 
   async function loadStores(db: IDBDatabase): Promise<void> {
@@ -947,7 +928,6 @@ export function createIndexedDbSyncBlobRepo<T extends RepoRecord>(
 
     assertMigrationPlan(plan, migrationVersion);
     const startedAt = nowIso();
-    const snapshot = snapshotState();
 
     await transaction(async (tx) => {
       for (const step of plan.steps) {
@@ -1024,7 +1004,6 @@ export function createIndexedDbSyncBlobRepo<T extends RepoRecord>(
       const envelope = tryParseEnvelopeHeader(row.blob);
       const keyId = envelope?.keyId ?? row.key_id;
       const encryptionDeviceId = envelope?.encryptionDeviceId ?? row.originator_device_id;
-      const keyParts = [row.entity_type, row.entity_id] as const;
       const syncScopeDefaults = "account-sync" as const;
       blobRows.set(
         recordKey,
@@ -1760,7 +1739,6 @@ export function createIndexedDbSyncBlobRepo<T extends RepoRecord>(
       const request = indexedDB.open(dbName, syncDbVersion);
       request.onupgradeneeded = (event) => {
         const db = request.result;
-        const transaction = request.transaction;
         const oldVersion = (event.oldVersion ?? 0) as number;
         if (oldVersion < 1) {
           if (!db.objectStoreNames.contains("entity_blobs")) {
@@ -1803,7 +1781,7 @@ export function createIndexedDbSyncBlobRepo<T extends RepoRecord>(
             store.createIndex("failedAt", "failedAt", { unique: false });
           }
           if (!db.objectStoreNames.contains("sync_state")) {
-            const store = db.createObjectStore("sync_state", {
+            db.createObjectStore("sync_state", {
               keyPath: "key",
             });
           }

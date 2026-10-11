@@ -13,13 +13,16 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { PREF_REGISTRY, type WebPrefKey, type WebPrefValue } from "./registry.js";
-import { getPref, setPref, removePref, subscribeSameTab } from "./storage.js";
-import { decode } from "./codec.js";
+import { getPref, setPref, removePref, subscribeSameTab, readRawPref, decodeStoredPrefValue } from "./storage.js";
+import { accountScope } from "./accountScope.js";
+import { ownershipForKey } from "./accountOwnership.js";
+import { isCanonicalCommandActivationEnabled, isCanonicalCommandKey, readCanonicalCommandSnapshot } from "./canonicalCommandState.js";
 
 // ---------------------------------------------------------------------------
 // PrefMeta
 // ---------------------------------------------------------------------------
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Retain the public generic argument for source compatibility.
 export interface PrefMeta<T> {
   readonly schemaVersion: number;
   /** true when value is the registry default (key absent from storage). */
@@ -41,7 +44,7 @@ export function usePref<K extends WebPrefKey>(
     next:
       | WebPrefValue<K>
       | ((prev: WebPrefValue<K>) => WebPrefValue<K>),
-  ) => void,
+  ) => boolean,
   meta: PrefMeta<WebPrefValue<K>>,
 ] {
   const entry = PREF_REGISTRY[key];
@@ -64,6 +67,7 @@ export function usePref<K extends WebPrefKey>(
         console.warn(
           "[plugin-web-storage] setPref called during SSR; no-op.",
         );
+        return false;
       },
       ssrMeta,
     ] as const;
@@ -90,17 +94,21 @@ function usePrefBrowser<K extends WebPrefKey>(
     next:
       | WebPrefValue<K>
       | ((prev: WebPrefValue<K>) => WebPrefValue<K>),
-  ) => void,
+  ) => boolean,
   meta: PrefMeta<WebPrefValue<K>>,
 ] {
   const entry = PREF_REGISTRY[key];
 
+  const [scope] = useState(() => accountScope.capture());
+  const [, invalidate] = useState(0);
+  useEffect(() => accountScope.subscribe(() => invalidate(value => value + 1)), []);
+
   // Read initial value from localStorage (or effectiveDefault).
   const readCurrent = useCallback((): WebPrefValue<K> => {
-    const stored = getPref(key);
+    const stored = getPref(key, scope);
     // If localStorage had the value, getPref returns it; otherwise returns registryDefault.
     // We must honour effectiveDefault when the key is absent.
-    const raw = localStorage.getItem(key);
+    const raw = readRawPref(key, scope);
     if (raw === null) return effectiveDefault;
     return stored;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,7 +118,7 @@ function usePrefBrowser<K extends WebPrefKey>(
 
   // Track isDefault: true iff the key is absent from storage.
   const [isDefault, setIsDefault] = useState<boolean>(
-    () => localStorage.getItem(key) === null,
+    () => readRawPref(key, scope) === null,
   );
 
   // We need a stable reference to the current value for functional updaters.
@@ -130,11 +138,13 @@ function usePrefBrowser<K extends WebPrefKey>(
         typeof next === "function"
           ? (next as (prev: WebPrefValue<K>) => WebPrefValue<K>)(prev)
           : next;
-      const ok = setPref(key, nextValue);
+      const ok = setPref(key, nextValue, scope);
       if (ok) {
+        valueRef.current = nextValue;
         setValueInternal(nextValue);
         setIsDefault(false);
       }
+      return ok;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [key],
@@ -145,6 +155,8 @@ function usePrefBrowser<K extends WebPrefKey>(
   useEffect(() => {
     function handleStorage(event: StorageEvent) {
       if (event.storageArea !== localStorage) return;
+      let physicalKey: string;
+      try { physicalKey = accountScope.physicalKey(key, scope); } catch { return; }
 
       if (event.key === null) {
         // localStorage.clear() — reset to effective default
@@ -153,7 +165,7 @@ function usePrefBrowser<K extends WebPrefKey>(
         return;
       }
 
-      if (event.key !== key) return;
+      if (event.key !== physicalKey) return;
 
       if (event.newValue === null) {
         // Key was removed by another tab
@@ -163,15 +175,15 @@ function usePrefBrowser<K extends WebPrefKey>(
         // Decode the value from the event directly (avoids re-reading from
         // localStorage which may not be updated yet in all jsdom environments,
         // and faithfully reflects what the other tab wrote).
-        const decoded = decode(entry.codec, event.newValue);
+        const decoded = decodeStoredPrefValue(key, event.newValue);
         if (decoded !== null) {
           setValueInternal(decoded as WebPrefValue<K>);
           setIsDefault(false);
         } else {
           // Decode failure — fall back to getPref which also falls back to default
-          const next = getPref(key);
+          const next = getPref(key, scope);
           setValueInternal(next);
-          setIsDefault(localStorage.getItem(key) === null);
+          setIsDefault(readRawPref(key, scope) === null);
         }
       }
     }
@@ -187,10 +199,10 @@ function usePrefBrowser<K extends WebPrefKey>(
 
   useEffect(() => {
     const unsub = subscribeSameTab(key, (newValue) => {
-      const isDefaultNow = localStorage.getItem(key) === null;
+      const isDefaultNow = readRawPref(key, scope) === null;
       setValueInternal(newValue as WebPrefValue<K>);
       setIsDefault(isDefaultNow);
-    });
+    }, scope);
     return unsub;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
@@ -198,7 +210,12 @@ function usePrefBrowser<K extends WebPrefKey>(
   // ---- reset --------------------------------------------------------------
 
   const reset = useCallback(() => {
-    removePref(key);
+    if (isCanonicalCommandKey(key)) {
+      const state = readCanonicalCommandSnapshot(key, scope);
+      if (isCanonicalCommandActivationEnabled() || state.status === "envelope" || state.status === "corrupt" || state.status === "unsupported" || state.status === "unavailable") return;
+    }
+    const removed = removePref(key, scope);
+    if (isCanonicalCommandKey(key) && !removed) return;
     setValueInternal(effectiveDefault);
     setIsDefault(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -210,5 +227,6 @@ function usePrefBrowser<K extends WebPrefKey>(
     reset,
   };
 
-  return [value, setValue, meta] as const;
+  const visible = ownershipForKey(key) === "device" || accountScope.isReady(scope);
+  return [visible ? value : effectiveDefault, setValue, visible ? meta : { ...meta, isDefault: true }] as const;
 }

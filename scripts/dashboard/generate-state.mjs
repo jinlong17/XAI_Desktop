@@ -424,7 +424,7 @@ function skillAgentCategoryFor(entry) {
   const name = String(entry.name || "").toLowerCase();
   if (/xai-web-to-desktop-sync|xai-account-sync-scope-check|xai-sync-fanout-dispatch|xai-release-log|^ship$/.test(name)) return "governance";
   if (/xai-roadmap-loop|workflow-router|planning-with-files|superpowers/.test(name)) return "automation";
-  if (/gh-fix-ci|security|threat|stride|feature-review|feature-verify|bug-verify|consistency-audit/.test(name)) return "quality";
+  if (/gh-fix-ci|security|threat|stride|feature-review|feature-verify|bug-verify|consistency-audit|stitch-design-taste/.test(name)) return "quality";
   if (/skill-creator|plugin-creator|agent-behavioral|frontend-dev|composition-patterns/.test(name)) return "authoring";
   if (/bugfix|bug-|bug_/.test(name)) return "bugfix";
   if (/feature-|feature_|xai-feature/.test(name)) return "feature";

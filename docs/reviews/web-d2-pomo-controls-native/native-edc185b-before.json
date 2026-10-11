@@ -1,0 +1,45 @@
+{
+  "requestedRef": "edc185b",
+  "revision": "edc185b1d1ebd0bf9f4531dabbe8feb12e2c0340",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "absent-six-keys",
+      "pass": false,
+      "error": "Error: Mount seeded device preferences: {\"xai_pref_pomodoro_preset\":\"\\\"focus-25\\\"\",\"xai_pref_pomodoro_custom_minutes\":\"45\",\"xai_pref_pomodoro_display_style\":\"\\\"apple\\\"\",\"xai_pref_pomodoro_theme\":\"\\\"coral\\\"\",\"xai_pref_pomodoro_sound\":\"\\\"soft-chime\\\"\",\"xai_pref_pomodoro_muted\":\"false\"}"
+    },
+    {
+      "name": "held-device-mute",
+      "pass": false,
+      "error": "Error: Control wrote while native device lock was held: mute-btn"
+    },
+    {
+      "name": "held-device-preset",
+      "pass": false,
+      "error": "Error: Control wrote while native device lock was held: preset-focus-30"
+    },
+    {
+      "name": "held-device-theme",
+      "pass": false,
+      "error": "Error: Control wrote while native device lock was held: theme-violet"
+    },
+    {
+      "name": "cross-document-theme",
+      "pass": false,
+      "error": "Error: Clean other-document change did not project"
+    }
+  ],
+  "checkpoint": {
+    "snapshot": {
+      "xai_pref_pomodoro_preset": "\"focus-25\"",
+      "xai_pref_pomodoro_custom_minutes": "45",
+      "xai_pref_pomodoro_display_style": "\"apple\"",
+      "xai_pref_pomodoro_theme": "\"blue\"",
+      "xai_pref_pomodoro_sound": "\"soft-chime\"",
+      "xai_pref_pomodoro_muted": "false"
+    }
+  },
+  "scope": "Actual Pomodoro preferences, real native Web Locks, isolated synthetic account, idle timer byte controls only; CSS omitted"
+}

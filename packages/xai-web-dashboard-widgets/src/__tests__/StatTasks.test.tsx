@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * StatTasks — real-data tests (§F rewrite).
  *
@@ -15,7 +16,7 @@ import { render, screen } from "@testing-library/react";
 import { StatTasks } from "../widgets/StatTasks.js";
 
 function seedTaskCols(store: unknown) {
-  localStorage.setItem("xai_task_cols", JSON.stringify(store));
+  localStorage.setItem(accountScope.physicalKey("xai_task_cols"), JSON.stringify(store));
 }
 
 beforeEach(() => {

@@ -1,0 +1,91 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ❯ docs/reviews/web-account-deletion-auth-receipt/recovery-contract.test.ts (3 tests | 3 failed) 13ms
+   × auth storage failure must reject and leave a recoverable receipt 11ms
+     → promise resolved "{ version: 1, accountId: 'A', …(4) }" instead of rejecting
+   × reload retry cleans the original auth generation after B becomes current 1ms
+     → expected "spy" to be called with arguments: [ Array(1) ]
+
+Number of calls: 0
+
+   × missing auth cleanup cannot produce a complete receipt 1ms
+     → promise resolved "{ version: 1, accountId: 'A', …(4) }" instead of rejecting
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-account-deletion-auth-receipt/recovery-contract.test.ts > auth storage failure must reject and leave a recoverable receipt
+AssertionError: promise resolved "{ version: 1, accountId: 'A', …(4) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "accountId": "A",
++   "generation": "business-A",
++   "kind": "account",
++   "phase": "complete",
++   "updatedAt": "2026-09-09T20:21:50.836Z",
++   "version": 1,
+  }
+
+ ❯ docs/reviews/web-account-deletion-auth-receipt/recovery-contract.test.ts:12:105
+     10| it('auth storage failure must reject and leave a recoverable receipt',…
+     11|   const receipt = begin();
+     12|   await expect(resumeAccountLocalDeletion(receipt, async () => { throw…
+       |                                                                                                         ^
+     13|   expect(readAccountDeletionReceipt('A')?.phase).not.toBe('complete');
+     14| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-account-deletion-auth-receipt/recovery-contract.test.ts > reload retry cleans the original auth generation after B becomes current
+AssertionError: expected "spy" to be called with arguments: [ Array(1) ]
+
+Number of calls: 0
+
+ ❯ docs/reviews/web-account-deletion-auth-receipt/recovery-contract.test.ts:19:21
+     17|   const clearAuth = vi.fn(async () => undefined);
+     18|   await resumeAccountLocalDeletion(readAccountDeletionReceipt('A')!, c…
+     19|   expect(clearAuth).toHaveBeenCalledWith({ owner: 'A', generation: 'au…
+       |                     ^
+     20|   expect(accountScope.capture().accountId).toBe('B');
+     21| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  docs/reviews/web-account-deletion-auth-receipt/recovery-contract.test.ts > missing auth cleanup cannot produce a complete receipt
+AssertionError: promise resolved "{ version: 1, accountId: 'A', …(4) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "accountId": "A",
++   "generation": "business-A",
++   "kind": "account",
++   "phase": "complete",
++   "updatedAt": "2026-09-09T20:21:50.844Z",
++   "version": 1,
+  }
+
+ ❯ docs/reviews/web-account-deletion-auth-receipt/recovery-contract.test.ts:23:51
+     21| });
+     22| it('missing auth cleanup cannot produce a complete receipt', async () …
+     23|   await expect(resumeAccountLocalDeletion(begin())).rejects.toThrow();
+       |                                                   ^
+     24|   expect(readAccountDeletionReceipt('A')?.phase).not.toBe('complete');
+     25| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  13:21:47
+   Duration  2.98s (transform 503ms, setup 0ms, collect 840ms, tests 13ms, environment 1.74s, prepare 113ms)
+

@@ -1,0 +1,16 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-TweZOL
+
+ ✓ docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx (7 tests) 5669ms
+   ✓ all six latest choices export from memory under full storage denial, retaining the complete schema and draft guard  349ms
+   ✓ export url failure preserves current choices, original save failure and guard; cleans temporary resources  1610ms
+   ✓ export append failure preserves current choices, original save failure and guard; cleans temporary resources  1253ms
+   ✓ export click failure preserves current choices, original save failure and guard; cleans temporary resources  1191ms
+   ✓ owner change during actual URL setup revokes the export before click and leaves surviving device work guarded  1178ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  01:31:09
+   Duration  9.57s (transform 1.32s, setup 0ms, collect 2.44s, tests 5.67s, environment 856ms, prepare 100ms)

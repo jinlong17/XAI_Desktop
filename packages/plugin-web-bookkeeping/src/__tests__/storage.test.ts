@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 import { describe, expect, it } from "vitest";
 import {
   BOOKKEEPING_CALENDAR_MODE_KEY,
@@ -25,19 +26,19 @@ describe("bookkeeping local storage adapter", () => {
 
     writeBookkeepingState(state);
 
-    expect(JSON.parse(localStorage.getItem(BOOKKEEPING_STATE_KEY) ?? "{}")).toMatchObject({ activeLedger: "us", version: 2 });
-    expect(localStorage.getItem(BOOKKEEPING_DASH_ORDER_KEY)).toBe("quick-first");
-    expect(localStorage.getItem(BOOKKEEPING_DASH_SPLIT_KEY)).toBe("55");
-    expect(localStorage.getItem(BOOKKEEPING_VIEW_KEY)).toBe("overview");
-    expect(localStorage.getItem(BOOKKEEPING_CALENDAR_MODE_KEY)).toBe("year");
+    expect(JSON.parse(localStorage.getItem(accountScope.physicalKey(BOOKKEEPING_STATE_KEY)) ?? "{}")).toMatchObject({ activeLedger: "us", version: 2 });
+    expect(localStorage.getItem(accountScope.physicalKey(BOOKKEEPING_DASH_ORDER_KEY))).toBe("quick-first");
+    expect(localStorage.getItem(accountScope.physicalKey(BOOKKEEPING_DASH_SPLIT_KEY))).toBe("55");
+    expect(localStorage.getItem(accountScope.physicalKey(BOOKKEEPING_VIEW_KEY))).toBe("overview");
+    expect(localStorage.getItem(accountScope.physicalKey(BOOKKEEPING_CALENDAR_MODE_KEY))).toBe("year");
     expect(readBookkeepingState().prefs).toMatchObject(state.prefs);
   });
 
   it("falls back to seeded data when stored state is missing or corrupt", () => {
-    localStorage.setItem(BOOKKEEPING_STATE_KEY, "{not-json");
+    localStorage.setItem(accountScope.physicalKey(BOOKKEEPING_STATE_KEY), "{not-json");
 
     expect(readBookkeepingState()).toMatchObject({ version: 2, activeLedger: "daily" });
     expect(localBookkeepingStorageAdapter.reset()).toMatchObject({ version: 2, activeLedger: "daily" });
-    expect(JSON.parse(localStorage.getItem(BOOKKEEPING_STATE_KEY) ?? "{}")).toMatchObject({ version: 2 });
+    expect(JSON.parse(localStorage.getItem(accountScope.physicalKey(BOOKKEEPING_STATE_KEY)) ?? "{}")).toMatchObject({ version: 2 });
   });
 });

@@ -1,0 +1,5 @@
+{"name":"baseline","commit":"96c4915","browser":"Chrome/152.0.7977.83"}
+{"name":"select-input","events":[{"name":"keydown","key":"s","value":"monday","trusted":true,"prevented":false},{"name":"input","value":"sunday","trusted":true,"prevented":false},{"name":"change","value":"sunday","trusted":true,"prevented":false},{"name":"keyup","key":"s","value":"sunday","trusted":true,"prevented":false}],"value":"sunday","raw":["invalid-week","true","true","true","true"]}
+{"name":"external-document-write","targetId":"D52501488F7EEC8A95142510D54CC3AC","key":"xai_pref_dt_start_week","value":"monday"}
+{"name":"source-reload-observation","reloadOffered":true,"raw":["monday","true","true","true","true"],"selected":{"week":"monday","toggles":["true","true","true","true"]},"warning":false,"recovery":false}
+{"name":"native","pass":false,"mode":"source-reload","error":"AssertionError [ERR_ASSERTION]: Source Reload/Retry replaced actual draft\n\n'monday' !== 'sunday'\n","runtimeErrors":[]}

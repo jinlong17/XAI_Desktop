@@ -1,0 +1,273 @@
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:745:17:
+      745 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:753:17:
+      753 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:761:15:
+      761 │     if (typeof import.meta !== "undefined" && (import.meta as { e...
+          ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-tasks/src/TasksModule.tsx:85:17:
+      85 │       if (typeof import.meta !== "undefined" && (import.meta as { ...
+         ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-shell/src/AvatarMenu.tsx:132:25:
+      132 │                   typeof import.meta !== "undefined" &&
+          ╵                          ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-shell/src/AppRail.tsx:51:13:
+      51 │       typeof import.meta !== "undefined" &&
+         ╵              ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-countdown/src/internal/validate.ts:31:11:
+      31 │     typeof import.meta !== "undefined" &&
+         ╵            ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts:39:15:
+      39 │         typeof import.meta !== "undefined" &&
+         ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-settings-shell/src/SettingsFooter.tsx:45:15:
+      45 │         typeof import.meta !== "undefined" &&
+         ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-dashboard-grid/src/DashboardGrid.tsx:53:21:
+      53 │         const meta = import.meta as ImportMeta & { env?: { DEV?: b...
+         ╵                      ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-settings-appearance/src/AppearancePane.tsx:98:17:
+      98 │       if (typeof import.meta !== "undefined" && (import.meta as { ...
+         ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-settings-appearance/src/AppearancePane.tsx:132:17:
+      132 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-settings-appearance/src/AppearancePane.tsx:179:19:
+      179 │         if (typeof import.meta !== "undefined" && (import.meta as...
+          ╵                    ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-countdown/src/CountdownCardView.tsx:33:11:
+      33 │     typeof import.meta !== "undefined" &&
+         ╵            ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+{
+  "pass": true,
+  "failures": [],
+  "checks": [
+    "Actual WebAuthPage form login and full navigation restore A in actual App shell",
+    "Native IDB logout failure stays visible after delay; private shell/client/session locked",
+    "Whole isolated Chrome process close/reopen restores A from native persistence",
+    "Actual host logout clears authenticated state and redirects to auth form",
+    "Actual OAuth button, authorize redirect and StrictMode callback exchange once",
+    "Actual reset-email, verify callback, reset-password form and owner-bound update complete",
+    "Actual two-page form login: delayed A HTTP completes after B publication without replacing B or leaking old error"
+  ],
+  "owner": "B",
+  "path": "/app/ai",
+  "launches": [
+    37043,
+    37093
+  ],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:53767/auth/v1/token?grant_type=password",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/auth/v1/logout?scope=global",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/auth/v1/logout?scope=global",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/auth/v1/token?grant_type=pkce",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/auth/v1/logout?scope=global",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/auth/v1/recover?redirect_to=http%3A%2F%2F127.0.0.1%3A53767%2Fauth%2Fverify%3Fnext%3D%252Fauth%252Freset-password%26xai_auth_attempt%3D5662b28d-f678-483c-baec-351b6d967651",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/auth/v1/token?grant_type=pkce",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/auth/v1/user",
+      "method": "PUT"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/auth/v1/logout?scope=global",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/auth/v1/token?grant_type=password",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/auth/v1/token?grant_type=password",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53767/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    }
+  ]
+}

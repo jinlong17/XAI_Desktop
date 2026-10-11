@@ -1,0 +1,32 @@
+{
+  "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY2",
+  "source": "e7d113e01bbe5b1df47d5fb51821779b30916bf0",
+  "parent": "8e3bad2985f9818f23c4df1c0fb4007b16921ef9",
+  "integration": "8a05231add157e43f31bb1f853b3b2fadb69cace",
+  "archive_ref": "codex/archive/parallel-hab01-hab05-source2-20261010",
+  "inputs_checked": 171,
+  "outputs": {
+    "docs/reviews/audit-parallel-hab01-hab05-source-discovery-r2/inputs.sha256": "0d0ee64b01305334870ff879d0c9455cea6385b1c794f15cb3d812bc50ad6ad1",
+    "docs/reviews/audit-parallel-hab01-hab05-source-discovery-r2/discovery.md": "135a45503c8d3b1142c4c49e8ed56784f66164a66fb8d7708b6c428d88137b47"
+  },
+  "state": "UNADOPTED_SOURCEONLY_pendingwholeD2",
+  "static": {
+    "pid": 37109,
+    "numeric_exit": 0,
+    "elapsed_seconds": 0.292561,
+    "owned_Git_children": 3,
+    "all_child_exits": 0,
+    "EOF_drained": true,
+    "before_anywrite": true
+  },
+  "commitwrapper_error": "temporaryfileobjectpassednotpath noGitcommitcalled exact2stagedverified correctedwrapper no staticrerun/amend",
+  "failure_record": "docs/reviews/20260908-full-product-audit/parallel-control-r1/exhausted-impact-review3-p81-failed-static-original-receipt.json",
+  "formal_counts": [
+    13,
+    3,
+    3,
+    293
+  ],
+  "refs": 939,
+  "root_business_checker": 0
+}

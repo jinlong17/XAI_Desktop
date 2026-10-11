@@ -1,0 +1,150 @@
+--- a/docs/reviews/web-features-recovery-native/native-host-harness.mjs	2026-10-09 07:40:55
++++ b/docs/reviews/web-apprail-order-recovery-final/native-host-harness.mjs	2026-10-09 07:50:09
+@@ -1,4 +1,34 @@
+ /**
++ * CP-APPRAIL-01 batch 64 (contract r1 §13 Features row "Native downstream … and native host", §15 E24) COPY of
++ * ../web-appearance-recovery-final/native-host-harness.mjs (SHA-256
++ * afa313f8e3562fe931871ae0182d0faa2193ac0291478c0c75ca266abc5e71cf, the accepted Appearance E25 copy, not modified),
++ * which is itself the copy described in the next paragraph. It serves byte-identical copies of
++ * ../web-features-recovery-native/{verify-native-host.mjs, native-host-matrix.tsx, verify-native-downstream.mjs,
++ * native-downstream.tsx, native-host-prelude.js} beside it. Exactly one change against that copy, marked "E24 copy"
++ * below: the product-delta precondition "baseline:fixed-delta-is-features-then-appearance-section-11" is replaced by
++ * "baseline:fixed-delta-is-features-then-appearance-then-apprail-section-11": the f359be6..fixed delta must be exactly
++ * the Features delta f359be6..5cd63ff (non-empty, all in the Features package) plus the 26 Appearance contract r3 §11
++ * files of 5cd63ff..419e56d plus the 19 AppRail contract r1 §11 files of 419e56d..fixed. The K-1 key audit of that
++ * copy is kept unchanged; every other precondition, transport, flag, instrument, check and verdict is unchanged.
++ * Evidence goes to this directory.
++ *
++ * CP-APPEARANCE-01 batch 51 (contract r3 §14 E25) COPY of ../web-features-recovery-native/native-host-harness.mjs
++ * (SHA-256 499fca4c54c2f197ec54cec229859e970ca988da95f7d3b8b87f09456fecf4e4, frozen, not modified). It serves the
++ * byte-identical copies of ./verify-native-downstream.mjs (82df2961…), ./native-downstream.tsx (9b77055e…) and
++ * ./native-host-prelude.js (01acaa5d…) beside it. Exactly two changes, both marked "E25 copy" below:
++ *   1. The caller-bound precondition "baseline:fixed-delta-only-in-features-package" (the f359be6..fixed product delta
++ *      must lie in the Features package; true only at the Features fixed revision 5cd63ff) is replaced by
++ *      "baseline:fixed-delta-is-features-then-appearance-section-11": the f359be6..fixed delta must be exactly the
++ *      Features delta f359be6..5cd63ff (non-empty, all in the Features package) plus the 26 Appearance contract r3 §11
++ *      files of 5cd63ff..fixed. Every other precondition, including "every bundled archive module outside that delta is
++ *      byte-identical to f359be6", is unchanged.
++ *   2. A passive K-1 key audit (control plane, K-1 ruling): a window capture-phase recorder of keydown, keypress and
++ *      keyup reports through a CDP binding in every document; at the end the run-level precondition
++ *      "run:k1-keyboard-trace-contains-only-the-runner-key-presses" requires exactly the runner's own presses (one
++ *      trusted keydown and keyup each, in order, in the pressed document, no keypress). pressKey already sends no
++ *      nativeVirtualKeyCode (unchanged). The recorder never calls preventDefault or stopPropagation.
++ * Transport, flags, instruments, checks and verdicts are the frozen harness's code. Evidence goes to this directory.
++ *
+  * CP-FEATURES-01 batch 28 (contract §14 E12, E13): shared harness of ./verify-native-host.mjs (E12, Settings host
+  * composition) and ./verify-native-downstream.mjs (E13, production App composition). Parent-role native verifier;
+  * verification only. It repairs nothing, accepts nothing and changes no product file, contract, ledger or existing
+@@ -29,6 +59,30 @@
+ export const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+ export const BEFORE_REVISION = "f359be6d838393e0f9e93efd80b88b5b09f6144e";
+ export const FEATURES_PACKAGE = "packages/xai-web-settings-features-panel/";
++// E25 copy, change 1: the accepted Features fixed revision and the Appearance contract r3 §11 product files.
++export const FEATURES_FIXED_REVISION = "5cd63ff652f02a2c726187fe12cbc796218d31c0";
++export const APPEARANCE_SECTION11 = [
++  ...["docs/api.md", "docs/test.md", "src/AppearancePane.tsx", "src/__tests__/AppearanceController.test.tsx", "src/__tests__/AppearancePane.bilingual.test.tsx",
++    "src/__tests__/AppearancePane.focus-ring.test.tsx", "src/__tests__/AppearancePane.live-binding.test.tsx", "src/__tests__/AppearancePane.rendering.test.tsx",
++    "src/__tests__/AppearancePane.save-reset.test.tsx", "src/__tests__/AppearancePane.selected-focus.test.tsx", "src/__tests__/AppearanceRetryAll.test.tsx",
++    "src/__tests__/appearanceLockFixture.ts", "src/index.ts", "src/internal/AppearanceActions.tsx", "src/internal/AppearanceStatus.tsx", "src/internal/appearanceController.tsx",
++    "src/internal/appearanceRecoveryCopy.ts", "src/styles.css", "src/types.ts"].map((file) => `packages/xai-web-settings-appearance/${file}`),
++  ...["docs/api.md", "src/Shell.tsx", "src/Topbar.tsx", "src/__tests__/Topbar.test.tsx", "src/types.ts"].map((file) => `packages/xai-web-shell/${file}`),
++  "apps/web/src/App.tsx",
++  "apps/web/src/__tests__/App.appearance.test.tsx",
++];
++// E24 copy: the accepted Appearance fixed revision and the AppRail contract r1 §11 product files.
++export const APPEARANCE_FIXED_REVISION = "419e56de9f23e4467fea806fbd4a990e1f429941";
++export const APPRAIL_SECTION11 = [
++  ...["docs/api.md", "docs/test.md", "src/AppRail.tsx", "src/Shell.tsx", "src/Topbar.tsx", "src/__tests__/AppRail.railorder.test.tsx", "src/__tests__/RailOrderStatus.test.tsx",
++    "src/__tests__/Topbar.test.tsx", "src/__tests__/railOrderFixture.tsx", "src/__tests__/railOrderModel.test.ts", "src/index.ts", "src/internal/RailOrderStatus.tsx",
++    "src/internal/railOrderController.tsx", "src/internal/railOrderCopy.ts", "src/internal/railOrderModel.ts", "src/railOrderStatus.css", "src/types.ts"].map((file) => `packages/xai-web-shell/${file}`),
++  "apps/web/src/App.tsx",
++  "apps/web/src/__tests__/App.railorder.test.tsx",
++];
++// E25 copy, change 2: the passive key recorder installed in every new document of every attached page target.
++const K1_BINDING = "__k1KeyAudit";
++const K1_RECORDER = `(() => { for (const type of ["keydown", "keypress", "keyup"]) window.addEventListener(type, (event) => { try { ${K1_BINDING}(JSON.stringify({ type, key: event.key, code: event.code, trusted: event.isTrusted, path: location.pathname })); } catch {} }, true); })();`;
+ export const sha256 = (value) => createHash("sha256").update(value).digest("hex");
+ export const delay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+ 
+@@ -98,6 +152,9 @@
+   const records = [];
+   const runtimeErrors = [];
+   const consoleWarnings = [];
++  // E25 copy, change 2: the runner's own presses and every key event the recorder reported.
++  const k1Pressed = [];
++  const k1Trace = [];
+   const dialogs = [];
+   const dialogPlan = [];
+   const deferredFailures = [];
+@@ -142,6 +199,11 @@
+   const docsHead = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
+   const productDelta = execFileSync("git", ["diff", "--name-only", resolved, "HEAD", "--", "apps", "packages", "package.json", "pnpm-lock.yaml"], { cwd: root, encoding: "utf8" }).trim();
+   const fixedDelta = execFileSync("git", ["diff", "--name-only", BEFORE_REVISION, resolved, "--", "apps", "packages", "package.json", "pnpm-lock.yaml"], { cwd: root, encoding: "utf8" }).trim().split("\n").filter(Boolean);
++  // E25 copy, change 1: the two accepted segments of that delta.
++  const featuresDelta = execFileSync("git", ["diff", "--name-only", BEFORE_REVISION, FEATURES_FIXED_REVISION, "--", "apps", "packages", "package.json", "pnpm-lock.yaml"], { cwd: root, encoding: "utf8" }).trim().split("\n").filter(Boolean);
++  // E24 copy: the Appearance segment ends at its accepted fixed revision; the AppRail segment follows it.
++  const appearanceDelta = execFileSync("git", ["diff", "--name-only", FEATURES_FIXED_REVISION, APPEARANCE_FIXED_REVISION, "--", "apps", "packages", "package.json", "pnpm-lock.yaml"], { cwd: root, encoding: "utf8" }).trim().split("\n").filter(Boolean);
++  const railDelta = execFileSync("git", ["diff", "--name-only", APPEARANCE_FIXED_REVISION, resolved, "--", "apps", "packages", "package.json", "pnpm-lock.yaml"], { cwd: root, encoding: "utf8" }).trim().split("\n").filter(Boolean);
+   const versionOf = (name) => {
+     try { return JSON.parse(readFileSync(join(dependencyRoot, "apps/web/node_modules", name, "package.json"), "utf8")).version; } catch { return null; }
+   };
+@@ -170,6 +232,9 @@
+         const text = message.params.args.map((argument) => argument.value ?? argument.description ?? "").join(" ").slice(0, 600);
+         if (message.params.type === "error" || message.params.type === "assert") runtimeErrors.push({ doc: label, kind: `console.${message.params.type}`, afterCheck: lastCheckId, atCheck: checks, text });
+         else if (message.params.type === "warning") consoleWarnings.push(`${label}: ${text.slice(0, 200)}`);
++      } else if (message.method === "Runtime.bindingCalled" && message.params.name === K1_BINDING) {
++        // E25 copy, change 2.
++        try { k1Trace.push({ doc: label, ...JSON.parse(message.params.payload) }); } catch { k1Trace.push({ doc: label, unparsed: String(message.params.payload).slice(0, 200) }); }
+       } else if (message.method === "Page.javascriptDialogOpening") {
+         const plan = dialogPlan.shift() ?? null;
+         // An unplanned beforeunload prompt is accepted (never hangs a navigation) but recorded as unexpected.
+@@ -220,6 +285,9 @@
+     await session.cdp("Runtime.enable");
+     await session.cdp("Page.enable");
+     await session.cdp("DOMStorage.enable");
++    // E25 copy, change 2: the key recorder for every later document of this target.
++    await session.cdp("Runtime.addBinding", { name: K1_BINDING });
++    await session.cdp("Page.addScriptToEvaluateOnNewDocument", { source: K1_RECORDER });
+     return session;
+   }
+   async function launch() {
+@@ -330,6 +398,7 @@
+     return point;
+   }
+   async function pressKey(session, key, code, keyCode) {
++    k1Pressed.push({ doc: session.label, key, code }); // E25 copy, change 2.
+     await session.cdp("Input.dispatchKeyEvent", { type: "rawKeyDown", key, code, windowsVirtualKeyCode: keyCode });
+     await session.cdp("Input.dispatchKeyEvent", { type: "keyUp", key, code, windowsVirtualKeyCode: keyCode });
+     await delay(80);
+@@ -452,7 +521,11 @@
+     pre("baseline:lockfile-gate", sha256(dependencyLock) === sha256(archiveLock) && sha256(extractedLock) === sha256(archiveLock));
+     pre("baseline:guard-no-module-from-a-checkout", guardViolations.length === 0 && foreign.length === 0, { guardViolations, foreign });
+     pre("baseline:every-required-module-bundled-from-archive", missingRequired.length === 0 && requiredModules.every((file) => archiveModules.has(file) || file.endsWith(".css")), { missingRequired });
+-    pre("baseline:fixed-delta-only-in-features-package", fixedDelta.length > 0 && fixedDelta.every((file) => file.startsWith(FEATURES_PACKAGE)), { fixedDelta });
++    // E24 copy (replaces the E25 copy's "baseline:fixed-delta-is-features-then-appearance-section-11").
++    const sorted = (list) => JSON.stringify([...new Set(list)].sort());
++    pre("baseline:fixed-delta-is-features-then-appearance-then-apprail-section-11", featuresDelta.length > 0 && featuresDelta.every((file) => file.startsWith(FEATURES_PACKAGE))
++      && sorted(appearanceDelta) === sorted(APPEARANCE_SECTION11) && sorted(railDelta) === sorted(APPRAIL_SECTION11)
++      && sorted(fixedDelta) === sorted([...featuresDelta, ...appearanceDelta, ...railDelta]), { fixedDelta, featuresDelta, appearanceDelta, railDelta });
+     pre("baseline:bundled-protected-modules-byte-identical-to-f359be6", protectedDrift.length === 0 && archiveDrift.length === 0, { protectedDrift, archiveDrift: archiveDrift.slice(0, 10) });
+     return main;
+   }
+@@ -483,6 +556,18 @@
+   }
+ 
+   async function finish(harnessError) {
++    // E25 copy, change 2: the K-1 key audit (run-level precondition), evaluated when the run itself completed.
++    {
++      const keydowns = k1Trace.filter((item) => item.type === "keydown");
++      const keyups = k1Trace.filter((item) => item.type === "keyup");
++      const keypresses = k1Trace.filter((item) => item.type === "keypress");
++      const matches = (list) => list.length === k1Pressed.length && k1Pressed.every((press, index) => list[index].doc === press.doc && list[index].key === press.key && list[index].code === press.code && list[index].trusted === true);
++      const ok = matches(keydowns) && matches(keyups) && keypresses.length === 0 && k1Trace.every((item) => !item.unparsed);
++      record("k1-key-audit", { pressed: k1Pressed, keydowns: keydowns.length, keyups: keyups.length, keypresses: keypresses.length, trace: k1Trace.slice(0, 40), ok });
++      if (harnessError === null) {
++        try { pre("run:k1-keyboard-trace-contains-only-the-runner-key-presses", ok, { pressed: k1Pressed.length, keydowns: keydowns.length, keyups: keyups.length, keypresses: keypresses.length }); } catch (error) { harnessError = error; }
++      }
++    }
+     const productFailure = harnessError?.checkKind === "product";
+     const deferred = deferredFailures.length;
+     const pass = harnessError === null && deferred === 0;

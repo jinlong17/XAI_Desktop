@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-tasks
+
+ ✓ src/__tests__/aiMutateSubscriber.test.tsx (8 tests) 261ms
+ ✓ src/__tests__/aiCreateSubscriber.test.tsx (9 tests) 259ms
+
+ Test Files  2 passed (2)
+      Tests  17 passed (17)
+   Start at  16:26:30
+   Duration  6.38s (transform 1.34s, setup 3.02s, collect 1.74s, tests 520ms, environment 4.02s, prepare 849ms)

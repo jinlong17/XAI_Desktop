@@ -1,0 +1,63 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+mode=features-typecheck
+suffix=features-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-final/verify-packages.mjs f359be6 all features-final-v1
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=cde91389f0a0baca69d266f5b6a6c5ff8098ac1f
+runner_sha256=f7758f28fd98cba97f2a04ba8a85b8410a381749f4aa8e8d1b6cca6a45653c05
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/plugin-web-settings-features-panel (packages/xai-web-settings-features-panel) kind=tsc script=typecheck: "tsc --noEmit"
+archive_file_sha256 packages/xai-web-settings-features-panel/package.json=20d5e894139071d92457aa68e76890c104583abc8df89bef81aecb0b122bae83 packages/xai-web-settings-features-panel/tsconfig.json=8264895f6ff844446cf042a6ea81db1464d3187dd69095537b215e6634a6c9c7 packages/xai-web-settings-features-panel/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 packages/xai-web-settings-features-panel/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-features-panel/eslint.config.js=e5fd80cab496575b6978b55d18244da722c48ad0e917a1a1149337612ae14bb3
+package_tree=074659c050fadd11ed3ff99274e441b48771b490 features_package_tree=074659c050fadd11ed3ff99274e441b48771b490
+node_modules_links third_party=448 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-settings-shell->packages/plugin-web-settings-shell @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus @repo/xai-web-shell->packages/xai-web-shell
+tsconfig_extends_checked=46 unresolved=none own=@repo/plugin-web-settings-features-panel:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/docs
+required_provenance_absent_from_archive=packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts,packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts,packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-features-panel/node_modules/.bin/tsc
+args=--noEmit --listFiles
+typescript=node_modules/.pnpm/typescript@5.9.2/node_modules/typescript@5.9.2
+tool_exit=0
+harness_checks=PASS (6/6)
+exit=0
+---- stdout ----
+[--listFiles output: 378 paths, summarised in the runner summary]
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS archive package.json script "typecheck" is "tsc --noEmit" (found "tsc --noEmit")
+harness PASS program file list parsed (--listFiles)
+harness PASS no program file from a checkout's packages/, apps/ or docs/
+harness PASS every program file is inside the archive or the dependency store node_modules/.pnpm
+harness PASS required product files in the type program (4 present of 7 listed)
+harness PASS own tsconfig extends resolves inside the archive (@repo/plugin-web-settings-features-panel:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json)
+tsc_exit=0 diagnostics_lines=0
+program_files=378 archive=79 store=299 elsewhere=0 forbidden=0
+archive_files_by_package packages/core=5 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=22 packages/plugin-web-tokens=6 packages/xai-web-event-bus=5 packages/xai-web-settings-features-panel=17 packages/xai-web-shell=10
+archive_file_list_sha256=0562133cb320b2c9ad871bc67948247f19af2a9a92f61b09dec2ec562974c03d
+pin_required_provenance packages/xai-web-settings-features-panel/src/FeaturesPane.tsx packages/xai-web-settings-features-panel/src/types.ts packages/plugin-web-storage/src/index.ts packages/plugin-web-settings-shell/src/index.ts
+pin_required_provenance_missing=none
+program packages/xai-web-settings-features-panel/src/DisabledFeatureFallback.tsx
+program packages/xai-web-settings-features-panel/src/FeaturesPane.tsx
+program packages/xai-web-settings-features-panel/src/__tests__/DisabledFeatureFallback.test.tsx
+program packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx
+program packages/xai-web-settings-features-panel/src/__tests__/featuresPaneEntry.test.tsx
+program packages/xai-web-settings-features-panel/src/__tests__/filterModulesByFeaturePrefs.test.ts
+program packages/xai-web-settings-features-panel/src/__tests__/useFeaturePrefs.test.tsx
+program packages/xai-web-settings-features-panel/src/__tests__/withDisabledFallback.test.tsx
+program packages/xai-web-settings-features-panel/src/featureIds.ts
+program packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts
+program packages/xai-web-settings-features-panel/src/index.ts
+program packages/xai-web-settings-features-panel/src/internal/FeatureThumb.tsx
+program packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx
+program packages/xai-web-settings-features-panel/src/types.ts
+program packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts
+program packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx
+program packages/xai-web-settings-features-panel/vitest.setup.ts

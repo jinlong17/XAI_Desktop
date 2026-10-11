@@ -1,0 +1,1274 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+package_trees packages/xai-web-dashboard-widgets=4d65ad167b0d3712166e96569b1d9f44ed66a500 packages/xai-web-dashboard-grid=8e96464cae57ba35a7f1a4c39c9b0a8f9df64509 packages/plugin-web-storage=782c79de33a1da6851b5a235950408eb7ae89f99 packages/xai-web-shell=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 apps/web=61ddf71751eaa9f1a456897ecb7fbe23e708be4b
+mode=original
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-dashboard-clock-recovery-sol/verify-fixed.mjs f9eb4b1 all before1
+runner_checkout_head=40f07b23fa3a92a221af9dff86617bd69da2be23 product_tree_delta_files_vs_runner_head=0
+archive_method=stream (spawned git archive piped into tar -x; no fixed buffer) archive_bytes=148408320 archive_sha256=bb468cede8a9659d9798bdb4c7f0a528faedf3ddfb344fb946f159ce6305a097
+contract_r2_sha256=214dc7582ff866cf76482b8883cc284edba8fa180f88bbf940fcaa7ab32cf0ae
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-widgets/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=589d065cb314928e29082a30aa861d288af7823aacbf1c91b6f944b4811bac00 bytes.test.tsx=996dd32e0ee034ac2d57bcd86b48dfe803290431b0ef8503d8232a730e8c5215 fields.test.tsx=4c6af5f6a41cae2c1a54c4771b7fdea7a705668d5dae0f316d0d5a8837258cef queues.test.tsx=a2be7088a07278a85f5a3b74c091ec7346f34ffb563f7b0e570baad9de9cb850 departure.test.tsx=613d0a8b97ca943425eb4614ca0eb351dab71dd24705e04cf9248acb66f42ecc continuity-export.test.tsx=17d021a2a4873c788f2586d20bf2931a70b9c06e5417e0940704e64701513135 verify-fixed.mjs=8b2c95c2a29763d2a5d11aaa9d22c8ebf6782b3275b79d2a1901e1486ac80d20
+archive_file_sha256 packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx=10bf13e8550bdf1207cfd89b372e5b87f099b1110326248dbf5b7ea2325614e9 packages/xai-web-dashboard-widgets/src/registrations.tsx=346cfddfbb3c299aff251b2e4daff31b909d0690196857c36b8ee71f6e015154 packages/xai-web-dashboard-widgets/src/styles.css=a7a4cf039b343b8c6b06113bf6b6997084524aa4c0413e2ab0396a1ca933a853 packages/xai-web-dashboard-widgets/src/internal/cityLibrary.ts=50de913a73caaef2ea98c7021fec24dd46a30d56177527ddda54db89bcb36f48 packages/xai-web-dashboard-widgets/src/internal/Icon.tsx=afd71c525472e5ba9087cfcfe78b6b801767bff34f61c7a73b59a6cdd5b26985 packages/xai-web-dashboard-widgets/src/index.ts=1e22d6b74d4f22655e273415798edd1c255b5af9a108f2a99822299ac8031b0b packages/xai-web-dashboard-grid/src/DashboardModule.tsx=36a8532beb638a5741d3b51338a2ce32da9daa220e1a461cd00729da61e542a2 packages/xai-web-dashboard-grid/src/DashboardGrid.tsx=395a134c9c1c3044ed86afdb48839373a7ba80ff57a387177dd277d76098fc2f packages/xai-web-dashboard-grid/src/types.ts=afeb1112713155f8998ca13cc9dbfc174025c98497148ab21cd4f015201e40f2 packages/xai-web-dashboard-grid/src/index.ts=fc5da5907da4de81a327736297ef2ae377a7cf3e589fb3c121475229f9acf71c packages/xai-web-dashboard-grid/src/DashHeader.tsx=0aaa4ce3b456b1fedf3c4bb3f7163830e6ee7390ba65382564d9c13852e40456 packages/xai-web-dashboard-grid/src/WidgetGhost.tsx=0b476928649a3b24bd35d97869c0b1e9e4588ebdec4908b6ef8c5583d0272c9b packages/xai-web-dashboard-grid/src/WidgetShell.tsx=7d1b74b80076983eb5cc34921d06d58b5365cbcf91efb63128a6c7938b1bd708 packages/xai-web-dashboard-grid/src/styles.css=d9e330e70a375b0579fcf3b98e3d9ea2c633fc4b498b4b3a66fda3df8db9fdc6 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 apps/web/src/routes/modules/dashboardRegistration.tsx=66c524e4e02117275ed369c02049f33a0eb2c42ad068388eb4041fa469c903e8 apps/web/src/routes/modules/settingsDeparture.ts=80c3a5787df8eb02102c4a508f2fe67c1fbd6a6b8ba7f16b3a65c3f542c8548b apps/web/src/routes/modules/shellRegistrations.tsx=c003c499ca3330ff6e3b7e738df4e3366d0daca141d65327dacc3d3665e1b8fe apps/web/src/main.tsx=6a7cdfbc6b17cdc13a3dbcb44611b09c33ddf7c7787da4a6ed31265e4abbf243 apps/web/src/providers/AccountStorageGate.tsx=1c6bf8c695e9bc8b80b83c6da0c3c55c44e9a88498dded1b8dd46f302d8cb666 apps/web/src/providers/AppProviders.tsx=950cde0f7f6ba7cae9776a8e8442a303f938d5bb04d389dd1ac9760e10ebe655 apps/web/src/App.tsx=f644e78ec482c0b9b66f9702407eb34e1dcd110e837293e4a736964bfe7ac408 packages/xai-web-shell/src/AppRail.tsx=fe789078fecc60936d3e6c5fc2b203001a15490aecf30f3a0ca301da1399fb44 packages/xai-web-shell/src/Topbar.tsx=aa5ac56e7b6a7652df70e82ed4d83dc81b44558181bfb48a30eb40b157d43c0e packages/xai-web-shell/src/Shell.tsx=38e25c6b20f6413c9362f53e9be7e2aa121001170898a6097e29fccabf22e432 packages/xai-web-shell/src/types.ts=d18f637e9bec8c05f305fb29467acfd3fdcf2649e83ad2b28b877389752139c0 packages/xai-web-shell/src/index.ts=396a894d09b5b2b95f2ed063b615b41f371044f356d4d2ef9f224189e09b66ab packages/xai-web-shell/src/internal/railOrderController.tsx=d7f2f0b699e087c34d453309d9fe4c0eb6ba38ef52e6dfc70fe49d2f75c4e2a6 packages/xai-web-shell/src/internal/RailOrderStatus.tsx=48b611ff1e2efbc96a888fd87f048925472702db898530cbf21f5df560ecff95 packages/xai-web-shell/src/internal/railOrderCopy.ts=268fb934f921843efd1c3e41cd9a81614ce26b3a94026e5884e10d633a05d7ba packages/xai-web-shell/src/railOrderStatus.css=338f0eae7338458da54b996880cfa93034940e0f19220a1669c1570a8fd4b6e5 packages/xai-web-shell/src/AvatarMenu.tsx=3401b838a2dc5a16d1c6f1113a2aaf1ef6d8673897029bb2a1614db8c379c4c2 packages/xai-web-settings-appearance/src/internal/appearanceController.tsx=64d6c8b74f689bc989bc8d1bcfa85bb333b068826829269f1e31d97cd2878e5a packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts=991232e97e44919c1b00b5502a62df05d814de3ccc34ed4452104ad59b54dab0 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-storage/src/internal/accountOwnership.ts=8d5b7fef04a014044b81cb95d56eaf084bfc306d7c8b9a27540b6caa3a2bef20 packages/plugin-web-storage/src/internal/accountCoordination.ts=d669fe47d22f6d9f4b5c56b24ca60eb68dee9fc6877de4901d328ffdd7e50e1c packages/plugin-web-storage/src/internal/codec.ts=99a735801cab8ce9d7208c244efb8eda66dd641cf5c7d795302384207c6b9b8f packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts=f292de4ec2e44d0fe75dde836fb360cfc2c292ceeaa47b2c107036765cd5b922 packages/xai-web-cmdk/src/internal/readModuleStates.ts=1ee898681af67b21bd84308bef99abf196ab8551069d53c8e570a9ec9e0ba008 packages/xai-web-cmdk/src/adapters/dashboard.ts=0c8e6ac9cfbcffd6a52e3f21cd5a09b077d03bd0539798ebcbc626776b64b1eb packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 packages/plugin-web-tokens/src/tokens.css=7c6eddebd1d826f939862ef75ba8159e966f0c76b0b9d34a0911f6b47265615d packages/plugin-web-tokens/src/i18n.ts=d5f2189b081d16a9f26b7146978c5f81660a6a44d6f534b9ac48e6e3c7ccb885 packages/xai-web-pet/src/DesktopPet.tsx=35edb0e686bf6682192ba1bbe7842d159e161a6593b7ccd13a432d59fe58ad6f
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] dashboard-widgets: include=packages/xai-web-dashboard-widgets/src/**/*.test.{ts,tsx} vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/clock-sol-original-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.report-original-0.json vitest_exit=0 cases=351 passed=351 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=351 numPassedTests=351 numFailedTests=0
+run[1] dashboard-grid: include=packages/xai-web-dashboard-grid/src/**/*.test.{ts,tsx} vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/clock-sol-original-1.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.report-original-1.json vitest_exit=0 cases=228 passed=228 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=228 numPassedTests=228 numFailedTests=0
+exit=0
+harness_checks=PASS (12/12)
+==== run[0] dashboard-widgets ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu
+
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-1: getWeather defensive narrow — null / malformed → null > getWeather(null) → null 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-1: getWeather defensive narrow — null / malformed → null > getWeather(undefined) → null 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-1: getWeather defensive narrow — null / malformed → null > getWeather({}) → null (missing required fields) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-1: getWeather defensive narrow — null / malformed → null > getWeather([]) → null (array not object) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-1: getWeather defensive narrow — null / malformed → null > getWeather({city:1, temp:25, condition:'sunny', updatedAt:'x'}) → null (city not string) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-1: getWeather defensive narrow — null / malformed → null > getWeather({city:'', temp:25, condition:'sunny', updatedAt:'x'}) → null (empty city) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-1: getWeather defensive narrow — null / malformed → null > getWeather({city:'x', temp:'hot', condition:'sunny', updatedAt:'x'}) → null (temp not number) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-1: getWeather defensive narrow — null / malformed → null > getWeather({city:'x', temp:25, condition:'stormy', updatedAt:'x'}) → null (unknown condition) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-1: getWeather defensive narrow — null / malformed → null > getWeather({city:'x', temp:25, condition:'sunny', updatedAt:'x', hi:'warm'}) → null (hi not number) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-1: getWeather defensive narrow — null / malformed → null > getWeather(location-only Open-Meteo snapshot) → valid 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-1: getWeather defensive narrow — null / malformed → null > getWeather(invalid latitude/longitude) → null 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-1: getWeather defensive narrow — null / malformed → null > never throws 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-2: getWeather(valid UserWeather) → the same validated object > returns the validated UserWeather 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-2: getWeather(valid UserWeather) → the same validated object > handles optional hi/lo when present and valid 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-2: getWeather(valid UserWeather) → the same validated object > handles all 3 WeatherCondition presets 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-2: getWeather(valid UserWeather) → the same validated object > handles optional Open-Meteo details when present and valid 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-3: setWeather trims city + stamps updatedAt > trims leading/trailing whitespace from city 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-3: setWeather trims city + stamps updatedAt > carries temp + condition 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-3: setWeather trims city + stamps updatedAt > updatedAt is an ISO string 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-3: setWeather trims city + stamps updatedAt > hi/lo absent when not provided in draft 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-3: setWeather trims city + stamps updatedAt > location-only Open-Meteo draft persists provider metadata without requiring manual temp 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-4: setWeather with hi/lo → carries hi/lo; without → undefined > carries hi and lo when provided 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-4: setWeather with hi/lo → carries hi/lo; without → undefined > omits hi/lo when not provided 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-4: setWeather with hi/lo → carries hi/lo; without → undefined > carries hi only when only hi provided 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-5: clearWeather() → null > returns null 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-6: SINGLETON — not a record; two setWeather calls do NOT accumulate > setWeather returns ONE object (not a keyed map) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/weatherStore.test.ts > AC-WSTORE-6: SINGLETON — not a record; two setWeather calls do NOT accumulate > second setWeather call overwrites (no accumulation — RW1) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-1: createSticky returns new store + created entity > creates a new sticky with trimmed text and given color 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-2: createSticky does not mutate original store > original store is unchanged after create 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-3: createSticky appends to existing store > pre-existing entries are preserved 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-4: deleteSticky removes the entry > key is gone after delete 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-5: deleteSticky is a no-op when id missing > returns same reference when id not found 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-6: deleteSticky does not mutate original store > original store still has the key after delete 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-7: listStickies returns sorted array > sorts by createdAt ASC then id ASC 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-7: listStickies returns sorted array > sorts by saved display order when present 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-7: listStickies returns sorted array > returns empty array for empty store 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-8: updateSticky edits an existing note without changing identity > updates text/color/source and preserves id + createdAt 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-8: updateSticky edits an existing note without changing identity > returns the same reference when id is missing 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-9: resizeSticky updates only dimensions > persists clamped width/height without changing note content 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-9: resizeSticky updates only dimensions > returns the same reference when id is missing 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-10: reorderStickies persists display order > rewrites order values without changing sticky content or size 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-10: reorderStickies persists display order > ignores missing ids and appends omitted stickies 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-11: moveSticky updates only free-form canvas position > persists clamped x/y without changing content or size 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-11: moveSticky updates only free-form canvas position > returns the same reference when id is missing 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-1: defensive — malformed input → [] (never throws) > overdueTasks({}, 'en') → [] 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-1: defensive — malformed input → [] (never throws) > overdueTasks(null, 'en') → [] 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-1: defensive — malformed input → [] (never throws) > overdueTasks([], 'en') → [] 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-1: defensive — malformed input → [] (never throws) > overdueTasks({overdue:42}, 'en') → [] 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-1: defensive — malformed input → [] (never throws) > never throws on malformed input 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-2: reads OVERDUE bucket specifically — next7/later/nodate tasks excluded > store with cards only in next7/later/nodate (empty overdue) → [] 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-3: overdue tasks with done !== true → one signal each; done === true excluded > 2 undone overdue tasks produce 2 signals with sourceType='task-overdue' 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-3: overdue tasks with done !== true → one signal each; done === true excluded > done=true task in overdue.tasks is excluded 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-3: overdue tasks with done !== true → one signal each; done === true excluded > label uses card.title[lang] 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-4: overdue.completed? array cards also filtered by done !== true > done=true card in overdue.completed is excluded 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-4: overdue.completed? array cards also filtered by done !== true > overdue.completed? cards with done !== true → included 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-5: bilingual — lang=zh uses title.zh > zh labels use title.zh 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-OVERDUE-5: bilingual — lang=zh uses title.zh > en labels use title.en 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-TODAY-1: defensive — malformed input → [] (never throws) > todaysEvents({}, now) → [] 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-TODAY-1: defensive — malformed input → [] (never throws) > todaysEvents(null, now) → [] 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-TODAY-1: defensive — malformed input → [] (never throws) > never throws 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-TODAY-2: today-date event → one signal; different-day event excluded > event on today (2026-05-29) → one signal with sourceType=calendar-today 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-TODAY-2: today-date event → one signal; different-day event excluded > event on tomorrow (2026-05-30) excluded 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-TODAY-3: multiple today events sorted by HH:MM ascending > today events sorted by time ascending (09:00 before 15:00) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-TODAY-4: DAILY-recurring event with past anchor → today instance still surfaces (RM3) > daily-recurring event with anchor yesterday → today instance produced 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-TODAY-5: WEEKLY-recurring event landing on today → today instance; non-matching weekday excluded > weekly-recurring event anchored 7 days ago → today instance produced 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-TODAY-5: WEEKLY-recurring event landing on today → today instance; non-matching weekday excluded > weekly-recurring event anchored 6 days ago (wrong weekday) → no today instance 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-TODAY-6: LOCAL date basis — event at 23:30 on today (local) IS today even with now=14:30 > event at 2026-05-29T23:30 with now=2026-05-29T14:30 → IS surfaced (day-START basis, not current-time) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-TODAY-6: LOCAL date basis — event at 23:30 on today (local) IS today even with now=14:30 > past-time-today event (e.g. 09:00 with now=14:30) is STILL surfaced (build-rec-1 compliance) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-COMBINE-1: overdue signals ordered before today signals > overdue task appears before today's calendar event in combined output 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-COMBINE-2: capped at max (6) even when more qualify > with 5 overdue + 3 today events, capped at 6 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-COMBINE-3: both sources empty → [] > empty task store + empty cal store → [] 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts > AC-RD-COMBINE-3: both sources empty → [] > null inputs → [] 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-EMPTY-1: both stores empty → honest 'All clear' / '暂无通知'; no .mail-row; badge=0 > lang=en: shows All clear text, no rows, badge=0 20ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-EMPTY-1: both stores empty → honest 'All clear' / '暂无通知'; no .mail-row; badge=0 > lang=zh: shows zh empty text 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-EMPTY-1: both stores empty → honest 'All clear' / '暂无通知'; no .mail-row; badge=0 > empty state is NOT a fixture row (not from MAILS fixture — RM6) 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-REAL-1: seed xai_task_cols (2 overdue) + xai_calendar_events (1 today) → 3 .mail-rows, badge=3 > 3 signals render as 3 .mail-row items with badge=3 8ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-REAL-1: seed xai_task_cols (2 overdue) + xai_calendar_events (1 today) → 3 .mail-rows, badge=3 > clicking notification rows deep-links to the owning module 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-REAL-2: each row shows label + time for events; source-type visually distinguished > overdue task row shows task title; calendar event row shows event time 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-REAL-3: now-threaded determinism — fixed now makes today signals deterministic > a tomorrow event does NOT appear with fixed NOW=today 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-REAL-3: now-threaded determinism — fixed now makes today signals deterministic > uses now prop not wall-clock: render with different now values gives different results 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-REAL-4: bilingual — overdue labels in zh use title.zh; title + source labels render en/zh > zh: overdue task label uses title.zh 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-REAL-4: bilingual — overdue labels in zh use title.zh; title + source labels render en/zh > zh: widget title + source labels are zh 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-REAL-4: bilingual — overdue labels in zh use title.zh; title + source labels render en/zh > en: widget title is en 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-READONLY-1: BOTH xai_task_cols + xai_calendar_events byte-unchanged after render (RM1) > rendering MailWidget with seeded stores does NOT mutate either store 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx > AC-MAIL-READONLY-1: BOTH xai_task_cols + xai_calendar_events byte-unchanged after render (RM1) > no setPref call touches xai_task_cols or xai_calendar_events (store identity check) 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-1: open=true calls showModal(); open=false calls close() > dialog has open attribute when open=true 22ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-1: open=true calls showModal(); open=false calls close() > dialog does NOT have open attribute when open=false 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-2: on open, city input is autofocused (after setTimeout 0 flush) > city input is focused after opening 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-3: initial pre-fill > initial=null shows blank city + empty temp + default condition sunny 36ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-3: initial pre-fill > initial=UserWeather pre-fills city/temp/condition/hi/lo 10ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-4: valid city + temp + condition → onSave called with correct draft > fills form and clicks Save → onSave called with trimmed city and parsed temp 17ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-1: store null → honest empty state; no fixture temp/city; Edit button present > renders empty state text when no weather is set 25ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-1: store null → honest empty state; no fixture temp/city; Edit button present > no fixture temp or city rendered (no .ww-temp) 9ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-1: store null → honest empty state; no fixture temp/city; Edit button present > Edit button is present with data-no-drag 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-2: clicking Edit opens the editor (dialog .open) > editor dialog is closed initially, opens on Edit click 9ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-2: clicking Edit opens the editor (dialog .open) > empty-state settings button opens the editor 8ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-3: seeded UserWeather → renders temp + city + condition label + icon > after seeding localStorage, widget renders the persisted weather values 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-4: each of the 3 conditions renders its mapped icon > condition "sunny" renders icon data-icon="sun" and label "Sunny" 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-4: each of the 3 conditions renders its mapped icon > condition "cloudy" renders icon data-icon="cloud" and label "Cloudy" 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-4: each of the 3 conditions renders its mapped icon > condition "rainy" renders icon data-icon="rain" and label "Rainy" 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-5: optional hi/lo — present → .ww-hilo shows values; absent → no .ww-hilo > seeded with hi+lo → .ww-hilo row with both values 10ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-5: optional hi/lo — present → .ww-hilo shows values; absent → no .ww-hilo > seeded without hi/lo → no .ww-hilo row 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > AC-STICKIES-1: renders 3 fixture sticky notes (samples) when store is empty 65ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > AC-STICKIES-2: each sample note has its fixture color and en text 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > AC-STICKIES-3: zh renders zh fixture text 9ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > AC-STICKIES-CREATE-2: fixture samples carry data-sample=true and no .sticky-del 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-4: valid city + temp + condition → onSave called with correct draft > hi/lo included only when entered 17ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-4: valid city + temp + condition → onSave called with correct draft > searches city candidates and saves a selected Open-Meteo location without manual temp 80ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-5: validation — empty city or empty/non-numeric temp → error, stays open, no onSave > empty city → error shown, onSave not called 7ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-6: integration — Edit → fill editor → Save → widget shows new values > fill and save editor → widget reflects the new city and temp 37ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-7: forecast renders only when live provider data includes it > no .wwf-day elements when weather is null (empty state) 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-7: forecast renders only when live provider data includes it > no .wwf-day elements when manual weather has no forecast 9ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-7: forecast renders only when live provider data includes it > renders forecast days when Open-Meteo data is cached 45ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-8: Open-Meteo refresh, cache, and fallback behavior > location-only weather triggers a live fetch and persists normalized data 26ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-8: Open-Meteo refresh, cache, and fallback behavior > fresh Open-Meteo cache skips network refresh 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > AC-STICKIES-CREATE-5: + button is present and wired (opens composer) 31ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > empty-state add action opens composer 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > composer shows an expanded 10-color palette 8ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > AC-STICKIES-CREATE-1: creating a sticky switches from fixture-sample to user branch 27ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > AC-STICKIES-CREATE-3: user sticky has delete button; fixture samples do not 18ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > AC-STICKIES-CREATE-4: user sticky text is rendered as single string (not bilingual) 11ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > AC-STICKIES-CREATE-6: deleting the only sticky reverts to fixture-sample branch 17ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > AC-STICKIES-CREATE-7: create→persist→rerender shows user sticky 10ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-5: validation — empty city or empty/non-numeric temp → error, stays open, no onSave > whitespace-only city → error shown, onSave not called 36ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-5: validation — empty city or empty/non-numeric temp → error, stays open, no onSave > empty temp → error shown, onSave not called 7ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-6: condition picker role=radiogroup; one chip aria-checked=true; default=sunny > radiogroup has role=radiogroup 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-6: condition picker role=radiogroup; one chip aria-checked=true; default=sunny > exactly one chip aria-checked=true; default = sunny 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-6: condition picker role=radiogroup; one chip aria-checked=true; default=sunny > default condition from initial.condition when pre-filled 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-6: condition picker role=radiogroup; one chip aria-checked=true; default=sunny > clicking a different chip changes selection 9ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-7: Cancel/ESC/backdrop → onClose; clicking inside content does NOT close > Cancel button calls onClose 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-7: Cancel/ESC/backdrop → onClose; clicking inside content does NOT close > ESC (native cancel event) calls onClose 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-7: Cancel/ESC/backdrop → onClose; clicking inside content does NOT close > clicking inside the panel does NOT close 19ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-8: a11y attributes > dialog has aria-modal=true + aria-labelledby=weather-editor-title 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-8: a11y attributes > city input has aria-required=true 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-8: a11y attributes > temp input has aria-required=true 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-8: a11y attributes > city error element connected via aria-describedby when error shown 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-9: bilingual — zh renders zh STR; STR_WEATHER every key has en+zh > lang=zh renders zh labels 16ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-8: Open-Meteo refresh, cache, and fallback behavior > failed live refresh keeps saved fallback visible and opens editor from the warning 72ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-9: bilingual — empty label + condition labels render in en + zh; title from dashboard.weather > lang=en: empty state label is en 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-9: bilingual — empty label + condition labels render in en + zh; title from dashboard.weather > lang=zh: empty state label is zh 10ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-9: bilingual — empty label + condition labels render in en + zh; title from dashboard.weather > lang=en + sunny: condition label is en sunny 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx > AC-WEATHER-REAL-9: bilingual — empty label + condition labels render in en + zh; title from dashboard.weather > lang=zh + cloudy: condition label is zh cloudy 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx > AC-WEDITOR-9: bilingual — zh renders zh STR; STR_WEATHER every key has en+zh > every STR_WEATHER key has both en and zh strings (grep-assert) 13ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > AC-STICKIES-CREATE-8: composer stays closed across a re-render with new lang prop 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > selecting an existing task fills the note and persists source metadata 35ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > existing-task filters can preview completed task sources 46ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > does not paste or render meaningless no-date metadata from task sources 9ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > double-clicking a user sticky opens edit composer and updates the same note 13ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > resizing a user sticky preserves the sticky's own saved width and height 14ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > dragging a user sticky moves it freely inside the sticky canvas and persists position 11ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calUpcoming.test.ts > upcomingEvents — empty store (AC-RD-UPC-1) > returns [] for null store 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calUpcoming.test.ts > upcomingEvents — empty store (AC-RD-UPC-1) > returns [] for empty map 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calUpcoming.test.ts > upcomingEvents — empty store (AC-RD-UPC-1) > returns [] for array store 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calUpcoming.test.ts > upcomingEvents — non-recurring (AC-RD-UPC-2) > includes a future non-recurring event 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calUpcoming.test.ts > upcomingEvents — non-recurring (AC-RD-UPC-2) > excludes a past non-recurring event 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calUpcoming.test.ts > upcomingEvents — non-recurring (AC-RD-UPC-2) > includes event starting at exactly now 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calUpcoming.test.ts > upcomingEvents — sort + max (AC-RD-UPC-3) > returns at most 4 events sorted by startISO 8ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calUpcoming.test.ts > upcomingEvents — daily recurrence (AC-RD-UPC-4) > expands a daily recurring event within the look-ahead window 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calUpcoming.test.ts > upcomingEvents — weekly recurrence (AC-RD-UPC-5) > expands a weekly recurring event correctly 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calUpcoming.test.ts > upcomingEvents — defensive (AC-RD-UPC-6) > drops malformed entries silently 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calUpcoming.test.ts > listValidCalEvents > returns valid events only 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calUpcoming.test.ts > listValidCalEvents > returns [] for non-object store 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > isHabitsState > AC-RD-HABIT-1: rejects null/string/number 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > isHabitsState > AC-RD-HABIT-1: rejects object without habits array 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > isHabitsState > AC-RD-HABIT-1: rejects object without checkIns object 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > isHabitsState > AC-RD-HABIT-1: rejects habit with no id 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > isHabitsState > AC-RD-HABIT-1: accepts valid state with no habits 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > isHabitsState > AC-RD-HABIT-1: accepts valid state with habits 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > maxStreak — invalid store > AC-RD-HABIT-2: returns 0 for null 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > maxStreak — invalid store > AC-RD-HABIT-2: returns 0 for string 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > maxStreak — invalid store > AC-RD-HABIT-2: returns 0 for empty habits list 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > maxStreak — C1 today-anchor (AC-RD-HABIT-3) > returns 0 if today is not checked 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > maxStreak — consecutive days (AC-RD-HABIT-4) > returns 1 if only today is checked 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > maxStreak — consecutive days (AC-RD-HABIT-4) > returns 3 for 3 consecutive days ending today 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > maxStreak — consecutive days (AC-RD-HABIT-4) > stops counting at a gap 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > maxStreak — UTC date basis (AC-RD-HABIT-5) > uses UTC day keys, not local 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > maxStreak — UTC date basis (AC-RD-HABIT-5) > utcDateKey produces YYYY-MM-DD in UTC 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > maxStreak — max across habits (AC-RD-HABIT-6) > returns the maximum streak across all habits 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/habitStreak.test.ts > maxStreak — max across habits (AC-RD-HABIT-6) > returns 0 when no habit has today checked 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) > AC-MINICAL-1: renders en month label 'May 2026' 32ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) > AC-MINICAL-1: renders zh month label '2026 年 5 月' 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) > AC-MINICAL-2: en weekday headers M T W T F S S 7ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) > AC-MINICAL-2: zh weekday headers 一 二 三 四 五 六 日 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) > AC-MINICAL-3: today cell carries 'today' class 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) > AC-MINICAL-5: prev/next nav buttons change month 18ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) > AC-MINICAL-6: clicking inside .mc-grid calls goTo('calendar') 10ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) > AC-MINICAL-7: clicking Open Calendar footer button calls goTo('calendar') 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) > AC-MINICAL-8: clicking prev/next nav does NOT call goTo 13ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > isPomodoroSession > AC-RD-POMO-1: rejects null/string/number 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > isPomodoroSession > AC-RD-POMO-1: rejects missing finishedAt 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > isPomodoroSession > AC-RD-POMO-1: rejects missing completed 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > isPomodoroSession > AC-RD-POMO-1: rejects invalid mode 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > isPomodoroSession > AC-RD-POMO-1: accepts valid focus session 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > isPomodoroSession > AC-RD-POMO-1: accepts break session (not focus, but still valid shape) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > countTodaysFocus — invalid store > AC-RD-POMO-2: returns 0 for null 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > countTodaysFocus — invalid store > AC-RD-POMO-2: returns 0 for object (not array) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > countTodaysFocus — invalid store > AC-RD-POMO-2: returns 0 for empty array 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > countTodaysFocus — completedAt guard (AC-RD-POMO-3) > does NOT count session that only has completedAt (Cmd-K stale field) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > countTodaysFocus — completedAt guard (AC-RD-POMO-3) > counts session with canonical finishedAt + completed=true 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > countTodaysFocus — local day basis (AC-RD-POMO-4) > counts a session finishing at 23:59 local as that local day 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > countTodaysFocus — local day basis (AC-RD-POMO-4) > does NOT count session from yesterday local 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > countTodaysFocus — filters by mode + completed (AC-RD-POMO-5) > excludes break sessions 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > countTodaysFocus — filters by mode + completed (AC-RD-POMO-5) > excludes incomplete focus sessions (completed=false) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/pomoStats.test.ts > countTodaysFocus — filters by mode + completed (AC-RD-POMO-5) > counts multiple valid focus sessions today 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) > AC-MINICAL-9: .mc-head and .mc-foot carry data-no-drag 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — real data (AC-MINICAL-REAL-1..5) > AC-MINICAL-REAL-1: no dots when calendar store is empty 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — real data (AC-MINICAL-REAL-1..5) > AC-MINICAL-REAL-2: event on day 15 shows dot on day 15 12ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — real data (AC-MINICAL-REAL-1..5) > AC-MINICAL-REAL-3: at most 3 dots per day (cap enforced) 9ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — real data (AC-MINICAL-REAL-1..5) > AC-MINICAL-REAL-4: rose colorPreset renders .mc-dot-rose class (RD4) 7ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx > MiniCalWidget — real data (AC-MINICAL-REAL-1..5) > AC-MINICAL-REAL-5: events from June don't appear in May view 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-1: dialog renders when open=true > dialog element has open attribute when open=true 95ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-2: dialog closes when open=false > dialog does not have open attribute when open=false 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/ClockWidget.test.tsx > AC-CLOCK: ClockWidget > AC-CLOCK-1: default render is 'classic' style with HH:MM:SS 25ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/ClockWidget.test.tsx > AC-CLOCK: ClockWidget > AC-CLOCK-2: clicking each of 4 style buttons swaps rendered content 18ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/ClockWidget.test.tsx > AC-CLOCK: ClockWidget > AC-CLOCK-3: style persists to xai_clock_style 11ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/ClockWidget.test.tsx > AC-CLOCK: ClockWidget > AC-CLOCK-4: timezone popover opens, lists Local + 12 cities, selection updates tz 11ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/ClockWidget.test.tsx > AC-CLOCK: ClockWidget > AC-CLOCK-5: tz=shanghai shifts displayed time by +8 UTC from local 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/ClockWidget.test.tsx > AC-CLOCK: ClockWidget > AC-CLOCK-6: .clock-toolbar carries data-no-drag 17ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/ClockWidget.test.tsx > AC-CLOCK: ClockWidget > AC-CLOCK-7: zh labels via useI18n 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/ClockWidget.test.tsx > AC-CLOCK: ClockWidget > AC-CLOCK-8: switching to analog mounts <svg class='clock-analog'> 9ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/ClockWidget.test.tsx > AC-CLOCK: ClockWidget > AC-CLOCK-extra: invalid stored style falls back to classic 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/ClockWidget.test.tsx > AC-CLOCK: ClockWidget > AC-CLOCK-extra: clicking scrim closes popover without changing tz 7ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-3: Cancel button calls onClose > clicking Cancel fires onClose 8ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-4: Save with empty text shows error, does not call onSave > empty textarea → error shown, onSave not called 13ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-5: Save with valid text calls onSave with trimmed draft > filled textarea → onSave called with trimmed text and selected color 29ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-6: color radiogroup defaults to sun, switches on click > sun chip is aria-checked=true initially; clicking mint switches selection 21ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-7: a11y — aria-modal + aria-labelledby > dialog has aria-modal=true and correct labelledby 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-8: form resets when open changes to true again > closing and reopening clears the text field 15ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-9: bilingual STR parity — all keys present in both en and zh > every key in STR_STICKY_COMPOSER has en and zh strings 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-9: bilingual STR parity — all keys present in both en and zh > zh labels render correctly 8ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx > UpcomingWidget — real data > AC-UPCOMING-REAL-1: shows empty label when no events 18ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx > UpcomingWidget — real data > AC-UPCOMING-REAL-1: empty label in Chinese 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx > UpcomingWidget — real data > AC-UPCOMING-REAL-1: shows empty label when all events are in the past 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx > UpcomingWidget — real data > AC-UPCOMING-REAL-2: renders a future event's title and date 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx > UpcomingWidget — real data > AC-UPCOMING-REAL-2: renders time string 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx > UpcomingWidget — real data > clicking an event row opens calendar 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx > UpcomingWidget — real data > clicking the empty state opens calendar 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx > UpcomingWidget — real data > AC-UPCOMING-REAL-2: renders month in Chinese 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx > UpcomingWidget — real data > AC-UPCOMING-REAL-3: excludes past events 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx > UpcomingWidget — real data > AC-UPCOMING-REAL-4: now prop determines the cutoff correctly 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx > UpcomingWidget — real data > re-renders without crash when now changes 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calMonthDots.test.ts > monthDots — empty store (AC-RD-CAL-1) > returns {} for null store 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calMonthDots.test.ts > monthDots — empty store (AC-RD-CAL-1) > returns {} for empty map 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calMonthDots.test.ts > monthDots — non-recurring (AC-RD-CAL-2) > places dot on correct day-of-month 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calMonthDots.test.ts > monthDots — non-recurring (AC-RD-CAL-2) > excludes event from different month 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calMonthDots.test.ts > monthDots — 3-dot cap (AC-RD-CAL-3) > caps at 3 dots per day 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calMonthDots.test.ts > monthDots — recurrence (AC-RD-CAL-4) > daily recurrence produces dots on multiple days in month 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calMonthDots.test.ts > monthDots — recurrence (AC-RD-CAL-4) > weekly recurrence produces one dot on anchor day and same weekday next week 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/calMonthDots.test.ts > monthDots — rose colorPreset (AC-RD-CAL-5) > includes 'rose' colorPreset in dots 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WorldClocks.test.tsx > WorldClocks > AC-WORLDCLOCKS-1: default shows 4 zones in list view 24ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WorldClocks.test.tsx > WorldClocks > AC-WORLDCLOCKS-2: view toggle list/analog/grid swaps rendered shape 21ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WorldClocks.test.tsx > WorldClocks > AC-WORLDCLOCKS-3: add-city picker shows the 8 unselected cities 16ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WorldClocks.test.tsx > WorldClocks > AC-WORLDCLOCKS-4: selecting a city adds it to xai_zones 9ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WorldClocks.test.tsx > WorldClocks > AC-WORLDCLOCKS-5: per-row remove button removes the zone 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WorldClocks.test.tsx > WorldClocks > AC-WORLDCLOCKS-6: .tz-view-toggle and .tz-picker carry data-no-drag 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WorldClocks.test.tsx > WorldClocks > AC-WORLDCLOCKS-7: removing the last zone is prevented 7ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WorldClocks.test.tsx > WorldClocks > AC-WORLDCLOCKS-9: persistence round-trip 11ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WorldClocks.test.tsx > WorldClocks > AC-WORLDCLOCKS-8: dayDelta label uses i18n strings 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/WorldClocks.test.tsx > WorldClocks > filters unknown zone ids from storage on render 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > isTaskColsRecord > AC-RD-TASKS-1: rejects null/undefined/string 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > isTaskColsRecord > AC-RD-TASKS-1: rejects object with non-object column values 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > isTaskColsRecord > AC-RD-TASKS-1: rejects col without tasks array 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > isTaskColsRecord > AC-RD-TASKS-1: accepts empty object (no buckets) 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > isTaskColsRecord > AC-RD-TASKS-1: accepts valid col shape 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > isTaskColsRecord > AC-RD-TASKS-1: accepts col with optional completed array 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > countDone — invalid store > AC-RD-TASKS-2: returns { done:0, total:0 } for null 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > countDone — invalid store > AC-RD-TASKS-2: returns { done:0, total:0 } for empty array 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > countDone — invalid store > AC-RD-TASKS-2: returns { done:0, total:0 } for empty object 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > countDone — col.tasks shape guard (AC-RD-TASKS-3) > counts cards from col.tasks, not from col directly 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > countDone — col.tasks shape guard (AC-RD-TASKS-3) > counts tasks across multiple buckets 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > countDone — absent done === false (AC-RD-TASKS-4) > treats missing done as false 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > countDone — absent done === false (AC-RD-TASKS-4) > treats done: undefined as false 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts > countDone — optional completed bucket (AC-RD-TASKS-5) > counts cards in the optional completed array 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatPomos.test.tsx > StatPomos — real data > AC-STATS-REAL-POMOS-1: shows 0 when no sessions 20ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatPomos.test.tsx > StatPomos — real data > AC-STATS-REAL-POMOS-2: counts today's completed focus sessions 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatPomos.test.tsx > StatPomos — real data > AC-STATS-REAL-POMOS-2: does NOT count yesterday's sessions 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatPomos.test.tsx > StatPomos — real data > AC-STATS-REAL-POMOS-2: does NOT count break sessions 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatPomos.test.tsx > StatPomos — real data > AC-STATS-REAL-POMOS-3: completedAt-only session NOT counted 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatPomos.test.tsx > StatPomos — real data > AC-STATS-REAL-POMOS-4: bilingual label en/zh 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatPomos.test.tsx > StatPomos — real data > dots cap at 8 even when count > 8 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/openMeteo.test.ts > Open-Meteo weather client > searchOpenMeteoCities normalizes geocoding results 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/openMeteo.test.ts > Open-Meteo weather client > fetchOpenMeteoWeather normalizes current weather and 3-day forecast 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/openMeteo.test.ts > Open-Meteo weather client > maps WMO codes to the widget's three condition icons 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/weatherStore/__tests__/openMeteo.test.ts > Open-Meteo weather client > isOpenMeteoCacheFresh honors the 20 minute cache window 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatStreak.test.tsx > StatStreak — real data > AC-STATS-REAL-STREAK-1: shows empty label when no habits 16ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatStreak.test.tsx > StatStreak — real data > AC-STATS-REAL-STREAK-1: shows empty label in Chinese 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatStreak.test.tsx > StatStreak — real data > AC-STATS-REAL-STREAK-1: shows empty label when habits array is empty 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatStreak.test.tsx > StatStreak — real data > AC-STATS-REAL-STREAK-2: shows streak count when today is checked 15ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatStreak.test.tsx > StatStreak — real data > AC-STATS-REAL-STREAK-3: shows 0 (not empty label) when streak broke 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatStreak.test.tsx > StatStreak — real data > AC-STATS-REAL-STREAK-4: bilingual label en/zh 4ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatStreak.test.tsx > StatStreak — real data > shows flame icon when habits exist 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatTasks.test.tsx > StatTasks — real data > AC-STATS-REAL-TASKS-1: shows empty label when no tasks 17ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatTasks.test.tsx > StatTasks — real data > AC-STATS-REAL-TASKS-1: shows empty label in Chinese 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatTasks.test.tsx > StatTasks — real data > AC-STATS-REAL-TASKS-2: renders correct done/total 6ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatTasks.test.tsx > StatTasks — real data > AC-STATS-REAL-TASKS-2: all done shows done === total 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatTasks.test.tsx > StatTasks — real data > AC-STATS-REAL-TASKS-2: 0 done with tasks renders 0/total donut 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatTasks.test.tsx > StatTasks — real data > AC-STATS-REAL-TASKS-2: donut value reflects real ratio 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatTasks.test.tsx > StatTasks — real data > AC-STATS-REAL-TASKS-3: bilingual label en/zh 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/StatTasks.test.tsx > StatTasks — real data > AC-STATS-REAL-TASKS-4: re-renders without crash (RD6) 8ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/useWeather.test.tsx > AC-WHOOK-3: default (unset) → weather === null > hook returns null when localStorage is clear 10ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/useWeather.test.tsx > AC-WHOOK-1: set(draft) persists to xai_dashboard_weather; weather reflects it > after set(), weather has the new city + condition 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/useWeather.test.tsx > AC-WHOOK-1: set(draft) persists to xai_dashboard_weather; weather reflects it > set() persists to xai_dashboard_weather key in localStorage 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/useWeather.test.tsx > AC-WHOOK-1: set(draft) persists to xai_dashboard_weather; weather reflects it > set() can persist an Open-Meteo location before live weather has loaded 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/useWeather.test.tsx > AC-WHOOK-2: clear() persists null; weather becomes null > after set then clear, weather is null and localStorage is null 5ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/useWeather.test.tsx > AC-WHOOK-4: a second hook instance reading the same key sees the persisted value > after set() in hook1, hook2 initialized fresh sees the same value via localStorage 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/fixtures.test.ts > AC-FIXTURES-1: WEATHER shape > has bilingual city + temp + hi/lo + bilingual condition + icon + 5-day forecast 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/fixtures.test.ts > AC-FIXTURES-2: STICKIES shape > has 3 entries each with id + color + bilingual text 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/fixtures.test.ts > AC-FIXTURES-3: MAILS shape > has 4 entries each with id + from + bilingual subj + time + unread bool 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/fixtures.test.ts > AC-FIXTURES-4: UPCOMING shape > has 4 entries each with id + date + bilingual month + bilingual title + time 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/fixtures.test.ts > AC-FIXTURES-5: CAL_EVENTS shape > is keyed by day number; each value is [{ c: <color> }] 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/fixtures.test.ts > bilingual helper > returns lang-specific value 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/useStickies.test.tsx > AC-HOOK-1: initial list is empty when localStorage is clear > list starts as [] 14ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/useStickies.test.tsx > AC-HOOK-2: create adds a sticky and updates list > after create, list has 1 sticky with correct text and color 3ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/useStickies.test.tsx > AC-HOOK-3: create persists to localStorage > after create, xai_dashboard_stickies key exists in localStorage 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/useStickies.test.tsx > AC-HOOK-4: remove deletes a sticky > after remove, list is empty and key reverts to {} 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/analogClockTicks.test.tsx > AC-ANALOG: analog clock SVG > AC-ANALOG-5: viewBox is 0 0 100 100 34ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/analogClockTicks.test.tsx > AC-ANALOG: analog clock SVG > AC-ANALOG-1: 48 minor ticks (60 minus 12 multiples of 5) 9ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/analogClockTicks.test.tsx > AC-ANALOG: analog clock SVG > AC-ANALOG-2: 12 major ticks 16ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/analogClockTicks.test.tsx > AC-ANALOG: analog clock SVG > AC-ANALOG-3: 12 numerals [12, 1..11] 7ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/analogClockTicks.test.tsx > AC-ANALOG: analog clock SVG > AC-ANALOG-4: hour hand rotates 90° at 03:00:00 10ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/cityLibrary.test.ts > AC-CITYLIB-1: 12 entries with prototype ids > library has 12 entries 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/cityLibrary.test.ts > AC-CITYLIB-1: 12 entries with prototype ids > ids match design.md §1.1 #8 verbatim 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/cityLibrary.test.ts > AC-CITYLIB-2: bilingual city + tz > each entry has en+zh city + numeric tz 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/cityLibrary.test.ts > findCity + cityLabel helpers > findCity returns matching entry by id 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/cityLibrary.test.ts > findCity + cityLabel helpers > findCity returns undefined for unknown id 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/cityLibrary.test.ts > findCity + cityLabel helpers > cityLabel returns the active-lang city name 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/ids.test.ts > AC-IDS-1: createStickyId returns a non-empty string > returns a non-empty string 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/ids.test.ts > AC-IDS-2: createStickyId returns unique ids on successive calls > two calls produce different ids 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/ids.test.ts > AC-IDS-3: createStickyId fallback format when crypto.randomUUID unavailable > fallback string includes sticky- prefix and timestamp components 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/Donut.test.tsx > Donut helper > renders an svg with class 'donut' 14ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/Donut.test.tsx > Donut helper > strokeDashoffset reflects 1-value 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/Donut.test.tsx > Donut helper > clamps out-of-range values to [0, 1] 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/Donut.test.tsx > Donut helper > treats NaN as 0 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/TzClock.test.tsx > TzClock > renders an svg with viewBox 0 0 100 100 15ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/TzClock.test.tsx > TzClock > rotates hour hand to 90° at 03:00:00 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/TzClock.test.tsx > TzClock > rotates hour hand to 180° at 06:00:00 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/registrations.test.tsx > AC-REG: dashboardWidgetRegistrations shape > AC-REG-1: length is 11 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/registrations.test.tsx > AC-REG: dashboardWidgetRegistrations shape > AC-REG-2: ids match the prototype WIDGETS_CONFIG order 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/registrations.test.tsx > AC-REG: dashboardWidgetRegistrations shape > AC-REG-3: spans map per design.md §1.1 #4 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/registrations.test.tsx > AC-REG: dashboardWidgetRegistrations shape > AC-REG-4: each entry has a callable render returning a ReactNode (null acceptable for placeholders) 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/registrations.test.tsx > AC-REG: dashboardWidgetRegistrations shape > AC-REG-5: each entry has bilingual ariaLabel 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/TimeTrackerWidget.test.tsx > TimeTrackerWidget > renders today's total and opens the Time Tracker module 54ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/slotIntegration.test.tsx > AC-HOST-1: slot integration sanity > dashboardWidgetRegistrations is importable from the public surface 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/slotIntegration.test.tsx > AC-HOST-1: slot integration sanity > each registration renders a non-null ReactNode given a valid ctx 70ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/slotIntegration.test.tsx > AC-HOST-1: slot integration sanity > ids match the prototype set plus Time Tracker 0ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/PomoDots.test.tsx > PomoDots helper > renders `total` dot spans 14ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/PomoDots.test.tsx > PomoDots helper > first `count` dots carry the 'on' class 2ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/PomoDots.test.tsx > PomoDots helper > clamps count to total 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/PomoDots.test.tsx > PomoDots helper > clamps negative count to 0 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/index-barrel.test.ts > AC-PKG-4: public surface is single export > exports exactly dashboardWidgetRegistrations 1ms
+ ✓ packages/xai-web-dashboard-widgets/src/__tests__/index-barrel.test.ts > AC-PKG-4: public surface is single export > dashboardWidgetRegistrations is an array 0ms
+
+ Test Files  34 passed (34)
+      Tests  351 passed (351)
+   Start at  09:32:37
+   Duration  4.41s (transform 1.30s, setup 6.05s, collect 2.90s, tests 2.14s, environment 10.66s, prepare 1.77s)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.report-original-0.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.clock-sol-vite-cache-original-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/packages/xai-web-dashboard-widgets/src/__tests__/setup.ts"],"include":["packages/xai-web-dashboard-widgets/src/**/*.test.{ts,tsx}"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx packages/xai-web-dashboard-widgets/src/registrations.tsx packages/xai-web-dashboard-widgets/src/internal/cityLibrary.ts
+pin_modules=134 by package: packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/xai-web-dashboard-widgets=77 packages/xai-web-event-bus=4 packages/xai-web-shell=14
+==== run[1] dashboard-grid ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu
+
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx > useGridDrag > AC-DRAG-1: startDrag on a known id sets drag state 14ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx > useGridDrag > AC-DRAG-2: pointerdown on a <button> child does NOT start drag 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx > useGridDrag > AC-DRAG-3: pointerdown on an <input> child does NOT start drag 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx > useGridDrag > AC-DRAG-4: pointerdown on an element with [data-no-drag] does NOT start drag 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx > useGridDrag > AC-DRAG-8: right-click (button !== 0) does NOT start drag 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx > useGridDrag > AC-DRAG-6: pointerup on window resets drag state 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx > useGridDrag > AC-DRAG-7: pointercancel on window resets drag state 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx > useGridDrag > pointermove updates drag.x / drag.y to follow cursor 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx > useGridDrag > pointermove over another widget swaps order 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx > useGridDrag > cleanup: listeners are removed on unmount 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx > useGridDrag > renders nothing visible itself — the hook is state-only 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-SLOT-2: applies widget-shell + span class 15ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-SLOT-2: data-widget-id matches id 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-SLOT-4: aria-label en when provided 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-SLOT-4: aria-label zh when provided 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-SLOT-4: no aria-label when omitted 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-DRAG-5: dragging class applied when isDragging=true 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-DRAG-5: no dragging class when isDragging=false 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-DRAG-1: pointerdown on the shell calls onPointerDown(id) 3ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > setRef is invoked with the mounted element 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > children are rendered inside the shell 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-RM-1: renders .widget-shell__remove button when onRemove is provided 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-RM-1: does NOT render .widget-shell__remove button when onRemove is omitted 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-RM-2: clicking .widget-shell__remove calls onRemove with the widget id 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-RM-2: clicking .widget-shell__remove does NOT fire the shell onPointerDown (drag excluded) 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-RM-3: aria-label uses en localised string with ariaLabel title 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-RM-3: aria-label uses zh localised string with ariaLabel title 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > AC-RM-3: aria-label falls back to widget id when ariaLabel is undefined 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > renders resize handle when onResizePointerDown is provided 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > does NOT render resize handle when onResizePointerDown is omitted 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > resize handle pointerdown calls callback with widget id 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > applies layout and glass appearance CSS variables to the shell 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > renders appearance controls only when onAppearanceChange is provided 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > clicking a swatch updates the widget glass tone 7ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > changing the transparency slider updates the widget glass alpha 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > clicking transparency step buttons updates the widget glass alpha 3ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx > WidgetShell > clicking reset calls the appearance reset callback 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx > DashHeader departure capability > does not treat an invalid device source as a host draft or unload warning 38ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx > DashHeader departure capability > names an unavailable note source without calling it a position failure 12ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-1: when open=false, showModal is NOT called 18ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-2: when open=true, showModal is called 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-3: renders cards for widgets not in currentOrder 10ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-3b: shows all 10 cards when currentOrder is empty 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-4: when all catalog ids are in currentOrder, renders .awp-empty not .awp-grid 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-5: empty state shows bilingual EN text 3ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-5b: empty state shows bilingual ZH text 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-6: clicking a card calls onAdd with the widget id 7ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-7: clicking a card does NOT call onClose 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-8: Cancel button calls onClose and NOT onAdd 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-9: click on dialog backdrop (target === dialog element) calls onClose 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-10: native cancel event on dialog calls onClose 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-11: lang=en renders English picker title 12ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-12: lang=zh renders Chinese picker title 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-13: cards have bilingual title (EN) from WIDGET_TITLES 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-13b: known widget id shows correct EN title from WIDGET_TITLES 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-14: cards have bilingual description (EN) from WIDGET_DESCRIPTIONS 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-AWP-15: each card has an inline SVG icon 3ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-A11Y-1: dialog has aria-labelledby pointing to the title h2 id 27ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-A11Y-2: each card is a button type=button 3ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-A11Y-3: known widget cards have accessible title text content 14ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-A11Y-4: Cancel button has aria-label from dashboard.picker.aria_close (EN) 3ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx > AddWidgetPicker > AC-A11Y-4b: Cancel button has aria-label from dashboard.picker.aria_close (ZH) 3ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions 12ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery 40ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success 13ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > layout physical storage notification must refresh rendered saved size 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > old A layout callback must not seed A map into B 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > a newer external layout entry must survive a local edit of another widget 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > order failure control retains original persisted and rendered order 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > latest layout proposal retries once while committed view stays unchanged 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > appearance latest change and reset are recoverable; old owner export is blocked 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > actual add retry emits once only after saving and closes picker; removal retry commits 17ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > failed order reconciliation remains pending and can retry rather than marking it saved 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx > DashHeader departure capability > names frozen account recovery without inventing a position source failure 59ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx > DashHeader departure capability > keeps a real editor draft guarded, discards only that field, and rereads it 16ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx > DashHeader departure capability > keeps the already-registered guard current during the edit turn 8ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx > DashHeader departure capability > does not turn a guarded departure dialog focus into an implicit blur save 52ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx > Dashboard header persistence recovery > keeps latest draft on quota, retries it, and warns before unload only while dirty 145ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx > Dashboard header persistence recovery > rejects newer raw data and old-account retry/export 42ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx > Dashboard header persistence recovery > retains failed clear with its original persistence 21ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx > Dashboard header persistence recovery > retains latest position on quota and refuses newer device raw on retry 17ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx > DashHeader departure capability > persists an ordinary Tab-style blur after the current turn 28ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx > DashHeader departure capability > keeps a moved position whose caller raw preflight rejects as a real draft 28ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx > DashHeader departure capability > does not make an unavailable position source dirty on an unmoved press 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx > DashHeader departure capability > holds a navigation-pointer blur across a slow click until the host reserves departure 24ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx > DashHeader departure capability > rejects a captured A capability after account B becomes current 24ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx > Dashboard header persistence recovery > commits the latest cancelled drag but keeps resize-only clamps local 17ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx > Dashboard header persistence recovery > keeps an invalid device source byte-for-byte until explicit reload 13ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx > Dashboard header persistence recovery > reload cancels an invalid-source pending position without an old completion polluting recovery 35ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx > DashHeader departure capability > does not capture a pointer until movement, so a normal pointer click opens the editor 19ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx > DashboardModule events (P3) > AC-EVENT-1: Add-widget header button click emits add-widget-button event 43ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx > DashboardModule events (P3) > AC-EVENT-2: empty-state CTA click emits empty-state-cta event 6ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx > DashboardModule events (P3) > AC-EVENT-1 + AC-EVENT-2: both buttons emit when both clicked 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx > DashboardModule events (P3) > AC-EVENT-4: no events fire on initial render (mount must be quiet) 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx > DashboardModule events (P3) > AC-EVENT-3 / AC-REG-8: widget goTo(moduleId) emits web:shell:module-change with mini-cal source 17ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx > DashboardModule events (P3) > AC-EVENT-3: goTo with unknown moduleId is silently ignored (matches DashboardSlotHost guard) 10ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx > DashboardModule events — gap-closure row #5 extension (AC-EVT-EXT) > AC-EVT-EXT-1: Add Widget button STILL emits web:dashboard:add-widget-clicked (source=add-widget-button) 7ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx > DashboardModule events — gap-closure row #5 extension (AC-EVT-EXT) > AC-EVT-EXT-2: Empty State CTA STILL emits web:dashboard:add-widget-clicked (source=empty-state-cta) 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx > DashboardModule events — gap-closure row #5 extension (AC-EVT-EXT) > AC-EVT-EXT-3: picker card click emits web:dashboard:widget-added with {widgetId, source:'picker'} — fires before close() 19ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx > DashboardModule events — gap-closure row #5 extension (AC-EVT-EXT) > AC-EVT-EXT-4: picker Cancel does NOT emit web:dashboard:widget-added 23ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > AC-RENDER-2: renders greeting + date + Add-widget button 63ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > AC-LANG-3: en label uses 'Add widget' 7ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > AC-LANG-3: zh label uses '添加组件' 7ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > AC-LANG-4: en aria-label uses 'Add a new dashboard widget' 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > AC-LANG-4: zh aria-label uses '添加新的工作台组件' 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > greeting uses good_morning in the morning 3ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > greeting uses good_afternoon in the afternoon 3ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > greeting uses good_evening in the evening 3ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > date string follows zh format on lang='zh' 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > button onClick fires when supplied 8ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > button click is a no-op when onAddWidget omitted 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > renders an editable center note placeholder 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > lets the user drag the center note horizontally and persists the position 22ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > clicking the center note lets the user save text with Enter 19ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > loads a saved center note from localStorage 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx > DashHeader > can clear a saved center note 14ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.picker.test.tsx > DashboardModule picker integration (AC-DMP) > AC-DMP-1: picker dialog is closed on first render (showModal not called) 35ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.picker.test.tsx > DashboardModule picker integration (AC-DMP) > AC-DMP-2: clicking Add Widget button opens picker 13ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.picker.test.tsx > DashboardModule picker integration (AC-DMP) > AC-DMP-3: clicking Empty State CTA opens picker 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.picker.test.tsx > DashboardModule picker integration (AC-DMP) > AC-DMP-4: picker card click appends widget + emits event + closes picker 9ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.picker.test.tsx > DashboardModule picker integration (AC-DMP) > AC-DMP-5: picker Cancel closes without emitting widget-added event 10ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.picker.test.tsx > DashboardModule picker integration (AC-DMP) > AC-DMP-6: picker ESC (cancel event) closes without emitting widget-added event 7ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.remove.test.tsx > DashboardModule — remove widget (AC-RM-6..7) > AC-RM-6: clicking remove on a widget removes it from the rendered grid 49ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.remove.test.tsx > DashboardModule — remove widget (AC-RM-6..7) > AC-RM-6: clicking remove persists the new order to xai_dash_order localStorage 9ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.remove.test.tsx > DashboardModule — remove widget (AC-RM-6..7) > AC-RM-6: removed widget re-appears as available in AddWidgetPicker 36ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.remove.test.tsx > DashboardModule — remove widget (AC-RM-6..7) > AC-RM-7: remove button click calls onRemove even when the shell has isDragging styling 9ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx > DashboardModule with widgets (P2 grid) > AC-SLOT-1: renders 3 widgets in registration order when persisted is empty 60ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx > DashboardModule with widgets (P2 grid) > AC-SLOT-3: render ctx receives the active lang 6ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx > DashboardModule with widgets (P2 grid) > AC-SLOT-5: empty state is NOT rendered when widgets are non-empty 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx > DashboardModule with widgets (P2 grid) > AC-PERSIST-8: persisted order is respected on mount 6ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx > DashboardModule with widgets (P2 grid) > AC-PERSIST-3 (host-level): unknown ids in persisted are sanitized away 7ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx > DashboardModule with widgets (P2 grid) > AC-SLOT-2: each shell carries the correct span class 6ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx > DashboardModule with widgets (P2 grid) > duplicate ids in widgets[] → first wins, no crash, dev-warn handled silently in test env 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.async.test.tsx > DashHeader async note session > keeps a newer draft open after an earlier pending operation completes 134ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.async.test.tsx > DashHeader async note session > retries an unchanged uncertain write through the hook token 55ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.async.test.tsx > DashHeader async note session > refuses an external raw replacement before a local editor can overwrite it 22ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.async.test.tsx > DashHeader async note session > does not let Escape hide an active save 17ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.async.test.tsx > DashHeader async note session > masks an old account's committed text after an editor session freezes 18ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.removeWidget.test.tsx > useDashOrder — removeWidget (AC-RM-4..5) > AC-RM-4: removeWidget(unknown_id) is a no-op — does not call setPref 9ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.removeWidget.test.tsx > useDashOrder — removeWidget (AC-RM-4..5) > AC-RM-4: removeWidget(id) is idempotent — does not throw on repeated calls 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.removeWidget.test.tsx > useDashOrder — removeWidget (AC-RM-4..5) > AC-RM-4: removeWidget is exposed as a function on the tuple 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.removeWidget.test.tsx > useDashOrder — removeWidget (AC-RM-4..5) > AC-RM-5: useDashOrder returns a 4-element tuple 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.removeWidget.test.tsx > useDashOrder — removeWidget (AC-RM-4..5) > AC-RM-5: 2-element destructure [order, setOrder] still works (back-compat) 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.removeWidget.test.tsx > useDashOrder — removeWidget (AC-RM-4..5) > AC-RM-5: 3-element destructure [order, setOrder, addWidget] still works (back-compat) 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > dashboardGridSlotRegistration > AC-REG-1: moduleId === 'dashboard' 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > dashboardGridSlotRegistration > AC-REG-2: icon === 'layout' 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > dashboardGridSlotRegistration > AC-REG-3: i18nKey === 'nav.dashboard' 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > dashboardGridSlotRegistration > AC-REG-4: railOrder === 4 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > dashboardGridSlotRegistration > AC-REG-5: showInRail === true 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > dashboardGridSlotRegistration > AC-REG-6: children[0].path === '' and children[1].path === '*' 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > dashboardGridSlotRegistration > AC-REG-6: children render functions are functions 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > dashboardGridSlotRegistration > label === 'Dashboard' 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > dashboardGridSlotRegistration > defaultChildPath === '' 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > DashboardSlotHost > AC-REG-7: reads lang from useWebShell() (en path) 88ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardSlotHost.composition.test.tsx > DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 1: dashboardWidgetRegistrations is a non-empty array 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardSlotHost.composition.test.tsx > DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 2: every entry has the WidgetRegistration shape 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardSlotHost.composition.test.tsx > DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 3: all registered ids are unique (no dedupe drift) 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardSlotHost.composition.test.tsx > DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 4: every span is one of the 9 declared WidgetSpanClass literals 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardSlotHost.composition.test.tsx > DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 5: DashboardSlotHost forwards the array, NOT the empty default 92ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardSlotHost.composition.test.tsx > DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 5b: DashboardSlotHost still works under lang=zh (no en-only regression) 33ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardSlotHost.composition.test.tsx > DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 6: 4 type aliases compile against the row #11 registrations 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardSlotHost.composition.test.tsx > DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 7: every render(ctx) returns something React can mount (no early-throw on row #11 widgets) 44ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx > useDashOrder > AC-AWO-1: returns a 4-element tuple [order, setOrder, addWidget, removeWidget] 10ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx > useDashOrder > AC-PERSIST-1: default first-visit order is sanitized by registered widgets 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx > useDashOrder > AC-PERSIST-2: persisted matches registered → returned as-is 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx > useDashOrder > AC-PERSIST-3: persisted contains unknown id → drop and write back 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx > useDashOrder > AC-PERSIST-4: persisted missing some ids → preserves user removals 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx > useDashOrder > AC-PERSIST-5: persisted contains duplicate ids → dedupe + write back 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx > useDashOrder > AC-PERSIST-6: empty widgets → empty order 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx > useDashOrder > setOrder writes through to localStorage 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx > useDashOrder > does NOT write back when sanitized equals persisted 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > DashboardSlotHost > AC-REG-7: reads lang from useWebShell() (zh path) 27ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > DashboardSlotHost > renders row #11 dashboardWidgetRegistrations (all widget shells, not empty state) 57ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > DashboardSlotHost > deep-links from calendar widget change the app route 11ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.addWidget.test.tsx > useDashOrder addWidget (AC-AWO-2..5) > AC-AWO-2: addWidget(newId) appends to order and persists via setPref 12ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.addWidget.test.tsx > useDashOrder addWidget (AC-AWO-2..5) > AC-AWO-2b: addWidget appends id at the end of the current order 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.addWidget.test.tsx > useDashOrder addWidget (AC-AWO-2..5) > AC-AWO-3: addWidget(existingId) is a no-op — order and storage unchanged 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.addWidget.test.tsx > useDashOrder addWidget (AC-AWO-2..5) > AC-AWO-4: addWidget(unknownId) is a no-op — id not in widgets[] 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.addWidget.test.tsx > useDashOrder addWidget (AC-AWO-2..5) > AC-AWO-5: after addWidget(newId), subsequent remount preserves the id 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > sanitizeOrder > AC-PERSIST-1: empty persisted → empty order 17ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > sanitizeOrder > AC-PERSIST-2: persisted matches registered → identity (pure) 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > sanitizeOrder > AC-PERSIST-3: persisted contains unknown id → drop unknown 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > sanitizeOrder > AC-PERSIST-4: persisted missing some registered → preserves user removals 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > sanitizeOrder > AC-PERSIST-5: persisted contains duplicate id → dedupe (first wins) 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > sanitizeOrder > AC-PERSIST-6: empty registered → empty output regardless of persisted 14ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > sanitizeOrder > AC-PERSIST-7: pure — same input → same output (referential stability not required, deep-equal is) 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > sanitizeOrder > preserves the persisted custom order for known ids 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > sanitizeOrder > handles all-unknown persisted gracefully 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > sanitizeOrder > combination: dedupe + drop without append 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > arraysEqual > returns true for identical arrays 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > arraysEqual > returns false for length mismatch 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > arraysEqual > returns false for order mismatch 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts > arraysEqual > returns false for content mismatch 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetAppearance.test.tsx > useWidgetAppearance > returns the default glass appearance when no saved preference exists 12ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetAppearance.test.tsx > useWidgetAppearance > persists normalized widget appearance to xai_pref_dashboard_widget_appearance 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetAppearance.test.tsx > useWidgetAppearance > ignores unknown widget ids 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetAppearance.test.tsx > useWidgetAppearance > removes the saved item when a widget appearance is reset 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetAppearance.test.tsx > useWidgetAppearance > maps appearance preferences into widget glass CSS variables 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/greeting.test.ts > pickGreetingKey > AC-RENDER-5: hour < 12 → good_morning 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/greeting.test.ts > pickGreetingKey > AC-RENDER-5: 12 ≤ hour < 18 → good_afternoon 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/greeting.test.ts > pickGreetingKey > AC-RENDER-5: hour ≥ 18 → good_evening 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/greeting.test.ts > formatDashboardDate > AC-RENDER-7: zh form returns '<Y> 年 <M> 月 <D> 日 · 周<W>' 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/greeting.test.ts > formatDashboardDate > AC-RENDER-7: zh form Sunday → 周日 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/greeting.test.ts > formatDashboardDate > AC-RENDER-6: en form uses long weekday + month + numeric day 13ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/greeting.test.ts > formatDashboardDate > returns the same string for the same input (pure) 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetLayout.test.tsx > useWidgetLayout > returns span defaults when no saved layout exists 9ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetLayout.test.tsx > useWidgetLayout > persists normalized widget layout to xai_pref_dashboard_widget_layout 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetLayout.test.tsx > useWidgetLayout > ignores unknown widget ids 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetLayout.test.tsx > useWidgetLayout > layoutFromResize clamps grid cols and height 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.render.test.tsx > DashboardModule render path (P1) > AC-RENDER-1: renders without throwing with widgets=[] 32ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.render.test.tsx > DashboardModule render path (P1) > AC-RENDER-3: widgets=[] → EmptyState is rendered 8ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.render.test.tsx > DashboardModule render path (P1) > AC-RENDER-3: header is rendered alongside the empty state 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.render.test.tsx > DashboardModule render path (P1) > AC-SLOT-5: widgets non-empty → EmptyState is NOT rendered, .dash-grid container is 7ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.render.test.tsx > DashboardModule render path (P1) > module root has the right class 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/EmptyState.test.tsx > EmptyState > AC-RENDER-4: en renders English title + subtitle + CTA 43ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/EmptyState.test.tsx > EmptyState > AC-LANG-5: zh renders Chinese title + subtitle + CTA 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/EmptyState.test.tsx > EmptyState > AC-RENDER-4: role='status' on the panel for a11y 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/EmptyState.test.tsx > EmptyState > CTA onClick fires when supplied 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/EmptyState.test.tsx > EmptyState > CTA click is a no-op when onAddWidget omitted 3ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.lang.test.tsx > DashboardModule lang > AC-LANG-1: lang='zh' greeting uses Chinese strings 39ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.lang.test.tsx > DashboardModule lang > AC-LANG-2: lang='zh' date uses Chinese weekday + 年/月/日 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.lang.test.tsx > DashboardModule lang > AC-LANG-2: lang='en' date uses long English weekday + Month + numeric day 5ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/index-barrel.test.ts > index barrel exports > AC-BARREL-1: exports DashboardModule 1ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/index-barrel.test.ts > index barrel exports > AC-BARREL-2: exports default === DashboardModule 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/index-barrel.test.ts > index barrel exports > AC-BARREL-3: exports dashboardGridSlotRegistration 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/index-barrel.test.ts > index barrel exports > AC-BARREL-4: type-only exports compile (smoke check via runtime access surface) 0ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/index-barrel.test.ts > index barrel exports > AC-BARREL-5: index does not re-export internal/ 0ms
+
+ Test Files  25 passed (25)
+      Tests  228 passed (228)
+   Start at  09:32:42
+   Duration  3.47s (transform 1.16s, setup 4.44s, collect 2.83s, tests 2.44s, environment 7.67s, prepare 1.38s)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.report-original-1.json
+
+---- stderr ----
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > order failure control retains original persisted and rendered order
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > latest layout proposal retries once while committed view stays unchanged
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > appearance latest change and reset are recoverable; old owner export is blocked
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > actual add retry emits once only after saving and closes picker; removal retry commits
+[plugin-web-storage] quota exceeded for xai_dash_order.
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > failed order reconciliation remains pending and can retry rather than marking it saved
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx > DashboardModule with widgets (P2 grid) > duplicate ids in widgets[] → first wins, no crash, dev-warn handled silently in test env
+[@repo/plugin-web-dashboard-grid] Duplicate widget id "alpha" — keeping first occurrence, dropping later one(s).
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.clock-sol-vite-cache-original-1/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/packages/xai-web-dashboard-grid/src/__tests__/setup.ts"],"include":["packages/xai-web-dashboard-grid/src/**/*.test.{ts,tsx}"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-dashboard-grid/src/DashboardModule.tsx packages/xai-web-dashboard-grid/src/DashboardGrid.tsx packages/xai-web-dashboard-grid/src/DashHeader.tsx
+pin_modules=146 by package: packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/xai-web-dashboard-grid=47 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-shell=14
+---- runner summary ----
+totals cases=579 passed=579 failed=0 skipped=0 precondition_failures=0
+harness PASS [dashboard-widgets] JSON report parsed
+harness PASS [dashboard-widgets] reported files match the requested pattern (34 files)
+harness PASS [dashboard-widgets] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-dashboard-widgets/src/__tests__/setup.ts], root = archive)
+harness PASS [dashboard-widgets] guard plugin active (archive modules recorded)
+harness PASS [dashboard-widgets] required product modules loaded from the archive (3)
+harness PASS [dashboard-widgets] no test-file suite error
+harness PASS [dashboard-grid] JSON report parsed
+harness PASS [dashboard-grid] reported files match the requested pattern (25 files)
+harness PASS [dashboard-grid] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-dashboard-grid/src/__tests__/setup.ts], root = archive)
+harness PASS [dashboard-grid] guard plugin active (archive modules recorded)
+harness PASS [dashboard-grid] required product modules loaded from the archive (3)
+harness PASS [dashboard-grid] no test-file suite error
+case 001 PASSED | [dashboard-widgets] AC-CLOCK: ClockWidget AC-CLOCK-1: default render is 'classic' style with HH:MM:SS
+case 002 PASSED | [dashboard-widgets] AC-CLOCK: ClockWidget AC-CLOCK-2: clicking each of 4 style buttons swaps rendered content
+case 003 PASSED | [dashboard-widgets] AC-CLOCK: ClockWidget AC-CLOCK-3: style persists to xai_clock_style
+case 004 PASSED | [dashboard-widgets] AC-CLOCK: ClockWidget AC-CLOCK-4: timezone popover opens, lists Local + 12 cities, selection updates tz
+case 005 PASSED | [dashboard-widgets] AC-CLOCK: ClockWidget AC-CLOCK-5: tz=shanghai shifts displayed time by +8 UTC from local
+case 006 PASSED | [dashboard-widgets] AC-CLOCK: ClockWidget AC-CLOCK-6: .clock-toolbar carries data-no-drag
+case 007 PASSED | [dashboard-widgets] AC-CLOCK: ClockWidget AC-CLOCK-7: zh labels via useI18n
+case 008 PASSED | [dashboard-widgets] AC-CLOCK: ClockWidget AC-CLOCK-8: switching to analog mounts <svg class='clock-analog'>
+case 009 PASSED | [dashboard-widgets] AC-CLOCK: ClockWidget AC-CLOCK-extra: invalid stored style falls back to classic
+case 010 PASSED | [dashboard-widgets] AC-CLOCK: ClockWidget AC-CLOCK-extra: clicking scrim closes popover without changing tz
+case 011 PASSED | [dashboard-widgets] Donut helper renders an svg with class 'donut'
+case 012 PASSED | [dashboard-widgets] Donut helper strokeDashoffset reflects 1-value
+case 013 PASSED | [dashboard-widgets] Donut helper clamps out-of-range values to [0, 1]
+case 014 PASSED | [dashboard-widgets] Donut helper treats NaN as 0
+case 015 PASSED | [dashboard-widgets] AC-MAIL-EMPTY-1: both stores empty → honest 'All clear' / '暂无通知'; no .mail-row; badge=0 lang=en: shows All clear text, no rows, badge=0
+case 016 PASSED | [dashboard-widgets] AC-MAIL-EMPTY-1: both stores empty → honest 'All clear' / '暂无通知'; no .mail-row; badge=0 lang=zh: shows zh empty text
+case 017 PASSED | [dashboard-widgets] AC-MAIL-EMPTY-1: both stores empty → honest 'All clear' / '暂无通知'; no .mail-row; badge=0 empty state is NOT a fixture row (not from MAILS fixture — RM6)
+case 018 PASSED | [dashboard-widgets] AC-MAIL-REAL-1: seed xai_task_cols (2 overdue) + xai_calendar_events (1 today) → 3 .mail-rows, badge=3 3 signals render as 3 .mail-row items with badge=3
+case 019 PASSED | [dashboard-widgets] AC-MAIL-REAL-1: seed xai_task_cols (2 overdue) + xai_calendar_events (1 today) → 3 .mail-rows, badge=3 clicking notification rows deep-links to the owning module
+case 020 PASSED | [dashboard-widgets] AC-MAIL-REAL-2: each row shows label + time for events; source-type visually distinguished overdue task row shows task title; calendar event row shows event time
+case 021 PASSED | [dashboard-widgets] AC-MAIL-REAL-3: now-threaded determinism — fixed now makes today signals deterministic a tomorrow event does NOT appear with fixed NOW=today
+case 022 PASSED | [dashboard-widgets] AC-MAIL-REAL-3: now-threaded determinism — fixed now makes today signals deterministic uses now prop not wall-clock: render with different now values gives different results
+case 023 PASSED | [dashboard-widgets] AC-MAIL-REAL-4: bilingual — overdue labels in zh use title.zh; title + source labels render en/zh zh: overdue task label uses title.zh
+case 024 PASSED | [dashboard-widgets] AC-MAIL-REAL-4: bilingual — overdue labels in zh use title.zh; title + source labels render en/zh zh: widget title + source labels are zh
+case 025 PASSED | [dashboard-widgets] AC-MAIL-REAL-4: bilingual — overdue labels in zh use title.zh; title + source labels render en/zh en: widget title is en
+case 026 PASSED | [dashboard-widgets] AC-MAIL-READONLY-1: BOTH xai_task_cols + xai_calendar_events byte-unchanged after render (RM1) rendering MailWidget with seeded stores does NOT mutate either store
+case 027 PASSED | [dashboard-widgets] AC-MAIL-READONLY-1: BOTH xai_task_cols + xai_calendar_events byte-unchanged after render (RM1) no setPref call touches xai_task_cols or xai_calendar_events (store identity check)
+case 028 PASSED | [dashboard-widgets] MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) AC-MINICAL-1: renders en month label 'May 2026'
+case 029 PASSED | [dashboard-widgets] MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) AC-MINICAL-1: renders zh month label '2026 年 5 月'
+case 030 PASSED | [dashboard-widgets] MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) AC-MINICAL-2: en weekday headers M T W T F S S
+case 031 PASSED | [dashboard-widgets] MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) AC-MINICAL-2: zh weekday headers 一 二 三 四 五 六 日
+case 032 PASSED | [dashboard-widgets] MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) AC-MINICAL-3: today cell carries 'today' class
+case 033 PASSED | [dashboard-widgets] MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) AC-MINICAL-5: prev/next nav buttons change month
+case 034 PASSED | [dashboard-widgets] MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) AC-MINICAL-6: clicking inside .mc-grid calls goTo('calendar')
+case 035 PASSED | [dashboard-widgets] MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) AC-MINICAL-7: clicking Open Calendar footer button calls goTo('calendar')
+case 036 PASSED | [dashboard-widgets] MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) AC-MINICAL-8: clicking prev/next nav does NOT call goTo
+case 037 PASSED | [dashboard-widgets] MiniCalWidget — SHIPPED nav/goTo/drag-exclude (AC-MINICAL-1..9) AC-MINICAL-9: .mc-head and .mc-foot carry data-no-drag
+case 038 PASSED | [dashboard-widgets] MiniCalWidget — real data (AC-MINICAL-REAL-1..5) AC-MINICAL-REAL-1: no dots when calendar store is empty
+case 039 PASSED | [dashboard-widgets] MiniCalWidget — real data (AC-MINICAL-REAL-1..5) AC-MINICAL-REAL-2: event on day 15 shows dot on day 15
+case 040 PASSED | [dashboard-widgets] MiniCalWidget — real data (AC-MINICAL-REAL-1..5) AC-MINICAL-REAL-3: at most 3 dots per day (cap enforced)
+case 041 PASSED | [dashboard-widgets] MiniCalWidget — real data (AC-MINICAL-REAL-1..5) AC-MINICAL-REAL-4: rose colorPreset renders .mc-dot-rose class (RD4)
+case 042 PASSED | [dashboard-widgets] MiniCalWidget — real data (AC-MINICAL-REAL-1..5) AC-MINICAL-REAL-5: events from June don't appear in May view
+case 043 PASSED | [dashboard-widgets] PomoDots helper renders `total` dot spans
+case 044 PASSED | [dashboard-widgets] PomoDots helper first `count` dots carry the 'on' class
+case 045 PASSED | [dashboard-widgets] PomoDots helper clamps count to total
+case 046 PASSED | [dashboard-widgets] PomoDots helper clamps negative count to 0
+case 047 PASSED | [dashboard-widgets] StatPomos — real data AC-STATS-REAL-POMOS-1: shows 0 when no sessions
+case 048 PASSED | [dashboard-widgets] StatPomos — real data AC-STATS-REAL-POMOS-2: counts today's completed focus sessions
+case 049 PASSED | [dashboard-widgets] StatPomos — real data AC-STATS-REAL-POMOS-2: does NOT count yesterday's sessions
+case 050 PASSED | [dashboard-widgets] StatPomos — real data AC-STATS-REAL-POMOS-2: does NOT count break sessions
+case 051 PASSED | [dashboard-widgets] StatPomos — real data AC-STATS-REAL-POMOS-3: completedAt-only session NOT counted
+case 052 PASSED | [dashboard-widgets] StatPomos — real data AC-STATS-REAL-POMOS-4: bilingual label en/zh
+case 053 PASSED | [dashboard-widgets] StatPomos — real data dots cap at 8 even when count > 8
+case 054 PASSED | [dashboard-widgets] StatStreak — real data AC-STATS-REAL-STREAK-1: shows empty label when no habits
+case 055 PASSED | [dashboard-widgets] StatStreak — real data AC-STATS-REAL-STREAK-1: shows empty label in Chinese
+case 056 PASSED | [dashboard-widgets] StatStreak — real data AC-STATS-REAL-STREAK-1: shows empty label when habits array is empty
+case 057 PASSED | [dashboard-widgets] StatStreak — real data AC-STATS-REAL-STREAK-2: shows streak count when today is checked
+case 058 PASSED | [dashboard-widgets] StatStreak — real data AC-STATS-REAL-STREAK-3: shows 0 (not empty label) when streak broke
+case 059 PASSED | [dashboard-widgets] StatStreak — real data AC-STATS-REAL-STREAK-4: bilingual label en/zh
+case 060 PASSED | [dashboard-widgets] StatStreak — real data shows flame icon when habits exist
+case 061 PASSED | [dashboard-widgets] StatTasks — real data AC-STATS-REAL-TASKS-1: shows empty label when no tasks
+case 062 PASSED | [dashboard-widgets] StatTasks — real data AC-STATS-REAL-TASKS-1: shows empty label in Chinese
+case 063 PASSED | [dashboard-widgets] StatTasks — real data AC-STATS-REAL-TASKS-2: renders correct done/total
+case 064 PASSED | [dashboard-widgets] StatTasks — real data AC-STATS-REAL-TASKS-2: all done shows done === total
+case 065 PASSED | [dashboard-widgets] StatTasks — real data AC-STATS-REAL-TASKS-2: 0 done with tasks renders 0/total donut
+case 066 PASSED | [dashboard-widgets] StatTasks — real data AC-STATS-REAL-TASKS-2: donut value reflects real ratio
+case 067 PASSED | [dashboard-widgets] StatTasks — real data AC-STATS-REAL-TASKS-3: bilingual label en/zh
+case 068 PASSED | [dashboard-widgets] StatTasks — real data AC-STATS-REAL-TASKS-4: re-renders without crash (RD6)
+case 069 PASSED | [dashboard-widgets] StickiesWidget — empty-store fixture-sample branch AC-STICKIES-1: renders 3 fixture sticky notes (samples) when store is empty
+case 070 PASSED | [dashboard-widgets] StickiesWidget — empty-store fixture-sample branch AC-STICKIES-2: each sample note has its fixture color and en text
+case 071 PASSED | [dashboard-widgets] StickiesWidget — empty-store fixture-sample branch AC-STICKIES-3: zh renders zh fixture text
+case 072 PASSED | [dashboard-widgets] StickiesWidget — empty-store fixture-sample branch AC-STICKIES-CREATE-2: fixture samples carry data-sample=true and no .sticky-del
+case 073 PASSED | [dashboard-widgets] StickiesWidget — empty-store fixture-sample branch AC-STICKIES-CREATE-5: + button is present and wired (opens composer)
+case 074 PASSED | [dashboard-widgets] StickiesWidget — empty-store fixture-sample branch empty-state add action opens composer
+case 075 PASSED | [dashboard-widgets] StickiesWidget — empty-store fixture-sample branch composer shows an expanded 10-color palette
+case 076 PASSED | [dashboard-widgets] StickiesWidget — user sticky create + delete AC-STICKIES-CREATE-1: creating a sticky switches from fixture-sample to user branch
+case 077 PASSED | [dashboard-widgets] StickiesWidget — user sticky create + delete AC-STICKIES-CREATE-3: user sticky has delete button; fixture samples do not
+case 078 PASSED | [dashboard-widgets] StickiesWidget — user sticky create + delete AC-STICKIES-CREATE-4: user sticky text is rendered as single string (not bilingual)
+case 079 PASSED | [dashboard-widgets] StickiesWidget — user sticky create + delete AC-STICKIES-CREATE-6: deleting the only sticky reverts to fixture-sample branch
+case 080 PASSED | [dashboard-widgets] StickiesWidget — user sticky create + delete AC-STICKIES-CREATE-7: create→persist→rerender shows user sticky
+case 081 PASSED | [dashboard-widgets] StickiesWidget — user sticky create + delete AC-STICKIES-CREATE-8: composer stays closed across a re-render with new lang prop
+case 082 PASSED | [dashboard-widgets] StickiesWidget — user sticky create + delete selecting an existing task fills the note and persists source metadata
+case 083 PASSED | [dashboard-widgets] StickiesWidget — user sticky create + delete existing-task filters can preview completed task sources
+case 084 PASSED | [dashboard-widgets] StickiesWidget — user sticky create + delete does not paste or render meaningless no-date metadata from task sources
+case 085 PASSED | [dashboard-widgets] StickiesWidget — user sticky create + delete double-clicking a user sticky opens edit composer and updates the same note
+case 086 PASSED | [dashboard-widgets] StickiesWidget — user sticky create + delete resizing a user sticky preserves the sticky's own saved width and height
+case 087 PASSED | [dashboard-widgets] StickiesWidget — user sticky create + delete dragging a user sticky moves it freely inside the sticky canvas and persists position
+case 088 PASSED | [dashboard-widgets] AC-COMPOSER-1: dialog renders when open=true dialog element has open attribute when open=true
+case 089 PASSED | [dashboard-widgets] AC-COMPOSER-2: dialog closes when open=false dialog does not have open attribute when open=false
+case 090 PASSED | [dashboard-widgets] AC-COMPOSER-3: Cancel button calls onClose clicking Cancel fires onClose
+case 091 PASSED | [dashboard-widgets] AC-COMPOSER-4: Save with empty text shows error, does not call onSave empty textarea → error shown, onSave not called
+case 092 PASSED | [dashboard-widgets] AC-COMPOSER-5: Save with valid text calls onSave with trimmed draft filled textarea → onSave called with trimmed text and selected color
+case 093 PASSED | [dashboard-widgets] AC-COMPOSER-6: color radiogroup defaults to sun, switches on click sun chip is aria-checked=true initially; clicking mint switches selection
+case 094 PASSED | [dashboard-widgets] AC-COMPOSER-7: a11y — aria-modal + aria-labelledby dialog has aria-modal=true and correct labelledby
+case 095 PASSED | [dashboard-widgets] AC-COMPOSER-8: form resets when open changes to true again closing and reopening clears the text field
+case 096 PASSED | [dashboard-widgets] AC-COMPOSER-9: bilingual STR parity — all keys present in both en and zh every key in STR_STICKY_COMPOSER has en and zh strings
+case 097 PASSED | [dashboard-widgets] AC-COMPOSER-9: bilingual STR parity — all keys present in both en and zh zh labels render correctly
+case 098 PASSED | [dashboard-widgets] TimeTrackerWidget renders today's total and opens the Time Tracker module
+case 099 PASSED | [dashboard-widgets] TzClock renders an svg with viewBox 0 0 100 100
+case 100 PASSED | [dashboard-widgets] TzClock rotates hour hand to 90° at 03:00:00
+case 101 PASSED | [dashboard-widgets] TzClock rotates hour hand to 180° at 06:00:00
+case 102 PASSED | [dashboard-widgets] UpcomingWidget — real data AC-UPCOMING-REAL-1: shows empty label when no events
+case 103 PASSED | [dashboard-widgets] UpcomingWidget — real data AC-UPCOMING-REAL-1: empty label in Chinese
+case 104 PASSED | [dashboard-widgets] UpcomingWidget — real data AC-UPCOMING-REAL-1: shows empty label when all events are in the past
+case 105 PASSED | [dashboard-widgets] UpcomingWidget — real data AC-UPCOMING-REAL-2: renders a future event's title and date
+case 106 PASSED | [dashboard-widgets] UpcomingWidget — real data AC-UPCOMING-REAL-2: renders time string
+case 107 PASSED | [dashboard-widgets] UpcomingWidget — real data clicking an event row opens calendar
+case 108 PASSED | [dashboard-widgets] UpcomingWidget — real data clicking the empty state opens calendar
+case 109 PASSED | [dashboard-widgets] UpcomingWidget — real data AC-UPCOMING-REAL-2: renders month in Chinese
+case 110 PASSED | [dashboard-widgets] UpcomingWidget — real data AC-UPCOMING-REAL-3: excludes past events
+case 111 PASSED | [dashboard-widgets] UpcomingWidget — real data AC-UPCOMING-REAL-4: now prop determines the cutoff correctly
+case 112 PASSED | [dashboard-widgets] UpcomingWidget — real data re-renders without crash when now changes
+case 113 PASSED | [dashboard-widgets] AC-WEDITOR-1: open=true calls showModal(); open=false calls close() dialog has open attribute when open=true
+case 114 PASSED | [dashboard-widgets] AC-WEDITOR-1: open=true calls showModal(); open=false calls close() dialog does NOT have open attribute when open=false
+case 115 PASSED | [dashboard-widgets] AC-WEDITOR-2: on open, city input is autofocused (after setTimeout 0 flush) city input is focused after opening
+case 116 PASSED | [dashboard-widgets] AC-WEDITOR-3: initial pre-fill initial=null shows blank city + empty temp + default condition sunny
+case 117 PASSED | [dashboard-widgets] AC-WEDITOR-3: initial pre-fill initial=UserWeather pre-fills city/temp/condition/hi/lo
+case 118 PASSED | [dashboard-widgets] AC-WEDITOR-4: valid city + temp + condition → onSave called with correct draft fills form and clicks Save → onSave called with trimmed city and parsed temp
+case 119 PASSED | [dashboard-widgets] AC-WEDITOR-4: valid city + temp + condition → onSave called with correct draft hi/lo included only when entered
+case 120 PASSED | [dashboard-widgets] AC-WEDITOR-4: valid city + temp + condition → onSave called with correct draft searches city candidates and saves a selected Open-Meteo location without manual temp
+case 121 PASSED | [dashboard-widgets] AC-WEDITOR-5: validation — empty city or empty/non-numeric temp → error, stays open, no onSave empty city → error shown, onSave not called
+case 122 PASSED | [dashboard-widgets] AC-WEDITOR-5: validation — empty city or empty/non-numeric temp → error, stays open, no onSave whitespace-only city → error shown, onSave not called
+case 123 PASSED | [dashboard-widgets] AC-WEDITOR-5: validation — empty city or empty/non-numeric temp → error, stays open, no onSave empty temp → error shown, onSave not called
+case 124 PASSED | [dashboard-widgets] AC-WEDITOR-6: condition picker role=radiogroup; one chip aria-checked=true; default=sunny radiogroup has role=radiogroup
+case 125 PASSED | [dashboard-widgets] AC-WEDITOR-6: condition picker role=radiogroup; one chip aria-checked=true; default=sunny exactly one chip aria-checked=true; default = sunny
+case 126 PASSED | [dashboard-widgets] AC-WEDITOR-6: condition picker role=radiogroup; one chip aria-checked=true; default=sunny default condition from initial.condition when pre-filled
+case 127 PASSED | [dashboard-widgets] AC-WEDITOR-6: condition picker role=radiogroup; one chip aria-checked=true; default=sunny clicking a different chip changes selection
+case 128 PASSED | [dashboard-widgets] AC-WEDITOR-7: Cancel/ESC/backdrop → onClose; clicking inside content does NOT close Cancel button calls onClose
+case 129 PASSED | [dashboard-widgets] AC-WEDITOR-7: Cancel/ESC/backdrop → onClose; clicking inside content does NOT close ESC (native cancel event) calls onClose
+case 130 PASSED | [dashboard-widgets] AC-WEDITOR-7: Cancel/ESC/backdrop → onClose; clicking inside content does NOT close clicking inside the panel does NOT close
+case 131 PASSED | [dashboard-widgets] AC-WEDITOR-8: a11y attributes dialog has aria-modal=true + aria-labelledby=weather-editor-title
+case 132 PASSED | [dashboard-widgets] AC-WEDITOR-8: a11y attributes city input has aria-required=true
+case 133 PASSED | [dashboard-widgets] AC-WEDITOR-8: a11y attributes temp input has aria-required=true
+case 134 PASSED | [dashboard-widgets] AC-WEDITOR-8: a11y attributes city error element connected via aria-describedby when error shown
+case 135 PASSED | [dashboard-widgets] AC-WEDITOR-9: bilingual — zh renders zh STR; STR_WEATHER every key has en+zh lang=zh renders zh labels
+case 136 PASSED | [dashboard-widgets] AC-WEDITOR-9: bilingual — zh renders zh STR; STR_WEATHER every key has en+zh every STR_WEATHER key has both en and zh strings (grep-assert)
+case 137 PASSED | [dashboard-widgets] AC-WEATHER-REAL-1: store null → honest empty state; no fixture temp/city; Edit button present renders empty state text when no weather is set
+case 138 PASSED | [dashboard-widgets] AC-WEATHER-REAL-1: store null → honest empty state; no fixture temp/city; Edit button present no fixture temp or city rendered (no .ww-temp)
+case 139 PASSED | [dashboard-widgets] AC-WEATHER-REAL-1: store null → honest empty state; no fixture temp/city; Edit button present Edit button is present with data-no-drag
+case 140 PASSED | [dashboard-widgets] AC-WEATHER-REAL-2: clicking Edit opens the editor (dialog .open) editor dialog is closed initially, opens on Edit click
+case 141 PASSED | [dashboard-widgets] AC-WEATHER-REAL-2: clicking Edit opens the editor (dialog .open) empty-state settings button opens the editor
+case 142 PASSED | [dashboard-widgets] AC-WEATHER-REAL-3: seeded UserWeather → renders temp + city + condition label + icon after seeding localStorage, widget renders the persisted weather values
+case 143 PASSED | [dashboard-widgets] AC-WEATHER-REAL-4: each of the 3 conditions renders its mapped icon condition "sunny" renders icon data-icon="sun" and label "Sunny"
+case 144 PASSED | [dashboard-widgets] AC-WEATHER-REAL-4: each of the 3 conditions renders its mapped icon condition "cloudy" renders icon data-icon="cloud" and label "Cloudy"
+case 145 PASSED | [dashboard-widgets] AC-WEATHER-REAL-4: each of the 3 conditions renders its mapped icon condition "rainy" renders icon data-icon="rain" and label "Rainy"
+case 146 PASSED | [dashboard-widgets] AC-WEATHER-REAL-5: optional hi/lo — present → .ww-hilo shows values; absent → no .ww-hilo seeded with hi+lo → .ww-hilo row with both values
+case 147 PASSED | [dashboard-widgets] AC-WEATHER-REAL-5: optional hi/lo — present → .ww-hilo shows values; absent → no .ww-hilo seeded without hi/lo → no .ww-hilo row
+case 148 PASSED | [dashboard-widgets] AC-WEATHER-REAL-6: integration — Edit → fill editor → Save → widget shows new values fill and save editor → widget reflects the new city and temp
+case 149 PASSED | [dashboard-widgets] AC-WEATHER-REAL-7: forecast renders only when live provider data includes it no .wwf-day elements when weather is null (empty state)
+case 150 PASSED | [dashboard-widgets] AC-WEATHER-REAL-7: forecast renders only when live provider data includes it no .wwf-day elements when manual weather has no forecast
+case 151 PASSED | [dashboard-widgets] AC-WEATHER-REAL-7: forecast renders only when live provider data includes it renders forecast days when Open-Meteo data is cached
+case 152 PASSED | [dashboard-widgets] AC-WEATHER-REAL-8: Open-Meteo refresh, cache, and fallback behavior location-only weather triggers a live fetch and persists normalized data
+case 153 PASSED | [dashboard-widgets] AC-WEATHER-REAL-8: Open-Meteo refresh, cache, and fallback behavior fresh Open-Meteo cache skips network refresh
+case 154 PASSED | [dashboard-widgets] AC-WEATHER-REAL-8: Open-Meteo refresh, cache, and fallback behavior failed live refresh keeps saved fallback visible and opens editor from the warning
+case 155 PASSED | [dashboard-widgets] AC-WEATHER-REAL-9: bilingual — empty label + condition labels render in en + zh; title from dashboard.weather lang=en: empty state label is en
+case 156 PASSED | [dashboard-widgets] AC-WEATHER-REAL-9: bilingual — empty label + condition labels render in en + zh; title from dashboard.weather lang=zh: empty state label is zh
+case 157 PASSED | [dashboard-widgets] AC-WEATHER-REAL-9: bilingual — empty label + condition labels render in en + zh; title from dashboard.weather lang=en + sunny: condition label is en sunny
+case 158 PASSED | [dashboard-widgets] AC-WEATHER-REAL-9: bilingual — empty label + condition labels render in en + zh; title from dashboard.weather lang=zh + cloudy: condition label is zh cloudy
+case 159 PASSED | [dashboard-widgets] WorldClocks AC-WORLDCLOCKS-1: default shows 4 zones in list view
+case 160 PASSED | [dashboard-widgets] WorldClocks AC-WORLDCLOCKS-2: view toggle list/analog/grid swaps rendered shape
+case 161 PASSED | [dashboard-widgets] WorldClocks AC-WORLDCLOCKS-3: add-city picker shows the 8 unselected cities
+case 162 PASSED | [dashboard-widgets] WorldClocks AC-WORLDCLOCKS-4: selecting a city adds it to xai_zones
+case 163 PASSED | [dashboard-widgets] WorldClocks AC-WORLDCLOCKS-5: per-row remove button removes the zone
+case 164 PASSED | [dashboard-widgets] WorldClocks AC-WORLDCLOCKS-6: .tz-view-toggle and .tz-picker carry data-no-drag
+case 165 PASSED | [dashboard-widgets] WorldClocks AC-WORLDCLOCKS-7: removing the last zone is prevented
+case 166 PASSED | [dashboard-widgets] WorldClocks AC-WORLDCLOCKS-9: persistence round-trip
+case 167 PASSED | [dashboard-widgets] WorldClocks AC-WORLDCLOCKS-8: dayDelta label uses i18n strings
+case 168 PASSED | [dashboard-widgets] WorldClocks filters unknown zone ids from storage on render
+case 169 PASSED | [dashboard-widgets] AC-ANALOG: analog clock SVG AC-ANALOG-5: viewBox is 0 0 100 100
+case 170 PASSED | [dashboard-widgets] AC-ANALOG: analog clock SVG AC-ANALOG-1: 48 minor ticks (60 minus 12 multiples of 5)
+case 171 PASSED | [dashboard-widgets] AC-ANALOG: analog clock SVG AC-ANALOG-2: 12 major ticks
+case 172 PASSED | [dashboard-widgets] AC-ANALOG: analog clock SVG AC-ANALOG-3: 12 numerals [12, 1..11]
+case 173 PASSED | [dashboard-widgets] AC-ANALOG: analog clock SVG AC-ANALOG-4: hour hand rotates 90° at 03:00:00
+case 174 PASSED | [dashboard-widgets] AC-CITYLIB-1: 12 entries with prototype ids library has 12 entries
+case 175 PASSED | [dashboard-widgets] AC-CITYLIB-1: 12 entries with prototype ids ids match design.md §1.1 #8 verbatim
+case 176 PASSED | [dashboard-widgets] AC-CITYLIB-2: bilingual city + tz each entry has en+zh city + numeric tz
+case 177 PASSED | [dashboard-widgets] findCity + cityLabel helpers findCity returns matching entry by id
+case 178 PASSED | [dashboard-widgets] findCity + cityLabel helpers findCity returns undefined for unknown id
+case 179 PASSED | [dashboard-widgets] findCity + cityLabel helpers cityLabel returns the active-lang city name
+case 180 PASSED | [dashboard-widgets] AC-FIXTURES-1: WEATHER shape has bilingual city + temp + hi/lo + bilingual condition + icon + 5-day forecast
+case 181 PASSED | [dashboard-widgets] AC-FIXTURES-2: STICKIES shape has 3 entries each with id + color + bilingual text
+case 182 PASSED | [dashboard-widgets] AC-FIXTURES-3: MAILS shape has 4 entries each with id + from + bilingual subj + time + unread bool
+case 183 PASSED | [dashboard-widgets] AC-FIXTURES-4: UPCOMING shape has 4 entries each with id + date + bilingual month + bilingual title + time
+case 184 PASSED | [dashboard-widgets] AC-FIXTURES-5: CAL_EVENTS shape is keyed by day number; each value is [{ c: <color> }]
+case 185 PASSED | [dashboard-widgets] bilingual helper returns lang-specific value
+case 186 PASSED | [dashboard-widgets] AC-PKG-4: public surface is single export exports exactly dashboardWidgetRegistrations
+case 187 PASSED | [dashboard-widgets] AC-PKG-4: public surface is single export dashboardWidgetRegistrations is an array
+case 188 PASSED | [dashboard-widgets] AC-REG: dashboardWidgetRegistrations shape AC-REG-1: length is 11
+case 189 PASSED | [dashboard-widgets] AC-REG: dashboardWidgetRegistrations shape AC-REG-2: ids match the prototype WIDGETS_CONFIG order
+case 190 PASSED | [dashboard-widgets] AC-REG: dashboardWidgetRegistrations shape AC-REG-3: spans map per design.md §1.1 #4
+case 191 PASSED | [dashboard-widgets] AC-REG: dashboardWidgetRegistrations shape AC-REG-4: each entry has a callable render returning a ReactNode (null acceptable for placeholders)
+case 192 PASSED | [dashboard-widgets] AC-REG: dashboardWidgetRegistrations shape AC-REG-5: each entry has bilingual ariaLabel
+case 193 PASSED | [dashboard-widgets] AC-HOST-1: slot integration sanity dashboardWidgetRegistrations is importable from the public surface
+case 194 PASSED | [dashboard-widgets] AC-HOST-1: slot integration sanity each registration renders a non-null ReactNode given a valid ctx
+case 195 PASSED | [dashboard-widgets] AC-HOST-1: slot integration sanity ids match the prototype set plus Time Tracker
+case 196 PASSED | [dashboard-widgets] AC-HOOK-1: initial list is empty when localStorage is clear list starts as []
+case 197 PASSED | [dashboard-widgets] AC-HOOK-2: create adds a sticky and updates list after create, list has 1 sticky with correct text and color
+case 198 PASSED | [dashboard-widgets] AC-HOOK-3: create persists to localStorage after create, xai_dashboard_stickies key exists in localStorage
+case 199 PASSED | [dashboard-widgets] AC-HOOK-4: remove deletes a sticky after remove, list is empty and key reverts to {}
+case 200 PASSED | [dashboard-widgets] AC-WHOOK-3: default (unset) → weather === null hook returns null when localStorage is clear
+case 201 PASSED | [dashboard-widgets] AC-WHOOK-1: set(draft) persists to xai_dashboard_weather; weather reflects it after set(), weather has the new city + condition
+case 202 PASSED | [dashboard-widgets] AC-WHOOK-1: set(draft) persists to xai_dashboard_weather; weather reflects it set() persists to xai_dashboard_weather key in localStorage
+case 203 PASSED | [dashboard-widgets] AC-WHOOK-1: set(draft) persists to xai_dashboard_weather; weather reflects it set() can persist an Open-Meteo location before live weather has loaded
+case 204 PASSED | [dashboard-widgets] AC-WHOOK-2: clear() persists null; weather becomes null after set then clear, weather is null and localStorage is null
+case 205 PASSED | [dashboard-widgets] AC-WHOOK-4: a second hook instance reading the same key sees the persisted value after set() in hook1, hook2 initialized fresh sees the same value via localStorage
+case 206 PASSED | [dashboard-widgets] monthDots — empty store (AC-RD-CAL-1) returns {} for null store
+case 207 PASSED | [dashboard-widgets] monthDots — empty store (AC-RD-CAL-1) returns {} for empty map
+case 208 PASSED | [dashboard-widgets] monthDots — non-recurring (AC-RD-CAL-2) places dot on correct day-of-month
+case 209 PASSED | [dashboard-widgets] monthDots — non-recurring (AC-RD-CAL-2) excludes event from different month
+case 210 PASSED | [dashboard-widgets] monthDots — 3-dot cap (AC-RD-CAL-3) caps at 3 dots per day
+case 211 PASSED | [dashboard-widgets] monthDots — recurrence (AC-RD-CAL-4) daily recurrence produces dots on multiple days in month
+case 212 PASSED | [dashboard-widgets] monthDots — recurrence (AC-RD-CAL-4) weekly recurrence produces one dot on anchor day and same weekday next week
+case 213 PASSED | [dashboard-widgets] monthDots — rose colorPreset (AC-RD-CAL-5) includes 'rose' colorPreset in dots
+case 214 PASSED | [dashboard-widgets] upcomingEvents — empty store (AC-RD-UPC-1) returns [] for null store
+case 215 PASSED | [dashboard-widgets] upcomingEvents — empty store (AC-RD-UPC-1) returns [] for empty map
+case 216 PASSED | [dashboard-widgets] upcomingEvents — empty store (AC-RD-UPC-1) returns [] for array store
+case 217 PASSED | [dashboard-widgets] upcomingEvents — non-recurring (AC-RD-UPC-2) includes a future non-recurring event
+case 218 PASSED | [dashboard-widgets] upcomingEvents — non-recurring (AC-RD-UPC-2) excludes a past non-recurring event
+case 219 PASSED | [dashboard-widgets] upcomingEvents — non-recurring (AC-RD-UPC-2) includes event starting at exactly now
+case 220 PASSED | [dashboard-widgets] upcomingEvents — sort + max (AC-RD-UPC-3) returns at most 4 events sorted by startISO
+case 221 PASSED | [dashboard-widgets] upcomingEvents — daily recurrence (AC-RD-UPC-4) expands a daily recurring event within the look-ahead window
+case 222 PASSED | [dashboard-widgets] upcomingEvents — weekly recurrence (AC-RD-UPC-5) expands a weekly recurring event correctly
+case 223 PASSED | [dashboard-widgets] upcomingEvents — defensive (AC-RD-UPC-6) drops malformed entries silently
+case 224 PASSED | [dashboard-widgets] listValidCalEvents returns valid events only
+case 225 PASSED | [dashboard-widgets] listValidCalEvents returns [] for non-object store
+case 226 PASSED | [dashboard-widgets] isHabitsState AC-RD-HABIT-1: rejects null/string/number
+case 227 PASSED | [dashboard-widgets] isHabitsState AC-RD-HABIT-1: rejects object without habits array
+case 228 PASSED | [dashboard-widgets] isHabitsState AC-RD-HABIT-1: rejects object without checkIns object
+case 229 PASSED | [dashboard-widgets] isHabitsState AC-RD-HABIT-1: rejects habit with no id
+case 230 PASSED | [dashboard-widgets] isHabitsState AC-RD-HABIT-1: accepts valid state with no habits
+case 231 PASSED | [dashboard-widgets] isHabitsState AC-RD-HABIT-1: accepts valid state with habits
+case 232 PASSED | [dashboard-widgets] maxStreak — invalid store AC-RD-HABIT-2: returns 0 for null
+case 233 PASSED | [dashboard-widgets] maxStreak — invalid store AC-RD-HABIT-2: returns 0 for string
+case 234 PASSED | [dashboard-widgets] maxStreak — invalid store AC-RD-HABIT-2: returns 0 for empty habits list
+case 235 PASSED | [dashboard-widgets] maxStreak — C1 today-anchor (AC-RD-HABIT-3) returns 0 if today is not checked
+case 236 PASSED | [dashboard-widgets] maxStreak — consecutive days (AC-RD-HABIT-4) returns 1 if only today is checked
+case 237 PASSED | [dashboard-widgets] maxStreak — consecutive days (AC-RD-HABIT-4) returns 3 for 3 consecutive days ending today
+case 238 PASSED | [dashboard-widgets] maxStreak — consecutive days (AC-RD-HABIT-4) stops counting at a gap
+case 239 PASSED | [dashboard-widgets] maxStreak — UTC date basis (AC-RD-HABIT-5) uses UTC day keys, not local
+case 240 PASSED | [dashboard-widgets] maxStreak — UTC date basis (AC-RD-HABIT-5) utcDateKey produces YYYY-MM-DD in UTC
+case 241 PASSED | [dashboard-widgets] maxStreak — max across habits (AC-RD-HABIT-6) returns the maximum streak across all habits
+case 242 PASSED | [dashboard-widgets] maxStreak — max across habits (AC-RD-HABIT-6) returns 0 when no habit has today checked
+case 243 PASSED | [dashboard-widgets] AC-RD-OVERDUE-1: defensive — malformed input → [] (never throws) overdueTasks({}, 'en') → []
+case 244 PASSED | [dashboard-widgets] AC-RD-OVERDUE-1: defensive — malformed input → [] (never throws) overdueTasks(null, 'en') → []
+case 245 PASSED | [dashboard-widgets] AC-RD-OVERDUE-1: defensive — malformed input → [] (never throws) overdueTasks([], 'en') → []
+case 246 PASSED | [dashboard-widgets] AC-RD-OVERDUE-1: defensive — malformed input → [] (never throws) overdueTasks({overdue:42}, 'en') → []
+case 247 PASSED | [dashboard-widgets] AC-RD-OVERDUE-1: defensive — malformed input → [] (never throws) never throws on malformed input
+case 248 PASSED | [dashboard-widgets] AC-RD-OVERDUE-2: reads OVERDUE bucket specifically — next7/later/nodate tasks excluded store with cards only in next7/later/nodate (empty overdue) → []
+case 249 PASSED | [dashboard-widgets] AC-RD-OVERDUE-3: overdue tasks with done !== true → one signal each; done === true excluded 2 undone overdue tasks produce 2 signals with sourceType='task-overdue'
+case 250 PASSED | [dashboard-widgets] AC-RD-OVERDUE-3: overdue tasks with done !== true → one signal each; done === true excluded done=true task in overdue.tasks is excluded
+case 251 PASSED | [dashboard-widgets] AC-RD-OVERDUE-3: overdue tasks with done !== true → one signal each; done === true excluded label uses card.title[lang]
+case 252 PASSED | [dashboard-widgets] AC-RD-OVERDUE-4: overdue.completed? array cards also filtered by done !== true done=true card in overdue.completed is excluded
+case 253 PASSED | [dashboard-widgets] AC-RD-OVERDUE-4: overdue.completed? array cards also filtered by done !== true overdue.completed? cards with done !== true → included
+case 254 PASSED | [dashboard-widgets] AC-RD-OVERDUE-5: bilingual — lang=zh uses title.zh zh labels use title.zh
+case 255 PASSED | [dashboard-widgets] AC-RD-OVERDUE-5: bilingual — lang=zh uses title.zh en labels use title.en
+case 256 PASSED | [dashboard-widgets] AC-RD-TODAY-1: defensive — malformed input → [] (never throws) todaysEvents({}, now) → []
+case 257 PASSED | [dashboard-widgets] AC-RD-TODAY-1: defensive — malformed input → [] (never throws) todaysEvents(null, now) → []
+case 258 PASSED | [dashboard-widgets] AC-RD-TODAY-1: defensive — malformed input → [] (never throws) never throws
+case 259 PASSED | [dashboard-widgets] AC-RD-TODAY-2: today-date event → one signal; different-day event excluded event on today (2026-05-29) → one signal with sourceType=calendar-today
+case 260 PASSED | [dashboard-widgets] AC-RD-TODAY-2: today-date event → one signal; different-day event excluded event on tomorrow (2026-05-30) excluded
+case 261 PASSED | [dashboard-widgets] AC-RD-TODAY-3: multiple today events sorted by HH:MM ascending today events sorted by time ascending (09:00 before 15:00)
+case 262 PASSED | [dashboard-widgets] AC-RD-TODAY-4: DAILY-recurring event with past anchor → today instance still surfaces (RM3) daily-recurring event with anchor yesterday → today instance produced
+case 263 PASSED | [dashboard-widgets] AC-RD-TODAY-5: WEEKLY-recurring event landing on today → today instance; non-matching weekday excluded weekly-recurring event anchored 7 days ago → today instance produced
+case 264 PASSED | [dashboard-widgets] AC-RD-TODAY-5: WEEKLY-recurring event landing on today → today instance; non-matching weekday excluded weekly-recurring event anchored 6 days ago (wrong weekday) → no today instance
+case 265 PASSED | [dashboard-widgets] AC-RD-TODAY-6: LOCAL date basis — event at 23:30 on today (local) IS today even with now=14:30 event at 2026-05-29T23:30 with now=2026-05-29T14:30 → IS surfaced (day-START basis, not current-time)
+case 266 PASSED | [dashboard-widgets] AC-RD-TODAY-6: LOCAL date basis — event at 23:30 on today (local) IS today even with now=14:30 past-time-today event (e.g. 09:00 with now=14:30) is STILL surfaced (build-rec-1 compliance)
+case 267 PASSED | [dashboard-widgets] AC-RD-COMBINE-1: overdue signals ordered before today signals overdue task appears before today's calendar event in combined output
+case 268 PASSED | [dashboard-widgets] AC-RD-COMBINE-2: capped at max (6) even when more qualify with 5 overdue + 3 today events, capped at 6
+case 269 PASSED | [dashboard-widgets] AC-RD-COMBINE-3: both sources empty → [] empty task store + empty cal store → []
+case 270 PASSED | [dashboard-widgets] AC-RD-COMBINE-3: both sources empty → [] null inputs → []
+case 271 PASSED | [dashboard-widgets] isPomodoroSession AC-RD-POMO-1: rejects null/string/number
+case 272 PASSED | [dashboard-widgets] isPomodoroSession AC-RD-POMO-1: rejects missing finishedAt
+case 273 PASSED | [dashboard-widgets] isPomodoroSession AC-RD-POMO-1: rejects missing completed
+case 274 PASSED | [dashboard-widgets] isPomodoroSession AC-RD-POMO-1: rejects invalid mode
+case 275 PASSED | [dashboard-widgets] isPomodoroSession AC-RD-POMO-1: accepts valid focus session
+case 276 PASSED | [dashboard-widgets] isPomodoroSession AC-RD-POMO-1: accepts break session (not focus, but still valid shape)
+case 277 PASSED | [dashboard-widgets] countTodaysFocus — invalid store AC-RD-POMO-2: returns 0 for null
+case 278 PASSED | [dashboard-widgets] countTodaysFocus — invalid store AC-RD-POMO-2: returns 0 for object (not array)
+case 279 PASSED | [dashboard-widgets] countTodaysFocus — invalid store AC-RD-POMO-2: returns 0 for empty array
+case 280 PASSED | [dashboard-widgets] countTodaysFocus — completedAt guard (AC-RD-POMO-3) does NOT count session that only has completedAt (Cmd-K stale field)
+case 281 PASSED | [dashboard-widgets] countTodaysFocus — completedAt guard (AC-RD-POMO-3) counts session with canonical finishedAt + completed=true
+case 282 PASSED | [dashboard-widgets] countTodaysFocus — local day basis (AC-RD-POMO-4) counts a session finishing at 23:59 local as that local day
+case 283 PASSED | [dashboard-widgets] countTodaysFocus — local day basis (AC-RD-POMO-4) does NOT count session from yesterday local
+case 284 PASSED | [dashboard-widgets] countTodaysFocus — filters by mode + completed (AC-RD-POMO-5) excludes break sessions
+case 285 PASSED | [dashboard-widgets] countTodaysFocus — filters by mode + completed (AC-RD-POMO-5) excludes incomplete focus sessions (completed=false)
+case 286 PASSED | [dashboard-widgets] countTodaysFocus — filters by mode + completed (AC-RD-POMO-5) counts multiple valid focus sessions today
+case 287 PASSED | [dashboard-widgets] isTaskColsRecord AC-RD-TASKS-1: rejects null/undefined/string
+case 288 PASSED | [dashboard-widgets] isTaskColsRecord AC-RD-TASKS-1: rejects object with non-object column values
+case 289 PASSED | [dashboard-widgets] isTaskColsRecord AC-RD-TASKS-1: rejects col without tasks array
+case 290 PASSED | [dashboard-widgets] isTaskColsRecord AC-RD-TASKS-1: accepts empty object (no buckets)
+case 291 PASSED | [dashboard-widgets] isTaskColsRecord AC-RD-TASKS-1: accepts valid col shape
+case 292 PASSED | [dashboard-widgets] isTaskColsRecord AC-RD-TASKS-1: accepts col with optional completed array
+case 293 PASSED | [dashboard-widgets] countDone — invalid store AC-RD-TASKS-2: returns { done:0, total:0 } for null
+case 294 PASSED | [dashboard-widgets] countDone — invalid store AC-RD-TASKS-2: returns { done:0, total:0 } for empty array
+case 295 PASSED | [dashboard-widgets] countDone — invalid store AC-RD-TASKS-2: returns { done:0, total:0 } for empty object
+case 296 PASSED | [dashboard-widgets] countDone — col.tasks shape guard (AC-RD-TASKS-3) counts cards from col.tasks, not from col directly
+case 297 PASSED | [dashboard-widgets] countDone — col.tasks shape guard (AC-RD-TASKS-3) counts tasks across multiple buckets
+case 298 PASSED | [dashboard-widgets] countDone — absent done === false (AC-RD-TASKS-4) treats missing done as false
+case 299 PASSED | [dashboard-widgets] countDone — absent done === false (AC-RD-TASKS-4) treats done: undefined as false
+case 300 PASSED | [dashboard-widgets] countDone — optional completed bucket (AC-RD-TASKS-5) counts cards in the optional completed array
+case 301 PASSED | [dashboard-widgets] AC-IDS-1: createStickyId returns a non-empty string returns a non-empty string
+case 302 PASSED | [dashboard-widgets] AC-IDS-2: createStickyId returns unique ids on successive calls two calls produce different ids
+case 303 PASSED | [dashboard-widgets] AC-IDS-3: createStickyId fallback format when crypto.randomUUID unavailable fallback string includes sticky- prefix and timestamp components
+case 304 PASSED | [dashboard-widgets] AC-STORE-1: createSticky returns new store + created entity creates a new sticky with trimmed text and given color
+case 305 PASSED | [dashboard-widgets] AC-STORE-2: createSticky does not mutate original store original store is unchanged after create
+case 306 PASSED | [dashboard-widgets] AC-STORE-3: createSticky appends to existing store pre-existing entries are preserved
+case 307 PASSED | [dashboard-widgets] AC-STORE-4: deleteSticky removes the entry key is gone after delete
+case 308 PASSED | [dashboard-widgets] AC-STORE-5: deleteSticky is a no-op when id missing returns same reference when id not found
+case 309 PASSED | [dashboard-widgets] AC-STORE-6: deleteSticky does not mutate original store original store still has the key after delete
+case 310 PASSED | [dashboard-widgets] AC-STORE-7: listStickies returns sorted array sorts by createdAt ASC then id ASC
+case 311 PASSED | [dashboard-widgets] AC-STORE-7: listStickies returns sorted array sorts by saved display order when present
+case 312 PASSED | [dashboard-widgets] AC-STORE-7: listStickies returns sorted array returns empty array for empty store
+case 313 PASSED | [dashboard-widgets] AC-STORE-8: updateSticky edits an existing note without changing identity updates text/color/source and preserves id + createdAt
+case 314 PASSED | [dashboard-widgets] AC-STORE-8: updateSticky edits an existing note without changing identity returns the same reference when id is missing
+case 315 PASSED | [dashboard-widgets] AC-STORE-9: resizeSticky updates only dimensions persists clamped width/height without changing note content
+case 316 PASSED | [dashboard-widgets] AC-STORE-9: resizeSticky updates only dimensions returns the same reference when id is missing
+case 317 PASSED | [dashboard-widgets] AC-STORE-10: reorderStickies persists display order rewrites order values without changing sticky content or size
+case 318 PASSED | [dashboard-widgets] AC-STORE-10: reorderStickies persists display order ignores missing ids and appends omitted stickies
+case 319 PASSED | [dashboard-widgets] AC-STORE-11: moveSticky updates only free-form canvas position persists clamped x/y without changing content or size
+case 320 PASSED | [dashboard-widgets] AC-STORE-11: moveSticky updates only free-form canvas position returns the same reference when id is missing
+case 321 PASSED | [dashboard-widgets] Open-Meteo weather client searchOpenMeteoCities normalizes geocoding results
+case 322 PASSED | [dashboard-widgets] Open-Meteo weather client fetchOpenMeteoWeather normalizes current weather and 3-day forecast
+case 323 PASSED | [dashboard-widgets] Open-Meteo weather client maps WMO codes to the widget's three condition icons
+case 324 PASSED | [dashboard-widgets] Open-Meteo weather client isOpenMeteoCacheFresh honors the 20 minute cache window
+case 325 PASSED | [dashboard-widgets] AC-WSTORE-1: getWeather defensive narrow — null / malformed → null getWeather(null) → null
+case 326 PASSED | [dashboard-widgets] AC-WSTORE-1: getWeather defensive narrow — null / malformed → null getWeather(undefined) → null
+case 327 PASSED | [dashboard-widgets] AC-WSTORE-1: getWeather defensive narrow — null / malformed → null getWeather({}) → null (missing required fields)
+case 328 PASSED | [dashboard-widgets] AC-WSTORE-1: getWeather defensive narrow — null / malformed → null getWeather([]) → null (array not object)
+case 329 PASSED | [dashboard-widgets] AC-WSTORE-1: getWeather defensive narrow — null / malformed → null getWeather({city:1, temp:25, condition:'sunny', updatedAt:'x'}) → null (city not string)
+case 330 PASSED | [dashboard-widgets] AC-WSTORE-1: getWeather defensive narrow — null / malformed → null getWeather({city:'', temp:25, condition:'sunny', updatedAt:'x'}) → null (empty city)
+case 331 PASSED | [dashboard-widgets] AC-WSTORE-1: getWeather defensive narrow — null / malformed → null getWeather({city:'x', temp:'hot', condition:'sunny', updatedAt:'x'}) → null (temp not number)
+case 332 PASSED | [dashboard-widgets] AC-WSTORE-1: getWeather defensive narrow — null / malformed → null getWeather({city:'x', temp:25, condition:'stormy', updatedAt:'x'}) → null (unknown condition)
+case 333 PASSED | [dashboard-widgets] AC-WSTORE-1: getWeather defensive narrow — null / malformed → null getWeather({city:'x', temp:25, condition:'sunny', updatedAt:'x', hi:'warm'}) → null (hi not number)
+case 334 PASSED | [dashboard-widgets] AC-WSTORE-1: getWeather defensive narrow — null / malformed → null getWeather(location-only Open-Meteo snapshot) → valid
+case 335 PASSED | [dashboard-widgets] AC-WSTORE-1: getWeather defensive narrow — null / malformed → null getWeather(invalid latitude/longitude) → null
+case 336 PASSED | [dashboard-widgets] AC-WSTORE-1: getWeather defensive narrow — null / malformed → null never throws
+case 337 PASSED | [dashboard-widgets] AC-WSTORE-2: getWeather(valid UserWeather) → the same validated object returns the validated UserWeather
+case 338 PASSED | [dashboard-widgets] AC-WSTORE-2: getWeather(valid UserWeather) → the same validated object handles optional hi/lo when present and valid
+case 339 PASSED | [dashboard-widgets] AC-WSTORE-2: getWeather(valid UserWeather) → the same validated object handles all 3 WeatherCondition presets
+case 340 PASSED | [dashboard-widgets] AC-WSTORE-2: getWeather(valid UserWeather) → the same validated object handles optional Open-Meteo details when present and valid
+case 341 PASSED | [dashboard-widgets] AC-WSTORE-3: setWeather trims city + stamps updatedAt trims leading/trailing whitespace from city
+case 342 PASSED | [dashboard-widgets] AC-WSTORE-3: setWeather trims city + stamps updatedAt carries temp + condition
+case 343 PASSED | [dashboard-widgets] AC-WSTORE-3: setWeather trims city + stamps updatedAt updatedAt is an ISO string
+case 344 PASSED | [dashboard-widgets] AC-WSTORE-3: setWeather trims city + stamps updatedAt hi/lo absent when not provided in draft
+case 345 PASSED | [dashboard-widgets] AC-WSTORE-3: setWeather trims city + stamps updatedAt location-only Open-Meteo draft persists provider metadata without requiring manual temp
+case 346 PASSED | [dashboard-widgets] AC-WSTORE-4: setWeather with hi/lo → carries hi/lo; without → undefined carries hi and lo when provided
+case 347 PASSED | [dashboard-widgets] AC-WSTORE-4: setWeather with hi/lo → carries hi/lo; without → undefined omits hi/lo when not provided
+case 348 PASSED | [dashboard-widgets] AC-WSTORE-4: setWeather with hi/lo → carries hi/lo; without → undefined carries hi only when only hi provided
+case 349 PASSED | [dashboard-widgets] AC-WSTORE-5: clearWeather() → null returns null
+case 350 PASSED | [dashboard-widgets] AC-WSTORE-6: SINGLETON — not a record; two setWeather calls do NOT accumulate setWeather returns ONE object (not a keyed map)
+case 351 PASSED | [dashboard-widgets] AC-WSTORE-6: SINGLETON — not a record; two setWeather calls do NOT accumulate second setWeather call overwrites (no accumulation — RW1)
+case 352 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-1: when open=false, showModal is NOT called
+case 353 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-2: when open=true, showModal is called
+case 354 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-3: renders cards for widgets not in currentOrder
+case 355 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-3b: shows all 10 cards when currentOrder is empty
+case 356 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-4: when all catalog ids are in currentOrder, renders .awp-empty not .awp-grid
+case 357 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-5: empty state shows bilingual EN text
+case 358 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-5b: empty state shows bilingual ZH text
+case 359 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-6: clicking a card calls onAdd with the widget id
+case 360 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-7: clicking a card does NOT call onClose
+case 361 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-8: Cancel button calls onClose and NOT onAdd
+case 362 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-9: click on dialog backdrop (target === dialog element) calls onClose
+case 363 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-10: native cancel event on dialog calls onClose
+case 364 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-11: lang=en renders English picker title
+case 365 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-12: lang=zh renders Chinese picker title
+case 366 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-13: cards have bilingual title (EN) from WIDGET_TITLES
+case 367 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-13b: known widget id shows correct EN title from WIDGET_TITLES
+case 368 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-14: cards have bilingual description (EN) from WIDGET_DESCRIPTIONS
+case 369 PASSED | [dashboard-grid] AddWidgetPicker AC-AWP-15: each card has an inline SVG icon
+case 370 PASSED | [dashboard-grid] AddWidgetPicker AC-A11Y-1: dialog has aria-labelledby pointing to the title h2 id
+case 371 PASSED | [dashboard-grid] AddWidgetPicker AC-A11Y-2: each card is a button type=button
+case 372 PASSED | [dashboard-grid] AddWidgetPicker AC-A11Y-3: known widget cards have accessible title text content
+case 373 PASSED | [dashboard-grid] AddWidgetPicker AC-A11Y-4: Cancel button has aria-label from dashboard.picker.aria_close (EN)
+case 374 PASSED | [dashboard-grid] AddWidgetPicker AC-A11Y-4b: Cancel button has aria-label from dashboard.picker.aria_close (ZH)
+case 375 PASSED | [dashboard-grid] DashHeader async note session keeps a newer draft open after an earlier pending operation completes
+case 376 PASSED | [dashboard-grid] DashHeader async note session retries an unchanged uncertain write through the hook token
+case 377 PASSED | [dashboard-grid] DashHeader async note session refuses an external raw replacement before a local editor can overwrite it
+case 378 PASSED | [dashboard-grid] DashHeader async note session does not let Escape hide an active save
+case 379 PASSED | [dashboard-grid] DashHeader async note session masks an old account's committed text after an editor session freezes
+case 380 PASSED | [dashboard-grid] DashHeader departure capability does not treat an invalid device source as a host draft or unload warning
+case 381 PASSED | [dashboard-grid] DashHeader departure capability names an unavailable note source without calling it a position failure
+case 382 PASSED | [dashboard-grid] DashHeader departure capability names frozen account recovery without inventing a position source failure
+case 383 PASSED | [dashboard-grid] DashHeader departure capability keeps a real editor draft guarded, discards only that field, and rereads it
+case 384 PASSED | [dashboard-grid] DashHeader departure capability keeps the already-registered guard current during the edit turn
+case 385 PASSED | [dashboard-grid] DashHeader departure capability does not turn a guarded departure dialog focus into an implicit blur save
+case 386 PASSED | [dashboard-grid] DashHeader departure capability persists an ordinary Tab-style blur after the current turn
+case 387 PASSED | [dashboard-grid] DashHeader departure capability keeps a moved position whose caller raw preflight rejects as a real draft
+case 388 PASSED | [dashboard-grid] DashHeader departure capability does not make an unavailable position source dirty on an unmoved press
+case 389 PASSED | [dashboard-grid] DashHeader departure capability holds a navigation-pointer blur across a slow click until the host reserves departure
+case 390 PASSED | [dashboard-grid] DashHeader departure capability rejects a captured A capability after account B becomes current
+case 391 PASSED | [dashboard-grid] DashHeader departure capability does not capture a pointer until movement, so a normal pointer click opens the editor
+case 392 PASSED | [dashboard-grid] Dashboard header persistence recovery keeps latest draft on quota, retries it, and warns before unload only while dirty
+case 393 PASSED | [dashboard-grid] Dashboard header persistence recovery rejects newer raw data and old-account retry/export
+case 394 PASSED | [dashboard-grid] Dashboard header persistence recovery retains failed clear with its original persistence
+case 395 PASSED | [dashboard-grid] Dashboard header persistence recovery retains latest position on quota and refuses newer device raw on retry
+case 396 PASSED | [dashboard-grid] Dashboard header persistence recovery commits the latest cancelled drag but keeps resize-only clamps local
+case 397 PASSED | [dashboard-grid] Dashboard header persistence recovery keeps an invalid device source byte-for-byte until explicit reload
+case 398 PASSED | [dashboard-grid] Dashboard header persistence recovery reload cancels an invalid-source pending position without an old completion polluting recovery
+case 399 PASSED | [dashboard-grid] DashHeader AC-RENDER-2: renders greeting + date + Add-widget button
+case 400 PASSED | [dashboard-grid] DashHeader AC-LANG-3: en label uses 'Add widget'
+case 401 PASSED | [dashboard-grid] DashHeader AC-LANG-3: zh label uses '添加组件'
+case 402 PASSED | [dashboard-grid] DashHeader AC-LANG-4: en aria-label uses 'Add a new dashboard widget'
+case 403 PASSED | [dashboard-grid] DashHeader AC-LANG-4: zh aria-label uses '添加新的工作台组件'
+case 404 PASSED | [dashboard-grid] DashHeader greeting uses good_morning in the morning
+case 405 PASSED | [dashboard-grid] DashHeader greeting uses good_afternoon in the afternoon
+case 406 PASSED | [dashboard-grid] DashHeader greeting uses good_evening in the evening
+case 407 PASSED | [dashboard-grid] DashHeader date string follows zh format on lang='zh'
+case 408 PASSED | [dashboard-grid] DashHeader button onClick fires when supplied
+case 409 PASSED | [dashboard-grid] DashHeader button click is a no-op when onAddWidget omitted
+case 410 PASSED | [dashboard-grid] DashHeader renders an editable center note placeholder
+case 411 PASSED | [dashboard-grid] DashHeader lets the user drag the center note horizontally and persists the position
+case 412 PASSED | [dashboard-grid] DashHeader clicking the center note lets the user save text with Enter
+case 413 PASSED | [dashboard-grid] DashHeader loads a saved center note from localStorage
+case 414 PASSED | [dashboard-grid] DashHeader can clear a saved center note
+case 415 PASSED | [dashboard-grid] DashboardModule events (P3) AC-EVENT-1: Add-widget header button click emits add-widget-button event
+case 416 PASSED | [dashboard-grid] DashboardModule events (P3) AC-EVENT-2: empty-state CTA click emits empty-state-cta event
+case 417 PASSED | [dashboard-grid] DashboardModule events (P3) AC-EVENT-1 + AC-EVENT-2: both buttons emit when both clicked
+case 418 PASSED | [dashboard-grid] DashboardModule events (P3) AC-EVENT-4: no events fire on initial render (mount must be quiet)
+case 419 PASSED | [dashboard-grid] DashboardModule events (P3) AC-EVENT-3 / AC-REG-8: widget goTo(moduleId) emits web:shell:module-change with mini-cal source
+case 420 PASSED | [dashboard-grid] DashboardModule events (P3) AC-EVENT-3: goTo with unknown moduleId is silently ignored (matches DashboardSlotHost guard)
+case 421 PASSED | [dashboard-grid] DashboardModule events — gap-closure row #5 extension (AC-EVT-EXT) AC-EVT-EXT-1: Add Widget button STILL emits web:dashboard:add-widget-clicked (source=add-widget-button)
+case 422 PASSED | [dashboard-grid] DashboardModule events — gap-closure row #5 extension (AC-EVT-EXT) AC-EVT-EXT-2: Empty State CTA STILL emits web:dashboard:add-widget-clicked (source=empty-state-cta)
+case 423 PASSED | [dashboard-grid] DashboardModule events — gap-closure row #5 extension (AC-EVT-EXT) AC-EVT-EXT-3: picker card click emits web:dashboard:widget-added with {widgetId, source:'picker'} — fires before close()
+case 424 PASSED | [dashboard-grid] DashboardModule events — gap-closure row #5 extension (AC-EVT-EXT) AC-EVT-EXT-4: picker Cancel does NOT emit web:dashboard:widget-added
+case 425 PASSED | [dashboard-grid] DashboardModule lang AC-LANG-1: lang='zh' greeting uses Chinese strings
+case 426 PASSED | [dashboard-grid] DashboardModule lang AC-LANG-2: lang='zh' date uses Chinese weekday + 年/月/日
+case 427 PASSED | [dashboard-grid] DashboardModule lang AC-LANG-2: lang='en' date uses long English weekday + Month + numeric day
+case 428 PASSED | [dashboard-grid] DashboardModule with widgets (P2 grid) AC-SLOT-1: renders 3 widgets in registration order when persisted is empty
+case 429 PASSED | [dashboard-grid] DashboardModule with widgets (P2 grid) AC-SLOT-3: render ctx receives the active lang
+case 430 PASSED | [dashboard-grid] DashboardModule with widgets (P2 grid) AC-SLOT-5: empty state is NOT rendered when widgets are non-empty
+case 431 PASSED | [dashboard-grid] DashboardModule with widgets (P2 grid) AC-PERSIST-8: persisted order is respected on mount
+case 432 PASSED | [dashboard-grid] DashboardModule with widgets (P2 grid) AC-PERSIST-3 (host-level): unknown ids in persisted are sanitized away
+case 433 PASSED | [dashboard-grid] DashboardModule with widgets (P2 grid) AC-SLOT-2: each shell carries the correct span class
+case 434 PASSED | [dashboard-grid] DashboardModule with widgets (P2 grid) duplicate ids in widgets[] → first wins, no crash, dev-warn handled silently in test env
+case 435 PASSED | [dashboard-grid] DashboardModule picker integration (AC-DMP) AC-DMP-1: picker dialog is closed on first render (showModal not called)
+case 436 PASSED | [dashboard-grid] DashboardModule picker integration (AC-DMP) AC-DMP-2: clicking Add Widget button opens picker
+case 437 PASSED | [dashboard-grid] DashboardModule picker integration (AC-DMP) AC-DMP-3: clicking Empty State CTA opens picker
+case 438 PASSED | [dashboard-grid] DashboardModule picker integration (AC-DMP) AC-DMP-4: picker card click appends widget + emits event + closes picker
+case 439 PASSED | [dashboard-grid] DashboardModule picker integration (AC-DMP) AC-DMP-5: picker Cancel closes without emitting widget-added event
+case 440 PASSED | [dashboard-grid] DashboardModule picker integration (AC-DMP) AC-DMP-6: picker ESC (cancel event) closes without emitting widget-added event
+case 441 PASSED | [dashboard-grid] DashboardModule — remove widget (AC-RM-6..7) AC-RM-6: clicking remove on a widget removes it from the rendered grid
+case 442 PASSED | [dashboard-grid] DashboardModule — remove widget (AC-RM-6..7) AC-RM-6: clicking remove persists the new order to xai_dash_order localStorage
+case 443 PASSED | [dashboard-grid] DashboardModule — remove widget (AC-RM-6..7) AC-RM-6: removed widget re-appears as available in AddWidgetPicker
+case 444 PASSED | [dashboard-grid] DashboardModule — remove widget (AC-RM-6..7) AC-RM-7: remove button click calls onRemove even when the shell has isDragging styling
+case 445 PASSED | [dashboard-grid] DashboardModule render path (P1) AC-RENDER-1: renders without throwing with widgets=[]
+case 446 PASSED | [dashboard-grid] DashboardModule render path (P1) AC-RENDER-3: widgets=[] → EmptyState is rendered
+case 447 PASSED | [dashboard-grid] DashboardModule render path (P1) AC-RENDER-3: header is rendered alongside the empty state
+case 448 PASSED | [dashboard-grid] DashboardModule render path (P1) AC-SLOT-5: widgets non-empty → EmptyState is NOT rendered, .dash-grid container is
+case 449 PASSED | [dashboard-grid] DashboardModule render path (P1) module root has the right class
+case 450 PASSED | [dashboard-grid] DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) locks invariant 1: dashboardWidgetRegistrations is a non-empty array
+case 451 PASSED | [dashboard-grid] DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) locks invariant 2: every entry has the WidgetRegistration shape
+case 452 PASSED | [dashboard-grid] DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) locks invariant 3: all registered ids are unique (no dedupe drift)
+case 453 PASSED | [dashboard-grid] DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) locks invariant 4: every span is one of the 9 declared WidgetSpanClass literals
+case 454 PASSED | [dashboard-grid] DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) locks invariant 5: DashboardSlotHost forwards the array, NOT the empty default
+case 455 PASSED | [dashboard-grid] DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) locks invariant 5b: DashboardSlotHost still works under lang=zh (no en-only regression)
+case 456 PASSED | [dashboard-grid] DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) locks invariant 6: 4 type aliases compile against the row #11 registrations
+case 457 PASSED | [dashboard-grid] DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) locks invariant 7: every render(ctx) returns something React can mount (no early-throw on row #11 widgets)
+case 458 PASSED | [dashboard-grid] EmptyState AC-RENDER-4: en renders English title + subtitle + CTA
+case 459 PASSED | [dashboard-grid] EmptyState AC-LANG-5: zh renders Chinese title + subtitle + CTA
+case 460 PASSED | [dashboard-grid] EmptyState AC-RENDER-4: role='status' on the panel for a11y
+case 461 PASSED | [dashboard-grid] EmptyState CTA onClick fires when supplied
+case 462 PASSED | [dashboard-grid] EmptyState CTA click is a no-op when onAddWidget omitted
+case 463 PASSED | [dashboard-grid] WidgetShell AC-SLOT-2: applies widget-shell + span class
+case 464 PASSED | [dashboard-grid] WidgetShell AC-SLOT-2: data-widget-id matches id
+case 465 PASSED | [dashboard-grid] WidgetShell AC-SLOT-4: aria-label en when provided
+case 466 PASSED | [dashboard-grid] WidgetShell AC-SLOT-4: aria-label zh when provided
+case 467 PASSED | [dashboard-grid] WidgetShell AC-SLOT-4: no aria-label when omitted
+case 468 PASSED | [dashboard-grid] WidgetShell AC-DRAG-5: dragging class applied when isDragging=true
+case 469 PASSED | [dashboard-grid] WidgetShell AC-DRAG-5: no dragging class when isDragging=false
+case 470 PASSED | [dashboard-grid] WidgetShell AC-DRAG-1: pointerdown on the shell calls onPointerDown(id)
+case 471 PASSED | [dashboard-grid] WidgetShell setRef is invoked with the mounted element
+case 472 PASSED | [dashboard-grid] WidgetShell children are rendered inside the shell
+case 473 PASSED | [dashboard-grid] WidgetShell AC-RM-1: renders .widget-shell__remove button when onRemove is provided
+case 474 PASSED | [dashboard-grid] WidgetShell AC-RM-1: does NOT render .widget-shell__remove button when onRemove is omitted
+case 475 PASSED | [dashboard-grid] WidgetShell AC-RM-2: clicking .widget-shell__remove calls onRemove with the widget id
+case 476 PASSED | [dashboard-grid] WidgetShell AC-RM-2: clicking .widget-shell__remove does NOT fire the shell onPointerDown (drag excluded)
+case 477 PASSED | [dashboard-grid] WidgetShell AC-RM-3: aria-label uses en localised string with ariaLabel title
+case 478 PASSED | [dashboard-grid] WidgetShell AC-RM-3: aria-label uses zh localised string with ariaLabel title
+case 479 PASSED | [dashboard-grid] WidgetShell AC-RM-3: aria-label falls back to widget id when ariaLabel is undefined
+case 480 PASSED | [dashboard-grid] WidgetShell renders resize handle when onResizePointerDown is provided
+case 481 PASSED | [dashboard-grid] WidgetShell does NOT render resize handle when onResizePointerDown is omitted
+case 482 PASSED | [dashboard-grid] WidgetShell resize handle pointerdown calls callback with widget id
+case 483 PASSED | [dashboard-grid] WidgetShell applies layout and glass appearance CSS variables to the shell
+case 484 PASSED | [dashboard-grid] WidgetShell renders appearance controls only when onAppearanceChange is provided
+case 485 PASSED | [dashboard-grid] WidgetShell clicking a swatch updates the widget glass tone
+case 486 PASSED | [dashboard-grid] WidgetShell changing the transparency slider updates the widget glass alpha
+case 487 PASSED | [dashboard-grid] WidgetShell clicking transparency step buttons updates the widget glass alpha
+case 488 PASSED | [dashboard-grid] WidgetShell clicking reset calls the appearance reset callback
+case 489 PASSED | [dashboard-grid] pickGreetingKey AC-RENDER-5: hour < 12 → good_morning
+case 490 PASSED | [dashboard-grid] pickGreetingKey AC-RENDER-5: 12 ≤ hour < 18 → good_afternoon
+case 491 PASSED | [dashboard-grid] pickGreetingKey AC-RENDER-5: hour ≥ 18 → good_evening
+case 492 PASSED | [dashboard-grid] formatDashboardDate AC-RENDER-7: zh form returns '<Y> 年 <M> 月 <D> 日 · 周<W>'
+case 493 PASSED | [dashboard-grid] formatDashboardDate AC-RENDER-7: zh form Sunday → 周日
+case 494 PASSED | [dashboard-grid] formatDashboardDate AC-RENDER-6: en form uses long weekday + month + numeric day
+case 495 PASSED | [dashboard-grid] formatDashboardDate returns the same string for the same input (pure)
+case 496 PASSED | [dashboard-grid] Independent Dashboard grid failure business oracles failed layout must not silently publish new dimensions
+case 497 PASSED | [dashboard-grid] Independent Dashboard grid failure business oracles failed appearance must not silently publish new color
+case 498 PASSED | [dashboard-grid] Independent Dashboard grid failure business oracles failed widget removal keeps widget or provides visible unsaved recovery
+case 499 PASSED | [dashboard-grid] Independent Dashboard grid failure business oracles failed add keeps picker and must not emit widget-added success
+case 500 PASSED | [dashboard-grid] Independent Dashboard grid failure business oracles layout physical storage notification must refresh rendered saved size
+case 501 PASSED | [dashboard-grid] Independent Dashboard grid failure business oracles old A layout callback must not seed A map into B
+case 502 PASSED | [dashboard-grid] Independent Dashboard grid failure business oracles a newer external layout entry must survive a local edit of another widget
+case 503 PASSED | [dashboard-grid] Independent Dashboard grid failure business oracles order failure control retains original persisted and rendered order
+case 504 PASSED | [dashboard-grid] Dashboard recovery proposals latest layout proposal retries once while committed view stays unchanged
+case 505 PASSED | [dashboard-grid] Dashboard recovery proposals appearance latest change and reset are recoverable; old owner export is blocked
+case 506 PASSED | [dashboard-grid] Dashboard recovery proposals actual add retry emits once only after saving and closes picker; removal retry commits
+case 507 PASSED | [dashboard-grid] failed order reconciliation remains pending and can retry rather than marking it saved
+case 508 PASSED | [dashboard-grid] index barrel exports AC-BARREL-1: exports DashboardModule
+case 509 PASSED | [dashboard-grid] index barrel exports AC-BARREL-2: exports default === DashboardModule
+case 510 PASSED | [dashboard-grid] index barrel exports AC-BARREL-3: exports dashboardGridSlotRegistration
+case 511 PASSED | [dashboard-grid] index barrel exports AC-BARREL-4: type-only exports compile (smoke check via runtime access surface)
+case 512 PASSED | [dashboard-grid] index barrel exports AC-BARREL-5: index does not re-export internal/
+case 513 PASSED | [dashboard-grid] dashboardGridSlotRegistration AC-REG-1: moduleId === 'dashboard'
+case 514 PASSED | [dashboard-grid] dashboardGridSlotRegistration AC-REG-2: icon === 'layout'
+case 515 PASSED | [dashboard-grid] dashboardGridSlotRegistration AC-REG-3: i18nKey === 'nav.dashboard'
+case 516 PASSED | [dashboard-grid] dashboardGridSlotRegistration AC-REG-4: railOrder === 4
+case 517 PASSED | [dashboard-grid] dashboardGridSlotRegistration AC-REG-5: showInRail === true
+case 518 PASSED | [dashboard-grid] dashboardGridSlotRegistration AC-REG-6: children[0].path === '' and children[1].path === '*'
+case 519 PASSED | [dashboard-grid] dashboardGridSlotRegistration AC-REG-6: children render functions are functions
+case 520 PASSED | [dashboard-grid] dashboardGridSlotRegistration label === 'Dashboard'
+case 521 PASSED | [dashboard-grid] dashboardGridSlotRegistration defaultChildPath === ''
+case 522 PASSED | [dashboard-grid] DashboardSlotHost AC-REG-7: reads lang from useWebShell() (en path)
+case 523 PASSED | [dashboard-grid] DashboardSlotHost AC-REG-7: reads lang from useWebShell() (zh path)
+case 524 PASSED | [dashboard-grid] DashboardSlotHost renders row #11 dashboardWidgetRegistrations (all widget shells, not empty state)
+case 525 PASSED | [dashboard-grid] DashboardSlotHost deep-links from calendar widget change the app route
+case 526 PASSED | [dashboard-grid] sanitizeOrder AC-PERSIST-1: empty persisted → empty order
+case 527 PASSED | [dashboard-grid] sanitizeOrder AC-PERSIST-2: persisted matches registered → identity (pure)
+case 528 PASSED | [dashboard-grid] sanitizeOrder AC-PERSIST-3: persisted contains unknown id → drop unknown
+case 529 PASSED | [dashboard-grid] sanitizeOrder AC-PERSIST-4: persisted missing some registered → preserves user removals
+case 530 PASSED | [dashboard-grid] sanitizeOrder AC-PERSIST-5: persisted contains duplicate id → dedupe (first wins)
+case 531 PASSED | [dashboard-grid] sanitizeOrder AC-PERSIST-6: empty registered → empty output regardless of persisted
+case 532 PASSED | [dashboard-grid] sanitizeOrder AC-PERSIST-7: pure — same input → same output (referential stability not required, deep-equal is)
+case 533 PASSED | [dashboard-grid] sanitizeOrder preserves the persisted custom order for known ids
+case 534 PASSED | [dashboard-grid] sanitizeOrder handles all-unknown persisted gracefully
+case 535 PASSED | [dashboard-grid] sanitizeOrder combination: dedupe + drop without append
+case 536 PASSED | [dashboard-grid] arraysEqual returns true for identical arrays
+case 537 PASSED | [dashboard-grid] arraysEqual returns false for length mismatch
+case 538 PASSED | [dashboard-grid] arraysEqual returns false for order mismatch
+case 539 PASSED | [dashboard-grid] arraysEqual returns false for content mismatch
+case 540 PASSED | [dashboard-grid] useDashOrder addWidget (AC-AWO-2..5) AC-AWO-2: addWidget(newId) appends to order and persists via setPref
+case 541 PASSED | [dashboard-grid] useDashOrder addWidget (AC-AWO-2..5) AC-AWO-2b: addWidget appends id at the end of the current order
+case 542 PASSED | [dashboard-grid] useDashOrder addWidget (AC-AWO-2..5) AC-AWO-3: addWidget(existingId) is a no-op — order and storage unchanged
+case 543 PASSED | [dashboard-grid] useDashOrder addWidget (AC-AWO-2..5) AC-AWO-4: addWidget(unknownId) is a no-op — id not in widgets[]
+case 544 PASSED | [dashboard-grid] useDashOrder addWidget (AC-AWO-2..5) AC-AWO-5: after addWidget(newId), subsequent remount preserves the id
+case 545 PASSED | [dashboard-grid] useDashOrder — removeWidget (AC-RM-4..5) AC-RM-4: removeWidget(unknown_id) is a no-op — does not call setPref
+case 546 PASSED | [dashboard-grid] useDashOrder — removeWidget (AC-RM-4..5) AC-RM-4: removeWidget(id) is idempotent — does not throw on repeated calls
+case 547 PASSED | [dashboard-grid] useDashOrder — removeWidget (AC-RM-4..5) AC-RM-4: removeWidget is exposed as a function on the tuple
+case 548 PASSED | [dashboard-grid] useDashOrder — removeWidget (AC-RM-4..5) AC-RM-5: useDashOrder returns a 4-element tuple
+case 549 PASSED | [dashboard-grid] useDashOrder — removeWidget (AC-RM-4..5) AC-RM-5: 2-element destructure [order, setOrder] still works (back-compat)
+case 550 PASSED | [dashboard-grid] useDashOrder — removeWidget (AC-RM-4..5) AC-RM-5: 3-element destructure [order, setOrder, addWidget] still works (back-compat)
+case 551 PASSED | [dashboard-grid] useDashOrder AC-AWO-1: returns a 4-element tuple [order, setOrder, addWidget, removeWidget]
+case 552 PASSED | [dashboard-grid] useDashOrder AC-PERSIST-1: default first-visit order is sanitized by registered widgets
+case 553 PASSED | [dashboard-grid] useDashOrder AC-PERSIST-2: persisted matches registered → returned as-is
+case 554 PASSED | [dashboard-grid] useDashOrder AC-PERSIST-3: persisted contains unknown id → drop and write back
+case 555 PASSED | [dashboard-grid] useDashOrder AC-PERSIST-4: persisted missing some ids → preserves user removals
+case 556 PASSED | [dashboard-grid] useDashOrder AC-PERSIST-5: persisted contains duplicate ids → dedupe + write back
+case 557 PASSED | [dashboard-grid] useDashOrder AC-PERSIST-6: empty widgets → empty order
+case 558 PASSED | [dashboard-grid] useDashOrder setOrder writes through to localStorage
+case 559 PASSED | [dashboard-grid] useDashOrder does NOT write back when sanitized equals persisted
+case 560 PASSED | [dashboard-grid] useGridDrag AC-DRAG-1: startDrag on a known id sets drag state
+case 561 PASSED | [dashboard-grid] useGridDrag AC-DRAG-2: pointerdown on a <button> child does NOT start drag
+case 562 PASSED | [dashboard-grid] useGridDrag AC-DRAG-3: pointerdown on an <input> child does NOT start drag
+case 563 PASSED | [dashboard-grid] useGridDrag AC-DRAG-4: pointerdown on an element with [data-no-drag] does NOT start drag
+case 564 PASSED | [dashboard-grid] useGridDrag AC-DRAG-8: right-click (button !== 0) does NOT start drag
+case 565 PASSED | [dashboard-grid] useGridDrag AC-DRAG-6: pointerup on window resets drag state
+case 566 PASSED | [dashboard-grid] useGridDrag AC-DRAG-7: pointercancel on window resets drag state
+case 567 PASSED | [dashboard-grid] useGridDrag pointermove updates drag.x / drag.y to follow cursor
+case 568 PASSED | [dashboard-grid] useGridDrag pointermove over another widget swaps order
+case 569 PASSED | [dashboard-grid] useGridDrag cleanup: listeners are removed on unmount
+case 570 PASSED | [dashboard-grid] useGridDrag renders nothing visible itself — the hook is state-only
+case 571 PASSED | [dashboard-grid] useWidgetAppearance returns the default glass appearance when no saved preference exists
+case 572 PASSED | [dashboard-grid] useWidgetAppearance persists normalized widget appearance to xai_pref_dashboard_widget_appearance
+case 573 PASSED | [dashboard-grid] useWidgetAppearance ignores unknown widget ids
+case 574 PASSED | [dashboard-grid] useWidgetAppearance removes the saved item when a widget appearance is reset
+case 575 PASSED | [dashboard-grid] useWidgetAppearance maps appearance preferences into widget glass CSS variables
+case 576 PASSED | [dashboard-grid] useWidgetLayout returns span defaults when no saved layout exists
+case 577 PASSED | [dashboard-grid] useWidgetLayout persists normalized widget layout to xai_pref_dashboard_widget_layout
+case 578 PASSED | [dashboard-grid] useWidgetLayout ignores unknown widget ids
+case 579 PASSED | [dashboard-grid] useWidgetLayout layoutFromResize clamps grid cols and height

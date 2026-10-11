@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "BRD-12/TECHNICAL-CONTRACT-AMENDMENT1",
+  "actor": "/root/parallel_c_brd12_technical_amendment_r1",
+  "fixed_parent": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641",
+  "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-technical-amendment1-20261010/XAI_Desktop",
+  "source_commit": null,
+  "outputs": [],
+  "author_iteration": 1,
+  "author_cap": 3,
+  "static_command_launches": 1,
+  "static_result": "FAILED_PARSER_ALL_SEMANTIC_UNRUN",
+  "exit_code": 1,
+  "chunk_id": "02082d",
+  "session_id": null,
+  "traceback": "SyntaxError: Non-UTF-8 code starting with '\\xe4' in file <stdin> on line170, but no encoding declared",
+  "syntax_only_preflight": {
+    "chunk": "3ba858",
+    "exit_code": 0,
+    "result": "SYNTAX_ONLY_OK ast.parse/compile of in-memorysource; NOTconcludingsemanticchecker oractualshelltransportvalidation"
+  },
+  "earlier_errors": "functionsJSconstructionSyntaxError beforetool and unmatchedglobreadexit1",
+  "unrun": "actualcheckerbody/allcompleteinputhashes/buffers/writes",
+  "memory_drafts": "43770-char draft/56104-char checker onlyagentmemory unvalidated notartifacts/notadopted",
+  "costs": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0,
+    "actual_billed_usd": null
+  },
+  "no_retry": true,
+  "worktree_clean": true
+}

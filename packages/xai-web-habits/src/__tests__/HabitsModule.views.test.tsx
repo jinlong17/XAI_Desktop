@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * AC-VIEWS-1..4: all Habits view modes render usable content.
  */
@@ -89,7 +90,7 @@ describe("HabitsModule view modes", () => {
       checkIns: {},
       diaries: {},
     };
-    localStorage.setItem(HABITS_STORAGE_KEY, JSON.stringify(state));
+    localStorage.setItem(accountScope.physicalKey(HABITS_STORAGE_KEY), JSON.stringify(state));
 
     render(<Wrapper><HabitsModule lang="en" /></Wrapper>);
     fireEvent.click(screen.getByText("All"));

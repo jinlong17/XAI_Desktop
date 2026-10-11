@@ -1,0 +1,41 @@
+{
+  "id": "SHARED/SOURCE-BYTE-COLLECTION-REVIEW3",
+  "result": "FAILED_STATIC_NO_INTEGRITY_VERDICT_FAMILY_EXHAUSTED",
+  "review_iteration": 3,
+  "review_cap": 3,
+  "static_invocations": 1,
+  "parent": "984f543fc63fa8f95725d5894ff88dfbf68c8c50",
+  "fixed_input": "2461db7d47e19b0a254fe14a9b82985152e94611",
+  "frozen_source": "b719ee3c54992c905b7f91d82eb3c8646d16df6f",
+  "process": {
+    "chunk": "75d511",
+    "exit": 1,
+    "synchronous": true,
+    "session": null,
+    "pid": null,
+    "catfile_pid": null,
+    "elapsed_seconds": 1.19,
+    "cleanup": "owned catfile closed and awaited in finally, reported; exactPIDunknown"
+  },
+  "failed_guard": "KeyError at line114 for git:6c3451eda23a90841db907502b647c53b43fe1a2:docs/reviews/audit-parallel-shared-source-byte-collection-review-r1/inputs.sha256; fallback resolved identity but later batch git_data map omitted it",
+  "classification": "checker input construction failure NOT bundle corruption",
+  "unrun": [
+    "complete617payload/corpus/provenance/dependencyclosure integrity verdict",
+    "source/config loaded forwarding qualification",
+    "root outer capture qualification",
+    "both output buffers",
+    "all writes",
+    "stage",
+    "commit"
+  ],
+  "source_commit": null,
+  "worktree_clean": true,
+  "collection_family_used": 3,
+  "collection_family_cap": 3,
+  "review_family_used": 3,
+  "review_family_cap": 3,
+  "collector4": false,
+  "reviewer4": false,
+  "held": "TASK/MET last source3 remain HELD; freeze only descendants; unrelated work continues",
+  "runtime": 0
+}

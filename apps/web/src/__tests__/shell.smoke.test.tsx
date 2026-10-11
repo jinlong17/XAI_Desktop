@@ -1,3 +1,4 @@
+import { prepareAccountFixture } from "./accountFixture.js";
 /**
  * Cross-package shell smoke tests — A1..A4
  *
@@ -31,7 +32,7 @@ vi.mock("@repo/web-auth-device-session/web", () => ({
     client: null,
     clearSessionStorage: vi.fn().mockResolvedValue(undefined),
     state: "authenticated",
-    session: null,
+    session: { user: { id: "host-test-account" } },
     deviceId: null,
     syncVersion: "2026-05",
     refreshSession: vi.fn(),
@@ -42,6 +43,7 @@ vi.mock("@repo/web-auth-device-session/web", () => ({
 
 beforeEach(() => {
   localStorage.clear();
+  prepareAccountFixture();
   document.documentElement.removeAttribute("data-theme");
   document.documentElement.removeAttribute("data-density");
   document.documentElement.removeAttribute("data-rail-pos");

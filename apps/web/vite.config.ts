@@ -61,9 +61,12 @@ export default defineConfig({
           if (
             id.includes("/packages/plugin-web-board-core/") ||
             id.includes("/packages/plugin-web-board-views/") ||
-            id.includes("/packages/plugin-web-board-workspaces/")
+            id.includes("/packages/plugin-web-board-workspaces/") ||
+            id.includes("/packages/xai-web-tasks/") ||
+            id.includes("/packages/xai-web-calendar/") ||
+            id.includes("/packages/xai-web-matrix/")
           ) {
-            return "feature-board";
+            return "feature-board-planning";
           }
           if (
             id.includes("/packages/plugin-web-dashboard-grid/") ||
@@ -72,19 +75,24 @@ export default defineConfig({
             return "feature-dashboard";
           }
           if (
+            id.includes("/packages/plugin-web-time-tracker/") ||
+            id.includes("/packages/plugin-web-bookkeeping/") ||
+            id.includes("/packages/plugin-web-metric-tracker/") ||
+            id.includes("/packages/xai-web-cmdk/") ||
+            id.includes("/packages/plugin-web-pet/")
+          ) {
+            return "feature-utilities";
+          }
+          if (id.includes("/packages/web-auth-device-session/")) {
+            return "feature-auth";
+          }
+          if (
             id.includes("/packages/plugin-web-settings-shell/") ||
             id.includes("/packages/plugin-web-settings-features-panel/") ||
             id.includes("/packages/plugin-web-settings-appearance/") ||
             id.includes("/packages/plugin-web-settings-rest/")
           ) {
             return "feature-settings";
-          }
-          if (
-            id.includes("/packages/xai-web-tasks/") ||
-            id.includes("/packages/xai-web-calendar/") ||
-            id.includes("/packages/xai-web-matrix/")
-          ) {
-            return "feature-planning";
           }
           if (
             id.includes("/packages/plugin-web-pomodoro/") ||

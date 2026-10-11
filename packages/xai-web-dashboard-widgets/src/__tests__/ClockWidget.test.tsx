@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * AC-CLOCK-1..8: ClockWidget behavior — 4 styles + timezone picker + persistence.
  */
@@ -46,7 +47,7 @@ describe("AC-CLOCK: ClockWidget", () => {
   it("AC-CLOCK-3: style persists to xai_clock_style", () => {
     const { container, unmount } = render(<ClockWidget lang="en" now={FIXED_NOW} />);
     fireEvent.click(container.querySelector("[data-clock-style='analog']")!);
-    expect(localStorage.getItem("xai_clock_style")).toBe("analog");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_clock_style"))).toBe("analog");
     unmount();
 
     const { container: c2 } = render(<ClockWidget lang="en" now={FIXED_NOW} />);
@@ -66,7 +67,7 @@ describe("AC-CLOCK: ClockWidget", () => {
 
     // Select Shanghai
     fireEvent.click(container.querySelector("[data-tz-id='shanghai']")!);
-    expect(localStorage.getItem("xai_clock_tz")).toBe("shanghai");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_clock_tz"))).toBe("shanghai");
     // Popover closes after selection
     expect(container.querySelector(".clk-tz-popover")).toBeNull();
   });
@@ -74,7 +75,7 @@ describe("AC-CLOCK: ClockWidget", () => {
   it("AC-CLOCK-5: tz=shanghai shifts displayed time by +8 UTC from local", () => {
     // Force a known local timezone offset: jsdom uses the runtime's tz. We
     // compute the expected hour from the math used in the widget itself.
-    localStorage.setItem("xai_clock_tz", "shanghai");
+    localStorage.setItem(accountScope.physicalKey("xai_clock_tz"), "shanghai");
     const { container } = render(<ClockWidget lang="en" now={FIXED_NOW} />);
     // Compute expected
     const utcMs = FIXED_NOW.getTime() + FIXED_NOW.getTimezoneOffset() * 60 * 1000;
@@ -113,7 +114,7 @@ describe("AC-CLOCK: ClockWidget", () => {
   });
 
   it("AC-CLOCK-extra: invalid stored style falls back to classic", () => {
-    localStorage.setItem("xai_clock_style", "bogus");
+    localStorage.setItem(accountScope.physicalKey("xai_clock_style"), "bogus");
     const { container } = render(<ClockWidget lang="en" now={FIXED_NOW} />);
     expect(container.querySelector("[data-testid='clock-classic']")).not.toBeNull();
   });

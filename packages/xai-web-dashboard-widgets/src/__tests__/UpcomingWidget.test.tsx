@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * UpcomingWidget — real-data tests (§F rewrite).
  *
@@ -15,7 +16,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { UpcomingWidget } from "../widgets/UpcomingWidget.js";
 
 function seedCalEvents(store: unknown) {
-  localStorage.setItem("xai_calendar_events", JSON.stringify(store));
+  localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), JSON.stringify(store));
 }
 
 function makeEvent(

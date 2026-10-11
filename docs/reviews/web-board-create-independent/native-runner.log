@@ -1,0 +1,8 @@
+baseline {"commit":"885a111","chromePid":67820}
+original-correct-oracle {"editorRetained":true,"errorVisible":true,"bytesUnchanged":true,"activeAttempts":0}
+real-download-latest-create {"pass":true}
+partial-success-retry-same-board {"pass":true}
+newer-baseline-preserved {"pass":true}
+cross-account-no-write-no-export {"pass":true}
+partial-A-cannot-open-or-export-after-B {"pass":true}
+PASS {"scope":"BoardCreator only","checks":6}

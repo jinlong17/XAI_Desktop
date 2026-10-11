@@ -14,6 +14,7 @@ function focus(finishedAt: string, minutes = 25): PomodoroSessionRecord {
   return {
     mode: "focus",
     durationMs: minutes * 60_000,
+    elapsedMs: minutes * 60_000,
     finishedAt,
   };
 }
@@ -45,7 +46,7 @@ describe("aggregateRange — single focus session current week", () => {
     expect(agg.kpis.tasksTrend).toBe("—");
     expect(agg.kpis.focusMinutesTotal).toBe(25);
     expect(agg.kpis.focusTrend).toBe("—");
-    expect(agg.peakHour).toBe(9);
+    expect(agg.peakHour).toBe(new Date("2026-05-20T09:00:00Z").getHours());
   });
 });
 
@@ -77,9 +78,9 @@ describe("aggregateRange — hour distribution", () => {
       focus("2026-05-22T14:00:00Z", 25),
     ];
     const agg = aggregateRange("week", sessions, EMPTY_HABITS_STATE, 0, NOW, "en");
-    expect(agg.hourDistribution[9]).toBe(50);
-    expect(agg.hourDistribution[14]).toBe(25);
-    expect(agg.peakHour).toBe(9);
+    expect(agg.hourDistribution[new Date("2026-05-20T09:00:00Z").getHours()]).toBe(50);
+    expect(agg.hourDistribution[new Date("2026-05-22T14:00:00Z").getHours()]).toBe(25);
+    expect(agg.peakHour).toBe(new Date("2026-05-20T09:00:00Z").getHours());
   });
 });
 
@@ -204,8 +205,7 @@ describe("aggregateRange — month / all ranges", () => {
 });
 
 describe("aggregateRange — invariants", () => {
-  it("A14: tasksTotal === sum(taskBuckets) === real done count from xai_task_cols (replaced proxy)", () => {
-    // With real taskCols: 2 done cards → tasksTotal = 2, placed in last bucket
+  it("A14: undated current completions contribute to total but never fabricate a date bucket", () => {
     const taskCols = {
       overdue: { tasks: [{ done: true }, { done: false }] },
       next7:   { tasks: [{ done: true }] },
@@ -218,10 +218,9 @@ describe("aggregateRange — invariants", () => {
     const agg = aggregateRange("week", sessions, EMPTY_HABITS_STATE, 0, NOW, "en", taskCols);
     // tasksTotal = real count (2), not session count (3)
     expect(agg.kpis.tasksTotal).toBe(2);
-    // taskBuckets sum equals tasksTotal
-    expect(agg.taskBuckets.reduce((a, b) => a + b, 0)).toBe(2);
-    // The total is placed in the last bucket (honest fill)
-    expect(agg.taskBuckets[agg.taskBuckets.length - 1]).toBe(2);
+    expect(agg.taskBuckets.every(n => n === 0)).toBe(true);
+    expect(agg.undatedCompletedTasks).toBe(2);
+    expect(agg.taskSeriesAvailable).toBe(false);
   });
 
   it("A15: focusMinutesTotal === sum(focusBuckets)", () => {

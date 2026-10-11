@@ -1,0 +1,94 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stderr | docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > checklist: rejected canonical write preserves editable draft and reports failure
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > attachment: rejected canonical write preserves editable draft and reports failure
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > activity: rejected canonical write preserves editable draft and reports failure
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+ ❯ docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx (3 tests | 3 failed) 230ms
+   × checklist: rejected canonical write preserves editable draft and reports failure 142ms
+     → expect(element).toHaveValue(Unsaved valuable checklist)
+
+Expected the element to have value:
+  Unsaved valuable checklist
+Received:
+
+   × attachment: rejected canonical write preserves editable draft and reports failure 45ms
+     → expect(element).toHaveValue(https://example.com/valuable-spec)
+
+Expected the element to have value:
+  https://example.com/valuable-spec
+Received:
+
+   × activity: rejected canonical write preserves editable draft and reports failure 42ms
+     → expect(element).toHaveValue(Unsaved valuable activity)
+
+Expected the element to have value:
+  Unsaved valuable activity
+Received:
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > checklist: rejected canonical write preserves editable draft and reports failure
+Error: expect(element).toHaveValue(Unsaved valuable checklist)
+
+Expected the element to have value:
+  Unsaved valuable checklist
+Received:
+
+ ❯ docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx:19:38
+     17|  await act(async()=>{fireEvent.click(screen.getByTestId(`card-detail-$…
+     18|  expect(rejected).toBeGreaterThan(0);expect(localStorage.getItem(key))…
+     19|  expect(screen.getByTestId(inputId)).toHaveValue(text);
+       |                                      ^
+     20|  if(kind==='attachment')expect(screen.getByTestId('card-detail-attachm…
+     21|  expect(screen.getByRole('alert').textContent).toMatch(/not saved|unsa…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > attachment: rejected canonical write preserves editable draft and reports failure
+Error: expect(element).toHaveValue(https://example.com/valuable-spec)
+
+Expected the element to have value:
+  https://example.com/valuable-spec
+Received:
+
+ ❯ docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx:19:38
+     17|  await act(async()=>{fireEvent.click(screen.getByTestId(`card-detail-$…
+     18|  expect(rejected).toBeGreaterThan(0);expect(localStorage.getItem(key))…
+     19|  expect(screen.getByTestId(inputId)).toHaveValue(text);
+       |                                      ^
+     20|  if(kind==='attachment')expect(screen.getByTestId('card-detail-attachm…
+     21|  expect(screen.getByRole('alert').textContent).toMatch(/not saved|unsa…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > activity: rejected canonical write preserves editable draft and reports failure
+Error: expect(element).toHaveValue(Unsaved valuable activity)
+
+Expected the element to have value:
+  Unsaved valuable activity
+Received:
+
+ ❯ docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx:19:38
+     17|  await act(async()=>{fireEvent.click(screen.getByTestId(`card-detail-$…
+     18|  expect(rejected).toBeGreaterThan(0);expect(localStorage.getItem(key))…
+     19|  expect(screen.getByTestId(inputId)).toHaveValue(text);
+       |                                      ^
+     20|  if(kind==='attachment')expect(screen.getByTestId('card-detail-attachm…
+     21|  expect(screen.getByRole('alert').textContent).toMatch(/not saved|unsa…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  14:50:56
+   Duration  5.79s (transform 1.25s, setup 572ms, collect 1.53s, tests 230ms, environment 2.62s, prepare 394ms)
+

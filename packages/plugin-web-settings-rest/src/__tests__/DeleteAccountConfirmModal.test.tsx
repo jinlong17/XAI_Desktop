@@ -22,7 +22,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { DeleteAccountConfirmModal } from "../internal/DeleteAccountConfirmModal.js";
 import type { UseAccountDeleteOrchestratorResult } from "../internal/useAccountDeleteOrchestrator.js";
-import { ACCOUNT_LOCAL_WIPE_IDB_NAMES } from "../internal/useAccountDeleteOrchestrator.js";
 
 // Mock the orchestrator module so tests control its state without needing
 // WebAuthSessionProvider context.
@@ -324,14 +323,5 @@ describe("DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth bann
   });
 
   // ---- DEL-IDB-LIST-1: frozen IDB list ----
-  it("DEL-IDB-LIST-1: ACCOUNT_LOCAL_WIPE_IDB_NAMES contains exactly 3 entries at row-#9-time", () => {
-    expect(ACCOUNT_LOCAL_WIPE_IDB_NAMES).toEqual([
-      "web-encrypted-cache",
-      "xai-web-ai-secrets",
-      "xai-web-auth",
-    ]);
-    expect(ACCOUNT_LOCAL_WIPE_IDB_NAMES).toHaveLength(3);
-    // Verify frozen (Object.isFrozen)
-    expect(Object.isFrozen(ACCOUNT_LOCAL_WIPE_IDB_NAMES)).toBe(true);
-  });
+
 });

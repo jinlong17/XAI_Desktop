@@ -1,0 +1,57 @@
+{
+  "requestedRef": "170c526",
+  "revision": "170c526328cb1366a643634e90efff470b721790",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 83894,
+  "reopenedPid": 83912,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "detail-conflict",
+        "pass": true
+      },
+      {
+        "name": "detail-quota-conflict",
+        "pass": true
+      },
+      {
+        "name": "detail-missing",
+        "pass": true
+      }
+    ],
+    "checkpoint": {
+      "detail-conflict": {
+        "raw": "{\"format\":\"xai-command-state\",\"version\":1,\"revision\":2,\"data\":[{\"id\":\"overdue\",\"key\":\"overdue\",\"count\":0,\"tasks\":[]},{\"id\":\"next7\",\"key\":\"next_7_days\",\"count\":0,\"tasks\":[]},{\"id\":\"later\",\"key\":\"later\",\"count\":0,\"tasks\":[]},{\"id\":\"nodate\",\"key\":\"no_date\",\"count\":1,\"tasks\":[{\"id\":\"existing\",\"title\":{\"en\":\"External newer task\",\"zh\":\"External newer task\"},\"tag\":\"work\",\"tags\":[\"work\"],\"priority\":\"normal\",\"listId\":\"inbox\"}]}],\"receipts\":{\"prior\":{\"operationVersion\":1,\"signature\":\"existing\",\"result\":{\"ok\":true,\"targetId\":\"existing\"},\"committedAt\":\"2026-09-09T00:00:00Z\"}}}"
+      },
+      "detail-quota-conflict": {
+        "raw": "{\"format\":\"xai-command-state\",\"version\":1,\"revision\":2,\"data\":[{\"id\":\"overdue\",\"key\":\"overdue\",\"count\":0,\"tasks\":[]},{\"id\":\"next7\",\"key\":\"next_7_days\",\"count\":0,\"tasks\":[]},{\"id\":\"later\",\"key\":\"later\",\"count\":0,\"tasks\":[]},{\"id\":\"nodate\",\"key\":\"no_date\",\"count\":1,\"tasks\":[{\"id\":\"existing\",\"title\":{\"en\":\"External newer task\",\"zh\":\"External newer task\"},\"tag\":\"work\",\"tags\":[\"work\"],\"priority\":\"normal\",\"listId\":\"inbox\"}]}],\"receipts\":{\"prior\":{\"operationVersion\":1,\"signature\":\"existing\",\"result\":{\"ok\":true,\"targetId\":\"existing\"},\"committedAt\":\"2026-09-09T00:00:00Z\"}}}"
+      },
+      "detail-missing": {
+        "raw": "{\"format\":\"xai-command-state\",\"version\":1,\"revision\":3,\"data\":[{\"id\":\"overdue\",\"key\":\"overdue\",\"count\":0,\"tasks\":[]},{\"id\":\"next7\",\"key\":\"next_7_days\",\"count\":0,\"tasks\":[]},{\"id\":\"later\",\"key\":\"later\",\"count\":0,\"tasks\":[]},{\"id\":\"nodate\",\"key\":\"no_date\",\"count\":0,\"tasks\":[]}],\"receipts\":{\"prior\":{\"operationVersion\":1,\"signature\":\"existing\",\"result\":{\"ok\":true,\"targetId\":\"existing\"},\"committedAt\":\"2026-09-09T00:00:00Z\"}}}"
+      }
+    },
+    "scope": "Actual Tasks detail UI, public canonical competing writer, native WebLocks and storage; reopened persisted data only, no unsaved draft durability or production claim"
+  },
+  "after": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "detail-conflict",
+        "pass": true
+      },
+      {
+        "name": "detail-quota-conflict",
+        "pass": true
+      },
+      {
+        "name": "detail-missing",
+        "pass": true
+      }
+    ],
+    "scope": "Actual Tasks detail UI, public canonical competing writer, native WebLocks and storage; reopened persisted data only, no unsaved draft durability or production claim"
+  }
+}

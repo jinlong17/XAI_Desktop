@@ -1,0 +1,11 @@
+revision=c9a388d fixed_commit=c9a388dfb965648496f62e486bae30555d56662c
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-1Z4jCN
+
+ ✓ docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx (5 tests) 768ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  00:45:07
+   Duration  5.73s (transform 2.44s, setup 0ms, collect 3.73s, tests 768ms, environment 474ms, prepare 175ms)

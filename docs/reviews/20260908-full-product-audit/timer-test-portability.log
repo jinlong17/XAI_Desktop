@@ -1,0 +1,9 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ✓ docs/reviews/20260908-full-product-audit/timer-test-audit.test.ts (10 tests) 43ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  23:30:36
+   Duration  1.49s (transform 196ms, setup 0ms, collect 424ms, tests 43ms, environment 664ms, prepare 89ms)

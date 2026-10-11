@@ -1,0 +1,6 @@
+{"name":"baseline","commit":"034ef46","chromePid":10715,"harness":"author CDP transport, reviewer scenarios"}
+{"name":"recolor-failure-retry-native","pass":true}
+{"name":"delete-failure-retry-native","pass":true}
+{"name":"malformed-workspace-create","expected":"preserve original bytes and show recovery","pass":true,"before":"[{\"id\":\"recover-me\",\"name\":{\"en\":\"Original\"},\"color\":123}]","after":"[{\"id\":\"recover-me\",\"name\":{\"en\":\"Original\"},\"color\":123}]","alert":true}
+{"name":"malformed-board-membership-delete","expected":"refuse deletion when membership is invalid","pass":true,"workspaceBefore":"[{\"id\":\"ws-personal\",\"name\":{\"en\":\"Personal\",\"zh\":\"个人\"},\"color\":\"oklch(60% 0.10 165)\"},{\"id\":\"ws-team\",\"name\":{\"en\":\"Team Workspace\",\"zh\":\"团队空间\"},\"color\":\"oklch(60% 0.14 295)\"},{\"id\":\"empty\",\"name\":{\"en\":\"Empty\",\"zh\":\"空\"},\"color\":\"red\"}]","workspaceAfter":"[{\"id\":\"ws-personal\",\"name\":{\"en\":\"Personal\",\"zh\":\"个人\"},\"color\":\"oklch(60% 0.10 165)\"},{\"id\":\"ws-team\",\"name\":{\"en\":\"Team Workspace\",\"zh\":\"团队空间\"},\"color\":\"oklch(60% 0.14 295)\"},{\"id\":\"empty\",\"name\":{\"en\":\"Empty\",\"zh\":\"空\"},\"color\":\"red\"}]","boardBytesUnchanged":true,"alert":true}
+{"name":"verdict","passed":4,"failed":0,"failures":[]}

@@ -4,6 +4,44 @@
 
 | Field | Value |
 |---|---|
+| Workflow | BUGFIX |
+| Target | web-auth-device-session |
+| Title | REL-02 shared IndexedDB schema initialization |
+| Status | FIX_READY_FOR_VERIFY |
+| Current Phase | BUG_VERIFY |
+| Suggested Next | bug-verify |
+| Automation Mode | A-Codex |
+| Verify Cross-vendor | pending; no cross-vendor PASS claimed |
+| Executor | bug-fix (Codex) |
+| Updated | 2026-09-09 10:57 PDT |
+| Blockers | — |
+
+## REL-02 Diagnosis
+
+- Reproduction: fake-indexeddb fresh database, createAuthSessionStorage().setItem followed by createDeviceIdentityStore().ensure. Fails with NotFoundError: No objectStore named device. Expected both durable stores to work in either order.
+- Root cause: independent idb-keyval createStore calls open the same database without schema version coordination; only the first store is created. Existing tests use memory adapters and miss the database contract.
+- Strategy: shared versioned database manager in storage.ts; default schema v2 includes session/device, migration preserves existing records, connection closes on versionchange, failed or blocked opens reject and permit retry, late connections are closed. Keep custom database/store API working. Add actual IndexedDB regressions and contract documentation.
+- Scope: Web package only; no route/manifest/native or Supabase network changes.
+
+### REL-02 Work Log
+
+| Timestamp | Executor | Action | Commits | Next |
+|---|---|---|---|---|
+| 2026-09-09 10:53 PDT | bug-diagnose (Codex) | Reproduced missing device store; recorded root cause and schema migration strategy. | — | bug-fix |
+
+| 2026-09-09 10:57 PDT | bug-fix (Codex) | Goal: preserve auth/device storage. Done: shared schema, migration and failure lifecycle; Tests: 52/52 package regressions, package/Web type checks; Risks: real browser/live auth not verified. | `0141ecb` | bug-verify |
+
+### REL-02 Fix Result
+
+- Implemented default schema v2 and custom-store upgrades; no deletion or clearing during migration.
+- Reproduction now passes. Existing PKCE memory tests remain unchanged.
+- Verification requested from independent reviewer; no READY_TO_SHIP or cross-vendor PASS claimed.
+- Commit reference: `0141ecb` — `fix(web-auth-device-session): migrate shared auth database safely`.
+
+## Historical W3 Status Panel
+
+| Field | Value |
+|---|---|
 | Workflow | FEATURE_DEV |
 | Target | web-auth-device-session |
 | Title | W3 browser auth and app-device session foundation |
@@ -199,3 +237,32 @@ Added to `packages/web-auth-device-session/src/`:
 - `wipeRegisteredIDB()` operates on a frozen static list; list is not dynamically expanded at runtime (DEL-IDB-LIST-1).
 - `signOut()` is best-effort (non-throwing); account deletion success does not depend on signOut success (R9 risk mitigation).
 - `already_deleted` (404) is treated as idempotent success and proceeds to signOut (DEL-ORCH-4 / R3 idempotency).
+
+### REL-02 parent verification follow-up · 2026-09-09
+
+Executor: Codex parent review/fix. Status remains FIX_READY_FOR_VERIFY. Independent review found a warm custom-store upgrade race, reproduced by the new 53rd test (InvalidStateError). Added per-database operation queue through callback completion. All 53 package tests and six isolated real-Chromium scenarios now pass. Cross-vendor reviewer could not authenticate (401 revoked OAuth), so independent cross-vendor approval remains pending; no READY_TO_SHIP claim. Next: independent review of follow-up and cross-vendor verification when available.
+
+### REL-03 auth lifecycle sub-fix — 2026-09-09
+
+Executor: Codex parent bug-fix; independent test author: rel01_independent_verify. Implemented identity callback and stale refresh guards, synchronous account invalidation before clear, and captured-token deletion options. Parent reran 60 package tests successfully; package typecheck passed before deletion option extension and is rerun at integration. Status: sub-fix implemented, REL-03 joint verification pending. No remote account mutation or hosted auth claim.
+
+References checked: Supabase changelog index and https://supabase.com/docs/reference/javascript/auth-onauthstatechange. Auth callback stays synchronous; SDK/config versions unchanged. The relevant changelog self-hosted API_EXTERNAL_URL change does not apply to this local lifecycle repair.
+
+## 2026-09-09 — REL-06 bounded 404 fix
+
+- Current Phase: BUG_VERIFY
+- Status: FIX_READY_FOR_VERIFY
+- Executor: Codex / rel01_independent_verify (bug-fix role)
+- Updated: 2026-09-09
+- Suggested Next: bug-verify
+- Root cause: generic routing 404 conflated with business deletion; SDK Response status ignored.
+- Change: fail every non-success HTTP status, preserve 2xx, use actual SDK response/context status. No unverified business code is invented. Prior historical entries describing blanket 404 success are superseded by this entry.
+- Tests: 13 files / 70 tests passed, including native Response + real FunctionsHttpError boundary cases.
+- Risk: externally deployed undocumented 404 idempotency now reports failure and preserves local data until its contract is verified. Complete deletion durability/IDB/auth/cache coordination remains REL-06 work; see diagnosis commit 27b8925.
+- Commit: this entry is included in the exact bounded fix commit (identify via Git history).
+- Work Log: independent diagnosis committed first; API, deployment contract and regression tests updated together; no production services invoked.
+
+
+## REL-06 legacy database reset result contract
+
+REL-06 bounded legacy helper correction: failures now reject, deprecated origin-wide ownership documented. Auth75/typecheck and isolated native blocked/release/retry checks PASS. No caller reintroduced; complete account cleanup participant and cross-tab coordination work remain open.

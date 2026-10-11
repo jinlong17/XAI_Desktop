@@ -1,0 +1,8 @@
+baseline {"commit":"9ebc48c","browser":"Chrome/152.0.7977.83"}
+original-correct-oracle {"dialogRetained":true,"draftRetained":true,"errorVisible":true,"bytesUnchanged":true,"falseEvents":0}
+actual-download {"filename":"matrix-unsaved-change.json","latestTitle":"Latest independent draft"}
+latest-retry {"pass":true}
+move-committed-event-once {"pass":true}
+baseline-conflict {"pass":true}
+cross-account-no-write-no-download {"pass":true}
+PASS {"scope":"REL05 Matrix only","checks":6}

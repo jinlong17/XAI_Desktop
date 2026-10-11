@@ -1,0 +1,38 @@
+{
+  "id": "CD-03/SOURCE-CONTRACT-REVIEW1",
+  "fixed_input": "316ff9696a6a4d4ff2ae95e805c7e8a0fd3dad8e",
+  "parent": "6db2aef8d316835e2aea2d469073e25899d6e1fd",
+  "source": "1d26bc1ed1d4af6f1c311fe34f9640c0f68e2e36",
+  "result": "FAILED_STATIC_NO_REVIEW_ARTIFACT",
+  "review_iteration": 1,
+  "review_cap": 3,
+  "static_invocations": 1,
+  "process": {
+    "pid": 37513,
+    "catfile_pid": 37525,
+    "session": 35556,
+    "chunks": [
+      "d26838",
+      "12734c",
+      "3fe3f4"
+    ],
+    "exit": 1,
+    "fully_drained": true,
+    "catfile_cleanup": "TERM owned37525 afterPythonassertion waitedstderrthread; bothPIDsabsent",
+    "catfile_exit": "UNKNOWN_NOT_CAPTURED"
+  },
+  "failed_guard": "stdin107 full original source paths extracted subset count==164 unsupported",
+  "classification": "reviewer-added checker defect not source/hash/product failure",
+  "completed": "inherited5940hashloop/predecessor/canonical/ledger checks precedingguard REPORTED complete",
+  "unrun": [
+    "additional source binding loop",
+    "both complete output buffers",
+    "ALLwrites",
+    "stage",
+    "commit"
+  ],
+  "unvalidated_observation": "contract46 passes AccountScope owner to accountPrefix/generationMarkerKey actualaccountScope14-19 requires stringaccountId/.trim; NOT accepted REVISE",
+  "source_commit": null,
+  "runtime": 0,
+  "worktree_clean": true
+}

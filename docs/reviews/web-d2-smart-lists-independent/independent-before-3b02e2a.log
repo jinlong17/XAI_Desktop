@@ -1,0 +1,64 @@
+revision=3b02e2a
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-xtCtBU
+
+ ❯ docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx (4 tests | 3 failed) 139ms
+   ✓ absent registry map renders all twelve existing show fallbacks without default seeding 55ms
+   × actual first row waits for held account lock and preserves latest choice 31ms
+     → expected '{"all":"hide","extension":"future-val…' to be '{"all":"show","extension":"future-val…' // Object.is equality
+   × actual first row waits for held key lock and preserves latest choice 21ms
+     → expected '{"all":"hide","extension":"future-val…' to be '{"all":"show","extension":"future-val…' // Object.is equality
+   × quota keeps latest two row choices recoverable and actual Retry saves the combined map 31ms
+     → expected 'show' to be 'hide' // Object.is equality
+     → expected 'show' to be 'if-not-empty' // Object.is equality
+     → expected null not to be null
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed (4)
+   Start at  21:21:38
+   Duration  1.07s (transform 155ms, setup 0ms, collect 301ms, tests 139ms, environment 338ms, prepare 72ms)
+
+
+stderr | docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx > quota keeps latest two row choices recoverable and actual Retry saves the combined map
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx > actual first row waits for held account lock and preserves latest choice
+ FAIL  docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx > actual first row waits for held key lock and preserves latest choice
+AssertionError: expected '{"all":"hide","extension":"future-val…' to be '{"all":"show","extension":"future-val…' // Object.is equality
+
+Expected: "{"all":"show","extension":"future-value"}"
+Received: "{"all":"hide","extension":"future-value"}"
+
+ ❯ docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx:18:132
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx > quota keeps latest two row choices recoverable and actual Retry saves the combined map
+AssertionError: expected 'show' to be 'hide' // Object.is equality
+
+Expected: "hide"
+Received: "show"
+
+ ❯ docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx:26:122
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx > quota keeps latest two row choices recoverable and actual Retry saves the combined map
+AssertionError: expected 'show' to be 'if-not-empty' // Object.is equality
+
+Expected: "if-not-empty"
+Received: "show"
+
+ ❯ docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx:26:208
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx > quota keeps latest two row choices recoverable and actual Retry saves the combined map
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx:26:265
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯

@@ -47,6 +47,10 @@ export interface MatrixComposerProps {
   onSave: (draft: NewMatrixCardDraft, targetQuadrant: Quadrant) => void;
   /** Called on ESC / backdrop click / Cancel (changes discarded). */
   onClose: () => void;
+  saveError?: string | null;
+  exportFailed?: boolean;
+  onExportDraft?: (draft: NewMatrixCardDraft, target: Quadrant) => void;
+  onDiscard?: () => void;
 }
 
 type TagOption = "none" | "study" | "work" | "personal" | "todo" | "other";
@@ -73,7 +77,7 @@ function str(key: keyof typeof STR_MATRIX_COMPOSER, lang: Lang): string {
 }
 
 export function MatrixComposer(props: MatrixComposerProps): ReactElement | null {
-  const { open, lang, defaultQuadrant, onSave, onClose } = props;
+  const { open, lang, defaultQuadrant, onSave, onClose, saveError, exportFailed, onExportDraft, onDiscard } = props;
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const { s } = useI18n(lang);
@@ -110,10 +114,10 @@ export function MatrixComposer(props: MatrixComposerProps): ReactElement | null 
   useEffect(() => {
     const el = dialogRef.current;
     if (!el) return;
-    const handler = () => onClose();
+    const handler = (event: Event) => { if (saveError) event.preventDefault(); else onClose(); };
     el.addEventListener("cancel", handler);
     return () => el.removeEventListener("cancel", handler);
-  }, [onClose]);
+  }, [onClose, saveError]);
 
   // Backdrop click: direct click on the <dialog> element (not its children)
   const handleBackdropClick = useCallback(
@@ -146,9 +150,9 @@ export function MatrixComposer(props: MatrixComposerProps): ReactElement | null 
   const handleCancel = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
-      onClose();
+      if (saveError) onDiscard?.(); else onClose();
     },
-    [onClose],
+    [onClose, saveError, onDiscard],
   );
 
   return (
@@ -244,6 +248,12 @@ export function MatrixComposer(props: MatrixComposerProps): ReactElement | null 
           </div>
         </div>
 
+        {saveError && <div className="matrix-save-recovery" role="alert">
+          <p>{saveError}</p>
+          <button type="button" onClick={() => onExportDraft?.({ title, ...(tag !== 'none' ? { tag } : {}) }, quadrant)}>{lang === 'zh' ? '导出草稿' : 'Export draft'}</button>
+          <p>{lang === 'zh' ? '导出仅供手动恢复，当前不支持导入。' : 'Export is for manual recovery; import is not supported.'}</p>
+          {exportFailed && <p>{lang === 'zh' ? '导出失败，请检查账户和存储权限。' : 'Export failed. Check account and storage access.'}</p>}
+        </div>}
         {/* Actions */}
         <div className="matrix-composer__actions">
           <button
@@ -251,14 +261,14 @@ export function MatrixComposer(props: MatrixComposerProps): ReactElement | null 
             className="matrix-composer__btn"
             onClick={handleCancel}
           >
-            {str("btn_cancel", lang)}
+            {saveError ? (lang === "zh" ? "放弃草稿" : "Discard draft") : str("btn_cancel", lang)}
           </button>
           <button
             type="button"
             className="matrix-composer__btn matrix-composer__btn--primary"
             onClick={handleSave}
           >
-            {str("btn_save", lang)}
+            {saveError ? (lang === "zh" ? "重试保存" : "Retry save") : str("btn_save", lang)}
           </button>
         </div>
       </div>

@@ -1,3 +1,10 @@
+import { createTestLockManager } from "./src/__tests__/webLocksHarness.js";
+import {
+  accountScope,
+  generationMarkerKey,
+  setCanonicalCommandActivationForTests,
+} from "@repo/plugin-web-storage";
+import { beforeEach as beforeAccountTest } from "vitest";
 import { vi, beforeEach, afterEach } from "vitest";
 import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
@@ -26,7 +33,24 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  setCanonicalCommandActivationForTests(false);
+  vi.unstubAllGlobals();
   vi.useRealTimers();
   localStorage.clear();
   cleanup();
+});
+
+// Explicit authenticated D1 context. Production activation remains closed;
+// package tests opt into the canonical writer with a real persisted marker and
+// deterministic serialized Web Lock callbacks.
+beforeAccountTest(() => {
+  const scope = accountScope.activate(accountScope.lock("consumer-test"), "fixture");
+  localStorage.setItem(generationMarkerKey("consumer-test"), JSON.stringify({
+    generation: "fixture",
+    migrationId: "tasks-package-test",
+    previous: null,
+  }));
+  setCanonicalCommandActivationForTests(true);
+  vi.stubGlobal("navigator", { locks: createTestLockManager() });
+  void scope;
 });

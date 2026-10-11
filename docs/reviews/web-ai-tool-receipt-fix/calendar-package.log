@@ -1,0 +1,143 @@
+
+> @repo/plugin-web-calendar@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-calendar
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-calendar
+
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps a failed new event and its latest draft available for retry
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+ ✓ src/__tests__/CalendarModule.recurrence.test.tsx (6 tests) 4733ms
+   ✓ CalendarModule recurrence integration (P4) > AC-RECUR-1: daily recurring event over Week view renders 7 blocks  898ms
+   ✓ CalendarModule recurrence integration (P4) > AC-RECUR-3: daily recurring event over Month view renders all month-window instances  638ms
+   ✓ CalendarModule recurrence integration (P4) > AC-RECUR-6: editing a recurring event updates all rendered instances  1653ms
+   ✓ CalendarModule recurrence integration (P4) > AC-RECUR-7: deleting a recurring event removes all rendered instances  1109ms
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps the editor and record when deletion fails
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+ ✓ src/__tests__/YearView.test.tsx (5 tests) 6450ms
+   ✓ YearView > renders a 12-month year grid from the persisted year view  1405ms
+   ✓ YearView > clicking a year-view date opens day overview before quick-create  1791ms
+   ✓ YearView > shows month-view fixture events as same-color dots in the year grid  1603ms
+   ✓ YearView > caps year-view dots at six and renders overflow as +N  676ms
+   ✓ YearView > shows user event colors/tags and opens edit from the event dot  972ms
+ ✓ src/__tests__/CalendarModule.nav.test.tsx (6 tests) 7465ms
+   ✓ CalendarModule nav > AC-NAV-1: > → June 2026  2051ms
+   ✓ CalendarModule nav > AC-NAV-2: < → April 2026  997ms
+   ✓ CalendarModule nav > AC-NAV-3: year rollover Dec → Jan  1826ms
+   ✓ CalendarModule nav > AC-NAV-4: today button resets to May 2026 anchor  936ms
+   ✓ CalendarModule nav > AC-NAV-5: nav clears focusedDate  843ms
+   ✓ CalendarModule nav > AC-NAV-6 (ZH): title updates in ZH after nav  811ms
+ ✓ src/__tests__/CalendarModule.render.test.tsx (12 tests) 8359ms
+   ✓ CalendarModule render > AC-RENDER-1: renders without throwing (EN)  582ms
+   ✓ CalendarModule render > AC-RENDER-4: title shows May 2026 in EN  1021ms
+   ✓ CalendarModule render > AC-RENDER-4 (ZH): title shows 2026 年 5 月  691ms
+   ✓ CalendarModule render > AC-RENDER-3: month grid has 42 cells for May 2026 Sunday-first (6 rows)  461ms
+   ✓ CalendarModule render > AC-RENDER-5: sample-data banner is visible (EN)  697ms
+   ✓ CalendarModule render > AC-RENDER-6 / AC-TODAY-1: today-pill wraps exactly one in-month day (May 22)  564ms
+   ✓ CalendarModule render > AC-VIEW-1: all 4 view tabs are present  487ms
+   ✓ CalendarModule render > AC-VIEW-3: clicking Week swaps Month grid for Week time-grid (P2+ behavior)  1113ms
+   ✓ CalendarModule render > AC-VIEW-5: clicking back to Month restores the grid  884ms
+   ✓ CalendarModule render > AC-TOKENS-EXT-3: .cal-coming-soon class is never rendered (ComingSoonPanel deleted in P4)  1663ms
+ ✓ src/__tests__/CalendarModule.viewtoggle.test.tsx (11 tests) 9518ms
+   ✓ CalendarModule view toggle > AC-TOGGLE-1: toggling Month→Week→Day→Month preserves activeDate  1463ms
+   ✓ CalendarModule view toggle > AC-TOGGLE-2: tab aria-selected flips correctly  557ms
+   ✓ CalendarModule view toggle > AC-TOGGLE-3: ComingSoonPanel is NOT rendered for any view  716ms
+   ✓ CalendarModule view toggle > AC-PERSIST-EXT-1: view change calls setViewPref with correct value  511ms
+   ✓ CalendarModule view toggle > AC-PERSIST-EXT-2: reload restores week view (mocked usePref returns "week")  1027ms
+   ✓ CalendarModule view toggle > AC-PERSIST-YEAR-1: reload restores year view (mocked usePref returns "year")  789ms
+   ✓ Nav arrows step by view (AC-NAV-EXT-1..3) > AC-NAV-EXT-1: when view=month, prev/next step ±1 month  738ms
+   ✓ Nav arrows step by view (AC-NAV-EXT-1..3) > AC-NAV-YEAR-1: when view=year, prev/next step ±1 year  2451ms
+   ✓ Nav arrows step by view (AC-NAV-EXT-1..3) > AC-ACTIVEDATE-3: today reset resets to MAY_2026_ANCHOR_TODAY  940ms
+ ✓ src/__tests__/CalendarModule.eventcrud.test.tsx (10 tests) 9620ms
+   ✓ CalendarModule event CRUD integration (P4) > AC-CREATE-7: toolbar + opens create composer on today (not activeDate)  1524ms
+   ✓ CalendarModule event CRUD integration (P4) > AC-EDIT-4: clicking a user block in Week view opens edit composer  769ms
+   ✓ CalendarModule event CRUD integration (P4) > AC-QUICK-CREATE-1: clicking a month date opens day overview, then create composer for that date  2592ms
+   ✓ CalendarModule event CRUD integration (P4) > AC-QUICK-CREATE-1B: clicking a fixture chip still opens the day overview  675ms
+   ✓ CalendarModule event CRUD integration (P4) > AC-QUICK-CREATE-2: created event renders on its source date with tag  2422ms
+   ✓ CalendarModule event CRUD integration (P4) > AC-DELETE-2: deleting a month user event removes it from the date cell  659ms
+   ✓ CalendarModule event CRUD integration (P4) > AC-EDIT-5: clicking a user block in Day view opens edit composer  344ms
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > exports the latest unsaved form and refuses old-account retry and export
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > does not overwrite newer raw events when retrying a failed draft
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+ ✓ src/__tests__/CalendarModule.saveRecovery.test.tsx (4 tests) 11544ms
+   ✓ keeps a failed new event and its latest draft available for retry  4530ms
+   ✓ keeps the editor and record when deletion fails  872ms
+   ✓ exports the latest unsaved form and refuses old-account retry and export  4333ms
+   ✓ does not overwrite newer raw events when retrying a failed draft  1803ms
+ ✓ src/__tests__/CalendarModule.deeplink.test.tsx (7 tests) 2928ms
+   ✓ CalendarModule deep-link > AC-DEEPLINK-1: focusDate sets focusedDate (same month)  664ms
+   ✓ CalendarModule deep-link > AC-DEEPLINK-2: matching cell receives data-focused=true  346ms
+   ✓ CalendarModule deep-link > AC-DEEPLINK-3: click on < clears focusedDate  644ms
+   ✓ CalendarModule deep-link > AC-DEEPLINK-4: non-calendar moduleId is ignored  308ms
+   ✓ CalendarModule deep-link > AC-DEEPLINK-5: cross-month focusDate navigates displayedMonth  673ms
+ ✓ src/__tests__/CalendarModule.i18n.test.tsx (6 tests) 2438ms
+   ✓ CalendarModule i18n > AC-I18N-1: EN weekday header (Sun-first default) renders Sun..Sat  617ms
+   ✓ CalendarModule i18n > AC-I18N-2: ZH weekday header (Sun-first default) renders 周日..周六  331ms
+   ✓ CalendarModule i18n > AC-I18N-3: today button text — EN Today / ZH 今天  324ms
+   ✓ CalendarModule i18n > AC-I18N-5: holiday May 9 — EN 'Mother\'s Day' / ZH '母亲节'  325ms
+   ✓ CalendarModule i18n > AC-I18N-6: week tab renders WeekView (ComingSoonPanel removed in P2+ for Week tab)  577ms
+ ✓ src/__tests__/CalendarModule.dst-recurrence.test.tsx (2 tests) 2041ms
+   ✓ CalendarModule DST x recurrence integration (P4) > AC-DST-RECUR-1: daily 09:30 recurrence is stable across Mar 7/8/9 around spring-forward  1430ms
+   ✓ CalendarModule DST x recurrence integration (P4) > AC-DST-RECUR-2: weekly recurrence anchored on fall-back day appears on Nov 8 + Nov 15  610ms
+ ✓ src/__tests__/CalendarModule.activedate.test.tsx (5 tests) 2340ms
+   ✓ CalendarModule activeDate state refactor > AC-ACTIVEDATE-1: mounts and shows month title (external behavior preserved)  721ms
+   ✓ CalendarModule activeDate state refactor > AC-ACTIVEDATE-2: displayedMonth is derived from activeDate (May 2026 on mount)  384ms
+   ✓ CalendarModule activeDate state refactor > today reset button keeps activeDate on MAY_2026_ANCHOR_TODAY month  389ms
+   ✓ CalendarModule activeDate state refactor > prev/next month buttons update the displayed month (derived from activeDate)  645ms
+ ✓ src/__tests__/WeekView.test.tsx (14 tests) 2162ms
+   ✓ WeekView > AC-WEEK-1: renders 7 column labels in header  366ms
+ ✓ src/__tests__/CalendarModule.weekstart.test.tsx (4 tests) 1915ms
+   ✓ CalendarModule weekStart preference > AC-WEEKSTART-1: default Sun-first  542ms
+   ✓ CalendarModule weekStart preference > AC-WEEKSTART-2: setPref(1) re-renders Mon-first  322ms
+   ✓ CalendarModule weekStart preference > AC-WEEKSTART-3: flipping back to 0 restores Sun-first  461ms
+   ✓ CalendarModule weekStart preference > AC-WEEKSTART-4: toolbar settings can switch to Mon-first  590ms
+ ✓ src/__tests__/CalendarModule.events.test.tsx (6 tests) 1279ms
+   ✓ event-chip rendering > AC-EVENT-1: Day 1 → 4 chips (amber/blue/mint/mint)  456ms
+ ✓ src/__tests__/EventComposer.test.tsx (21 tests) 1220ms
+ ✓ src/__tests__/perfBudget.test.ts (1 test) 382ms
+   ✓ PB-EXT-1: view-toggle perf budget > p95 of 100 placeEventBlocks iterations < 50 ms (R4: retry once on flakiness)  381ms
+ ✓ src/__tests__/DayView.test.tsx (10 tests) 548ms
+ ✓ src/__tests__/TimeGrid.test.tsx (8 tests) 918ms
+   ✓ TimeGrid > AC-TIMEGRID-7: activeDate column gets data-active  301ms
+ ✓ src/__tests__/CalendarModule.boardfeed.test.tsx (3 tests) 1092ms
+   ✓ CalendarModule Board feed > BCF-MOD-1: absent xai_boards_v2 does not auto-seed Board cards  359ms
+   ✓ CalendarModule Board feed > BCF-MOD-2: Board card dueDate appears in Month view  491ms
+ ✓ src/__tests__/localDate.test.tsx (4 tests) 647ms
+   ✓ today action uses the new civil day after midnight without remounting  627ms
+ ✓ src/__tests__/eventStore.test.ts (13 tests) 46ms
+ ✓ src/__tests__/aiCreateSubscriber.test.tsx (5 tests) 43ms
+ ✓ src/__tests__/useUserCalEvents.test.tsx (8 tests) 48ms
+ ✓ src/__tests__/aiMutateSubscriber.test.tsx (6 tests) 166ms
+ ✓ src/__tests__/perfBudget.eventcrud.test.ts (1 test) 133ms
+ ✓ src/__tests__/events.test.ts (3 tests) 17ms
+ ✓ src/__tests__/placeEventBlocks.test.ts (12 tests) 6ms
+ ✓ src/__tests__/boardCalendarFeed.test.ts (6 tests) 37ms
+ ✓ src/__tests__/ids.test.ts (4 tests) 3ms
+ ✓ src/__tests__/monthGridCells.test.ts (9 tests) 19ms
+ ✓ src/__tests__/sampleEvents.test.ts (10 tests) 12ms
+ ✓ src/__tests__/expandRecurrence.test.ts (12 tests) 5ms
+ ✓ src/__tests__/mergeEventsForViewport.test.ts (10 tests) 33ms
+ ✓ src/__tests__/timeGridMath.test.ts (16 tests) 7ms
+ ✓ src/__tests__/weekWindow.test.ts (8 tests) 14ms
+ ✓ src/__tests__/parseDateKey.test.ts (15 tests) 10ms
+ ✓ src/__tests__/styles.css.tokens.test.ts (11 tests) 25ms
+ ✓ src/__tests__/validators.test.ts (11 tests) 47ms
+ ✓ src/__tests__/index-barrel.test.ts (9 tests) 3ms
+ ✓ src/__tests__/dateKeys.test.ts (7 tests) 3ms
+ ✓ src/__tests__/registration.test.tsx (2 tests) 7ms
+ ✓ src/__tests__/isoWeekNumber.test.ts (6 tests) 69ms
+ ✓ src/__tests__/formatMonth.test.ts (3 tests) 5ms
+ ✓ src/__tests__/holidays.test.ts (4 tests) 2ms
+ ✓ src/__tests__/registry-presence.test.ts (4 tests) 5ms
+ ✓ src/__tests__/weekdays.test.ts (3 tests) 2ms
+
+ Test Files  46 passed (46)
+      Tests  343 passed (343)
+   Start at  14:25:23
+   Duration  36.37s (transform 5.75s, setup 23.75s, collect 41.47s, tests 78.37s, environment 69.71s, prepare 9.63s)
+

@@ -1,0 +1,108 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh FULL independent whole MED correcting sourcecontract reviewer2 neverrepair",
+  "model": "gpt-6-astra",
+  "fixed_input": "7e57bb81594476e28727430b4fb9ed87dbdcfb2d",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "review_iteration": 2,
+    "review_cap": 3,
+    "static_pass": 1,
+    "prior_source_author_used": 2
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "MED-03/SOURCE-CONTRACT-REVIEW2",
+  "source_inputs": [
+    "5bc80abca8845b2ed0b2645fb616e73b2c156273",
+    "dc9f0046c431d1357d947884c282a53a6e257f30",
+    "5a8d7141d8e032ae08c56a7650cdf47597d717ff",
+    "30e0a903196db8b11c3f30cc02f173bfe2a4bffd",
+    "1e2d0ac42ecdc142c34291294fca09bce1f77dae",
+    "291a4175d9ea237451bec9fe87cd9fc6cc736de7"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-med03-source-contract-review-r2/review.md",
+    "docs/reviews/audit-parallel-med03-source-contract-review-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "Whole1307review/1216impact/803review2/737source2/688review1/649prep/full16MEDrows/all10logs13applicability/11original+23additionalconditionalpaths/18machinery. Rootadopted5a8impact+30e0fullreview conditionaltechnicalbasisONLY; exact sourcecontract/signatures/sourceavailabilityAPI/backwardoptionalcoerciblecodec/export5fieldproposalnotbackup/error2channels/resetREL10pref-only/lifecycle/schema/path resources allfiniteproposals needfreshWHOLEreview/rootadopt beforegrant. R1/R2/R3fulltext+canonicalClock§14 E1–25/E24ANDRules copiedverbatim. No autoplay/history/starttime/statistics or silentproductmeaning changes.",
+    "ActualpublicMEDroute-local vsPOMO persistent host/main startup managedSDK/localHTTP/scopedgeneration/tombstone/ownerqueues/deviceaux/consumertruth/firstframe/rawavailability/migration/currentliveprefvolume versus execution snapshot/oneended untilDismiss/nohistory/actualsourceexports+rawdiskmidowner/forcedloss/default-reset contradiction. Freeze exactpercase16-sourceemitter/mode/normalandactualfaultcontrols/fullbefore/fixed/integrated/affected/nativevisualtrustedkeys/consumer/G1/actualvendor/freshacceptance. Methods actualsourcecopies/loadconditions/config/transitivedeps/bootstraprootcapture/stdoutstderr/terminalquiescence/waits/causalreentrant acquisition actualcontrols mandatory no placeholderrefusingskeleton/sourcequalifiedclaim. Localbyte/rootcapture/retention3visual3M8unknownRELunknown/prodactivationholds explicit/no standardswaiver.",
+    "Permanentactualhistoricalpurpose/command/PID/mode/refusals/duplicates/probes/unknown budgets cap3 preserved, genuinelynewsourcecontractphasefromapprovedtechnicalbasis notoldauthorreset; fullqualifiedsource+indepreview/rootadoption/fullvalidP0before needed beforeimplementation. Exact allowed product/machinery candidates frozenFORPROPOSALONLY no newpathgrant.",
+    "Whole312originalfields/39original_module literalreversiblelabels/939/formal13,3,3,293 unchanged. Actualmodule normalizedweb213/app22/plugin16/sync41/admin16/site4; original_module retainsweb174+project-system30+crossmodule9, nonemptygateobligations150!=118differentgatepolicy. Dynamicexecution-state.tasksLIST/card notinitialregistry; P0runtime vsfourTTdocs separate. ALLinputs/BOTHbuffersbeforeANYwrite/static1actualcommand failurestopsnoretry/fullsessionexitdrain safeASCIIUnicodeescapes/correctUTF8 noMarkdownbacktickJSassembly. Allruntime tests build lint browser native qualification probes vendor0/nochildrenpush/exact2ADD.",
+    "WHOLE1697source1307review/1216impact/803/737/688/649 preserved; exact313900bytecontract281317bytemanifest/full16MEDrows/R1R2R3/11original+23candidatepaths/18roles/10logs/13applicability/87Resetregistryrows. Independentlyjudge actualreadonlyS-MED predicate/signatures/sourceavailability/migrationoptionalcoerciblecompat/error2channels/fivefieldproposalexport notbackup/firstframe/source refresh/accountscope lifecycle/audiofencing/noautoplay/oneended untilDismiss/nohistory/persistentPOMOvsroute-localMED/actualdiskmidownerforcedloss/REL10pref-onlyReset. 87registryrows actualfullsourceactionclassification NOT87grantedwritepaths: no broad reset/coordinator/schema/ownerpolicy grant. Everyadditionalcandidate scopefinite/necessary/fullimpactapproved, no fictitioushistory/starttime/listeningmetrics. CanonicalG1verbatim and alloldsourcefailures preserved. REVIEWERNEVERrepair; APPPROVEDwholeconditionaltechnicalproposal orpreciseREVISE only/no sourcequalified/implgrant.",
+    "Freshsourcequalification+fullvalidP0before/boundedindependentimpl/fullfixedintegratedaffectednativevisualtrustedkeys/G1/vendor/freshoriginalfullcalleraccept/rootappendinventory mandatory. MissingactualReactDOMSDKconsumed/config/forwarding/rootcapture/nativefocus localholds explicit no placeholderwaiver. Allpurposes actualcommandsPID/unknownexhaustedcap3/refusal/duplicates/probes unchanged. Review1/3/static1 allruntime0; ALLinputsBOTHbuffersbeforewrites/safeASCIIUnicodeescapesUTF8/pretool!=checkeractualfailurefreeze/no retry/FULLsessionexitdrain. Actualmodule normalizedvsoriginal_module39labels/nonemptygate150not118differentpolicy/dynamicstate.tasksLIST/card/fourTTdocs vsP0 notwholepackageassert.",
+    "Wholecorrected2133 + original2069/1697/1307/1216/803/737/688/649/full16rows/11+23paths/18roles/87registry/7events/10logs13comparisons. Independently review ALL contract, not only SC-R1-R3: mutation versus rawsession/mount/exports; throwing coercion invalid version rawbytes and backwardcodec; actual7event order/recipients/Appearance/historicalutility/fourwithoutremove; Reset87rows classification not pathgrant; no MEDhistory/autoplay decisions invented. Outerimpact2BLOCKED UNADOPTED, bytecollection/review3exhausted, no sourcegrant. CurrentBRDauthor3FAILED exhausted, CDfullreview3REVISE exhausted no automaticcorrector. CorrectDASH source633 and review649 distinct artifacts. ALLinputs and BOTH buffers before writes; no headline/minsize/P0auditdoc equality guards; actualPython failures count attempts, no retry/materialization/amend. Compact JSON-fed safe transport; record actual exit/PID/session/drain. Review2/3 static1 allruntime0."
+  ],
+  "original_item": {
+    "id": "MED-03",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "定义冥想历史记录、离开修正和重新播放规则",
+    "acceptance": "是否计入离开时长、是否续播和实际记录字段有可测试合同",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "MED-03",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:MED-03"
+    ],
+    "source_section": "MED",
+    "acceptance_evidence": {
+      "business_acceptance": "是否计入离开时长、是否续播和实际记录字段有可测试合同",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "MED-03/prepare",
+      "MED-03/contract-review",
+      "MED-03/before",
+      "MED-03/implement",
+      "MED-03/verify",
+      "MED-03/accept",
+      "MED-03/reconcile",
+      "MED-03/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  }
+}

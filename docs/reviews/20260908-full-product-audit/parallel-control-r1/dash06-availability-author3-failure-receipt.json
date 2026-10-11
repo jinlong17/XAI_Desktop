@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "DASH-06/SOURCE-AVAILABILITY-CONTRACT3",
+  "fixed_parent": "62fde14c9a63d37edf66714ba63dcf6a7975870c",
+  "fixed_input": "bf08ae70f2e51a679cc5f87f0880435c601cdbc8",
+  "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-availability-final3-20261010/XAI_Desktop",
+  "source_commit": null,
+  "outputs": [],
+  "static_command_launches": 1,
+  "static_result": "FAILED_ASSERTION_AFTER8705HASHES_LATER_UNRUN",
+  "chunks": [
+    "088b1a",
+    "584c17"
+  ],
+  "session_id": 42817,
+  "no_retry": true,
+  "worktree_clean": true,
+  "costs": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "actual_billed_usd": null
+  },
+  "exit_code": 1,
+  "hashes_checked": 8705,
+  "failed_assertion": "stdin151 nonempty gate_obligations list count assumed118; not established product drift",
+  "unrun": "execution-evidence/readiness/product-delta/canonical/census/buffers/ALLwrites",
+  "author_iteration": 3,
+  "author_cap": 3,
+  "no_author4": true
+}

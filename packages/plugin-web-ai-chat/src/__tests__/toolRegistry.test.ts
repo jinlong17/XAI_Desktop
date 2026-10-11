@@ -96,6 +96,17 @@ describe("TR-5: toWriteEvent produces correct channel + payload", () => {
     expect(result.payload["startTime"]).toBe("09:30");
     expect(result.payload["durationMin"]).toBe(30);
   });
+
+  it("preserves explicit malformed calendar create input for subscriber validation", () => {
+    const tool = findTool("create_calendar_event")!;
+    const result = tool.toWriteEvent(
+      { title: "Standup", date: "bad", startTime: "09:00", durationMin: "bad" },
+      "toolu_calendar_invalid",
+    );
+    expect(result.payload["date"]).toBe("bad");
+    expect(result.payload["durationMin"]).toBe("bad");
+    expect(tool.toConfirmation({ title: "Standup", date: "bad", startTime: "09:00", durationMin: "bad" }).description).toContain("bad");
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -241,6 +252,14 @@ describe("TR-UPD-TOOL-3: update_calendar_event toWriteEvent — only provided fi
     expect(patch["date"]).toBeUndefined();
     expect(patch["startTime"]).toBeUndefined();
     expect(patch["durationMin"]).toBeUndefined();
+  });
+
+  it("preserves explicit malformed update fields for subscriber validation", () => {
+    const tool = findTool("update_calendar_event")!;
+    const result = tool.toWriteEvent({ id: "ev-xyz", title: "Changed", date: "bad", durationMin: 7.5 }, "toolu_upd_cal_invalid");
+    const patch = result.payload["patch"] as Record<string, unknown>;
+    expect(patch).toEqual({ title: "Changed", date: "bad", durationMin: 7.5 });
+    expect(tool.toConfirmation({ id: "ev-xyz", title: "Changed", date: "bad", durationMin: 7.5 }).description).toContain("7.5 min");
   });
 
   it("date + startTime → patch has date + startTime; no title or durationMin", () => {

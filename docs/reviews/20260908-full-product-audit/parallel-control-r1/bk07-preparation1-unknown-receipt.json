@@ -1,0 +1,28 @@
+{
+  "task": "BK-07/PREPARE",
+  "actor": "/root/parallel_c_bk07_prepare_r1",
+  "parent": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641",
+  "fixed_input": "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "result": "UNKNOWN",
+  "exact_failure": "Sole static command launched1s yield; actor forwarded only output and dropped session ID/completion metadata. Returned no text. Later actor inspection saw no Python/cat-file process/no outputdir/cleanHEAD. No PASS or specific assertion failure established; no rerun. Full unwritten draft command isnot artifact.",
+  "cost": {
+    "preparation_iteration": 1,
+    "preparation_cap": 3,
+    "static_attempted": 1,
+    "static_completion": "UNKNOWN",
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0
+  },
+  "discovery": "No existingcarryforward/closedperiod/legacyscalarallocation ownerpolicyfound inunadoptedpreparation; actualglobalbudget/category/monthfiltergap hypotheses remainunverified. Two pathmisses/truncatedreads/optionalnomatch; exactoriginalgoalattachment notread beforeattempt, parentreadclarificationarrivedafterlaunch.",
+  "root_verification": "Clean parent/absent outputs metadataonly; cannotrecoverexit/claimfailedassertion or PASS; cumulativeprep1/static1consumed"
+}

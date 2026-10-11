@@ -1,0 +1,573 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+package_trees packages/xai-web-dashboard-widgets=4d65ad167b0d3712166e96569b1d9f44ed66a500 packages/xai-web-dashboard-grid=8e96464cae57ba35a7f1a4c39c9b0a8f9df64509 packages/plugin-web-storage=782c79de33a1da6851b5a235950408eb7ae89f99 packages/xai-web-shell=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 apps/web=61ddf71751eaa9f1a456897ecb7fbe23e708be4b
+mode=departure
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-dashboard-clock-recovery-sol/verify-fixed.mjs f9eb4b1 all before1
+runner_checkout_head=40f07b23fa3a92a221af9dff86617bd69da2be23 product_tree_delta_files_vs_runner_head=0
+archive_method=stream (spawned git archive piped into tar -x; no fixed buffer) archive_bytes=148408320 archive_sha256=bb468cede8a9659d9798bdb4c7f0a528faedf3ddfb344fb946f159ce6305a097
+contract_r2_sha256=214dc7582ff866cf76482b8883cc284edba8fa180f88bbf940fcaa7ab32cf0ae
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-widgets/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=589d065cb314928e29082a30aa861d288af7823aacbf1c91b6f944b4811bac00 bytes.test.tsx=996dd32e0ee034ac2d57bcd86b48dfe803290431b0ef8503d8232a730e8c5215 fields.test.tsx=4c6af5f6a41cae2c1a54c4771b7fdea7a705668d5dae0f316d0d5a8837258cef queues.test.tsx=a2be7088a07278a85f5a3b74c091ec7346f34ffb563f7b0e570baad9de9cb850 departure.test.tsx=613d0a8b97ca943425eb4614ca0eb351dab71dd24705e04cf9248acb66f42ecc continuity-export.test.tsx=17d021a2a4873c788f2586d20bf2931a70b9c06e5417e0940704e64701513135 verify-fixed.mjs=8b2c95c2a29763d2a5d11aaa9d22c8ebf6782b3275b79d2a1901e1486ac80d20
+archive_file_sha256 packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx=10bf13e8550bdf1207cfd89b372e5b87f099b1110326248dbf5b7ea2325614e9 packages/xai-web-dashboard-widgets/src/registrations.tsx=346cfddfbb3c299aff251b2e4daff31b909d0690196857c36b8ee71f6e015154 packages/xai-web-dashboard-widgets/src/styles.css=a7a4cf039b343b8c6b06113bf6b6997084524aa4c0413e2ab0396a1ca933a853 packages/xai-web-dashboard-widgets/src/internal/cityLibrary.ts=50de913a73caaef2ea98c7021fec24dd46a30d56177527ddda54db89bcb36f48 packages/xai-web-dashboard-widgets/src/internal/Icon.tsx=afd71c525472e5ba9087cfcfe78b6b801767bff34f61c7a73b59a6cdd5b26985 packages/xai-web-dashboard-widgets/src/index.ts=1e22d6b74d4f22655e273415798edd1c255b5af9a108f2a99822299ac8031b0b packages/xai-web-dashboard-grid/src/DashboardModule.tsx=36a8532beb638a5741d3b51338a2ce32da9daa220e1a461cd00729da61e542a2 packages/xai-web-dashboard-grid/src/DashboardGrid.tsx=395a134c9c1c3044ed86afdb48839373a7ba80ff57a387177dd277d76098fc2f packages/xai-web-dashboard-grid/src/types.ts=afeb1112713155f8998ca13cc9dbfc174025c98497148ab21cd4f015201e40f2 packages/xai-web-dashboard-grid/src/index.ts=fc5da5907da4de81a327736297ef2ae377a7cf3e589fb3c121475229f9acf71c packages/xai-web-dashboard-grid/src/DashHeader.tsx=0aaa4ce3b456b1fedf3c4bb3f7163830e6ee7390ba65382564d9c13852e40456 packages/xai-web-dashboard-grid/src/WidgetGhost.tsx=0b476928649a3b24bd35d97869c0b1e9e4588ebdec4908b6ef8c5583d0272c9b packages/xai-web-dashboard-grid/src/WidgetShell.tsx=7d1b74b80076983eb5cc34921d06d58b5365cbcf91efb63128a6c7938b1bd708 packages/xai-web-dashboard-grid/src/styles.css=d9e330e70a375b0579fcf3b98e3d9ea2c633fc4b498b4b3a66fda3df8db9fdc6 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 apps/web/src/routes/modules/dashboardRegistration.tsx=66c524e4e02117275ed369c02049f33a0eb2c42ad068388eb4041fa469c903e8 apps/web/src/routes/modules/settingsDeparture.ts=80c3a5787df8eb02102c4a508f2fe67c1fbd6a6b8ba7f16b3a65c3f542c8548b apps/web/src/routes/modules/shellRegistrations.tsx=c003c499ca3330ff6e3b7e738df4e3366d0daca141d65327dacc3d3665e1b8fe apps/web/src/main.tsx=6a7cdfbc6b17cdc13a3dbcb44611b09c33ddf7c7787da4a6ed31265e4abbf243 apps/web/src/providers/AccountStorageGate.tsx=1c6bf8c695e9bc8b80b83c6da0c3c55c44e9a88498dded1b8dd46f302d8cb666 apps/web/src/providers/AppProviders.tsx=950cde0f7f6ba7cae9776a8e8442a303f938d5bb04d389dd1ac9760e10ebe655 apps/web/src/App.tsx=f644e78ec482c0b9b66f9702407eb34e1dcd110e837293e4a736964bfe7ac408 packages/xai-web-shell/src/AppRail.tsx=fe789078fecc60936d3e6c5fc2b203001a15490aecf30f3a0ca301da1399fb44 packages/xai-web-shell/src/Topbar.tsx=aa5ac56e7b6a7652df70e82ed4d83dc81b44558181bfb48a30eb40b157d43c0e packages/xai-web-shell/src/Shell.tsx=38e25c6b20f6413c9362f53e9be7e2aa121001170898a6097e29fccabf22e432 packages/xai-web-shell/src/types.ts=d18f637e9bec8c05f305fb29467acfd3fdcf2649e83ad2b28b877389752139c0 packages/xai-web-shell/src/index.ts=396a894d09b5b2b95f2ed063b615b41f371044f356d4d2ef9f224189e09b66ab packages/xai-web-shell/src/internal/railOrderController.tsx=d7f2f0b699e087c34d453309d9fe4c0eb6ba38ef52e6dfc70fe49d2f75c4e2a6 packages/xai-web-shell/src/internal/RailOrderStatus.tsx=48b611ff1e2efbc96a888fd87f048925472702db898530cbf21f5df560ecff95 packages/xai-web-shell/src/internal/railOrderCopy.ts=268fb934f921843efd1c3e41cd9a81614ce26b3a94026e5884e10d633a05d7ba packages/xai-web-shell/src/railOrderStatus.css=338f0eae7338458da54b996880cfa93034940e0f19220a1669c1570a8fd4b6e5 packages/xai-web-shell/src/AvatarMenu.tsx=3401b838a2dc5a16d1c6f1113a2aaf1ef6d8673897029bb2a1614db8c379c4c2 packages/xai-web-settings-appearance/src/internal/appearanceController.tsx=64d6c8b74f689bc989bc8d1bcfa85bb333b068826829269f1e31d97cd2878e5a packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts=991232e97e44919c1b00b5502a62df05d814de3ccc34ed4452104ad59b54dab0 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-storage/src/internal/accountOwnership.ts=8d5b7fef04a014044b81cb95d56eaf084bfc306d7c8b9a27540b6caa3a2bef20 packages/plugin-web-storage/src/internal/accountCoordination.ts=d669fe47d22f6d9f4b5c56b24ca60eb68dee9fc6877de4901d328ffdd7e50e1c packages/plugin-web-storage/src/internal/codec.ts=99a735801cab8ce9d7208c244efb8eda66dd641cf5c7d795302384207c6b9b8f packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts=f292de4ec2e44d0fe75dde836fb360cfc2c292ceeaa47b2c107036765cd5b922 packages/xai-web-cmdk/src/internal/readModuleStates.ts=1ee898681af67b21bd84308bef99abf196ab8551069d53c8e570a9ec9e0ba008 packages/xai-web-cmdk/src/adapters/dashboard.ts=0c8e6ac9cfbcffd6a52e3f21cd5a09b077d03bd0539798ebcbc626776b64b1eb packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 packages/plugin-web-tokens/src/tokens.css=7c6eddebd1d826f939862ef75ba8159e966f0c76b0b9d34a0911f6b47265615d packages/plugin-web-tokens/src/i18n.ts=d5f2189b081d16a9f26b7146978c5f81660a6a44d6f534b9ac48e6e3c7ccb885 packages/xai-web-pet/src/DesktopPet.tsx=35edb0e686bf6682192ba1bbe7842d159e161a6593b7ccd13a432d59fe58ad6f
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] departure.test.tsx: include=docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/clock-sol-departure-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.report-departure-0.json vitest_exit=1 cases=24 passed=6 failed=18 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=24 numPassedTests=6 numFailedTests=18
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] departure.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu
+
+stdout | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D1 Header-only equivalence: an AppRail click is held under "Dashboard header"; dialog Export downloads the Header file once; dialog Discard proceeds once 289ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D1 Header-only equivalence: a successful Header Retry auto-releases the held AppRail click exactly once 209ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D1 Header-only equivalence: sign-out with a failed Header save is held under "Dashboard header"; Stay resolves false; zero confirms 151ms
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D2 H5 §7.3 a failed Clock choice holds programmatic navigation under "Clock"; dialog Export exports the Clock draft; Stay keeps everything; dialog Discard writes nothing and navigates once 91ms
+   → H5 §7.3 programmatic navigation is held while the Clock has a failed draft: expected false to be true // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D2 H5 §7.3 ZH: a failed Clock timezone choice holds an AppRail click under "时钟" 86ms
+   → H5 the AppRail click is held: expected false to be true // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D2 H5 §7.3 row f: a failed Clock choice holds the Mini Calendar goTo; Stay keeps the Dashboard; Discard navigates once 76ms
+   → H5 the widget goTo is held: expected false to be true // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D3 H5 §6.8 a pending write behind the real lock holds an AppRail click; dialog Export exports the pending draft; on release exactly one write and one auto-release 68ms
+   → H3 the held per-key lock keeps the bytes unchanged: expected 'analog' to be 'classic' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D3 §5.8 a write in flight when dialog Discard runs may commit the latest choice; nothing throws and no rejection is left 66ms
+   → H3 the held per-key lock keeps the bytes unchanged: expected 'analog' to be 'classic' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D4 H5 §7.3 a failed Clock choice holds Back (POP); a successful Retry releases it exactly once 83ms
+   → H5 Back is held: expected false to be true // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D4 H5 §7.3 a failed Clock choice holds Forward (POP); a successful Retry releases it exactly once 83ms
+   → H5 Forward is held: expected false to be true // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D5 H5 §7.5 sign-out with a Clock draft is held: Stay resolves false with zero history mutations; Discard resolves true with zero writes and no router commit 81ms
+   → H5 §7.5 the sign-out request is held: expected true to be 'pending' // Object.is equality
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D5 rule 12 recorder (positive control): with a Clock draft and no App steps, every sign-out path records zero window.confirm calls of every class 102ms
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D6 H6 k1: a failed Header save and a failed Clock choice hold an AppRail click under "Dashboard"; dialog Export exports both once; dialog Discard discards both and navigates once 148ms
+   → H6 §6.6 two blocking participants are labelled "Dashboard": expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D6 H6 k2: a Clock Retry success keeps the hold under "Dashboard header"; a Header Retry success then releases it once 159ms
+   → H6 the combined label: expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D6 H6 ZH: the combined label is "工作台" 131ms
+   → H6 the ZH combined label: expected { open: true, …(2) } to strictly equal { open: true, aria: '未保存的工作台草稿', …(1) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D7 §6.2–§6.6 the widget render context carries one stable registration; the combined guard follows the participant set, labels, order, isCurrent/isBlocking and identity-based unregister 24ms
+   → §5/§6.3 the widget render context carries registerDepartureGuard: expected null not to be null
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D8 §7.7 the drag ghost is inert: zero writes and no participant registration over the drag; the source keeps its draft and its hold 59ms
+   → H1 §7.7 the source keeps its failed-draft block after the drop: expected { present: false, …(5) } to strictly equal { present: true, notSaved: true, …(4) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D9 §7.6 A7 removing the Clock widget discards its drafts with zero Clock writes, unregisters the participant and removes the unload warning 35ms
+   → §6.7 the failed Clock draft blocks before removal: expected { blocking: false, …(1) } to strictly equal { blocking: true, label: 'Clock' }
+stdout | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D10 §6.7 ticks (positive control): over three ticks with no edits, and again with a failed choice present, zero registrations and zero Clock-key storage attempts
+SOL-OBS D10 registrations {"clean":3,"drafted":3,"total":3}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D10 §6.7 ticks (positive control): over three ticks with no edits, and again with a failed choice present, zero registrations and zero Clock-key storage attempts 6674ms
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D11 a standalone DashboardModule without a registration: the Clock records and recovers with no participation and no throw 53ms
+   → H2 §6.1 the Clock records its failure without a coordinator: expected { present: false, …(5) } to strictly equal { present: true, notSaved: true, …(4) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D12 §7.4 beforeunload warns only while a Clock draft exists (pending or settled), with zero storage attempts in the handler; not when clean; not after Discard or unmount 40ms
+   → H5 §7.4 a pending draft warns, with zero storage attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D13 §6.1 inside <StrictMode>: a failed Clock choice holds an AppRail click under "Clock" and dialog Discard navigates once (D2) 107ms
+   → §6.1 the aggregator survives the StrictMode effect re-run: held: expected false to be true // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D13 §6.1 inside <StrictMode>: the combined Header and Clock hold is labelled "Dashboard" and dialog Export exports both once (D6) 171ms
+   → §6.1 H6 the combined label inside StrictMode: expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+
+ Test Files  1 failed (1)
+      Tests  18 failed | 6 passed (24)
+   Start at  09:32:23
+   Duration  12.00s (transform 1.82s, setup 186ms, collect 2.43s, tests 8.99s, environment 187ms, prepare 47ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.report-departure-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D2 H5 §7.3 a failed Clock choice holds programmatic navigation under "Clock"; dialog Export exports the Clock draft; Stay keeps everything; dialog Discard writes nothing and navigates once
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D2 H5 §7.3 ZH: a failed Clock timezone choice holds an AppRail click under "时钟"
+[plugin-web-storage] quota exceeded for xai_clock_tz.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D2 H5 §7.3 row f: a failed Clock choice holds the Mini Calendar goTo; Stay keeps the Dashboard; Discard navigates once
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D4 H5 §7.3 a failed Clock choice holds Back (POP); a successful Retry releases it exactly once
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D4 H5 §7.3 a failed Clock choice holds Forward (POP); a successful Retry releases it exactly once
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D5 H5 §7.5 sign-out with a Clock draft is held: Stay resolves false with zero history mutations; Discard resolves true with zero writes and no router commit
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D5 rule 12 recorder (positive control): with a Clock draft and no App steps, every sign-out path records zero window.confirm calls of every class
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D6 H6 k1: a failed Header save and a failed Clock choice hold an AppRail click under "Dashboard"; dialog Export exports both once; dialog Discard discards both and navigates once
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D6 H6 k2: a Clock Retry success keeps the hold under "Dashboard header"; a Header Retry success then releases it once
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D6 H6 ZH: the combined label is "工作台"
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D8 §7.7 the drag ghost is inert: zero writes and no participant registration over the drag; the source keeps its draft and its hold
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D9 §7.6 A7 removing the Clock widget discards its drafts with zero Clock writes, unregisters the participant and removes the unload warning
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D10 §6.7 ticks (positive control): over three ticks with no edits, and again with a failed choice present, zero registrations and zero Clock-key storage attempts
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D11 a standalone DashboardModule without a registration: the Clock records and recovers with no participation and no throw
+[plugin-web-storage] quota exceeded for xai_clock_tz.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D13 §6.1 inside <StrictMode>: a failed Clock choice holds an AppRail click under "Clock" and dialog Discard navigates once (D2)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D13 §6.1 inside <StrictMode>: the combined Header and Clock hold is labelled "Dashboard" and dialog Export exports both once (D6)
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 18 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D2 H5 §7.3 a failed Clock choice holds programmatic navigation under "Clock"; dialog Export exports the Clock draft; Stay keeps everything; dialog Discard writes nothing and navigates once
+AssertionError: H5 §7.3 programmatic navigation is held while the Clock has a failed draft: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:138:99
+    136|   await flush();
+    137|   census("held");
+    138|   expect(held(app), "H5 §7.3 programmatic navigation is held while the…
+       |                                                                                                   ^
+    139|   expect(dialogState(), "§5 the dialog names the Clock").toStrictEqual…
+    140|   const harness = download();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D2 H5 §7.3 ZH: a failed Clock timezone choice holds an AppRail click under "时钟"
+AssertionError: H5 the AppRail click is held: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:172:53
+    170|   await flush();
+    171|   census("held");
+    172|   expect(held(app), "H5 the AppRail click is held").toBe(true);
+       |                                                     ^
+    173|   expect(dialogState(), "§5 the ZH dialog names 时钟").toStrictEqual(dia…
+    174|   expectQuiet("D2 zh");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D2 H5 §7.3 row f: a failed Clock choice holds the Mini Calendar goTo; Stay keeps the Dashboard; Discard navigates once
+AssertionError: H5 the widget goTo is held: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:185:51
+    183|   fireEvent.click(jump);
+    184|   await flush();
+    185|   expect(held(app), "H5 the widget goTo is held").toBe(true);
+       |                                                   ^
+    186|   expect(dialogState()).toStrictEqual(dialogFor(W.en.participant));
+    187|   click(need(dialogButton(W.en.stay), "Stay"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D3 H5 §6.8 a pending write behind the real lock holds an AppRail click; dialog Export exports the pending draft; on release exactly one write and one auto-release
+AssertionError: H3 the held per-key lock keeps the bytes unchanged: expected 'analog' to be 'classic' // Object.is equality
+
+Expected: "classic"
+Received: "analog"
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:208:80
+    206|   choose("style", "analog");
+    207|   await flush();
+    208|   expect(bytes("style"), "H3 the held per-key lock keeps the bytes unc…
+       |                                                                                ^
+    209|   expect(blockState("style"), "matrix row 2: pending shows no block").…
+    210|   expect(exportButton(), "matrix row 1: no inline Export for pending-o…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D3 §5.8 a write in flight when dialog Discard runs may commit the latest choice; nothing throws and no rejection is left
+AssertionError: H3 the held per-key lock keeps the bytes unchanged: expected 'analog' to be 'classic' // Object.is equality
+
+Expected: "classic"
+Received: "analog"
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:234:80
+    232|   choose("style", "analog");
+    233|   await flush();
+    234|   expect(bytes("style"), "H3 the held per-key lock keeps the bytes unc…
+       |                                                                                ^
+    235|   const from = app.locations.length;
+    236|   clickRail("tasks");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D4 H5 §7.3 a failed Clock choice holds Back (POP); a successful Retry releases it exactly once
+AssertionError: H5 Back is held: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:260:50
+    258|     await act(async () => { await app.router.navigate(direction === "B…
+    259|     await flush();
+    260|     expect(held(app), `H5 ${direction} is held`).toBe(true);
+       |                                                  ^
+    261|     expect(dialogState()).toStrictEqual(dialogFor(W.en.participant));
+    262|     injected.off();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D4 H5 §7.3 a failed Clock choice holds Forward (POP); a successful Retry releases it exactly once
+AssertionError: H5 Forward is held: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:260:50
+    258|     await act(async () => { await app.router.navigate(direction === "B…
+    259|     await flush();
+    260|     expect(held(app), `H5 ${direction} is held`).toBe(true);
+       |                                                  ^
+    261|     expect(dialogState()).toStrictEqual(dialogFor(W.en.participant));
+    262|     injected.off();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D5 H5 §7.5 sign-out with a Clock draft is held: Stay resolves false with zero history mutations; Discard resolves true with zero writes and no router commit
+AssertionError: H5 §7.5 the sign-out request is held: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:283:57
+    281|   await act(async () => { void requestSettingsDeparture("sign-out").th…
+    282|   await flush();
+    283|   expect(first, "H5 §7.5 the sign-out request is held").toBe("pending"…
+       |                                                         ^
+    284|   expect(dialogState()).toStrictEqual(dialogFor(W.en.participant));
+    285|   click(need(dialogButton(W.en.stay), "Stay"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D6 H6 k1: a failed Header save and a failed Clock choice hold an AppRail click under "Dashboard"; dialog Export exports both once; dialog Discard discards both and navigates once
+AssertionError: H6 §6.6 two blocking participants are labelled "Dashboard": expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+
+- Expected
++ Received
+
+  {
+-   "aria": "Unsaved Dashboard draft",
++   "aria": "Unsaved Dashboard header draft",
+    "open": true,
+-   "text": "Dashboard has unsaved changes.",
++   "text": "Dashboard header has unsaved changes.",
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:334:89
+    332|   census("held");
+    333|   expect(held(app), "held").toBe(true);
+    334|   expect(dialogState(), "H6 §6.6 two blocking participants are labelle…
+       |                                                                                         ^
+    335|   const harness = download();
+    336|   click(need(dialogButton(W.en.dialogExport), "dialog Export"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D6 H6 k2: a Clock Retry success keeps the hold under "Dashboard header"; a Header Retry success then releases it once
+AssertionError: H6 the combined label: expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+
+- Expected
++ Received
+
+  {
+-   "aria": "Unsaved Dashboard draft",
++   "aria": "Unsaved Dashboard header draft",
+    "open": true,
+-   "text": "Dashboard has unsaved changes.",
++   "text": "Dashboard header has unsaved changes.",
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:356:50
+    354|   clickRail("tasks");
+    355|   await flush();
+    356|   expect(dialogState(), "H6 the combined label").toStrictEqual(dialogF…
+       |                                                  ^
+    357|   clockQuota.off();
+    358|   click(need(action("style", "retry"), "§5.5 Retry Clock style"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D6 H6 ZH: the combined label is "工作台"
+AssertionError: H6 the ZH combined label: expected { open: true, …(2) } to strictly equal { open: true, aria: '未保存的工作台草稿', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "aria": "未保存的工作台草稿",
++   "aria": "未保存的工作台备注草稿",
+    "open": true,
+-   "text": "工作台有未保存的更改。",
++   "text": "工作台备注有未保存的更改。",
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:377:53
+    375|   await flush();
+    376|   expect(held(app)).toBe(true);
+    377|   expect(dialogState(), "H6 the ZH combined label").toStrictEqual(dial…
+       |                                                     ^
+    378|   expectQuiet("D6 zh");
+    379| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D7 §6.2–§6.6 the widget render context carries one stable registration; the combined guard follows the participant set, labels, order, isCurrent/isBlocking and identity-based unregister
+AssertionError: §5/§6.3 the widget render context carries registerDepartureGuard: expected null not to be null
+ ❯ need docs/reviews/web-dashboard-clock-recovery-sol/fixture.tsx:55:38
+     53| /** Business presence assertion: fails as a product failure (not a pre…
+     54| export function need<T>(value: T | null | undefined, message: string):…
+     55|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     56|   return value as T;
+     57| }
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:405:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D8 §7.7 the drag ghost is inert: zero writes and no participant registration over the drag; the source keeps its draft and its hold
+AssertionError: H1 §7.7 the source keeps its failed-draft block after the drop: expected { present: false, …(5) } to strictly equal { present: true, notSaved: true, …(4) }
+
+- Expected
++ Received
+
+  {
+-   "discard": true,
+-   "notSaved": true,
+-   "present": true,
++   "discard": false,
++   "notSaved": false,
++   "present": false,
+    "reload": false,
+-   "retry": true,
++   "retry": false,
+    "source": false,
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:467:97
+    465|   expect(writes(from), "§7.7 zero set/remove attempts over the drag").…
+    466|   expect(record.calls.length, "§7.7 the ghost registers no participant…
+    467|   expect(blockState("style"), "H1 §7.7 the source keeps its failed-dra…
+       |                                                                                                 ^
+    468|   expect({ blocking: record.blocking(), label: record.label() }, "§7.7…
+    469|   expectQuiet("D8");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D9 §7.6 A7 removing the Clock widget discards its drafts with zero Clock writes, unregisters the participant and removes the unload warning
+AssertionError: §6.7 the failed Clock draft blocks before removal: expected { blocking: false, …(1) } to strictly equal { blocking: true, label: 'Clock' }
+
+- Expected
++ Received
+
+  {
+-   "blocking": true,
+-   "label": "Clock",
++   "blocking": false,
++   "label": "Dashboard header",
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:477:119
+    475|   await mountModule({ record });
+    476|   await failChoice("style", "analog");
+    477|   expect({ blocking: record.blocking(), label: record.label() }, "§6.7…
+       |                                                                                                                       ^
+    478|   const remove = clockShell().querySelector<HTMLElement>(".widget-shel…
+    479|   pre(remove, "the Clock widget's remove button is present");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D11 a standalone DashboardModule without a registration: the Clock records and recovers with no participation and no throw
+AssertionError: H2 §6.1 the Clock records its failure without a coordinator: expected { present: false, …(5) } to strictly equal { present: true, notSaved: true, …(4) }
+
+- Expected
++ Received
+
+  {
+-   "discard": true,
+-   "notSaved": true,
+-   "present": true,
++   "discard": false,
++   "notSaved": false,
++   "present": false,
+    "reload": false,
+-   "retry": true,
++   "retry": false,
+    "source": false,
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:520:97
+    518|   await mountModule();
+    519|   const injected = await failChoice("timezone", "dubai");
+    520|   expect(blockState("timezone"), "H2 §6.1 the Clock records its failur…
+       |                                                                                                 ^
+    521|   injected.off();
+    522|   click(need(action("timezone", "retry"), "§5.5 Retry Clock timezone")…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D12 §7.4 beforeunload warns only while a Clock draft exists (pending or settled), with zero storage attempts in the handler; not when clean; not after Discard or unmount
+AssertionError: H5 §7.4 a pending draft warns, with zero storage attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+
+- Expected
++ Received
+
+  {
+    "attempts": 0,
+-   "warned": true,
++   "warned": false,
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:536:95
+    534|   await flush();
+    535|   const pending = unload();
+    536|   expect(pending, "H5 §7.4 a pending draft warns, with zero storage at…
+       |                                                                                               ^
+    537|   await lock.release();
+    538|   expect(warns(), "no warning after the success").toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D13 §6.1 inside <StrictMode>: a failed Clock choice holds an AppRail click under "Clock" and dialog Discard navigates once (D2)
+AssertionError: §6.1 the aggregator survives the StrictMode effect re-run: held: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:562:88
+    560|   clickRail("tasks");
+    561|   await flush();
+    562|   expect(held(app), "§6.1 the aggregator survives the StrictMode effec…
+       |                                                                                        ^
+    563|   expect(dialogState()).toStrictEqual(dialogFor(W.en.participant));
+    564|   click(need(dialogButton(W.en.dialogDiscard), "dialog Discard"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/18]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx > D13 §6.1 inside <StrictMode>: the combined Header and Clock hold is labelled "Dashboard" and dialog Export exports both once (D6)
+AssertionError: §6.1 H6 the combined label inside StrictMode: expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+
+- Expected
++ Received
+
+  {
+-   "aria": "Unsaved Dashboard draft",
++   "aria": "Unsaved Dashboard header draft",
+    "open": true,
+-   "text": "Dashboard has unsaved changes.",
++   "text": "Dashboard header has unsaved changes.",
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx:577:73
+    575|   clickRail("tasks");
+    576|   await flush();
+    577|   expect(dialogState(), "§6.1 H6 the combined label inside StrictMode"…
+       |                                                                         ^
+    578|   const harness = download();
+    579|   click(need(dialogButton(W.en.dialogExport), "dialog Export"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/18]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.clock-sol-vite-cache-departure-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/packages/xai-web-dashboard-grid/src/__tests__/setup.ts"],"include":["docs/reviews/web-dashboard-clock-recovery-sol/departure.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx packages/xai-web-dashboard-widgets/src/registrations.tsx packages/xai-web-dashboard-widgets/src/internal/cityLibrary.ts packages/xai-web-dashboard-grid/src/DashboardModule.tsx packages/xai-web-dashboard-grid/src/DashboardGrid.tsx packages/xai-web-dashboard-grid/src/DashHeader.tsx packages/xai-web-dashboard-grid/src/WidgetShell.tsx packages/xai-web-dashboard-grid/src/WidgetGhost.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts packages/plugin-web-storage/src/internal/registry.ts apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/routes/modules/dashboardRegistration.tsx apps/web/src/routes/modules/settingsDeparture.ts apps/web/src/routes/modules/shellRegistrations.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-event-bus/src/emitter.ts
+pin_modules=571 by package: apps/web=7 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=21 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-dashboard-grid=21 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=14 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=24 passed=6 failed=18 skipped=0 precondition_failures=0
+harness PASS [departure.test.tsx] JSON report parsed
+harness PASS [departure.test.tsx] reported files equal the requested include
+harness PASS [departure.test.tsx] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-dashboard-grid/src/__tests__/setup.ts], root = archive)
+harness PASS [departure.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [departure.test.tsx] required product modules loaded from the archive (23)
+harness PASS [departure.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 PASSED | D1 Header-only equivalence: an AppRail click is held under "Dashboard header"; dialog Export downloads the Header file once; dialog Discard proceeds once
+case 003 PASSED | D1 Header-only equivalence: a successful Header Retry auto-releases the held AppRail click exactly once
+case 004 PASSED | D1 Header-only equivalence: sign-out with a failed Header save is held under "Dashboard header"; Stay resolves false; zero confirms
+case 005 FAILED | D2 H5 §7.3 a failed Clock choice holds programmatic navigation under "Clock"; dialog Export exports the Clock draft; Stay keeps everything; dialog Discard writes nothing and navigates once
+    first: AssertionError: H5 §7.3 programmatic navigation is held while the Clock has a failed draft: expected false to be true // Object.is equality
+case 006 FAILED | D2 H5 §7.3 ZH: a failed Clock timezone choice holds an AppRail click under "时钟"
+    first: AssertionError: H5 the AppRail click is held: expected false to be true // Object.is equality
+case 007 FAILED | D2 H5 §7.3 row f: a failed Clock choice holds the Mini Calendar goTo; Stay keeps the Dashboard; Discard navigates once
+    first: AssertionError: H5 the widget goTo is held: expected false to be true // Object.is equality
+case 008 FAILED | D3 H5 §6.8 a pending write behind the real lock holds an AppRail click; dialog Export exports the pending draft; on release exactly one write and one auto-release
+    first: AssertionError: H3 the held per-key lock keeps the bytes unchanged: expected 'analog' to be 'classic' // Object.is equality
+case 009 FAILED | D3 §5.8 a write in flight when dialog Discard runs may commit the latest choice; nothing throws and no rejection is left
+    first: AssertionError: H3 the held per-key lock keeps the bytes unchanged: expected 'analog' to be 'classic' // Object.is equality
+case 010 FAILED | D4 H5 §7.3 a failed Clock choice holds Back (POP); a successful Retry releases it exactly once
+    first: AssertionError: H5 Back is held: expected false to be true // Object.is equality
+case 011 FAILED | D4 H5 §7.3 a failed Clock choice holds Forward (POP); a successful Retry releases it exactly once
+    first: AssertionError: H5 Forward is held: expected false to be true // Object.is equality
+case 012 FAILED | D5 H5 §7.5 sign-out with a Clock draft is held: Stay resolves false with zero history mutations; Discard resolves true with zero writes and no router commit
+    first: AssertionError: H5 §7.5 the sign-out request is held: expected true to be 'pending' // Object.is equality
+case 013 PASSED | D5 rule 12 recorder (positive control): with a Clock draft and no App steps, every sign-out path records zero window.confirm calls of every class
+case 014 FAILED | D6 H6 k1: a failed Header save and a failed Clock choice hold an AppRail click under "Dashboard"; dialog Export exports both once; dialog Discard discards both and navigates once
+    first: AssertionError: H6 §6.6 two blocking participants are labelled "Dashboard": expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+case 015 FAILED | D6 H6 k2: a Clock Retry success keeps the hold under "Dashboard header"; a Header Retry success then releases it once
+    first: AssertionError: H6 the combined label: expected { open: true, …(2) } to strictly equal { open: true, …(2) }
+case 016 FAILED | D6 H6 ZH: the combined label is "工作台"
+    first: AssertionError: H6 the ZH combined label: expected { open: true, …(2) } to strictly equal { open: true, aria: '未保存的工作台草稿', …(1) }
+case 017 FAILED | D7 §6.2–§6.6 the widget render context carries one stable registration; the combined guard follows the participant set, labels, order, isCurrent/isBlocking and identity-based unregister
+    first: AssertionError: §5/§6.3 the widget render context carries registerDepartureGuard: expected null not to be null
+case 018 FAILED | D8 §7.7 the drag ghost is inert: zero writes and no participant registration over the drag; the source keeps its draft and its hold
+    first: AssertionError: H1 §7.7 the source keeps its failed-draft block after the drop: expected { present: false, …(5) } to strictly equal { present: true, notSaved: true, …(4) }
+case 019 FAILED | D9 §7.6 A7 removing the Clock widget discards its drafts with zero Clock writes, unregisters the participant and removes the unload warning
+    first: AssertionError: §6.7 the failed Clock draft blocks before removal: expected { blocking: false, …(1) } to strictly equal { blocking: true, label: 'Clock' }
+case 020 PASSED | D10 §6.7 ticks (positive control): over three ticks with no edits, and again with a failed choice present, zero registrations and zero Clock-key storage attempts
+case 021 FAILED | D11 a standalone DashboardModule without a registration: the Clock records and recovers with no participation and no throw
+    first: AssertionError: H2 §6.1 the Clock records its failure without a coordinator: expected { present: false, …(5) } to strictly equal { present: true, notSaved: true, …(4) }
+case 022 FAILED | D12 §7.4 beforeunload warns only while a Clock draft exists (pending or settled), with zero storage attempts in the handler; not when clean; not after Discard or unmount
+    first: AssertionError: H5 §7.4 a pending draft warns, with zero storage attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+case 023 FAILED | D13 §6.1 inside <StrictMode>: a failed Clock choice holds an AppRail click under "Clock" and dialog Discard navigates once (D2)
+    first: AssertionError: §6.1 the aggregator survives the StrictMode effect re-run: held: expected false to be true // Object.is equality
+case 024 FAILED | D13 §6.1 inside <StrictMode>: the combined Header and Clock hold is labelled "Dashboard" and dialog Export exports both once (D6)
+    first: AssertionError: §6.1 H6 the combined label inside StrictMode: expected { open: true, …(2) } to strictly equal { open: true, …(2) }

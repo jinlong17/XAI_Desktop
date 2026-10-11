@@ -1,0 +1,55 @@
+{
+  "id": "GOV-04+GOV-07/STATUS-SOURCE-DISCOVERY3",
+  "source": "0049ef84724688de6194d43fbea0b171a7855a40",
+  "parent": "9d4b0eee441be0384cad99a855072fb3d55d85bc",
+  "integration": "ae9ea3ce70d1d822b462b726fcdb43f1d59e2746",
+  "archive_ref": "codex/archive/parallel-gov04-gov07-source3-20261010",
+  "all_declared_hashes_checked": 92,
+  "inputs": 91,
+  "output_self_bindings": 1,
+  "outputs": {
+    "docs/reviews/audit-parallel-gov04-gov07-status-source-discovery-r3/inputs.sha256": "2c93cf3560e0d1086084514ccbc70d3af841c842f410c0ecf9708ca81e1a97e5",
+    "docs/reviews/audit-parallel-gov04-gov07-status-source-discovery-r3/discovery.md": "b6462e0eaa9eec592edbc9686a0038bc2314a1cbc0986e9e2959d4c3ae85ba8d"
+  },
+  "disposition": "UNADOPTED_bindingcompletenessprocessholds pendingwholeD2 sourcefamilyFINAL3/3",
+  "static": {
+    "pid": 28377,
+    "numeric_exit": 0,
+    "elapsed_seconds": 0.001703,
+    "Git_checker_children": 0,
+    "stderr_bytes": 0,
+    "session": "UNKNOWN",
+    "chunk": "UNKNOWN",
+    "explicit_pipe_EOF": "UNKNOWN"
+  },
+  "original_commit_subject": "Why:",
+  "integration_metadata": "sameexacttwofilebytes conventional subject normalized ONLY originalremoteunchanged",
+  "author_postcommit_bindinggaps": [
+    "Meditation player/useAmbientAudio",
+    "plugin-project"
+  ],
+  "SK_original_log": {
+    "path": "/Users/lijinlong/.codex/sessions/2026/10/10/rollout-2026-10-10T11-27-46-01a12712-32c9-7050-8308-529cb7ddbce7.jsonl",
+    "sha256": "3b7f37f130b64f3242fc42c10839130ff12a92b3b746a3ebf2e75609b3d3f6f3",
+    "rows": [
+      602,
+      613,
+      624,
+      651,
+      666
+    ],
+    "actual_failed_executed_prewrite_guards": 5,
+    "previous_reported": 3,
+    "raw_preservation": "docs/reviews/20260908-full-product-audit/parallel-control-r1/sk-source1-p79-recovered-five-prewrite-tool-failures.json",
+    "no_historical_execution": true,
+    "classification": "HELD no numericPIDexit invented notpretool/missingfacts0"
+  },
+  "formalcounts": [
+    13,
+    3,
+    3,
+    293
+  ],
+  "refs": 939,
+  "root_business_checker": 0
+}

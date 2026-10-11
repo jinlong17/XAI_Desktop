@@ -1,0 +1,56 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent bounded byte provenance/full prerequisite source closure reviewer1; neverrepaircollector",
+  "model": "gpt-6-sol",
+  "fixed_input": "0121be25e10a8f3f60510c686a1832cbd40a9bcb",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "review_iteration": 1,
+    "review_cap": 3,
+    "static_pass": 1,
+    "prior_source_author_used": 1
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "SHARED/SOURCE-BYTE-COLLECTION-REVIEW1",
+  "source_inputs": [
+    "05e8514429e9f24bd2e1d6ffa9dd9e9312899e1d",
+    "f667a0b6996b4039d2c4e5ca28657953703e830b",
+    "bdc06bd5b57f026caf6d7838563bfdae6f8684c9"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-shared-source-byte-collection-review-r1/review.md",
+    "docs/reviews/audit-parallel-shared-source-byte-collection-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Collection1/PARTIAL_BLOCKED NOTfullsourcequalification: exact3outputs/104regularfiles7993322bytes/4starts/5externalindexrecords+104embeddedhashes/rawcodeavailable immutableGit, static0(collectionroutine1 notqualificationchecker). Full2863review/full2842impact/TASK477rawMET2663raw2651unique/union2781/completepriorcallerconfigs/protectedAppearance/G1 nowindependentlybound forfullprerequisite assessment. Validate wholebundle/no secrets/codeexecution. Rootmetadatafirstinspector printedlargeentries+KeyError thenallhashloopscompletedbuttrailingassumed109manifestguard failed(actual5index+104bundle); correctedmetadataonly no sourcebudget/productiteration. No retrofullPASS/adoption frompartialreport.",
+    "Independentread exactdependency-root/permittedpackage links/packageJSON/lockP0/browserimportconditions/actualReactDOM inputtracker defineProperty forwarding/untrack/nativegetter caching andactualSDKsession/API/transitive files. Collectorlookedinsidepackageroot/node_modules and reportedmissingreact/scheduler/fiveSDKsubpackages; distinguishphysicalretrieval-path mistake fromgenuineunavailablebytes usingread-onlyNode resolution metadata (NOimport/requireexecute/install/network). Scope prior24roots4096files32MiB unchanged; you mayinspectmetadata/code withinexistingpermittedproviders butneverrepaircapturebundle. Installedversionalone notconsumedcodeproof; prospectivecopiedsource/loadedcondition/descriptornative qualification independentandmandatory. FullclosureandknownreachableAPI/forwardingfacts exactsource/table compare, no claimqualifiedfromstaticbytes.",
+    "Preciselyresolve reportclaim TASK/MET prior identitiesnotavailable fromcardenum vs fullGit source+reviewmanifests actuallyreferenced; existingrootcapture/supervisor/bootstrap inventory wholefixedinputs/TASKMETsources, actualsourcehash ifexists vs absence/unknown, notmanualcontrollerleases. No newdesign/method/sourcecode/author4; sharedauthor3cap3exhausted. APPROVEDpartialbyteintegrity basisONLY withremainingholds orREVISE exactcollectionfacts/prerequisites; no grantlastcaller3untilcompleteactualbytes/configforwardingandrootcaptureprovided/rootamendedcards. Freshcollector2 permissiblewithinoriginalcollection1of3 onlyifviablefinite correction, notdisguiseddesignrepair.",
+    "Wholefullfive-rowapproveddesign/sourceauthorhistory/failedstatic/unrun/caps/unknownnative/M8/retention3visual3REL/productionactivation preserve. FullTASK111+112/4440+5072/64/59/MET89/2437/2497/G1 canonicalRules/312fields39labels939/formal13,3,3,293 unchanged. Allinputhashes/BOTHbuffersbeforeANYwrite/static1commandfailurestopnoretry/FULLexecsessiondrain/allruntime tests build lint browser native server qualification probes vendor0/nochildrenpush/reviewerneverrepairs. Exact2ADD only no remote credential or outside-root reads."
+  ],
+  "original_item": null,
+  "read_only_dependency_root": "/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm"
+}

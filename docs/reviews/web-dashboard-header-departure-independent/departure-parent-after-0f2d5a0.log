@@ -1,0 +1,31 @@
+revision=0f2d5a0 fixed_commit=0f2d5a07ceb13f76cfd75abd9169bee29d3cda66
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-5mydGK
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx (5 tests | 1 failed) 828ms
+   ✓ actual Dashboard registration keeps a quota-failed note behind route decision  364ms
+   × unsubmitted actual Header text is protected before programmatic departure 145ms
+     → expected '/app/tasks' to be '/app/dashboard' // Object.is equality
+   ✓ actual Shell AppRail preserves failed Header note 152ms
+   ✓ actual App signout preflight remains pending for current Header draft 128ms
+   ✓ clean Header does not block current signout or normal navigation 38ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  00:19:11
+   Duration  8.46s (transform 3.91s, setup 0ms, collect 6.48s, tests 828ms, environment 453ms, prepare 219ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx > unsubmitted actual Header text is protected before programmatic departure
+AssertionError: expected '/app/tasks' to be '/app/dashboard' // Object.is equality
+
+Expected: "/app/dashboard"
+Received: "/app/tasks"
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx:20:245
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

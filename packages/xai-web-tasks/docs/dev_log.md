@@ -1,3 +1,49 @@
+# REL-05 Tasks failed-save recovery — current iteration
+
+| Field | Value |
+|---|---|
+| Workflow | BUGFIX |
+| Target | xai-web-tasks / shared usePref setter |
+| Title | Failed persistence discards Tasks drafts and hides metadata failure |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Executor | Codex bug-fix (explicit role switch after independent reproduction) |
+| Updated | 2026-09-09 11:57 America/Los_Angeles |
+| Suggested Next | independent bug-verify |
+| Verify Cross-vendor | pending; no hosted-auth or cross-vendor claim |
+
+Diagnosis: parent `docs/reviews/web-storage-write-results/20260909-rel05-diagnosis.md` and independent reproduction commit `aff8175`. Scope is this Tasks sub-fix and the shared setter result; other REL-05 consumers remain separate work.
+
+Strategy: propagate existing write success, publish metadata after success, preserve rejected editor state with visible retry/export, and bind recovery to captured account scope. No new data namespace or background replay.
+
+## Work Log
+
+- 2026-09-09 11:57 — Codex bug-fix: implemented result-aware Tasks create/detail/metadata handling, scoped draft export and retry, deletion close/reference safeguards; retained original independent regression unchanged. Native Chrome recovery chain PASS; independent Tasks regression PASS; final Tasks suite 17 files / 162 PASS; shared usePref two files / 16 PASS; Tasks and storage typechecks PASS. Tasks package lint PASS; shared changed files lint PASS using the same React config (storage has no standalone ESLint config). Commit: this scoped fix changeset; next: an independent verifier must review because the initial reviewer explicitly switched to implementation.
+
+---
+
+# REL-01 Tasks dueDate repair — current iteration
+
+| Field | Value |
+|---|---|
+| Workflow | BUGFIX |
+| Target | xai-web-tasks |
+| Title | REL-01 Tasks smart lists approximate dates and lose linkage on moves |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Executor | Codex bug-fix |
+| Updated | 2026-09-09 11:04 America/Los_Angeles |
+| Suggested Next | bug-verify |
+| Verify Cross-vendor | pending independent verification |
+
+Diagnosis: `docs/reviews/web-local-time-contract/20260909-bug-diagnose.md`, S3. Authorized FIX_READY strategy implemented. The older shipped iterations below are historical evidence.
+
+## Work Log
+
+- 2026-09-09 11:04 — Codex bug-fix: added real dueDate create/edit/move/Board/persistence lifecycle, exact local-day filters and midnight regroup, preserved legacy records and source metadata. Tests: whole Tasks suite 16 files / 156 PASS; typecheck/lint PASS; focused date/component matrix 32 PASS each in UTC, America/Los_Angeles, Asia/Shanghai. Commit: this scoped `fix(web-tasks)` changeset; next: independent bug-verify. Does not mark full cross-feature REL-01 or TASK-01 complete.
+
+---
+
 # Dev Log — `@repo/plugin-web-tasks`
 
 > Source of truth for the workflow state machine of this feature.
@@ -804,3 +850,9 @@ No blockers. Both命脉 (no-mutation + D-QT honesty) proven by green load-bearin
 ## Notes for feature-review (Iteration 3)
 
 The single decision needing reviewer sign-off is **Q-T** (today→overdue, tomorrow→next7 bucket approximation). It is unavoidable: the SHIPPED `xai_task_cols` card shape has no real per-day due dates (discovery §1.2), and the carve-out forbids a schema change. Everything else (state lift, pure selector, no-mutation property, session-only, defer custom/tag, Summary-as-all) follows precedent and the carve-out line-for-line. The load-bearing safety gates are T-FILT-NOMUT (pure deep-equal) + T-FILT-COUNT (localStorage byte-identical) — both must be green for the no-mutation constraint to be proven, not just asserted.
+
+## 2026-09-09 TASK-02 iteration
+
+Workflow BUGFIX; target web / Tasks + Board links; executor Codex /root/rel02_auth_fix; status FIX_IN_PROGRESS (producer sub-fix complete, Board recovery and independent verification pending). Diagnosed T05 against current source: move/source was already fixed, but done lookup, Board list identity, completedAt and retry overwrite failed correct expectations. Added shared timestamp transition, stable lookup, explicit idempotent creation option, and actual legacy completed-row undo. Existing tests preserved; new completion contract cases cover undo/recomplete/metadata/move and undated compatibility. No historical timestamps synthesized. See docs/reviews/web-task-completion-link. Cross-vendor verification not performed.
+
+TASK-02 author completion: status FIX_READY_FOR_VERIFY. Producer `1b7c0e0`, Board recovery `d7d1733`, guard/UI/date alignment `f3a75f1`. Final author Chrome 8/8 scenarios passes; Tasks 165 tests, related Board suites, package types/lint and Web types pass. Parent-owned Statistics consumer remains separately verified. Source hard deletion and full bidirectional controls remain BRD-18 scope. See docs/reviews/web-task-completion-link/20260909-fix.md. Next: independent bug-verify; no independent approval or push claimed.

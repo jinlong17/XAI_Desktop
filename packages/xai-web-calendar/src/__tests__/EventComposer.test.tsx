@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { act, render, screen, fireEvent } from "@testing-library/react";
 import { EventComposer } from "../EventComposer.js";
 import * as calendarPkg from "../index.js";
 import type { UserCalEvent } from "../internal/eventStore/types.js";
@@ -354,7 +354,7 @@ describe("EventComposer — AC-EDIT-3 + AC-DELETE-1 edit mode", () => {
     expect((document.getElementById("event-composer-reminder-input") as HTMLSelectElement).value).toBe("30m");
   });
 
-  it("delete click calls onDelete(event.id) then onClose", () => {
+  it("delete click calls onDelete(event.id) then onClose", async () => {
     const onDelete = vi.fn();
     const onClose = vi.fn();
     const event = sampleEvent();
@@ -369,7 +369,7 @@ describe("EventComposer — AC-EDIT-3 + AC-DELETE-1 edit mode", () => {
         onClose={onClose}
       />,
     );
-    fireEvent.click(screen.getByText(STR_EVENT_COMPOSER.btn_delete.en));
+    await act(async () => { fireEvent.click(screen.getByText(STR_EVENT_COMPOSER.btn_delete.en)); });
     expect(onDelete).toHaveBeenCalledWith("evt-1");
     expect(onClose).toHaveBeenCalled();
   });

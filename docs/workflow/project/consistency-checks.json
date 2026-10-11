@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json",
-  "updated": "2026-06-02",
+  "updated": "2026-09-08",
   "purpose": "Machine-readable check table for the xai-consistency-audit skill. Defines the 3 check groups that keep real development aligned with the management surface: (1) the 3-surface boundary (Web/App/Plugin 越界/归属), (2) feature reconciliation across code/PRD/dashboard, (3) skill/workflow registration + snapshot freshness. The audit DETECTS (read-only) then, on confirmation, applies record-drift fixes to BOTH docs and the dashboard so they never diverge. Code violations are report-only; governed fields (priority/branch/release/ship) are needs-operator.",
   "governance": {
     "authority": [
@@ -17,6 +17,7 @@
       "CODE violations (a plugin implementing native commands, re-doing a Web module, bypassing D3) are REPORT-ONLY — fixing code is feature-workflow territory, not this skill",
       "NEVER auto-change priority / branch / release / ship / roadmap — report needs-operator (dev-dashboard.md write-authority)",
       "frozen lines (plugin/sync PAUSED, site PROPOSED) get impact-note only, no source landing; admin is operator-activated but roadmap-gated, so source landing must stay within admin roadmap slices",
+      "recoverable project work must not exist only on one machine; use the multi-machine handoff gate and keep secret values outside Git",
       "this skill detects + routes; it delegates real writes to owning skills where one exists (dashboard via xai-dev-dashboard-sync rules, PRD via xai-feature-dossier-sync, syncScope proof via xai-account-sync-scope-check)"
     ],
     "frozen_lines": {
@@ -61,7 +62,8 @@
       "checks": [
         { "id": "reg_skill_unregistered", "severity": "INFO", "scans": [".teams/skills", ".claude/skills", ".codex/skills", ".cursor/rules", "CLAUDE.md Agent/Skill Tracking", "dashboard-state.json kpis"], "detect": "a .teams/skills/* skill is missing one of its .claude/.codex mirrors, OR is missing a .cursor/rules/xai-*.mdc mirror when it should work in Cursor, OR (if it is an operator entry-point skill) is absent from the curated dashboard '固定 skill' kpi note. NOTE: CLAUDE.md tracks skills by DIRECTORY (.teams/.claude/.codex/skills and Cursor rules are in the tracking contract), NOT a per-skill list; and the '固定 skill' kpi is a CURATED entry-point list — do NOT compare it against the raw .teams/skills directory count without checking entry-point intent", "finding_type": "record_drift", "action": "confirm_then_apply", "owning_fix": "self (.claude/.codex/.cursor mirror + curated kpi note; directory tracking already satisfies CLAUDE.md)" },
         { "id": "reg_workflow_unregistered", "severity": "INFO", "scans": ["docs/workflow/_portable", ".codex/agents", ".claude/agents", ".cursor/agents", ".cursor/rules"], "detect": "a workflow/agent/rule not registered across the tracked surfaces", "finding_type": "record_drift", "action": "confirm_then_apply", "owning_fix": "self" },
-        { "id": "fresh_snapshot_stale", "severity": "INFO", "scans": ["git HEAD", "state.generated.js", "dashboard-state.json"], "detect": "dashboard snapshot commit != HEAD, or dirty-file count mismatch", "finding_type": "freshness", "action": "delegate", "owning_fix": "xai-dev-dashboard-sync (refresh / pnpm dashboard)" }
+        { "id": "fresh_snapshot_stale", "severity": "INFO", "scans": ["git HEAD", "state.generated.js", "dashboard-state.json"], "detect": "dashboard snapshot commit != HEAD, or dirty-file count mismatch", "finding_type": "freshness", "action": "delegate", "owning_fix": "xai-dev-dashboard-sync (refresh / pnpm dashboard)" },
+        { "id": "fresh_multi_machine_source_of_truth", "severity": "BLOCKER", "scans": ["git status", "local branches vs remotes", "stash reachability", "local refs", "reflog", "unreachable commits", "project-level untracked files", ".env.example parity"], "detect": "recoverable project work exists only in one machine's dirty tree, unpushed branch, stash, hidden ref, reflog, unreachable commit, ignored source, or undocumented local configuration", "finding_type": "source_of_truth_drift", "action": "delegate", "owning_fix": "docs/workflow/project/multi-machine-development.md + pnpm git:sync-check -- --fetch (add --deep for migration/cleanup)" }
       ]
     }
   ],

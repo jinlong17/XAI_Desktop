@@ -1,0 +1,13 @@
+product=f359be6d838393e0f9e93efd80b88b5b09f6144e
+checkout_head=2bdb02089231acae99386091f6450c669b0f61f4
+product_delta_vs_checkout=""
+command=pnpm --filter @repo/web check-types
+cwd=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a7c736b67a78cecf7
+stdio=piped (non-TTY), inherited environment, no overrides
+started=2026-10-04T05:09:32.944Z
+finished=2026-10-04T05:09:40.913Z
+exit=0
+
+
+> @repo/web@0.1.0 check-types /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a7c736b67a78cecf7/apps/web
+> tsc --noEmit

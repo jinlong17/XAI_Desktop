@@ -1,0 +1,44 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+mode=continuity-export
+suffix=appearance-final-v1
+include=docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=8cc5993a08b4ccee7ff557601d2fe9085cd7f6e041940d5eeba64b3b62e390ca bytes.test.tsx=3774dfa9703578ae22fed8d862441481226b0bf28c704cab0cc20672dfdf5da9 fields.test.tsx=2bf42fb6ddbe83bf54c574926fc8a7272bb6cdf073c746efea93012bbbd401bb queues.test.tsx=258aec9e5247f7c75c8a5b997683c7b5aa58c8a8b98117dc86df9ffa975c4983 continuity-export.test.tsx=78f140f50306b91ff22eb116bc587ce30b2cac57390dcefc948e1f3e44ce828d verify-fixed.mjs=3fba4b3b181d13431db9fe632fd68b70a4e51c6357168ec29aa89dd7977864c3
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-SRTqav
+
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7 A→B→locked→A: a held device operation survives; old guards refuse before and after rerender; fresh guards export 171ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7 old inline Retry, Discard, Discard all and Export callbacks refuse before rerender; device work survives under fresh permission 108ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7 same-account epoch change with a held device lock: old guard refuses; fresh guard exports and discards with zero writes 80ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > INV §7 edits across A→B→locked→A never touch account keys, markers or lifecycle locks 140ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > INV §7 an unrelated held account lifecycle lock never delays a device edit 51ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a sparse one-field export is memory-only under total storage denial 102ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 the all-five export (three strings, two booleans) equals the contract envelope under total storage denial 66ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a dialog export through the registered guard is memory-only and changes nothing 57ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an export while one operation is held behind a real lock includes it and releases, saves or retries nothing 84ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 the export excludes saved, default, source-only and input-error-only fields 83ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > INV §8 without an actual draft there is no Export control and no empty download 67ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a blob setup failure shows the localized export error, keeps drafts and guard, and cleans up 62ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a url setup failure shows the localized export error, keeps drafts and guard, and cleans up 61ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a append setup failure shows the localized export error, keeps drafts and guard, and cleans up 61ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a click setup failure shows the localized export error, keeps drafts and guard, and cleans up 57ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an epoch change during blob cancels the click and cleans up; fresh permission exports 42ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an epoch change during url cancels the click and cleans up; fresh permission exports 41ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an epoch change during append cancels the click and cleans up; fresh permission exports 42ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an unmount during blob cancels the click and cleans up 37ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an unmount during url cancels the click and cleans up 35ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an unmount during append cancels the click and cleans up 37ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7/§9 unmount removes the guard and the beforeunload listener and detaches old callbacks 76ms
+
+ Test Files  1 passed (1)
+      Tests  22 passed (22)
+   Start at  13:37:26
+   Duration  2.30s (transform 223ms, setup 169ms, collect 190ms, tests 1.56s, environment 185ms, prepare 44ms)
+
+
+---- stderr ----

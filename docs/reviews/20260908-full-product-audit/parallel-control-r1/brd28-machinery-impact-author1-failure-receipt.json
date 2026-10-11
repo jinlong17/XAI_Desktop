@@ -1,0 +1,45 @@
+{
+  "id": "BRD-28/SOURCE-MACHINERY-IMPACT1",
+  "source_parent": "e8b29df83f34fc13a55a04d78c3db2002b2d5fb6",
+  "fixed_input": "aed09103a71c7e939ffc71d23c7b9b802ac47b51",
+  "result": "FAILED_STATIC1_NO_OUTPUTS",
+  "author_iteration": 1,
+  "author_cap": 3,
+  "actual_static_invocations": 1,
+  "process": {
+    "pid": 94493,
+    "session": 40532,
+    "chunks": [
+      "56e406",
+      "e019c8",
+      "dfe350"
+    ],
+    "exit": 1,
+    "drained": true,
+    "checker_source_sha256": "e90e7a71372850ce5b108a24bfabc3ab3882ead684b3710084d071548934b8b3"
+  },
+  "failed_guard": "line107 required full source document membership and size: for title,p in source_docs: assert p in kept and len(get(p))>1000",
+  "classification": "source-document index/buffer guard; not product or ledger failure",
+  "reported_completed": {
+    "raw_corpora": 123295,
+    "identities": 53462,
+    "objects": 6089,
+    "bytes": 245064408,
+    "hashes": "PASS_REPORTED"
+  },
+  "unrun": [
+    "later B/R/T and canonical section containment",
+    "complete appendix",
+    "both buffers",
+    "all writes",
+    "stage",
+    "commit"
+  ],
+  "source_commit": null,
+  "runtime": 0,
+  "probes": 0,
+  "qualification": 0,
+  "mechanical_clean_chunk": "c74bb0",
+  "compact_actor_memory_receipt_sha256": "89889ec1a503854e8244601ee5ea3a453db81470f175e443f0dc7634f34c628d",
+  "compact_hash_limit": "actor memory JSON only; not this newly serialized root receipt hash"
+}

@@ -1,0 +1,72 @@
+{
+  "status": "BLOCKED",
+  "iteration": 1,
+  "cases": [
+    {
+      "name": "01-primary-plus-cleanup-failure",
+      "pass": true
+    },
+    {
+      "name": "02-cleanup-only-failure",
+      "pass": true
+    },
+    {
+      "name": "03-slow-no-exit-owned-signals",
+      "pass": true
+    },
+    {
+      "name": "04-CDP-close-rejection",
+      "pass": true
+    },
+    {
+      "name": "05-startup-before-handle",
+      "pass": true
+    },
+    {
+      "name": "06-journal-and-result-write-failure",
+      "pass": true
+    },
+    {
+      "name": "07-stream-partial-child-nonzero-exit2",
+      "pass": true
+    },
+    {
+      "name": "08-checkout-cleanup-failure",
+      "pass": true
+    },
+    {
+      "name": "09-overwrite-refusal",
+      "pass": true
+    },
+    {
+      "name": "10-interrupted-tail-visible",
+      "pass": true
+    },
+    {
+      "name": "11-permanent-cumulative-reservations",
+      "pass": true
+    },
+    {
+      "name": "12-exact-ownership",
+      "pass": true
+    },
+    {
+      "name": "13-unrelated-causal-refusal-rejected",
+      "pass": true
+    },
+    {
+      "name": "14-static-generated-adapter-source-freeze",
+      "pass": false,
+      "error": "Error: Retention adapter anchor Journal before owned directory/server/browser acquisition\n    at change (file:///Users/lijinlong/.codex/worktrees/audit-parallel-clock-retention-20261010/XAI_Desktop/docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-qualification.mjs:142:78)\n    at retentionSource (file:///Users/lijinlong/.codex/worktrees/audit-parallel-clock-retention-20261010/XAI_Desktop/docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-qualification.mjs:145:2)\n    at historicalSource (file:///Users/lijinlong/.codex/worktrees/audit-parallel-clock-retention-20261010/XAI_Desktop/docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-qualification.mjs:136:18)\n    at file:///Users/lijinlong/.codex/worktrees/audit-parallel-clock-retention-20261010/XAI_Desktop/docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-qualification.mjs:38:686\n    at Array.map (<anonymous>)\n    at Module.inventory (file:///Users/lijinlong/.codex/worktrees/audit-parallel-clock-retention-20261010/XAI_Desktop/docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-qualification.mjs:32:18)\n    at file:///Users/lijinlong/.codex/worktrees/audit-parallel-clock-retention-20261010/XAI_Desktop/docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-evidence-retention.mjs:36:236\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async test (file:///Users/lijinlong/.codex/worktrees/audit-parallel-clock-retention-20261010/XAI_Desktop/docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-evidence-retention.mjs:19:71)\n    at async file:///Users/lijinlong/.codex/worktrees/audit-parallel-clock-retention-20261010/XAI_Desktop/docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-evidence-retention.mjs:36:2"
+    }
+  ],
+  "checks": 39,
+  "formal": 0,
+  "probes": 0,
+  "browserNative": 0,
+  "sourceHashes": {
+    "evidence-retention.mjs": "bd148523a73b789baeddbc0345b2c810d9735deb83142f2a4f8a7ef549c252e0",
+    "verify-evidence-retention.mjs": "445e322ac11a5fca4934e65e1de4910418289ede100104cc707dbe70ac7ee71c",
+    "verify-qualification.mjs": "18017e8a3d9d5ab49d263d1b00c8c0b383831288b432becba80b32e57f079a79"
+  }
+}

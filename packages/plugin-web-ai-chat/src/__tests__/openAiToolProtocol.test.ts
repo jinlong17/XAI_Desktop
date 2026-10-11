@@ -1,3 +1,5 @@
+import { accountScope } from "@repo/plugin-web-storage";
+import { resetAccountFixture } from "./accountTestSetup.js";
 /**
  * openAiToolProtocol.test.ts — OAI-STREAM-1..4
  *
@@ -25,9 +27,9 @@ import { streamCompleteChat } from "../internal/claudeStreamAdapter.js";
 // ---- Setup: provider = openai-compatible ------------------------------------
 
 beforeEach(async () => {
-  localStorage.clear();
-  localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
-  localStorage.setItem("xai_ai_base_url", JSON.stringify("https://api.groq.com/openai/v1"));
+  resetAccountFixture();
+  localStorage.setItem(accountScope.physicalKey("xai_ai_provider"), JSON.stringify("openai-compatible"));
+  localStorage.setItem(accountScope.physicalKey("xai_ai_base_url"), JSON.stringify("https://api.groq.com/openai/v1"));
   await aiKeyStorage.saveKey("openai-compatible", "gsk-test-key");
   vi.restoreAllMocks();
 });

@@ -1,0 +1,812 @@
+requested_revision=2023526
+resolved_commit=20235269749dad514833d76c27b958f694d0e4e9
+mode=fields
+suffix=before1
+include=docs/reviews/web-sticky-recovery-sol/fields.test.tsx
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=8cc5993a08b4ccee7ff557601d2fe9085cd7f6e041940d5eeba64b3b62e390ca bytes.test.tsx=3774dfa9703578ae22fed8d862441481226b0bf28c704cab0cc20672dfdf5da9 fields.test.tsx=2bf42fb6ddbe83bf54c574926fc8a7272bb6cdf073c746efea93012bbbd401bb queues.test.tsx=258aec9e5247f7c75c8a5b997683c7b5aa58c8a8b98117dc86df9ffa975c4983 continuity-export.test.tsx=78f140f50306b91ff22eb116bc587ce30b2cac57390dcefc948e1f3e44ce828d verify-fixed.mjs=3fba4b3b181d13431db9fe632fd68b70a4e51c6357168ec29aa89dd7977864c3
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol
+
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'color' > H1 color: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes 68ms
+   → H1: color keeps displaying the latest choice after its write failed: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'color' > H2 color: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 22ms
+   → H2: "Saved Default Color is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'font' > H1 font: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes 37ms
+   → H1: font keeps displaying the latest choice after its write failed: expected 'small' to be 'xl' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'font' > H2 font: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 21ms
+   → H2: "Saved Font Size is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'pin_default' > H1 pin_default: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes 58ms
+   → H1: pin_default keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'pin_default' > H2 pin_default: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 20ms
+   → H2: "Saved Pin by Default is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'restore_size' > H1 restore_size: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes 38ms
+   → H1: restore_size keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'restore_size' > H2 restore_size: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 22ms
+   → H2: "Saved Restore Default Size is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'grid_spacing' > H1 grid_spacing: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes 35ms
+   → H1: grid_spacing keeps displaying the latest choice after its write failed: expected 'large' to be 'xl' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'grid_spacing' > H2 grid_spacing: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 22ms
+   → H2: "Saved Default Grid Spacing is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 color="purple": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 19ms
+   → H3: an invalid source displays the registry default, never the stored bytes: expected null to be 'sun' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 color="Sun": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 18ms
+   → H3: an invalid source displays the registry default, never the stored bytes: expected null to be 'sun' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 color=" sun": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 17ms
+   → H3: an invalid source displays the registry default, never the stored bytes: expected null to be 'sun' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 color="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 19ms
+   → H3: an invalid source displays the registry default, never the stored bytes: expected null to be 'sun' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 font="huge": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 18ms
+   → H3: an invalid source displays the registry default, never the stored bytes: expected 'small' to be 'large' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 font="tiny": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 19ms
+   → H3: an invalid source displays the registry default, never the stored bytes: expected 'small' to be 'large' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 font="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 19ms
+   → H3: an invalid source displays the registry default, never the stored bytes: expected 'small' to be 'large' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 grid_spacing="huge": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 18ms
+   → H3: an invalid source displays the registry default, never the stored bytes: expected null to be 'normal' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 grid_spacing="tiny": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 19ms
+   → H3: an invalid source displays the registry default, never the stored bytes: expected null to be 'normal' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 grid_spacing="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 19ms
+   → H3: an invalid source displays the registry default, never the stored bytes: expected null to be 'normal' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 pin_default="TRUE": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 25ms
+   → H2: "Saved Pin by Default is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 pin_default="1": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 19ms
+   → H2: "Saved Pin by Default is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 pin_default="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 24ms
+   → H2: "Saved Pin by Default is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 restore_size="yes": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 20ms
+   → H2: "Saved Restore Default Size is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 restore_size="0": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 20ms
+   → H2: "Saved Restore Default Size is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 restore_size=" false": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 19ms
+   → H2: "Saved Restore Default Size is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font injected option value: the prior value stays with an independent input error; zero writes; sibling work untouched 52ms
+   → H4: a malformed font value (injected) is never persisted: expected 'huge' to be 'normal' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font empty option value: the prior value stays with an independent input error; zero writes; sibling work untouched 49ms
+   → H4: a malformed font value (empty) is never persisted: expected '' to be 'normal' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font unmatched option value: the prior value stays with an independent input error; zero writes; sibling work untouched 52ms
+   → H4: a malformed font value (unmatched) is never persisted: expected '' to be 'normal' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H3 §5.2 a valid choice over invalid color bytes is a failed draft that never overwrites them; Discard is zero-write and returns to Reload-only 33ms
+   → H3/§5.2: a valid edit never silently overwrites an invalid source: expected 'mint' to be 'purple' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2 §5.2 a valid toggle over an unavailable pin source is a failed draft; bytes untouched; Discard returns to Reload-only 37ms
+   → H1/H2: the toggle keeps displaying the latest intent: expected true to be false // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 Reload refuses at invocation time to erase the same field's actual draft 29ms
+   → H2: Reload Restore Default Size: expected null not to be null
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 all five unresolved at once; a targeted Retry never touches siblings; Discard all is zero-write and visits only drafts 40ms
+   → H1: all five latest choices stay displayed: expected { color: 'sun', font: 'large', …(3) } to strictly equal { color: 'mint', font: 'xl', …(3) }
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 a color conflict coexists with an unrelated font quota failure; each settles independently and Retry never overwrites the conflict 36ms
+   → H6: the held per-key lock serializes the color write: expected 'mint' to be 'sky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 a failed string field and a successful boolean settle independently 36ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 a failed boolean field and a successful string settle independently 41ms
+   → H1: the failed boolean keeps the latest intent: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 a targeted Discard is zero-write, rereads only its field and leaves sibling work exportable 36ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H8 §5.7 Saved appears only after a genuine latest success with no pending work or input error 35ms
+   → H8: a genuine latest success shows the Saved status: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2 §5.7 a sibling source error suppresses Saved even after a successful edit 37ms
+   → H2: the pin source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7/§5.8 a sibling source-only Reload repair clears its alert without claiming Saved or acknowledging failed work 48ms
+   → H2: Reload Pin by Default: expected null not to be null
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 Discard all visits only actual drafts: source-only and input-error siblings are untouched 60ms
+   → H8: Discard all changes: expected null not to be null
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H6 §5.5 a missing Web Lock capability keeps the latest color with failed feedback and no write; Retry after restoration saves 34ms
+   → H6: the write consults the Web Lock capability: expected 0 to be greater than 0
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H6 §5.5 a rejected Web Lock capability keeps the latest color with failed feedback and no write; Retry after restoration saves 41ms
+   → H6: the write requests the per-key Web Lock: expected 0 to be greater than 0
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H7 a failed choice registers a blocking Sticky Note guard and a beforeunload warning; source-only and input-error-only states never warn 54ms
+   → H7: StickyPaneContent registers the optional departure guard: expected null not to be null
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H8 an uncertain write exposes Retry, Discard, Export and Discard all instead of a silent success 42ms
+   → H8: Retry Default Color: expected null not to be null
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5 ZH wording: source alert, failed feedback, per-field and pane actions, input error, Saved, pending and guard label 19ms
+   → ZH source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5 ZH export failure status 34ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  47 failed (47)
+   Start at  15:43:21
+   Duration  2.56s (transform 282ms, setup 200ms, collect 283ms, tests 1.50s, environment 309ms, prepare 56ms)
+
+
+---- stderr ----
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'color' > H1 color: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'font' > H1 font: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_sticky_font.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'pin_default' > H1 pin_default: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_sticky_pin_default.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'restore_size' > H1 restore_size: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_sticky_restore_size.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'grid_spacing' > H1 grid_spacing: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_sticky_grid_spacing.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 pin_default="TRUE": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_sticky_pin_default: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:47:25)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 pin_default="1": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_sticky_pin_default: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:47:25)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 pin_default="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_sticky_pin_default: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:47:25)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 restore_size="yes": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_sticky_restore_size: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:51:33)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 restore_size="0": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_sticky_restore_size: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:51:33)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 restore_size=" false": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_sticky_restore_size: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:51:33)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font injected option value: the prior value stays with an independent input error; zero writes; sibling work untouched
+[plugin-web-storage] decode failed for xai_pref_sticky_pin_default: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:47:25)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font injected option value: the prior value stays with an independent input error; zero writes; sibling work untouched
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font empty option value: the prior value stays with an independent input error; zero writes; sibling work untouched
+[plugin-web-storage] decode failed for xai_pref_sticky_pin_default: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:47:25)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font empty option value: the prior value stays with an independent input error; zero writes; sibling work untouched
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font unmatched option value: the prior value stays with an independent input error; zero writes; sibling work untouched
+[plugin-web-storage] decode failed for xai_pref_sticky_pin_default: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:47:25)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font unmatched option value: the prior value stays with an independent input error; zero writes; sibling work untouched
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2 §5.2 a valid toggle over an unavailable pin source is a failed draft; bytes untouched; Discard returns to Reload-only
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 Reload refuses at invocation time to erase the same field's actual draft
+[plugin-web-storage] decode failed for xai_pref_sticky_restore_size: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:51:33)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 all five unresolved at once; a targeted Retry never touches siblings; Discard all is zero-write and visits only drafts
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+[plugin-web-storage] quota exceeded for xai_pref_sticky_font.
+[plugin-web-storage] quota exceeded for xai_pref_sticky_pin_default.
+[plugin-web-storage] quota exceeded for xai_pref_sticky_restore_size.
+[plugin-web-storage] quota exceeded for xai_pref_sticky_grid_spacing.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 a failed string field and a successful boolean settle independently
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 a failed boolean field and a successful string settle independently
+[plugin-web-storage] quota exceeded for xai_pref_sticky_pin_default.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 a targeted Discard is zero-write, rereads only its field and leaves sibling work exportable
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+[plugin-web-storage] quota exceeded for xai_pref_sticky_restore_size.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2 §5.7 a sibling source error suppresses Saved even after a successful edit
+[plugin-web-storage] decode failed for xai_pref_sticky_pin_default: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:47:25)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7/§5.8 a sibling source-only Reload repair clears its alert without claiming Saved or acknowledging failed work
+[plugin-web-storage] decode failed for xai_pref_sticky_pin_default: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:47:25)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7/§5.8 a sibling source-only Reload repair clears its alert without claiming Saved or acknowledging failed work
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 Discard all visits only actual drafts: source-only and input-error siblings are untouched
+[plugin-web-storage] decode failed for xai_pref_sticky_pin_default: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:47:25)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 Discard all visits only actual drafts: source-only and input-error siblings are untouched
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H7 a failed choice registers a blocking Sticky Note guard and a beforeunload warning; source-only and input-error-only states never warn
+[plugin-web-storage] decode failed for xai_pref_sticky_pin_default: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:47:25)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H7 a failed choice registers a blocking Sticky Note guard and a beforeunload warning; source-only and input-error-only states never warn
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5 ZH wording: source alert, failed feedback, per-field and pane actions, input error, Saved, pending and guard label
+[plugin-web-storage] decode failed for xai_pref_sticky_restore_size: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:51:33)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5 ZH export failure status
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 47 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'color' > H1 color: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes
+AssertionError: H1: color keeps displaying the latest choice after its write failed: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:30:110
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'color' > H2 color: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Default Color is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:61:90
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'font' > H1 font: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes
+AssertionError: H1: font keeps displaying the latest choice after its write failed: expected 'small' to be 'xl' // Object.is equality
+
+Expected: "xl"
+Received: "small"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:30:110
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'font' > H2 font: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Font Size is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:61:90
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'pin_default' > H1 pin_default: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes
+AssertionError: H1: pin_default keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:30:110
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'pin_default' > H2 pin_default: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Pin by Default is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:61:90
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'restore_size' > H1 restore_size: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes
+AssertionError: H1: restore_size keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:30:110
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'restore_size' > H2 restore_size: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Restore Default Size is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:61:90
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'grid_spacing' > H1 grid_spacing: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes
+AssertionError: H1: grid_spacing keeps displaying the latest choice after its write failed: expected 'large' to be 'xl' // Object.is equality
+
+Expected: "xl"
+Received: "large"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:30:110
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'grid_spacing' > H2 grid_spacing: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Default Grid Spacing is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:61:90
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 color="purple": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 color="Sun": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 color=" sun": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 color="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H3: an invalid source displays the registry default, never the stored bytes: expected null to be 'sun' // Object.is equality
+
+- Expected: 
+"sun"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:98:111
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 font="huge": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 font="tiny": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 font="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H3: an invalid source displays the registry default, never the stored bytes: expected 'small' to be 'large' // Object.is equality
+
+Expected: "large"
+Received: "small"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:98:111
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 grid_spacing="huge": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 grid_spacing="tiny": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 grid_spacing="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H3: an invalid source displays the registry default, never the stored bytes: expected null to be 'normal' // Object.is equality
+
+- Expected: 
+"normal"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:98:111
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 pin_default="TRUE": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 pin_default="1": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 pin_default="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H2: "Saved Pin by Default is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:99:92
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 restore_size="yes": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 restore_size="0": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 restore_size=" false": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H2: "Saved Restore Default Size is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:99:92
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font injected option value: the prior value stays with an independent input error; zero writes; sibling work untouched
+AssertionError: H4: a malformed font value (injected) is never persisted: expected 'huge' to be 'normal' // Object.is equality
+
+Expected: "normal"
+Received: "huge"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:127:85
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font empty option value: the prior value stays with an independent input error; zero writes; sibling work untouched
+AssertionError: H4: a malformed font value (empty) is never persisted: expected '' to be 'normal' // Object.is equality
+
+- Expected
++ Received
+
+- normal
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:127:85
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font unmatched option value: the prior value stays with an independent input error; zero writes; sibling work untouched
+AssertionError: H4: a malformed font value (unmatched) is never persisted: expected '' to be 'normal' // Object.is equality
+
+- Expected
++ Received
+
+- normal
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:127:85
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H3 §5.2 a valid choice over invalid color bytes is a failed draft that never overwrites them; Discard is zero-write and returns to Reload-only
+AssertionError: H3/§5.2: a valid edit never silently overwrites an invalid source: expected 'mint' to be 'purple' // Object.is equality
+
+Expected: "purple"
+Received: "mint"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:150:93
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2 §5.2 a valid toggle over an unavailable pin source is a failed draft; bytes untouched; Discard returns to Reload-only
+AssertionError: H1/H2: the toggle keeps displaying the latest intent: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:186:82
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 Reload refuses at invocation time to erase the same field's actual draft
+AssertionError: H2: Reload Restore Default Size: expected null not to be null
+ ❯ need ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/docs/reviews/web-sticky-recovery-sol/fixture.tsx:31:38
+     29| /** Business presence assertion: fails as a product failure (not a pre…
+     30| export function need<T>(value: T | null | undefined, message: string):…
+     31|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     32|   return value as T;
+     33| }
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:206:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 all five unresolved at once; a targeted Retry never touches siblings; Discard all is zero-write and visits only drafts
+AssertionError: H1: all five latest choices stay displayed: expected { color: 'sun', font: 'large', …(3) } to strictly equal { color: 'mint', font: 'xl', …(3) }
+
+- Expected
++ Received
+
+  {
+-   "color": "mint",
+-   "font": "xl",
+-   "grid_spacing": "xl",
+-   "pin_default": false,
+-   "restore_size": true,
++   "color": "sun",
++   "font": "large",
++   "grid_spacing": "normal",
++   "pin_default": true,
++   "restore_size": false,
+  }
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:238:70
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 a color conflict coexists with an unrelated font quota failure; each settles independently and Retry never overwrites the conflict
+AssertionError: H6: the held per-key lock serializes the color write: expected 'mint' to be 'sky' // Object.is equality
+
+Expected: "sky"
+Received: "mint"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:279:80
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 a failed string field and a successful boolean settle independently
+AssertionError: H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:323:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 a failed boolean field and a successful string settle independently
+AssertionError: H1: the failed boolean keeps the latest intent: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:349:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 a targeted Discard is zero-write, rereads only its field and leaves sibling work exportable
+AssertionError: H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:376:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H8 §5.7 Saved appears only after a genuine latest success with no pending work or input error
+AssertionError: H8: a genuine latest success shows the Saved status: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:403:83
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2 §5.7 a sibling source error suppresses Saved even after a successful edit
+AssertionError: H2: the pin source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:428:66
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7/§5.8 a sibling source-only Reload repair clears its alert without claiming Saved or acknowledging failed work
+AssertionError: H2: Reload Pin by Default: expected null not to be null
+ ❯ need ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/docs/reviews/web-sticky-recovery-sol/fixture.tsx:31:38
+     29| /** Business presence assertion: fails as a product failure (not a pre…
+     30| export function need<T>(value: T | null | undefined, message: string):…
+     31|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     32|   return value as T;
+     33| }
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:443:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 Discard all visits only actual drafts: source-only and input-error siblings are untouched
+AssertionError: H8: Discard all changes: expected null not to be null
+ ❯ need ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/docs/reviews/web-sticky-recovery-sol/fixture.tsx:31:38
+     29| /** Business presence assertion: fails as a product failure (not a pre…
+     30| export function need<T>(value: T | null | undefined, message: string):…
+     31|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     32|   return value as T;
+     33| }
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:469:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H6 §5.5 a missing Web Lock capability keeps the latest color with failed feedback and no write; Retry after restoration saves
+AssertionError: H6: the write consults the Web Lock capability: expected 0 to be greater than 0
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:494:124
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H6 §5.5 a rejected Web Lock capability keeps the latest color with failed feedback and no write; Retry after restoration saves
+AssertionError: H6: the write requests the per-key Web Lock: expected 0 to be greater than 0
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:495:115
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H7 a failed choice registers a blocking Sticky Note guard and a beforeunload warning; source-only and input-error-only states never warn
+AssertionError: H7: StickyPaneContent registers the optional departure guard: expected null not to be null
+ ❯ need ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/docs/reviews/web-sticky-recovery-sol/fixture.tsx:31:38
+     29| /** Business presence assertion: fails as a product failure (not a pre…
+     30| export function need<T>(value: T | null | undefined, message: string):…
+     31|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     32|   return value as T;
+     33| }
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:528:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H8 an uncertain write exposes Retry, Discard, Export and Discard all instead of a silent success
+AssertionError: H8: Retry Default Color: expected null not to be null
+ ❯ need ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-GQiKol/docs/reviews/web-sticky-recovery-sol/fixture.tsx:31:38
+     29| /** Business presence assertion: fails as a product failure (not a pre…
+     30| export function need<T>(value: T | null | undefined, message: string):…
+     31|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     32|   return value as T;
+     33| }
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:551:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5 ZH wording: source alert, failed feedback, per-field and pane actions, input error, Saved, pending and guard label
+AssertionError: ZH source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:567:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/47]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5 ZH export failure status
+AssertionError: H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/fields.test.tsx:606:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/47]⎯

@@ -1,0 +1,148 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+mode=storage-unchanged
+suffix=apprail-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc node docs/reviews/web-apprail-order-recovery-final/verify-packages.mjs 419e56d storage-unchanged apprail-final-v1
+output_dir=docs/reviews/web-apprail-order-recovery-final
+runner_checkout_head=9aeec39ecc3d9da70837e97b9660837fe887b765
+runner_sha256=fd9d9988c8c38c904555c4a539836db62aceda005098919d02bba4daf53dde15
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/plugin-web-storage (packages/plugin-web-storage) kind=vitest script=test: "vitest run"
+archive_file_sha256 packages/plugin-web-storage/package.json=cb441e2c168f419102a4301da09a7d6a2828f0bd91376f2b183e064014502778 packages/plugin-web-storage/tsconfig.json=d6ed012dbb7ba814d3ad10969827e9e91ca33dc1c5a292550967032d367dca1a packages/plugin-web-storage/vitest.config.ts=87367d81da10e0d0318ca05177f85ec82aff7649491e517691a4d0f5310bac44
+package_tree=782c79de33a1da6851b5a235950408eb7ae89f99 appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+node_modules_links third_party=449 workspace=281; package_workspace_links @repo/typescript-config->packages/typescript-config
+tsconfig_extends_checked=46 unresolved=none own=@repo/plugin-web-storage:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages/plugin-web-storage/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-78LUec/packages/plugin-web-storage/final-storage-unchanged.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-78LUec/.final-guard/report-storage-unchanged.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@25.0.1/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=25.0.1
+tool_exit=0
+harness_checks=PASS (7/7)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-78LUec/packages/plugin-web-storage
+
+ ✓ src/__tests__/registry.test.ts > AC-REG-1: All 18 explicit §9.2 keys exist in PREF_REGISTRY > registry is a superset of the 18 explicit literal keys 2ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-2: Both proposed keys exist with proposed: true > xai_pomodoro_sessions has proposed: true 0ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-2: Both proposed keys exist with proposed: true > xai_countdowns has proposed: true 0ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-2: Both proposed keys exist with proposed: true > no explicit key carries proposed: true 0ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-3: Registry entries use the expected schemaVersion > every registry entry has the expected schemaVersion 1ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-4: Codec set is the closed union > every entry codec is in the closed set 1ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-5: Owner row is non-empty > every entry has a non-empty owner 1ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-6: No accidental duplicate keys > key count equals unique key count 0ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-7: Default type matches codec > codec=number entries have typeof default === number 0ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-7: Default type matches codec > codec=boolean entries have typeof default === boolean 0ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-7: Default type matches codec > codec=string entries have typeof default === string 0ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-7: Default type matches codec > codec=json entries can have any default shape 0ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-8: Total entry count = 20 baseline + owner-row additions > PREF_REGISTRY has exactly 87 entries 0ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-8: Total entry count = 20 baseline + owner-row additions > registry contains all 18 explicit + all 2 proposed + all owner-row additions 1ms
+ ✓ src/__tests__/registry.test.ts > AC-REG-9: xai-web-board-saved-filters owner-row key contract > registers xai_board_filter_by_id as module json state 1ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-1: getPref returns default when key absent > xai_accent_hue default is 165 1ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-1: getPref returns default when key absent > xai_ai_insights default is true 0ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-1: getPref returns default when key absent > xai_zones default is empty array 0ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-2: setPref/getPref round-trip for number codec > setPref(xai_accent_hue, 200) then getPref returns 200 0ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-3: setPref/getPref round-trip for string codec > setPref(xai_rail_pos, 'right') then getPref returns 'right' 0ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-4: setPref/getPref round-trip for boolean codec > setPref(xai_ai_insights, false) then getPref returns false 0ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-4: setPref/getPref round-trip for boolean codec > setPref(xai_ai_voice, true) then getPref returns true 0ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-5: setPref/getPref round-trip for json codec > setPref(xai_rail_order, ['board','tasks']) then getPref returns the array 0ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-5: setPref/getPref round-trip for json codec > setPref(xai_pet_pos, {x:10,y:20}) then getPref returns the object 0ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-6: removePref then getPref returns default > sets then removes xai_accent_hue — getPref returns 165 0ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-7: corrupt JSON in storage returns default + warns > corrupt xai_zones value returns [] and calls console.warn once 1ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-8: type-mismatched value returns default > 'abc' stored for number codec xai_accent_hue returns 165 3ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-8: type-mismatched value returns default > 'notbool' stored for boolean codec xai_ai_insights returns true (default) 0ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-9: setPref returns true on success > setPref(xai_accent_hue, 100) returns true 0ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-10: setPref returns false on QuotaExceededError > mocked QuotaExceededError causes setPref to return false and log 0ms
+ ✓ src/__tests__/imperative.test.ts > AC-IMP-11: setPref with identical-to-current value does NOT call setItem > writing the same value twice: second write skips localStorage.setItem 0ms
+
+ Test Files  2 passed (2)
+      Tests  31 passed (31)
+   Start at  07:53:08
+   Duration  532ms (transform 104ms, setup 0ms, collect 135ms, tests 16ms, environment 477ms, prepare 87ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-78LUec/.final-guard/report-storage-unchanged.json
+
+---- stderr ----
+stderr | src/__tests__/imperative.test.ts > AC-IMP-8: type-mismatched value returns default > 'abc' stored for number codec xai_accent_hue returns 165
+[plugin-web-storage] decode failed for xai_accent_hue: Error: Cannot decode stored value with codec "number"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-78LUec/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-78LUec/packages/plugin-web-storage/src/__tests__/imperative.test.ts:99:12
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | src/__tests__/imperative.test.ts > AC-IMP-8: type-mismatched value returns default > 'notbool' stored for boolean codec xai_ai_insights returns true (default)
+[plugin-web-storage] decode failed for xai_ai_insights: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-78LUec/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-78LUec/packages/plugin-web-storage/src/__tests__/imperative.test.ts:104:12
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+
+---- runner summary ----
+harness PASS archive package.json script "test" is "vitest run" (found "vitest run")
+harness PASS JSON report parsed
+harness PASS reported test files equal the expected set (2 files, explicit include)
+harness PASS package config in effect (environment jsdom, globals false, setupFiles [], include ["src/__tests__/imperative.test.ts","src/__tests__/registry.test.ts"], root = archive package)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (2 present of 2 listed)
+harness PASS no test-file suite error
+required_tests_absent_from_archive=none
+json_report=success=true numTotalTestSuites=22 numTotalTests=31 numPassedTests=31 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals files=2 tests=31 passed=31 failed=0 other=0 suite_errors=0 unhandled_error_lines=0
+file src/__tests__/imperative.test.ts status=passed tests=16 passed=16 failed=0
+file src/__tests__/registry.test.ts status=passed tests=15 passed=15 failed=0
+case 001 PASSED | src/__tests__/imperative.test.ts > AC-IMP-1: getPref returns default when key absent xai_accent_hue default is 165
+case 002 PASSED | src/__tests__/imperative.test.ts > AC-IMP-1: getPref returns default when key absent xai_ai_insights default is true
+case 003 PASSED | src/__tests__/imperative.test.ts > AC-IMP-1: getPref returns default when key absent xai_zones default is empty array
+case 004 PASSED | src/__tests__/imperative.test.ts > AC-IMP-2: setPref/getPref round-trip for number codec setPref(xai_accent_hue, 200) then getPref returns 200
+case 005 PASSED | src/__tests__/imperative.test.ts > AC-IMP-3: setPref/getPref round-trip for string codec setPref(xai_rail_pos, 'right') then getPref returns 'right'
+case 006 PASSED | src/__tests__/imperative.test.ts > AC-IMP-4: setPref/getPref round-trip for boolean codec setPref(xai_ai_insights, false) then getPref returns false
+case 007 PASSED | src/__tests__/imperative.test.ts > AC-IMP-4: setPref/getPref round-trip for boolean codec setPref(xai_ai_voice, true) then getPref returns true
+case 008 PASSED | src/__tests__/imperative.test.ts > AC-IMP-5: setPref/getPref round-trip for json codec setPref(xai_rail_order, ['board','tasks']) then getPref returns the array
+case 009 PASSED | src/__tests__/imperative.test.ts > AC-IMP-5: setPref/getPref round-trip for json codec setPref(xai_pet_pos, {x:10,y:20}) then getPref returns the object
+case 010 PASSED | src/__tests__/imperative.test.ts > AC-IMP-6: removePref then getPref returns default sets then removes xai_accent_hue — getPref returns 165
+case 011 PASSED | src/__tests__/imperative.test.ts > AC-IMP-7: corrupt JSON in storage returns default + warns corrupt xai_zones value returns [] and calls console.warn once
+case 012 PASSED | src/__tests__/imperative.test.ts > AC-IMP-8: type-mismatched value returns default 'abc' stored for number codec xai_accent_hue returns 165
+case 013 PASSED | src/__tests__/imperative.test.ts > AC-IMP-8: type-mismatched value returns default 'notbool' stored for boolean codec xai_ai_insights returns true (default)
+case 014 PASSED | src/__tests__/imperative.test.ts > AC-IMP-9: setPref returns true on success setPref(xai_accent_hue, 100) returns true
+case 015 PASSED | src/__tests__/imperative.test.ts > AC-IMP-10: setPref returns false on QuotaExceededError mocked QuotaExceededError causes setPref to return false and log
+case 016 PASSED | src/__tests__/imperative.test.ts > AC-IMP-11: setPref with identical-to-current value does NOT call setItem writing the same value twice: second write skips localStorage.setItem
+case 017 PASSED | src/__tests__/registry.test.ts > AC-REG-1: All 18 explicit §9.2 keys exist in PREF_REGISTRY registry is a superset of the 18 explicit literal keys
+case 018 PASSED | src/__tests__/registry.test.ts > AC-REG-2: Both proposed keys exist with proposed: true xai_pomodoro_sessions has proposed: true
+case 019 PASSED | src/__tests__/registry.test.ts > AC-REG-2: Both proposed keys exist with proposed: true xai_countdowns has proposed: true
+case 020 PASSED | src/__tests__/registry.test.ts > AC-REG-2: Both proposed keys exist with proposed: true no explicit key carries proposed: true
+case 021 PASSED | src/__tests__/registry.test.ts > AC-REG-3: Registry entries use the expected schemaVersion every registry entry has the expected schemaVersion
+case 022 PASSED | src/__tests__/registry.test.ts > AC-REG-4: Codec set is the closed union every entry codec is in the closed set
+case 023 PASSED | src/__tests__/registry.test.ts > AC-REG-5: Owner row is non-empty every entry has a non-empty owner
+case 024 PASSED | src/__tests__/registry.test.ts > AC-REG-6: No accidental duplicate keys key count equals unique key count
+case 025 PASSED | src/__tests__/registry.test.ts > AC-REG-7: Default type matches codec codec=number entries have typeof default === number
+case 026 PASSED | src/__tests__/registry.test.ts > AC-REG-7: Default type matches codec codec=boolean entries have typeof default === boolean
+case 027 PASSED | src/__tests__/registry.test.ts > AC-REG-7: Default type matches codec codec=string entries have typeof default === string
+case 028 PASSED | src/__tests__/registry.test.ts > AC-REG-7: Default type matches codec codec=json entries can have any default shape
+case 029 PASSED | src/__tests__/registry.test.ts > AC-REG-8: Total entry count = 20 baseline + owner-row additions PREF_REGISTRY has exactly 87 entries
+case 030 PASSED | src/__tests__/registry.test.ts > AC-REG-8: Total entry count = 20 baseline + owner-row additions registry contains all 18 explicit + all 2 proposed + all owner-row additions
+case 031 PASSED | src/__tests__/registry.test.ts > AC-REG-9: xai-web-board-saved-filters owner-row key contract registers xai_board_filter_by_id as module json state
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-78LUec/packages/plugin-web-storage","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-78LUec/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"include":["src/__tests__/imperative.test.ts","src/__tests__/registry.test.ts"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/plugin-web-storage/src/internal/registry.ts packages/plugin-web-storage/src/internal/storage.ts
+pin_required_provenance_missing=none
+pin_modules=12 by package: packages/plugin-web-storage=12

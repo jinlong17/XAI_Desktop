@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * OS1..OS7 — OAuth state machine tests (test.md §5.3 P1)
  */
@@ -73,5 +74,37 @@ describe("OAuth state machine", () => {
 
     // The sessionStorage entry should be cleared
     expect(sessionStorage.getItem("xai_oauth_pending_linear")).toBeNull();
+  });
+});
+
+// REL-03: transient OAuth attempts have an account owner, not just a provider.
+describe("OAuth account binding", () => {
+  it("cancels A pending state synchronously on an account switch", async () => {
+    const pending = await startOAuth("notion");
+    accountScope.activate(accountScope.lock("B"), "g-b");
+    expect(sessionStorage.getItem("xai_oauth_pending_notion")).toBeNull();
+    expect(validateAndConsumeState(pending.state)).toBeNull();
+  });
+  it("rejects a retained A callback mounted under B, even if old sessionStorage is restored", async () => {
+    const pending = await startOAuth("gcal");
+    accountScope.activate(accountScope.lock("B"), "g-b");
+    sessionStorage.setItem("xai_oauth_pending_gcal", JSON.stringify(pending));
+    expect(validateAndConsumeState(pending.state)).toBeNull();
+  });
+  it("does not revive a retired attempt after switching A→B→A", async () => {
+    const original = accountScope.capture();
+    const pending = await startOAuth("linear");
+    accountScope.activate(accountScope.lock("B"), "g-b");
+    accountScope.activate(accountScope.lock(original.accountId!), original.generation!, original.kind === "demo");
+    expect(validateAndConsumeState(pending.state)).toBeNull();
+  });
+  it("does not permit an old handler to start an attempt for a new account", async () => {
+    const captured = accountScope.capture(); accountScope.activate(accountScope.lock("B"), "g-b");
+    await expect(startOAuth("notion", captured)).rejects.toThrow();
+    expect(sessionStorage.length).toBe(0);
+  });
+  it("rejects pre-isolation attempts without a verifiable owner", () => {
+    sessionStorage.setItem("xai_oauth_pending_notion", JSON.stringify({ state: "notion.legacy", codeVerifier: "old", expiresAt: Date.now() + 1000 }));
+    expect(validateAndConsumeState("notion.legacy")).toBeNull();
   });
 });

@@ -1,0 +1,89 @@
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps a failed new event and its latest draft available for retry
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps the editor and record when deletion fails
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > exports the latest unsaved form and refuses old-account retry and export
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > does not overwrite newer raw events when retrying a failed draft
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-HBJDws/source/packages/xai-web-calendar
+
+ ✓ src/__tests__/CalendarModule.recurrence.test.tsx (6 tests) 1411ms
+   ✓ CalendarModule recurrence integration (P4) > AC-RECUR-1: daily recurring event over Week view renders 7 blocks  453ms
+   ✓ CalendarModule recurrence integration (P4) > AC-RECUR-7: deleting a recurring event removes all rendered instances  354ms
+ ✓ src/__tests__/CalendarModule.nav.test.tsx (6 tests) 2080ms
+   ✓ CalendarModule nav > AC-NAV-1: > → June 2026  697ms
+   ✓ CalendarModule nav > AC-NAV-4: today button resets to May 2026 anchor  440ms
+   ✓ CalendarModule nav > AC-NAV-6 (ZH): title updates in ZH after nav  322ms
+ ✓ src/__tests__/YearView.test.tsx (5 tests) 2101ms
+   ✓ YearView > renders a 12-month year grid from the persisted year view  630ms
+   ✓ YearView > clicking a year-view date opens day overview before quick-create  350ms
+   ✓ YearView > shows month-view fixture events as same-color dots in the year grid  500ms
+   ✓ YearView > shows user event colors/tags and opens edit from the event dot  351ms
+ ✓ src/__tests__/CalendarModule.render.test.tsx (12 tests) 2442ms
+   ✓ CalendarModule render > AC-RENDER-4: title shows May 2026 in EN  489ms
+   ✓ CalendarModule render > AC-VIEW-5: clicking back to Month restores the grid  420ms
+ ✓ src/__tests__/CalendarModule.viewtoggle.test.tsx (11 tests) 2402ms
+   ✓ CalendarModule view toggle > AC-TOGGLE-1: toggling Month→Week→Day→Month preserves activeDate  502ms
+   ✓ Nav arrows step by view (AC-NAV-EXT-1..3) > AC-NAV-YEAR-1: when view=year, prev/next step ±1 year  741ms
+ ✓ src/__tests__/CalendarModule.eventcrud.test.tsx (10 tests) 2665ms
+   ✓ CalendarModule event CRUD integration (P4) > AC-CREATE-7: toolbar + opens create composer on today (not activeDate)  392ms
+   ✓ CalendarModule event CRUD integration (P4) > AC-EDIT-4: clicking a user block in Week view opens edit composer  458ms
+   ✓ CalendarModule event CRUD integration (P4) > AC-QUICK-CREATE-1: clicking a month date opens day overview, then create composer for that date  707ms
+   ✓ CalendarModule event CRUD integration (P4) > AC-QUICK-CREATE-2: created event renders on its source date with tag  482ms
+ ✓ src/__tests__/CalendarModule.saveRecovery.test.tsx (4 tests) 3242ms
+   ✓ keeps a failed new event and its latest draft available for retry  1589ms
+   ✓ keeps the editor and record when deletion fails  366ms
+   ✓ exports the latest unsaved form and refuses old-account retry and export  976ms
+   ✓ does not overwrite newer raw events when retrying a failed draft  308ms
+ ✓ src/__tests__/CalendarModule.dst-recurrence.test.tsx (2 tests) 455ms
+ ✓ src/__tests__/CalendarModule.i18n.test.tsx (6 tests) 692ms
+ ✓ src/__tests__/CalendarModule.deeplink.test.tsx (7 tests) 961ms
+ ✓ src/__tests__/WeekView.test.tsx (14 tests) 793ms
+ ✓ src/__tests__/CalendarModule.weekstart.test.tsx (4 tests) 650ms
+ ✓ src/__tests__/CalendarModule.activedate.test.tsx (5 tests) 803ms
+ ✓ src/__tests__/CalendarModule.boardfeed.test.tsx (3 tests) 265ms
+ ✓ src/__tests__/CalendarModule.events.test.tsx (6 tests) 490ms
+ ✓ src/__tests__/TimeGrid.test.tsx (8 tests) 190ms
+ ✓ src/__tests__/DayView.test.tsx (10 tests) 192ms
+ ✓ src/__tests__/perfBudget.test.ts (1 test) 130ms
+ ✓ src/__tests__/EventComposer.test.tsx (21 tests) 266ms
+ ✓ src/__tests__/localDate.test.tsx (4 tests) 195ms
+ ✓ src/__tests__/eventStore.test.ts (13 tests) 42ms
+ ✓ src/__tests__/useUserCalEvents.test.tsx (8 tests) 30ms
+ ✓ src/__tests__/aiMutateSubscriber.test.tsx (6 tests) 24ms
+ ✓ src/__tests__/aiCreateSubscriber.test.tsx (5 tests) 33ms
+ ✓ src/__tests__/perfBudget.eventcrud.test.ts (1 test) 23ms
+ ✓ src/__tests__/monthGridCells.test.ts (9 tests) 5ms
+ ✓ src/__tests__/styles.css.tokens.test.ts (11 tests) 8ms
+ ✓ src/__tests__/mergeEventsForViewport.test.ts (10 tests) 7ms
+ ✓ src/__tests__/timeGridMath.test.ts (16 tests) 5ms
+ ✓ src/__tests__/parseDateKey.test.ts (15 tests) 4ms
+ ✓ src/__tests__/placeEventBlocks.test.ts (12 tests) 6ms
+ ✓ src/__tests__/sampleEvents.test.ts (10 tests) 7ms
+ ✓ src/__tests__/events.test.ts (3 tests) 6ms
+ ✓ src/__tests__/boardCalendarFeed.test.ts (6 tests) 13ms
+ ✓ src/__tests__/formatMonth.test.ts (3 tests) 3ms
+ ✓ src/__tests__/expandRecurrence.test.ts (12 tests) 5ms
+ ✓ src/__tests__/validators.test.ts (11 tests) 4ms
+ ✓ src/__tests__/weekWindow.test.ts (8 tests) 4ms
+ ✓ src/__tests__/ids.test.ts (4 tests) 28ms
+ ✓ src/__tests__/weekdays.test.ts (3 tests) 2ms
+ ✓ src/__tests__/index-barrel.test.ts (9 tests) 4ms
+ ✓ src/__tests__/isoWeekNumber.test.ts (6 tests) 5ms
+ ✓ src/__tests__/dateKeys.test.ts (7 tests) 3ms
+ ✓ src/__tests__/holidays.test.ts (4 tests) 2ms
+ ✓ src/__tests__/registration.test.tsx (2 tests) 2ms
+ ✓ src/__tests__/registry-presence.test.ts (4 tests) 2ms
+
+ Test Files  46 passed (46)
+      Tests  343 passed (343)
+   Start at  13:46:08
+   Duration  13.05s (transform 2.19s, setup 12.56s, collect 11.80s, tests 22.70s, environment 25.80s, prepare 3.88s)
+
+

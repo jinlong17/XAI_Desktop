@@ -1,0 +1,11 @@
+revision=2a536c1 fixed_commit=2a536c16ff839dd1281d7a2b484478532ac5f9a0
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-1jTeSA
+
+ ✓ docs/reviews/web-collaborate-recovery-independent/host.test.tsx (8 tests) 649ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  23:08:48
+   Duration  5.98s (transform 2.38s, setup 0ms, collect 3.89s, tests 649ms, environment 694ms, prepare 267ms)

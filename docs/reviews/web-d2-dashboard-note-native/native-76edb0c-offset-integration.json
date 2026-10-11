@@ -1,0 +1,68 @@
+{
+  "requestedRef": "76edb0c",
+  "revision": "76edb0c9b36ca7afee327e095840124ef208a94a",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 68533,
+  "reopenedPid": 68601,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "held-account-lock",
+        "pass": true
+      },
+      {
+        "name": "absent-no-mount-write",
+        "pass": true
+      },
+      {
+        "name": "quota-latest-retry",
+        "pass": true
+      },
+      {
+        "name": "readback-uncertain",
+        "pass": true
+      }
+    ],
+    "checkpoint": {
+      "held-account-lock": {
+        "raw": "Submitted note"
+      },
+      "absent-no-mount-write": {
+        "raw": null
+      },
+      "quota-latest-retry": {
+        "raw": "Latest recovery note"
+      },
+      "readback-uncertain": {
+        "raw": "Submitted note"
+      }
+    },
+    "scope": "Actual DashHeader, native account WebLocks and synthetic physical account notes; device offset protocol unchanged; CSS omitted, not visual acceptance"
+  },
+  "after": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "held-account-lock",
+        "pass": true
+      },
+      {
+        "name": "absent-no-mount-write",
+        "pass": true
+      },
+      {
+        "name": "quota-latest-retry",
+        "pass": true
+      },
+      {
+        "name": "readback-uncertain",
+        "pass": true
+      }
+    ],
+    "scope": "Actual DashHeader, native account WebLocks and synthetic physical account notes; device offset protocol unchanged; CSS omitted, not visual acceptance"
+  }
+}

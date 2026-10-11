@@ -1,0 +1,53 @@
+revision=2b02dd3 fixed_commit=2b02dd3a033a8af1b77259ff8d7d0990180eaa39
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-3NO5t8
+
+ ❯ docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx (24 tests | 1 failed) 372ms
+   ✓ absent mount and rerender preserve all absent physical sources without a draft 63ms
+   ✓ actual share producer saves exact own source and leaves siblings absent 16ms
+   ✓ actual avatars producer saves exact own source and leaves siblings absent 19ms
+   ✓ actual mentions producer saves exact own source and leaves siblings absent 11ms
+   ✓ invalid share source is retained on mount without fake draft or seed 17ms
+   ✓ invalid avatars source is retained on mount without fake draft or seed 6ms
+   ✓ invalid mentions source is retained on mount without fake draft or seed 5ms
+   ✓ share waits for its actual key lock with latest draft 11ms
+   ✓ avatars waits for its actual key lock with latest draft 10ms
+   ✓ mentions waits for its actual key lock with latest draft 10ms
+   ✓ account exclusive blocks share while independent device choice commits 14ms
+   ✓ three same-turn toggles use latest desired values 26ms
+   ✓ repairing one invalid device source preserves a failed sibling draft 19ms
+   ✓ pending device operation survives account epoch and old combined guard is inert 12ms
+   ✓ unchanged uncertain device Retry verifies without duplicate physical commit 15ms
+   ✓ source conflict discard is read-only and preserves another failed field 21ms
+   ✓ clean external values project all three controls without writing 8ms
+   ✓ forged share selection cannot persist or create a draft 6ms
+   ✓ missing locks retains latest choice without raw fallback write 12ms
+   ✓ retry of the only failed field never reattempts saved siblings 15ms
+   ✓ old export and discard capabilities are revoked after unmount 9ms
+   ✓ owner change at URL setup cancels and cleans old export without a click 15ms
+   ✓ failed export setup reports separate error while quota draft remains 14ms
+   × failed export setup reports separate error while pure pending draft remains 17ms
+     → expected 'CollaborateSavingExport current draft…' to match /could not export the draft/i
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 23 passed (24)
+   Start at  22:54:29
+   Duration  1.65s (transform 290ms, setup 0ms, collect 570ms, tests 372ms, environment 342ms, prepare 66ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx > failed export setup reports separate error while pure pending draft remains
+AssertionError: expected 'CollaborateSavingExport current draft…' to match /could not export the draft/i
+
+- Expected: 
+/could not export the draft/i
+
++ Received: 
+"CollaborateSavingExport current draftShow collaborator avatarsDefault share permissionCan commentCan editView onlyNotify on @ mentions"
+
+ ❯ docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx:29:405
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

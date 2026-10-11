@@ -1,0 +1,114 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+shell_package_tree=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 web_app_tree=61ddf71751eaa9f1a456897ecb7fbe23e708be4b
+mode=bytes
+suffix=apprail-fixed1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-apprail-order-recovery-sol/verify-fixed.mjs f9eb4b1 bytes apprail-fixed1
+runner_checkout_head=dac8cd3ff4d916392051519699577eff084c42e4
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-shell/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=07c4f87674e5a14d7cbeffc4cd8ae18d0c9d725cfe052ce45b55fb631720c236 bytes.test.tsx=d4827472827f284178944dd621198a39d7b7ffc34be19781714e61f91103d6cd domain.test.tsx=f7b55802a73251b6eb1b0f0cb0d3d39d798fdb9ff7c472ee4b57a5abca4cea0a merge.test.tsx=05f6e01081156e2d32076606f2b4f314f33246d6b96b0ab7ffa644a9de8d377a drag.test.tsx=4be85f28b053eeed2606e8118641c7ffd93b1a078ce298c3343facfc3fd23063 field.test.tsx=21e7b77f7135bb1debe446f48bafdc9f3f4a3a5b1796084094bbac140f995846 continuity-export.test.tsx=b92790b3f989e66b5e3b549995c58abcaee88d5acb700e7f2c31af577f5dd5fc host.test.tsx=b89a4f6e2ebc12cf4a4952b17deb6ea7c793818198ad16562610f63ec47a4b03 verify-fixed.mjs=e944cb226e3fa342727c913547ff5084e0ad38fad5293ed306cb512bf9f5a4e8
+archive_file_sha256 packages/xai-web-shell/src/AppRail.tsx=fe789078fecc60936d3e6c5fc2b203001a15490aecf30f3a0ca301da1399fb44 packages/xai-web-shell/src/internal/dnd.ts=a538b51f119f9cedbed3421f8cd21549f1730d0ede9059257402bee9a63deaf9 packages/xai-web-shell/src/registry.tsx=b621abbecfda785a5d7da628465925dacdb3249638b181cc3ca074687b734c1e packages/xai-web-shell/src/Topbar.tsx=aa5ac56e7b6a7652df70e82ed4d83dc81b44558181bfb48a30eb40b157d43c0e packages/xai-web-shell/src/Shell.tsx=38e25c6b20f6413c9362f53e9be7e2aa121001170898a6097e29fccabf22e432 packages/xai-web-shell/src/types.ts=d18f637e9bec8c05f305fb29467acfd3fdcf2649e83ad2b28b877389752139c0 packages/xai-web-shell/src/index.ts=396a894d09b5b2b95f2ed063b615b41f371044f356d4d2ef9f224189e09b66ab packages/xai-web-shell/src/__tests__/AppRail.test.tsx=cbe4179146b7f9565cb038027f004520b46917db3da6c0e9f653cf319b309e8f packages/xai-web-shell/src/__tests__/Topbar.test.tsx=cd96f9bccf31b489d442de84d7c02ca855f712edf411da55d9e52ac30f47accd apps/web/src/App.tsx=f644e78ec482c0b9b66f9702407eb34e1dcd110e837293e4a736964bfe7ac408 packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] bytes.test.tsx: include=docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-HFpl98/apprail-sol-bytes-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-HFpl98/.report-bytes-0.json vitest_exit=0 cases=26 passed=26 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=26 numPassedTests=26 numFailedTests=0
+exit=0
+harness_checks=PASS (6/6)
+==== run[0] bytes.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-HFpl98
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE F-B002 the storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE F-B002 the storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE the attempt-counting Storage injector logs before delegation, faults precisely and proves firing 1ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE the exclusive Web Lock fixture serves async grants, holds, programmed holds, denial and a missing capability 43ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE accountScope transitions, confirm recorder, StorageEvent counter, bus spy, unload probe and download harness are observable 21ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE the production App mounts with only the auth-session hook substituted, real modules and no network 187ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE the drag driver fires dragStart → dragEnter → dragOver → drop → dragEnd on the real rail nodes with one DataTransfer stub 174ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §2/§10.11 lifecycle classification, registry entry, device ownership and the per-key lock name are unchanged 1ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §3.7 absent bytes display the 12 defaults then Bookkeeping and Metrics, with no status and no unload warning 97ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §3.7 `[]` displays all 14 modules in R order with XAI Chat first, with no status 93ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.2 a value written by the before product is read identically: a seeded custom order displays as D(S, R) 164ms
+stdout | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 loading the production App on the three host-row-a routes, the Topbar popover and a reload make zero attempts to write
+SOL-OBS other-key writes during the zero-write mount []
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 loading the production App on the three host-row-a routes, the Topbar popover and a reload make zero attempts to write 268ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 a seeded custom order is displayed on every route with zero attempts to write and unchanged bytes 208ms
+stdout | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 AppRail re-renders caused by a Features toggle, a rail-position change and a language change from another document make zero attempts
+SOL-OBS after language and position changes {"lang":"统计","pos":"top"}
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 AppRail re-renders caused by a Features toggle, a rail-position change and a language change from another document make zero attempts 178ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 a standalone AppRail mounts with zero attempts to write, absent and seeded 50ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.1 P6 an all-visible drop over a stored custom order writes exactly P 112ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.1 P6 an all-visible drop over absent bytes writes exactly P (12 defaults plus Bookkeeping and Metrics) 112ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.1 P6 an all-visible drop over `[]` writes exactly P 108ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.1 P6 a two-step all-visible drop writes the final preview 113ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 a drop with Boards hidden keeps `board` at its stored index 2 105ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 a drop with three modules hidden keeps each at its stored index 114ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 an unknown id (`ghost-module`) in the stored order keeps its index 142ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 `settings` in the stored order keeps its index 132ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P7 over absent bytes with Boards hidden, `board` keeps its default index 1 103ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.2 bytes written by a drop decode identically through the unchanged legacy getPref and appear verbatim in exportDeviceRecoveryData() 104ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H11 PC a committed order in another document updates an idle rail live; a removal there displays the default 107ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §2 the rail buttons keep their markup: .rail-btn.has-tip with data-tip, aria-label and draggable; the pet button stays outside .rail-items 79ms
+
+ Test Files  1 passed (1)
+      Tests  26 passed (26)
+   Start at  04:27:13
+   Duration  6.39s (transform 1.86s, setup 111ms, collect 2.86s, tests 2.82s, environment 342ms, prepare 70ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-HFpl98/.report-bytes-0.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-HFpl98","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-HFpl98/.apprail-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-HFpl98/packages/xai-web-shell/src/__tests__/setup.ts"],"include":["docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/registry.tsx packages/xai-web-shell/src/internal/dnd.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx packages/plugin-web-storage/src/internal/dataExport.ts packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts
+pin_modules=630 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=15 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=26 passed=26 failed=0 skipped=0 precondition_failures=0
+harness PASS [bytes.test.tsx] JSON report parsed
+harness PASS [bytes.test.tsx] reported files equal the requested include
+harness PASS [bytes.test.tsx] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-shell/src/__tests__/setup.ts], root = archive)
+harness PASS [bytes.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [bytes.test.tsx] required product modules loaded from the archive (29)
+harness PASS [bytes.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 the storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 PASSED | FIXTURE the attempt-counting Storage injector logs before delegation, faults precisely and proves firing
+case 003 PASSED | FIXTURE the exclusive Web Lock fixture serves async grants, holds, programmed holds, denial and a missing capability
+case 004 PASSED | FIXTURE accountScope transitions, confirm recorder, StorageEvent counter, bus spy, unload probe and download harness are observable
+case 005 PASSED | FIXTURE the production App mounts with only the auth-session hook substituted, real modules and no network
+case 006 PASSED | FIXTURE the drag driver fires dragStart → dragEnter → dragOver → drop → dragEnd on the real rail nodes with one DataTransfer stub
+case 007 PASSED | PC §2/§10.11 lifecycle classification, registry entry, device ownership and the per-key lock name are unchanged
+case 008 PASSED | PC §3.7 absent bytes display the 12 defaults then Bookkeeping and Metrics, with no status and no unload warning
+case 009 PASSED | PC §3.7 `[]` displays all 14 modules in R order with XAI Chat first, with no status
+case 010 PASSED | PC §10.2 a value written by the before product is read identically: a seeded custom order displays as D(S, R)
+case 011 PASSED | PC §5.1 loading the production App on the three host-row-a routes, the Topbar popover and a reload make zero attempts to write
+case 012 PASSED | PC §5.1 a seeded custom order is displayed on every route with zero attempts to write and unchanged bytes
+case 013 PASSED | PC §5.1 AppRail re-renders caused by a Features toggle, a rail-position change and a language change from another document make zero attempts
+case 014 PASSED | PC §5.1 a standalone AppRail mounts with zero attempts to write, absent and seeded
+case 015 PASSED | PC §10.1 P6 an all-visible drop over a stored custom order writes exactly P
+case 016 PASSED | PC §10.1 P6 an all-visible drop over absent bytes writes exactly P (12 defaults plus Bookkeeping and Metrics)
+case 017 PASSED | PC §10.1 P6 an all-visible drop over `[]` writes exactly P
+case 018 PASSED | PC §10.1 P6 a two-step all-visible drop writes the final preview
+case 019 PASSED | H5 §10.1 P2 a drop with Boards hidden keeps `board` at its stored index 2
+case 020 PASSED | H5 §10.1 P2 a drop with three modules hidden keeps each at its stored index
+case 021 PASSED | H5 §10.1 P2 an unknown id (`ghost-module`) in the stored order keeps its index
+case 022 PASSED | H5 §10.1 P2 `settings` in the stored order keeps its index
+case 023 PASSED | H5 §10.1 P7 over absent bytes with Boards hidden, `board` keeps its default index 1
+case 024 PASSED | PC §10.2 bytes written by a drop decode identically through the unchanged legacy getPref and appear verbatim in exportDeviceRecoveryData()
+case 025 PASSED | H11 PC a committed order in another document updates an idle rail live; a removal there displays the default
+case 026 PASSED | PC §2 the rail buttons keep their markup: .rail-btn.has-tip with data-tip, aria-label and draggable; the pet button stays outside .rail-items

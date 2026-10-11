@@ -1,0 +1,272 @@
+acceptance-checks suffix=419e56d
+cwd_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a186ea951fa059eaf
+node=v24.16.0
+started=2026-10-05T21:31:51.408Z
+## A identity
+PASS A1 docs head is the batch-52 control-plane commit | {"head":"8c88dd2b629a509faa6cd153b53456b01b8758bb"}
+PASS A2 the docs head carries the fixed product unchanged (apps, packages, package.json, pnpm-lock.yaml)
+PASS A3 lockfile SHA-256 equals the contract gate at 419e56d and 5cd63ff | {"lockFixed":"df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9","lockBefore":"df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9"}
+## B contract r3
+PASS B1 contract SHA-256 at HEAD equals r3 | ef1b573c9f1366ec0fc342d8960eb5a2975a8d1c75904da04134edb57212d90d
+PASS B2 contract SHA-256 at 706c9a3 equals r3
+PASS B3 contract history is exactly r3 706c9a3, r2 b2e5eb2, r1 e9fbdb7 | ["706c9a3186e27d80f7c05f065981f111cf80e3a7","b2e5eb20891c4bdbe4749ff5229207af7a210918","e9fbdb7ef21c86936da22b666cd80dfc34a3c609"]
+PASS B4 r1 commit added only the selection memo and the contract | ["docs/reviews/web-appearance-recovery-contract/contract.md","docs/reviews/web-next-caller-selection/selection-5cd63ff.md"]
+PASS B5 r2 commit changed only the contract
+PASS B6 r3 commit changed only the contract
+PASS B7 A1 text byte-identical in r1, r2 and r3 | {"r1":"4bc689c7ac91820456ad8df6af377ca8925b5db8aaec793fe899eb0ffb9d3328","r2":"4bc689c7ac91820456ad8df6af377ca8925b5db8aaec793fe899eb0ffb9d3328","r3":"4bc689c7ac91820456ad8df6af377ca8925b5db8aaec793fe899eb0ffb9d3328"}
+PASS B8 A3-A9 text byte-identical in r1, r2 and r3 | {"r1":"23bc6950ebc8cfad6af94643aaec2284bf98154f930e6ebc9006a1e5674a1b6f","r3":"23bc6950ebc8cfad6af94643aaec2284bf98154f930e6ebc9006a1e5674a1b6f"}
+PASS B9 r3 counts: hypotheses H1-H17, gates 1-10, evidence E1-E27 (contiguous, once each) | {"hyp":17,"gates":[1,2,3,4,5,6,7,8,9,10],"eItems":27}
+PASS B10 r3 records both product-owner decisions (A2 decision and 'Always shown (decision two)')
+## C product scope
+PASS C1 product diff 5cd63ff..419e56d has 26 files, every one a contract §11 file | {"count":26,"unclassified":[]}
+PASS C2 full diff outside docs/ equals the product diff | {"count":26}
+PASS C3 at most four new Appearance internal modules (exactly the four roles) | ["packages/xai-web-settings-appearance/src/internal/AppearanceActions.tsx","packages/xai-web-settings-appearance/src/internal/AppearanceStatus.tsx","packages/xai-web-settings-appearance/src/internal/appearanceController.tsx","packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts"]
+PASS C4 protected tree unchanged: packages/plugin-web-storage | {"tree":"782c79de33a1da6851b5a235950408eb7ae89f99"}
+PASS C4 protected tree unchanged: packages/plugin-web-settings-shell | {"tree":"8fe33026603bdbf50676b25ce99ba78a444ead34"}
+PASS C4 protected tree unchanged: packages/plugin-web-tokens | {"tree":"3ea903458975b90129f563ddbf4b31224e9b4b52"}
+PASS C4 protected tree unchanged: packages/core | {"tree":"6bfdb0eac1ff1a597128e5c8c9b9feba52d11051"}
+PASS C4 protected tree unchanged: packages/xai-web-event-bus | {"tree":"c68c77fae4984e8b60aaf9684c61bbe21224a38d"}
+PASS C4 protected tree unchanged: packages/xai-web-pet | {"tree":"6594df5e7009a47018b217f171c7895c11105b5a"}
+PASS C4 protected tree unchanged: packages/xai-web-cmdk | {"tree":"a8c733f2d0fdf269bb4f0131bca7a8de342469a2"}
+PASS C4 protected tree unchanged: packages/xai-web-settings-features-panel | {"tree":"3f25c84b5b582719d74fda8872db4e6e1db388f1"}
+PASS C4 protected tree unchanged: packages/plugin-web-settings-rest | {"tree":"21f0bbb61dae92948ebddfc82946a3ff6b36e2a6"}
+PASS C4 protected tree unchanged: packages/xai-web-dashboard-grid | {"tree":"8e96464cae57ba35a7f1a4c39c9b0a8f9df64509"}
+PASS C4 protected tree unchanged: packages/xai-web-dashboard-widgets | {"tree":"4d65ad167b0d3712166e96569b1d9f44ed66a500"}
+PASS C4 protected file unchanged: package.json
+PASS C4 protected file unchanged: pnpm-lock.yaml
+PASS C5 Appearance §11-protected file unchanged: src/internal/appearancePane.tsx
+PASS C5 Appearance §11-protected file unchanged: src/constants.ts
+PASS C5 Appearance §11-protected file unchanged: src/appearanceDefaults.ts
+PASS C5 Appearance §11-protected file unchanged: package.json
+PASS C5 Appearance §11-protected file unchanged: manifest.json
+PASS C5 Appearance §11-protected file unchanged: tsconfig.json
+PASS C5 Appearance §11-protected file unchanged: vitest.config.ts
+PASS C5 Appearance §11-protected file unchanged: vitest.setup.ts
+PASS C5 Appearance §11-protected file unchanged: eslint.config.js
+PASS C5 Appearance §11-protected file unchanged: docs/design.md
+PASS C5 Appearance §11-protected file unchanged: docs/dev_log.md
+PASS C6 settings-shell SettingsFooter, confirmAction and resetAllPrefs unchanged (shared code untouched, A2)
+PASS C7 delta 24073b5..419e56d outside docs/ is exactly styles.css and the two guard tests | ["packages/xai-web-settings-appearance/src/__tests__/AppearancePane.focus-ring.test.tsx","packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx","packages/xai-web-settings-appearance/src/styles.css"]
+PASS C8 24073b5..5bbf473 = styles.css + focus-ring test; 5bbf473..419e56d = styles.css + selected-focus test | {"d1a":["packages/xai-web-settings-appearance/src/__tests__/AppearancePane.focus-ring.test.tsx","packages/xai-web-settings-appearance/src/styles.css"],"d1b":["packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx","packages/xai-web-settings-appearance/src/styles.css"]}
+PASS C9 styles.css append-only chain: 419e56d ⊇ 5bbf473 ⊇ 24073b5 ⊇ 5cd63ff (byte prefixes) | {"before":[8595,"1b17d1f442905e255eae53e4e16a01c02b4a912ed6a1482231e8db5e50d5927c"],"r1":[12491,"c3d3393d48b98b61aa4f218d4eec7ff61ed56b5ab2961961e368f3d24ba192bf"],"r2":[12956,"2a417677e2160ccc57cde0079dd1bcf41c6b59e3375eb200b23958b00ade081a"],"fixed":[13693,"cd95e4a921e334d7ac47fc7e808ffa3e79b664c45fbf754049be33f649f250ce"]}
+PASS C10 additive only (no removed line): packages/xai-web-settings-appearance/src/types.ts | {"removed":0}
+PASS C10 additive only (no removed line): packages/xai-web-settings-appearance/src/index.ts | {"removed":0}
+PASS C10 additive only (no removed line): packages/xai-web-settings-appearance/src/styles.css | {"removed":0}
+PASS C10 additive only (no removed line): packages/xai-web-shell/src/types.ts | {"removed":0}
+PASS C10 additive only (no removed line): packages/xai-web-shell/src/Shell.tsx | {"removed":0}
+INFO numstat App.tsx and Topbar.tsx: 82	112	apps/web/src/App.tsx ; 11	29	packages/xai-web-shell/src/Topbar.tsx
+## D product static checks at 419e56d
+PASS D1 Appearance product source (non-test src) has zero of each §10 item 9 spelling | {"files":11,"counts":{"localStorage":0,"setPref(":0,"removePref(":0,"usePref(":0,"emitWebEvent(":0,"new StorageEvent":0,"dispatchEvent(":0,"SettingsFooter":0,"pane-footer":0,"pane-save":0}}
+PASS D2 Topbar.tsx has zero localStorage and no persistAndSet
+PASS D3 App.tsx: no writeLocalPref, localStorage.setItem, preference-changed subscriber or usePref(
+PASS D4 readLocalPref byte-identical between 5cd63ff and 419e56d | 3675ffe3ba163e40fa232325008b862ffd61a96bfe049c3458399fa4b9582a44
+PASS D5 App.tsx public exports unchanged (App, createPetToggleHandler, createSettingsOpenHandler, readLocalPref) | ["App","createPetToggleHandler","createSettingsOpenHandler","readLocalPref"]
+PASS D6 the Appearance sign-out step is awaited on the line immediately before each requestSettingsDeparture("sign-out") (2 branches) | ["if (!await confirmAppearanceSignOut()) return;","if (!await confirmAppearanceSignOut()) return;"]
+PASS D7 App creates exactly one controller and provides it
+PASS D8 App passes appearanceStatus and the controller's edits to Shell
+PASS D9 Review callback emits the shortcut module-change event, then navigates once to the pane
+PASS D10 Topbar renders the appearanceStatus slot immediately after premiumBadge and before the popover
+PASS D11 Topbar option setters are called directly (one call, no storage)
+PASS D12 Retry all is an always-rendered native <button type="button"> with the §5 test id, aria-disabled when E is empty, and never disabled/inert/hidden/tabIndex | {"tag":"<button type=\"button\" className=\"btn primary appearance-retry-all\" data-testid=\"appearance-retry-all\" aria-disabled={enabled ? undefined : \"true\"} aria-describedby={described ? statusId : undefined} onClick={() => controller.retryAll()} > {copy.retryAll} "}
+PASS D13 Retry all is described by the status line only while enabled or a pass is open, and its label is the copy constant
+PASS D14 bottom action area DOM order: status line, Retry all, Export, Discard all, Reset (A2.8) | [2276,2541,2919,3172,3478]
+PASS D15 the status line is always rendered with role="status"
+PASS D16 Export and Discard all render only while drafts exist
+PASS D17 Topbar status renders nothing unless E is non-empty and only calls onReview (no storage, no retry)
+PASS D18 controller: Retry all order is the pane display order; Reset fields exclude language
+PASS D19 controller: retryAll derives E live and is inert when E is empty, before clearing any line
+PASS D20 controller: strict validators equal the §2 domains (accent integer 0-360, font scale finite 0.85-1.15, six tones, four rail positions)
+PASS D21 controller: root keys use the open-ended suffix path with the json codec; registered keys the registered path
+PASS D22 controller makes no raw storage, event, lock or broadcast call
+PASS D23 every EN/ZH recovery string (44) equals a backticked string of the contract §5 normative table | []
+PASS D24 in-flight line ends with U+2026; EN count line singular/plural, ZH one form
+PASS D25 no 'Save & apply'/'保存生效'/'Saved'/'已保存' string in the copy module
+PASS D26 every appended selector is under .appearance-pane, .appearance-recovery-* or .appearance-status* (17 selectors) | {"count":17,"outOfScope":[]}
+PASS D27 appended at-rules are only @media (max-width: 640px) and @media (max-width: 767px); no !important, sticky or fixed position | ["@media (max-width: 640px)","@media (max-width: 767px)"]
+PASS D28 the disabled Retry all rule is one rule set under .appearance-pane declaring only colours and the cursor, from neutral tokens | {"background-color":"var(--bg-panel-2)","border-color":"var(--border-1)","color":"var(--text-3)","cursor":"not-allowed"}
+PASS D29 no appended rule sets pointer-events or touches an --accent/--red/--danger token outside the two focus rules
+PASS D30 F-APP-1 rule restores the global ring on the Font scale slider (outline + offset 2px only)
+PASS D31 F-APP-2 rule draws the global ring outside the selected swatch and keeps the selection as a box-shadow (paint-only)
+PASS D32 the global focus ring in protected tokens.css matches the F-APP rules' outline
+PASS D33 root causes stay in protected layout.css: slider-row outline none; accent-sw.active ring; popover option focus outline none then checked tint
+PASS D34 Topbar summary hidden at <=760 px and at 641-767 px, only width-capped at 768-1024 px: visible from 768 px (line-606 erratum facts)
+PASS D35 the Topbar status text is hidden at max-width 767px (shown from 768 px, following the summary)
+PASS D36 the pane registers no Settings route guard (protected render forwards only lang; no registerDepartureGuard in the package source)
+PASS D37 every unscoped selector of the original Appearance sheet is bound to Appearance-only markup, so the stylesheet reorder cannot restyle other modules | {"unscopedSelectors":83,"unbound":[],"sharedClasses":[]}
+## E evidence hashes
+INFO hash-log section "E1": 10/10 re-derived equal
+INFO hash-log section "E2": 26/26 re-derived equal
+INFO hash-log section "E3": 7/7 re-derived equal
+INFO hash-log section "E4": 58/58 re-derived equal
+INFO hash-log section "E4/E5 supplementary K-1": 82/82 re-derived equal
+INFO hash-log section "E5": 5/5 re-derived equal
+INFO hash-log section "E6 r1 run record": 10/10 re-derived equal
+INFO hash-log section "E6 r2 run record": 7/7 re-derived equal
+INFO hash-log section "E6 r3 run record": 7/7 re-derived equal
+INFO hash-log section "E6 product (§11 files at 419e56d)": 26/26 re-derived equal
+INFO hash-log section "E7 OE erratum basis": 15/15 re-derived equal
+INFO hash-log section "E7": 9/9 re-derived equal
+INFO hash-log section "E7 corrected copy run": 1/1 re-derived equal
+INFO hash-log section "E8": 1/1 re-derived equal
+INFO hash-log section "E9": 5/5 re-derived equal
+INFO hash-log section "E10": 1/1 re-derived equal
+INFO hash-log section "E11": 10/10 re-derived equal
+INFO hash-log section "E12": 6/6 re-derived equal
+INFO hash-log section "E13": 18/18 re-derived equal
+INFO hash-log section "E14 (PASS at 419e56d)": 40/40 re-derived equal
+INFO hash-log section "E15 (PASS at 419e56d)": 121/121 re-derived equal
+INFO hash-log section "E14-E15 historical FAIL at 24073b5 (F-APP-1)": 29/29 re-derived equal
+INFO hash-log section "E14-E15 historical FAIL at 5bbf473 (F-APP-2)": 77/77 re-derived equal
+INFO hash-log section "E16": 10/10 re-derived equal
+INFO hash-log section "E16 (Features F1)": 2/2 re-derived equal
+INFO hash-log section "E17": 2/2 re-derived equal
+INFO hash-log section "E26": 5/5 re-derived equal
+INFO hash-log section "This batch": 107/107 re-derived equal
+PASS E0 every hash in the E27 hash log re-derives equal (697 entries: 590 committed + 107 batch 51) | {"total":697,"mismatches":[]}
+PASS E0b every committed artifact's last commit is its listed producing commit (unchanged since); batch-51 files last touched by c6d1ed4 | []
+PASS E-E1 web-appearance-recovery-sol/verify-fixed.mjs sha256=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e | {"citedIn":"web-appearance-recovery-sol/README.md","mode":"full","addedBy":["bd09456"],"unchangedSince":true}
+PASS E-E1 web-appearance-recovery-sol/retry-all.test.tsx sha256=d851c75a5ca80470e928b52425521d8b549d3e91738796ac9f84708d793c513c | {"citedIn":"web-appearance-recovery-sol/README.md","mode":"full","addedBy":["bd09456"],"unchangedSince":true}
+PASS E-E1 web-appearance-recovery-sol/queues.test.tsx sha256=1d6c85c28224a2fc1dace8ee754873fd3d2b716264f9b812c753a816b6ac2d66 | {"citedIn":"web-appearance-recovery-sol/README.md","mode":"full","addedBy":["bd09456"],"unchangedSince":true}
+PASS E-E1 web-appearance-recovery-sol/README.md sha256=575514d5f2c7b7c69a1296a91515d2a48da4efec8cc71d23c06c76b2a9f3805e | {"citedIn":"20260908-full-product-audit/CURRENT-CONTROL-PLANE.md","mode":"prefix8","addedBy":["bd09456"],"unchangedSince":true}
+PASS E-E2 web-appearance-recovery-sol/retry-all-before3-5cd63ff.log sha256=ba661294ede1bf4045e348d5d24912c5f9eb4d101d51357c3a62604776f0b919 | {"citedIn":"web-appearance-recovery-sol/README.md","mode":"full","addedBy":["bd09456"],"unchangedSince":true}
+PASS E-E2 web-appearance-recovery-sol/queues-before3-5cd63ff.log sha256=7084597c2a248b23b8ef7d0a8a16cf8ac5111fa07d09f8b2c8c8b64743a60125 | {"citedIn":"web-appearance-recovery-sol/README.md","mode":"full","addedBy":["bd09456"],"unchangedSince":true}
+PASS E-E2 web-appearance-recovery-sol/fields-before3-5cd63ff.log sha256=9c8bd67d6e739d7e436c0d5d340816ccb7070af5176e7664886ad3855fcbeff0 | {"citedIn":"web-appearance-recovery-sol/README.md","mode":"full","addedBy":["bd09456"],"unchangedSince":true}
+PASS E-E3 web-appearance-recovery-independent/host-before3-5cd63ff.log sha256=2ffcab96a6a1397149c47c1d1dfa89925aa77e09dbc93e0341ac052f5f3cc306 | {"citedIn":"web-appearance-recovery-independent/README.md","mode":"full","addedBy":["b997235"],"unchangedSince":true}
+PASS E-E3 web-appearance-recovery-independent/README.md sha256=61d3b101ed72a96520faad83f9d1f3947991d4e1527b14342b2f34f1e0e111d6 | {"citedIn":"20260908-full-product-audit/CURRENT-CONTROL-PLANE.md","mode":"prefix8","addedBy":["b997235"],"unchangedSince":true}
+PASS E-E4 web-appearance-recovery-native/before-5cd63ff.md sha256=1040306d539471ede6f1f4e276af482b516f4f605bdc741f2737bebe934452be | {"citedIn":"20260908-full-product-audit/CURRENT-CONTROL-PLANE.md","mode":"prefix8","addedBy":["72538d1"],"unchangedSince":true}
+PASS E-E4 web-appearance-recovery-native/native-5cd63ff-before1-h14.log sha256=3d1f5763d11207e6e4e24fc2678177aae0960a91fb933985c061b08bde54e02f | {"citedIn":"web-appearance-recovery-native/before-5cd63ff.md","mode":"full","addedBy":["72538d1"],"unchangedSince":true}
+PASS E-E4 web-appearance-recovery-native/native-5cd63ff-before1-h15.log sha256=33b8d9471aeda3b633d17db1fa401e38da55212c12461b54def848fb3d339722 | {"citedIn":"web-appearance-recovery-native/before-5cd63ff.md","mode":"full","addedBy":["72538d1"],"unchangedSince":true}
+PASS E-E4 web-appearance-recovery-native/native-5cd63ff-before1-h17.log sha256=0677f985760b9e7078d54e631e40cc77bc98e941d1c27879f0796a8229d985e5 | {"citedIn":"web-appearance-recovery-native/before-5cd63ff.md","mode":"full","addedBy":["72538d1"],"unchangedSince":true}
+PASS E-E4/E5 K-1 web-native-keyinput-k1/review-k1.md sha256=18a98325b5ff04960087967260017237fda9d2be67ef97f91bffa26e14eaf04b | {"citedIn":"20260908-full-product-audit/CURRENT-CONTROL-PLANE.md","mode":"prefix8","addedBy":["6b9f0ee"],"unchangedSince":true}
+PASS E-E5 web-appearance-recovery-f1/before-5cd63ff.md sha256=ddd1f4924641b56dbbc03b1dd342fc743f28aab4a22dbace485b22a3f8a55935 | {"citedIn":"20260908-full-product-audit/CURRENT-CONTROL-PLANE.md","mode":"prefix8","addedBy":["72538d1"],"unchangedSince":true}
+PASS E-E5 web-appearance-recovery-f1/f1-5cd63ff-appearance-before1.log sha256=6da3c371cf1f8a49eb5128bbe89bf386a4eda254b350dfcdb6c5337fd9c501ea | {"citedIn":"web-appearance-recovery-f1/before-5cd63ff.md","mode":"full","addedBy":["72538d1"],"unchangedSince":true}
+PASS E-E6 r1 web-appearance-recovery-terra/implementation.md sha256=6e07573a8a5881155be91cf002ba27624c9911497c285c91fb0806f747eb5e58 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["4874170"],"unchangedSince":true}
+PASS E-E6 r1 web-appearance-recovery-terra/appearance-test.log sha256=f99fc19499cbaafceeae159067cac80a5cf417dcc844936872e44a432b77447d | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"prefix8","addedBy":["4874170"],"unchangedSince":true}
+PASS E-E6 r2 web-appearance-recovery-terra/r2-appearance-test.log sha256=4e2ee96b4924c207c916151f2cb647d838ff8a391d71f409e36e44d31b855ffa | {"citedIn":"web-appearance-recovery-terra/implementation-r2.md","mode":"full","addedBy":["0d34bf2"],"unchangedSince":true}
+PASS E-E6 r3 web-appearance-recovery-terra/r3-appearance-test.log sha256=539cb4bb5f662dc9ad547366a25a6524646a84850e5280989c06cecfc50972c2 | {"citedIn":"web-appearance-recovery-terra/implementation-r3.md","mode":"full","addedBy":["5766c1e"],"unchangedSince":true}
+PASS E-E6 r3 web-appearance-recovery-terra/r3-web-test.log sha256=0adfb87352250db6fb11f706ead2f94bbf7bcc3fb228c4867e4ccb22d851d246 | {"citedIn":"web-appearance-recovery-terra/implementation-r3.md","mode":"full","addedBy":["5766c1e"],"unchangedSince":true}
+PASS E-E7 web-appearance-recovery-sol/fixed-24073b5.md sha256=59b8b56fb6765ea35d34a98b5c51a01f0fb4914c9c9193c617bfb8490ef6b149 | {"citedIn":"20260908-full-product-audit/CURRENT-CONTROL-PLANE.md","mode":"prefix8","addedBy":["31d6335"],"unchangedSince":true}
+PASS E-E7 web-appearance-recovery-sol/retry-all-fixed1-24073b5.log sha256=4a20985a777208bd885e3345732a14e4db291475e1f3ee98be5fbc803dae714f | {"citedIn":"web-appearance-recovery-sol/fixed-24073b5.md","mode":"full","addedBy":["31d6335"],"unchangedSince":true}
+PASS E-E7 web-appearance-recovery-sol/queues-fixed1-24073b5.log sha256=b7ec55fe24cc9211b8c34699b42ecccf168b1d6f9c28147594e8cb29487a1710 | {"citedIn":"web-appearance-recovery-sol/fixed-24073b5.md","mode":"full","addedBy":["31d6335"],"unchangedSince":true}
+PASS E-E7 OE web-appearance-recovery-oracle-erratum/review-oe.md sha256=63e7eed0313baebb5255a8aa1144ba66a30bef0e83426377d40418d2dacc220b | {"citedIn":"20260908-full-product-audit/CURRENT-CONTROL-PLANE.md","mode":"prefix8","addedBy":["26cfce8"],"unchangedSince":true}
+PASS E-E7 OE web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx sha256=6e9c7def13a5128534a245653c90414c805a5af7597e7a12644189a258a5909a | {"citedIn":"web-appearance-recovery-oracle-erratum/review-oe.md","mode":"full","addedBy":["26cfce8"],"unchangedSince":true}
+PASS E-E7 rerun web-appearance-recovery-sol/retry-all-appearance-final-v1-419e56d.log sha256=e87c05693358d7d368ac66bc5be73f6e7af638cfbae3fc546635bf65ff2370e4 | {"citedIn":"web-appearance-recovery-final/hashes-appearance-final-v1.log","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E7 rerun web-appearance-recovery-oracle-erratum/corrected-appearance-final-v1-419e56d.log sha256=d2ce51d322271487a45e421e93693763d7faf81e365fc3a22bad292348a19bfa | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"prefix8","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E8 web-appearance-recovery-independent/host-fixed1-24073b5.log sha256=b2425a58806178d0f89a1966a19ce78996191ac759e6e5a99a306b2725b1c4b1 | {"citedIn":"web-appearance-recovery-sol/fixed-24073b5.md","mode":"full","addedBy":["31d6335"],"unchangedSince":true}
+PASS E-E8 rerun web-appearance-recovery-independent/host-appearance-final-v1-419e56d.log sha256=e010516873a940f6e61b997a1086a97b4a2b0b1e62beb1c81e43c492c6eae334 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E9 web-appearance-recovery-native/review-controls-reset-export-24073b5.md sha256=287477b8b4f4a5a4304d6117dd495e40c467d6af18fe4addaa621ef9c82e55c0 | {"citedIn":"20260908-full-product-audit/CURRENT-CONTROL-PLANE.md","mode":"prefix8","addedBy":["3419542"],"unchangedSince":true}
+PASS E-E9 web-appearance-recovery-native/native-24073b5-fixed1-controls.log sha256=ccf7acb2d3152e8b1db7340dc9a60185d38c40c5a99362e0e7f4f04ca87384fa | {"citedIn":"web-appearance-recovery-native/review-controls-reset-export-24073b5.md","mode":"full","addedBy":["3419542"],"unchangedSince":true}
+PASS E-E10 web-appearance-recovery-native/native-24073b5-fixed1-reset.log sha256=5b6fe71481c0049694f4919b0c1991678b6d125263d9b3efa951448176157809 | {"citedIn":"web-appearance-recovery-native/review-controls-reset-export-24073b5.md","mode":"full","addedBy":["3419542"],"unchangedSince":true}
+PASS E-E11 web-appearance-recovery-native/native-24073b5-fixed1-export.log sha256=c3ac58b0e1d6096525c28991f46b5b26e6762e4fe2ca69a6625a7481a20e3e9c | {"citedIn":"web-appearance-recovery-native/review-controls-reset-export-24073b5.md","mode":"full","addedBy":["3419542"],"unchangedSince":true}
+PASS E-E12 web-appearance-recovery-native/review-host-downstream-retryall-24073b5.md sha256=ea10ba23e2c0ba6df2d55a2d066e50c432430a6b37a9f758b2a8b63ac3a00020 | {"citedIn":"20260908-full-product-audit/CURRENT-CONTROL-PLANE.md","mode":"prefix8","addedBy":["32e6753"],"unchangedSince":true}
+PASS E-E12 web-appearance-recovery-native/native-24073b5-fixed1-host.log sha256=57ba2c11dc53391831f64d666a7211dbcee79ed95be828b388ccff6eeb1a0d06 | {"citedIn":"web-appearance-recovery-native/review-host-downstream-retryall-24073b5.md","mode":"full","addedBy":["32e6753"],"unchangedSince":true}
+PASS E-E13 web-appearance-recovery-native/native-24073b5-fixed1-downstream.log sha256=8da81f7e0101bae29e9c98fc33916afe84f66bbc4573c4f785e0247cf1eaa472 | {"citedIn":"web-appearance-recovery-native/review-host-downstream-retryall-24073b5.md","mode":"full","addedBy":["32e6753"],"unchangedSince":true}
+PASS E-E14 web-appearance-recovery-native/review-visual-keyboard-419e56d.md sha256=89ee14cdca69bf91e5c7fa117572a5dd9e17f51bdd2cbec616cb3910af06a0cc | {"citedIn":"20260908-full-product-audit/CURRENT-CONTROL-PLANE.md","mode":"prefix8","addedBy":["2696855"],"unchangedSince":true}
+PASS E-E14 web-appearance-recovery-native/native-419e56d-fixed1-visual-en.log sha256=0e8e642b60e8f8211357211456bb8d4ecf0931ec8ce7a98ec9cd9781e7b9277b | {"citedIn":"web-appearance-recovery-native/review-visual-keyboard-419e56d.md","mode":"full","addedBy":["2696855"],"unchangedSince":true}
+PASS E-E14 web-appearance-recovery-native/native-419e56d-fixed1-visual-zh.log sha256=43097916cb3fc721909fa95c2fba487f1a1eab8369a84563e54186fd511903c5 | {"citedIn":"web-appearance-recovery-native/review-visual-keyboard-419e56d.md","mode":"full","addedBy":["2696855"],"unchangedSince":true}
+PASS E-E15 web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en.log sha256=2c96feb68ae200a4232981cfa79cc13bbefaf04e59abba533e0b57e9a8e7d486 | {"citedIn":"web-appearance-recovery-native/review-visual-keyboard-419e56d.md","mode":"full","addedBy":["2696855"],"unchangedSince":true}
+PASS E-E15 web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh.log sha256=cfe5d63f71368fa3c8f76c25d57fff0e180348ab404a3e1868615c9f01ffca9e | {"citedIn":"web-appearance-recovery-native/review-visual-keyboard-419e56d.md","mode":"full","addedBy":["2696855"],"unchangedSince":true}
+PASS E-E16 web-sticky-recovery-f1/f1-24073b5-sticky-fixed1.log sha256=2d72ef3dabc4613557a65712c2f6508da0a1f0dc20f98469938e235cb43455c1 | {"citedIn":"web-appearance-recovery-sol/fixed-24073b5.md","mode":"full","addedBy":["31d6335"],"unchangedSince":true}
+PASS E-E16 rerun web-sticky-recovery-f1/f1-419e56d-sticky-appearance-final-v1.log sha256=b610ed8c76af343b523e4616607a9b53de55989edb53d3750566063b8b506e8e | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E16 rerun web-features-recovery-f1/f1-419e56d-features-appearance-final-v1.log sha256=68e80ec39c20d976b723e808c70f48c1f6317843be9a4d883083c8ba63ba5e64 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"prefix8","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E17 web-appearance-recovery-f1/f1-24073b5-appearance-fixed1.log sha256=815196e8533fd70fe7104866d7de96215696e8ac708f2d13715c555e2ff0346e | {"citedIn":"web-appearance-recovery-sol/fixed-24073b5.md","mode":"full","addedBy":["31d6335"],"unchangedSince":true}
+PASS E-E17 rerun web-native-keyinput-k1/f1-419e56d-appearance-appearance-final-v1.log sha256=ef30c1d8b415962d842360b02a2011b90e791303f73d56892e3b742a6ad5e326 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E18 web-appearance-recovery-final/search-appearance-final-v1-419e56d.log sha256=aa26ba18cbb1db5377c5f867ad09e911d20ef46094e2ac3d7580b0cead27f00e | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E19 web-appearance-recovery-final/protected-diff-appearance-final-v1-419e56d.log sha256=c67781ff16589825025ed267d535aaa82b51dfc71cfe4d6cf7829fc4232a3083 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E20 web-features-recovery-final/storage-check-types-appearance-final-v1-419e56d.log sha256=ae923a15e1a42085d7014a541eb9f05728d23d73b2b75b035c67afad40039896 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E20 web-appearance-recovery-sol/bytes-appearance-final-v1-419e56d.log sha256=cf616e933931eda06ffa7cd08e886de74322a8573e28cfee13b3d26fe11bcfbf | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E21 web-appearance-recovery-final/appearance-test-appearance-final-v1-419e56d.log sha256=4b986489a694c22f3c49e1bbab18f789e94ed081dbb6307e6dbff70f3773f934 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E22 web-appearance-recovery-final/shell-test-appearance-final-v1-419e56d.log sha256=ea8348139704afd4176c926e66e8ae716d96e5fae8cde306c4de01a622caa220 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E23 web-appearance-recovery-final/web-test-appearance-final-v1-419e56d.log sha256=9c8c470225bbae25f2503804bed47af0666a4eee20cd79570d585022ec916c58 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E24 web-appearance-recovery-final/compare-accepted-appearance-final-v1.log sha256=2151a375520ca7e35342defa4e15224af492ab1e51243c1919c59025302b2980 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E24 web-features-recovery-sol/downstream-appearance-final-v1-419e56d.log sha256=647ce30c112fb4192b03bf5f9d3d448d78c9c00d686f6f95835c53dcbbbf4b8f | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E24 web-more-recovery-fb002/logs/corrected-full-appearance-final-v1-419e56d.log sha256=6ea3eb542a95866636856d42735ff7cf2da2d9ff2597efe08cc41d08a4412cb4 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"prefix8","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E25 web-appearance-recovery-final/native-419e56d-appearance-final-v1-downstream.log sha256=937572d82d950c00af92b7c496924915a988850a64a736941d7a849a551a76d3 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E26 web-appearance-recovery-native/native-24073b5-fixed1-retryall.log sha256=dc7f27e859d99408e1607f8628cd5e83e64acd6e6b6132633f7577c09ef75d42 | {"citedIn":"web-appearance-recovery-native/review-host-downstream-retryall-24073b5.md","mode":"full","addedBy":["32e6753"],"unchangedSince":true}
+PASS E-E26 web-appearance-recovery-native/native-24073b5-fixed1-retryall.log sha256=dc7f27e859d99408e1607f8628cd5e83e64acd6e6b6132633f7577c09ef75d42 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["32e6753"],"unchangedSince":true}
+PASS E-E27 web-appearance-recovery-final/review-final-regressions-419e56d.md sha256=094112c33f864a858028d42d426745352878557cf4799e1a77d719944d5949c6 | {"citedIn":"20260908-full-product-audit/CURRENT-CONTROL-PLANE.md","mode":"prefix8","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-E27 web-appearance-recovery-final/hashes-appearance-final-v1.log sha256=d14a4173a62001aa1064a30400d01284f85ca2ba13713afd9b81f28dfab9e3d5 | {"citedIn":"web-appearance-recovery-final/review-final-regressions-419e56d.md","mode":"full","addedBy":["c6d1ed4"],"unchangedSince":true}
+PASS E-cover at least one independently re-derived hash for every ID E1-E27 | []
+PASS E-27 the E27 receipt enumerates E1-E26 in order, once each | ["E1","E2","E3","E4","E5","E6","E7","E8","E9","E10","E11","E12","E13","E14","E15","E16","E17","E18","E19","E20","E21","E22","E23","E24","E25","E26"]
+## F outcomes from raw logs
+PASS F1 E2 Sol bytes before3 at 5cd63ff: 65 cases, 65 pass, 0 correct FAIL, 0 PRECONDITION | {"cases":65,"passed":65,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F1 E2 Sol fields before3 at 5cd63ff: 89 cases, 1 pass, 88 correct FAIL, 0 PRECONDITION | {"cases":89,"passed":1,"failed":88,"skipped":0,"precondition_failures":0}
+PASS F1 E2 Sol reset before3 at 5cd63ff: 34 cases, 4 pass, 30 correct FAIL, 0 PRECONDITION | {"cases":34,"passed":4,"failed":30,"skipped":0,"precondition_failures":0}
+PASS F1 E2 Sol queues before3 at 5cd63ff: 56 cases, 1 pass, 55 correct FAIL, 0 PRECONDITION | {"cases":56,"passed":1,"failed":55,"skipped":0,"precondition_failures":0}
+PASS F1 E2 Sol continuity-export before3 at 5cd63ff: 26 cases, 4 pass, 22 correct FAIL, 0 PRECONDITION | {"cases":26,"passed":4,"failed":22,"skipped":0,"precondition_failures":0}
+PASS F1 E2 Sol host before3 at 5cd63ff: 33 cases, 6 pass, 27 correct FAIL, 0 PRECONDITION | {"cases":33,"passed":6,"failed":27,"skipped":0,"precondition_failures":0}
+PASS F1 E2 Sol retry-all before3 at 5cd63ff: 48 cases, 2 pass, 46 correct FAIL, 0 PRECONDITION | {"cases":48,"passed":2,"failed":46,"skipped":0,"precondition_failures":0}
+PASS F1 E2 Sol original before2 at 5cd63ff: 97/97 (operable 'Save & apply' controls included) | {"cases":97,"passed":97,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F2 ruling-5 fu2-retry-theme is a correct business FAIL at step 1 at 5cd63ff | first: AssertionError: R5 fu2-retry-theme step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected '"dark"' to be '"system"' // Ob
+PASS F2 ruling-5 fu2-retry-railPos is a correct business FAIL at step 1 at 5cd63ff | first: AssertionError: R5 fu2-retry-railPos step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected 'right' to be 'bottom' // Obj
+PASS F2 ruling-5 fu2-retry-all-theme is a correct business FAIL at step 1 at 5cd63ff | first: AssertionError: R5 fu2-retry-all-theme step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected '"dark"' to be '"system"' /
+PASS F2 ruling-5 fu2-retry-all-railPos is a correct business FAIL at step 1 at 5cd63ff | first: AssertionError: R5 fu2-retry-all-railPos step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected 'right' to be 'bottom' //
+PASS F3 E7 Sol bytes at 24073b5: 65/65, 0 PRECONDITION | {"cases":65,"passed":65,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F3 E7 Sol fields at 24073b5: 89/89, 0 PRECONDITION | {"cases":89,"passed":89,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F3 E7 Sol reset at 24073b5: 34/34, 0 PRECONDITION | {"cases":34,"passed":34,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F3 E7 Sol queues at 24073b5: 56/56, 0 PRECONDITION | {"cases":56,"passed":56,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F3 E7 Sol host at 24073b5: 33/33, 0 PRECONDITION | {"cases":33,"passed":33,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F3 E7 Sol retry-all at 24073b5: 48/48, 0 PRECONDITION | {"cases":48,"passed":48,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F4 E7 frozen continuity-export at 24073b5: 24/26, failures exactly OE-1 (006) and OE-2 (007), none PRECONDITION | ["006","007"]
+PASS F4 E7 corrected continuity-export at 24073b5: 26/26 (OE ruling) | {"cases":26,"passed":26,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F5 ruling-5 cases PASS at 24073b5 (queues)
+PASS F5 ruling-5 cases PASS at 24073b5 (retry-all)
+PASS F6 E8 parent host at 24073b5: 33/33 | {"cases":33,"passed":33,"failed":0,"skipped":0,"precondition_failures":0,"suite_errors":0,"unhandled_error_lines":0,"runtime_error_lines":0}
+PASS F3 E7 Sol bytes at 419e56d: 65/65, 0 PRECONDITION | {"cases":65,"passed":65,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F3 E7 Sol fields at 419e56d: 89/89, 0 PRECONDITION | {"cases":89,"passed":89,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F3 E7 Sol reset at 419e56d: 34/34, 0 PRECONDITION | {"cases":34,"passed":34,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F3 E7 Sol queues at 419e56d: 56/56, 0 PRECONDITION | {"cases":56,"passed":56,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F3 E7 Sol host at 419e56d: 33/33, 0 PRECONDITION | {"cases":33,"passed":33,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F3 E7 Sol retry-all at 419e56d: 48/48, 0 PRECONDITION | {"cases":48,"passed":48,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F4 E7 frozen continuity-export at 419e56d: 24/26, failures exactly OE-1 (006) and OE-2 (007), none PRECONDITION | ["006","007"]
+PASS F4 E7 corrected continuity-export at 419e56d: 26/26 (OE ruling) | {"cases":26,"passed":26,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F5 ruling-5 cases PASS at 419e56d (queues)
+PASS F5 ruling-5 cases PASS at 419e56d (retry-all)
+PASS F6 E8 parent host at 419e56d: 33/33 | {"cases":33,"passed":33,"failed":0,"skipped":0,"precondition_failures":0,"suite_errors":0,"unhandled_error_lines":0,"runtime_error_lines":0}
+INFO original fixed1-24073b5 totals {"cases":174,"passed":174,"failed":0,"skipped":0,"precondition_failures":0}; final-v1-419e56d {"cases":185,"passed":185,"failed":0,"skipped":0,"precondition_failures":0}
+PASS F7 E3 parent host before3 at 5cd63ff: 33 cases, 4 pass, 29 correct FAIL, 0 PRECONDITION | {"cases":33,"passed":4,"failed":29,"skipped":0,"precondition_failures":0,"suite_errors":0,"unhandled_error_lines":0,"runtime_error_lines":0}
+PASS F8 E4 native before h3: harness valid with correct before FAILs | {"checks":195,"fails":6}
+PASS F8 E4 native before h5: harness valid with correct before FAILs | {"checks":87,"fails":4}
+PASS F8 E4 native before h6: harness valid with correct before FAILs | {"checks":462,"fails":18}
+PASS F8 E4 native before h10: harness valid with correct before FAILs | {"checks":117,"fails":8}
+PASS F8 E4 native before h14: harness valid with correct before FAILs | {"checks":67,"fails":6}
+PASS F8 E4 native before h15: harness valid with correct before FAILs | {"checks":101,"fails":10}
+PASS F8 E4 native before h17: harness valid with correct before FAILs | {"checks":88,"fails":6}
+PASS F9 E5 F1-shape at 5cd63ff: selfcheck harness-valid, appearance before-correct | {"e5":"before-correct","selfcheck":"harness-valid"}
+PASS F10 native controls at 24073b5 (E9-E13/E26): pass, harness valid, 0 runtime errors | {"checks":1345,"productChecks":703}
+PASS F10 native reset at 24073b5 (E9-E13/E26): pass, harness valid, 0 runtime errors | {"checks":288,"productChecks":145}
+PASS F10 native export at 24073b5 (E9-E13/E26): pass, harness valid, 0 runtime errors | {"checks":389,"productChecks":135}
+PASS F10 native host at 24073b5 (E9-E13/E26): pass, harness valid, 0 runtime errors | {"checks":1956,"productChecks":576}
+PASS F10 native downstream at 24073b5 (E9-E13/E26): pass, harness valid, 0 runtime errors | {"checks":1768,"productChecks":400}
+PASS F10 native retryall at 24073b5 (E9-E13/E26): pass, harness valid, 0 runtime errors | {"checks":521,"productChecks":91}
+PASS F11 E14/E15 visual-en at 419e56d: pass, harness valid, 0 runtime errors, 0 console warnings | {"checks":3437,"productChecks":1766}
+PASS F11 E14/E15 visual-zh at 419e56d: pass, harness valid, 0 runtime errors, 0 console warnings | {"checks":3437,"productChecks":1766}
+PASS F11 E14/E15 keyboard-en at 419e56d: pass, harness valid, 0 runtime errors, 0 console warnings | {"checks":1398,"productChecks":246}
+PASS F11 E14/E15 keyboard-zh at 419e56d: pass, harness valid, 0 runtime errors, 0 console warnings | {"checks":1468,"productChecks":246}
+PASS F12 E16 at 419e56d: all 12 frozen F1 invocations pass, 0 runtime errors, no 'Invalid blocker state transition' | [true,true,true,true,true,true,true,true,true,true,true,true]
+PASS F13 E17 at 419e56d (K-1 copy): appearance fixed-pass a1-a4 with F1 signature 0; selfcheck harness-valid | ["fixed-pass","fixed-pass","fixed-pass","fixed-pass"]
+PASS F14 E18 search and E19 protected-diff logs exit 0 with all assertions
+PASS F15 delta audit log exit 0 with 21/21 assertions
+PASS F16 E21-E23 package tests: Appearance 137/137, shell 115/115, web 178/178; web control at 5cd63ff 156/156 | {"at":{"files":11,"tests":137,"passed":137,"failed":0,"other":0,"suite_errors":0,"unhandled_error_lines":0},"st":{"files":9,"tests":115,"passed":115,"failed":0,"other":0,"suite_errors":0,"unhandled_error_lines":0},"wt":{"files":29,"tests":178,"passed":178,"failed":0,"other":0,"suite_errors":0,"unhandled_error_lines":0},"wt0":{"files":28,"tests":156,"passed":156,"failed":0,"other":0,"suite_errors":0,"unhandled_error_lines":0}}
+PASS F17 E21-E23 typecheck/check-types and lint exit 0 (6 logs) | [true,true,true,true,true,true]
+PASS F18 E24 comparison: 54 MATCH, 1 DIFF, and every DIFF line is the Features Sol downstream count (F-FD1) | [" features-sol downstream: 14/15 vs accepted 15/15 (contract count 15)","features-sol downstream: 14/15 vs accepted 15/15 (contract count 15)"]
+PASS F19 F-FD1: frozen Features downstream at 419e56d fails only case 012, as a PRECONDITION
+PASS F20 F-FD1: the two-token corrected copy passes 15/15 at 419e56d and at 5cd63ff | {"fdc1":{"cases":15,"passed":15,"failed":0,"skipped":0,"precondition_failures":0,"suite_errors":0,"unhandled_error_lines":0},"fdc0":{"cases":15,"passed":15,"failed":0,"skipped":0,"precondition_failures":0,"suite_errors":0,"unhandled_error_lines":0}}
+PASS F21 F-FD1 corrected diff changes exactly two lines, 'sage' -> 'mist' | ["-  seedKey(\"xai_bg_tone\", \"sage\");","+  seedKey(\"xai_bg_tone\", \"mist\");","-  bgTone: \"sage\",","+  bgTone: \"mist\","]
+PASS F22 C-FB002: More corrected boundaries oracle 10/10 at 419e56d | {"cases":10,"passed":10,"failed":0,"skipped":0,"other":0,"suite_errors":0,"unhandled_error_lines":0,"console_blocks":8,"act_warning_lines":18}
+PASS F23 E25 Features native downstream (copy) at 419e56d: pass, 140 product checks, 0 runtime errors | {"checks":344}
+PASS F24 E25 harness copy removes exactly one line, the caller-bound Features-only delta precondition
+PASS F25 E25 runner, fixture and prelude are byte-identical to the frozen Features files
+PASS F26 cheap reruns at 419e56d vs 24073b5: 26 MATCH, 0 DIFF
+PASS F27 K-1: no fixed-product native runner (E9-E15, E26) and no E17/E25 copy sends nativeVirtualKeyCode | [false,false,false]
+## N negative controls
+PASS N1 a one-character-corrupted SHA-256 does not equal the re-derived hash (hash comparison is sensitive)
+PASS N2 the tree comparison detects a changed package (Appearance tree differs between 5cd63ff and 419e56d)
+PASS N3 the copy comparison rejects strings absent from the contract table ('Save & apply', 'Saved', '已保存') | {"tableStrings":60}
+PASS N4 the CSS scope predicate flags out-of-scope selectors (synthetic .topbar-pref-option and .pane-footer rules)
+PASS N5 the log parser reports failures where they exist (Sol retry-all before3 has 46 failures)
+PASS N6 the product diff classifier rejects a non-§11 path
+PASS N7 the D37 class search finds classes that other modules do use ('pane-title', 'active'), so D37 is not vacuous | {"pane-title":9,"active":160}
+## summary checks=228 passed=228 failed=0
+finished=2026-10-05T21:32:27.914Z
+exit=0

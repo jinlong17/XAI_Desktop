@@ -1,0 +1,248 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+mode=shell-unchanged-files
+suffix=apprail-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc node docs/reviews/web-apprail-order-recovery-final/verify-packages.mjs f9eb4b1 shell-unchanged-files apprail-final-v1
+output_dir=docs/reviews/web-apprail-order-recovery-final
+runner_checkout_head=9aeec39ecc3d9da70837e97b9660837fe887b765
+runner_sha256=fd9d9988c8c38c904555c4a539836db62aceda005098919d02bba4daf53dde15
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/xai-web-shell (packages/xai-web-shell) kind=vitest script=test: "vitest run"
+archive_file_sha256 packages/xai-web-shell/package.json=af4bcd1decf7542296ee89b648ec714efec94cdb3591b91bdb18cf85a0111376 packages/xai-web-shell/tsconfig.json=d6ed012dbb7ba814d3ad10969827e9e91ca33dc1c5a292550967032d367dca1a packages/xai-web-shell/vitest.config.ts=4ce52c49da38a9e12b08433dcfbff33e192e53d9d73d37430d6a5e47d7766a0c packages/xai-web-shell/eslint.config.js=79fded991853b3cfcad93ce8fe1312d993926017697438ddc2bb5ea770a6f55f
+package_tree=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 web_tree=61ddf71751eaa9f1a456897ecb7fbe23e708be4b
+node_modules_links third_party=449 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus
+tsconfig_extends_checked=46 unresolved=none own=@repo/xai-web-shell:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages/xai-web-shell/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-GCxOIt/packages/xai-web-shell/final-shell-unchanged-files.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-GCxOIt/.final-guard/report-shell-unchanged-files.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+tool_exit=0
+harness_checks=PASS (7/7)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-GCxOIt/packages/xai-web-shell
+
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > R1 — <WebShellProvider modules={[]}> renders without crash (AC-SLOT-1) 11ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > R2 — useWebShell() outside provider throws (AC-SLOT-2) 4ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > R2b — useWebModuleRegistry() outside provider throws (AC-SLOT-2) 1ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > R3 — useWebModuleRegistry sorts by railOrder then id alphabetical (AC-SLOT-3) 5ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > R4 — modules with showInRail:false are excluded from registry list (AC-SLOT-4) 3ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > R6 — re-rendering with new modules array updates registry synchronously (AC-SLOT-6) 30ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > useWebShell returns correct context values 1ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-1 — dialog is closed (no open attribute) when open=false 17ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-2 — dialog is open and shows title, body, and both buttons when open=true 32ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-3 — clicking Confirm (Sign out) button calls onConfirm 5ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-4 — clicking Cancel button calls onCancel 2ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-5 — ESC key (native dialog cancel event) calls onCancel 1ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-6 — clicking the dialog backdrop (dialog element itself) calls onCancel 1ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-7 — renders ZH strings when lang=zh 2ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-8 — renders EN strings when lang=en 2ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV1 — returns null when open is false 13ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV1b — renders menu when open is true 9ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV2 — clicking Settings entry calls onOpenSettings then onClose 8ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV3 — data-anchor is 'left-top-right' when railPos=left 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV3 — data-anchor is 'right-top-left' when railPos=right 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV3 — data-anchor is 'top-bottom-left' when railPos=top 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV3 — data-anchor is 'bottom-top-left' when railPos=bottom 2ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV4 — scrim click calls onClose 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV5 — Escape key calls onClose 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV5b — Escape key does NOT call onClose when menu is closed 1ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV6 — clicking Statistics entry calls onOpenStatistics then onClose 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV7 — Sign Out menu item is rendered in the menu 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV7b — clicking Sign Out with undefined onSignOut: closes popover, warns in DEV, no dialog 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV7c — clicking Sign Out with onSignOut wired opens confirmation dialog 7ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV7d — confirming in dialog calls onSignOut and closes dialog 4ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV7e — cancelling in dialog does NOT call onSignOut 4ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV8 — user name shows 'Aki Chen' in EN 2ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV8 — user name shows '百事可爱' in ZH 2ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S1 — Shell renders with Topbar (search input present) 22ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S1b — Shell renders with AppRail (app-rail aside present) 5ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S2 — Shell renders children in app-main 4ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S3a — Shell renders with railPos=right 3ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S3b — Shell renders with railPos=top 3ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S3c — Shell renders with railPos=bottom 5ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S4 — Shell renders with empty modules (no crash) 4ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > SH-SO1 — Shell accepts onSignOut prop and passes it to AppRail (structural smoke) 11ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S-StrictMode — StrictMode double-mount does not throw 5ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports Shell component 2ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports AppRail component 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports Topbar component 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports AvatarMenu component 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports WebShellProvider 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports useWebShell 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports useWebModuleRegistry 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B2 — does NOT export internal symbols (reorderArray, getPopoverAnchor) 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B3 — WebModuleSlotRegistration type extends WebModuleRouteRegistration (structural check via runtime object shape) 0ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR1 — renders rail-visible modules sorted by railOrder 21ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR1b — settings module with showInRail:false is not in rail-items 3ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR2 — data-pos attribute matches railPos 4ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR2b — left is the default data-pos 3ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR3 — clicking a module button calls onModuleClick with the module id 5ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR4 — active module button has 'active' className 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR4b — inactive buttons do NOT have 'active' className 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR5 — drag-reorder: onDragStart sets dragging class 4ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR8 — ghost module ids in localStorage are filtered out 3ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR9 — Pet button is rendered in the rail-bottom 3ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR9b — clicking Pet button calls onPetToggle 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR9c — Pet button has 'active' class when petOn=true 5ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR10 — bottom row has exactly 1 button (pet only; sync/notif/help hidden) 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR10a — sync icon is NOT rendered in the rail-bottom (Rail-05 fix) 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR10b — notif icon is NOT rendered in the rail-bottom (Rail-06 fix) 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR10c — help icon is NOT rendered in the rail-bottom (Rail-07 fix) 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR10d — pet button is still present after removing sync/notif/help 2ms
+ ✓ src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E1 — AppRail module click emits web:shell:module-change with source 'app-rail' 29ms
+ ✓ src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E2 — Pet button click emits web:shell:pet-toggle with { on: true } 6ms
+ ✓ src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E3 — Topbar Settings row click emits web:shell:module-change with source 'shortcut' 47ms
+ ✓ src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E4 — AvatarMenu Settings click emits web:shell:module-change with source 'shortcut' 9ms
+ ✓ src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E5 — AvatarMenu Statistics click emits web:shell:module-change with source 'shortcut' 15ms
+ ✓ src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E1/E3 — emitWebEvent is called exactly once per user interaction 5ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR11 — icon-only rail controls expose accessible names 35ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR11 — module button has data-tip with i18n label 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail sign-out passthrough (AR-SO1..SO2) > AR-SO1 — renderRail with onSignOut wired: opening AvatarMenu and clicking Sign Out opens confirmation dialog 9ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail sign-out passthrough (AR-SO1..SO2) > AR-SO2 — renderRail without onSignOut: AvatarMenu renders normally (backward-compatible) 6ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > P1 — xai_rail_order is restored on remount 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > P3 — items missing from xai_rail_order are appended at end 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > N1 — empty modules list renders empty rail-items 3ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > N3 — empty xai_rail_order falls back to registry order 2ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > moves item from position 0 to position 2 2ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > moves item from position 2 to position 0 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > returns original array when fromId === toId (N7 — drag onto self) 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > returns original array when fromId not found 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > returns original array when toId not found 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > always returns a new array (safe for React state) 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > moves last item to first 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > moves first item to last 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > handles 2-element arrays 0ms
+
+ Test Files  8 passed (8)
+      Tests  91 passed (91)
+   Start at  07:51:40
+   Duration  1.46s (transform 563ms, setup 902ms, collect 1.87s, tests 506ms, environment 3.24s, prepare 616ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-GCxOIt/.final-guard/report-shell-unchanged-files.json
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS archive package.json script "test" is "vitest run" (found "vitest run")
+harness PASS JSON report parsed
+harness PASS reported test files equal the expected set (8 files, explicit include)
+harness PASS package config in effect (environment jsdom, globals false, setupFiles [src/__tests__/setup.ts], include ["src/__tests__/AppRail.test.tsx","src/__tests__/AvatarMenu.test.tsx","src/__tests__/Shell.smoke.test.tsx","src/__tests__/SignOutConfirmDialog.test.tsx","src/__tests__/event-emit.test.tsx","src/__tests__/index-barrel.test.ts","src/__tests__/internal/dnd.test.ts","src/__tests__/registry.test.tsx"], root = archive package)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (6 present of 6 listed)
+harness PASS no test-file suite error
+required_tests_absent_from_archive=none
+json_report=success=true numTotalTestSuites=18 numTotalTests=91 numPassedTests=91 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals files=8 tests=91 passed=91 failed=0 other=0 suite_errors=0 unhandled_error_lines=0
+file src/__tests__/AppRail.test.tsx status=passed tests=25 passed=25 failed=0
+file src/__tests__/AvatarMenu.test.tsx status=passed tests=18 passed=18 failed=0
+file src/__tests__/event-emit.test.tsx status=passed tests=6 passed=6 failed=0
+file src/__tests__/index-barrel.test.ts status=passed tests=9 passed=9 failed=0
+file src/__tests__/internal/dnd.test.ts status=passed tests=9 passed=9 failed=0
+file src/__tests__/registry.test.tsx status=passed tests=7 passed=7 failed=0
+file src/__tests__/Shell.smoke.test.tsx status=passed tests=9 passed=9 failed=0
+file src/__tests__/SignOutConfirmDialog.test.tsx status=passed tests=8 passed=8 failed=0
+case 001 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR1 — renders rail-visible modules sorted by railOrder
+case 002 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR1b — settings module with showInRail:false is not in rail-items
+case 003 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR2 — data-pos attribute matches railPos
+case 004 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR2b — left is the default data-pos
+case 005 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR3 — clicking a module button calls onModuleClick with the module id
+case 006 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR4 — active module button has 'active' className
+case 007 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR4b — inactive buttons do NOT have 'active' className
+case 008 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR5 — drag-reorder: onDragStart sets dragging class
+case 009 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR8 — ghost module ids in localStorage are filtered out
+case 010 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR9 — Pet button is rendered in the rail-bottom
+case 011 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR9b — clicking Pet button calls onPetToggle
+case 012 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR9c — Pet button has 'active' class when petOn=true
+case 013 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR10 — bottom row has exactly 1 button (pet only; sync/notif/help hidden)
+case 014 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR10a — sync icon is NOT rendered in the rail-bottom (Rail-05 fix)
+case 015 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR10b — notif icon is NOT rendered in the rail-bottom (Rail-06 fix)
+case 016 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR10c — help icon is NOT rendered in the rail-bottom (Rail-07 fix)
+case 017 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR10d — pet button is still present after removing sync/notif/help
+case 018 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR11 — icon-only rail controls expose accessible names
+case 019 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR11 — module button has data-tip with i18n label
+case 020 PASSED | src/__tests__/AppRail.test.tsx > AppRail sign-out passthrough (AR-SO1..SO2) AR-SO1 — renderRail with onSignOut wired: opening AvatarMenu and clicking Sign Out opens confirmation dialog
+case 021 PASSED | src/__tests__/AppRail.test.tsx > AppRail sign-out passthrough (AR-SO1..SO2) AR-SO2 — renderRail without onSignOut: AvatarMenu renders normally (backward-compatible)
+case 022 PASSED | src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) P1 — xai_rail_order is restored on remount
+case 023 PASSED | src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) P3 — items missing from xai_rail_order are appended at end
+case 024 PASSED | src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) N1 — empty modules list renders empty rail-items
+case 025 PASSED | src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) N3 — empty xai_rail_order falls back to registry order
+case 026 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV1 — returns null when open is false
+case 027 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV1b — renders menu when open is true
+case 028 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV2 — clicking Settings entry calls onOpenSettings then onClose
+case 029 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV3 — data-anchor is 'left-top-right' when railPos=left
+case 030 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV3 — data-anchor is 'right-top-left' when railPos=right
+case 031 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV3 — data-anchor is 'top-bottom-left' when railPos=top
+case 032 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV3 — data-anchor is 'bottom-top-left' when railPos=bottom
+case 033 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV4 — scrim click calls onClose
+case 034 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV5 — Escape key calls onClose
+case 035 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV5b — Escape key does NOT call onClose when menu is closed
+case 036 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV6 — clicking Statistics entry calls onOpenStatistics then onClose
+case 037 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV7 — Sign Out menu item is rendered in the menu
+case 038 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV7b — clicking Sign Out with undefined onSignOut: closes popover, warns in DEV, no dialog
+case 039 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV7c — clicking Sign Out with onSignOut wired opens confirmation dialog
+case 040 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV7d — confirming in dialog calls onSignOut and closes dialog
+case 041 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV7e — cancelling in dialog does NOT call onSignOut
+case 042 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV8 — user name shows 'Aki Chen' in EN
+case 043 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV8 — user name shows '百事可爱' in ZH
+case 044 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S1 — Shell renders with Topbar (search input present)
+case 045 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S1b — Shell renders with AppRail (app-rail aside present)
+case 046 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S2 — Shell renders children in app-main
+case 047 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S3a — Shell renders with railPos=right
+case 048 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S3b — Shell renders with railPos=top
+case 049 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S3c — Shell renders with railPos=bottom
+case 050 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S4 — Shell renders with empty modules (no crash)
+case 051 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) SH-SO1 — Shell accepts onSignOut prop and passes it to AppRail (structural smoke)
+case 052 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S-StrictMode — StrictMode double-mount does not throw
+case 053 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-1 — dialog is closed (no open attribute) when open=false
+case 054 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-2 — dialog is open and shows title, body, and both buttons when open=true
+case 055 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-3 — clicking Confirm (Sign out) button calls onConfirm
+case 056 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-4 — clicking Cancel button calls onCancel
+case 057 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-5 — ESC key (native dialog cancel event) calls onCancel
+case 058 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-6 — clicking the dialog backdrop (dialog element itself) calls onCancel
+case 059 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-7 — renders ZH strings when lang=zh
+case 060 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-8 — renders EN strings when lang=en
+case 061 PASSED | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) E1 — AppRail module click emits web:shell:module-change with source 'app-rail'
+case 062 PASSED | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) E2 — Pet button click emits web:shell:pet-toggle with { on: true }
+case 063 PASSED | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) E3 — Topbar Settings row click emits web:shell:module-change with source 'shortcut'
+case 064 PASSED | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) E4 — AvatarMenu Settings click emits web:shell:module-change with source 'shortcut'
+case 065 PASSED | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) E5 — AvatarMenu Statistics click emits web:shell:module-change with source 'shortcut'
+case 066 PASSED | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) E1/E3 — emitWebEvent is called exactly once per user interaction
+case 067 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports Shell component
+case 068 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports AppRail component
+case 069 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports Topbar component
+case 070 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports AvatarMenu component
+case 071 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports WebShellProvider
+case 072 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports useWebShell
+case 073 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports useWebModuleRegistry
+case 074 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B2 — does NOT export internal symbols (reorderArray, getPopoverAnchor)
+case 075 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B3 — WebModuleSlotRegistration type extends WebModuleRouteRegistration (structural check via runtime object shape)
+case 076 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) R1 — <WebShellProvider modules={[]}> renders without crash (AC-SLOT-1)
+case 077 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) R2 — useWebShell() outside provider throws (AC-SLOT-2)
+case 078 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) R2b — useWebModuleRegistry() outside provider throws (AC-SLOT-2)
+case 079 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) R3 — useWebModuleRegistry sorts by railOrder then id alphabetical (AC-SLOT-3)
+case 080 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) R4 — modules with showInRail:false are excluded from registry list (AC-SLOT-4)
+case 081 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) R6 — re-rendering with new modules array updates registry synchronously (AC-SLOT-6)
+case 082 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) useWebShell returns correct context values
+case 083 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray moves item from position 0 to position 2
+case 084 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray moves item from position 2 to position 0
+case 085 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray returns original array when fromId === toId (N7 — drag onto self)
+case 086 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray returns original array when fromId not found
+case 087 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray returns original array when toId not found
+case 088 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray always returns a new array (safe for React state)
+case 089 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray moves last item to first
+case 090 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray moves first item to last
+case 091 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray handles 2-element arrays
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-GCxOIt/packages/xai-web-shell","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-GCxOIt/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["./src/__tests__/setup.ts"],"include":["src/__tests__/AppRail.test.tsx","src/__tests__/AvatarMenu.test.tsx","src/__tests__/Shell.smoke.test.tsx","src/__tests__/SignOutConfirmDialog.test.tsx","src/__tests__/event-emit.test.tsx","src/__tests__/index-barrel.test.ts","src/__tests__/internal/dnd.test.ts","src/__tests__/registry.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/AvatarMenu.tsx packages/xai-web-shell/src/SignOutConfirmDialog.tsx packages/xai-web-shell/src/registry.tsx packages/xai-web-shell/src/internal/dnd.ts
+pin_required_provenance_missing=none
+pin_modules=58 by package: packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-shell=24

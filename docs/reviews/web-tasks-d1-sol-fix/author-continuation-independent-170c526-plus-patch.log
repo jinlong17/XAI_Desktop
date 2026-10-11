@@ -1,0 +1,81 @@
+
+ RUN  v3.2.7 /private/tmp/sol-tasks-continuation.EULg52
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-parent-baseline.test.tsx > queued checkbox refuses a changed target without overwriting newer external bytes
+queued-target {"preserved":true}
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > invalid present null refuses normalization without loss
+[plugin-web-storage] decode failed for xai_task_cols: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/tmp/sol-tasks-continuation.EULg52/packages/plugin-web-storage/src/internal/storage.ts:107:7)
+    at /private/tmp/sol-tasks-continuation.EULg52/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/tmp/sol-tasks-continuation.EULg52/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/tmp/sol-tasks-continuation.EULg52/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at TasksModule (/private/tmp/sol-tasks-continuation.EULg52/packages/xai-web-tasks/src/TasksModule.tsx:80:21)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-parent-baseline.test.tsx > render and checkbox do not repair a present invalid domain by overwriting it with demo tasks
+[plugin-web-tasks] usePref('xai_task_cols') returned non-array shape — falling back to seed.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > invalid present {bad refuses normalization without loss
+[plugin-web-storage] decode failed for xai_task_cols: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/tmp/sol-tasks-continuation.EULg52/packages/plugin-web-storage/src/internal/storage.ts:107:7)
+    at /private/tmp/sol-tasks-continuation.EULg52/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/tmp/sol-tasks-continuation.EULg52/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/tmp/sol-tasks-continuation.EULg52/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at TasksModule (/private/tmp/sol-tasks-continuation.EULg52/packages/xai-web-tasks/src/TasksModule.tsx:80:21)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > invalid present {"bad":"shape"} refuses normalization without loss
+[plugin-web-tasks] usePref('xai_task_cols') returned non-array shape — falling back to seed.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > invalid present {"format":"xai-command-state","version":1,"revision":1,"data":null,"receipts":{}} refuses normalization without loss
+[plugin-web-storage] decode failed for xai_task_cols: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/tmp/sol-tasks-continuation.EULg52/packages/plugin-web-storage/src/internal/storage.ts:107:7)
+    at /private/tmp/sol-tasks-continuation.EULg52/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/tmp/sol-tasks-continuation.EULg52/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/tmp/sol-tasks-continuation.EULg52/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at TasksModule (/private/tmp/sol-tasks-continuation.EULg52/packages/xai-web-tasks/src/TasksModule.tsx:80:21)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx > Complete then title edit in the same detail session must retain the successful completion
+complete-then-edit {"done":true,"completedAt":"2026-09-09T19:00:00.000Z","originalCompletedAt":"2026-09-09T19:00:00.000Z"}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-tasks-parent-baseline.test.tsx (8 tests) 505ms
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=false
+stale-detail {"failed":false,"preserved":true,"actual":"External title"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=true
+stale-detail {"failed":true,"preserved":true,"actual":"External title"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > queued missing detail target leaves the failed draft visibly recoverable
+missing-detail {"panel":true,"alert":true,"draftVisible":false}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx (5 tests) 888ms
+   ✓ same detail session advances baseline through three sequential edits and a successful deletion  340ms
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > old bulk-delete completion must preserve newer selection and detail session
+bulk-new-session {"panel":true,"selected":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > deleting list metadata must also reassign references in valid completed storage
+completed-cascade {"kind":"list","completed":{"id":"completed","title":{"en":"Completed row","zh":"Completed row"},"tag":"study","tags":["study"],"priority":"normal","listId":"research","done":true}}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > deleting tag metadata must also reassign references in valid completed storage
+completed-cascade {"kind":"tag","completed":{"id":"completed","title":{"en":"Completed row","zh":"Completed row"},"tags":[],"priority":"normal","listId":"inbox","done":true}}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx (18 tests) 1442ms
+
+ Test Files  3 passed (3)
+      Tests  31 passed (31)
+   Start at  17:44:55
+   Duration  2.68s (transform 271ms, setup 0ms, collect 1.15s, tests 2.84s, environment 1.31s, prepare 329ms)

@@ -1,0 +1,11 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4 original_assertions=docs/reviews/web-board-workspace-astra-review/d1-shared-writer.test.tsx
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-dLX7Xj
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-shared-writer.test.tsx (8 tests) 28ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  01:31:21
+   Duration  2.04s (transform 311ms, setup 0ms, collect 505ms, tests 28ms, environment 659ms, prepare 485ms)

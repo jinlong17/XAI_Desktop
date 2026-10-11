@@ -1,0 +1,583 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+features_package_tree=074659c050fadd11ed3ff99274e441b48771b490
+mode=continuity-export
+suffix=before1
+include=docs/reviews/web-features-recovery-sol/continuity-export.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-sol/verify-fixed.mjs f359be6 continuity-export before1
+runner_checkout_head=4a54f7648cbed30d884f9e6976ece93a42ac92f6
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-features-panel/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/features-sol-continuity-export.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/.report-continuity-export.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=f0b5d272695026f8e60df6dd2dbf5889790b3d2e834256259e86bb0432050ef8 bytes.test.tsx=904cb0de88eb5047365309df501ebbb8cb725a485963d23df022e7bbd26aba14 fields.test.tsx=7711e9f71a1d7e85c83b8712ff874594d88093fb2ebd3dbc570cfc6d18cb72e1 reset.test.tsx=dc4ee31e52a5800f30e7dbd924834e25f6f8a77dd5e88c8262443e1c322ac8e9 queues.test.tsx=d58160748187b7d7a7aeabfc620b694e7bc1e2714d37491aa99dbf8d8cb16f2b continuity-export.test.tsx=1e3066f963edc15ba161937d26cbee949cb2886f1c3122740fd4c7c143c5a55a downstream.test.tsx=8d916cce247d66bebe542ac99f4c23bf8ebce49f7869f3de80197afa3a5ff77e verify-fixed.mjs=432c30c3617106a09f884d035c86dabaa8c2be8fbbdb4defc8a31ea6249c4b37
+archive_file_sha256 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx=987c38250554f05eee185073f92fdfafc504b5e3f9c183658fc5aeb583ce50ea packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx=14053daaffeee27f151221a197756ae043a2de3a8823d15342722eea5855e993 packages/xai-web-settings-features-panel/src/types.ts=bd6b35990e4f9de9719303ff528630b17a1c6ed02bbb06dfd96c5878cf727c53 packages/xai-web-settings-features-panel/src/styles.css=db4a5f24bfbb922571a5528b4d863be79bda2c8586eb4f2427f281803b13027e packages/xai-web-settings-features-panel/src/index.ts=cf89e7454252927a457f48f9e4bcf9190219b94862d896240999626a1b097c68 packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx=2d42bdc3ef69ab9bcdc2d1770a34aba45463e44550f0c6ece4a9ecd31f18a4c6 packages/xai-web-settings-features-panel/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-features-panel/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+vitest_exit=1
+harness_checks=PASS (6/6)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd
+
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §7 A→B→locked→A: a held device operation survives; old guards refuse before and after rerender; fresh B and locked guards guard and export (shapes 7, 8) 70ms
+   → H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §7 old inline Retry, Discard, Discard all, Export and Reset callbacks refuse before rerender; device work survives under fresh permission 48ms
+   → H1: the failed tasks keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §7 same-account epoch change with a held device lock: old guard refuses; fresh guard exports and discards with zero writes 48ms
+   → H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §7 an admitted reset batch survives A→B: the old guard refuses; a fresh B guard exports the pending reset; the held removal finishes or keeps its recovery 71ms
+   → H3: the held per-key lock keeps the admitted Calendar removal pending: expected null to be 'false' // Object.is equality
+ ✓ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > INV §7 edits and a reset across A→B→locked→A never touch account keys, markers or lifecycle locks 193ms
+ ✓ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > INV §7 an unrelated held account lifecycle lock never delays a device edit or a reset 95ms
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 1: a sparse one-field set export is memory-only under total storage denial 45ms
+   → H1: the failed habits keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 2: a sparse reset left over from a partial reset is exported as a reset entry, never a saved default 63ms
+   → H5: "Matrix was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 3: mixed set and reset entries 59ms
+   → H5: "Boards was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 4: all 8 sets 49ms
+   → H1: all 8 latest choices stay displayed: expected { tasks: true, board: true, …(6) } to strictly equal { tasks: false, board: false, …(6) }
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 5: all 8 pending resets behind held locks 50ms
+   → H3: every held per-key lock keeps its removal pending: expected { tasks: null, board: null, …(6) } to strictly equal { Object (tasks, board, ...) }
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 6: a dialog export through the registered guard is memory-only and changes nothing 57ms
+   → H5: "Pomodoro was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 9: an export while one operation is held behind a real lock includes it and releases, saves or retries nothing 41ms
+   → H1: the failed tasks keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 the export excludes saved, default and source-only fields 62ms
+   → H1: the failed board keeps the latest choice: expected true to be false // Object.is equality
+ ✓ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > INV §8 without an actual draft there is no Export control and no empty download 47ms
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 a blob setup failure shows the localized export error, keeps drafts and guard, and cleans up 42ms
+   → H1: the failed calendar keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 a url setup failure shows the localized export error, keeps drafts and guard, and cleans up 46ms
+   → H1: the failed calendar keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 a append setup failure shows the localized export error, keeps drafts and guard, and cleans up 39ms
+   → H1: the failed calendar keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 a click setup failure shows the localized export error, keeps drafts and guard, and cleans up 41ms
+   → H1: the failed calendar keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an epoch change during blob cancels the click and cleans up; fresh permission exports 42ms
+   → H1: the failed habits keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an epoch change during url cancels the click and cleans up; fresh permission exports 38ms
+   → H1: the failed habits keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an epoch change during append cancels the click and cleans up; fresh permission exports 40ms
+   → H1: the failed habits keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an unmount during blob cancels the click and cleans up 54ms
+   → H1: the failed pomodoro keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an unmount during url cancels the click and cleans up 38ms
+   → H1: the failed pomodoro keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an unmount during append cancels the click and cleans up 40ms
+   → H1: the failed pomodoro keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §7 §9 unmount removes the guard and the beforeunload listener, detaches old callbacks, and never undoes committed writes or removals 91ms
+   → H1: the failed calendar keeps the latest choice: expected true to be false // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  23 failed | 3 passed (26)
+   Start at  02:34:28
+   Duration  2.36s (transform 247ms, setup 38ms, collect 361ms, tests 1.51s, environment 205ms, prepare 57ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/.report-continuity-export.json
+
+---- stderr ----
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §7 old inline Retry, Discard, Discard all, Export and Reset callbacks refuse before rerender; device work survives under fresh permission
+[plugin-web-storage] quota exceeded for xai_pref_features_tasks.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 1: a sparse one-field set export is memory-only under total storage denial
+[plugin-web-storage] quota exceeded for xai_pref_features_habits.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 4: all 8 sets
+[plugin-web-storage] quota exceeded for xai_pref_features_tasks.
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+[plugin-web-storage] quota exceeded for xai_pref_features_dashboard.
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+[plugin-web-storage] quota exceeded for xai_pref_features_matrix.
+[plugin-web-storage] quota exceeded for xai_pref_features_pomodoro.
+[plugin-web-storage] quota exceeded for xai_pref_features_habits.
+[plugin-web-storage] quota exceeded for xai_pref_features_meditation.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 9: an export while one operation is held behind a real lock includes it and releases, saves or retries nothing
+[plugin-web-storage] quota exceeded for xai_pref_features_tasks.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 the export excludes saved, default and source-only fields
+[plugin-web-storage] decode failed for xai_pref_features_pomodoro: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 the export excludes saved, default and source-only fields
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > INV §8 without an actual draft there is no Export control and no empty download
+[plugin-web-storage] decode failed for xai_pref_features_pomodoro: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 a blob setup failure shows the localized export error, keeps drafts and guard, and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 a url setup failure shows the localized export error, keeps drafts and guard, and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 a append setup failure shows the localized export error, keeps drafts and guard, and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 a click setup failure shows the localized export error, keeps drafts and guard, and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an epoch change during blob cancels the click and cleans up; fresh permission exports
+[plugin-web-storage] quota exceeded for xai_pref_features_habits.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an epoch change during url cancels the click and cleans up; fresh permission exports
+[plugin-web-storage] quota exceeded for xai_pref_features_habits.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an epoch change during append cancels the click and cleans up; fresh permission exports
+[plugin-web-storage] quota exceeded for xai_pref_features_habits.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an unmount during blob cancels the click and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_features_pomodoro.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an unmount during url cancels the click and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_features_pomodoro.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an unmount during append cancels the click and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_features_pomodoro.
+
+stderr | docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §7 §9 unmount removes the guard and the beforeunload listener, detaches old callbacks, and never undoes committed writes or removals
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 23 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §7 A→B→locked→A: a held device operation survives; old guards refuse before and after rerender; fresh B and locked guards guard and export (shapes 7, 8)
+AssertionError: H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:59:74
+     57|   toggle(ui, board);
+     58|   await flush();
+     59|   expect(bytes(board), "H3: the held per-key lock serializes the write…
+       |                                                                          ^
+     60|   const oldA = need(guard(), "§9: departure guard registered");
+     61|   expect(blocking(), "held device work blocks").toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §7 old inline Retry, Discard, Discard all, Export and Reset callbacks refuse before rerender; device work survives under fresh permission
+AssertionError: H1: the failed tasks keeps the latest choice: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ failedSetDraft docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:34:82
+     32|   await flush();
+     33|   fired(quota, `${field.id} write`);
+     34|   expect(shown(ui, field), `H1: the failed ${field.id} keeps the lates…
+       |                                                                                  ^
+     35|   return quota;
+     36| }
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:120:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §7 same-account epoch change with a held device lock: old guard refuses; fresh guard exports and discards with zero writes
+AssertionError: H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:163:78
+    161|   toggle(ui, dashboard);
+    162|   await flush();
+    163|   expect(bytes(dashboard), "H3: the held per-key lock serializes the w…
+       |                                                                              ^
+    164|   const old = need(guard(), "§9: departure guard registered");
+    165|   activate(OWNER_A, "g2");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §7 an admitted reset batch survives A→B: the old guard refuses; a fresh B guard exports the pending reset; the held removal finishes or keeps its recovery
+AssertionError: H3: the held per-key lock keeps the admitted Calendar removal pending: expected null to be 'false' // Object.is equality
+
+- Expected: 
+"false"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:196:100
+    194|   clickReset(ui, true);
+    195|   await flush();
+    196|   expect(bytes(calendar), "H3: the held per-key lock keeps the admitte…
+       |                                                                                                    ^
+    197|   expect(bytes(board), "the unheld Boards removal completed").toBeNull…
+    198|   const oldA = need(guard(), "§9: departure guard registered");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 1: a sparse one-field set export is memory-only under total storage denial
+AssertionError: H1: the failed habits keeps the latest choice: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ failedSetDraft docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:34:82
+     32|   await flush();
+     33|   fired(quota, `${field.id} write`);
+     34|   expect(shown(ui, field), `H1: the failed ${field.id} keeps the lates…
+       |                                                                                  ^
+     35|   return quota;
+     36| }
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:284:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 2: a sparse reset left over from a partial reset is exported as a reset entry, never a saved default
+AssertionError: H5: "Matrix was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ failedResetDraft docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:44:86
+     42|   await flush(24);
+     43|   fired(refusal, `${field.id} remove`);
+     44|   expect(says(msg.notReset(field)), `H5: "${msg.notReset(field)}" fail…
+       |                                                                                      ^
+     45|   return refusal;
+     46| }
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:293:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 3: mixed set and reset entries
+AssertionError: H5: "Boards was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ failedResetDraft docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:44:86
+     42|   await flush(24);
+     43|   fired(refusal, `${field.id} remove`);
+     44|   expect(says(msg.notReset(field)), `H5: "${msg.notReset(field)}" fail…
+       |                                                                                      ^
+     45|   return refusal;
+     46| }
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:302:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 4: all 8 sets
+AssertionError: H1: all 8 latest choices stay displayed: expected { tasks: true, board: true, …(6) } to strictly equal { tasks: false, board: false, …(6) }
+
+- Expected
++ Received
+
+  {
+-   "board": false,
+-   "calendar": false,
+-   "dashboard": false,
+-   "habits": false,
+-   "matrix": false,
+-   "meditation": false,
+-   "pomodoro": false,
+-   "tasks": false,
++   "board": true,
++   "calendar": true,
++   "dashboard": true,
++   "habits": true,
++   "matrix": true,
++   "meditation": true,
++   "pomodoro": true,
++   "tasks": true,
+  }
+
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:314:67
+    312|   await flush();
+    313|   FIELDS.forEach((field, index) => fired(quotas[index]!, `${field.id} …
+    314|   expect(shownAll(ui), "H1: all 8 latest choices stay displayed").toSt…
+       |                                                                   ^
+    315|   await exportUnderDenial(ui, "shape 4 all 8 sets", changes(Object.fro…
+    316| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 5: all 8 pending resets behind held locks
+AssertionError: H3: every held per-key lock keeps its removal pending: expected { tasks: null, board: null, …(6) } to strictly equal { Object (tasks, board, ...) }
+
+- Expected
++ Received
+
+  {
+-   "board": "false",
+-   "calendar": "false",
+-   "dashboard": "false",
+-   "habits": "false",
+-   "matrix": "false",
+-   "meditation": "false",
+-   "pomodoro": "false",
+-   "tasks": "false",
++   "board": null,
++   "calendar": null,
++   "dashboard": null,
++   "habits": null,
++   "matrix": null,
++   "meditation": null,
++   "pomodoro": null,
++   "tasks": null,
+  }
+
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:326:79
+    324|   clickReset(ui, true);
+    325|   await flush();
+    326|   expect(bytesAll(), "H3: every held per-key lock keeps its removal pe…
+       |                                                                               ^
+    327|   expect(shownAll(ui), "all 8 pending resets display the default").toS…
+    328|   for (const field of FIELDS) expect(says(msg.resetting(field)), `pend…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 6: a dialog export through the registered guard is memory-only and changes nothing
+AssertionError: H5: "Pomodoro was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ failedResetDraft docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:44:86
+     42|   await flush(24);
+     43|   fired(refusal, `${field.id} remove`);
+     44|   expect(says(msg.notReset(field)), `H5: "${msg.notReset(field)}" fail…
+       |                                                                                      ^
+     45|   return refusal;
+     46| }
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:340:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 shape 9: an export while one operation is held behind a real lock includes it and releases, saves or retries nothing
+AssertionError: H1: the failed tasks keeps the latest choice: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ failedSetDraft docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:34:82
+     32|   await flush();
+     33|   fired(quota, `${field.id} write`);
+     34|   expect(shown(ui, field), `H1: the failed ${field.id} keeps the lates…
+       |                                                                                  ^
+     35|   return quota;
+     36| }
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:362:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 the export excludes saved, default and source-only fields
+AssertionError: H1: the failed board keeps the latest choice: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ failedSetDraft docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:34:82
+     32|   await flush();
+     33|   fired(quota, `${field.id} write`);
+     34|   expect(shown(ui, field), `H1: the failed ${field.id} keeps the lates…
+       |                                                                                  ^
+     35|   return quota;
+     36| }
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:383:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 a blob setup failure shows the localized export error, keeps drafts and guard, and cleans up
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 a url setup failure shows the localized export error, keeps drafts and guard, and cleans up
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 a append setup failure shows the localized export error, keeps drafts and guard, and cleans up
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 a click setup failure shows the localized export error, keeps drafts and guard, and cleans up
+AssertionError: H1: the failed calendar keeps the latest choice: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ failedSetDraft docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:34:82
+     32|   await flush();
+     33|   fired(quota, `${field.id} write`);
+     34|   expect(shown(ui, field), `H1: the failed ${field.id} keeps the lates…
+       |                                                                                  ^
+     35|   return quota;
+     36| }
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:403:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an epoch change during blob cancels the click and cleans up; fresh permission exports
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an epoch change during url cancels the click and cleans up; fresh permission exports
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an epoch change during append cancels the click and cleans up; fresh permission exports
+AssertionError: H1: the failed habits keeps the latest choice: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ failedSetDraft docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:34:82
+     32|   await flush();
+     33|   fired(quota, `${field.id} write`);
+     34|   expect(shown(ui, field), `H1: the failed ${field.id} keeps the lates…
+       |                                                                                  ^
+     35|   return quota;
+     36| }
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:432:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an unmount during blob cancels the click and cleans up
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an unmount during url cancels the click and cleans up
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §8 an unmount during append cancels the click and cleans up
+AssertionError: H1: the failed pomodoro keeps the latest choice: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ failedSetDraft docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:34:82
+     32|   await flush();
+     33|   fired(quota, `${field.id} write`);
+     34|   expect(shown(ui, field), `H1: the failed ${field.id} keeps the lates…
+       |                                                                                  ^
+     35|   return quota;
+     36| }
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:460:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/23]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/continuity-export.test.tsx > §7 §9 unmount removes the guard and the beforeunload listener, detaches old callbacks, and never undoes committed writes or removals
+AssertionError: H1: the failed calendar keeps the latest choice: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ failedSetDraft docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:34:82
+     32|   await flush();
+     33|   fired(quota, `${field.id} write`);
+     34|   expect(shown(ui, field), `H1: the failed ${field.id} keeps the lates…
+       |                                                                                  ^
+     35|   return quota;
+     36| }
+ ❯ docs/reviews/web-features-recovery-sol/continuity-export.test.tsx:487:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/23]⎯
+
+
+---- runner summary ----
+json_report=success=false numTotalTests=26 numPassedTests=3 numFailedTests=23 numPendingTests=0 numTodoTests=0
+totals cases=26 passed=3 failed=23 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles = features vitest.setup.ts, root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (6)
+harness PASS no test-file suite error
+case 001 FAILED | §7 A→B→locked→A: a held device operation survives; old guards refuse before and after rerender; fresh B and locked guards guard and export (shapes 7, 8)
+    first: AssertionError: H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+case 002 FAILED | §7 old inline Retry, Discard, Discard all, Export and Reset callbacks refuse before rerender; device work survives under fresh permission
+    first: AssertionError: H1: the failed tasks keeps the latest choice: expected true to be false // Object.is equality
+case 003 FAILED | §7 same-account epoch change with a held device lock: old guard refuses; fresh guard exports and discards with zero writes
+    first: AssertionError: H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+case 004 FAILED | §7 an admitted reset batch survives A→B: the old guard refuses; a fresh B guard exports the pending reset; the held removal finishes or keeps its recovery
+    first: AssertionError: H3: the held per-key lock keeps the admitted Calendar removal pending: expected null to be 'false' // Object.is equality
+case 005 PASSED | INV §7 edits and a reset across A→B→locked→A never touch account keys, markers or lifecycle locks
+case 006 PASSED | INV §7 an unrelated held account lifecycle lock never delays a device edit or a reset
+case 007 FAILED | §8 shape 1: a sparse one-field set export is memory-only under total storage denial
+    first: AssertionError: H1: the failed habits keeps the latest choice: expected true to be false // Object.is equality
+case 008 FAILED | §8 shape 2: a sparse reset left over from a partial reset is exported as a reset entry, never a saved default
+    first: AssertionError: H5: "Matrix was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 009 FAILED | §8 shape 3: mixed set and reset entries
+    first: AssertionError: H5: "Boards was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 010 FAILED | §8 shape 4: all 8 sets
+    first: AssertionError: H1: all 8 latest choices stay displayed: expected { tasks: true, board: true, …(6) } to strictly equal { tasks: false, board: false, …(6) }
+case 011 FAILED | §8 shape 5: all 8 pending resets behind held locks
+    first: AssertionError: H3: every held per-key lock keeps its removal pending: expected { tasks: null, board: null, …(6) } to strictly equal { Object (tasks, board, ...) }
+case 012 FAILED | §8 shape 6: a dialog export through the registered guard is memory-only and changes nothing
+    first: AssertionError: H5: "Pomodoro was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 013 FAILED | §8 shape 9: an export while one operation is held behind a real lock includes it and releases, saves or retries nothing
+    first: AssertionError: H1: the failed tasks keeps the latest choice: expected true to be false // Object.is equality
+case 014 FAILED | §8 the export excludes saved, default and source-only fields
+    first: AssertionError: H1: the failed board keeps the latest choice: expected true to be false // Object.is equality
+case 015 PASSED | INV §8 without an actual draft there is no Export control and no empty download
+case 016 FAILED | §8 a blob setup failure shows the localized export error, keeps drafts and guard, and cleans up
+    first: AssertionError: H1: the failed calendar keeps the latest choice: expected true to be false // Object.is equality
+case 017 FAILED | §8 a url setup failure shows the localized export error, keeps drafts and guard, and cleans up
+    first: AssertionError: H1: the failed calendar keeps the latest choice: expected true to be false // Object.is equality
+case 018 FAILED | §8 a append setup failure shows the localized export error, keeps drafts and guard, and cleans up
+    first: AssertionError: H1: the failed calendar keeps the latest choice: expected true to be false // Object.is equality
+case 019 FAILED | §8 a click setup failure shows the localized export error, keeps drafts and guard, and cleans up
+    first: AssertionError: H1: the failed calendar keeps the latest choice: expected true to be false // Object.is equality
+case 020 FAILED | §8 an epoch change during blob cancels the click and cleans up; fresh permission exports
+    first: AssertionError: H1: the failed habits keeps the latest choice: expected true to be false // Object.is equality
+case 021 FAILED | §8 an epoch change during url cancels the click and cleans up; fresh permission exports
+    first: AssertionError: H1: the failed habits keeps the latest choice: expected true to be false // Object.is equality
+case 022 FAILED | §8 an epoch change during append cancels the click and cleans up; fresh permission exports
+    first: AssertionError: H1: the failed habits keeps the latest choice: expected true to be false // Object.is equality
+case 023 FAILED | §8 an unmount during blob cancels the click and cleans up
+    first: AssertionError: H1: the failed pomodoro keeps the latest choice: expected true to be false // Object.is equality
+case 024 FAILED | §8 an unmount during url cancels the click and cleans up
+    first: AssertionError: H1: the failed pomodoro keeps the latest choice: expected true to be false // Object.is equality
+case 025 FAILED | §8 an unmount during append cancels the click and cleans up
+    first: AssertionError: H1: the failed pomodoro keeps the latest choice: expected true to be false // Object.is equality
+case 026 FAILED | §7 §9 unmount removes the guard and the beforeunload listener, detaches old callbacks, and never undoes committed writes or removals
+    first: AssertionError: H1: the failed calendar keeps the latest choice: expected true to be false // Object.is equality
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/.features-sol-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-U6wbFd/packages/xai-web-settings-features-panel/vitest.setup.ts"],"include":["docs/reviews/web-features-recovery-sol/continuity-export.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-features-panel/src/FeaturesPane.tsx packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts
+pin_modules=70 by package: docs/reviews=2 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-settings-features-panel=11 packages/xai-web-shell=9

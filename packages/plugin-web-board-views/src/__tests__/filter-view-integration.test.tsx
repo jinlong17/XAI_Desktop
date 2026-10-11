@@ -52,6 +52,7 @@ const LISTS: BoardListData[] = [
 const URGENT_FILTER: FilterState = {
   labels: new Set(["urgent"]),
   members: new Set(),
+  priorities: new Set(),
   dueRange: "all",
 };
 

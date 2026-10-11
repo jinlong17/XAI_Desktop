@@ -1,0 +1,11 @@
+revision=f359be6 fixed_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-astra-XZXpBR
+
+ ✓ docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx (7 tests) 586ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  23:30:01
+   Duration  1.62s (transform 248ms, setup 228ms, collect 208ms, tests 586ms, environment 252ms, prepare 73ms)

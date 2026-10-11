@@ -1,0 +1,55 @@
+independent exit=1
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-vEemxh
+
+ ❯ docs/reviews/web-board-workspace-astra-review/independent.test.tsx (9 tests | 3 failed) 1611ms
+   ✓ recolor: rejected bytes retained, retry durable, remount matches stored result  765ms
+   ✓ delete: rejected bytes retained, retry durable, remount matches stored result 220ms
+   ✓ delete: external board membership arriving after quota failure wins over retry 291ms
+   ✓ create: absent workspace storage remains a supported fresh-start write 59ms
+   ✓ create: malformed workspace bytes are preserved: {broken 63ms
+   ✓ create: malformed workspace bytes are preserved: [{"id":"recover-me","name":{"en":"Original"},"color":123}] 64ms
+   × delete: structurally malformed board membership must not be treated as an empty workspace 60ms
+     → expected '[{"id":"ws-personal","name":{"en":"Pe…' to be '[{"id":"ws-personal","name":{"en":"Pe…' // Object.is equality
+   × create: quota retry must not replace a pre-existing structurally invalid baseline 43ms
+     → expected '[{"id":"b-default","workspaceId":"ws-…' to be '[{"id":"b-default","workspaceId":"ws-…' // Object.is equality
+   × delete: quota retry must not replace a pre-existing structurally invalid baseline 42ms
+     → expected '[{"id":"ws-personal","name":{"en":"Pe…' to be '[{"id":"ws-personal","name":{"en":"Pe…' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 6 passed (9)
+   Start at  14:53:26
+   Duration  3.74s (transform 737ms, setup 200ms, collect 1.07s, tests 1.61s, environment 414ms, prepare 95ms)
+
+
+author-contract-rerun exit=0
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-vEemxh
+
+ ✓ docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx (10 tests) 520ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  14:53:30
+   Duration  2.76s (transform 908ms, setup 575ms, collect 991ms, tests 520ms, environment 316ms, prepare 96ms)
+
+
+package-rerun exit=0 eteConfirmDialog.test.tsx (11 tests) 54ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts (6 tests) 13ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/shareUrl.test.ts (6 tests) 5ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/WorkspaceSaveRecovery.test.tsx (6 tests) 19ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardRecoveryInitialization.test.tsx (2 tests) 12ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/index-barrel.test.ts (4 tests) 4ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/panelOps.test.ts (19 tests) 4ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/shareContract.test.ts (3 tests) 4ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/ringMath.test.ts (16 tests) 8ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/savedFilters.test.ts (5 tests) 3ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/filterState.test.ts (8 tests) 2ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/guards.test.ts (12 tests) 3ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/registration.test.tsx (6 tests) 3ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/types.test.ts (3 tests) 2ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/responsiveStyles.test.ts (3 tests) 5ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardWorkspacesModule.test.tsx (85 tests) 3247ms
+
+ Test Files  26 passed (26)
+      Tests  305 passed (305)
+   Start at  14:53:34
+   Duration  5.26s (transform 1.29s, setup 3.28s, collect 6.65s, tests 5.71s, environment 9.92s, prepare 1.60s)

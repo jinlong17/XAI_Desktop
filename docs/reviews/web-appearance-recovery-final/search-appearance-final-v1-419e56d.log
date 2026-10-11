@@ -1,0 +1,799 @@
+requested_fixed=419e56d
+resolved_fixed_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_fixed_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+requested_before=5cd63ff
+resolved_before_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_before_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+suffix=appearance-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-final/verify-static.mjs 419e56d 5cd63ff appearance-final-v1
+output_dir=docs/reviews/web-appearance-recovery-final
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+runner_sha256=8f6352fd162d4decac3e66f3b1c67fe5e95e2aa8a1a28738e886c2081254aca5
+node=v24.16.0 platform=darwin-arm64 git=git version 2.54.0 (Apple Git-157)
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+fixed_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 extracted=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+before_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 extracted=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+repo_pin=not applicable (no product code is executed; text scan and git object comparison only)
+archives fixed_files=7205 (symlinks 22) before_files=6503 (symlinks 22) scanned_text_files fixed=2126 before=2116 binary_skipped fixed=23 before=23
+log=E18 (contract §10 item 9) writer/reader search
+## Per-pattern, per-file matching-line counts (scope: every committed file outside docs/ and *.md; text files only)
+pattern K1 lang key "xai_pref_lang": 5cd63ff files=6 lines=14; 419e56d files=10 lines=29
+  DOWN apps/web/src/App.tsx 5cd63ff=4 419e56d=1 [§11]
+  UP   apps/web/src/__tests__/App.appearance.test.tsx 5cd63ff=0 419e56d=5 [§11]
+  same apps/web/src/__tests__/App.lazy-init.test.tsx 5cd63ff=2 419e56d=2
+  same apps/web/src/providers/AccountStorageGate.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/internal/accountOwnership.ts 5cd63ff=1 419e56d=1
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 5cd63ff=0 419e56d=10 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 5cd63ff=0 419e56d=6 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=1 [§11]
+  DOWN packages/xai-web-shell/src/Topbar.tsx 5cd63ff=2 419e56d=0 [§11]
+  DOWN packages/xai-web-shell/src/__tests__/Topbar.test.tsx 5cd63ff=4 419e56d=0 [§11]
+pattern K2 theme key "xai_pref_theme": 5cd63ff files=9 lines=31; 419e56d files=15 lines=59
+  DOWN apps/web/src/App.tsx 5cd63ff=4 419e56d=1 [§11]
+  UP   apps/web/src/__tests__/App.appearance.test.tsx 5cd63ff=0 419e56d=11 [§11]
+  same apps/web/src/__tests__/App.lazy-init.test.tsx 5cd63ff=9 419e56d=9
+  same apps/web/src/pages/NotFoundPage.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/accountDataLifecycle.test.ts 5cd63ff=3 419e56d=3
+  same packages/plugin-web-storage/src/__tests__/accountMigration.test.ts 5cd63ff=3 419e56d=3
+  same packages/plugin-web-storage/src/__tests__/accountScope.test.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-storage/src/internal/accountOwnership.ts 5cd63ff=1 419e56d=1
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 5cd63ff=0 419e56d=16 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 5cd63ff=0 419e56d=4 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 5cd63ff=0 419e56d=4 [§11]
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=1 [§11]
+  DOWN packages/xai-web-shell/src/Topbar.tsx 5cd63ff=2 419e56d=0 [§11]
+  DOWN packages/xai-web-shell/src/__tests__/Topbar.test.tsx 5cd63ff=6 419e56d=0 [§11]
+pattern K3 density key "xai_pref_density": 5cd63ff files=5 lines=13; 419e56d files=9 lines=25
+  DOWN apps/web/src/App.tsx 5cd63ff=4 419e56d=1 [§11]
+  UP   apps/web/src/__tests__/App.appearance.test.tsx 5cd63ff=0 419e56d=9 [§11]
+  same apps/web/src/__tests__/App.lazy-init.test.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-storage/src/internal/accountOwnership.ts 5cd63ff=1 419e56d=1
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 5cd63ff=0 419e56d=6 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 5cd63ff=0 419e56d=3 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=1 [§11]
+  DOWN packages/xai-web-shell/src/Topbar.tsx 5cd63ff=2 419e56d=0 [§11]
+  DOWN packages/xai-web-shell/src/__tests__/Topbar.test.tsx 5cd63ff=4 419e56d=0 [§11]
+pattern K4 font scale key "xai_pref_font_scale": 5cd63ff files=2 lines=5; 419e56d files=9 lines=19
+  DOWN apps/web/src/App.tsx 5cd63ff=4 419e56d=1 [§11]
+  UP   apps/web/src/__tests__/App.appearance.test.tsx 5cd63ff=0 419e56d=3 [§11]
+  same packages/plugin-web-storage/src/internal/accountOwnership.ts 5cd63ff=1 419e56d=1
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 5cd63ff=0 419e56d=6 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 5cd63ff=0 419e56d=3 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 5cd63ff=0 419e56d=2 [§11]
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=1 [§11]
+pattern K5 accent key "xai_accent_hue": 5cd63ff files=17 lines=97; 419e56d files=19 lines=129
+  DOWN apps/web/src/App.tsx 5cd63ff=1 419e56d=0 [§11]
+  UP   apps/web/src/__tests__/App.appearance.test.tsx 5cd63ff=0 419e56d=6 [§11]
+  same packages/plugin-web-settings-shell/src/__tests__/resetAllPrefs.test.ts 5cd63ff=7 419e56d=7
+  same packages/plugin-web-storage/src/__tests__/consumer.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/imperative.test.ts 5cd63ff=19 419e56d=19
+  same packages/plugin-web-storage/src/__tests__/registry.test.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/ssr.test.ts 5cd63ff=8 419e56d=8
+  same packages/plugin-web-storage/src/__tests__/types.test-d.ts 5cd63ff=9 419e56d=9
+  same packages/plugin-web-storage/src/__tests__/usePref.test.tsx 5cd63ff=21 419e56d=21
+  same packages/plugin-web-storage/src/__tests__/usePrefAsync.contract.test.tsx 5cd63ff=6 419e56d=6
+  same packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-storage/src/internal/accountOwnership.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/internal/registry.ts 5cd63ff=2 419e56d=2
+  DOWN packages/xai-web-settings-appearance/src/AppearancePane.tsx 5cd63ff=5 419e56d=0 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 5cd63ff=0 419e56d=7 [§11]
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 5cd63ff=4 419e56d=4 [§11]
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx 5cd63ff=2 419e56d=2 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 5cd63ff=6 419e56d=15 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 5cd63ff=0 419e56d=14 [§11]
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=2 [§11]
+  same packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx 5cd63ff=2 419e56d=2
+pattern K6 rail key "xai_rail_pos": 5cd63ff files=13 lines=29; 419e56d files=16 lines=47
+  DOWN apps/web/src/App.tsx 5cd63ff=1 419e56d=0 [§11]
+  UP   apps/web/src/__tests__/App.appearance.test.tsx 5cd63ff=0 419e56d=2 [§11]
+  same packages/plugin-web-settings-shell/src/__tests__/resetAllPrefs.test.ts 5cd63ff=5 419e56d=5
+  same packages/plugin-web-storage/src/__tests__/consumer.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/imperative.test.ts 5cd63ff=3 419e56d=3
+  same packages/plugin-web-storage/src/__tests__/registry.test.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/types.test-d.ts 5cd63ff=3 419e56d=3
+  same packages/plugin-web-storage/src/internal/accountOwnership.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/internal/registry.ts 5cd63ff=2 419e56d=2
+  DOWN packages/xai-web-settings-appearance/src/AppearancePane.tsx 5cd63ff=4 419e56d=0 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 5cd63ff=0 419e56d=8 [§11]
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 5cd63ff=2 419e56d=2 [§11]
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx 5cd63ff=2 419e56d=2 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 5cd63ff=2 419e56d=4 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 5cd63ff=0 419e56d=8 [§11]
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=2 [§11]
+  same packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx 5cd63ff=2 419e56d=2
+pattern K7 background key "xai_bg_tone": 5cd63ff files=9 lines=19; 419e56d files=11 lines=27
+  DOWN apps/web/src/App.tsx 5cd63ff=1 419e56d=0 [§11]
+  UP   apps/web/src/__tests__/App.appearance.test.tsx 5cd63ff=0 419e56d=3 [§11]
+  same packages/plugin-web-settings-shell/src/__tests__/resetAllPrefs.test.ts 5cd63ff=5 419e56d=5
+  same packages/plugin-web-storage/src/__tests__/registry.test.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/internal/accountOwnership.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/internal/registry.ts 5cd63ff=2 419e56d=2
+  DOWN packages/xai-web-settings-appearance/src/AppearancePane.tsx 5cd63ff=4 419e56d=0 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 5cd63ff=0 419e56d=3 [§11]
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 5cd63ff=1 419e56d=1 [§11]
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx 5cd63ff=2 419e56d=2 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 5cd63ff=2 419e56d=4 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 5cd63ff=0 419e56d=3 [§11]
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=2 [§11]
+pattern E1 retired event channel "web:settings:preference-changed": 5cd63ff files=12 lines=49; 419e56d files=16 lines=34
+  DOWN apps/web/src/App.tsx 5cd63ff=2 419e56d=1 [§11]
+  UP   apps/web/src/__tests__/App.appearance.test.tsx 5cd63ff=0 419e56d=2 [§11]
+  same packages/core/src/types/events.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-settings-shell/package.json 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-shell/src/SettingsFooter.tsx 5cd63ff=7 419e56d=7
+  same packages/plugin-web-settings-shell/src/__tests__/SettingsFooter.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-shell/src/__tests__/resetAllPrefs.test.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts 5cd63ff=8 419e56d=8
+  same packages/xai-web-event-bus/src/emitter.test.ts 5cd63ff=2 419e56d=2
+  same packages/xai-web-event-bus/src/events.test-d.ts 5cd63ff=1 419e56d=1
+  DOWN packages/xai-web-settings-appearance/src/AppearancePane.tsx 5cd63ff=15 419e56d=1 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  DOWN packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 5cd63ff=7 419e56d=1 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 5cd63ff=0 419e56d=2 [§11]
+  same packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts 5cd63ff=1 419e56d=1
+  UP   packages/xai-web-settings-appearance/src/types.ts 5cd63ff=0 419e56d=1 [§11]
+pattern A1 App raw reader "readLocalPref": 5cd63ff files=2 lines=12; 419e56d files=3 lines=11
+  DOWN apps/web/src/App.tsx 5cd63ff=6 419e56d=3 [§11]
+  UP   apps/web/src/__tests__/App.appearance.test.tsx 5cd63ff=0 419e56d=2 [§11]
+  same apps/web/src/__tests__/App.lazy-init.test.tsx 5cd63ff=6 419e56d=6
+pattern A2 App raw writer "writeLocalPref": 5cd63ff files=1 lines=5; 419e56d files=0 lines=0
+  DOWN apps/web/src/App.tsx 5cd63ff=5 419e56d=0 [§11]
+pattern T1 Topbar raw writer "persistAndSet": 5cd63ff files=3 lines=8; 419e56d files=1 lines=1
+  DOWN apps/web/src/App.tsx 5cd63ff=2 419e56d=0 [§11]
+  same apps/web/src/__tests__/App.lazy-init.test.tsx 5cd63ff=1 419e56d=1
+  DOWN packages/xai-web-shell/src/Topbar.tsx 5cd63ff=5 419e56d=0 [§11]
+pattern S1 setPref call "setPref(": 5cd63ff files=38 lines=151; 419e56d files=37 lines=148
+  same apps/web/src/dev/seedAiConfigFromEnv.ts 5cd63ff=3 419e56d=3
+  same apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardComposerRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardCreateRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-board-workspaces/src/internal/taskLinkCommand.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx 5cd63ff=9 419e56d=9
+  same packages/plugin-web-settings-rest/src/internal/integrationDisconnectButton.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-shell/src/__tests__/resetAllPrefs.test.ts 5cd63ff=4 419e56d=4
+  same packages/plugin-web-statistics/src/__tests__/StatisticsModule.test.tsx 5cd63ff=11 419e56d=11
+  same packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/imperative.test.ts 5cd63ff=18 419e56d=18
+  same packages/plugin-web-storage/src/__tests__/ssr.test.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-storage/src/__tests__/types.test-d.ts 5cd63ff=3 419e56d=3
+  same packages/plugin-web-storage/src/internal/usePref.ts 5cd63ff=2 419e56d=2
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.dst-recurrence.test.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.eventcrud.test.tsx 5cd63ff=5 419e56d=5
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.recurrence.test.tsx 5cd63ff=6 419e56d=6
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.saveRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.weekstart.test.tsx 5cd63ff=4 419e56d=4
+  same packages/xai-web-calendar/src/__tests__/YearView.test.tsx 5cd63ff=5 419e56d=5
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx 5cd63ff=7 419e56d=7
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.remove.test.tsx 5cd63ff=4 419e56d=4
+  same packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx 5cd63ff=5 419e56d=5
+  same packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.addWidget.test.tsx 5cd63ff=6 419e56d=6
+  same packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.removeWidget.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx 5cd63ff=7 419e56d=7
+  same packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx 5cd63ff=13 419e56d=13
+  DOWN packages/xai-web-settings-appearance/src/AppearancePane.tsx 5cd63ff=4 419e56d=0 [§11]
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx 5cd63ff=4 419e56d=4 [§11]
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 5cd63ff=4 419e56d=5 [§11]
+  same packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-settings-features-panel/src/__tests__/useFeaturePrefs.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-settings-features-panel/src/__tests__/withDisabledFallback.test.tsx 5cd63ff=2 419e56d=2
+pattern S2 removePref call "removePref(": 5cd63ff files=7 lines=10; 419e56d files=6 lines=9
+  same packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-storage/src/__tests__/imperative.test.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/ssr.test.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-storage/src/internal/usePref.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx 5cd63ff=2 419e56d=2
+  DOWN packages/xai-web-settings-appearance/src/AppearancePane.tsx 5cd63ff=1 419e56d=0 [§11]
+pattern S3 legacy usePref call "usePref(": 5cd63ff files=57 lines=115; 419e56d files=55 lines=109
+  DOWN apps/web/src/App.tsx 5cd63ff=3 419e56d=0 [§11]
+  same packages/plugin-web-ai-chat/src/internal/useChatPreference.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-ai-chat/src/internal/useConversationRecovery.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-board-core/src/BoardModule.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-board-core/src/internal/persistence.ts 5cd63ff=3 419e56d=3
+  same packages/plugin-web-board-core/src/internal/seed/board-data.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-board-views/src/BoardModule.tsx 5cd63ff=3 419e56d=3
+  same packages/plugin-web-board-views/src/internal/persistence.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx 5cd63ff=8 419e56d=8
+  same packages/plugin-web-countdown/src/internal/useCountdownSaveRecovery.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-pomodoro/src/PomodoroModule.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-rest/src/CallbackPage.tsx 5cd63ff=3 419e56d=3
+  same packages/plugin-web-settings-rest/src/internal/usePremiumTier.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-settings-rest/src/panes/aiPane.tsx 5cd63ff=4 419e56d=4
+  same packages/plugin-web-settings-rest/src/panes/integrationsPane.tsx 5cd63ff=3 419e56d=3
+  same packages/plugin-web-statistics/src/StatisticsModule.tsx 5cd63ff=4 419e56d=4
+  same packages/plugin-web-statistics/src/internal/narrowTaskCols.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/consumer.test.tsx 5cd63ff=5 419e56d=5
+  same packages/plugin-web-storage/src/__tests__/types.test-d.ts 5cd63ff=5 419e56d=5
+  same packages/plugin-web-storage/src/__tests__/usePref.test.tsx 5cd63ff=5 419e56d=5
+  same packages/plugin-web-storage/src/__tests__/usePref.writeResult.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-calendar/src/CalendarModule.tsx 5cd63ff=4 419e56d=4
+  same packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-grid/src/DashboardModule.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts 5cd63ff=2 419e56d=2
+  same packages/xai-web-dashboard-widgets/src/StickyComposer.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/calMonthDots.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/calUpcoming.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/habitStreak.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/isHabitsState.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/isTaskColsRecord.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/isUserCalEventMap.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/notifications.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/pomoStats.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/internal/stickiesStore/useStickies.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/internal/weatherStore/useWeather.ts 5cd63ff=2 419e56d=2
+  same packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-dashboard-widgets/src/widgets/MailWidget.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-dashboard-widgets/src/widgets/MiniCalWidget.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/widgets/StatPomos.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/widgets/StatStreak.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/widgets/StatTasks.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/widgets/UpcomingWidget.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/widgets/WorldClocks.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-habits/src/internal/usePersistedHabits.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-matrix/src/internal/usePersistedMatrix.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-meditation/src/internal/useMeditationPrefs.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-pet/src/DesktopPet.tsx 5cd63ff=2 419e56d=2
+  DOWN packages/xai-web-settings-appearance/src/AppearancePane.tsx 5cd63ff=3 419e56d=0 [§11]
+  same packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts 5cd63ff=8 419e56d=8
+  same packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-shell/src/AppRail.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-tasks/src/TasksModule.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-tasks/src/internal/validate.ts 5cd63ff=1 419e56d=1
+pattern S4 open-ended async binding "usePrefAutosaveAsync(": 5cd63ff files=8 lines=61; 419e56d files=9 lines=68
+  same packages/plugin-web-settings-rest/src/panes/collaboratePane.tsx 5cd63ff=3 419e56d=3
+  same packages/plugin-web-settings-rest/src/panes/dateTimePane.tsx 5cd63ff=5 419e56d=5
+  same packages/plugin-web-settings-rest/src/panes/morePane.tsx 5cd63ff=15 419e56d=15
+  same packages/plugin-web-settings-rest/src/panes/notificationsPane.tsx 5cd63ff=8 419e56d=8
+  same packages/plugin-web-settings-rest/src/panes/smartListsPane.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-rest/src/panes/stickyPane.tsx 5cd63ff=5 419e56d=5
+  same packages/plugin-web-storage/src/__tests__/usePrefAsync.contract.test.tsx 5cd63ff=16 419e56d=16
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=7 [§11]
+  same packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts 5cd63ff=8 419e56d=8
+pattern S5 event emit "emitWebEvent(": 5cd63ff files=37 lines=132; 419e56d files=36 lines=119
+  UP   apps/web/src/App.tsx 5cd63ff=2 419e56d=3 [§11]
+  same apps/web/src/__tests__/event-bus.smoke.test.tsx 5cd63ff=5 419e56d=5
+  same apps/web/src/routes/modules/dashboardRegistration.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-ai-chat/src/AiChatModule.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-ai-chat/src/__tests__/AiChatModule.test.tsx 5cd63ff=4 419e56d=4
+  same packages/plugin-web-ai-chat/src/internal/claudeStreamAdapter.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-ai-chat/src/internal/requestToolWrite.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-board-workspaces/src/ShareModal.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-pomodoro/src/internal/sessionController.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-rest/src/CallbackPage.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-rest/src/CheckoutSuccessPage.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-rest/src/internal/integrationDisconnectButton.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-rest/src/internal/premiumCancelButton.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-rest/src/panes/accountPane.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-shell/src/SettingsFooter.tsx 5cd63ff=7 419e56d=7
+  same packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts 5cd63ff=7 419e56d=7
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.deeplink.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.dst-recurrence.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-calendar/src/__tests__/aiCalendarInputValidation.test.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-calendar/src/__tests__/aiCreateSubscriber.test.tsx 5cd63ff=5 419e56d=5
+  same packages/xai-web-calendar/src/__tests__/aiMutateSubscriber.test.tsx 5cd63ff=8 419e56d=8
+  same packages/xai-web-cmdk/src/CommandPalette.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-grid/src/DashboardModule.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-dashboard-grid/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-event-bus/src/emitter.test.ts 5cd63ff=12 419e56d=12
+  same packages/xai-web-event-bus/src/events.test-d.ts 5cd63ff=3 419e56d=3
+  same packages/xai-web-event-bus/src/listener.test.tsx 5cd63ff=7 419e56d=7
+  same packages/xai-web-event-bus/src/toolWriteReceipt.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-habits/src/internal/emit.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-matrix/src/internal/emit.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-pet/src/__tests__/DesktopPet.event.test.tsx 5cd63ff=5 419e56d=5
+  same packages/xai-web-pet/src/__tests__/useToggleSync.test.tsx 5cd63ff=3 419e56d=3
+  DOWN packages/xai-web-settings-appearance/src/AppearancePane.tsx 5cd63ff=14 419e56d=0 [§11]
+  same packages/xai-web-shell/src/Shell.tsx 5cd63ff=5 419e56d=5 [§11]
+  same packages/xai-web-tasks/src/__tests__/aiCreateSubscriber.test.tsx 5cd63ff=9 419e56d=9
+  same packages/xai-web-tasks/src/__tests__/aiMutateSubscriber.test.tsx 5cd63ff=10 419e56d=10
+pattern S6 global reset "resetAllPrefs": 5cd63ff files=11 lines=42; 419e56d files=11 lines=42
+  same packages/plugin-web-settings-shell/src/SettingsFooter.tsx 5cd63ff=3 419e56d=3
+  same packages/plugin-web-settings-shell/src/__tests__/SettingsFooter.test.tsx 5cd63ff=8 419e56d=8
+  same packages/plugin-web-settings-shell/src/__tests__/index-barrel.test.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-shell/src/__tests__/resetAllPrefs.test.ts 5cd63ff=14 419e56d=14
+  same packages/plugin-web-settings-shell/src/index.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-settings-shell/src/internal/defaults.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts 5cd63ff=3 419e56d=3
+  same packages/plugin-web-settings-shell/src/types.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/internal/registry.ts 5cd63ff=3 419e56d=3
+  same packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts 5cd63ff=5 419e56d=5
+  same packages/xai-web-settings-appearance/src/appearanceDefaults.ts 5cd63ff=1 419e56d=1
+pattern B1 storage event construction "new StorageEvent": 5cd63ff files=18 lines=24; 419e56d files=19 lines=26
+  UP   apps/web/src/__tests__/App.appearance.test.tsx 5cd63ff=0 419e56d=2 [§11]
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-pomodoro/src/internal/sessionController.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-rest/src/__tests__/smartListsRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/AccountDataGate.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/usePref.test.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-storage/src/__tests__/usePrefAsync.contract.test.tsx 5cd63ff=4 419e56d=4
+  same packages/xai-web-calendar/src/__tests__/useUserCalEvents.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-grid/src/internal/useOrderSaveRecovery.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.events.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.persist.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-habits/src/__tests__/saveRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.events.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.persist.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-meditation/src/__tests__/MeditationModule.persist.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-tasks/src/__tests__/saveRecovery.test.tsx 5cd63ff=2 419e56d=2
+pattern B2 event dispatch "dispatchEvent(": 5cd63ff files=53 lines=94; 419e56d files=55 lines=98
+  UP   apps/web/src/__tests__/App.appearance.test.tsx 5cd63ff=0 419e56d=3 [§11]
+  same apps/web/src/providers/AccountStorageGate.tsx 5cd63ff=2 419e56d=2
+  same apps/web/src/providers/AppProviders.tsx 5cd63ff=1 419e56d=1
+  same apps/web/src/routes/router.integration.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-ai-cube/src/hooks/useAiConversation.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-organizer/src/hooks/useFileDrop.test.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-productivity/src/web/TodoWebModuleRoute.test.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-board-views/src/__tests__/BoardCalendarView.test.tsx 5cd63ff=4 419e56d=4
+  same packages/plugin-web-board-views/src/__tests__/TimelineView.test.tsx 5cd63ff=14 419e56d=14
+  same packages/plugin-web-board-views/src/__tests__/_helpers/timelineDrag.ts 5cd63ff=3 419e56d=3
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-bookkeeping/src/internal/storage.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-countdown/src/__tests__/useDaysUntil.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-countdown/vitest.setup.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-metric-tracker/src/internal/storage.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-pomodoro/src/__tests__/preferenceRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-pomodoro/src/__tests__/useTimerTick.test.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-pomodoro/src/internal/sessionController.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-rest/src/__tests__/smartListsRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-rest/src/__tests__/stickyPaneRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-rest/src/internal/accountDeletionIntent.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-settings-rest/src/internal/accountDeletionRecovery.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/AccountDataGate.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/AccountDataGate.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-storage/src/__tests__/usePref.test.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-storage/src/__tests__/usePrefAsync.contract.test.tsx 5cd63ff=4 419e56d=4
+  same packages/plugin-web-time-tracker/src/__tests__/dayRollover.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-time-tracker/src/internal/storage.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-tokens/src/__tests__/localDate.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-calendar/src/__tests__/useUserCalEvents.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-grid/src/internal/useOrderSaveRecovery.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-grid/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-event-bus/src/emitter.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-habits/src/__tests__/AddHabitDialog.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.add.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.events.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.persist.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-habits/src/__tests__/saveRecovery.test.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-matrix/src/__tests__/MatrixComposer.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.events.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.persist.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-meditation/src/__tests__/MeditationModule.persist.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-pet/src/__tests__/DesktopPet.drag.test.tsx 5cd63ff=5 419e56d=5
+  same packages/xai-web-pet/src/__tests__/DesktopPet.resize.test.tsx 5cd63ff=2 419e56d=2
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  same packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-tasks/docs/native-save-recovery.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-tasks/src/__tests__/dueDate.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-tasks/src/__tests__/saveRecovery.test.tsx 5cd63ff=2 419e56d=2
+pattern F1 shared footer "SettingsFooter": 5cd63ff files=10 lines=31; 419e56d files=8 lines=26
+  same packages/plugin-web-settings-shell/package.json 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-shell/src/SettingsFooter.tsx 5cd63ff=5 419e56d=5
+  same packages/plugin-web-settings-shell/src/__tests__/SettingsFooter.test.tsx 5cd63ff=11 419e56d=11
+  same packages/plugin-web-settings-shell/src/__tests__/index-barrel.test.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-shell/src/index.ts 5cd63ff=3 419e56d=3
+  same packages/plugin-web-settings-shell/src/types.ts 5cd63ff=1 419e56d=1
+  DOWN packages/xai-web-settings-appearance/src/AppearancePane.tsx 5cd63ff=3 419e56d=0 [§11]
+  DOWN packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx 5cd63ff=2 419e56d=1 [§11]
+  DOWN packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 5cd63ff=1 419e56d=0 [§11]
+  same packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx 5cd63ff=3 419e56d=3
+pattern F2 footer class "pane-footer": 5cd63ff files=4 lines=5; 419e56d files=5 lines=6
+  same packages/plugin-web-settings-shell/src/SettingsFooter.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-shell/src/styles.css 5cd63ff=2 419e56d=2
+  same packages/plugin-web-tokens/src/layout.css 5cd63ff=1 419e56d=1
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx 5cd63ff=0 419e56d=1 [§11]
+  same packages/xai-web-settings-features-panel/src/styles.css 5cd63ff=1 419e56d=1
+pattern F3 save class "pane-save": 5cd63ff files=3 lines=7; 419e56d files=4 lines=8
+  same packages/plugin-web-settings-shell/src/SettingsFooter.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-shell/src/styles.css 5cd63ff=4 419e56d=4
+  same packages/plugin-web-tokens/src/layout.css 5cd63ff=2 419e56d=2
+  UP   packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx 5cd63ff=0 419e56d=1 [§11]
+pattern D1 applyTheme "applyTheme(": 5cd63ff files=9 lines=21; 419e56d files=8 lines=19
+  DOWN apps/web/src/App.tsx 5cd63ff=2 419e56d=0 [§11]
+  same apps/web/src/__tests__/shell.smoke.test.tsx 5cd63ff=1 419e56d=1
+  same apps/web/src/__tests__/shell.theme.test.tsx 5cd63ff=1 419e56d=1
+  same apps/web/src/pages/NotFoundPage.tsx 5cd63ff=2 419e56d=2
+  same apps/web/src/pages/TokensSmokePage.tsx 5cd63ff=3 419e56d=3
+  same packages/plugin-web-tokens/src/__tests__/apply.test.ts 5cd63ff=8 419e56d=8
+  same packages/plugin-web-tokens/src/__tests__/types.test-d.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-tokens/src/apply.ts 5cd63ff=1 419e56d=1
+  DOWN packages/xai-web-settings-appearance/src/AppearancePane.tsx 5cd63ff=2 419e56d=0 [§11]
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=2 [§11]
+pattern D2 applyDensity "applyDensity(": 5cd63ff files=6 lines=12; 419e56d files=5 lines=10
+  DOWN apps/web/src/App.tsx 5cd63ff=1 419e56d=0 [§11]
+  same apps/web/src/pages/TokensSmokePage.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-tokens/src/__tests__/apply.test.ts 5cd63ff=4 419e56d=4
+  same packages/plugin-web-tokens/src/__tests__/types.test-d.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-tokens/src/apply.ts 5cd63ff=1 419e56d=1
+  DOWN packages/xai-web-settings-appearance/src/AppearancePane.tsx 5cd63ff=2 419e56d=0 [§11]
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=1 [§11]
+pattern D3 applyFontScale "applyFontScale(": 5cd63ff files=4 lines=10; 419e56d files=3 lines=8
+  DOWN apps/web/src/App.tsx 5cd63ff=1 419e56d=0 [§11]
+  same packages/plugin-web-tokens/src/__tests__/apply.test.ts 5cd63ff=6 419e56d=6
+  same packages/plugin-web-tokens/src/apply.ts 5cd63ff=1 419e56d=1
+  DOWN packages/xai-web-settings-appearance/src/AppearancePane.tsx 5cd63ff=2 419e56d=0 [§11]
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=1 [§11]
+pattern D4 applyAccentHue "applyAccentHue(": 5cd63ff files=4 lines=5; 419e56d files=4 lines=5
+  DOWN apps/web/src/App.tsx 5cd63ff=1 419e56d=0 [§11]
+  same apps/web/src/pages/TokensSmokePage.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-tokens/src/__tests__/apply.test.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-tokens/src/apply.ts 5cd63ff=1 419e56d=1
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=1 [§11]
+pattern D5 applyBgTone "applyBgTone(": 5cd63ff files=3 lines=7; 419e56d files=3 lines=7
+  DOWN apps/web/src/App.tsx 5cd63ff=1 419e56d=0 [§11]
+  same packages/plugin-web-tokens/src/__tests__/apply.test.ts 5cd63ff=5 419e56d=5
+  same packages/plugin-web-tokens/src/apply.ts 5cd63ff=1 419e56d=1
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=1 [§11]
+pattern D6 applyRailPos "applyRailPos(": 5cd63ff files=3 lines=4; 419e56d files=3 lines=4
+  DOWN apps/web/src/App.tsx 5cd63ff=1 419e56d=0 [§11]
+  same packages/plugin-web-tokens/src/__tests__/apply.test.ts 5cd63ff=2 419e56d=2
+  same packages/plugin-web-tokens/src/apply.ts 5cd63ff=1 419e56d=1
+  UP   packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 5cd63ff=0 419e56d=1 [§11]
+pattern R1 shell display provider "WebShellProvider": 5cd63ff files=46 lines=153; 419e56d files=46 lines=153
+  same apps/web/src/App.tsx 5cd63ff=4 419e56d=4 [§11]
+  same apps/web/src/routes/modules/shellRegistrations.tsx 5cd63ff=2 419e56d=2
+  same apps/web/src/routes/router.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-ai-chat/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-board-core/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-board-views/src/__tests__/registration.test.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-board-views/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-board-workspaces/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-countdown/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-pomodoro/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-settings-shell/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-statistics/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-cmdk/src/types.ts 5cd63ff=1 419e56d=1
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx 5cd63ff=5 419e56d=5
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardSlotHost.composition.test.tsx 5cd63ff=8 419e56d=8
+  same packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx 5cd63ff=9 419e56d=9
+  same packages/xai-web-habits/src/__tests__/HabitsModule.add.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-habits/src/__tests__/HabitsModule.events.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-habits/src/__tests__/HabitsModule.i18n.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-habits/src/__tests__/HabitsModule.persist.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-habits/src/__tests__/HabitsModule.render.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-habits/src/__tests__/HabitsModule.toggle.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-habits/src/__tests__/HabitsModule.views.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-habits/src/__tests__/_helpers/render.tsx 5cd63ff=4 419e56d=4
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.create.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.dnd.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.edge.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.events.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.i18n.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.kbd.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.persist.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.render.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-settings-features-panel/src/__tests__/withDisabledFallback.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-shell/src/__fixtures__/ShellFixture.tsx 5cd63ff=4 419e56d=4
+  same packages/xai-web-shell/src/__tests__/AppRail.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-shell/src/__tests__/AvatarMenu.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx 5cd63ff=7 419e56d=7
+  same packages/xai-web-shell/src/__tests__/SignOutConfirmDialog.test.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-shell/src/__tests__/event-emit.test.tsx 5cd63ff=5 419e56d=5
+  same packages/xai-web-shell/src/__tests__/index-barrel.test.ts 5cd63ff=2 419e56d=2
+  same packages/xai-web-shell/src/__tests__/registry.test.tsx 5cd63ff=16 419e56d=16
+  same packages/xai-web-shell/src/index.ts 5cd63ff=2 419e56d=2
+  same packages/xai-web-shell/src/registry.tsx 5cd63ff=9 419e56d=9
+  same packages/xai-web-shell/src/types.ts 5cd63ff=1 419e56d=1 [§11]
+  same packages/xai-web-tasks/src/__tests__/registration.test.tsx 5cd63ff=6 419e56d=6
+  same packages/xai-web-tasks/src/registration.tsx 5cd63ff=1 419e56d=1
+pattern R2 shell display hook "useWebShell(": 5cd63ff files=35 lines=60; 419e56d files=35 lines=60
+  same apps/web/src/routes/modules/composedSettingsRegistration.tsx 5cd63ff=1 419e56d=1
+  same apps/web/src/routes/modules/dashboardRegistration.tsx 5cd63ff=1 419e56d=1
+  same apps/web/src/routes/modules/pomodoroRegistration.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-ai-chat/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-board-core/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-board-views/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-board-workspaces/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-bookkeeping/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-countdown/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-metric-tracker/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/plugin-web-pomodoro/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-settings-shell/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-settings-shell/src/types.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-statistics/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/plugin-web-statistics/src/types.ts 5cd63ff=1 419e56d=1
+  same packages/plugin-web-time-tracker/src/registration.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-calendar/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-cmdk/src/CommandPalette.tsx 5cd63ff=3 419e56d=3
+  same packages/xai-web-cmdk/src/types.ts 5cd63ff=2 419e56d=2
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-dashboard-grid/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-habits/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-matrix/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-meditation/src/registration.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-shell/src/AppRail.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-shell/src/AvatarMenu.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-shell/src/Shell.tsx 5cd63ff=1 419e56d=1 [§11]
+  same packages/xai-web-shell/src/SignOutConfirmDialog.tsx 5cd63ff=2 419e56d=2
+  same packages/xai-web-shell/src/__tests__/AppRail.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-shell/src/__tests__/registry.test.tsx 5cd63ff=4 419e56d=4
+  same packages/xai-web-shell/src/registry.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-tasks/src/__tests__/registration.test.tsx 5cd63ff=1 419e56d=1
+  same packages/xai-web-tasks/src/registration.tsx 5cd63ff=2 419e56d=2
+## Delta rows (files whose count differs between 5cd63ff and 419e56d): 102
+  K1 lang key apps/web/src/App.tsx 4->1 §11
+  K1 lang key apps/web/src/__tests__/App.appearance.test.tsx 0->5 §11
+  K1 lang key packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 0->10 §11
+  K1 lang key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 0->1 §11
+  K1 lang key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 0->6 §11
+  K1 lang key packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 0->1 §11
+  K1 lang key packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->1 §11
+  K1 lang key packages/xai-web-shell/src/Topbar.tsx 2->0 §11
+  K1 lang key packages/xai-web-shell/src/__tests__/Topbar.test.tsx 4->0 §11
+  K2 theme key apps/web/src/App.tsx 4->1 §11
+  K2 theme key apps/web/src/__tests__/App.appearance.test.tsx 0->11 §11
+  K2 theme key packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 0->16 §11
+  K2 theme key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 0->1 §11
+  K2 theme key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx 0->1 §11
+  K2 theme key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 0->4 §11
+  K2 theme key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx 0->1 §11
+  K2 theme key packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 0->4 §11
+  K2 theme key packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->1 §11
+  K2 theme key packages/xai-web-shell/src/Topbar.tsx 2->0 §11
+  K2 theme key packages/xai-web-shell/src/__tests__/Topbar.test.tsx 6->0 §11
+  K3 density key apps/web/src/App.tsx 4->1 §11
+  K3 density key apps/web/src/__tests__/App.appearance.test.tsx 0->9 §11
+  K3 density key packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 0->6 §11
+  K3 density key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 0->1 §11
+  K3 density key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 0->3 §11
+  K3 density key packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 0->1 §11
+  K3 density key packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->1 §11
+  K3 density key packages/xai-web-shell/src/Topbar.tsx 2->0 §11
+  K3 density key packages/xai-web-shell/src/__tests__/Topbar.test.tsx 4->0 §11
+  K4 font scale key apps/web/src/App.tsx 4->1 §11
+  K4 font scale key apps/web/src/__tests__/App.appearance.test.tsx 0->3 §11
+  K4 font scale key packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 0->6 §11
+  K4 font scale key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 0->1 §11
+  K4 font scale key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx 0->1 §11
+  K4 font scale key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 0->3 §11
+  K4 font scale key packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 0->2 §11
+  K4 font scale key packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->1 §11
+  K5 accent key apps/web/src/App.tsx 1->0 §11
+  K5 accent key apps/web/src/__tests__/App.appearance.test.tsx 0->6 §11
+  K5 accent key packages/xai-web-settings-appearance/src/AppearancePane.tsx 5->0 §11
+  K5 accent key packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 0->7 §11
+  K5 accent key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 6->15 §11
+  K5 accent key packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 0->14 §11
+  K5 accent key packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->2 §11
+  K6 rail key apps/web/src/App.tsx 1->0 §11
+  K6 rail key apps/web/src/__tests__/App.appearance.test.tsx 0->2 §11
+  K6 rail key packages/xai-web-settings-appearance/src/AppearancePane.tsx 4->0 §11
+  K6 rail key packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 0->8 §11
+  K6 rail key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 2->4 §11
+  K6 rail key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx 0->1 §11
+  K6 rail key packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 0->8 §11
+  K6 rail key packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->2 §11
+  K7 background key apps/web/src/App.tsx 1->0 §11
+  K7 background key apps/web/src/__tests__/App.appearance.test.tsx 0->3 §11
+  K7 background key packages/xai-web-settings-appearance/src/AppearancePane.tsx 4->0 §11
+  K7 background key packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 0->3 §11
+  K7 background key packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 2->4 §11
+  K7 background key packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 0->3 §11
+  K7 background key packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->2 §11
+  E1 retired event channel apps/web/src/App.tsx 2->1 §11
+  E1 retired event channel apps/web/src/__tests__/App.appearance.test.tsx 0->2 §11
+  E1 retired event channel packages/xai-web-settings-appearance/src/AppearancePane.tsx 15->1 §11
+  E1 retired event channel packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 0->1 §11
+  E1 retired event channel packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 7->1 §11
+  E1 retired event channel packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 0->2 §11
+  E1 retired event channel packages/xai-web-settings-appearance/src/types.ts 0->1 §11
+  A1 App raw reader apps/web/src/App.tsx 6->3 §11
+  A1 App raw reader apps/web/src/__tests__/App.appearance.test.tsx 0->2 §11
+  A2 App raw writer apps/web/src/App.tsx 5->0 §11
+  T1 Topbar raw writer apps/web/src/App.tsx 2->0 §11
+  T1 Topbar raw writer packages/xai-web-shell/src/Topbar.tsx 5->0 §11
+  S1 setPref call packages/xai-web-settings-appearance/src/AppearancePane.tsx 4->0 §11
+  S1 setPref call packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 4->5 §11
+  S2 removePref call packages/xai-web-settings-appearance/src/AppearancePane.tsx 1->0 §11
+  S3 legacy usePref call apps/web/src/App.tsx 3->0 §11
+  S3 legacy usePref call packages/xai-web-settings-appearance/src/AppearancePane.tsx 3->0 §11
+  S4 open-ended async binding packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->7 §11
+  S5 event emit apps/web/src/App.tsx 2->3 §11
+  S5 event emit packages/xai-web-settings-appearance/src/AppearancePane.tsx 14->0 §11
+  B1 storage event construction apps/web/src/__tests__/App.appearance.test.tsx 0->2 §11
+  B2 event dispatch apps/web/src/__tests__/App.appearance.test.tsx 0->3 §11
+  B2 event dispatch packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 0->1 §11
+  F1 shared footer packages/xai-web-settings-appearance/src/AppearancePane.tsx 3->0 §11
+  F1 shared footer packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx 2->1 §11
+  F1 shared footer packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 1->0 §11
+  F2 footer class packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx 0->1 §11
+  F3 save class packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx 0->1 §11
+  D1 applyTheme apps/web/src/App.tsx 2->0 §11
+  D1 applyTheme packages/xai-web-settings-appearance/src/AppearancePane.tsx 2->0 §11
+  D1 applyTheme packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->2 §11
+  D2 applyDensity apps/web/src/App.tsx 1->0 §11
+  D2 applyDensity packages/xai-web-settings-appearance/src/AppearancePane.tsx 2->0 §11
+  D2 applyDensity packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->1 §11
+  D3 applyFontScale apps/web/src/App.tsx 1->0 §11
+  D3 applyFontScale packages/xai-web-settings-appearance/src/AppearancePane.tsx 2->0 §11
+  D3 applyFontScale packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->1 §11
+  D4 applyAccentHue apps/web/src/App.tsx 1->0 §11
+  D4 applyAccentHue packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->1 §11
+  D5 applyBgTone apps/web/src/App.tsx 1->0 §11
+  D5 applyBgTone packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->1 §11
+  D6 applyRailPos apps/web/src/App.tsx 1->0 §11
+  D6 applyRailPos packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 0->1 §11
+## Appearance product source
+419e56d: Appearance product source files (non-test, under src/): 11
+  packages/xai-web-settings-appearance/src/AppearancePane.tsx sha256=0818f7ee1cb9b525e6fac603ba4958b175dd401e0fd754d05ed3ac7d88e27c8f
+  packages/xai-web-settings-appearance/src/appearanceDefaults.ts sha256=87900dc789f7182c574ce0ca399aa71d38e1a2a86915ad0eb18ff5026601b0e1
+  packages/xai-web-settings-appearance/src/constants.ts sha256=35229aad5ab8ccc137d406673a23512dbe8357a46ae61b630b0e8856fcbc4970
+  packages/xai-web-settings-appearance/src/index.ts sha256=9113e85cab3eee31e1f54e5220b87e8d8eac69a48f73b2697a8662dac1d5caef
+  packages/xai-web-settings-appearance/src/internal/AppearanceActions.tsx sha256=54f227efe3f8f2473e49a0e8e5c18329a9d2f6d37da504adee1a090c540780ad
+  packages/xai-web-settings-appearance/src/internal/AppearanceStatus.tsx sha256=414a76b3ff6b5e0e638124eb9c1f0b4dad8d7e6282fbaa4d788bf3982836c27c
+  packages/xai-web-settings-appearance/src/internal/appearanceController.tsx sha256=64d6c8b74f689bc989bc8d1bcfa85bb333b068826829269f1e31d97cd2878e5a
+  packages/xai-web-settings-appearance/src/internal/appearancePane.tsx sha256=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c
+  packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts sha256=991232e97e44919c1b00b5502a62df05d814de3ccc34ed4452104ad59b54dab0
+  packages/xai-web-settings-appearance/src/styles.css sha256=cd95e4a921e334d7ac47fc7e808ffa3e79b664c45fbf754049be33f649f250ce
+  packages/xai-web-settings-appearance/src/types.ts sha256=40a72a058ba1e4b64f40afe8a31d590935d800e786d065248a8030f3137eeae3
+  gated "localStorage": 0 lines
+  gated "setPref(": 0 lines
+  gated "removePref(": 0 lines
+  gated "usePref(": 0 lines
+  gated "emitWebEvent(": 0 lines
+  gated "new StorageEvent": 0 lines
+  gated "dispatchEvent(": 0 lines
+  gated "SettingsFooter": 0 lines
+  gated "pane-footer": 0 lines
+  gated "pane-save": 0 lines
+5cd63ff: Appearance product source files (non-test, under src/): 7
+  packages/xai-web-settings-appearance/src/AppearancePane.tsx sha256=552eb224c5103d1c0d0ee878420f8a586ee91575dd8461f908de1147cf2b08c3
+  packages/xai-web-settings-appearance/src/appearanceDefaults.ts sha256=87900dc789f7182c574ce0ca399aa71d38e1a2a86915ad0eb18ff5026601b0e1
+  packages/xai-web-settings-appearance/src/constants.ts sha256=35229aad5ab8ccc137d406673a23512dbe8357a46ae61b630b0e8856fcbc4970
+  packages/xai-web-settings-appearance/src/index.ts sha256=10bfbed11749e9c65fc3c2d40d0a50e177154254ef83a2e0690c693aeb4dc776
+  packages/xai-web-settings-appearance/src/internal/appearancePane.tsx sha256=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c
+  packages/xai-web-settings-appearance/src/styles.css sha256=1b17d1f442905e255eae53e4e16a01c02b4a912ed6a1482231e8db5e50d5927c
+  packages/xai-web-settings-appearance/src/types.ts sha256=18d5894e6603427f933100f9030d6e403c03abc57d9bd561f372b0b4f559f6d6
+  info  "localStorage": 1 lines (src/AppearancePane.tsx:1)
+  info  "setPref(": 4 lines (src/AppearancePane.tsx:4)
+  info  "removePref(": 1 lines (src/AppearancePane.tsx:1)
+  info  "usePref(": 3 lines (src/AppearancePane.tsx:3)
+  info  "emitWebEvent(": 14 lines (src/AppearancePane.tsx:14)
+  info  "new StorageEvent": 0 lines
+  info  "dispatchEvent(": 0 lines
+  info  "SettingsFooter": 3 lines (src/AppearancePane.tsx:3)
+  info  "pane-footer": 0 lines
+  info  "pane-save": 0 lines
+## Topbar.tsx and App.tsx
+  419e56d packages/xai-web-shell/src/Topbar.tsx "localStorage"=0
+  419e56d packages/xai-web-shell/src/Topbar.tsx "persistAndSet"=0
+  419e56d apps/web/src/App.tsx "writeLocalPref"=0
+  419e56d apps/web/src/App.tsx "localStorage.setItem"=0
+  419e56d apps/web/src/App.tsx "onWebEvent(\"web:settings:preference-changed\""=0
+  419e56d apps/web/src/App.tsx "usePref("=0
+  419e56d apps/web/src/App.tsx "readLocalPref"=3
+  419e56d apps/web/src/App.tsx "localStorage"=4
+  419e56d apps/web/src/App.tsx "getItem("=1
+  419e56d apps/web/src/App.tsx "setItem("=0
+  419e56d apps/web/src/App.tsx "removeItem("=0
+  5cd63ff packages/xai-web-shell/src/Topbar.tsx "localStorage"=6
+  5cd63ff packages/xai-web-shell/src/Topbar.tsx "persistAndSet"=5
+  5cd63ff apps/web/src/App.tsx "writeLocalPref"=5
+  5cd63ff apps/web/src/App.tsx "localStorage.setItem"=1
+  5cd63ff apps/web/src/App.tsx "onWebEvent(\"web:settings:preference-changed\""=1
+  5cd63ff apps/web/src/App.tsx "usePref("=3
+  5cd63ff apps/web/src/App.tsx "readLocalPref"=6
+  5cd63ff apps/web/src/App.tsx "localStorage"=10
+  5cd63ff apps/web/src/App.tsx "getItem("=1
+  5cd63ff apps/web/src/App.tsx "setItem("=1
+  5cd63ff apps/web/src/App.tsx "removeItem("=0
+  readLocalPref 5cd63ff L86-L96 sha256=3675ffe3ba163e40fa232325008b862ffd61a96bfe049c3458399fa4b9582a44; 419e56d L87-L97 sha256=3675ffe3ba163e40fa232325008b862ffd61a96bfe049c3458399fa4b9582a44
+  419e56d apps/web/src/App.tsx L78 outside readLocalPref (comment): // ---- readLocalPref — safe localStorage reader (retained, byte-identical) ------
+  419e56d apps/web/src/App.tsx L80 outside readLocalPref (comment): // Reads a JSON-encoded string value from localStorage with a typed fallback.
+## Checks
+PASS [harness] 419e56d: every committed path exists in the extracted archive (7205 paths, .gitattributes absent)
+PASS [harness] 419e56d: extracted file count equals the committed tree (7205)
+PASS [harness] 5cd63ff: every committed path exists in the extracted archive (6503 paths, .gitattributes absent)
+PASS [harness] 5cd63ff: extracted file count equals the committed tree (6503)
+PASS [harness] 419e56d K1 lang key: archive scan equals git grep -I -c -F (10 files)
+PASS [harness] 5cd63ff K1 lang key: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] 419e56d K2 theme key: archive scan equals git grep -I -c -F (15 files)
+PASS [harness] 5cd63ff K2 theme key: archive scan equals git grep -I -c -F (9 files)
+PASS [harness] 419e56d K3 density key: archive scan equals git grep -I -c -F (9 files)
+PASS [harness] 5cd63ff K3 density key: archive scan equals git grep -I -c -F (5 files)
+PASS [harness] 419e56d K4 font scale key: archive scan equals git grep -I -c -F (9 files)
+PASS [harness] 5cd63ff K4 font scale key: archive scan equals git grep -I -c -F (2 files)
+PASS [harness] 419e56d K5 accent key: archive scan equals git grep -I -c -F (19 files)
+PASS [harness] 5cd63ff K5 accent key: archive scan equals git grep -I -c -F (17 files)
+PASS [harness] 419e56d K6 rail key: archive scan equals git grep -I -c -F (16 files)
+PASS [harness] 5cd63ff K6 rail key: archive scan equals git grep -I -c -F (13 files)
+PASS [harness] 419e56d K7 background key: archive scan equals git grep -I -c -F (11 files)
+PASS [harness] 5cd63ff K7 background key: archive scan equals git grep -I -c -F (9 files)
+PASS [harness] 419e56d E1 retired event channel: archive scan equals git grep -I -c -F (16 files)
+PASS [harness] 5cd63ff E1 retired event channel: archive scan equals git grep -I -c -F (12 files)
+PASS [harness] 419e56d A1 App raw reader: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] 5cd63ff A1 App raw reader: archive scan equals git grep -I -c -F (2 files)
+PASS [harness] 419e56d A2 App raw writer: archive scan equals git grep -I -c -F (0 files)
+PASS [harness] 5cd63ff A2 App raw writer: archive scan equals git grep -I -c -F (1 files)
+PASS [harness] 419e56d T1 Topbar raw writer: archive scan equals git grep -I -c -F (1 files)
+PASS [harness] 5cd63ff T1 Topbar raw writer: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] 419e56d S1 setPref call: archive scan equals git grep -I -c -F (37 files)
+PASS [harness] 5cd63ff S1 setPref call: archive scan equals git grep -I -c -F (38 files)
+PASS [harness] 419e56d S2 removePref call: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] 5cd63ff S2 removePref call: archive scan equals git grep -I -c -F (7 files)
+PASS [harness] 419e56d S3 legacy usePref call: archive scan equals git grep -I -c -F (55 files)
+PASS [harness] 5cd63ff S3 legacy usePref call: archive scan equals git grep -I -c -F (57 files)
+PASS [harness] 419e56d S4 open-ended async binding: archive scan equals git grep -I -c -F (9 files)
+PASS [harness] 5cd63ff S4 open-ended async binding: archive scan equals git grep -I -c -F (8 files)
+PASS [harness] 419e56d S5 event emit: archive scan equals git grep -I -c -F (36 files)
+PASS [harness] 5cd63ff S5 event emit: archive scan equals git grep -I -c -F (37 files)
+PASS [harness] 419e56d S6 global reset: archive scan equals git grep -I -c -F (11 files)
+PASS [harness] 5cd63ff S6 global reset: archive scan equals git grep -I -c -F (11 files)
+PASS [harness] 419e56d B1 storage event construction: archive scan equals git grep -I -c -F (19 files)
+PASS [harness] 5cd63ff B1 storage event construction: archive scan equals git grep -I -c -F (18 files)
+PASS [harness] 419e56d B2 event dispatch: archive scan equals git grep -I -c -F (55 files)
+PASS [harness] 5cd63ff B2 event dispatch: archive scan equals git grep -I -c -F (53 files)
+PASS [harness] 419e56d F1 shared footer: archive scan equals git grep -I -c -F (8 files)
+PASS [harness] 5cd63ff F1 shared footer: archive scan equals git grep -I -c -F (10 files)
+PASS [harness] 419e56d F2 footer class: archive scan equals git grep -I -c -F (5 files)
+PASS [harness] 5cd63ff F2 footer class: archive scan equals git grep -I -c -F (4 files)
+PASS [harness] 419e56d F3 save class: archive scan equals git grep -I -c -F (4 files)
+PASS [harness] 5cd63ff F3 save class: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] 419e56d D1 applyTheme: archive scan equals git grep -I -c -F (8 files)
+PASS [harness] 5cd63ff D1 applyTheme: archive scan equals git grep -I -c -F (9 files)
+PASS [harness] 419e56d D2 applyDensity: archive scan equals git grep -I -c -F (5 files)
+PASS [harness] 5cd63ff D2 applyDensity: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] 419e56d D3 applyFontScale: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] 5cd63ff D3 applyFontScale: archive scan equals git grep -I -c -F (4 files)
+PASS [harness] 419e56d D4 applyAccentHue: archive scan equals git grep -I -c -F (4 files)
+PASS [harness] 5cd63ff D4 applyAccentHue: archive scan equals git grep -I -c -F (4 files)
+PASS [harness] 419e56d D5 applyBgTone: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] 5cd63ff D5 applyBgTone: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] 419e56d D6 applyRailPos: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] 5cd63ff D6 applyRailPos: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] 419e56d R1 shell display provider: archive scan equals git grep -I -c -F (46 files)
+PASS [harness] 5cd63ff R1 shell display provider: archive scan equals git grep -I -c -F (46 files)
+PASS [harness] 419e56d R2 shell display hook: archive scan equals git grep -I -c -F (35 files)
+PASS [harness] 5cd63ff R2 shell display hook: archive scan equals git grep -I -c -F (35 files)
+PASS [assert] E18: every file whose writer/reader count changed is a contract §11 file
+PASS [assert] E18: every new or increased hit is in a contract §11 file
+PASS [assert] E18: Appearance product source at 419e56d has zero "localStorage"
+PASS [assert] E18: Appearance product source at 419e56d has zero "setPref("
+PASS [assert] E18: Appearance product source at 419e56d has zero "removePref("
+PASS [assert] E18: Appearance product source at 419e56d has zero "usePref("
+PASS [assert] E18: Appearance product source at 419e56d has zero "emitWebEvent("
+PASS [assert] E18: Appearance product source at 419e56d has zero "new StorageEvent"
+PASS [assert] E18: Appearance product source at 419e56d has zero "dispatchEvent("
+PASS [assert] E18: Appearance product source at 419e56d has zero "SettingsFooter"
+PASS [assert] E18: Appearance product source at 419e56d has zero "pane-footer"
+PASS [assert] E18: Appearance product source at 419e56d has zero "pane-save"
+PASS [assert] E18: packages/xai-web-shell/src/Topbar.tsx at 419e56d has zero "localStorage"
+PASS [assert] E18: apps/web/src/App.tsx at 419e56d has zero "writeLocalPref" :: count=0
+PASS [assert] E18: apps/web/src/App.tsx at 419e56d has zero "localStorage.setItem" :: count=0
+PASS [assert] E18: apps/web/src/App.tsx at 419e56d has zero "onWebEvent(\"web:settings:preference-changed\"" :: count=0
+PASS [assert] E18: apps/web/src/App.tsx at 419e56d has zero "usePref(" :: count=0
+PASS [assert] E18: readLocalPref in apps/web/src/App.tsx is byte-identical between 5cd63ff and 419e56d
+PASS [assert] E18: in apps/web/src/App.tsx at 419e56d every localStorage/getItem/setItem/removeItem line outside readLocalPref is a comment (the only storage access is readLocalPref)
+assertions=118/118 harness=64/64
+exit=0

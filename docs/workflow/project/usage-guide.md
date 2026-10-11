@@ -701,7 +701,31 @@ manifest: docs/workflow/roadmap/<roadmap_name>.md
 
 让 reconcile 修正 manifest。
 
-### 13.6 macOS native / 多窗口功能 verify 卡住
+### 13.6 多电脑继续开发前后如何保证没有单机遗留
+
+权威规则：`docs/workflow/project/multi-machine-development.md`。
+
+开始工作前先 fetch/prune，并确认当前短分支没有被另一台电脑或另一个 worktree 同时
+写入。两台电脑处理同一功能时使用不同 sibling branches，不要共同写一个 branch。
+
+普通会话收尾：
+
+```bash
+pnpm git:sync-check -- --fetch
+```
+
+迁移电脑、删除 worktree 或做周期性深度检查：
+
+```bash
+pnpm git:sync-check -- --fetch --deep
+```
+
+未完成工作优先形成 `wip:` commit 并 push 到独占短分支；不要把 stash、reflog、
+Codex 隐藏快照或聊天记录当作交接载体。`.env.local` 只通过安全渠道迁移，Git 中只
+提交 `.env.example` 的变量名。检查失败时先远端化或明确本地资产策略，不通过删除
+恢复证据来伪造 clean。
+
+### 13.7 macOS native / 多窗口功能 verify 卡住
 
 这类功能不能只靠单元测试:
 

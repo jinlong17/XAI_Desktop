@@ -1,0 +1,14 @@
+{"name":"baseline","head":"f3a75f11408f1dbdd9309c51d3bdeca594c27427","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":1440}
+{"name":"actual-create-failure-retains-intent","retryHeight":44,"pass":true}
+{"name":"reload-retry-one-task","taskId":"bt-b-default-bc1","pass":true}
+{"name":"actual-completion-and-task-move","completedAt":"2026-05-23T19:00:00.000Z","sourceRetained":true,"pass":true}
+{"name":"actual-board-column-move-status","location":"b-today","pass":true}
+{"name":"actual-card-archive-restore","sourceAndDoneRetained":true,"pass":true}
+{"name":"actual-list-archive-restore","pass":true}
+{"name":"actual-undo-recomplete","newCompletedAt":"2026-05-24T19:00:00.000Z","pass":true}
+{"name":"final-reload-link-completion","pass":true}
+{"name":"original-native-chain-PASS","checks":8,"scope":"actual Board/Tasks UI, native persistence failure/reload/retry, two-sided move, completion and archive recovery"}
+{"name":"independent-native-cut-intent","pass":true,"retryIdempotent":true,"userEditsPreserved":false}
+{"name":"independent-native-cut-task","pass":true,"retryIdempotent":true,"userEditsPreserved":false}
+{"name":"independent-native-cut-acknowledgement","pass":true,"retryIdempotent":true,"userEditsPreserved":true}
+{"name":"independent-mid-command-owner-switch","pass":true,"AIntentPreserved":true,"BUnwritten":true,"staleCallbackRejected":true}

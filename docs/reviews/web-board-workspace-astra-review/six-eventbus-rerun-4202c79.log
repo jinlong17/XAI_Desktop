@@ -1,0 +1,11 @@
+revision=4202c79
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-subscribers-kt7mT3
+
+ ✓ packages/xai-web-event-bus/src/toolWriteReceipt.test.ts (4 tests) 3ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  16:34:52
+   Duration  606ms (transform 36ms, setup 0ms, collect 30ms, tests 3ms, environment 245ms, prepare 81ms)

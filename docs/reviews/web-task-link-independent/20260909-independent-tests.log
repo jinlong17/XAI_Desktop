@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ✓ docs/reviews/web-task-link-independent/independent.test.ts (3 tests) 3ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  13:33:51
+   Duration  402ms (transform 86ms, setup 0ms, collect 113ms, tests 3ms, environment 0ms, prepare 88ms)
+

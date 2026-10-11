@@ -1,0 +1,11 @@
+revision=0d7f885 fixed_commit=0d7f8851b8d44865fdd4d364fa364e9691f8f146
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-Lp98GG
+
+ ✓ docs/reviews/web-pomodoro-departure-independent/departure.test.tsx (9 tests) 375ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  23:48:45
+   Duration  9.19s (transform 4.77s, setup 0ms, collect 7.65s, tests 375ms, environment 482ms, prepare 172ms)

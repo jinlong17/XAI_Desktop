@@ -1,0 +1,11 @@
+revision=afbfb24 fixed_commit=afbfb24d6f7311366b77852eda927d08467478c2
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-sol-7aNDUm
+
+ ✓ docs/reviews/web-notifications-recovery-sol/core.test.tsx (11 tests) 1170ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  05:45:01
+   Duration  2.44s (transform 297ms, setup 267ms, collect 282ms, tests 1.17s, environment 411ms, prepare 116ms)

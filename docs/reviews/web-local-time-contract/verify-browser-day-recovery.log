@@ -1,0 +1,47 @@
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-tasks/src/TasksModule.tsx:82:17:
+      82 │       if (typeof import.meta !== "undefined" && (import.meta as { ...
+         ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:745:17:
+      745 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:753:17:
+      753 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:761:15:
+      761 │     if (typeof import.meta !== "undefined" && (import.meta as { e...
+          ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+{"status":"PASS","zone":"America/Los_Angeles","checks":["Tasks tomorrow to today after focus","date/source/legacy persistence","remount recovery","pageshow resample"]}
+node:fs:1222
+  return binding.rmSync(getValidatedPath(path), opts.maxRetries, opts.recursive, opts.retryDelay);
+                 ^
+
+Error: ENOTEMPTY, Directory not empty: /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-rel01-browser-pS9vDA '/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-rel01-browser-pS9vDA'
+    at rmSync (node:fs:1222:18)
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-local-time-contract/verify-browser-day-recovery.mjs:60:2 {
+  errno: 66,
+  code: 'ENOTEMPTY',
+  path: '/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-rel01-browser-pS9vDA',
+  syscall: 'rm'
+}
+
+Node.js v24.16.0

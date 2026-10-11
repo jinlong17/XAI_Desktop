@@ -1,0 +1,13 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-yrqarV
+
+ ✓ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx (10 tests) 1881ms
+   ✓ programmatic second destination cannot replace first blocked intent  330ms
+   ✓ Back keeps original pane, Stay retains map; later discard permits Back once  331ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  01:31:11
+   Duration  7.78s (transform 2.65s, setup 0ms, collect 4.58s, tests 1.88s, environment 516ms, prepare 283ms)

@@ -3,8 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Time Tracker module for XAI Web Console — category-based time tracking with pause/resume, manual records, local persistence, and dashboard summary support.",
-  "sideEffects": ["./src/styles.css", "./src/index.ts"],
+  "description": "Time Tracker module for XAI Web Console \u2014 category-based time tracking with pause/resume, manual records, local persistence, and dashboard summary support.",
+  "sideEffects": [
+    "./src/styles.css",
+    "./src/index.ts",
+    "./src/internal/storage.ts",
+    "./src/TimeTrackerModule.tsx"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -25,7 +30,8 @@
   "dependencies": {
     "@repo/core": "workspace:*",
     "@repo/plugin-web-tokens": "workspace:*",
-    "@repo/xai-web-shell": "workspace:*"
+    "@repo/xai-web-shell": "workspace:*",
+    "@repo/plugin-web-storage": "workspace:*"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -38,6 +44,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "typescript": "5.9.2",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.7"
   }
 }

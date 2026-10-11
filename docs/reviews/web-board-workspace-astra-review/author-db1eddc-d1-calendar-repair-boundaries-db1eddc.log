@@ -1,0 +1,25 @@
+revision=db1eddc
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d1-1YJ21B
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-repair-boundaries.test.tsx > old pending delete completion must not close a newly opened editor
+old-delete-new-editor {"editorOpen":true,"latestDraft":"New editor after delete","oldEventDeleted":true}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-repair-boundaries.test.tsx (4 tests) 339ms
+   ✓ old pending delete completion must not close a newly opened editor  334ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  16:25:13
+   Duration  1.67s (transform 398ms, setup 281ms, collect 385ms, tests 339ms, environment 353ms, prepare 89ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-repair-boundaries.test.tsx > old pending delete completion must not close a newly opened editor
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-repair-boundaries.test.tsx > shared calendar guard keeps valid low-year leap-day writes usable
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-repair-boundaries.test.tsx > target baseline allows a receipt-only revision change while preserving latest metadata
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.

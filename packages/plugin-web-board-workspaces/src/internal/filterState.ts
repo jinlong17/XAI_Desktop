@@ -10,6 +10,7 @@
  * board-workspaces does NOT export anything that board-views imports. Safe.
  */
 
+import type { BoardCardPriority } from "@repo/plugin-web-board-core";
 import type { FilterState } from "@repo/plugin-web-board-views";
 import { EMPTY_FILTER } from "@repo/plugin-web-board-views";
 
@@ -45,6 +46,22 @@ export function toggleMember(filter: FilterState, memberId: string): FilterState
     next.add(memberId);
   }
   return { ...filter, members: next };
+}
+
+/**
+ * Toggle a priority in the filter's priorities Set. Returns a new FilterState.
+ */
+export function togglePriority(
+  filter: FilterState,
+  priority: BoardCardPriority,
+): FilterState {
+  const next = new Set(filter.priorities);
+  if (next.has(priority)) {
+    next.delete(priority);
+  } else {
+    next.add(priority);
+  }
+  return { ...filter, priorities: next };
 }
 
 /**

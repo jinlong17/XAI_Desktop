@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"a2c0fe0","browser":"Chrome/152.0.7977.83"}
+{"name":"native-router-cleanup","pass":true,"scope":"Actual composed host unmount restores original method; outside navigation and Back remain usable"}
+{"name":"actual-host-departure","pass":true,"scope":"Actual composedSettingsRegistration with data router and WebShellProvider, real sidebar; initial departure blocked. Full Stay/Export/Discard flows require their separate final contract checks"}

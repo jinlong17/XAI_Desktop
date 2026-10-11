@@ -1,0 +1,52 @@
+revision=c9a388d fixed_commit=c9a388dfb965648496f62e486bae30555d56662c
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-astra-clU0Yc
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/blur-lifecycle.test.tsx (4 tests | 3 failed) 145ms
+   × ordinary blur still saves when an unrelated parent clock prop rerenders before its timer 96ms
+     → parent clock update cannot cancel ordinary blur persistence: expected 'Original A' to be 'Ordinary blur latest' // Object.is equality
+   × an unrelated pointer release cannot settle the navigation pointer that deferred blur 20ms
+     → pointer7 is still held and may yet navigate: expected 'Ordinary blur latest' to be 'Original A' // Object.is equality
+   × window focus loss cannot strand a canceled pointer and suppress a later ordinary keyboard blur 14ms
+     → expected 'Original A' to be 'Ordinary blur latest' // Object.is equality
+   ✓ normal blur without navigation or rerender persists the latest note 14ms
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed (4)
+   Start at  00:48:35
+   Duration  1.16s (transform 185ms, setup 235ms, collect 64ms, tests 145ms, environment 240ms, prepare 69ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/blur-lifecycle.test.tsx > ordinary blur still saves when an unrelated parent clock prop rerenders before its timer
+AssertionError: parent clock update cannot cancel ordinary blur persistence: expected 'Original A' to be 'Ordinary blur latest' // Object.is equality
+
+Expected: "Ordinary blur latest"
+Received: "Original A"
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/blur-lifecycle.test.tsx:16:110
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/blur-lifecycle.test.tsx > an unrelated pointer release cannot settle the navigation pointer that deferred blur
+AssertionError: pointer7 is still held and may yet navigate: expected 'Ordinary blur latest' to be 'Original A' // Object.is equality
+
+Expected: "Original A"
+Received: "Ordinary blur latest"
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/blur-lifecycle.test.tsx:24:94
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/blur-lifecycle.test.tsx > window focus loss cannot strand a canceled pointer and suppress a later ordinary keyboard blur
+AssertionError: expected 'Original A' to be 'Ordinary blur latest' // Object.is equality
+
+Expected: "Ordinary blur latest"
+Received: "Original A"
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/blur-lifecycle.test.tsx:36:48
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯

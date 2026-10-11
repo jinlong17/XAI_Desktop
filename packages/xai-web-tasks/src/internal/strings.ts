@@ -17,22 +17,7 @@
 /**
  * Smart-list filter empty-state strings (FP2 — xai-web-tasks-smartlist-filter).
  *
- * D-QT BINDING DIRECTIVE (feature-review): today/tomorrow empty-state copy MUST NOT
- * claim "due today/tomorrow" precision. These lists show *bucket views*:
- *  - "today" shows the "overdue" bucket (past-due / needs-attention-now).
- *  - "tomorrow" shares the "next7" bucket with "next7" (nearest upcoming bucket).
- * Wording must reflect what is actually shown, not a calendar-day filter.
- *
- * Examples of COMPLIANT copy (D-QT):
- *  - today → "No overdue tasks" / "没有逾期任务"
- *  - tomorrow/next7 → "Nothing in the next 7 days" / "最近 7 天没有任务"
- *
- * Examples of NON-COMPLIANT copy (D-QT VIOLATION):
- *  - "Nothing due today" / "今天没有到期任务" — claims precise calendar-day match.
- *  - "Nothing due tomorrow" — same issue.
- *
- * API: packages/xai-web-tasks/docs/api.md §F.6
- * Design: packages/xai-web-tasks/docs/design.md §F.1 #8 + Q-T ruling
+ * REL-01 supersedes the legacy bucket approximation: exact local dueDate filters.
  */
 export const STR_SMART_LIST_EMPTY = {
   /** list=all / list=summary: should never be shown (all/summary show everything) */
@@ -40,18 +25,9 @@ export const STR_SMART_LIST_EMPTY = {
   summary:  { en: "No tasks",                      zh: "没有任务" },
   /** list=inbox */
   inbox:    { en: "No inbox tasks",                zh: "没有收件箱任务" },
-  /** list=next7 — shows the next7 bucket (nearest upcoming dated bucket) */
-  next7:    { en: "Nothing in the next 7 days",    zh: "最近 7 天没有任务" },
-  /**
-   * list=today — shows the "overdue" bucket (D-QT: bucket view, NOT "due today").
-   * Copy is bucket-framed: "No overdue tasks", not "Nothing due today".
-   */
-  today:    { en: "No overdue tasks",              zh: "没有逾期任务" },
-  /**
-   * list=tomorrow — shows the "next7" bucket (D-QT: bucket view, NOT "due tomorrow").
-   * Shares wording with next7 since both map to the same bucket.
-   */
-  tomorrow: { en: "Nothing in the next 7 days",    zh: "最近 7 天没有任务" },
+  next7: { en: "Nothing due in the next 7 days", zh: "未来 7 天没有到期任务" },
+  today: { en: "Nothing due today or overdue", zh: "今天没有到期或逾期任务" },
+  tomorrow: { en: "Nothing due tomorrow", zh: "明天没有到期任务" },
 } as const;
 
 /** TaskComposer dialog strings (dialog title, field labels, buttons, errors). */

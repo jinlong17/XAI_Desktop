@@ -1,0 +1,1238 @@
+revision=0d7f885 fixed_commit=0d7f8851b8d44865fdd4d364fa364e9691f8f146
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-qaT1ie
+
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx (13 tests | 2 failed) 1693ms
+   ✓ preset: discard clears only its actual failed draft, preserving successful siblings and timer bytes 71ms
+   ✓ custom_minutes: discard clears only its actual failed draft, preserving successful siblings and timer bytes 53ms
+   ✓ display_style: discard clears only its actual failed draft, preserving successful siblings and timer bytes 45ms
+   ✓ theme: discard clears only its actual failed draft, preserving successful siblings and timer bytes 26ms
+   ✓ sound: discard clears only its actual failed draft, preserving successful siblings and timer bytes 28ms
+   ✓ muted: discard clears only its actual failed draft, preserving successful siblings and timer bytes 42ms
+   ✓ same-value successor failure stays a real draft after an earlier matching value committed 87ms
+   ✓ readback uncertainty unchanged: departure tracks the actual token outcome without duplicate settlement 43ms
+   ✓ readback uncertainty changed: departure tracks the actual token outcome without duplicate settlement 59ms
+   × source-only repair is clean while repairing one source leaves another actual failed draft guarded 114ms
+     → Unable to find an accessible element with the role "button" and name "Reload preferences"
+
+Here are the accessible roles:
+
+  alert:
+
+  Name "":
+  [36m<section[39m
+    [33mclass[39m=[32m"pomo-notice pomo-recovery"[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Retry preferences":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Discard current preference drafts":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Export current preferences":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mute":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mute"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"mute-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enter fullscreen":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Enter fullscreen"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"icon-btn pomo-fullscreen-btn"[39m
+    [33mdata-testid[39m=[32m"fullscreen-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "More":
+  [36m<button[39m
+    [33maria-label[39m=[32m"More"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"dots-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Current mode":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Current mode"[39m
+    [33mclass[39m=[32m"focus-pill"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Start":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Start"[39m
+    [33mclass[39m=[32m"btn primary"[39m
+    [33mdata-testid[39m=[32m"start-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Reset":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Reset"[39m
+    [33mclass[39m=[32m"btn ghost"[39m
+    [33mdata-testid[39m=[32m"reset-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "25 min":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"dur-chip active"[39m
+    [33mdata-testid[39m=[32m"preset-focus-25"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "30 min":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-focus-30"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "15 min":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-focus-15"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "5 min break":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-break-5"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "10 min break":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-break-10"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "15 min break":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-break-15"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Custom":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-custom"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Digital":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-digital"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Ring":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-ring"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Clockwise":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-clockwise"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Apple":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"pomo-style-btn active"[39m
+    [33mdata-testid[39m=[32m"style-apple"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Minimal":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-minimal"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Focus":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-focus"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Coral":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Coral"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-coral"[39m
+    [33mstyle[39m=[32m"--accent-hue: 25;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Amber":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Amber"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-amber"[39m
+    [33mstyle[39m=[32m"--accent-hue: 72;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Sage":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Sage"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-sage"[39m
+    [33mstyle[39m=[32m"--accent-hue: 145;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Teal":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Teal"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-teal"[39m
+    [33mstyle[39m=[32m"--accent-hue: 185;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Blue":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Blue"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-blue"[39m
+    [33mstyle[39m=[32m"--accent-hue: 245;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Violet":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Violet"[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"pomo-color-dot active"[39m
+    [33mdata-testid[39m=[32m"theme-violet"[39m
+    [33mstyle[39m=[32m"--accent-hue: 285;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rose":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rose"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-rose"[39m
+    [33mstyle[39m=[32m"--accent-hue: 340;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Preview":
+  [36m<button[39m
+    [33mclass[39m=[32m"btn ghost pomo-preview-btn"[39m
+    [33mdata-testid[39m=[32m"sound-preview-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Add manually":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Add manually"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"add-record-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "More":
+  [36m<button[39m
+    [33maria-label[39m=[32m"More"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"record-dots-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"module-head pomo-head"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Pomodoro":
+  [36m<h1[39m
+    [33mclass[39m=[32m"module-title"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<h2[39m
+    [33mclass[39m=[32m"side-h"[39m
+  [36m/>[39m
+
+  Name "Focus Record":
+  [36m<h2[39m
+    [33mclass[39m=[32m"side-h"[39m
+    [33mstyle[39m=[32m"flex: 1 1 0%;"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  region:
+
+  Name "Pomodoro settings":
+  [36m<section[39m
+    [33maria-label[39m=[32m"Pomodoro settings"[39m
+    [33mclass[39m=[32m"pomo-control-panel"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"dur-row"[39m
+    [33mrole[39m=[32m"list"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-style-grid"[39m
+    [33mrole[39m=[32m"list"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Overview"[39m
+    [33mclass[39m=[32m"pomo-stats"[39m
+    [33mrole[39m=[32m"list"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Select alert sound":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Select alert sound"[39m
+    [33mclass[39m=[32m"pomo-select"[39m
+    [33mdata-testid[39m=[32m"sound-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Soft Chime":
+  [36m<option[39m
+    [33mvalue[39m=[32m"soft-chime"[39m
+  [36m/>[39m
+
+  Name "Bell":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bell"[39m
+  [36m/>[39m
+
+  Name "Digital":
+  [36m<option[39m
+    [33mvalue[39m=[32m"digital"[39m
+  [36m/>[39m
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  complementary:
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"pomo-side"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"module module-pomo"[39m
+      [33mdata-display-style[39m=[32m"apple"[39m
+      [33mdata-fullscreen[39m=[32m"false"[39m
+      [33mdata-running[39m=[32m"false"[39m
+      [33mstyle[39m=[32m"--accent-hue: 285;"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"pomo-notice pomo-recovery"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0mSome preferences were not saved. Current choices still apply on this page; retry or export before reopening.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mRetry preferences[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mDiscard current preference drafts[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mExport current preferences[0m
+        [36m</button>[39m
+      [36m</section>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"module-head pomo-head"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"pomo-title-block"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mPomodoro[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"pomo-head-sub"[39m
+          [36m>[39m
+            [0mFocus[0m
+            [0m · [0m
+            [0mApple[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"pomo-status-chip"[39m
+          [33mdata-testid[39m=[32m"pomo-status-chip"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"pomo-status-dot"[39m
+          [36m/>[39m
+          [0mReady[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Mute"[39m
+          [33mclass[39m=[32m"icon-btn"[39m
+          [33mdata-testid[39m=[32m"mute-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<polygon[39m
+              [33mpoints[39m=[32m"11 5 6 9 2 9 2 15 6 15 11 19 11 5"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M15.54 8.46a5 5 0 0 1 0 7.07"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Enter fullscreen"[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"icon-btn pomo-fullscreen-btn"[39m
+          [33mdata-testid[39m=[32m"fullscreen-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<polyline[39m
+              [33mpoints[39m=[32m"15 3 21 3 21 9"[39m
+            [36m/>[39m
+            [36m<polyline[39m
+              [33mpoints[39m=[32m"9 21 3 21 3 15"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"21"[39m
+              [33mx2[39m=[32m"14"[39m
+              [33my1[39m=[32m"3"[39m
+              [33my2[39m=[32m"10"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"3"[39m
+              [33mx2[39m=[32m"10"[39m
+              [33my1[39m=[32m"21"[39m
+              [33my2[39m=[32m"14"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"More"[39m
+          [33mclass[39m=[32m"icon-btn"[39m
+          [33mdata-testid[39m=[32m"dots-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"5"[39m
+              [33mr[39m=[32m"1"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"12"[39m
+              [33mr[39m=[32m"1"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"19"[39m
+              [33mr[39m=[32m"1"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"pomo-shell"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"pomo-main"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"pomo-stage"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"pomo-stage-top"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Current mode"[39m
+                [33mclass[39m=[32m"focus-pill"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mFocus[0m
+                [36m</span>[39m
+      ...
+   × old epoch and disposed discard capabilities cannot clear surviving or successor device choices 36ms
+     → expected 'false' to be 'true' // Object.is equality
+   ✓ running timer is not a preference draft and preference discard leaves its actual active record untouched 39ms
+   ✓ completion-driven failed next preset is a draft; successful retry releases it without replaying history or event  1051ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 11 passed (13)
+   Start at  23:50:06
+   Duration  3.46s (transform 597ms, setup 0ms, collect 945ms, tests 1.69s, environment 426ms, prepare 77ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > source-only repair is clean while repairing one source leaves another actual failed draft guarded
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Reload preferences"
+
+Here are the accessible roles:
+
+  alert:
+
+  Name "":
+  [36m<section[39m
+    [33mclass[39m=[32m"pomo-notice pomo-recovery"[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Retry preferences":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Discard current preference drafts":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Export current preferences":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mute":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mute"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"mute-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enter fullscreen":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Enter fullscreen"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"icon-btn pomo-fullscreen-btn"[39m
+    [33mdata-testid[39m=[32m"fullscreen-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "More":
+  [36m<button[39m
+    [33maria-label[39m=[32m"More"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"dots-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Current mode":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Current mode"[39m
+    [33mclass[39m=[32m"focus-pill"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Start":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Start"[39m
+    [33mclass[39m=[32m"btn primary"[39m
+    [33mdata-testid[39m=[32m"start-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Reset":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Reset"[39m
+    [33mclass[39m=[32m"btn ghost"[39m
+    [33mdata-testid[39m=[32m"reset-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "25 min":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"dur-chip active"[39m
+    [33mdata-testid[39m=[32m"preset-focus-25"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "30 min":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-focus-30"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "15 min":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-focus-15"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "5 min break":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-break-5"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "10 min break":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-break-10"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "15 min break":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-break-15"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Custom":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-custom"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Digital":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-digital"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Ring":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-ring"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Clockwise":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-clockwise"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Apple":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"pomo-style-btn active"[39m
+    [33mdata-testid[39m=[32m"style-apple"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Minimal":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-minimal"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Focus":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-focus"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Coral":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Coral"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-coral"[39m
+    [33mstyle[39m=[32m"--accent-hue: 25;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Amber":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Amber"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-amber"[39m
+    [33mstyle[39m=[32m"--accent-hue: 72;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Sage":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Sage"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-sage"[39m
+    [33mstyle[39m=[32m"--accent-hue: 145;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Teal":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Teal"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-teal"[39m
+    [33mstyle[39m=[32m"--accent-hue: 185;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Blue":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Blue"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-blue"[39m
+    [33mstyle[39m=[32m"--accent-hue: 245;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Violet":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Violet"[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"pomo-color-dot active"[39m
+    [33mdata-testid[39m=[32m"theme-violet"[39m
+    [33mstyle[39m=[32m"--accent-hue: 285;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rose":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rose"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-rose"[39m
+    [33mstyle[39m=[32m"--accent-hue: 340;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Preview":
+  [36m<button[39m
+    [33mclass[39m=[32m"btn ghost pomo-preview-btn"[39m
+    [33mdata-testid[39m=[32m"sound-preview-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Add manually":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Add manually"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"add-record-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "More":
+  [36m<button[39m
+    [33maria-label[39m=[32m"More"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"record-dots-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"module-head pomo-head"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Pomodoro":
+  [36m<h1[39m
+    [33mclass[39m=[32m"module-title"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<h2[39m
+    [33mclass[39m=[32m"side-h"[39m
+  [36m/>[39m
+
+  Name "Focus Record":
+  [36m<h2[39m
+    [33mclass[39m=[32m"side-h"[39m
+    [33mstyle[39m=[32m"flex: 1 1 0%;"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  region:
+
+  Name "Pomodoro settings":
+  [36m<section[39m
+    [33maria-label[39m=[32m"Pomodoro settings"[39m
+    [33mclass[39m=[32m"pomo-control-panel"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"dur-row"[39m
+    [33mrole[39m=[32m"list"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-style-grid"[39m
+    [33mrole[39m=[32m"list"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Overview"[39m
+    [33mclass[39m=[32m"pomo-stats"[39m
+    [33mrole[39m=[32m"list"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Select alert sound":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Select alert sound"[39m
+    [33mclass[39m=[32m"pomo-select"[39m
+    [33mdata-testid[39m=[32m"sound-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Soft Chime":
+  [36m<option[39m
+    [33mvalue[39m=[32m"soft-chime"[39m
+  [36m/>[39m
+
+  Name "Bell":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bell"[39m
+  [36m/>[39m
+
+  Name "Digital":
+  [36m<option[39m
+    [33mvalue[39m=[32m"digital"[39m
+  [36m/>[39m
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  complementary:
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"pomo-side"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"module module-pomo"[39m
+      [33mdata-display-style[39m=[32m"apple"[39m
+      [33mdata-fullscreen[39m=[32m"false"[39m
+      [33mdata-running[39m=[32m"false"[39m
+      [33mstyle[39m=[32m"--accent-hue: 285;"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"pomo-notice pomo-recovery"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0mSome preferences were not saved. Current choices still apply on this page; retry or export before reopening.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mRetry preferences[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mDiscard current preference drafts[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mExport current preferences[0m
+        [36m</button>[39m
+      [36m</section>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"module-head pomo-head"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"pomo-title-block"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mPomodoro[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"pomo-head-sub"[39m
+          [36m>[39m
+            [0mFocus[0m
+            [0m · [0m
+            [0mApple[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"pomo-status-chip"[39m
+          [33mdata-testid[39m=[32m"pomo-status-chip"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"pomo-status-dot"[39m
+          [36m/>[39m
+          [0mReady[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Mute"[39m
+          [33mclass[39m=[32m"icon-btn"[39m
+          [33mdata-testid[39m=[32m"mute-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<polygon[39m
+              [33mpoints[39m=[32m"11 5 6 9 2 9 2 15 6 15 11 19 11 5"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M15.54 8.46a5 5 0 0 1 0 7.07"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Enter fullscreen"[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"icon-btn pomo-fullscreen-btn"[39m
+          [33mdata-testid[39m=[32m"fullscreen-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<polyline[39m
+              [33mpoints[39m=[32m"15 3 21 3 21 9"[39m
+            [36m/>[39m
+            [36m<polyline[39m
+              [33mpoints[39m=[32m"9 21 3 21 3 15"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"21"[39m
+              [33mx2[39m=[32m"14"[39m
+              [33my1[39m=[32m"3"[39m
+              [33my2[39m=[32m"10"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"3"[39m
+              [33mx2[39m=[32m"10"[39m
+              [33my1[39m=[32m"21"[39m
+              [33my2[39m=[32m"14"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"More"[39m
+          [33mclass[39m=[32m"icon-btn"[39m
+          [33mdata-testid[39m=[32m"dots-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"5"[39m
+              [33mr[39m=[32m"1"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"12"[39m
+              [33mr[39m=[32m"1"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"19"[39m
+              [33mr[39m=[32m"1"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"pomo-shell"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"pomo-main"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"pomo-stage"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"pomo-stage-top"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Current mode"[39m
+                [33mclass[39m=[32m"focus-pill"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mFocus[0m
+                [36m</span>[39m
+      ...
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx:66:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > old epoch and disposed discard capabilities cannot clear surviving or successor device choices
+AssertionError: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx:79:69
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯

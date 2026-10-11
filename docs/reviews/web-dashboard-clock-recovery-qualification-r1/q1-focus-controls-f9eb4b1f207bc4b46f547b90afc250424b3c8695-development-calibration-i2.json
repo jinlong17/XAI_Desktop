@@ -1,0 +1,604 @@
+{
+  "status": "AUTHOR_CONTROLS_PASS_UNQUALIFIED",
+  "formal": false,
+  "unit": "focus-controls",
+  "iteration": 2,
+  "checks": 66,
+  "failures": 0,
+  "artifacts": [
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-initial-i2.png",
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744",
+      "width": 375,
+      "height": 900
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-0-outside-target-focused-i2.png",
+      "sha256": "9ccf091f9583096451a77615c02f622768ad2493a4c93671d02239bdf6f4b038",
+      "state": "focused",
+      "clip": {
+        "x": 53,
+        "y": 109,
+        "width": 122,
+        "height": 68
+      },
+      "first": {
+        "left": 62,
+        "top": 118.04000091552734,
+        "right": 166,
+        "bottom": 167.95999145507812
+      },
+      "again": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-0-outside-target-moved-on-i2.png",
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e",
+      "state": "moved-on",
+      "clip": {
+        "x": 53,
+        "y": 109,
+        "width": 122,
+        "height": 68
+      },
+      "first": {
+        "left": 62,
+        "top": 118.04000091552734,
+        "right": 166,
+        "bottom": 167.95999145507812
+      },
+      "again": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-0-outside-target-focused-repeat-i2.png",
+      "sha256": "9ccf091f9583096451a77615c02f622768ad2493a4c93671d02239bdf6f4b038",
+      "state": "focused-repeat",
+      "clip": {
+        "x": 53,
+        "y": 109,
+        "width": 122,
+        "height": 68
+      },
+      "first": {
+        "left": 62,
+        "top": 118.04000091552734,
+        "right": 166,
+        "bottom": 167.95999145507812
+      },
+      "again": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-0-outside-target-moved-on-repeat-i2.png",
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e",
+      "state": "moved-on-repeat",
+      "clip": {
+        "x": 53,
+        "y": 109,
+        "width": 122,
+        "height": 68
+      },
+      "first": {
+        "left": 62,
+        "top": 118.04000091552734,
+        "right": 166,
+        "bottom": 167.95999145507812
+      },
+      "again": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-1-outside-next-focused-i2.png",
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e",
+      "state": "focused",
+      "clip": {
+        "x": 187,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "again": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-1-outside-next-moved-on-i2.png",
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744",
+      "state": "moved-on",
+      "clip": {
+        "x": 187,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "again": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-1-outside-next-focused-repeat-i2.png",
+      "sha256": "23b776862ec3da92b1f7ff28a3e2743560e1ef7740609430fcfb632102a0e80e",
+      "state": "focused-repeat",
+      "clip": {
+        "x": 187,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "again": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-1-outside-next-moved-on-repeat-i2.png",
+      "sha256": "75f84e05e93b4fed8cffda22e5b6fbdb1a7a559cfbdb4ab623c82c6f50634744",
+      "state": "moved-on-repeat",
+      "clip": {
+        "x": 187,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "again": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-partial-occluded-style-initial-i2.png",
+      "sha256": "96407211584297c2b9de8c10abcb045b553c404f001cb9c49015e84dd190bad2",
+      "width": 375,
+      "height": 900
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-partial-occluded-style-0-outside-target-focused-i2.png",
+      "sha256": "bb177e31f9e3708afd6679835de3c95429674abe3bc122d52657821c86461c8e",
+      "state": "focused",
+      "clip": {
+        "x": 55,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "again": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-partial-occluded-style-0-outside-target-moved-on-i2.png",
+      "sha256": "34e3314bda0931e806a1b2ccd3794909bde028d5f7c21b3a2c3fa5fcaad977de",
+      "state": "moved-on",
+      "clip": {
+        "x": 55,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "again": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-partial-occluded-style-0-outside-target-focused-repeat-i2.png",
+      "sha256": "bb177e31f9e3708afd6679835de3c95429674abe3bc122d52657821c86461c8e",
+      "state": "focused-repeat",
+      "clip": {
+        "x": 55,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "again": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-partial-occluded-style-0-outside-target-moved-on-repeat-i2.png",
+      "sha256": "34e3314bda0931e806a1b2ccd3794909bde028d5f7c21b3a2c3fa5fcaad977de",
+      "state": "moved-on-repeat",
+      "clip": {
+        "x": 55,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "again": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-partial-occluded-style-1-outside-next-focused-i2.png",
+      "sha256": "34e3314bda0931e806a1b2ccd3794909bde028d5f7c21b3a2c3fa5fcaad977de",
+      "state": "focused",
+      "clip": {
+        "x": 187,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "again": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-partial-occluded-style-1-outside-next-moved-on-i2.png",
+      "sha256": "96407211584297c2b9de8c10abcb045b553c404f001cb9c49015e84dd190bad2",
+      "state": "moved-on",
+      "clip": {
+        "x": 187,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "again": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-partial-occluded-style-1-outside-next-focused-repeat-i2.png",
+      "sha256": "34e3314bda0931e806a1b2ccd3794909bde028d5f7c21b3a2c3fa5fcaad977de",
+      "state": "focused-repeat",
+      "clip": {
+        "x": 187,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "again": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-partial-occluded-style-1-outside-next-moved-on-repeat-i2.png",
+      "sha256": "96407211584297c2b9de8c10abcb045b553c404f001cb9c49015e84dd190bad2",
+      "state": "moved-on-repeat",
+      "clip": {
+        "x": 187,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "again": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-ring-occluded-style-initial-i2.png",
+      "sha256": "d5b496d8bccf7f120e27ddb9c5556c8ba34ba73c832c265332751cdc20a995f0",
+      "width": 375,
+      "height": 900
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-ring-occluded-style-0-outside-target-focused-i2.png",
+      "sha256": "49073267691ae5a891833eff309083f75cad520d1aaf48d834c0903f2aa052d4",
+      "state": "focused",
+      "clip": {
+        "x": 55,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "again": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-ring-occluded-style-0-outside-target-moved-on-i2.png",
+      "sha256": "c72c195bac5c9fdd77462da6a9ecd503c4cfce5a29b15b55e48f76e74d9343d7",
+      "state": "moved-on",
+      "clip": {
+        "x": 55,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "again": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-ring-occluded-style-0-outside-target-focused-repeat-i2.png",
+      "sha256": "49073267691ae5a891833eff309083f75cad520d1aaf48d834c0903f2aa052d4",
+      "state": "focused-repeat",
+      "clip": {
+        "x": 55,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "again": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-ring-occluded-style-0-outside-target-moved-on-repeat-i2.png",
+      "sha256": "c72c195bac5c9fdd77462da6a9ecd503c4cfce5a29b15b55e48f76e74d9343d7",
+      "state": "moved-on-repeat",
+      "clip": {
+        "x": 55,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "again": {
+        "left": 64,
+        "top": 119,
+        "right": 164,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-ring-occluded-style-1-outside-next-focused-i2.png",
+      "sha256": "c72c195bac5c9fdd77462da6a9ecd503c4cfce5a29b15b55e48f76e74d9343d7",
+      "state": "focused",
+      "clip": {
+        "x": 187,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "again": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-ring-occluded-style-1-outside-next-moved-on-i2.png",
+      "sha256": "d5b496d8bccf7f120e27ddb9c5556c8ba34ba73c832c265332751cdc20a995f0",
+      "state": "moved-on",
+      "clip": {
+        "x": 187,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "again": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-ring-occluded-style-1-outside-next-focused-repeat-i2.png",
+      "sha256": "c72c195bac5c9fdd77462da6a9ecd503c4cfce5a29b15b55e48f76e74d9343d7",
+      "state": "focused-repeat",
+      "clip": {
+        "x": 187,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "again": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-ring-occluded-style-1-outside-next-moved-on-repeat-i2.png",
+      "sha256": "d5b496d8bccf7f120e27ddb9c5556c8ba34ba73c832c265332751cdc20a995f0",
+      "state": "moved-on-repeat",
+      "clip": {
+        "x": 187,
+        "y": 110,
+        "width": 118,
+        "height": 66
+      },
+      "first": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "again": {
+        "left": 196,
+        "top": 119,
+        "right": 296,
+        "bottom": 167
+      },
+      "nativeFullViewport": true
+    }
+  ]
+}

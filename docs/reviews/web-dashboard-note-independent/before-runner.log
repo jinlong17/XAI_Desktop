@@ -1,0 +1,20 @@
+baseline {"commit":"8eb163d^","browser":"Chrome/152.0.7977.83"}
+original-correct-oracle {"editor":false,"error":false,"bytes":"Original note"}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert(original.editor&&original.error&&original.bytes==='Original note')
+
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-dashboard-note-independent/verify-native.mjs:34:444 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.16.0

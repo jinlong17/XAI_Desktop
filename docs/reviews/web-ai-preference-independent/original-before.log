@@ -1,0 +1,679 @@
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-vK9DQw/source
+
+ ❯ docs/reviews/web-ai-preference-discard/save-contract.test.tsx (1 test | 1 failed) 149ms
+   × discarding an obsolete preference proposal shows the current stored preference 149ms
+     → Unable to find an accessible element with the role "button" and name "Show insights"
+
+Here are the accessible roles:
+
+  complementary:
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"ai-side open"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"ai-side-head"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Collapse":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Collapse"[39m
+    [33mclass[39m=[32m"ai-icon-round"[39m
+    [33mtitle[39m=[32m"Collapse"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "New chat":
+  [36m<button[39m
+    [33mclass[39m=[32m"ai-new-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "New chat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"New chat"[39m
+    [33mclass[39m=[32m"ai-new-corner"[39m
+    [33mtitle[39m=[32m"New chat"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Hide insights":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Hide insights"[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ai-insights-toggle on"[39m
+    [33mtitle[39m=[32m"Hide insights"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Summarize my overdue tasks and suggest a plan":
+  [36m<button[39m
+    [33mclass[39m=[32m"ai-starter"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "What time of day am I most productive?":
+  [36m<button[39m
+    [33mclass[39m=[32m"ai-starter"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Draft a daily standup from yesterday's done items":
+  [36m<button[39m
+    [33mclass[39m=[32m"ai-starter"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Generate a 25-min focus playlist concept":
+  [36m<button[39m
+    [33mclass[39m=[32m"ai-starter"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Attach":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Attach"[39m
+    [33mclass[39m=[32m"ai-icon-round"[39m
+    [33mtitle[39m=[32m"Attach"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Voice off":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Voice off"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ai-icon-round muted"[39m
+    [33mtitle[39m=[32m"Voice off"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Send":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Send"[39m
+    [33mclass[39m=[32m"ai-send"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Search chats":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Search chats"[39m
+    [33mplaceholder[39m=[32m"Search chats"[39m
+    [33mreadonly[39m=[32m""[39m
+    [33mtype[39m=[32m"text"[39m
+  [36m/>[39m
+
+  Name "Ask XAI":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Ask XAI"[39m
+    [33mclass[39m=[32m"ai-input"[39m
+    [33mplaceholder[39m=[32m"Ask XAI"[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"ai-convos"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"ai-main with-side"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Where should we start?":
+  [36m<h1 />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"module module-ai"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"ai-side open"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ai-side-head"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Collapse"[39m
+            [33mclass[39m=[32m"ai-icon-round"[39m
+            [33mtitle[39m=[32m"Collapse"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"16"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"3"[39m
+                [33mx2[39m=[32m"21"[39m
+                [33my1[39m=[32m"6"[39m
+                [33my2[39m=[32m"6"[39m
+              [36m/>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"3"[39m
+                [33mx2[39m=[32m"21"[39m
+                [33my1[39m=[32m"12"[39m
+                [33my2[39m=[32m"12"[39m
+              [36m/>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"3"[39m
+                [33mx2[39m=[32m"21"[39m
+                [33my1[39m=[32m"18"[39m
+                [33my2[39m=[32m"18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ai-new-btn"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"13"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"13"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"12"[39m
+                [33mx2[39m=[32m"12"[39m
+                [33my1[39m=[32m"5"[39m
+                [33my2[39m=[32m"19"[39m
+              [36m/>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"5"[39m
+                [33mx2[39m=[32m"19"[39m
+                [33my1[39m=[32m"12"[39m
+                [33my2[39m=[32m"12"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mNew chat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ai-search"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"13"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"13"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"11"[39m
+              [33mcy[39m=[32m"11"[39m
+              [33mr[39m=[32m"7"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"21"[39m
+              [33mx2[39m=[32m"16.65"[39m
+              [33my1[39m=[32m"21"[39m
+              [33my2[39m=[32m"16.65"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<input[39m
+            [33maria-label[39m=[32m"Search chats"[39m
+            [33mplaceholder[39m=[32m"Search chats"[39m
+            [33mreadonly[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ai-side-section"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ai-side-label"[39m
+          [36m>[39m
+            [0mRecent[0m
+          [36m</div>[39m
+          [36m<ul[39m
+            [33mclass[39m=[32m"ai-convos"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"ai-main with-side"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"New chat"[39m
+          [33mclass[39m=[32m"ai-new-corner"[39m
+          [33mtitle[39m=[32m"New chat"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"14"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"14"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"12"[39m
+              [33mx2[39m=[32m"12"[39m
+              [33my1[39m=[32m"5"[39m
+              [33my2[39m=[32m"19"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"5"[39m
+              [33mx2[39m=[32m"19"[39m
+              [33my1[39m=[32m"12"[39m
+              [33my2[39m=[32m"12"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Hide insights"[39m
+          [33maria-pressed[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ai-insights-toggle on"[39m
+          [33mtitle[39m=[32m"Hide insights"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"13"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m...
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  14:27:52
+   Duration  1.34s (transform 260ms, setup 83ms, collect 437ms, tests 149ms, environment 338ms, prepare 78ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-ai-preference-discard/save-contract.test.tsx > discarding an obsolete preference proposal shows the current stored preference
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Show insights"
+
+Here are the accessible roles:
+
+  complementary:
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"ai-side open"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"ai-side-head"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Collapse":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Collapse"[39m
+    [33mclass[39m=[32m"ai-icon-round"[39m
+    [33mtitle[39m=[32m"Collapse"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "New chat":
+  [36m<button[39m
+    [33mclass[39m=[32m"ai-new-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "New chat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"New chat"[39m
+    [33mclass[39m=[32m"ai-new-corner"[39m
+    [33mtitle[39m=[32m"New chat"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Hide insights":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Hide insights"[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ai-insights-toggle on"[39m
+    [33mtitle[39m=[32m"Hide insights"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Summarize my overdue tasks and suggest a plan":
+  [36m<button[39m
+    [33mclass[39m=[32m"ai-starter"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "What time of day am I most productive?":
+  [36m<button[39m
+    [33mclass[39m=[32m"ai-starter"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Draft a daily standup from yesterday's done items":
+  [36m<button[39m
+    [33mclass[39m=[32m"ai-starter"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Generate a 25-min focus playlist concept":
+  [36m<button[39m
+    [33mclass[39m=[32m"ai-starter"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Attach":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Attach"[39m
+    [33mclass[39m=[32m"ai-icon-round"[39m
+    [33mtitle[39m=[32m"Attach"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Voice off":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Voice off"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ai-icon-round muted"[39m
+    [33mtitle[39m=[32m"Voice off"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Send":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Send"[39m
+    [33mclass[39m=[32m"ai-send"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Search chats":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Search chats"[39m
+    [33mplaceholder[39m=[32m"Search chats"[39m
+    [33mreadonly[39m=[32m""[39m
+    [33mtype[39m=[32m"text"[39m
+  [36m/>[39m
+
+  Name "Ask XAI":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Ask XAI"[39m
+    [33mclass[39m=[32m"ai-input"[39m
+    [33mplaceholder[39m=[32m"Ask XAI"[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"ai-convos"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"ai-main with-side"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Where should we start?":
+  [36m<h1 />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"module module-ai"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"ai-side open"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ai-side-head"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Collapse"[39m
+            [33mclass[39m=[32m"ai-icon-round"[39m
+            [33mtitle[39m=[32m"Collapse"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"16"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"3"[39m
+                [33mx2[39m=[32m"21"[39m
+                [33my1[39m=[32m"6"[39m
+                [33my2[39m=[32m"6"[39m
+              [36m/>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"3"[39m
+                [33mx2[39m=[32m"21"[39m
+                [33my1[39m=[32m"12"[39m
+                [33my2[39m=[32m"12"[39m
+              [36m/>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"3"[39m
+                [33mx2[39m=[32m"21"[39m
+                [33my1[39m=[32m"18"[39m
+                [33my2[39m=[32m"18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ai-new-btn"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"13"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"13"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"12"[39m
+                [33mx2[39m=[32m"12"[39m
+                [33my1[39m=[32m"5"[39m
+                [33my2[39m=[32m"19"[39m
+              [36m/>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"5"[39m
+                [33mx2[39m=[32m"19"[39m
+                [33my1[39m=[32m"12"[39m
+                [33my2[39m=[32m"12"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mNew chat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ai-search"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"13"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"13"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"11"[39m
+              [33mcy[39m=[32m"11"[39m
+              [33mr[39m=[32m"7"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"21"[39m
+              [33mx2[39m=[32m"16.65"[39m
+              [33my1[39m=[32m"21"[39m
+              [33my2[39m=[32m"16.65"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<input[39m
+            [33maria-label[39m=[32m"Search chats"[39m
+            [33mplaceholder[39m=[32m"Search chats"[39m
+            [33mreadonly[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ai-side-section"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ai-side-label"[39m
+          [36m>[39m
+            [0mRecent[0m
+          [36m</div>[39m
+          [36m<ul[39m
+            [33mclass[39m=[32m"ai-convos"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"ai-main with-side"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"New chat"[39m
+          [33mclass[39m=[32m"ai-new-corner"[39m
+          [33mtitle[39m=[32m"New chat"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"14"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"14"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"12"[39m
+              [33mx2[39m=[32m"12"[39m
+              [33my1[39m=[32m"5"[39m
+              [33my2[39m=[32m"19"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"5"[39m
+              [33mx2[39m=[32m"19"[39m
+              [33my1[39m=[32m"12"[39m
+              [33my2[39m=[32m"12"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Hide insights"[39m
+          [33maria-pressed[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ai-insights-toggle on"[39m
+          [33mtitle[39m=[32m"Hide insights"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"13"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m...
+ ❯ Object.getElementError ../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-ai-preference-discard/save-contract.test.tsx:15:16
+     13|  fireEvent.click(screen.getByRole('button',{name:'Discard unsaved cont…
+     14|  expect(localStorage.getItem('xai_ai_insights')).toBe('false');
+     15|  expect(screen.getByRole('button',{name:'Show insights'})).toBeTruthy(…
+       |                ^
+     16| });
+     17| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

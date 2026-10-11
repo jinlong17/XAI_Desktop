@@ -140,6 +140,16 @@ const STR = {
   "smartLists.show": { en: "Show", zh: "显示" },
   "smartLists.if-not-empty": { en: "Show if not empty", zh: "不空显示" },
   "smartLists.hide": { en: "Hide", zh: "隐藏" },
+  "smartLists.saving": { en: "Saving Smart Lists choices…", zh: "正在保存智能列表选择…" },
+  "smartLists.saved": { en: "Smart Lists choices saved", zh: "智能列表选择已保存" },
+  "smartLists.notSaved": { en: "Smart Lists choices were not saved", zh: "智能列表选择未保存" },
+  "smartLists.conflict": { en: "Saved Smart Lists choices changed elsewhere. Your local choices are still shown.", zh: "已保存的智能列表选择已在其他位置更改。当前仍显示本地选择。" },
+  "smartLists.sourceUnavailable": { en: "Saved Smart Lists data is unavailable or invalid. Repair it, then reload saved choices.", zh: "已保存的智能列表数据不可用或无效。修复后请重新加载已保存的选择。" },
+  "smartLists.retry": { en: "Retry", zh: "重试" },
+  "smartLists.reload": { en: "Reload saved choices", zh: "重新加载已保存的选择" },
+  "smartLists.discardAndReload": { en: "Discard local Smart Lists changes and reload saved choices", zh: "放弃本地智能列表更改并重新加载已保存的选择" },
+  "smartLists.export": { en: "Export current draft", zh: "导出当前草稿" },
+  "smartLists.exportFailed": { en: "Draft export failed. Please try again.", zh: "草稿导出失败，请重试。" },
 
   // Notifications pane
   "notif.enable": { en: "Enable notifications", zh: "启用通知" },
@@ -269,6 +279,17 @@ const STR = {
   "collab.canEdit": { en: "Can edit", zh: "可编辑" },
   "collab.viewOnly": { en: "View only", zh: "只读" },
   "collab.mentionNotify": { en: "Notify on @ mentions", zh: "接收 @ 提及通知" },
+  "collab.saving": { en: "Saving", zh: "正在保存" },
+  "collab.saved": { en: "Saved", zh: "已保存" },
+  "collab.notSaved": { en: "Not saved", zh: "未保存" },
+  "collab.retry": { en: "Retry", zh: "重试" },
+  "collab.reload": { en: "Reload", zh: "重新加载" },
+  "collab.conflict": { en: "Changed elsewhere. Your selection is still local.", zh: "已在其他位置更改；你的选择仍保留在本地。" },
+  "collab.sourceUnavailable": { en: "Saved value needs recovery. Repair storage, then reload.", zh: "已保存的值需要恢复。修复存储后重新加载。" },
+  "collab.discardAndReload": { en: "Discard local changes and reload", zh: "放弃本地更改并重新加载" },
+  "collab.discard": { en: "Discard", zh: "放弃" },
+  "collab.export": { en: "Export current draft", zh: "导出当前草稿" },
+  "collab.exportFailed": { en: "Could not export the draft. Your local changes remain available.", zh: "无法导出草稿；本地更改仍然可用。" },
 
   // Sticky pane
   "sticky.defaultColor": { en: "Default Color", zh: "默认颜色" },
@@ -293,6 +314,21 @@ const STR = {
     en: 'Pin tasks as Sticky Notes on your desktop for quick idea capture. (Right-click tasks and choose "Open as Sticky Note")',
     zh: "将任务以便签形式钉在桌面快速捕获想法。（右键任务，选择「打开为便签」）",
   },
+  // Sticky recovery wording (contract §5 item 8). `{label}` is the field label.
+  "sticky.retry": { en: "Retry", zh: "重试" },
+  "sticky.discard": { en: "Discard", zh: "放弃" },
+  "sticky.reload": { en: "Reload", zh: "重新读取" },
+  "sticky.exportDraft": { en: "Export Sticky Note draft", zh: "导出便签草稿" },
+  "sticky.discardAll": { en: "Discard all changes", zh: "放弃全部更改" },
+  "sticky.saving": { en: "{label} is saving.", zh: "{label}正在保存。" },
+  "sticky.notSaved": { en: "{label} was not saved.", zh: "{label}未保存。" },
+  "sticky.unavailable": {
+    en: "Saved {label} is unavailable. Reload it; this is not a new unsaved change.",
+    zh: "已保存的{label}不可用。请重新读取；这不是新的未保存更改。",
+  },
+  "sticky.invalid": { en: "{label} has an invalid value.", zh: "{label}格式无效。" },
+  "sticky.saved": { en: "Sticky Note settings saved.", zh: "便签设置已保存。" },
+  "sticky.exportFailed": { en: "Export failed. Please retry.", zh: "导出失败，请重试。" },
 
   // Hotkeys pane
   "hk.quickAdd": { en: "Quick add", zh: "快速添加" },

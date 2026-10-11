@@ -1,0 +1,51 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stdout | docs/reviews/web-metrics-save-independent/profile-retry.test.tsx > Retry save commits the latest visible profile draft, not the prior failed value
+profile retry observed {"visible":"64","persisted":63,"failureVisible":false}
+
+stdout | docs/reviews/web-metrics-save-independent/profile-retry.test.tsx > an unrelated successful action must not silently discard a failed profile snapshot
+cross-operation observed {"persistedProfile":70,"failureVisible":false}
+
+ ❯ docs/reviews/web-metrics-save-independent/profile-retry.test.tsx (2 tests | 2 failed) 355ms
+   × Retry save commits the latest visible profile draft, not the prior failed value 211ms
+     → expected 63 to be 64 // Object.is equality
+   × an unrelated successful action must not silently discard a failed profile snapshot 143ms
+     → expected false to be true // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-metrics-save-independent/profile-retry.test.tsx > Retry save commits the latest visible profile draft, not the prior failed value
+AssertionError: expected 63 to be 64 // Object.is equality
+
+- Expected
++ Received
+
+- 64
++ 63
+
+ ❯ docs/reviews/web-metrics-save-independent/profile-retry.test.tsx:12:682
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-metrics-save-independent/profile-retry.test.tsx > an unrelated successful action must not silently discard a failed profile snapshot
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-metrics-save-independent/profile-retry.test.tsx:15:710
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  12:09:09
+   Duration  1.66s (transform 197ms, setup 0ms, collect 339ms, tests 355ms, environment 645ms, prepare 84ms)
+

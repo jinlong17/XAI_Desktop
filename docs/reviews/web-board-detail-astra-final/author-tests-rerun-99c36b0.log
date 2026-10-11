@@ -1,0 +1,31 @@
+revision=99c36b0
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-0NW1Ae
+
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/responsiveStyles.test.ts (4 tests) 4ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx (16 tests) 518ms
+
+ Test Files  2 passed (2)
+      Tests  20 passed (20)
+   Start at  18:36:58
+   Duration  2.22s (transform 599ms, setup 445ms, collect 735ms, tests 522ms, environment 835ms, prepare 140ms)
+
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > keeps a failed draft visible when its target disappears and blocks close before that
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > retries the latest inline draft once and clears the editor only after commit
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > revalidates the latest attachment fields and keeps an invalid retry editable
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > downloads the latest checklist recovery with original target context
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > downloads the latest attachment recovery with original target context
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > downloads the latest activity recovery with original target context
+[plugin-web-storage] quota exceeded for xai_boards_v2.

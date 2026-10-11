@@ -1,0 +1,101 @@
+{
+  "id": "CAL-03/PREPARE",
+  "workflow": "C",
+  "module": "web",
+  "role": "fresh original full-obligation preparer; no implementation or product decisions",
+  "model": "gpt-6-astra",
+  "fixed_input": "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "original_item": {
+    "id": "CAL-03",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "补重复事件本次/此后/全部编辑语义、例外与跨日范围",
+    "acceptance": "重复编辑前给范围选择；daily/weekly及时区边界不误改其他发生项",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "CAL-03",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:CAL-03"
+    ],
+    "source_section": "CAL",
+    "acceptance_evidence": {
+      "business_acceptance": "重复编辑前给范围选择；daily/weekly及时区边界不误改其他发生项",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "CAL-03/prepare",
+      "CAL-03/contract-review",
+      "CAL-03/before",
+      "CAL-03/implement",
+      "CAL-03/verify",
+      "CAL-03/accept",
+      "CAL-03/reconcile",
+      "CAL-03/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  },
+  "allowed_files": [
+    "docs/reviews/audit-parallel-cal03-preparation-r1/contract.md",
+    "docs/reviews/audit-parallel-cal03-preparation-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Fulloriginal CAL-03 action and acceptance verbatim from exact original_item. Complete312 orderedfields/unique attribution/39reversible labels/939 currentevidence/formal13,3,3,293 and299unclosed preserved; rankedinventory staticdiscovery not implementationgrant; no smaller slice replacing original goal.",
+    "Trace actualCalendarModule/eventStore/expandRecurrence/occurrenceeditor/schema/dailyweekly expansion/exdates/override/id/timezone/localday/DST/crossday. Existingowner decisions first for this/this-and-following/all editing/deleting scopechoice beforeany mutation, exceptionownership/series split/revision/incarnation/list navigation/importexport/accountclock. Current source implementation accident not authority; original fullscopechoice dailyweekly/timezoneboundary mustbe testable. REL01/CAL01/02/DASH09/12/SET08/10 calendar-date resource retained, no shared date/storage/schema grant. Unsupported newsemantics isolate exact minimum product question afterfreshreview; no invention.",
+    "Pin all owningdesign/API/test/devlog/actualsource/currentacceptedcontracts/decisions/historicalbefore-fixed-failure-refusal-acceptance. Full writer-reader-producer-consumer/realpublichost route/reload/accountgeneration/queuedlatework/sourceerror/deletion/export/import/readonly availability. Exactfiniteconditionalpaths andsemanticresources/protectedsharedscope. CompletecanonicalClockr2§14 E1-E25/E24+jcopies/before/sourcequalification/nativevisual/trustedkeyboard/account/affected/fullregression/actualvendor/freshfullacceptance/rootappend-onlyreconcile/inventory mandatory. Existingmethodsbudget blockedonlytheirdependentunits, no standardswaiver.",
+    "Permanentactualrunningunit histories sourcepurpose/commands/mode/launchids/calibration/refusal/formalprobeunknown counts andcap3/noactor-wt-path reset. Reuse valid exactevidence applicability neverduplicatehistoryruns; newassertionpurposes sourcegrounded registerseparately, emptyitem evidence not0. Preparation1/3/static1/allruntime-test-build-lint-browser-native-qualification-probes-vendor0/nochildrenpush; completeproposal+fullhashmanifest thenfreshindependentreview beforeadoption. Allinputsvalidated/alloutputbuffersconstructed beforewrites; no authorproductdecision."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/lockfile/config",
+    "original contracts/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/other worktrees",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "preparation_iteration": 1,
+    "preparation_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "hash/dirty/scope drift",
+    "unsupported product decision or weakened acceptance",
+    "protected boundary or runtime need"
+  ],
+  "no_children": true,
+  "source_inputs": [
+    "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473",
+    "acd21f9b15a735e2202ca9553aff54b3e3b46e17",
+    "e041c2bc293b70db367444c62c4300231976dbf7",
+    "f9eb4b1f207bc4b46f547b90afc250424b3c8695"
+  ]
+}

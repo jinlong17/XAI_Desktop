@@ -5,6 +5,7 @@
  * the existing board-views FilterState shape.
  */
 
+import type { BoardCardPriority } from "@repo/plugin-web-board-core";
 import type { FilterState } from "@repo/plugin-web-board-views";
 import { EMPTY_FILTER } from "@repo/plugin-web-board-views";
 
@@ -13,17 +14,32 @@ export type BoardFilterDueRange = FilterState["dueRange"];
 export interface SavedBoardFilter {
   labels: string[];
   members: string[];
+  priorities: BoardCardPriority[];
   dueRange: BoardFilterDueRange;
 }
 
 export type SavedBoardFilterById = Record<string, SavedBoardFilter>;
 
 const DUE_RANGES = ["all", "overdue", "today", "week"] as const;
+const PRIORITIES = ["urgent", "high", "medium", "low"] as const;
 const EMPTY_SAVED_FILTER: SavedBoardFilter = Object.freeze({
   labels: [],
   members: [],
+  priorities: [],
   dueRange: "all",
 });
+
+function sortedUniquePriorities(value: unknown): BoardCardPriority[] {
+  if (!Array.isArray(value)) return [];
+  return Array.from(
+    new Set(
+      value.filter((item): item is BoardCardPriority =>
+        typeof item === "string" &&
+        (PRIORITIES as readonly string[]).includes(item),
+      ),
+    ),
+  ).sort();
+}
 
 function isDueRange(value: unknown): value is BoardFilterDueRange {
   return typeof value === "string" && DUE_RANGES.includes(value as BoardFilterDueRange);
@@ -47,7 +63,12 @@ function readStringArrayProp(
 }
 
 export function isEmptyFilterState(filter: FilterState): boolean {
-  return filter.labels.size === 0 && filter.members.size === 0 && filter.dueRange === "all";
+  return (
+    filter.labels.size === 0 &&
+    filter.members.size === 0 &&
+    filter.priorities.size === 0 &&
+    filter.dueRange === "all"
+  );
 }
 
 export function serializeFilterState(filter: FilterState): SavedBoardFilter {
@@ -55,6 +76,7 @@ export function serializeFilterState(filter: FilterState): SavedBoardFilter {
   return {
     labels: Array.from(filter.labels).filter(Boolean).sort(),
     members: Array.from(filter.members).filter(Boolean).sort(),
+    priorities: Array.from(filter.priorities).sort(),
     dueRange: filter.dueRange,
   };
 }
@@ -63,6 +85,7 @@ export function filterStateFromSavedFilter(saved: SavedBoardFilter): FilterState
   if (
     saved.labels.length === 0 &&
     saved.members.length === 0 &&
+    saved.priorities.length === 0 &&
     saved.dueRange === "all"
   ) {
     return EMPTY_FILTER;
@@ -70,6 +93,7 @@ export function filterStateFromSavedFilter(saved: SavedBoardFilter): FilterState
   return {
     labels: new Set(saved.labels),
     members: new Set(saved.members),
+    priorities: new Set(saved.priorities),
     dueRange: saved.dueRange,
   };
 }
@@ -90,6 +114,7 @@ export function loadSavedBoardFilters(raw: unknown): SavedBoardFilterById {
     result[boardId] = {
       labels,
       members,
+      priorities: sortedUniquePriorities(record.priorities),
       dueRange: isDueRange(record.dueRange) ? record.dueRange : "all",
     };
   }

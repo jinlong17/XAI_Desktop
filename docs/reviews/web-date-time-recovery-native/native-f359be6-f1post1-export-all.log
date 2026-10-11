@@ -1,0 +1,4 @@
+{"name":"baseline","commit":"f359be6","browser":"Chrome/154.0.8037.97"}
+{"name":"select-input","events":[{"name":"keydown","key":"s","value":"monday","trusted":true,"prevented":false},{"name":"input","value":"sunday","trusted":true,"prevented":false},{"name":"change","value":"sunday","trusted":true,"prevented":false},{"name":"keyup","key":"s","value":"sunday","trusted":true,"prevented":false}],"value":"sunday","raw":["monday","true","true","true","true"]}
+{"name":"disk-export","filename":"date-time-draft.json","data":{"version":1,"kind":"date-time-draft","values":{"device":{"start_week":"sunday","lunar":false,"week_numbers":false,"holidays":false,"timezone":false}}}}
+{"name":"native","pass":true,"mode":"export-all","runtimeErrors":0}

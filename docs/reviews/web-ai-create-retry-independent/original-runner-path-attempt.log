@@ -1,0 +1,20 @@
+Fixed revision: e45f78e Original save-contract.test.tsx unchanged; workspace aliases resolve into snapshot.
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-ai-original-hmx30snq
+
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-ai-tool-write-receipts/save-contract.test.tsx [ docs/reviews/web-ai-tool-write-receipts/save-contract.test.tsx ]
+Error: Cannot find module '/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-ai-original-hmx30snq/packages/xai-web-tasks/vitest.setup.ts'
+Caused by: Error: Failed to load url /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-ai-original-hmx30snq/packages/xai-web-tasks/vitest.setup.ts (resolved id: /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-ai-original-hmx30snq/packages/xai-web-tasks/vitest.setup.ts). Does the file exist?
+ ❯ loadAndTransform ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/vite@7.3.6_@types+node@22.15.3/node_modules/vite/dist/node/chunks/config.js:22739:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  14:20:01
+   Duration  952ms (transform 17ms, setup 0ms, collect 0ms, tests 0ms, environment 478ms, prepare 117ms)
+

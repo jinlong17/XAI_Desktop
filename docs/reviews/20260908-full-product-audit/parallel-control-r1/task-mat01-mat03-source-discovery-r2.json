@@ -1,0 +1,232 @@
+{
+  "workflow": "C",
+  "primary_workflow": "mixed_B_and_C_preserve_original_ownership",
+  "module": "web",
+  "model": "gpt-6-luna",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "66060a9caa7bd4c5443c202bf8fad99469e1e123",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "no_children": true,
+  "budgets": {
+    "discovery_iteration": 2,
+    "discovery_cap": 3,
+    "static_pass": 1,
+    "total_wall_minutes": 30,
+    "static_seconds": 120,
+    "owned_process_drain_seconds": 30,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "network": 0,
+    "children": 0
+  },
+  "protected": [
+    "ALLnonallowed files/source/contracts/runner/evidence/failurelogs",
+    "globalcontrol/ledgers/otherworktrees/canonicaldocs/skills/generator/registry",
+    "module/ownerdecisions/caps/measurementstandards",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "stop": [
+    "actualinput/dirty/hash/protecteddrift",
+    "need new undecidedproductrule or unauthorizedexec",
+    "actual concluding staticFAIL immediatelyfreeze no retry/materialization/commit"
+  ],
+  "shared_conditions": [
+    "Source-only new discovery not valid-before/qualification or acceptedcontract. Read originalgoal/humanparalleloverlay/AGENTS/CLAUDE/workflow/multimachine/card and exactoriginalitems at actualdispatchparent. Existing312map/taskownership unchanged, do not duplicateitems or shrinkscope. Formal13/3/3/293=312/299unclosed939refs intact.",
+    "All complete actually used inputbytes bound individually at exact immutableSHA, including actualparentcard/state and ownsourceMD. Finite relevant source inventory obtained from actualGit tree/paths before acquisition; no imagined filename/headline/minsize/cardinality guard, no P0audit/control/docs equality. Code source proves only implementation presence, not product requirement/runtime or independentverification.",
+    "Reported/evidenced0/UNKNOWN distinct. No historicalvalidbatch rerun, oldbusinesschecker/scriptimport or actualprovider/browser/runtimeexecution to fillgaps. Discover gaps honest and propose finite newscope+dependency gates only, nogrant. Do not reinterpret missing evidence as a productdecision.",
+    "ALLrequiredinputchecks and BOTH entirefinalbuffers in memory BEFORE ANYfilesystemwrite includinginterimdraft/index. One own-document static1 actualhashes/manifestgrammar/originalitemcoverage/outputbuffers; meaningful semanticfindings explained in prose not brittle guessedstring assertions. Actualcheckfailure STOP no retry/postfailurewrite/materialization/commit. Python3.9safeUTF8 realnewline API no write_textnewline keyword.",
+    "Raw actualPID/session/chunk/numericexit/stdoutstderr/EOF/ownedGitchilddrain preserved, UNKNOWNnot0. Exact2ADD hooksdisabled singlecommit realnewlineWhy/What/Scope/Risk/Docs/Tests clean noamend/no push; newfreshfullreview and rootscopedadmission required beforecanonicalimplementation."
+  ],
+  "id": "MAT-01+MAT-02+MAT-03/SOURCE-DISCOVERY2",
+  "role": "fresh wholeMatrix sourcecorrection2/3 after frozenmissingguessedinput no canonicalimplementation",
+  "original_items": [
+    {
+      "id": "MAT-01",
+      "priority": "P2",
+      "kind": "修复",
+      "action": "补真实编辑、删除、完成动作和合法空态",
+      "acceptance": "装饰checkbox/更多按钮有真实语义或禁用；清空后不恢复8条样例",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "MAT-01",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "MAT",
+      "acceptance_evidence": {
+        "business_acceptance": "装饰checkbox/更多按钮有真实语义或禁用；清空后不恢复8条样例",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "MAT-01/prepare",
+        "MAT-01/contract-review",
+        "MAT-01/before",
+        "MAT-01/implement",
+        "MAT-01/verify",
+        "MAT-01/accept",
+        "MAT-01/reconcile",
+        "MAT-01/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "MAT-02",
+      "priority": "P2",
+      "kind": "决策",
+      "action": "确定Matrix是独立任务库还是Tasks优先级视图",
+      "acceptance": "PRD明确数据关系；若整合则共享taskId，不创建持续漂移副本",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "C",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "MAT-02",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [
+        "existing-owner-rule-or-minimal-decision:MAT-02"
+      ],
+      "source_section": "MAT",
+      "acceptance_evidence": {
+        "business_acceptance": "PRD明确数据关系；若整合则共享taskId，不创建持续漂移副本",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "MAT-02/prepare",
+        "MAT-02/contract-review",
+        "MAT-02/before",
+        "MAT-02/implement",
+        "MAT-02/verify",
+        "MAT-02/accept",
+        "MAT-02/reconcile",
+        "MAT-02/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "MAT-03",
+      "priority": "P2",
+      "kind": "优化",
+      "action": "保留Cmd/Ctrl+箭头移动，补触屏移动与未分类引导",
+      "acceptance": "键盘及触屏都有移动路径；四象限空态能引导设置重要/紧急",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "MAT-03",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "MAT",
+      "acceptance_evidence": {
+        "business_acceptance": "键盘及触屏都有移动路径；四象限空态能引导设置重要/紧急",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "MAT-03/prepare",
+        "MAT-03/contract-review",
+        "MAT-03/before",
+        "MAT-03/implement",
+        "MAT-03/verify",
+        "MAT-03/accept",
+        "MAT-03/reconcile",
+        "MAT-03/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    }
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-mat01-mat03-source-discovery-r2/discovery.md",
+    "docs/reviews/audit-parallel-mat01-mat03-source-discovery-r2/inputs.sha256"
+  ],
+  "logical_locks": {
+    "write": [
+      "newMATthreeitemdiscoveryreport"
+    ],
+    "read": [
+      "Matrix package",
+      "Tasks owning source/contracts",
+      "acceptedREL05Matrix history"
+    ],
+    "future_writer": "Matrix canonicalimplementation and Tasks identity links serialize with TASK/REL/sharedstorage/registry/dossier owners; worktrees do not waive it"
+  },
+  "read_paths": [
+    "packages/xai-web-matrix",
+    "packages/xai-web-cmdk/src/adapters/matrix.ts",
+    "packages/plugin-productivity/src/components/EisenhowerMatrix.tsx",
+    "apps/web/src/App.tsx",
+    "docs/PLUGIN_MAP.md",
+    "docs/workflow/project/dev-dashboard.md",
+    "docs/workflow/project/release-log.md",
+    "docs/reviews/20260908-full-product-audit/02-tasks-time-boards.md",
+    "docs/reviews/20260908-full-product-audit/05-visual-ux-audit.md"
+  ],
+  "acceptance": [
+    "Whole ORIGINAL MAT01 true edit/delete/complete semantics plus lawful empty/no8sample reseed, failedsave/recovery/dataownership; MAT02 independentTaskstore versus Taskspriorityprojection is productdecision not derive from currentcode. First acquire actual approvedPRD/brief/devlog/acceptedREL05Matrix recovery/Taskscontracts/owningdocs; if explicitacceptedrule exists citeexactidentity&limits, otherwise minimum necessary decision pendingONLY afterfullreview, do notinvent/formcanonicaldossier or ownerquestion. MAT03 retainCmd/Ctrl+arrow movement plus realtouchmove/unclassifiedguide/fourquadrants emptystates. Fullsource/currentimplementation/tests authoredpresence != runtimePASS or businessrequirement.",
+    "Read complete actualMatrixdesign/API/test/devlog/manifest/source andfinite actualparentGit tree seams for Card/Group/Quadrant/Composer/persistence/create/move/kbd/seed/accountmigration/currentTasks bridge/CmdKadapter/registration/host mounts and actualmobile controls. Preserve accepted REL05 Matrix local save-recovery historicalevidence notrerun or imply solvesCRUD/globaltransaction/sourcequalification. Separate PRODUCT Matrix from plugin-productivitynative/Eisenhower and click-through-matrix/windowpackages boundary; no app/plugin/sync edits/grants. Sourceonly create factualwholebefore-description not validbefore/testexecution; currentTasksourcecontract/REL02+03budget/MatrixdossierGOV05EXHAUSTED/registry/GOV06UNADOPTED technicalconditionaldocs/sourcequal/sharedstorage holds retained. No duplicateGOV05dossierpurpose/sourcecensus/capreset. FreshindependentwholeD1/3 reserved after lawfulsource1.",
+    "Propose finite exact futureallowedpaths/oracles/acceptance matrices ALLthreeoriginalactions no omission/duplicateownership/shrunkgoal. Stable taskId relationship/history/account/content/empty/corrupt/sample/cross-tabdraft recovery/dnd keyboardtouchaccessibility only if realoriginal/acceptedrules; preserve missing/unknownpolicy honest. Future methodsourcequalification/fullbefore/businessimplementation/independentfrozenverify/affectedregression/finalcalleracceptance/reconcile/inventory separate no newgrant. No provider/native/browsernetwork/server/runtimeproduction/testing to fillgaps.",
+    "EveryactuallyusedcompleteMD/source/card/state hash-bound atactualusedSHA, finiteinputinventorybeforeacquisition noimaginedpathheadline/count/minsize/P0auditdocparity. ALLinputchecks and BOTHwholefinalbuffers in-memory BEFOREANYfilesystemwriteincldraft/index; exactly1 meaningfulprewritestatic <=120sec/wall30min/drain30sec actualFAIL/UNKNOWNimmediatefreeze no retry/materialization/commit. Captureactualresult BEFOREprinter PID/numericexit/streamsEOF/drain/sessionchunk UNKNOWNnot0 safechildstdin. Python3.9safeUTF8realnewline. Allruntime/tests/build/lint/browser/native/server/parser/generator/import/qualification/probes/vendor/network/children0. Exact2ADD onehooksdisabledcommit viaactualnewlinebodyWhyWhatScopeRiskDocsTests clean/noamendpushsync. Sourcepurpose1/3 only originalcap3 remains independentreviewerneverrepairs.",
+    "Originalsource1actualprewritestaticFAIL missingguessed20260528-feature-brief atactualassignedtree process1 exit1/PIDUNKNOWN/nooutputs preservediteration1/3. Freshwholeoriginalthree-source2/3 not justmissingpathfix, fullCRUD/emptysamples/Tasksrelationship existingrules-first/keyboards/touch allfutureacceptance. Obtain complete actualGit-tree inventory first; existingdiscovery/roadmap/acceptedREL05history canberealrequirements sources, absentoptionalbrief is honestlymissing NOTinventedmandatoryguessedpathguard. Do NOT assume or assertfilename/headline/cardinality; followactualtrackednames then acquirecompletebytes. Originalcap3 noreset/newformalgrant. ALLrequiredinputs and BOTHcompletefinalbuffers BEFOREANYwrite andsoleownmeaningfulstatic; simple robusttransport avoiding nestedJS/Python newline or finalJSONbrace errors, actualfailureSTOP no retry/materialization/commit. IndependentfreshwholeD1reservedafterlawfulsource2. No duplicateGOV05dossier/Tasksourcecensus/currentsharedexhaustedpurpose or canonicalproductdecision/workflowreset."
+  ],
+  "source_roots": [
+    "packages/xai-web-habits",
+    "apps/web",
+    "packages/core-data",
+    "packages/plugin-sdk"
+  ],
+  "previous_failed_source_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/matrix-source1-p82-missing-input-failure-receipt.json"
+}

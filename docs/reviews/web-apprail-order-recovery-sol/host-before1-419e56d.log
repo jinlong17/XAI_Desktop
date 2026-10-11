@@ -1,0 +1,613 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=host
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-apprail-order-recovery-sol/verify-fixed.mjs 419e56d host before1
+runner_checkout_head=1094d96776b26c020632823eb84fdb7e8768b489
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-shell/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=07c4f87674e5a14d7cbeffc4cd8ae18d0c9d725cfe052ce45b55fb631720c236 bytes.test.tsx=d4827472827f284178944dd621198a39d7b7ffc34be19781714e61f91103d6cd domain.test.tsx=9dc5784b574768b1f71c13260aa68aabed9a80322497224e689ebe3cb316b989 merge.test.tsx=dd6961f6463db641601a369d5dd135e135d99b888dfee8bbbdc77cb42b50d2c6 drag.test.tsx=8a8da1134fceb5a90ec7de7c7453d617d6ffe496ce42c6f953903d31a2e54f17 field.test.tsx=440f08929d625558d14dbd3084d22a26e3e899214071419a51dad8f1832c67fc continuity-export.test.tsx=b92790b3f989e66b5e3b549995c58abcaee88d5acb700e7f2c31af577f5dd5fc host.test.tsx=e9b64c02373c552775d64ba603572a2467c4b4d909930682cfcbaf13aa7c2bc3 verify-fixed.mjs=e944cb226e3fa342727c913547ff5084e0ad38fad5293ed306cb512bf9f5a4e8
+archive_file_sha256 packages/xai-web-shell/src/AppRail.tsx=6312caa162a7d194774bf95282c203ddc633ccc54068edcd2854dfbfd4633f67 packages/xai-web-shell/src/internal/dnd.ts=a538b51f119f9cedbed3421f8cd21549f1730d0ede9059257402bee9a63deaf9 packages/xai-web-shell/src/registry.tsx=b621abbecfda785a5d7da628465925dacdb3249638b181cc3ca074687b734c1e packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0 packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a packages/xai-web-shell/src/index.ts=c404a9713dee4d821ba3ec6b5c7591f984da3c92b5fb1a62d88fbab5cec368ed packages/xai-web-shell/src/__tests__/AppRail.test.tsx=cbe4179146b7f9565cb038027f004520b46917db3da6c0e9f653cf319b309e8f packages/xai-web-shell/src/__tests__/Topbar.test.tsx=b3a068eab6bbb95e62cb2ec73f8a715921a48549f090bf7237e8d8c0dabfcb12 apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] host.test.tsx: include=docs/reviews/web-apprail-order-recovery-sol/host.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-BJyKF6/apprail-sol-host-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-BJyKF6/.report-host-0.json vitest_exit=1 cases=33 passed=7 failed=26 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=33 numPassedTests=7 numFailedTests=26
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] host.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-BJyKF6
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > PC A8 no status and no unload warning in a clean state 188ms
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 A8 a pending-only first attempt shows no status; once it settles unsuccessful the status renders; a successful Retry removes it 176ms
+   → §7.3: the pending draft warns: expected false to be true // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 the status is a native button with aria-expanded and aria-controls; pointer activation toggles the panel exactly once, keeps focus and touches no storage 129ms
+   → H9 status button: the Topbar rail status for an unsaved rail order: expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 Enter and Space on the status each toggle the panel exactly once 115ms
+   → H9 keyboard: the Topbar rail status for an unsaved rail order: expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 the panel follows the button in DOM order inside one status root, so Tab reaches Retry, Discard and Export next, then the appearance trigger 112ms
+   → H9 tab order: the Topbar rail status for an unsaved rail order: expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 Escape closes the panel and returns focus to the status button 111ms
+   → H9 Escape: the Topbar rail status for an unsaved rail order: expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 a mousedown outside the status root closes the panel; focus moves only when it was inside the panel 109ms
+   → H9 outside mousedown: the Topbar rail status for an unsaved rail order: expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 a keyboard Retry that succeeds unmounts the status and moves focus to .topbar-pref-trigger, never <body> 116ms
+   → H9: the status: expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 placement: the status root sits immediately after the Appearance status and before .topbar-pref 172ms
+   → H9 placement: the Topbar rail status for an unsaved rail order: expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 the status in Chinese: the draft accessible name and the panel name 138ms
+   → H9: "侧栏顺序未保存，点击查看。": expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.1 with a failed draft a rail click and the Settings sidebar are not held; the status shows on every route; the draft is intact 128ms
+   → H9 no route guard: the Topbar rail status for an unsaved rail order: expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.1 Back and Forward with a failed draft are not held and land on the same history entries as an ordinary navigation 114ms
+   → H9 Back/Forward: the Topbar rail status for an unsaved rail order: expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.3 beforeunload warns while a failed rail draft exists, with zero storage attempts in the handler; it is removed after Discard 113ms
+   → H9 §7.3: an unsaved rail order warns, with zero attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+ ✓ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > PC §7.4 fallback: without drafts sign-out makes zero confirm calls and completes as at 419e56d 124ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > PC §7.4 fallback: with an Appearance draft only, the confirm list is exactly the Appearance text 151ms
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: with a failed rail draft, Cancel resolves false: one rail confirm, identity intact, zero history mutations, the draft, status and warning kept 191ms
+   → H9 §7.4: exactly one confirm with the rail text: expected [] to deeply equal [ Array(1) ]
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: with a failed rail draft, OK discards it with zero writes and the existing sequence continues 189ms
+   → H9 §7.4: exactly one confirm with the rail text: expected [] to deeply equal [ Array(1) ]
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: with rail and Appearance drafts the confirm list is [rail, Appearance]; OK and OK proceeds 198ms
+   → H9 §7.4: rail first, then Appearance: expected [ Array(1) ] to deeply equal [ …(2) ]
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: OK at the rail step then Cancel at the Appearance step resolves false with the rail draft discarded and the Appearance draft kept 182ms
+   → H9 §7.4: rail first, then Appearance: expected [ Array(1) ] to deeply equal [ …(2) ]
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: Cancel at the rail step never asks the Appearance step 173ms
+   → H9 §7.4: only the rail confirm: expected [ Array(1) ] to deeply equal [ Array(1) ]
+ ✓ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > PC §7.4 coordinator: without drafts sign-out makes zero confirm calls and completes as at 419e56d 128ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > PC §7.4 coordinator: with an Appearance draft only, the confirm list is exactly the Appearance text 188ms
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: with a failed rail draft, Cancel resolves false: one rail confirm, identity intact, zero history mutations, the draft, status and warning kept 186ms
+   → H9 §7.4: exactly one confirm with the rail text: expected [] to deeply equal [ Array(1) ]
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: with a failed rail draft, OK discards it with zero writes and the existing sequence continues 154ms
+   → H9 §7.4: exactly one confirm with the rail text: expected [] to deeply equal [ Array(1) ]
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: with rail and Appearance drafts the confirm list is [rail, Appearance]; OK and OK proceeds 188ms
+   → H9 §7.4: rail first, then Appearance: expected [ Array(1) ] to deeply equal [ …(2) ]
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: OK at the rail step then Cancel at the Appearance step resolves false with the rail draft discarded and the Appearance draft kept 172ms
+   → H9 §7.4: rail first, then Appearance: expected [ Array(1) ] to deeply equal [ …(2) ]
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: Cancel at the rail step never asks the Appearance step 178ms
+   → H9 §7.4: only the rail confirm: expected [ Array(1) ] to deeply equal [ Array(1) ]
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.4 the rail sign-out confirmation in Chinese 184ms
+   → H9 §7.4: the ZH rail confirmation: expected [] to deeply equal [ '侧栏顺序更改尚未保存。仍要退出并放弃这项更改吗？' ]
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7 REL-09 a forced scope change from another document remounts the App: the committed order displays, no status, zero runtime errors 137ms
+   → H9 forced remount: the Topbar rail status for an unsaved rail order: expected null not to be null
+ ✓ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > PC §5.9 a Features toggle success, a toggle failure with Retry and Reset to defaults make zero attempts on xai_rail_order; the rail follows R 221ms
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §10.3 exactly one controller: Discard updates the rail and removes the status in the same frame 108ms
+   → H9 one controller: the Topbar rail status for an unsaved rail order: expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §10.7 every rail operation dispatches zero StorageEvents and zero preference-changed events, and every other key keeps its bytes 154ms
+   → H9: the status for the failed drop: expected null not to be null
+
+ Test Files  1 failed (1)
+      Tests  26 failed | 7 passed (33)
+   Start at  02:40:36
+   Duration  8.16s (transform 1.84s, setup 65ms, collect 2.66s, tests 4.93s, environment 223ms, prepare 83ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-BJyKF6/.report-host-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 A8 a pending-only first attempt shows no status; once it settles unsuccessful the status renders; a successful Retry removes it
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 the status is a native button with aria-expanded and aria-controls; pointer activation toggles the panel exactly once, keeps focus and touches no storage
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 Enter and Space on the status each toggle the panel exactly once
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 the panel follows the button in DOM order inside one status root, so Tab reaches Retry, Discard and Export next, then the appearance trigger
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 Escape closes the panel and returns focus to the status button
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 a mousedown outside the status root closes the panel; focus moves only when it was inside the panel
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 a keyboard Retry that succeeds unmounts the status and moves focus to .topbar-pref-trigger, never <body>
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 placement: the status root sits immediately after the Appearance status and before .topbar-pref
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 the status in Chinese: the draft accessible name and the panel name
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.1 with a failed draft a rail click and the Settings sidebar are not held; the status shows on every route; the draft is intact
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.1 Back and Forward with a failed draft are not held and land on the same history entries as an ordinary navigation
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.3 beforeunload warns while a failed rail draft exists, with zero storage attempts in the handler; it is removed after Discard
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: with a failed rail draft, Cancel resolves false: one rail confirm, identity intact, zero history mutations, the draft, status and warning kept
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: with a failed rail draft, OK discards it with zero writes and the existing sequence continues
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: with rail and Appearance drafts the confirm list is [rail, Appearance]; OK and OK proceeds
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: OK at the rail step then Cancel at the Appearance step resolves false with the rail draft discarded and the Appearance draft kept
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: Cancel at the rail step never asks the Appearance step
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: with a failed rail draft, Cancel resolves false: one rail confirm, identity intact, zero history mutations, the draft, status and warning kept
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: with a failed rail draft, OK discards it with zero writes and the existing sequence continues
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: with rail and Appearance drafts the confirm list is [rail, Appearance]; OK and OK proceeds
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: OK at the rail step then Cancel at the Appearance step resolves false with the rail draft discarded and the Appearance draft kept
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: Cancel at the rail step never asks the Appearance step
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.4 the rail sign-out confirmation in Chinese
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7 REL-09 a forced scope change from another document remounts the App: the committed order displays, no status, zero runtime errors
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > PC §5.9 a Features toggle success, a toggle failure with Retry and Reset to defaults make zero attempts on xai_rail_order; the rail follows R
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > PC §5.9 a Features toggle success, a toggle failure with Retry and Reset to defaults make zero attempts on xai_rail_order; the rail follows R
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §10.3 exactly one controller: Discard updates the rail and removes the status in the same frame
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §10.7 every rail operation dispatches zero StorageEvents and zero preference-changed events, and every other key keeps its bytes
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 26 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 A8 a pending-only first attempt shows no status; once it settles unsuccessful the status renders; a successful Retry removes it
+AssertionError: §7.3: the pending draft warns: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:115:52
+    113|   expect(raw(), "H6: the held lock keeps the bytes unchanged").toBe(en…
+    114|   expect(status(), "A8: a pending-only first attempt renders no status…
+    115|   expect(warns(), "§7.3: the pending draft warns").toBe(true);
+       |                                                    ^
+    116|   await lock.release();
+    117|   fired(quota, "the rail write after release");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 the status is a native button with aria-expanded and aria-controls; pointer activation toggles the panel exactly once, keeps focus and touches no storage
+AssertionError: H9 status button: the Topbar rail status for an unsaved rail order: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ railDraft docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:79:3
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:132:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 Enter and Space on the status each toggle the panel exactly once
+AssertionError: H9 keyboard: the Topbar rail status for an unsaved rail order: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ railDraft docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:79:3
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:158:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 the panel follows the button in DOM order inside one status root, so Tab reaches Retry, Discard and Export next, then the appearance trigger
+AssertionError: H9 tab order: the Topbar rail status for an unsaved rail order: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ railDraft docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:79:3
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:172:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 Escape closes the panel and returns focus to the status button
+AssertionError: H9 Escape: the Topbar rail status for an unsaved rail order: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ railDraft docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:79:3
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:191:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 a mousedown outside the status root closes the panel; focus moves only when it was inside the panel
+AssertionError: H9 outside mousedown: the Topbar rail status for an unsaved rail order: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ railDraft docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:79:3
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:203:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 a keyboard Retry that succeeds unmounts the status and moves focus to .topbar-pref-trigger, never <body>
+AssertionError: H9: the status: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:220:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 placement: the status root sits immediately after the Appearance status and before .topbar-pref
+AssertionError: H9 placement: the Topbar rail status for an unsaved rail order: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ railDraft docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:79:3
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:234:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.2 the status in Chinese: the draft accessible name and the panel name
+AssertionError: H9: "侧栏顺序未保存，点击查看。": expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:247:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.1 with a failed draft a rail click and the Settings sidebar are not held; the status shows on every route; the draft is intact
+AssertionError: H9 no route guard: the Topbar rail status for an unsaved rail order: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ railDraft docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:79:3
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:259:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.1 Back and Forward with a failed draft are not held and land on the same history entries as an ordinary navigation
+AssertionError: H9 Back/Forward: the Topbar rail status for an unsaved rail order: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ railDraft docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:79:3
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:276:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.3 beforeunload warns while a failed rail draft exists, with zero storage attempts in the handler; it is removed after Discard
+AssertionError: H9 §7.3: an unsaved rail order warns, with zero attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+
+- Expected
++ Received
+
+  {
+    "attempts": 0,
+-   "warned": true,
++   "warned": false,
+  }
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:294:92
+    292|   await failedDrop(X, [Y1]);
+    293|   const probe = unload();
+    294|   expect(probe, "H9 §7.3: an unsaved rail order warns, with zero attem…
+       |                                                                                            ^
+    295|   fireEvent.click(panelAction("discard", "Discard"));
+    296|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: with a failed rail draft, Cancel resolves false: one rail confirm, identity intact, zero history mutations, the draft, status and warning kept
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: with a failed rail draft, Cancel resolves false: one rail confirm, identity intact, zero history mutations, the draft, status and warning kept
+AssertionError: H9 §7.4: exactly one confirm with the rail text: expected [] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+- [
+-   "Your sidebar order change is not saved. Sign out and discard it?",
+- ]
++ []
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:354:80
+    352|     confirmer.answer = false;
+    353|     await signOut();
+    354|     expect(confirmer.calls, "H9 §7.4: exactly one confirm with the rai…
+       |                                                                                ^
+    355|     expect(signedOut(branch), "§7.4 Cancel: nothing is invalidated or …
+    356|     expect(accountScope.capture(), "identity intact").toBe(scope);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: with a failed rail draft, OK discards it with zero writes and the existing sequence continues
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: with a failed rail draft, OK discards it with zero writes and the existing sequence continues
+AssertionError: H9 §7.4: exactly one confirm with the rail text: expected [] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+- [
+-   "Your sidebar order change is not saved. Sign out and discard it?",
+- ]
++ []
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:370:80
+    368|     confirmer.answer = true;
+    369|     await signOut();
+    370|     expect(confirmer.calls, "H9 §7.4: exactly one confirm with the rai…
+       |                                                                                ^
+    371|     expect(railWrites(from), "§7.4 OK: zero set or remove attempts").t…
+    372|     expect(signedOut(branch), "§7.4 OK: the existing sequence continue…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: with rail and Appearance drafts the confirm list is [rail, Appearance]; OK and OK proceeds
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: with rail and Appearance drafts the confirm list is [rail, Appearance]; OK and OK proceeds
+AssertionError: H9 §7.4: rail first, then Appearance: expected [ Array(1) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "Your sidebar order change is not saved. Sign out and discard it?",
+    "Some appearance changes are not saved. Sign out and discard them?",
+  ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:384:69
+    382|     confirmer.answers.push(true, true);
+    383|     await signOut();
+    384|     expect(confirmer.calls, "H9 §7.4: rail first, then Appearance").to…
+       |                                                                     ^
+    385|     expect(signedOut(branch), "OK and OK proceeds").toStrictEqual({ re…
+    386|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: OK at the rail step then Cancel at the Appearance step resolves false with the rail draft discarded and the Appearance draft kept
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: OK at the rail step then Cancel at the Appearance step resolves false with the rail draft discarded and the Appearance draft kept
+AssertionError: H9 §7.4: rail first, then Appearance: expected [ Array(1) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "Your sidebar order change is not saved. Sign out and discard it?",
+    "Some appearance changes are not saved. Sign out and discard them?",
+  ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:396:69
+    394|     confirmer.answers.push(true, false);
+    395|     await signOut();
+    396|     expect(confirmer.calls, "H9 §7.4: rail first, then Appearance").to…
+       |                                                                     ^
+    397|     expect(signedOut(branch), "the Appearance Cancel stops sign-out").…
+    398|     expect(railWrites(from), "the rail discard made zero writes").toEq…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out fallback branch > H9 §7.4 fallback: Cancel at the rail step never asks the Appearance step
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > sign-out coordinator branch > H9 §7.4 coordinator: Cancel at the rail step never asks the Appearance step
+AssertionError: H9 §7.4: only the rail confirm: expected [ Array(1) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+-   "Your sidebar order change is not saved. Sign out and discard it?",
++   "Some appearance changes are not saved. Sign out and discard them?",
+  ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:411:63
+    409|     confirmer.answers.push(false);
+    410|     await signOut();
+    411|     expect(confirmer.calls, "H9 §7.4: only the rail confirm").toEqual(…
+       |                                                               ^
+    412|     expect(appearanceStatus(), "the Appearance draft is untouched").no…
+    413|     expect(status(), "the rail draft is kept").not.toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7.4 the rail sign-out confirmation in Chinese
+AssertionError: H9 §7.4: the ZH rail confirmation: expected [] to deeply equal [ '侧栏顺序更改尚未保存。仍要退出并放弃这项更改吗？' ]
+
+- Expected
++ Received
+
+- [
+-   "侧栏顺序更改尚未保存。仍要退出并放弃这项更改吗？",
+- ]
++ []
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:426:64
+    424|   confirmer.answer = false;
+    425|   await signOut("zh");
+    426|   expect(confirmer.calls, "H9 §7.4: the ZH rail confirmation").toEqual…
+       |                                                                ^
+    427|   expect(railIds(), "the draft is kept after Cancel").toEqual(order);
+    428| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §7 REL-09 a forced scope change from another document remounts the App: the committed order displays, no status, zero runtime errors
+AssertionError: H9 forced remount: the Topbar rail status for an unsaved rail order: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ railDraft docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:79:3
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:436:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §10.3 exactly one controller: Discard updates the rail and removes the status in the same frame
+AssertionError: H9 one controller: the Topbar rail status for an unsaved rail order: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ railDraft docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:79:3
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:493:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/26]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/host.test.tsx > H9 §10.7 every rail operation dispatches zero StorageEvents and zero preference-changed events, and every other key keeps its bytes
+AssertionError: H9: the status for the failed drop: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ docs/reviews/web-apprail-order-recovery-sol/host.test.tsx:513:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/26]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-BJyKF6","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-BJyKF6/.apprail-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-BJyKF6/packages/xai-web-shell/src/__tests__/setup.ts"],"include":["docs/reviews/web-apprail-order-recovery-sol/host.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/registry.tsx packages/xai-web-shell/src/internal/dnd.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=625 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=10 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=33 passed=7 failed=26 skipped=0 precondition_failures=0
+harness PASS [host.test.tsx] JSON report parsed
+harness PASS [host.test.tsx] reported files equal the requested include
+harness PASS [host.test.tsx] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-shell/src/__tests__/setup.ts], root = archive)
+harness PASS [host.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [host.test.tsx] required product modules loaded from the archive (27)
+harness PASS [host.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 PASSED | PC A8 no status and no unload warning in a clean state
+case 003 FAILED | H9 A8 a pending-only first attempt shows no status; once it settles unsuccessful the status renders; a successful Retry removes it
+    first: AssertionError: §7.3: the pending draft warns: expected false to be true // Object.is equality
+case 004 FAILED | H9 §7.2 the status is a native button with aria-expanded and aria-controls; pointer activation toggles the panel exactly once, keeps focus and touches no storage
+    first: AssertionError: H9 status button: the Topbar rail status for an unsaved rail order: expected null not to be null
+case 005 FAILED | H9 §7.2 Enter and Space on the status each toggle the panel exactly once
+    first: AssertionError: H9 keyboard: the Topbar rail status for an unsaved rail order: expected null not to be null
+case 006 FAILED | H9 §7.2 the panel follows the button in DOM order inside one status root, so Tab reaches Retry, Discard and Export next, then the appearance trigger
+    first: AssertionError: H9 tab order: the Topbar rail status for an unsaved rail order: expected null not to be null
+case 007 FAILED | H9 §7.2 Escape closes the panel and returns focus to the status button
+    first: AssertionError: H9 Escape: the Topbar rail status for an unsaved rail order: expected null not to be null
+case 008 FAILED | H9 §7.2 a mousedown outside the status root closes the panel; focus moves only when it was inside the panel
+    first: AssertionError: H9 outside mousedown: the Topbar rail status for an unsaved rail order: expected null not to be null
+case 009 FAILED | H9 §7.2 a keyboard Retry that succeeds unmounts the status and moves focus to .topbar-pref-trigger, never <body>
+    first: AssertionError: H9: the status: expected null not to be null
+case 010 FAILED | H9 §7.2 placement: the status root sits immediately after the Appearance status and before .topbar-pref
+    first: AssertionError: H9 placement: the Topbar rail status for an unsaved rail order: expected null not to be null
+case 011 FAILED | H9 §7.2 the status in Chinese: the draft accessible name and the panel name
+    first: AssertionError: H9: "侧栏顺序未保存，点击查看。": expected null not to be null
+case 012 FAILED | H9 §7.1 with a failed draft a rail click and the Settings sidebar are not held; the status shows on every route; the draft is intact
+    first: AssertionError: H9 no route guard: the Topbar rail status for an unsaved rail order: expected null not to be null
+case 013 FAILED | H9 §7.1 Back and Forward with a failed draft are not held and land on the same history entries as an ordinary navigation
+    first: AssertionError: H9 Back/Forward: the Topbar rail status for an unsaved rail order: expected null not to be null
+case 014 FAILED | H9 §7.3 beforeunload warns while a failed rail draft exists, with zero storage attempts in the handler; it is removed after Discard
+    first: AssertionError: H9 §7.3: an unsaved rail order warns, with zero attempts in the handler: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+case 015 PASSED | sign-out fallback branch PC §7.4 fallback: without drafts sign-out makes zero confirm calls and completes as at 419e56d
+case 016 PASSED | sign-out fallback branch PC §7.4 fallback: with an Appearance draft only, the confirm list is exactly the Appearance text
+case 017 FAILED | sign-out fallback branch H9 §7.4 fallback: with a failed rail draft, Cancel resolves false: one rail confirm, identity intact, zero history mutations, the draft, status and warning kept
+    first: AssertionError: H9 §7.4: exactly one confirm with the rail text: expected [] to deeply equal [ Array(1) ]
+case 018 FAILED | sign-out fallback branch H9 §7.4 fallback: with a failed rail draft, OK discards it with zero writes and the existing sequence continues
+    first: AssertionError: H9 §7.4: exactly one confirm with the rail text: expected [] to deeply equal [ Array(1) ]
+case 019 FAILED | sign-out fallback branch H9 §7.4 fallback: with rail and Appearance drafts the confirm list is [rail, Appearance]; OK and OK proceeds
+    first: AssertionError: H9 §7.4: rail first, then Appearance: expected [ Array(1) ] to deeply equal [ …(2) ]
+case 020 FAILED | sign-out fallback branch H9 §7.4 fallback: OK at the rail step then Cancel at the Appearance step resolves false with the rail draft discarded and the Appearance draft kept
+    first: AssertionError: H9 §7.4: rail first, then Appearance: expected [ Array(1) ] to deeply equal [ …(2) ]
+case 021 FAILED | sign-out fallback branch H9 §7.4 fallback: Cancel at the rail step never asks the Appearance step
+    first: AssertionError: H9 §7.4: only the rail confirm: expected [ Array(1) ] to deeply equal [ Array(1) ]
+case 022 PASSED | sign-out coordinator branch PC §7.4 coordinator: without drafts sign-out makes zero confirm calls and completes as at 419e56d
+case 023 PASSED | sign-out coordinator branch PC §7.4 coordinator: with an Appearance draft only, the confirm list is exactly the Appearance text
+case 024 FAILED | sign-out coordinator branch H9 §7.4 coordinator: with a failed rail draft, Cancel resolves false: one rail confirm, identity intact, zero history mutations, the draft, status and warning kept
+    first: AssertionError: H9 §7.4: exactly one confirm with the rail text: expected [] to deeply equal [ Array(1) ]
+case 025 FAILED | sign-out coordinator branch H9 §7.4 coordinator: with a failed rail draft, OK discards it with zero writes and the existing sequence continues
+    first: AssertionError: H9 §7.4: exactly one confirm with the rail text: expected [] to deeply equal [ Array(1) ]
+case 026 FAILED | sign-out coordinator branch H9 §7.4 coordinator: with rail and Appearance drafts the confirm list is [rail, Appearance]; OK and OK proceeds
+    first: AssertionError: H9 §7.4: rail first, then Appearance: expected [ Array(1) ] to deeply equal [ …(2) ]
+case 027 FAILED | sign-out coordinator branch H9 §7.4 coordinator: OK at the rail step then Cancel at the Appearance step resolves false with the rail draft discarded and the Appearance draft kept
+    first: AssertionError: H9 §7.4: rail first, then Appearance: expected [ Array(1) ] to deeply equal [ …(2) ]
+case 028 FAILED | sign-out coordinator branch H9 §7.4 coordinator: Cancel at the rail step never asks the Appearance step
+    first: AssertionError: H9 §7.4: only the rail confirm: expected [ Array(1) ] to deeply equal [ Array(1) ]
+case 029 FAILED | H9 §7.4 the rail sign-out confirmation in Chinese
+    first: AssertionError: H9 §7.4: the ZH rail confirmation: expected [] to deeply equal [ '侧栏顺序更改尚未保存。仍要退出并放弃这项更改吗？' ]
+case 030 FAILED | H9 §7 REL-09 a forced scope change from another document remounts the App: the committed order displays, no status, zero runtime errors
+    first: AssertionError: H9 forced remount: the Topbar rail status for an unsaved rail order: expected null not to be null
+case 031 PASSED | PC §5.9 a Features toggle success, a toggle failure with Retry and Reset to defaults make zero attempts on xai_rail_order; the rail follows R
+case 032 FAILED | H9 §10.3 exactly one controller: Discard updates the rail and removes the status in the same frame
+    first: AssertionError: H9 one controller: the Topbar rail status for an unsaved rail order: expected null not to be null
+case 033 FAILED | H9 §10.7 every rail operation dispatches zero StorageEvents and zero preference-changed events, and every other key keeps its bytes
+    first: AssertionError: H9: the status for the failed drop: expected null not to be null

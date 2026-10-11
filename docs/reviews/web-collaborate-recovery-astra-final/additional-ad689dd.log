@@ -1,0 +1,11 @@
+revision=ad689dd fixed_commit=ad689ddb6281e7dd879b618570d1a28277f184b7
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-svWEPL
+
+ ✓ docs/reviews/web-collaborate-recovery-astra-final/additional.test.tsx (5 tests) 139ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  23:36:12
+   Duration  1.23s (transform 294ms, setup 0ms, collect 499ms, tests 139ms, environment 281ms, prepare 68ms)

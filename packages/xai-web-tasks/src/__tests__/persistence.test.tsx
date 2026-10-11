@@ -1,3 +1,4 @@
+import { accountScope, getPref } from "@repo/plugin-web-storage";
 /**
  * persistence.test.tsx — T-PER-1..3 + T-CR-1..3 + T-PER-DONE-1..2 + T-FILT-COUNT
  *
@@ -25,7 +26,7 @@ describe("TasksModule persistence", () => {
   });
 
   // T-PER-2: after a DnD move, localStorage round-trips a valid JSON array
-  it("T-PER-2: after DnD move, localStorage xai_task_cols is a JSON array with updated cols", () => {
+  it("T-PER-2: after DnD move, localStorage xai_task_cols is a JSON array with updated cols", async () => {
     render(<TasksModule lang="en" />);
 
     const cols = document.querySelectorAll(".task-col");
@@ -43,10 +44,11 @@ describe("TasksModule persistence", () => {
 
     fireEvent.dragStart(firstCard, { dataTransfer });
     fireEvent.drop(nodateCol, { dataTransfer, preventDefault: () => {} });
+    await act(async () => {});
 
-    const raw = localStorage.getItem("xai_task_cols");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(raw).not.toBeNull();
-    const parsed = JSON.parse(raw!) as unknown[];
+    const parsed = getPref("xai_task_cols") as unknown as unknown[];
     expect(Array.isArray(parsed)).toBe(true);
     expect(parsed).toHaveLength(4);
     // First element is overdue — should have 9 tasks (10 - 1 moved)
@@ -57,7 +59,7 @@ describe("TasksModule persistence", () => {
 
   // T-PER-3: pre-seeded bogus localStorage → falls back to seed + DEV warn
   it("T-PER-3: bogus localStorage falls back to seed + console.warn fired once", () => {
-    localStorage.setItem("xai_task_cols", "{bogus}");
+    localStorage.setItem(accountScope.physicalKey("xai_task_cols"), "{bogus}");
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     render(<TasksModule lang="en" />);
@@ -81,7 +83,7 @@ describe("TasksModule persistence", () => {
 
 describe("TasksModule create flow + persistence (T-CR)", () => {
   // T-CR-1: open composer → type title → Save → card at top of column + localStorage round-trip
-  it("T-CR-1: create card → appears at top of target column + localStorage round-trips it", () => {
+  it("T-CR-1: create card → appears at top of target column + localStorage round-trips it", async () => {
     render(<TasksModule lang="en" />);
 
     // Find the first + button (action="add" column)
@@ -107,6 +109,7 @@ describe("TasksModule create flow + persistence (T-CR)", () => {
     act(() => {
       fireEvent.click(saveBtn);
     });
+    await act(async () => {});
 
     // Card should appear in the task columns
     const allCards = document.querySelectorAll(".task-card");
@@ -114,9 +117,9 @@ describe("TasksModule create flow + persistence (T-CR)", () => {
     expect(cardTitles).toContain("My new task");
 
     // localStorage should have been updated with a valid array
-    const raw = localStorage.getItem("xai_task_cols");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(raw).not.toBeNull();
-    const parsed = JSON.parse(raw!) as unknown[];
+    const parsed = getPref("xai_task_cols") as unknown as unknown[];
     expect(Array.isArray(parsed)).toBe(true);
     expect(parsed).toHaveLength(4);
 
@@ -128,7 +131,7 @@ describe("TasksModule create flow + persistence (T-CR)", () => {
   });
 
   // T-CR-2: create into a bucket → card appears; count reflects +1
-  it("T-CR-2: create card → card prepended and column count +1", () => {
+  it("T-CR-2: create card → card prepended and column count +1", async () => {
     render(<TasksModule lang="en" />);
 
     // Find the first + button
@@ -155,6 +158,7 @@ describe("TasksModule create flow + persistence (T-CR)", () => {
     act(() => {
       fireEvent.click(saveBtn);
     });
+    await act(async () => {});
 
     // Count in the column header should be +1
     const newCount = parseInt(countEl?.textContent ?? "0", 10);
@@ -175,9 +179,10 @@ describe("TasksModule create flow + persistence (T-CR)", () => {
 
     const saveBtn = dialog!.querySelector('.task-composer__btn--primary') as HTMLElement;
     act(() => { fireEvent.click(saveBtn); });
+    await act(async () => {});
 
     // Verify it's in localStorage before unmount
-    const raw = localStorage.getItem("xai_task_cols");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(raw).not.toBeNull();
 
     // Unmount the module (simulates navigation away)
@@ -199,7 +204,7 @@ describe("TasksModule create flow + persistence (T-CR)", () => {
 
 describe("TasksModule completion persistence (T-PER-DONE)", () => {
   // T-PER-DONE-1: toggle a card's checkbox → localStorage xai_task_cols round-trips done:true
-  it("T-PER-DONE-1: click checkbox → localStorage round-trips with done:true for that card", () => {
+  it("T-PER-DONE-1: click checkbox → localStorage round-trips with done:true for that card", async () => {
     render(<TasksModule lang="en" />);
 
     // Find the first task card checkbox in the overdue column
@@ -215,14 +220,15 @@ describe("TasksModule completion persistence (T-PER-DONE)", () => {
     act(() => {
       fireEvent.click(checkbox);
     });
+    await act(async () => {});
 
     // Card should have is-completed class after toggle
     expect(firstCard.classList.contains("is-completed")).toBe(true);
 
     // localStorage must now contain done:true for that card
-    const raw = localStorage.getItem("xai_task_cols");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(raw).not.toBeNull();
-    const parsed = JSON.parse(raw!) as Array<{ id: string; tasks: Array<{ id: string; done?: boolean }> }>;
+    const parsed = getPref("xai_task_cols") as unknown as Array<{ id: string; tasks: Array<{ id: string; done?: boolean }> }>;
     expect(Array.isArray(parsed)).toBe(true);
     const overdueParsed = parsed.find((c) => c.id === "overdue");
     expect(overdueParsed).toBeTruthy();
@@ -233,7 +239,7 @@ describe("TasksModule completion persistence (T-PER-DONE)", () => {
   });
 
   // T-PER-DONE-2: toggle → unmount → re-mount → card still shows is-completed (refresh-survival)
-  it("T-PER-DONE-2: toggled card shows is-completed after unmount + re-mount (simulates page reload)", () => {
+  it("T-PER-DONE-2: toggled card shows is-completed after unmount + re-mount (simulates page reload)", async () => {
     const { unmount } = render(<TasksModule lang="en" />);
 
     // Toggle the first card in the overdue column
@@ -245,11 +251,12 @@ describe("TasksModule completion persistence (T-PER-DONE)", () => {
     act(() => {
       fireEvent.click(checkbox);
     });
+    await act(async () => {});
 
     // Verify written to localStorage before unmount
-    const raw = localStorage.getItem("xai_task_cols");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(raw).not.toBeNull();
-    const parsed = JSON.parse(raw!) as Array<{ id: string; tasks: Array<{ id: string; done?: boolean }> }>;
+    const parsed = getPref("xai_task_cols") as unknown as Array<{ id: string; tasks: Array<{ id: string; done?: boolean }> }>;
     const toggledCardId = parsed.find((c) => c.id === "overdue")!.tasks[0]!.id;
     expect(parsed.find((c) => c.id === "overdue")!.tasks[0]!.done).toBe(true);
 
@@ -291,7 +298,7 @@ describe("filterCardsByList — T-FILT-COUNT storage byte-identical (FP2)", () =
     render(<TasksModule lang="en" />);
 
     // Capture the localStorage state BEFORE applying filters (may be null on fresh render)
-    const snapshotBefore = localStorage.getItem("xai_task_cols");
+    const snapshotBefore = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
 
     // Apply all 6 smart-list filters in sequence via the pure selector (no DOM interaction)
     const cols = JSON.parse(JSON.stringify(SEED_TASK_COLS)) as Parameters<typeof filterCardsByList>[0];
@@ -301,11 +308,11 @@ describe("filterCardsByList — T-FILT-COUNT storage byte-identical (FP2)", () =
     }
 
     // localStorage must be byte-identical to before (the selector wrote nothing)
-    const snapshotAfter = localStorage.getItem("xai_task_cols");
+    const snapshotAfter = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(snapshotAfter).toBe(snapshotBefore);
   });
 
-  it("T-FILT-COUNT: persisted xai_task_cols count field is not mutated after applying filters", () => {
+  it("T-FILT-COUNT: persisted xai_task_cols count field is not mutated after applying filters", async () => {
     // Perform a DnD to get something written to localStorage
     render(<TasksModule lang="en" />);
 
@@ -323,9 +330,10 @@ describe("filterCardsByList — T-FILT-COUNT storage byte-identical (FP2)", () =
     };
     fireEvent.dragStart(firstCard, { dataTransfer });
     fireEvent.drop(nodateCol, { dataTransfer, preventDefault: () => {} });
+    await act(async () => {});
 
     // Capture localStorage after the DnD write
-    const rawAfterDnd = localStorage.getItem("xai_task_cols");
+    const rawAfterDnd = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(rawAfterDnd).not.toBeNull();
 
     // Apply all filters — localStorage must stay identical
@@ -334,6 +342,6 @@ describe("filterCardsByList — T-FILT-COUNT storage byte-identical (FP2)", () =
       filterCardsByList(colsForFilter, list);
     }
 
-    expect(localStorage.getItem("xai_task_cols")).toBe(rawAfterDnd);
+    expect(localStorage.getItem(accountScope.physicalKey("xai_task_cols"))).toBe(rawAfterDnd);
   });
 });

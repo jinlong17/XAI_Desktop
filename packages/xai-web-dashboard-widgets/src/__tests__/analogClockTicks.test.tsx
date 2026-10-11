@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * AC-ANALOG-1..5: analog clock SVG renders 60 minor + 12 major + 12 numerals + 3 hands.
  *
@@ -11,7 +12,7 @@ import { ClockWidget } from "../widgets/ClockWidget.js";
 
 beforeEach(() => {
   try {
-    localStorage.setItem("xai_clock_style", "analog");
+    localStorage.setItem(accountScope.physicalKey("xai_clock_style"), "analog");
   } catch {
     /* ignore */
   }

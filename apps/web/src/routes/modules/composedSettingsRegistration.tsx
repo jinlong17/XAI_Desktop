@@ -21,6 +21,8 @@ import { SectionBlock } from "@repo/plugin-web-settings-shell";
 import type { Pane, SettingsPaneId } from "@repo/plugin-web-settings-shell";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { composeSettingsPaneRegistry } from "./settingsPaneComposition.js";
+import { registerDepartureDelegate } from "./settingsDeparture.js";
+import { DepartureCoordinator } from "./departureCoordinator.js";
 
 // ---- ComposedSettingsModule -------------------------------------------------
 
@@ -54,24 +56,11 @@ function ComposedSettingsModule(): React.ReactElement {
   const location = useLocation();
   const urlSplat = params["*"];
 
-  const [active, setActive] = React.useState<SettingsPaneId>(() =>
-    resolveInitialPane(urlSplat, composed),
-  );
-
-  // URL → state sync (browser back/forward, deep-link navigation).
-  React.useEffect(() => {
-    const next = resolveInitialPane(urlSplat, composed);
-    if (next !== active) {
-      setActive(next);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlSplat]);
-
+  const active = resolveInitialPane(urlSplat, composed);
   // State → URL sync (sidebar click). Default "account" maps to clean
   // `/app/settings` (no splat) so the landing URL stays shareable.
   const handleSelect = React.useCallback(
     (next: SettingsPaneId) => {
-      setActive(next);
       const targetPath =
         next === "account" ? "/app/settings" : `/app/settings/${next}`;
       if (location.pathname !== targetPath) {
@@ -83,36 +72,41 @@ function ComposedSettingsModule(): React.ReactElement {
 
   const activePane = composed.find((p) => p.id === active) ?? composed[0]!;
   const { s } = useI18n(lang);
-
   return (
     <div className="module module-settings">
       <div className="settings-shell panel">
-        <aside className="settings-sidebar">
-          <h2 className="settings-h">{s("settings.title")}</h2>
-          <SectionBlock>
-            {composed.map((p) => (
-              <div
-                key={p.id}
-                className="list-row"
-                data-active={active === p.id ? "true" : "false"}
-                role="button"
-                tabIndex={0}
-                onClick={() => handleSelect(p.id)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    handleSelect(p.id);
-                  }
-                }}
-              >
-                <span className="grow">{s(p.i18nKey)}</span>
-              </div>
-            ))}
-          </SectionBlock>
-        </aside>
-        <section className="settings-detail" data-pane={activePane.id}>
-          {activePane.render({ lang })}
-        </section>
+        <DepartureCoordinator lang={lang} registerSignOutDelegate={registerDepartureDelegate}>
+          {({ registerDepartureGuard, isDeparturePending }) => (
+            <>
+              <aside className="settings-sidebar">
+                <h2 className="settings-h">{s("settings.title")}</h2>
+                <SectionBlock>
+                  {composed.map((p) => (
+                    <div
+                      key={p.id}
+                      className="list-row"
+                      data-active={active === p.id ? "true" : "false"}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => { if (!isDeparturePending()) handleSelect(p.id); }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          if (!isDeparturePending()) handleSelect(p.id);
+                        }
+                      }}
+                    >
+                      <span className="grow">{s(p.i18nKey)}</span>
+                    </div>
+                  ))}
+                </SectionBlock>
+              </aside>
+              <section className="settings-detail" data-pane={activePane.id}>
+                {activePane.render({ lang, registerDepartureGuard })}
+              </section>
+            </>
+          )}
+        </DepartureCoordinator>
       </div>
     </div>
   );

@@ -1,10 +1,19 @@
 /**
  * ST1..ST10 — stickyPane tests (test.md §3 P3)
  */
-import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { afterEach, beforeEach, describe, it, expect } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { stickyPane } from "../panes/stickyPane.js";
 import { getPref } from "@repo/plugin-web-storage";
+import { createSmartListsLockManager } from "./smartListsLockFixture.js";
+
+// jsdom has no Web Locks; the Sticky writes hold the real per-key lock.
+beforeEach(() => {
+  Object.defineProperty(navigator, "locks", { configurable: true, value: createSmartListsLockManager() });
+});
+afterEach(() => {
+  delete (navigator as unknown as { locks?: unknown }).locks;
+});
 
 describe("stickyPane", () => {
   it("ST1: renders without error", () => {
@@ -48,14 +57,14 @@ describe("stickyPane", () => {
     }
   });
 
-  it("ST6: clicking a swatch persists xai_pref_sticky_color", () => {
+  it("ST6: clicking a swatch persists xai_pref_sticky_color", async () => {
     const { container } = render(stickyPane.render({ lang: "en" }));
     const mintSwatch = container.querySelector<HTMLButtonElement>(
       '[data-color-id="mint"]',
     );
     expect(mintSwatch).not.toBeNull();
     fireEvent.click(mintSwatch!);
-    expect(getPref("xai_pref_sticky_color")).toBe("mint");
+    await waitFor(() => expect(getPref("xai_pref_sticky_color")).toBe("mint"));
   });
 
   it("ST7: 4 spacing buttons rendered", () => {
@@ -64,14 +73,14 @@ describe("stickyPane", () => {
     expect(spacingBtns.length).toBe(4);
   });
 
-  it("ST8: clicking a spacing button persists xai_pref_sticky_grid_spacing", () => {
+  it("ST8: clicking a spacing button persists xai_pref_sticky_grid_spacing", async () => {
     const { container } = render(stickyPane.render({ lang: "en" }));
     const xlBtn = container.querySelector<HTMLButtonElement>(
       '[data-spacing-id="xl"]',
     );
     expect(xlBtn).not.toBeNull();
     fireEvent.click(xlBtn!);
-    expect(getPref("xai_pref_sticky_grid_spacing")).toBe("xl");
+    await waitFor(() => expect(getPref("xai_pref_sticky_grid_spacing")).toBe("xl"));
   });
 
   it("ST9: bilingual — ZH font size options", () => {

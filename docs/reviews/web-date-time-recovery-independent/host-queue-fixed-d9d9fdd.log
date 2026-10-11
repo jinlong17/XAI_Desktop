@@ -1,0 +1,11 @@
+revision=d9d9fdd fixed_commit=d9d9fdde211e19fc258f97e7184a8ee77338d80c
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-bT5fY5
+
+ ✓ docs/reviews/web-date-time-recovery-independent/host.test.tsx (8 tests) 641ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  05:07:26
+   Duration  12.72s (transform 6.43s, setup 0ms, collect 10.53s, tests 641ms, environment 711ms, prepare 252ms)

@@ -29,6 +29,7 @@ export interface AddWidgetPickerProps {
   /** Current order — used to filter out already-added ids (hide pattern per C1). */
   readonly currentOrder: readonly string[];
   /** Called when the user picks a widget. DashboardModule calls addWidget + emits + closes. */
+  readonly recovery?: React.ReactNode;
   readonly onAdd: (widgetId: string) => void;
   /** Called when the user cancels (ESC, backdrop click, Cancel button). */
   readonly onClose: () => void;
@@ -159,6 +160,7 @@ export function AddWidgetPicker({
   currentOrder,
   onAdd,
   onClose,
+  recovery,
 }: AddWidgetPickerProps): React.ReactElement {
   const dialogRef = React.useRef<HTMLDialogElement>(null);
   const { s } = useI18n(lang);
@@ -225,6 +227,7 @@ export function AddWidgetPicker({
           {s("dashboard.picker.title")}
         </h2>
 
+        {recovery}
         {allAdded ? (
           <div className="awp-empty">
             <div className="awp-empty__title">{s("dashboard.picker.all_added_title")}</div>

@@ -1,0 +1,11 @@
+$ pnpm --filter @repo/plugin-web-settings-appearance run typecheck
+# cwd: /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4249842bc08beeb0
+# HEAD: 419e56de9f23e4467fea806fbd4a990e1f429941
+# started: 2026-10-05T18:12:34Z
+
+
+> @repo/plugin-web-settings-appearance@0.0.0 typecheck /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4249842bc08beeb0/packages/xai-web-settings-appearance
+> tsc --noEmit
+
+
+# exit: 0

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, type PropsWithChildren } from "react";
+import { useCallback, useEffect, useMemo, useSyncExternalStore, type PropsWithChildren } from "react";
 import {
   DeviceSessionBridge,
   useDeviceBoundFetch,
@@ -7,7 +7,21 @@ import {
   createRestRpcDeviceTransport
 } from "@repo/web-auth-device-session/web";
 
+import { accountScope } from "@repo/plugin-web-storage";
+import { AccountDeletionRecoveryNotice } from "@repo/plugin-web-settings-rest";
+import { invalidateAccountIdentity } from "./AccountStorageGate.js";
+
 type WebAuthMode = "live" | "mock-authenticated" | "mock-unauthenticated";
+
+function AccountDeletionRecoveryBridge() {
+  const { coordinator } = useWebAuthSession();
+  const clearAuth = useCallback(async (captured: { generation: string; owner: string }) => {
+    if (!coordinator) throw new Error('Authentication cleanup is unavailable');
+    const result = await coordinator.signOut(captured, { remote: false });
+    if (result.status === 'failed' || result.local.status !== 'applied') throw new Error(result.reason ?? 'Authentication cleanup failed');
+  }, [coordinator]);
+  return <AccountDeletionRecoveryNotice clearAuth={clearAuth} />;
+}
 type MockAuthSession = {
   access_token: string;
   refresh_token: string;
@@ -341,6 +355,7 @@ function TodoWebRuntimeBridge({
   supabaseUrl
 }: PropsWithChildren<{ supabaseAnonKey?: string; supabaseUrl?: string }>) {
   const { state, session, deviceId, syncVersion } = useWebAuthSession();
+  const scope = useSyncExternalStore(accountScope.subscribe, accountScope.capture, accountScope.capture);
   const deviceBoundFetch = useDeviceBoundFetch();
 
   const sessionFetch = useMemo(() => {
@@ -359,6 +374,12 @@ function TodoWebRuntimeBridge({
     };
 
     const accountId = typeof session?.user?.id === "string" ? session.user.id : undefined;
+    if (scope.kind === "locked" || scope.accountId !== accountId || state !== "authenticated") {
+      delete runtime.__XAI_WEB_TODO_SESSION__;
+      delete runtime.__XAI_WEB_TODO_CRYPTO__;
+      emitTodoRuntimeUpdated();
+      return () => { active = false; };
+    }
     const baseFetchSync = deviceBoundFetch ?? sessionFetch ?? undefined;
     const fetchSync = baseFetchSync
       ? createTodoScopedFetch(baseFetchSync, { accountId, supabaseAnonKey, supabaseUrl })
@@ -382,7 +403,7 @@ function TodoWebRuntimeBridge({
           keyId: cryptoSnapshot.keyId
         })
           .then((lease) => {
-            if (!active) {
+            if (!active || accountScope.capture() !== scope) {
               return;
             }
             runtime.__XAI_WEB_TODO_CRYPTO__ = {
@@ -401,7 +422,7 @@ function TodoWebRuntimeBridge({
     return () => {
       active = false;
     };
-  }, [deviceBoundFetch, deviceId, session, sessionFetch, state, supabaseAnonKey, supabaseUrl]);
+  }, [deviceBoundFetch, deviceId, session, sessionFetch, state, supabaseAnonKey, supabaseUrl, scope]);
 
   return children;
 }
@@ -426,7 +447,7 @@ function resolveWebSupabaseConfig() {
 
 export function AppProviders({ children }: PropsWithChildren) {
   const authMode = resolveWebAuthMode();
-  const config = resolveWebSupabaseConfig();
+  const config = useMemo(() => resolveWebSupabaseConfig(), []);
   const mockSession = authMode === "mock-authenticated" ? createMockSession() : null;
   const mockClient = useMemo<MockSupabaseLikeClient | null>(
     () => (authMode === "live" ? null : createMockSupabaseClient(mockSession)),
@@ -443,7 +464,8 @@ export function AppProviders({ children }: PropsWithChildren) {
   );
 
   return (
-    <WebAuthSessionProvider client={mockClient as never} config={authMode === "live" ? config : null}>
+    <WebAuthSessionProvider client={mockClient as never} config={authMode === "live" ? config : null} onIdentityChange={invalidateAccountIdentity}>
+      <AccountDeletionRecoveryBridge />
       {transport ? (
         <DeviceSessionBridge transport={transport}>
           <TodoWebRuntimeBridge supabaseAnonKey={config?.anonKey} supabaseUrl={config?.url}>

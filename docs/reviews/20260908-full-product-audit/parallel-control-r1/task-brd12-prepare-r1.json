@@ -1,0 +1,43 @@
+{
+  "id": "BRD-12/PREPARE",
+  "workflow": "C",
+  "module": "web",
+  "role": "fresh source-grounded complete original-obligation contract preparation",
+  "model": "gpt-6-astra",
+  "fixed_input": "1955d250a7b33cde0f51c09c5836822f92bd0807",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "allowed_files": [
+    "docs/reviews/audit-parallel-brd12-preparation-r1/contract.md",
+    "docs/reviews/audit-parallel-brd12-preparation-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Preserve full original BRD12 action Checklist legacy-count migration and Done automatic checking semantics: no fabricated Item1 titles, auto-check explainable and reversible; original full312/933 exact record and all actual editor/CardDetail/types/store/test/design/source closure bound",
+    "Use explicit existing owner/design and migration rules first; distinguish legacy count-only data, true titles/identity, real Done transition/undo/persistence/provenance and intended behavior from synthetic tests. If unresolved actual behavior choice minimal alternatives and affected rows frozen, no guessed defaults or destructive repair",
+    "Full-source contract before/fixed rawdata preservation/errors/recovery/actualhost/account/migration/source/visual/trustednative/affected dependencies and all judgingcopy G1/regressions/vendor/freshacceptance/rootreconcile/inventory. Exact proposed product allowlist/protected sharedsources/CSS/semanticlocks; no productwrite yet",
+    "Permanent actual running-unit history mapping and original cap3 including refusals; source-bound novel purpose distinct from renamed old unit, unknown historical count never0; fullinputmanifest/staticproposal requires freshreview, no runtime or caller acceptance"
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/sharedsources/tests/CSS/config/lockfile",
+    "originalcontracts/runners/failures/otherworktrees",
+    "globalcontrol/ledgers/inventory",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "preparation_iteration": 1,
+    "preparation_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "native": 0,
+    "browser": 0,
+    "probes": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unresolved product choice keep affected descendants blocked",
+    "runtime need or boundary crossing"
+  ],
+  "no_children": true
+}

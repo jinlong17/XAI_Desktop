@@ -19,9 +19,10 @@
  *     reference; `setPref` updates the React state inside `usePref`).
  */
 
-import { useCallback, useMemo } from "react";
-import { usePref } from "@repo/plugin-web-storage";
+import { useCallback, useMemo, useState } from "react";
+import { accountScope, mutateCanonicalDataset, usePref } from "@repo/plugin-web-storage";
 import type { UserCalEvent } from "./types.js";
+import { isCalendarEventStore } from "../aiCommandDomain.js";
 import {
   createEvent,
   updateEvent,
@@ -38,14 +39,15 @@ export interface UserCalEventsApi {
   /** Create + persist; returns the new entity. */
   create: (
     partial: Omit<UserCalEvent, "id" | "createdAt" | "updatedAt">,
-  ) => UserCalEvent;
+  ) => Promise<UserCalEvent | null>;
   /** Update + persist; returns the updated entity, or null when id missing. */
   update: (
     id: string,
     patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>,
-  ) => UserCalEvent | null;
+    expected?: UserCalEvent,
+  ) => Promise<UserCalEvent | null>;
   /** Remove + persist; no-op when id missing. */
-  remove: (id: string) => void;
+  remove: (id: string, expected?: UserCalEvent) => Promise<boolean>;
   /** Read by id. */
   getById: (id: string) => UserCalEvent | null;
 }
@@ -58,35 +60,50 @@ export interface UserCalEventsApi {
 export function useUserCalEvents(): UserCalEventsApi {
   // The registry default is `Record<string, unknown>`; cast to the
   // concrete UserCalEvent shape here (single point of truth).
-  const [eventsRaw, setEventsRaw] = usePref("xai_calendar_events");
+  const [eventsRaw] = usePref("xai_calendar_events");
   const events = eventsRaw as Record<string, UserCalEvent>;
+  const [scope] = useState(() => accountScope.capture());
+  const valid = useCallback(isCalendarEventStore, []);
+  const commit = useCallback(async (mutate: (current: Record<string, UserCalEvent>) => { ok: true; data: Record<string, UserCalEvent> } | { ok: false; reason: "not-found" | "conflict" }) => {
+    if (!accountScope.isReady(scope)) return null;
+    const result = await mutateCanonicalDataset({ key: "xai_calendar_events", scope, validate: valid, initialize: () => ({}), mutate });
+    if (!result.ok) return null;
+    return result.data;
+  }, [scope, valid]);
 
   const list = useMemo(() => listEvents(events), [events]);
 
   const create = useCallback(
-    (partial: Omit<UserCalEvent, "id" | "createdAt" | "updatedAt">) => {
-      const { next, created } = createEvent(events, partial);
-      setEventsRaw(next);
-      return created;
+    async (partial: Omit<UserCalEvent, "id" | "createdAt" | "updatedAt">) => {
+      const { created } = createEvent({}, partial);
+      const saved = await commit(current => current[created.id] ? { ok: false, reason: "conflict" } : { ok: true, data: { ...current, [created.id]: created } });
+      return saved ? created : null;
     },
-    [events, setEventsRaw],
+    [commit],
   );
 
   const update = useCallback(
-    (id: string, patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>) => {
-      const { next, updated } = updateEvent(events, id, patch);
-      if (updated) setEventsRaw(next);
-      return updated;
+    async (id: string, patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>, expected?: UserCalEvent) => {
+      let updated: UserCalEvent | null = null;
+      const saved = await commit(current => {
+        if (expected && JSON.stringify(current[id]) !== JSON.stringify(expected)) return { ok: false, reason: "conflict" };
+        const result = updateEvent(current, id, patch);
+        updated = result.updated;
+        return result.updated ? { ok: true, data: result.next } : { ok: false, reason: "not-found" };
+      });
+      return saved ? updated : null;
     },
-    [events, setEventsRaw],
+    [commit],
   );
 
   const remove = useCallback(
-    (id: string) => {
-      const next = deleteEvent(events, id);
-      if (next !== events) setEventsRaw(next);
+    async (id: string, expected?: UserCalEvent) => {
+      const saved = await commit(current => !current[id] ? { ok: false, reason: "not-found" }
+        : expected && JSON.stringify(current[id]) !== JSON.stringify(expected) ? { ok: false, reason: "conflict" }
+          : { ok: true, data: deleteEvent(current, id) });
+      return saved !== null;
     },
-    [events, setEventsRaw],
+    [commit],
   );
 
   const getById = useCallback(

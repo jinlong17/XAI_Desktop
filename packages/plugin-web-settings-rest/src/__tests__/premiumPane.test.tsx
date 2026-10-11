@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * PR1..PR3 — premiumPane SHIPPED row #24 tests (preserved verbatim per FA-14)
  * PT-EXT-1..6 — premiumPane extension tests (gap-closure row #8)
@@ -44,8 +45,8 @@ describe("premiumPane", () => {
   });
 
   it("PT-EXT-3: Cancel Subscription button IS visible when tier is premium_stub", () => {
-    localStorage.setItem("xai_pref_premium_tier", "premium_stub");
-    localStorage.setItem("xai_pref_premium_started_at", String(Date.now()));
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_tier"), "premium_stub");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_started_at"), String(Date.now()));
     render(premiumPane.render({ lang: "en" }));
     expect(screen.getByTestId("premium-cancel-btn")).toBeTruthy();
   });
@@ -57,8 +58,8 @@ describe("premiumPane", () => {
   });
 
   it("PT-EXT-5: disclosure banner is present when tier is premium_stub", () => {
-    localStorage.setItem("xai_pref_premium_tier", "premium_stub");
-    localStorage.setItem("xai_pref_premium_started_at", String(Date.now()));
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_tier"), "premium_stub");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_started_at"), String(Date.now()));
     render(premiumPane.render({ lang: "en" }));
     expect(screen.getByTestId("premium-disclosure-banner")).toBeTruthy();
   });

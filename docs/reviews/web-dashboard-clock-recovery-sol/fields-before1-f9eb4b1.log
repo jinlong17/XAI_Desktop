@@ -1,0 +1,1002 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+package_trees packages/xai-web-dashboard-widgets=4d65ad167b0d3712166e96569b1d9f44ed66a500 packages/xai-web-dashboard-grid=8e96464cae57ba35a7f1a4c39c9b0a8f9df64509 packages/plugin-web-storage=782c79de33a1da6851b5a235950408eb7ae89f99 packages/xai-web-shell=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 apps/web=61ddf71751eaa9f1a456897ecb7fbe23e708be4b
+mode=fields
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-dashboard-clock-recovery-sol/verify-fixed.mjs f9eb4b1 all before1
+runner_checkout_head=40f07b23fa3a92a221af9dff86617bd69da2be23 product_tree_delta_files_vs_runner_head=0
+archive_method=stream (spawned git archive piped into tar -x; no fixed buffer) archive_bytes=148408320 archive_sha256=bb468cede8a9659d9798bdb4c7f0a528faedf3ddfb344fb946f159ce6305a097
+contract_r2_sha256=214dc7582ff866cf76482b8883cc284edba8fa180f88bbf940fcaa7ab32cf0ae
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-widgets/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=589d065cb314928e29082a30aa861d288af7823aacbf1c91b6f944b4811bac00 bytes.test.tsx=996dd32e0ee034ac2d57bcd86b48dfe803290431b0ef8503d8232a730e8c5215 fields.test.tsx=4c6af5f6a41cae2c1a54c4771b7fdea7a705668d5dae0f316d0d5a8837258cef queues.test.tsx=a2be7088a07278a85f5a3b74c091ec7346f34ffb563f7b0e570baad9de9cb850 departure.test.tsx=613d0a8b97ca943425eb4614ca0eb351dab71dd24705e04cf9248acb66f42ecc continuity-export.test.tsx=17d021a2a4873c788f2586d20bf2931a70b9c06e5417e0940704e64701513135 verify-fixed.mjs=8b2c95c2a29763d2a5d11aaa9d22c8ebf6782b3275b79d2a1901e1486ac80d20
+archive_file_sha256 packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx=10bf13e8550bdf1207cfd89b372e5b87f099b1110326248dbf5b7ea2325614e9 packages/xai-web-dashboard-widgets/src/registrations.tsx=346cfddfbb3c299aff251b2e4daff31b909d0690196857c36b8ee71f6e015154 packages/xai-web-dashboard-widgets/src/styles.css=a7a4cf039b343b8c6b06113bf6b6997084524aa4c0413e2ab0396a1ca933a853 packages/xai-web-dashboard-widgets/src/internal/cityLibrary.ts=50de913a73caaef2ea98c7021fec24dd46a30d56177527ddda54db89bcb36f48 packages/xai-web-dashboard-widgets/src/internal/Icon.tsx=afd71c525472e5ba9087cfcfe78b6b801767bff34f61c7a73b59a6cdd5b26985 packages/xai-web-dashboard-widgets/src/index.ts=1e22d6b74d4f22655e273415798edd1c255b5af9a108f2a99822299ac8031b0b packages/xai-web-dashboard-grid/src/DashboardModule.tsx=36a8532beb638a5741d3b51338a2ce32da9daa220e1a461cd00729da61e542a2 packages/xai-web-dashboard-grid/src/DashboardGrid.tsx=395a134c9c1c3044ed86afdb48839373a7ba80ff57a387177dd277d76098fc2f packages/xai-web-dashboard-grid/src/types.ts=afeb1112713155f8998ca13cc9dbfc174025c98497148ab21cd4f015201e40f2 packages/xai-web-dashboard-grid/src/index.ts=fc5da5907da4de81a327736297ef2ae377a7cf3e589fb3c121475229f9acf71c packages/xai-web-dashboard-grid/src/DashHeader.tsx=0aaa4ce3b456b1fedf3c4bb3f7163830e6ee7390ba65382564d9c13852e40456 packages/xai-web-dashboard-grid/src/WidgetGhost.tsx=0b476928649a3b24bd35d97869c0b1e9e4588ebdec4908b6ef8c5583d0272c9b packages/xai-web-dashboard-grid/src/WidgetShell.tsx=7d1b74b80076983eb5cc34921d06d58b5365cbcf91efb63128a6c7938b1bd708 packages/xai-web-dashboard-grid/src/styles.css=d9e330e70a375b0579fcf3b98e3d9ea2c633fc4b498b4b3a66fda3df8db9fdc6 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 apps/web/src/routes/modules/dashboardRegistration.tsx=66c524e4e02117275ed369c02049f33a0eb2c42ad068388eb4041fa469c903e8 apps/web/src/routes/modules/settingsDeparture.ts=80c3a5787df8eb02102c4a508f2fe67c1fbd6a6b8ba7f16b3a65c3f542c8548b apps/web/src/routes/modules/shellRegistrations.tsx=c003c499ca3330ff6e3b7e738df4e3366d0daca141d65327dacc3d3665e1b8fe apps/web/src/main.tsx=6a7cdfbc6b17cdc13a3dbcb44611b09c33ddf7c7787da4a6ed31265e4abbf243 apps/web/src/providers/AccountStorageGate.tsx=1c6bf8c695e9bc8b80b83c6da0c3c55c44e9a88498dded1b8dd46f302d8cb666 apps/web/src/providers/AppProviders.tsx=950cde0f7f6ba7cae9776a8e8442a303f938d5bb04d389dd1ac9760e10ebe655 apps/web/src/App.tsx=f644e78ec482c0b9b66f9702407eb34e1dcd110e837293e4a736964bfe7ac408 packages/xai-web-shell/src/AppRail.tsx=fe789078fecc60936d3e6c5fc2b203001a15490aecf30f3a0ca301da1399fb44 packages/xai-web-shell/src/Topbar.tsx=aa5ac56e7b6a7652df70e82ed4d83dc81b44558181bfb48a30eb40b157d43c0e packages/xai-web-shell/src/Shell.tsx=38e25c6b20f6413c9362f53e9be7e2aa121001170898a6097e29fccabf22e432 packages/xai-web-shell/src/types.ts=d18f637e9bec8c05f305fb29467acfd3fdcf2649e83ad2b28b877389752139c0 packages/xai-web-shell/src/index.ts=396a894d09b5b2b95f2ed063b615b41f371044f356d4d2ef9f224189e09b66ab packages/xai-web-shell/src/internal/railOrderController.tsx=d7f2f0b699e087c34d453309d9fe4c0eb6ba38ef52e6dfc70fe49d2f75c4e2a6 packages/xai-web-shell/src/internal/RailOrderStatus.tsx=48b611ff1e2efbc96a888fd87f048925472702db898530cbf21f5df560ecff95 packages/xai-web-shell/src/internal/railOrderCopy.ts=268fb934f921843efd1c3e41cd9a81614ce26b3a94026e5884e10d633a05d7ba packages/xai-web-shell/src/railOrderStatus.css=338f0eae7338458da54b996880cfa93034940e0f19220a1669c1570a8fd4b6e5 packages/xai-web-shell/src/AvatarMenu.tsx=3401b838a2dc5a16d1c6f1113a2aaf1ef6d8673897029bb2a1614db8c379c4c2 packages/xai-web-settings-appearance/src/internal/appearanceController.tsx=64d6c8b74f689bc989bc8d1bcfa85bb333b068826829269f1e31d97cd2878e5a packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts=991232e97e44919c1b00b5502a62df05d814de3ccc34ed4452104ad59b54dab0 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-storage/src/internal/accountOwnership.ts=8d5b7fef04a014044b81cb95d56eaf084bfc306d7c8b9a27540b6caa3a2bef20 packages/plugin-web-storage/src/internal/accountCoordination.ts=d669fe47d22f6d9f4b5c56b24ca60eb68dee9fc6877de4901d328ffdd7e50e1c packages/plugin-web-storage/src/internal/codec.ts=99a735801cab8ce9d7208c244efb8eda66dd641cf5c7d795302384207c6b9b8f packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts=f292de4ec2e44d0fe75dde836fb360cfc2c292ceeaa47b2c107036765cd5b922 packages/xai-web-cmdk/src/internal/readModuleStates.ts=1ee898681af67b21bd84308bef99abf196ab8551069d53c8e570a9ec9e0ba008 packages/xai-web-cmdk/src/adapters/dashboard.ts=0c8e6ac9cfbcffd6a52e3f21cd5a09b077d03bd0539798ebcbc626776b64b1eb packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 packages/plugin-web-tokens/src/tokens.css=7c6eddebd1d826f939862ef75ba8159e966f0c76b0b9d34a0911f6b47265615d packages/plugin-web-tokens/src/i18n.ts=d5f2189b081d16a9f26b7146978c5f81660a6a44d6f534b9ac48e6e3c7ccb885 packages/xai-web-pet/src/DesktopPet.tsx=35edb0e686bf6682192ba1bbe7842d159e161a6593b7ccd13a432d59fe58ad6f
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] fields.test.tsx: include=docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/clock-sol-fields-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.report-fields-0.json vitest_exit=1 cases=38 passed=1 failed=37 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=38 numPassedTests=1 numFailedTests=37
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] fields.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu
+
+stdout | docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5.5 style: a quota failure keeps "analog" displayed with Retry and Discard; Retry writes it once 59ms
+   → H1 §5.5 the latest choice stays displayed after a quota failure: expected 'classic' to be 'analog' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5.5 style: a setItem throws failure keeps "analog" displayed with Retry and Discard; Retry writes it once 35ms
+   → H1 §5.5 the latest choice stays displayed after a setItem throws failure: expected 'classic' to be 'analog' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5.5 style: a write-time getItem throws failure keeps "analog" displayed with Retry and Discard; Retry writes it once 33ms
+   → H1 §5.5 the latest choice stays displayed after a write-time getItem throws failure: expected 'classic' to be 'analog' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5.5 style: a missing Web Lock failure keeps "analog" displayed with Retry and Discard; Retry writes it once 45ms
+   → §5.5/§16 a missing Web Lock failure leaves the stored bytes unchanged (never written unfenced): expected 'analog' to be 'classic' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5.5 style: a rejected Web Lock failure keeps "analog" displayed with Retry and Discard; Retry writes it once 40ms
+   → §5.5/§16 a rejected Web Lock failure leaves the stored bytes unchanged (never written unfenced): expected 'analog' to be 'classic' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone city: a quota failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once 46ms
+   → H2 §5.5 the latest choice stays displayed after a quota failure: expected 'local' to be 'tokyo' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone city: a setItem throws failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once 40ms
+   → H2 §5.5 the latest choice stays displayed after a setItem throws failure: expected 'local' to be 'tokyo' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone city: a write-time getItem throws failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once 39ms
+   → H2 §5.5 the latest choice stays displayed after a write-time getItem throws failure: expected 'local' to be 'tokyo' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone city: a missing Web Lock failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once 37ms
+   → §5.5/§16 a missing Web Lock failure leaves the stored bytes unchanged (never written unfenced): expected 'tokyo' to be 'local' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone city: a rejected Web Lock failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once 39ms
+   → §5.5/§16 a rejected Web Lock failure leaves the stored bytes unchanged (never written unfenced): expected 'tokyo' to be 'local' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone Local time: a quota failure over a city baseline keeps Local time displayed; Retry writes "local" once 39ms
+   → H2 §5.5 the latest choice stays displayed after a quota failure: expected 'sydney' to be 'local' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5 ZH: a quota failure shows the ZH block (时钟样式未保存。, 重试/放弃 时钟样式) and the ZH Export 35ms
+   → H1 §5.5 the latest choice stays displayed after a quota failure: expected 'split' to be 'minimal' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5 ZH: a quota failure shows the ZH block (时钟时区未保存。, 重试/放弃 时钟时区) 46ms
+   → H2 §5.5 the latest choice stays displayed after a quota failure: expected 'local' to be 'hk' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_style="bogus" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it 21ms
+   → H4 §5.2 malformed "bogus": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_style="Analog" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it 17ms
+   → H4 §5.2 malformed "Analog": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_style="" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it 18ms
+   → H4 §5.2 malformed "": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_style=" classic" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it 18ms
+   → H4 §5.2 malformed " classic": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_style="\"analog\"" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it 18ms
+   → H4 §5.2 malformed "\"analog\"": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 a getItem that throws for xai_clock_style only makes that field unavailable with Reload only; Reload after the fault clears shows the stored value 17ms
+   → H4 §5.2 key-scoped throwing read: the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="mars" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it 19ms
+   → H4 §5.2 malformed "mars": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="Shanghai" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it 19ms
+   → H4 §5.2 malformed "Shanghai": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="UTC+8" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it 19ms
+   → H4 §5.2 malformed "UTC+8": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="Asia/Shanghai" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it 19ms
+   → H4 §5.2 malformed "Asia/Shanghai": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="new-york" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it 17ms
+   → H4 §5.2 malformed "new-york": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it 19ms
+   → H4 §5.2 malformed "": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="\"local\"" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it 18ms
+   → H4 §5.2 malformed "\"local\"": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 a getItem that throws for xai_clock_tz only makes that field unavailable with Reload only; Reload after the fault clears shows the stored value 19ms
+   → H4 §5.2 key-scoped throwing read: the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5 ZH: a malformed style shows 已保存的时钟样式不可用… with 重新读取 时钟样式 only 19ms
+   → H4 §5.2 zh malformed style: the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5 ZH: a malformed timezone shows 已保存的时钟时区不可用… with 重新读取 时钟时区 only 20ms
+   → H4 §5.2 zh malformed timezone: the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.2/A5 style: a valid choice over malformed bytes is a failed draft that never overwrites them; Discard returns to source-only 37ms
+   → A5 §5.2 the malformed bytes are never silently overwritten: expected 'minimal' to be 'bogus' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.2/A5 timezone: a valid choice over malformed bytes is a failed draft that never overwrites them; Discard returns to source-only 45ms
+   → A5 §5.2 the malformed bytes are never silently overwritten: expected 'berlin' to be 'mars' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.8 targeted Discard of style: zero set/remove attempts, zero reads of the sibling key, display returns to the committed value 39ms
+   → §5.8 Discard Clock style: expected null not to be null
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.8 targeted Discard of timezone: zero set/remove attempts, zero reads of the sibling key, display returns to the committed value 42ms
+   → §5.8 Discard Clock timezone: expected null not to be null
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.7 both fields unresolved at once: two failed-draft blocks, one inline Export, the unload warning 60ms
+   → H1 H2 §5.5 both failed choices stay displayed: expected { style: 'classic', timezone: 'local' } to strictly equal { style: 'analog', timezone: 'sf' }
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.7 one field failing while the other succeeds: the success never retries, rewrites, discards or rereads the sibling 57ms
+   → H1 the failed style choice stays displayed: expected 'classic' to be 'analog' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.7 a conflict on style coexists with an unrelated timezone quota failure; each settles independently and Retry never overwrites the conflict 42ms
+   → H3 the held per-key lock serializes the style write: expected 'analog' to be 'classic' // Object.is equality
+ × docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.8/§7.9 a late completion after unmount is ignored: the held write never lands, no error and no unhandled rejection 40ms
+   → H3 the held per-key lock keeps the bytes unchanged: expected 'analog' to be 'classic' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  37 failed | 1 passed (38)
+   Start at  09:32:17
+   Duration  2.31s (transform 484ms, setup 206ms, collect 512ms, tests 1.19s, environment 189ms, prepare 57ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.report-fields-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5.5 style: a quota failure keeps "analog" displayed with Retry and Discard; Retry writes it once
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5.5 style: a setItem throws failure keeps "analog" displayed with Retry and Discard; Retry writes it once
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone city: a quota failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once
+[plugin-web-storage] quota exceeded for xai_clock_tz.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone Local time: a quota failure over a city baseline keeps Local time displayed; Retry writes "local" once
+[plugin-web-storage] quota exceeded for xai_clock_tz.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5 ZH: a quota failure shows the ZH block (时钟样式未保存。, 重试/放弃 时钟样式) and the ZH Export
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5 ZH: a quota failure shows the ZH block (时钟时区未保存。, 重试/放弃 时钟时区)
+[plugin-web-storage] quota exceeded for xai_clock_tz.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.8 targeted Discard of style: zero set/remove attempts, zero reads of the sibling key, display returns to the committed value
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.8 targeted Discard of timezone: zero set/remove attempts, zero reads of the sibling key, display returns to the committed value
+[plugin-web-storage] quota exceeded for xai_clock_tz.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.7 both fields unresolved at once: two failed-draft blocks, one inline Export, the unload warning
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.7 both fields unresolved at once: two failed-draft blocks, one inline Export, the unload warning
+[plugin-web-storage] quota exceeded for xai_clock_tz.
+
+stderr | docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.7 one field failing while the other succeeds: the success never retries, rewrites, discards or rereads the sibling
+[plugin-web-storage] quota exceeded for xai_clock_style.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 37 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5.5 style: a quota failure keeps "analog" displayed with Retry and Discard; Retry writes it once
+AssertionError: H1 §5.5 the latest choice stays displayed after a quota failure: expected 'classic' to be 'analog' // Object.is equality
+
+Expected: "analog"
+Received: "classic"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:60:102
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+       |                                                                                                      ^
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+     62|   expect(blockState(sibling(field), lang), "the sibling has no block")…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:93:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5.5 style: a setItem throws failure keeps "analog" displayed with Retry and Discard; Retry writes it once
+AssertionError: H1 §5.5 the latest choice stays displayed after a setItem throws failure: expected 'classic' to be 'analog' // Object.is equality
+
+Expected: "analog"
+Received: "classic"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:60:102
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+       |                                                                                                      ^
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+     62|   expect(blockState(sibling(field), lang), "the sibling has no block")…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:93:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5.5 style: a write-time getItem throws failure keeps "analog" displayed with Retry and Discard; Retry writes it once
+AssertionError: H1 §5.5 the latest choice stays displayed after a write-time getItem throws failure: expected 'classic' to be 'analog' // Object.is equality
+
+Expected: "analog"
+Received: "classic"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:60:102
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+       |                                                                                                      ^
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+     62|   expect(blockState(sibling(field), lang), "the sibling has no block")…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:93:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5.5 style: a missing Web Lock failure keeps "analog" displayed with Retry and Discard; Retry writes it once
+AssertionError: §5.5/§16 a missing Web Lock failure leaves the stored bytes unchanged (never written unfenced): expected 'analog' to be 'classic' // Object.is equality
+
+Expected: "classic"
+Received: "analog"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:59:113
+     57|   await flush();
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+       |                                                                                                                 ^
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:93:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5.5 style: a rejected Web Lock failure keeps "analog" displayed with Retry and Discard; Retry writes it once
+AssertionError: §5.5/§16 a rejected Web Lock failure leaves the stored bytes unchanged (never written unfenced): expected 'analog' to be 'classic' // Object.is equality
+
+Expected: "classic"
+Received: "analog"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:59:113
+     57|   await flush();
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+       |                                                                                                                 ^
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:93:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone city: a quota failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once
+AssertionError: H2 §5.5 the latest choice stays displayed after a quota failure: expected 'local' to be 'tokyo' // Object.is equality
+
+Expected: "tokyo"
+Received: "local"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:60:102
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+       |                                                                                                      ^
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+     62|   expect(blockState(sibling(field), lang), "the sibling has no block")…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:98:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone city: a setItem throws failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once
+AssertionError: H2 §5.5 the latest choice stays displayed after a setItem throws failure: expected 'local' to be 'tokyo' // Object.is equality
+
+Expected: "tokyo"
+Received: "local"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:60:102
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+       |                                                                                                      ^
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+     62|   expect(blockState(sibling(field), lang), "the sibling has no block")…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:98:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone city: a write-time getItem throws failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once
+AssertionError: H2 §5.5 the latest choice stays displayed after a write-time getItem throws failure: expected 'local' to be 'tokyo' // Object.is equality
+
+Expected: "tokyo"
+Received: "local"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:60:102
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+       |                                                                                                      ^
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+     62|   expect(blockState(sibling(field), lang), "the sibling has no block")…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:98:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone city: a missing Web Lock failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once
+AssertionError: §5.5/§16 a missing Web Lock failure leaves the stored bytes unchanged (never written unfenced): expected 'tokyo' to be 'local' // Object.is equality
+
+Expected: "local"
+Received: "tokyo"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:59:113
+     57|   await flush();
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+       |                                                                                                                 ^
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:98:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone city: a rejected Web Lock failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once
+AssertionError: §5.5/§16 a rejected Web Lock failure leaves the stored bytes unchanged (never written unfenced): expected 'tokyo' to be 'local' // Object.is equality
+
+Expected: "local"
+Received: "tokyo"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:59:113
+     57|   await flush();
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+       |                                                                                                                 ^
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:98:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5.5 timezone Local time: a quota failure over a city baseline keeps Local time displayed; Retry writes "local" once
+AssertionError: H2 §5.5 the latest choice stays displayed after a quota failure: expected 'sydney' to be 'local' // Object.is equality
+
+Expected: "local"
+Received: "sydney"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:60:102
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+       |                                                                                                      ^
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+     62|   expect(blockState(sibling(field), lang), "the sibling has no block")…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:102:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H1 §5 ZH: a quota failure shows the ZH block (时钟样式未保存。, 重试/放弃 时钟样式) and the ZH Export
+AssertionError: H1 §5.5 the latest choice stays displayed after a quota failure: expected 'split' to be 'minimal' // Object.is equality
+
+Expected: "minimal"
+Received: "split"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:60:102
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+       |                                                                                                      ^
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+     62|   expect(blockState(sibling(field), lang), "the sibling has no block")…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:105:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H2 §5 ZH: a quota failure shows the ZH block (时钟时区未保存。, 重试/放弃 时钟时区)
+AssertionError: H2 §5.5 the latest choice stays displayed after a quota failure: expected 'local' to be 'hk' // Object.is equality
+
+Expected: "hk"
+Received: "local"
+
+ ❯ failureAndRetry docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:60:102
+     58|   failure.observe();
+     59|   expect(bytes(field), `§5.5/§16 a ${kind} failure leaves the stored b…
+     60|   expect(shown(field), `${H(field)} §5.5 the latest choice stays displ…
+       |                                                                                                      ^
+     61|   expect(blockState(field, lang), `${H(field)} §5.7 a settled failure …
+     62|   expect(blockState(sibling(field), lang), "the sibling has no block")…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:108:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_style="bogus" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+AssertionError: H4 §5.2 malformed "bogus": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:144:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_style="Analog" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+AssertionError: H4 §5.2 malformed "Analog": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:144:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_style="" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+AssertionError: H4 §5.2 malformed "": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:144:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_style=" classic" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+AssertionError: H4 §5.2 malformed " classic": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:144:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_style="\"analog\"" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+AssertionError: H4 §5.2 malformed "\"analog\"": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:144:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 a getItem that throws for xai_clock_style only makes that field unavailable with Reload only; Reload after the fault clears shows the stored value
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 a getItem that throws for xai_clock_tz only makes that field unavailable with Reload only; Reload after the fault clears shows the stored value
+AssertionError: H4 §5.2 key-scoped throwing read: the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:148:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="mars" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+AssertionError: H4 §5.2 malformed "mars": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:144:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="Shanghai" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+AssertionError: H4 §5.2 malformed "Shanghai": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:144:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="UTC+8" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+AssertionError: H4 §5.2 malformed "UTC+8": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:144:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="Asia/Shanghai" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+AssertionError: H4 §5.2 malformed "Asia/Shanghai": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:144:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="new-york" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+AssertionError: H4 §5.2 malformed "new-york": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:144:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5.2 xai_clock_tz="\"local\"" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+AssertionError: H4 §5.2 malformed "\"local\"": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:144:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5 ZH: a malformed style shows 已保存的时钟样式不可用… with 重新读取 时钟样式 only
+AssertionError: H4 §5.2 zh malformed style: the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:156:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > H4 §5 ZH: a malformed timezone shows 已保存的时钟时区不可用… with 重新读取 时钟时区 only
+AssertionError: H4 §5.2 zh malformed timezone: the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+
+- Expected
++ Received
+
+  {
+    "discard": false,
+    "notSaved": false,
+-   "present": true,
+-   "reload": true,
++   "present": false,
++   "reload": false,
+    "retry": false,
+-   "source": true,
++   "source": false,
+  }
+
+ ❯ sourceOnly docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:123:106
+    121|   expect(shown(field), `§5.2 ${tag}: the default displays`).toBe(DEFAU…
+    122|   expect(shown(sibling(field)), "the sibling displays its default").to…
+    123|   expect(blockState(field, lang), `H4 §5.2 ${tag}: the field shows the…
+       |                                                                                                          ^
+    124|   expect(blockState(sibling(field), lang)).toStrictEqual(NONE);
+    125|   expect(exportButton(lang), "§8 a source-only issue never renders the…
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:159:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.2/A5 style: a valid choice over malformed bytes is a failed draft that never overwrites them; Discard returns to source-only
+AssertionError: A5 §5.2 the malformed bytes are never silently overwritten: expected 'minimal' to be 'bogus' // Object.is equality
+
+Expected: "bogus"
+Received: "minimal"
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:171:88
+    169|     choose(field, choice);
+    170|     await flush();
+    171|     expect(bytes(field), "A5 §5.2 the malformed bytes are never silent…
+       |                                                                                        ^
+    172|     expect(shown(field), "the valid choice stays displayed").toBe(choi…
+    173|     expect(blockState(field), "§5.7 a failed draft over an unavailable…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.2/A5 timezone: a valid choice over malformed bytes is a failed draft that never overwrites them; Discard returns to source-only
+AssertionError: A5 §5.2 the malformed bytes are never silently overwritten: expected 'berlin' to be 'mars' // Object.is equality
+
+Expected: "mars"
+Received: "berlin"
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:171:88
+    169|     choose(field, choice);
+    170|     await flush();
+    171|     expect(bytes(field), "A5 §5.2 the malformed bytes are never silent…
+       |                                                                                        ^
+    172|     expect(shown(field), "the valid choice stays displayed").toBe(choi…
+    173|     expect(blockState(field), "§5.7 a failed draft over an unavailable…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.8 targeted Discard of style: zero set/remove attempts, zero reads of the sibling key, display returns to the committed value
+AssertionError: §5.8 Discard Clock style: expected null not to be null
+ ❯ need docs/reviews/web-dashboard-clock-recovery-sol/fixture.tsx:55:38
+     53| /** Business presence assertion: fails as a product failure (not a pre…
+     54| export function need<T>(value: T | null | undefined, message: string):…
+     55|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     56|   return value as T;
+     57| }
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:202:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.8 targeted Discard of timezone: zero set/remove attempts, zero reads of the sibling key, display returns to the committed value
+AssertionError: §5.8 Discard Clock timezone: expected null not to be null
+ ❯ need docs/reviews/web-dashboard-clock-recovery-sol/fixture.tsx:55:38
+     53| /** Business presence assertion: fails as a product failure (not a pre…
+     54| export function need<T>(value: T | null | undefined, message: string):…
+     55|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     56|   return value as T;
+     57| }
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:202:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.7 both fields unresolved at once: two failed-draft blocks, one inline Export, the unload warning
+AssertionError: H1 H2 §5.5 both failed choices stay displayed: expected { style: 'classic', timezone: 'local' } to strictly equal { style: 'analog', timezone: 'sf' }
+
+- Expected
++ Received
+
+  {
+-   "style": "analog",
+-   "timezone": "sf",
++   "style": "classic",
++   "timezone": "local",
+  }
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:221:115
+    219|   await failChoice("style", "analog");
+    220|   await failChoice("timezone", "sf");
+    221|   expect({ style: shown("style"), timezone: shown("timezone") }, "H1 H…
+       |                                                                                                                   ^
+    222|   expect({ style: blockState("style"), timezone: blockState("timezone"…
+    223|   need(exportButton(), "§8 one inline Export");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.7 one field failing while the other succeeds: the success never retries, rewrites, discards or rereads the sibling
+AssertionError: H1 the failed style choice stays displayed: expected 'classic' to be 'analog' // Object.is equality
+
+Expected: "analog"
+Received: "classic"
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:244:72
+    242|   expect(bytes("timezone"), "the timezone choice succeeds").toBe("pari…
+    243|   expect(touches(from, KEY.style), "§5.7 the sibling's key is not touc…
+    244|   expect(shown("style"), "H1 the failed style choice stays displayed")…
+       |                                                                        ^
+    245|   expect({ style: blockState("style"), timezone: blockState("timezone"…
+    246|   expectQuiet("independent settlement");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.7 a conflict on style coexists with an unrelated timezone quota failure; each settles independently and Retry never overwrites the conflict
+AssertionError: H3 the held per-key lock serializes the style write: expected 'analog' to be 'classic' // Object.is equality
+
+Expected: "classic"
+Received: "analog"
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:256:81
+    254|   choose("style", "analog");
+    255|   await flush();
+    256|   expect(bytes("style"), "H3 the held per-key lock serializes the styl…
+       |                                                                                 ^
+    257|   nativeSet.call(localStorage, KEY.style, "minimal");
+    258|   pre(bytes("style") === "minimal", "an unobserved external replacemen…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/37]⎯
+
+ FAIL  docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx > §5.8/§7.9 a late completion after unmount is ignored: the held write never lands, no error and no unhandled rejection
+AssertionError: H3 the held per-key lock keeps the bytes unchanged: expected 'analog' to be 'classic' // Object.is equality
+
+Expected: "classic"
+Received: "analog"
+
+ ❯ docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx:287:80
+    285|   choose("style", "analog");
+    286|   await flush();
+    287|   expect(bytes("style"), "H3 the held per-key lock keeps the bytes unc…
+       |                                                                                ^
+    288|   view.unmount();
+    289|   const from = mark();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/37]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.clock-sol-vite-cache-fields-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/packages/xai-web-dashboard-widgets/src/__tests__/setup.ts"],"include":["docs/reviews/web-dashboard-clock-recovery-sol/fields.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx packages/xai-web-dashboard-widgets/src/registrations.tsx packages/xai-web-dashboard-widgets/src/internal/cityLibrary.ts packages/xai-web-dashboard-grid/src/DashboardModule.tsx packages/xai-web-dashboard-grid/src/DashboardGrid.tsx packages/xai-web-dashboard-grid/src/DashHeader.tsx packages/xai-web-dashboard-grid/src/WidgetShell.tsx packages/xai-web-dashboard-grid/src/WidgetGhost.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts packages/plugin-web-storage/src/internal/registry.ts
+pin_modules=122 by package: docs/reviews=2 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=43 packages/xai-web-event-bus=4 packages/xai-web-shell=14
+---- runner summary ----
+totals cases=38 passed=1 failed=37 skipped=0 precondition_failures=0
+harness PASS [fields.test.tsx] JSON report parsed
+harness PASS [fields.test.tsx] reported files equal the requested include
+harness PASS [fields.test.tsx] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-dashboard-widgets/src/__tests__/setup.ts], root = archive)
+harness PASS [fields.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [fields.test.tsx] required product modules loaded from the archive (15)
+harness PASS [fields.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 FAILED | H1 §5.5 style: a quota failure keeps "analog" displayed with Retry and Discard; Retry writes it once
+    first: AssertionError: H1 §5.5 the latest choice stays displayed after a quota failure: expected 'classic' to be 'analog' // Object.is equality
+case 003 FAILED | H1 §5.5 style: a setItem throws failure keeps "analog" displayed with Retry and Discard; Retry writes it once
+    first: AssertionError: H1 §5.5 the latest choice stays displayed after a setItem throws failure: expected 'classic' to be 'analog' // Object.is equality
+case 004 FAILED | H1 §5.5 style: a write-time getItem throws failure keeps "analog" displayed with Retry and Discard; Retry writes it once
+    first: AssertionError: H1 §5.5 the latest choice stays displayed after a write-time getItem throws failure: expected 'classic' to be 'analog' // Object.is equality
+case 005 FAILED | H1 §5.5 style: a missing Web Lock failure keeps "analog" displayed with Retry and Discard; Retry writes it once
+    first: AssertionError: §5.5/§16 a missing Web Lock failure leaves the stored bytes unchanged (never written unfenced): expected 'analog' to be 'classic' // Object.is equality
+case 006 FAILED | H1 §5.5 style: a rejected Web Lock failure keeps "analog" displayed with Retry and Discard; Retry writes it once
+    first: AssertionError: §5.5/§16 a rejected Web Lock failure leaves the stored bytes unchanged (never written unfenced): expected 'analog' to be 'classic' // Object.is equality
+case 007 FAILED | H2 §5.5 timezone city: a quota failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once
+    first: AssertionError: H2 §5.5 the latest choice stays displayed after a quota failure: expected 'local' to be 'tokyo' // Object.is equality
+case 008 FAILED | H2 §5.5 timezone city: a setItem throws failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once
+    first: AssertionError: H2 §5.5 the latest choice stays displayed after a setItem throws failure: expected 'local' to be 'tokyo' // Object.is equality
+case 009 FAILED | H2 §5.5 timezone city: a write-time getItem throws failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once
+    first: AssertionError: H2 §5.5 the latest choice stays displayed after a write-time getItem throws failure: expected 'local' to be 'tokyo' // Object.is equality
+case 010 FAILED | H2 §5.5 timezone city: a missing Web Lock failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once
+    first: AssertionError: §5.5/§16 a missing Web Lock failure leaves the stored bytes unchanged (never written unfenced): expected 'tokyo' to be 'local' // Object.is equality
+case 011 FAILED | H2 §5.5 timezone city: a rejected Web Lock failure keeps "tokyo" displayed with Retry and Discard; Retry writes it once
+    first: AssertionError: §5.5/§16 a rejected Web Lock failure leaves the stored bytes unchanged (never written unfenced): expected 'tokyo' to be 'local' // Object.is equality
+case 012 FAILED | H2 §5.5 timezone Local time: a quota failure over a city baseline keeps Local time displayed; Retry writes "local" once
+    first: AssertionError: H2 §5.5 the latest choice stays displayed after a quota failure: expected 'sydney' to be 'local' // Object.is equality
+case 013 FAILED | H1 §5 ZH: a quota failure shows the ZH block (时钟样式未保存。, 重试/放弃 时钟样式) and the ZH Export
+    first: AssertionError: H1 §5.5 the latest choice stays displayed after a quota failure: expected 'split' to be 'minimal' // Object.is equality
+case 014 FAILED | H2 §5 ZH: a quota failure shows the ZH block (时钟时区未保存。, 重试/放弃 时钟时区)
+    first: AssertionError: H2 §5.5 the latest choice stays displayed after a quota failure: expected 'local' to be 'hk' // Object.is equality
+case 015 FAILED | H4 §5.2 xai_clock_style="bogus" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+    first: AssertionError: H4 §5.2 malformed "bogus": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 016 FAILED | H4 §5.2 xai_clock_style="Analog" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+    first: AssertionError: H4 §5.2 malformed "Analog": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 017 FAILED | H4 §5.2 xai_clock_style="" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+    first: AssertionError: H4 §5.2 malformed "": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 018 FAILED | H4 §5.2 xai_clock_style=" classic" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+    first: AssertionError: H4 §5.2 malformed " classic": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 019 FAILED | H4 §5.2 xai_clock_style="\"analog\"" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+    first: AssertionError: H4 §5.2 malformed "\"analog\"": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 020 FAILED | H4 §5.2 a getItem that throws for xai_clock_style only makes that field unavailable with Reload only; Reload after the fault clears shows the stored value
+    first: AssertionError: H4 §5.2 key-scoped throwing read: the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 021 FAILED | H4 §5.2 xai_clock_tz="mars" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+    first: AssertionError: H4 §5.2 malformed "mars": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 022 FAILED | H4 §5.2 xai_clock_tz="Shanghai" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+    first: AssertionError: H4 §5.2 malformed "Shanghai": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 023 FAILED | H4 §5.2 xai_clock_tz="UTC+8" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+    first: AssertionError: H4 §5.2 malformed "UTC+8": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 024 FAILED | H4 §5.2 xai_clock_tz="Asia/Shanghai" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+    first: AssertionError: H4 §5.2 malformed "Asia/Shanghai": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 025 FAILED | H4 §5.2 xai_clock_tz="new-york" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+    first: AssertionError: H4 §5.2 malformed "new-york": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 026 FAILED | H4 §5.2 xai_clock_tz="" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+    first: AssertionError: H4 §5.2 malformed "": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 027 FAILED | H4 §5.2 xai_clock_tz="\"local\"" displays the default with the source message and Reload only, no hold, no write; Reload after a repair shows it
+    first: AssertionError: H4 §5.2 malformed "\"local\"": the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 028 FAILED | H4 §5.2 a getItem that throws for xai_clock_tz only makes that field unavailable with Reload only; Reload after the fault clears shows the stored value
+    first: AssertionError: H4 §5.2 key-scoped throwing read: the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 029 FAILED | H4 §5 ZH: a malformed style shows 已保存的时钟样式不可用… with 重新读取 时钟样式 only
+    first: AssertionError: H4 §5.2 zh malformed style: the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 030 FAILED | H4 §5 ZH: a malformed timezone shows 已保存的时钟时区不可用… with 重新读取 时钟时区 only
+    first: AssertionError: H4 §5.2 zh malformed timezone: the field shows the source message with Reload only: expected { present: false, …(5) } to strictly equal { Object (present, notSaved, ...) }
+case 031 FAILED | §5.2/A5 style: a valid choice over malformed bytes is a failed draft that never overwrites them; Discard returns to source-only
+    first: AssertionError: A5 §5.2 the malformed bytes are never silently overwritten: expected 'minimal' to be 'bogus' // Object.is equality
+case 032 FAILED | §5.2/A5 timezone: a valid choice over malformed bytes is a failed draft that never overwrites them; Discard returns to source-only
+    first: AssertionError: A5 §5.2 the malformed bytes are never silently overwritten: expected 'berlin' to be 'mars' // Object.is equality
+case 033 FAILED | §5.8 targeted Discard of style: zero set/remove attempts, zero reads of the sibling key, display returns to the committed value
+    first: AssertionError: §5.8 Discard Clock style: expected null not to be null
+case 034 FAILED | §5.8 targeted Discard of timezone: zero set/remove attempts, zero reads of the sibling key, display returns to the committed value
+    first: AssertionError: §5.8 Discard Clock timezone: expected null not to be null
+case 035 FAILED | §5.7 both fields unresolved at once: two failed-draft blocks, one inline Export, the unload warning
+    first: AssertionError: H1 H2 §5.5 both failed choices stay displayed: expected { style: 'classic', timezone: 'local' } to strictly equal { style: 'analog', timezone: 'sf' }
+case 036 FAILED | §5.7 one field failing while the other succeeds: the success never retries, rewrites, discards or rereads the sibling
+    first: AssertionError: H1 the failed style choice stays displayed: expected 'classic' to be 'analog' // Object.is equality
+case 037 FAILED | §5.7 a conflict on style coexists with an unrelated timezone quota failure; each settles independently and Retry never overwrites the conflict
+    first: AssertionError: H3 the held per-key lock serializes the style write: expected 'analog' to be 'classic' // Object.is equality
+case 038 FAILED | §5.8/§7.9 a late completion after unmount is ignored: the held write never lands, no error and no unhandled rejection
+    first: AssertionError: H3 the held per-key lock keeps the bytes unchanged: expected 'analog' to be 'classic' // Object.is equality

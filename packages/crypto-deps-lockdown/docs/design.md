@@ -22,8 +22,8 @@
 | # | Decision | Selected | One-line rationale |
 |---|---|---|---|
 | D-1 | Rust advisory tool | B — `cargo-deny` only | `cargo deny check` advisories use same RustSec DB as audit + add licenses/bans/sources; subsumes audit; faster CI |
-| D-2 | JS advisory tool | A — `osv-scanner` official GH Action, `fail-on-vuln: true` | brief-mandated; pnpm-lock support; blocking flag |
-| D-3 | CI platform | A — GitHub Actions (`.github/workflows/`) | repo on GitHub, no CI exists, osv-scanner ships GH Action |
+| D-2 | JS advisory tool | A — `osv-scanner` v2.3.8 CLI binary with SHA256 verification | brief-mandated; pnpm-lock support; avoids action wrapper drift while preserving a blocking scanner |
+| D-3 | CI platform | A — GitHub Actions (`.github/workflows/`) | repo on GitHub; workflow installs pinned tools and runs scanner/deny gates directly |
 | D-4 | `--locked` strategy | A — commit `Cargo.lock` + `--locked` in CI | exact-pin + committed lock = reproducible; CI fails on stale lock |
 | D-5 | `verify_strict` enforcement point | B — version floor + cargo-deny `bans` + named contract + planted inert grep-lint | runtime call impossible (no dep yet, boundary forbids plugin/Host code); policy-as-code now, trip-wire for future crypto row |
 | D-6 | SQLCipher license policy | curated permissive `allow` + explicit reviewed `exceptions`/`clarify` for sqlcipher BSD-style | encodes community-edition determination in `deny.toml`, not a doc |
@@ -80,8 +80,9 @@
   │                      + scripts/ci/check-verify-strict.sh (inert grep trip-wire)
   ├─ job cargo-deny   → cargo deny --all-features check advisories bans licenses sources
   │                      reads apps/desktop/src-tauri/deny.toml
-  └─ job osv-scanner  → google/osv-scanner GH Action, fail-on-vuln:true
-                         scans pnpm-lock.yaml (+ Cargo.lock)
+  └─ job osv-scanner  → SHA256-verified osv-scanner v2.3.8 binary
+                         scans pnpm-lock.yaml (+ Cargo.lock) with
+                         scripts/ci/osv-scanner.toml reviewed exceptions
 
 apps/desktop/src-tauri/Cargo.toml
   └─ [dependencies] argon2/aes-gcm/x25519-dalek/ed25519-dalek/hpke/rusqlite/reqwest

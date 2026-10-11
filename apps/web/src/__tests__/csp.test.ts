@@ -185,4 +185,16 @@ describe("CSP source-text guards", () => {
     expect(cspLine).toContain("https://api.groq.com");
     expect(cspLine).toContain("https://*.ingest.sentry.io");
   });
+
+  it("CSP7: connect-src includes https://api.deepseek.com for DeepSeek provider", () => {
+    const content = readFileSync(HEADERS_PATH, "utf-8");
+    const cspLine = content
+      .split("\n")
+      .find((l) => l.includes("Content-Security-Policy:"));
+    expect(cspLine).toBeTruthy();
+    expect(
+      cspLine,
+      "connect-src does not include https://api.deepseek.com — DeepSeek OpenAI-compatible requests are blocked; update ADR-0008 §S3 D3 + _headers",
+    ).toContain("https://api.deepseek.com");
+  });
 });

@@ -10,7 +10,12 @@ import { useState } from "react";
 import type { DragEvent, KeyboardEvent } from "react";
 import { LIST_COLOR_PALETTE } from "./internal/listColors.js";
 import { BoardCard } from "./BoardCard.js";
-import type { BoardList as BoardListData, BoardListColorId } from "./types.js";
+import type {
+  BoardList as BoardListData,
+  BoardListColorId,
+  BoardLabel,
+  BoardMemberOption,
+} from "./types.js";
 
 export interface BoardListProps {
   list: BoardListData;
@@ -54,6 +59,10 @@ export interface BoardListProps {
 
   // Card open
   onOpenCard?: (cardId: string) => void;
+
+  // Catalogs for resolving card label/member chips
+  labelCatalog?: readonly BoardLabel[];
+  memberCatalog?: readonly BoardMemberOption[];
 }
 
 const LIST_KEY_LABEL: Record<string, { en: string; zh: string }> = {
@@ -109,6 +118,8 @@ export function BoardList({
   onCardDragEnd,
   draggingCardId,
   onOpenCard,
+  labelCatalog,
+  memberCatalog,
 }: BoardListProps) {
   const name = resolveListName(list, lang);
   const [isRenaming, setIsRenaming] = useState(false);
@@ -358,6 +369,8 @@ export function BoardList({
             onClick={() => onOpenCard?.(card.id)}
             onDragStart={(event) => onCardDragStart(event, card.id)}
             onDragEnd={onCardDragEnd}
+            labelCatalog={labelCatalog}
+            memberCatalog={memberCatalog}
           />
         ))}
 

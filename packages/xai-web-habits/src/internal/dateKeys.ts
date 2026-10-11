@@ -1,8 +1,9 @@
+import { localDateKey } from "@repo/plugin-web-tokens";
 /**
  * @internal — dateKeys.ts
  * Pure date helper utilities for the habits module.
  *
- * All keys use UTC to eliminate DST edge cases (design.md §6, frozen assumption 4).
+ * Keys represent device-local civil dates (design.md §6, frozen assumption 4).
  * Design: design.md §6
  */
 
@@ -23,19 +24,20 @@ export function isLeapYear(year: number): boolean {
 }
 
 /**
- * Returns the UTC-based day key for the given Date.
+ * Returns the device-local day key for the given Date.
  * Format: `YYYY-MM-DD`.
  */
+/** Historical internal name retained for callers; semantics are local civil date. */
 export function utcDateKey(d: Date): DateKey {
-  return `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
+  return localDateKey(d);
 }
 
 /**
- * Returns the UTC-based month key for the given Date.
+ * Returns the device-local month key for the given Date.
  * Format: `YYYY-MM`.
  */
 export function monthKey(d: Date): MonthKey {
-  return `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}`;
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}`;
 }
 
 /**
@@ -45,21 +47,21 @@ export function monthKey(d: Date): MonthKey {
  */
 export function daysInMonth(year: number, month0: number): number {
   // Day 0 of next month = last day of this month
-  return new Date(Date.UTC(year, month0 + 1, 0)).getUTCDate();
+  return new Date(year, month0 + 1, 0).getDate();
 }
 
 /**
  * Returns an array of 7 Date objects for the week containing `now`,
  * where the week starts on the day specified by `weekStart`.
  *
- * All dates are UTC-midnight values (time = 00:00:00 UTC).
+ * All dates are local-midnight values (time = local midnight).
  *
  * @param now       Reference date (typically `new Date()`)
  * @param weekStart "sun" (default) or "mon"
  */
 export function weekDates(now: Date, weekStart: WeekStart = "sun"): Date[] {
-  // Get the UTC day-of-week for `now`
-  const todayDow = now.getUTCDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+  // Get the local day-of-week for `now`
+  const todayDow = now.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
 
   // How many days back to reach the start of the week?
   const startOffset = weekStart === "sun"
@@ -68,11 +70,11 @@ export function weekDates(now: Date, weekStart: WeekStart = "sun"): Date[] {
 
   const result: Date[] = [];
   for (let i = 0; i < 7; i++) {
-    const d = new Date(Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate() - startOffset + i,
-    ));
+    const d = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() - startOffset + i,
+    );
     result.push(d);
   }
   return result;

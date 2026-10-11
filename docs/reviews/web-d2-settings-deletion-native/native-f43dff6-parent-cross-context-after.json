@@ -1,0 +1,57 @@
+{
+  "requestedRef": "f43dff6",
+  "revision": "f43dff6d02c12e8c3955d0195e2112babb7f5fc5",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 6223,
+  "reopenedPid": 6253,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "held-account-lock",
+        "pass": true
+      },
+      {
+        "name": "concurrent-cross-account-recovery",
+        "pass": true
+      },
+      {
+        "name": "cross-context-recovery",
+        "pass": true
+      }
+    ],
+    "checkpoint": {
+      "held-account-lock": {
+        "receipt": "{\"version\":2,\"accountId\":\"native-delete-held-account-lock\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:19:40.354Z\",\"authGeneration\":\"auth-native-delete-held-account-lock\"}"
+      },
+      "concurrent-cross-account-recovery": {
+        "receipt": "{\"version\":2,\"accountId\":\"native-delete-concurrent-cross-account-recovery\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:19:40.399Z\",\"authGeneration\":\"auth-native-delete-concurrent-cross-account-recovery\"}"
+      },
+      "cross-context-recovery": {
+        "receipt": "{\"version\":2,\"accountId\":\"native-delete-cross-context-recovery\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:19:40.576Z\",\"authGeneration\":\"auth-native-delete-cross-context-recovery\"}"
+      }
+    },
+    "scope": "Actual Settings recovery, native WebLocks and IndexedDB secrets in isolated profile; synthetic auth cleanup callback, no real provider/server deletion, no full UI or old-client claim"
+  },
+  "after": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "held-account-lock",
+        "pass": true
+      },
+      {
+        "name": "concurrent-cross-account-recovery",
+        "pass": true
+      },
+      {
+        "name": "cross-context-recovery",
+        "pass": true
+      }
+    ],
+    "scope": "Actual Settings recovery, native WebLocks and IndexedDB secrets in isolated profile; synthetic auth cleanup callback, no real provider/server deletion, no full UI or old-client claim"
+  }
+}

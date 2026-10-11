@@ -1,0 +1,9 @@
+import React from './packages/plugin-web-metric-tracker/node_modules/react/index.js';import {createRoot} from './packages/plugin-web-metric-tracker/node_modules/react-dom/client.js';
+import {MetricTrackerModule} from './packages/plugin-web-metric-tracker/src/MetricTrackerModule.tsx';
+import {createSeedMetricTrackerState} from './packages/plugin-web-metric-tracker/src/internal/seed.ts';
+import {accountScope,generationKey} from './packages/plugin-web-storage/src/index.ts';
+import './packages/plugin-web-tokens/src/tokens.css';import './packages/plugin-web-tokens/src/layout.css';import './packages/plugin-web-metric-tracker/src/styles.css';
+const key=generationKey('native-metrics-A','one','xai_metric_tracker_state_v1'),bkey=generationKey('native-metrics-B','two','xai_metric_tracker_state_v1');
+const original=Storage.prototype.setItem;let root=createRoot(document.getElementById('app')!);
+function reset(){Storage.prototype.setItem=original;root.unmount();root=createRoot(document.getElementById('app')!);accountScope.activate(accountScope.lock('native-metrics-A'),'one');localStorage.setItem(key,JSON.stringify(createSeedMetricTrackerState()));localStorage.setItem(bkey,'B sentinel');root.render(<MetricTrackerModule lang="en"/>);}
+(window as any).verify={reset,deny:()=>{Storage.prototype.setItem=function(k,v){if(k===key)throw new DOMException('Independent native quota','QuotaExceededError');return original.call(this,k,v)}},restore:()=>{Storage.prototype.setItem=original},raw:()=>localStorage.getItem(key),external:()=>{const s=JSON.parse(localStorage.getItem(key)!);s.profile.targetWeightKg=99;localStorage.setItem(key,JSON.stringify(s));return localStorage.getItem(key)},switchB:()=>accountScope.activate(accountScope.lock('native-metrics-B'),'two'),Bsafe:()=>localStorage.getItem(bkey)==='B sentinel'};reset();

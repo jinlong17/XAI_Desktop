@@ -48,6 +48,13 @@ describe("countTodaysPomos", () => {
 });
 
 describe("sumTodaysFocusMs", () => {
+  it('counts early-ended actual time while completed-session counters remain zero', () => {
+    const rows = [{ ...FIXTURE_FOCUS_TODAY_PARTIAL, elapsedMs: 60_000 }];
+    expect(sumTodaysFocusMs(rows, TODAY_LOCAL)).toBe(60_000);
+    expect(sumTotalFocusMs(rows)).toBe(60_000);
+    expect(countTodaysPomos(rows, TODAY_LOCAL)).toBe(0);
+    expect(countTotalPomos(rows)).toBe(0);
+  });
   // DC4: today's focus ms
   it("DC4: completed focus today → correct sum", () => {
     const result = sumTodaysFocusMs([FIXTURE_FOCUS_TODAY], TODAY_LOCAL);

@@ -1,0 +1,51 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full original-obligation reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "a489adcb1205c56623738a8fa54696e40f22d17a",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 1,
+    "review_cap": 3,
+    "prior_source_author_used": 1,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "MED-03/CONTRACT-REVIEW1",
+  "source_inputs": [
+    "23bd8545b317e2d5565ad069aaabd0e65061737b"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-med03-contract-review-r1/review.md",
+    "docs/reviews/audit-parallel-med03-contract-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full649 immutable input identities/source exact2ADD/fixed parent/original and explicit7eb8280 corrected metadata bound; complete original312 orderedfields/39reversible module labels/939 evidence/formal13,3,3,293 preserved. Preparation is UNADOPTED, empty caller evidence notzero historical counts. Root hash receipt is not author semantic PASS.",
+    "Full original caller action and acceptance/no shrink, complete canonical Clockr2G1 E1-E25/E24/Rules and all required copies, before/sourcequalification/implementation/fixed/affected/native/actualvendor/fresh original acceptance/root append-only reconciliation/inventory mandatory. Every actual historical process/formal-vs-probe/refusal/unknown permanentcap3 retained; source-bound reuse only valid original evidence, no duplicate rerun or caller reset. Review1/3 static1 all execution0, reviewer neverrepair; conditional APPROVED docproposal or precise bounded REVISE author2 paths, no product scope grant or formal closure.",
+    "Authorstatic1 FAILED before any assertions/writes with Python encoding error; root authorized deterministic documentation construction and identity closure only, not rerun. Preserve failure, unrun original312/39/evidence/formal/16row/productboundary/canonicalID assertions must be independently assessed now; no retroactive replacement authorPASS. Full10 historical logartifact census, no runtime rerun.",
+    "Challenge existing accepted MED01/02 API authority: running absence included, paused excluded, explicit audio consent on recovery/no autoplay, one active-ended execution row until dismissal and no session history ledger. Original MED03 asks history/away/replay/actual fields; proposal must define every actual field without invented start-time/listening/history/statistics semantics. Existing rules first, no owner question unless conflicting explicit sources proved. End vs Dismiss, fixed expiry originaldeadline/manualelapsed/infinite/pause/recovery prefsvolume snapshot vs liveplayer honest.",
+    "All16 MED acceptance rows/full finite paths/full sharedaccount/genericreset/source availability and route-local actualMeditation vs persistent Pomodoro host. Recovery/native historical authors47047/47093 autoplay bypass vs independent50081/50172 genuine defaults distinct runs/duplicate runnerlogs retained. Generic reset touches session keys contradicting REL10 preference-only requirement is technical prerequisite not implicit policy or fix grant. No new schema/history/audio consumer/host/storage/account/CSS writes. Honest export lifetime/forcedloss limits."
+  ]
+}

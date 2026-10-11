@@ -1,0 +1,7 @@
+Environment: Node + fake-indexeddb@6.2.5; source bundled by esbuild@0.28.1
+Safety: isolated in-memory factories; no browser, network, or real user data
+AUTH_THEN_DEVICE: NotFoundError: No objectStore named device in this database
+AUTH_THEN_DEVICE_OBJECT_STORES: ["session"]
+DEVICE_THEN_AUTH: NotFoundError: No objectStore named session in this database
+DEVICE_THEN_AUTH_OBJECT_STORES: ["device"]
+AUDIT_RESULT: BOTH_SCHEMA_FAILURES_REPRODUCED

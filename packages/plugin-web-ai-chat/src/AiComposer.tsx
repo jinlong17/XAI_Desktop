@@ -1,19 +1,16 @@
 /**
  * AiComposer — composer pill containing: attach button, hidden file input,
- * text input (Enter to send / Shift+Enter newline), model picker popover,
- * voice mic toggle, send arrow button. Optional attachments row above.
+ * text input (Enter to send / Shift+Enter newline), voice mic toggle, send
+ * arrow button. Optional attachments row above.
  *
  * API contract: packages/xai-web-ai-chat/docs/api.md §1
  */
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
-import type { AiAttachment, AiModelId } from "./types.js";
-import { MODELS, findModelById } from "./internal/models.js";
+import type { AiAttachment } from "./types.js";
 import {
   IconArrowR,
-  IconChevD,
-  IconCheck2,
   IconClose,
   IconPaperclip,
   IconPlus,
@@ -27,8 +24,6 @@ export interface AiComposerProps {
   attachments: readonly AiAttachment[];
   onAttachFiles: (files: File[]) => void;
   onRemoveAttachment: (index: number) => void;
-  model: AiModelId;
-  onModelChange: (next: AiModelId) => void;
   voiceOn: boolean;
   onVoiceToggle: () => void;
   onSend: () => void;
@@ -43,8 +38,6 @@ export function AiComposer({
   attachments,
   onAttachFiles,
   onRemoveAttachment,
-  model,
-  onModelChange,
   voiceOn,
   onVoiceToggle,
   onSend,
@@ -52,8 +45,6 @@ export function AiComposer({
 }: AiComposerProps) {
   const zh = lang === "zh";
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const [modelOpen, setModelOpen] = useState(false);
-  const activeModel = findModelById(model);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -122,54 +113,6 @@ export function AiComposer({
           placeholder={zh ? "询问 XAI" : "Ask XAI"}
           aria-label={zh ? "询问 XAI" : "Ask XAI"}
         />
-        <div className="ai-model-wrap">
-          <button
-            type="button"
-            className="ai-model-btn"
-            onClick={() => setModelOpen((o) => !o)}
-            aria-haspopup="listbox"
-            aria-expanded={modelOpen}
-          >
-            {activeModel.name}
-            <IconChevD size={11} />
-          </button>
-          {modelOpen && (
-            <>
-              <div
-                className="popover-scrim"
-                role="presentation"
-                onClick={() => setModelOpen(false)}
-              />
-              <div className="popover ai-model-popover" role="listbox">
-                {MODELS.map((m) => {
-                  const itemClass =
-                    "popover-item" + (model === m.id ? " active" : "");
-                  return (
-                    <button
-                      key={m.id}
-                      type="button"
-                      className={itemClass}
-                      role="option"
-                      aria-selected={model === m.id}
-                      onClick={() => {
-                        onModelChange(m.id);
-                        setModelOpen(false);
-                      }}
-                    >
-                      <div>
-                        <div style={{ fontWeight: 700 }}>{m.name}</div>
-                        <div style={{ fontSize: 11, opacity: 0.65, marginTop: 2 }}>
-                          {zh ? m.descZh : m.descEn}
-                        </div>
-                      </div>
-                      {model === m.id && <IconCheck2 size={14} />}
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
-        </div>
         <button
           type="button"
           className={"ai-icon-round" + (voiceOn ? "" : " muted")}

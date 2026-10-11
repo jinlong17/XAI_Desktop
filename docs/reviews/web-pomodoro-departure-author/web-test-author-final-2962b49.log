@@ -1,0 +1,5 @@
+revision=2962b49
+executor=Sol author verification
+exit=0
+command=pnpm --filter @repo/web test
+result=27 files passed; 146 tests passed

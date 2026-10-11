@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage
+
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx (17 tests) 31ms
+
+ Test Files  1 passed (1)
+      Tests  17 passed (17)
+   Start at  20:17:55
+   Duration  909ms (transform 80ms, setup 0ms, collect 120ms, tests 31ms, environment 343ms, prepare 61ms)
+

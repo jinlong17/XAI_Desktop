@@ -1,0 +1,48 @@
+revision=fb3ae2f
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-canonical-remove-ONHXxO
+
+ ❯ docs/reviews/web-canonical-remove-read-failure/remove-contract.test.tsx (2 tests | 1 failed) 10ms
+   × failed read must not authorize canonical removal 9ms
+     → expected 1 to be +0 // Object.is equality
+     → expected null to be '{"format":"xai-command-state","versio…' // Object.is equality
+   ✓ readable envelope refuses legacy removal 1ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  15:23:21
+   Duration  747ms (transform 77ms, setup 0ms, collect 91ms, tests 10ms, environment 335ms, prepare 58ms)
+
+
+stderr | docs/reviews/web-canonical-remove-read-failure/remove-contract.test.tsx > readable envelope refuses legacy removal
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-canonical-remove-read-failure/remove-contract.test.tsx > failed read must not authorize canonical removal
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ docs/reviews/web-canonical-remove-read-failure/remove-contract.test.tsx:13:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-canonical-remove-read-failure/remove-contract.test.tsx > failed read must not authorize canonical removal
+AssertionError: expected null to be '{"format":"xai-command-state","versio…' // Object.is equality
+
+- Expected: 
+"{\"format\":\"xai-command-state\",\"version\":1,\"revision\":1,\"data\":[],\"receipts\":{\"request\":{\"operationVersion\":1,\"signature\":\"create\",\"result\":{\"ok\":true,\"targetId\":\"task\"},\"committedAt\":\"2026-09-09T00:00:00Z\"}}}"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-canonical-remove-read-failure/remove-contract.test.tsx:13:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯

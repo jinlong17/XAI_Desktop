@@ -1,0 +1,109 @@
+{
+  "wave": "P6",
+  "fixed_input": "d9c36dbb9400a39e447e47fb0a82d4868fb18195",
+  "max_workers": 3,
+  "tasks": [
+    {
+      "fixed_input": "d9c36dbb9400a39e447e47fb0a82d4868fb18195",
+      "dispatch_parent": "commit containing exactcard resolved beforelaunch",
+      "module": "web",
+      "no_children": true,
+      "protected": [
+        "allnonallowedfiles",
+        "globalcontrol/ledgers/inventory",
+        "product/runtime/tests/CSS/runner",
+        "originalcontracts/reports/logs",
+        "otherworktrees",
+        "push/merge/rebase/deploy/release/promote/D3"
+      ],
+      "stop": [
+        "unexpecteddirt/hash/scope",
+        "unsupportedownerbehavior",
+        "runtime needed",
+        "budgetexhausted"
+      ],
+      "id": "REL02+03/CONTRACT-REVIEW",
+      "workflow": "D",
+      "role": "fresh independent fullcontract reviewer neverrepair",
+      "model": "gpt-6-astra",
+      "source_inputs": [
+        "c6050091f21aca4f3003da8f67f92a41a4a528d4"
+      ],
+      "allowed_files": [
+        "docs/reviews/audit-parallel-rel02-rel03-contract-review-r1/review.md",
+        "docs/reviews/audit-parallel-rel02-rel03-contract-review-r1/inputs.sha256"
+      ],
+      "acceptance": [
+        "All5616 full input identities verified binary-safe against fixedcommits/disk; entire bothcaller obligations/EXECUTIONrecords/history/gates retained",
+        "Independently assess sourceclosure equivalence REL02 and drift REL03; minimalnecessary current Gate/BYOK integration evidence must have real causality, not broaden or waive original matrices",
+        "Actualcrossvendor gate/source+evidence/fullaccept path meaningful; no namedmodel/launch/auth asPASS",
+        "Explicit readiness/qualifiedoracle deps/exactfutureoutputs/cumulativebudgets/forbiddenpaths; honestAPPROVEDorREVISE with coordinates no repair",
+        "No rerun validhistory/no changes to states13/3/3/293 or current contracts/oldfailures"
+      ],
+      "budgets": {
+        "review_iteration": 1,
+        "family_cap": 3,
+        "static_pass": 1,
+        "runtime": 0
+      },
+      "state": "registered_ready"
+    },
+    {
+      "fixed_input": "d9c36dbb9400a39e447e47fb0a82d4868fb18195",
+      "dispatch_parent": "commit containing exactcard resolved beforelaunch",
+      "module": "web",
+      "no_children": true,
+      "protected": [
+        "allnonallowedfiles",
+        "globalcontrol/ledgers/inventory",
+        "product/runtime/tests/CSS/runner",
+        "originalcontracts/reports/logs",
+        "otherworktrees",
+        "push/merge/rebase/deploy/release/promote/D3"
+      ],
+      "stop": [
+        "unexpecteddirt/hash/scope",
+        "unsupportedownerbehavior",
+        "runtime needed",
+        "budgetexhausted"
+      ],
+      "id": "DASH-03/CONTRACT-CORRECT2",
+      "workflow": "C",
+      "role": "fresh independent contract correction author",
+      "model": "gpt-6-astra",
+      "source_inputs": [
+        "fd52c3746ba322e3cb0048748263b8cc29f2c932",
+        "792a6ba95157de6430d5f16a5b392aa8f0f89f22",
+        "cbf18b491ef10941d396bc9655d10c8beed4a68b",
+        "44d04c8edc9cfc793317059a503152f8b27f6171"
+      ],
+      "allowed_files": [
+        "docs/reviews/audit-parallel-world-clocks-preparation-r2/contract.md",
+        "docs/reviews/audit-parallel-world-clocks-preparation-r2/inputs.sha256"
+      ],
+      "acceptance": [
+        "Newversion only preserve entire WC01-WC20/originalactionacceptance/approvedW1 allowempty, nooverwrite r1",
+        "R1 source-grounded compatibility table semanticJSON/raw/exactexpectedRaw guards; preserve admitted legacy usable visibility and rawbytes/export-only actuallimits; no invented restoration/productdecision. If irreducible behavior decision explicitly record smallest unresolvedchoice and stopapproval, other bounded fixes continue",
+        "R2 causespecific nonmodal Tab/ShiftTab/pointer exit neverstealsoutsidefocus; Escape/success invoker and recoverydisappearance onlyownfocus withlivenessfence; fullnativepositive/negative matrices preserved",
+        "R3 mandatory streaming gitarchive preserved without bufferedalternative; exactbytecount/root/lock/partial-evidence guards",
+        "Pin actualClockREVISE/hardcap, full14futureallowlist andWC01-20 account/source/export/multiparticipant/native/date/regression/vendoraccept gates remain, noimplementationready fromproposal",
+        "Allold79andreview100 identities hashbound, exactsourcegrounded changes limitedR1-R3, no runtime/engine/schema/accountUI/shared modifications"
+      ],
+      "budgets": {
+        "author_iteration": 2,
+        "family_cap": 3,
+        "review_used": 1,
+        "next_fresh_review": 2,
+        "static_pass": 1,
+        "runtime": 0
+      },
+      "state": "registered_queued_slot"
+    }
+  ],
+  "dispatch_now": [
+    "REL02+03/CONTRACT-REVIEW"
+  ],
+  "queued": [
+    "DASH-03/CONTRACT-CORRECT2"
+  ]
+}

@@ -28,7 +28,8 @@ describe("AppearancePane rendering", () => {
   });
 
   it("AC-RENDER-3: theme card matching current data-theme has .active class", () => {
-    document.documentElement.setAttribute("data-theme", "dark");
+    // CP-APPEARANCE-01 disposition: seed stored bytes instead of DOM state.
+    localStorage.setItem("xai_pref_theme", '"dark"');
     const { container } = render(<AppearancePane lang="en" />);
     const activeCards = container.querySelectorAll(".theme-card.active");
     expect(activeCards.length).toBe(1);
@@ -73,7 +74,8 @@ describe("AppearancePane rendering", () => {
   });
 
   it("AC-RENDER-8: font slider value reflects fontScale; slider-val shows rounded %", () => {
-    document.documentElement.style.fontSize = "17.6px"; // 17.6/16 = 1.10
+    // CP-APPEARANCE-01 disposition: seed stored bytes instead of DOM state.
+    localStorage.setItem("xai_pref_font_scale", "1.1");
     const { container } = render(<AppearancePane lang="en" />);
     const fontSlider = container.querySelector<HTMLInputElement>('input[type="range"][min="0.85"]');
     expect(parseFloat(fontSlider?.value ?? "0")).toBeCloseTo(1.1, 1);

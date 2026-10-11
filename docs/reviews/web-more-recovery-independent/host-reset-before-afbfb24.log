@@ -1,0 +1,106 @@
+revision=afbfb24 fixed_commit=afbfb24d6f7311366b77852eda927d08467478c2
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-vFK9Ke
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx (11 tests | 10 failed) 611ms
+   × actual More retains failed latest 'win_type' 80ms
+     → expected 'window' to be 'tray' // Object.is equality
+   × actual More retains failed latest 'default_tag' 42ms
+     → expected 'none' to be 'work' // Object.is equality
+   × actual More retains failed latest 'default_list' 41ms
+     → expected 'inbox' to be 'today' // Object.is equality
+   × actual route holds failed More work at field 0 60ms
+     → expected '/app/settings/date_time' to be '/app/settings/more' // Object.is equality
+   × actual route holds failed More work at field 1 62ms
+     → expected '/app/settings/date_time' to be '/app/settings/more' // Object.is equality
+   × actual route holds failed More work at field 2 58ms
+     → expected '/app/settings/date_time' to be '/app/settings/more' // Object.is equality
+   × actual signout holds mixed device and private work 50ms
+     → expected true to be 'pending' // Object.is equality
+   ✓ clean More permits departure with zero seeded writes 43ms
+   × actual route holds failed physical reset at field 0 even when value equals default 58ms
+     → expected '/app/settings/date_time' to be '/app/settings/more' // Object.is equality
+   × actual route holds failed physical reset at field 1 even when value equals default 61ms
+     → expected '/app/settings/date_time' to be '/app/settings/more' // Object.is equality
+   × actual route holds failed physical reset at field 2 even when value equals default 56ms
+     → expected '/app/settings/date_time' to be '/app/settings/more' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 1 passed (11)
+   Start at  06:00:36
+   Duration  4.17s (transform 1.92s, setup 0ms, collect 2.84s, tests 611ms, environment 386ms, prepare 77ms)
+
+
+stderr | docs/reviews/web-more-recovery-independent/host.test.tsx > actual More retains failed latest 'win_type'
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual More retains failed latest 'win_type'
+AssertionError: expected 'window' to be 'tray' // Object.is equality
+
+Expected: "tray"
+Received: "window"
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx:27:328
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual More retains failed latest 'default_tag'
+AssertionError: expected 'none' to be 'work' // Object.is equality
+
+Expected: "work"
+Received: "none"
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx:27:328
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual More retains failed latest 'default_list'
+AssertionError: expected 'inbox' to be 'today' // Object.is equality
+
+Expected: "today"
+Received: "inbox"
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx:27:328
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual route holds failed More work at field 0
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual route holds failed More work at field 1
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual route holds failed More work at field 2
+AssertionError: expected '/app/settings/date_time' to be '/app/settings/more' // Object.is equality
+
+Expected: "/app/settings/more"
+Received: "/app/settings/date_time"
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx:28:262
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual signout holds mixed device and private work
+AssertionError: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx:29:307
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual route holds failed physical reset at field 0 even when value equals default
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual route holds failed physical reset at field 1 even when value equals default
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual route holds failed physical reset at field 2 even when value equals default
+AssertionError: expected '/app/settings/date_time' to be '/app/settings/more' // Object.is equality
+
+Expected: "/app/settings/more"
+Received: "/app/settings/date_time"
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx:32:597
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯

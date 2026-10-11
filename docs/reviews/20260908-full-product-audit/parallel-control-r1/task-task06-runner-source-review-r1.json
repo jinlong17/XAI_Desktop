@@ -1,0 +1,48 @@
+{
+  "id": "TASK-06/RUNNER-SOURCE-REVIEW",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full source reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "7ba41f0e3c88510b2589e43090b10f7484c3956d",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "9c85a2f1049d54145bdb72366f6d4df26d3c1567",
+    "d6a310f2472356bd69d7a240c81f4b71e35d5ac1",
+    "9bd435df80345e6e94f256777a3d865144cb9611"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-task06-runner-source-review-r1/review.md",
+    "docs/reviews/audit-parallel-task06-runner-source-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Verify all229 source identities and original195/210 prep/review inputs, exact8ADD/7file fullindex source.patch, complete original task obligation and ten approved oracles/111cases/64visual/25G1 references/4440 finite paths without accepting planned counts as implemented evidence",
+    "Review executable source against every required row, explicitly distinguish real module CRUD/drop/persisted counts, complete business effects, premount read/source faults, disk Export, late-held settlement/restored-lock retry, genuine publicAuthProvider/App/Tasks host identity and200percent browser zoom/frozenfocus from synthetic callbacks/emulation/refusals. Missing required coverage yields precise REVISE with exact proposed fresh versioned correction scope, not accepted residuals",
+    "Challenge independent causal qualification controls, parser negative faults vs generic nonzero, archive/alias ownership, all stream/journal/child-close late failures/deadlines/cleanup summary ordering, exact external wrapper/adapters/dependencies and no private source substitution. Validate inherited permanent budget correspondence and samecaller independence; never reset Clock histories or rerun them",
+    "Clarify actual A-Codex sole-root builtin-worker mode versus inaccurate D-Codex label; only report, never repair. Source review APPROVED is not qualification/adoption/before/native/business acceptance. Return coordinate-specific full source verdict and bounded correction path preserving source author1/3 and source review1/3"
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/CSS/runner repair/globalcontrol/ledgers/inventory",
+    "original evidence/contracts/methods/failures/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "source_review_iteration": 1,
+    "source_review_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "native": 0,
+    "browser": 0,
+    "qualification": 0,
+    "probes": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported product decision or weakening standard",
+    "runtime need or inherited cap/protected boundary"
+  ],
+  "no_children": true
+}

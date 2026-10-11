@@ -1,0 +1,51 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full original-obligation reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "a489adcb1205c56623738a8fa54696e40f22d17a",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 1,
+    "review_cap": 3,
+    "prior_source_author_used": 1,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "CD-03/CONTRACT-REVIEW1",
+  "source_inputs": [
+    "2a35488361bfbad596473fc355bd18d8feb5b164"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-cd03-contract-review-r1/review.md",
+    "docs/reviews/audit-parallel-cd03-contract-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full3326 immutable input identities/source exact2ADD/fixed parent/original and explicit7eb8280 corrected metadata bound; complete original312 orderedfields/39reversible module labels/939 evidence/formal13,3,3,293 preserved. Preparation is UNADOPTED, empty caller evidence notzero historical counts. Root hash receipt is not author semantic PASS.",
+    "Full original caller action and acceptance/no shrink, complete canonical Clockr2G1 E1-E25/E24/Rules and all required copies, before/sourcequalification/implementation/fixed/affected/native/actualvendor/fresh original acceptance/root append-only reconciliation/inventory mandatory. Every actual historical process/formal-vs-probe/refusal/unknown permanentcap3 retained; source-bound reuse only valid original evidence, no duplicate rerun or caller reset. Review1/3 static1 all execution0, reviewer neverrepair; conditional APPROVED docproposal or precise bounded REVISE author2 paths, no product scope grant or formal closure.",
+    "Complete14 CD business acceptance rows/11 conditional paths; existing owning design excludes zero-day notification and source has no recurrence/reminder/job consumer. Challenge no-owner-question conclusion against original CD03 obligation, not assume missing source decides behavior. Future JOB integration remains inactive separate authorization, no background delivery or recurrence promise.",
+    "Actual custom expiry changes projection only, active and history views overlap, dynamic presets mounted daily/visibility refresh can persist/hidden-deleted preset dates change, manual Restore can bump date or merge override; observed implementation is not new owner acceptance. Time missing midnight vs end-of-day comment remains CD01, duplicate presets CD02, astronomicalCNY fallback limitations explicit. All truthful ENZH visible disclosure vs proposed misleading never-automatic-write/archive/completed-task semantics.",
+    "Full REL05 historical before/fixed process/actualcommands/duplicate logs/permanentunknown counts and complete canonical G1 preserved. Actual public route/account/generic export-delete/import source availability fallback and mid-export ownerchange limitations; no shared storage/schema/account/reset/notification/Jobs/CSS/host scope expansion. Single tooling JS parse failure before tools/static launch preserved, not hidden runtime or added static iteration."
+  ]
+}

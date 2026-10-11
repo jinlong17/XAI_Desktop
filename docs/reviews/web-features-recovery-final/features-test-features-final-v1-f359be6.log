@@ -1,0 +1,116 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+mode=features-test
+suffix=features-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-final/verify-packages.mjs f359be6 all features-final-v1
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=cde91389f0a0baca69d266f5b6a6c5ff8098ac1f
+runner_sha256=f7758f28fd98cba97f2a04ba8a85b8410a381749f4aa8e8d1b6cca6a45653c05
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/plugin-web-settings-features-panel (packages/xai-web-settings-features-panel) kind=vitest script=test: "vitest run"
+archive_file_sha256 packages/xai-web-settings-features-panel/package.json=20d5e894139071d92457aa68e76890c104583abc8df89bef81aecb0b122bae83 packages/xai-web-settings-features-panel/tsconfig.json=8264895f6ff844446cf042a6ea81db1464d3187dd69095537b215e6634a6c9c7 packages/xai-web-settings-features-panel/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 packages/xai-web-settings-features-panel/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-features-panel/eslint.config.js=e5fd80cab496575b6978b55d18244da722c48ad0e917a1a1149337612ae14bb3
+package_tree=074659c050fadd11ed3ff99274e441b48771b490 features_package_tree=074659c050fadd11ed3ff99274e441b48771b490
+node_modules_links third_party=448 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-settings-shell->packages/plugin-web-settings-shell @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus @repo/xai-web-shell->packages/xai-web-shell
+tsconfig_extends_checked=46 unresolved=none own=@repo/plugin-web-settings-features-panel:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/docs
+required_provenance_absent_from_archive=packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts,packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-features-panel/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-zUZyCO/packages/xai-web-settings-features-panel/final-features-test.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-zUZyCO/.final-guard/report-features-test.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+tool_exit=0
+harness_checks=PASS (13/13)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-zUZyCO/packages/xai-web-settings-features-panel
+
+ ✓ src/__tests__/filterModulesByFeaturePrefs.test.ts > filterModulesByFeaturePrefs > AC-FILTER-1: all prefs true → input is unchanged by value 1ms
+ ✓ src/__tests__/filterModulesByFeaturePrefs.test.ts > filterModulesByFeaturePrefs > AC-FILTER-2: one pref false → that module is removed 1ms
+ ✓ src/__tests__/filterModulesByFeaturePrefs.test.ts > filterModulesByFeaturePrefs > AC-FILTER-3: non-FeatureId modules always pass through 0ms
+ ✓ src/__tests__/filterModulesByFeaturePrefs.test.ts > filterModulesByFeaturePrefs > AC-FILTER-4: pure — same inputs produce structurally equal output across calls 0ms
+ ✓ src/__tests__/DisabledFeatureFallback.test.tsx > DisabledFeatureFallback > AC-FB-1: renders module name + body copy + CTA hint 16ms
+ ✓ src/__tests__/DisabledFeatureFallback.test.tsx > DisabledFeatureFallback > AC-FB-2: bilingual — ZH variant 2ms
+ ✓ src/__tests__/DisabledFeatureFallback.test.tsx > DisabledFeatureFallback > AC-FB-3: unknown moduleId warns in DEV and falls back to generic copy 2ms
+ ✓ src/__tests__/useFeaturePrefs.test.tsx > useFeaturePrefs > AC-PREFS-1: defaults are all true 9ms
+ ✓ src/__tests__/useFeaturePrefs.test.tsx > useFeaturePrefs > AC-PREFS-2: setPref propagates to subscribers 2ms
+ ✓ src/__tests__/useFeaturePrefs.test.tsx > useFeaturePrefs > AC-PREFS-3: localStorage round-trip 1ms
+ ✓ src/__tests__/withDisabledFallback.test.tsx > withDisabledFallback > AC-WRAP-1: when pref is true (default), original render is invoked 14ms
+ ✓ src/__tests__/withDisabledFallback.test.tsx > withDisabledFallback > AC-WRAP-2: when pref is false, every child path renders DisabledFeatureFallback 5ms
+ ✓ src/__tests__/withDisabledFallback.test.tsx > withDisabledFallback > AC-WRAP-3: top-level metadata is preserved 1:1 1ms
+ ✓ src/__tests__/withDisabledFallback.test.tsx > withDisabledFallback > AC-WRAP-4: wrapping twice is idempotent in behavior 2ms
+ ✓ src/__tests__/featuresPaneEntry.test.tsx > featuresPane registry entry > AC-REG-1: id === 'features' 1ms
+ ✓ src/__tests__/featuresPaneEntry.test.tsx > featuresPane registry entry > AC-REG-2: i18nKey === 'settings.features' 0ms
+ ✓ src/__tests__/featuresPaneEntry.test.tsx > featuresPane registry entry > AC-REG-3: render({ lang }) returns a renderable React element 32ms
+ ✓ src/__tests__/FeaturesPane.test.tsx > FeaturesPane > AC-PANE-1: renders 8 feature cards in featureIdOrder 34ms
+ ✓ src/__tests__/FeaturesPane.test.tsx > FeaturesPane > AC-PANE-2: each row shows the nav.<id> i18n label (EN) 24ms
+ ✓ src/__tests__/FeaturesPane.test.tsx > FeaturesPane > AC-PANE-3: clicking a Toggle flips the underlying pref 18ms
+ ✓ src/__tests__/FeaturesPane.test.tsx > FeaturesPane > AC-PANE-4: renders 8 distinct FeatureThumb SVGs (no img/network) 10ms
+ ✓ src/__tests__/FeaturesPane.test.tsx > FeaturesPane > AC-PANE-5: bilingual — lang='zh' shows Chinese strings 14ms
+ ✓ src/__tests__/FeaturesPane.test.tsx > FeaturesPane > AC-PANE-6: SettingsFooter Reset restores all 8 prefs to true 45ms
+
+ Test Files  6 passed (6)
+      Tests  23 passed (23)
+   Start at  08:44:30
+   Duration  1.21s (transform 457ms, setup 350ms, collect 1.47s, tests 237ms, environment 2.37s, prepare 408ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-zUZyCO/.final-guard/report-features-test.json
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS archive package.json script "test" is "vitest run" (found "vitest run")
+harness PASS JSON report parsed
+harness PASS reported test files equal the expected set (6 files, from the archive by the package include)
+harness PASS required test file ran: src/__tests__/useFeaturePrefs.test.tsx
+harness PASS required test file ran: src/__tests__/withDisabledFallback.test.tsx
+harness PASS required test file ran: src/__tests__/filterModulesByFeaturePrefs.test.ts
+harness PASS required test file ran: src/__tests__/DisabledFeatureFallback.test.tsx
+harness PASS required test file ran: src/__tests__/featuresPaneEntry.test.tsx
+harness PASS required test file ran: src/__tests__/FeaturesPane.test.tsx
+harness PASS package config in effect (environment jsdom, globals true, setupFiles [vitest.setup.ts], include ["src/__tests__/**/*.{test,spec}.{ts,tsx}"], root = archive package)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (8 present of 10 listed)
+harness PASS no test-file suite error
+required_tests_absent_from_archive=src/__tests__/FeaturesPaneRecovery.test.tsx
+json_report=success=true numTotalTestSuites=12 numTotalTests=23 numPassedTests=23 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals files=6 tests=23 passed=23 failed=0 other=0 suite_errors=0 unhandled_error_lines=0
+file src/__tests__/DisabledFeatureFallback.test.tsx status=passed tests=3 passed=3 failed=0
+file src/__tests__/FeaturesPane.test.tsx status=passed tests=6 passed=6 failed=0
+file src/__tests__/featuresPaneEntry.test.tsx status=passed tests=3 passed=3 failed=0
+file src/__tests__/filterModulesByFeaturePrefs.test.ts status=passed tests=4 passed=4 failed=0
+file src/__tests__/useFeaturePrefs.test.tsx status=passed tests=3 passed=3 failed=0
+file src/__tests__/withDisabledFallback.test.tsx status=passed tests=4 passed=4 failed=0
+case 001 PASSED | src/__tests__/DisabledFeatureFallback.test.tsx > DisabledFeatureFallback AC-FB-1: renders module name + body copy + CTA hint
+case 002 PASSED | src/__tests__/DisabledFeatureFallback.test.tsx > DisabledFeatureFallback AC-FB-2: bilingual — ZH variant
+case 003 PASSED | src/__tests__/DisabledFeatureFallback.test.tsx > DisabledFeatureFallback AC-FB-3: unknown moduleId warns in DEV and falls back to generic copy
+case 004 PASSED | src/__tests__/FeaturesPane.test.tsx > FeaturesPane AC-PANE-1: renders 8 feature cards in featureIdOrder
+case 005 PASSED | src/__tests__/FeaturesPane.test.tsx > FeaturesPane AC-PANE-2: each row shows the nav.<id> i18n label (EN)
+case 006 PASSED | src/__tests__/FeaturesPane.test.tsx > FeaturesPane AC-PANE-3: clicking a Toggle flips the underlying pref
+case 007 PASSED | src/__tests__/FeaturesPane.test.tsx > FeaturesPane AC-PANE-4: renders 8 distinct FeatureThumb SVGs (no img/network)
+case 008 PASSED | src/__tests__/FeaturesPane.test.tsx > FeaturesPane AC-PANE-5: bilingual — lang='zh' shows Chinese strings
+case 009 PASSED | src/__tests__/FeaturesPane.test.tsx > FeaturesPane AC-PANE-6: SettingsFooter Reset restores all 8 prefs to true
+case 010 PASSED | src/__tests__/featuresPaneEntry.test.tsx > featuresPane registry entry AC-REG-1: id === 'features'
+case 011 PASSED | src/__tests__/featuresPaneEntry.test.tsx > featuresPane registry entry AC-REG-2: i18nKey === 'settings.features'
+case 012 PASSED | src/__tests__/featuresPaneEntry.test.tsx > featuresPane registry entry AC-REG-3: render({ lang }) returns a renderable React element
+case 013 PASSED | src/__tests__/filterModulesByFeaturePrefs.test.ts > filterModulesByFeaturePrefs AC-FILTER-1: all prefs true → input is unchanged by value
+case 014 PASSED | src/__tests__/filterModulesByFeaturePrefs.test.ts > filterModulesByFeaturePrefs AC-FILTER-2: one pref false → that module is removed
+case 015 PASSED | src/__tests__/filterModulesByFeaturePrefs.test.ts > filterModulesByFeaturePrefs AC-FILTER-3: non-FeatureId modules always pass through
+case 016 PASSED | src/__tests__/filterModulesByFeaturePrefs.test.ts > filterModulesByFeaturePrefs AC-FILTER-4: pure — same inputs produce structurally equal output across calls
+case 017 PASSED | src/__tests__/useFeaturePrefs.test.tsx > useFeaturePrefs AC-PREFS-1: defaults are all true
+case 018 PASSED | src/__tests__/useFeaturePrefs.test.tsx > useFeaturePrefs AC-PREFS-2: setPref propagates to subscribers
+case 019 PASSED | src/__tests__/useFeaturePrefs.test.tsx > useFeaturePrefs AC-PREFS-3: localStorage round-trip
+case 020 PASSED | src/__tests__/withDisabledFallback.test.tsx > withDisabledFallback AC-WRAP-1: when pref is true (default), original render is invoked
+case 021 PASSED | src/__tests__/withDisabledFallback.test.tsx > withDisabledFallback AC-WRAP-2: when pref is false, every child path renders DisabledFeatureFallback
+case 022 PASSED | src/__tests__/withDisabledFallback.test.tsx > withDisabledFallback AC-WRAP-3: top-level metadata is preserved 1:1
+case 023 PASSED | src/__tests__/withDisabledFallback.test.tsx > withDisabledFallback AC-WRAP-4: wrapping twice is idempotent in behavior
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-zUZyCO/packages/xai-web-settings-features-panel","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-zUZyCO/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["./vitest.setup.ts"],"include":["src/__tests__/**/*.{test,spec}.{ts,tsx}"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/xai-web-settings-features-panel/src/FeaturesPane.tsx packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts packages/xai-web-settings-features-panel/src/DisabledFeatureFallback.tsx packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts
+pin_required_provenance_missing=none
+pin_modules=74 by package: packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-settings-features-panel=17 packages/xai-web-shell=9

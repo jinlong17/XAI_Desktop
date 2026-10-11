@@ -1,3 +1,5 @@
+import { accountScope } from "@repo/plugin-web-storage";
+import { resetAccountFixture } from "./accountTestSetup.js";
 /**
  * AiChatModule integration tests.
  *
@@ -49,7 +51,8 @@ describe("AiChatModule integration (I)", () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
-    localStorage.clear();
+    vi.unstubAllGlobals();
+    act(() => resetAccountFixture());
     void aiKeyStorage.clearKey("anthropic").catch(() => undefined);
     void aiKeyStorage.clearKey("openai-compatible").catch(() => undefined);
   });
@@ -106,10 +109,12 @@ describe("AiChatModule integration (I)", () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MAX_MS + 50);
     });
-    const raw = localStorage.getItem("xai_ai_convos");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_ai_convos"));
     expect(raw).not.toBeNull();
-    const parsed = JSON.parse(raw!) as Array<{ title: string }>;
+    const parsed = JSON.parse(raw!) as Array<{ title: string; summary?: string; messages?: unknown[] }>;
     expect(parsed[0]?.title).toBe("weekly review");
+    expect(parsed[0]?.summary).toBe(DEMO_REPLY_EN);
+    expect(parsed[0]?.messages?.length).toBe(2);
   });
 
   it("I6: new-chat resets messages but leaves xai_ai_convos intact", async () => {
@@ -134,7 +139,7 @@ describe("AiChatModule integration (I)", () => {
     // messages cleared
     expect(container.querySelector(".ai-thread")).toBeNull();
     // convos intact
-    expect(localStorage.getItem("xai_ai_convos")).not.toBeNull();
+    expect(localStorage.getItem(accountScope.physicalKey("xai_ai_convos"))).not.toBeNull();
   });
 
   it("I7: insights toggle flips xai_ai_insights and hides starters", () => {
@@ -147,7 +152,7 @@ describe("AiChatModule integration (I)", () => {
       fireEvent.click(toggle);
     });
     expect(container.querySelectorAll(".ai-starter").length).toBe(0);
-    expect(localStorage.getItem("xai_ai_insights")).toBe("false");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_ai_insights"))).toBe("false");
   });
 
   it("I8: voice mic toggle flips xai_ai_voice and swaps the icon aria-label", () => {
@@ -161,32 +166,20 @@ describe("AiChatModule integration (I)", () => {
         container.querySelector<HTMLButtonElement>('button[aria-label="Voice off"]')!,
       );
     });
-    expect(localStorage.getItem("xai_ai_voice")).toBe("true");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_ai_voice"))).toBe("true");
     expect(
       container.querySelector('button[aria-label="Voice on"]'),
     ).not.toBeNull();
   });
 
-  it("I9: model picker default 'Haiku 4.5'; selecting Opus updates label", () => {
+  it("I9: model picker is hidden from the user-facing chat surface", () => {
     const { container } = render(<AiChatModule lang="en" />);
-    expect(container.querySelector(".ai-model-btn")?.textContent).toContain(
-      "Haiku 4.5",
-    );
-    act(() => {
-      fireEvent.click(container.querySelector<HTMLButtonElement>(".ai-model-btn")!);
-    });
-    const items = container.querySelectorAll<HTMLButtonElement>(".popover-item");
-    act(() => {
-      fireEvent.click(items[2]!); // opus
-    });
-    expect(container.querySelector(".ai-model-btn")?.textContent).toContain(
-      "Opus 4.1",
-    );
+    expect(container.querySelector(".ai-model-btn")).toBeNull();
+    expect(container.textContent).not.toMatch(/Haiku 4\.5|Sonnet|Opus 4\.1/i);
   });
 
   it("I10: corrupted convo entries are filtered with dev warning", () => {
-    localStorage.setItem(
-      "xai_ai_convos",
+    localStorage.setItem(accountScope.physicalKey("xai_ai_convos"),
       JSON.stringify([{}, { id: "ok", title: "t", time: "1" }]),
     );
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined);
@@ -206,7 +199,26 @@ describe("AiChatModule integration (I)", () => {
     expect(container.querySelector(".ai-stage")?.className).not.toContain(
       "thinking",
     );
-    expect(localStorage.getItem("xai_ai_convos")).toBeNull();
+    expect(localStorage.getItem(accountScope.physicalKey("xai_ai_convos"))).toBeNull();
+  });
+
+  it("I11b: small screens start with the chat sidebar collapsed", () => {
+    const matchMedia = vi.fn((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+    vi.stubGlobal("matchMedia", matchMedia);
+
+    const { container } = render(<AiChatModule lang="en" />);
+    expect(matchMedia).toHaveBeenCalledWith("(min-width: 768px)");
+    expect(container.querySelector(".ai-side.open")).toBeNull();
+    expect(screen.getByRole("button", { name: /Open sidebar/i })).toBeInTheDocument();
   });
 
   it("I12: unmount during thinking does not throw or leak", async () => {
@@ -249,13 +261,32 @@ describe("AiChatModule integration (I)", () => {
     expect(container.querySelector(".ai-side")?.className).toContain("open");
   });
 
-  it("I14: clicking an existing convo row switches activeConvo and clears messages", async () => {
+  it("I14: clicking an existing convo row loads its persisted messages", async () => {
     // Seed two convos in storage.
-    localStorage.setItem(
-      "xai_ai_convos",
+    localStorage.setItem(accountScope.physicalKey("xai_ai_convos"),
       JSON.stringify([
-        { id: "c1", title: "older", time: "Yesterday" },
-        { id: "c2", title: "newer", time: "Today" },
+        {
+          id: "c1",
+          title: "older",
+          time: "Yesterday",
+          activeAt: "2026-06-01T00:00:00.000Z",
+          summary: "old answer",
+          messages: [
+            { role: "user", text: "old question", attachments: null },
+            { role: "assistant", text: "old answer", attachments: null },
+          ],
+        },
+        {
+          id: "c2",
+          title: "newer",
+          time: "Today",
+          activeAt: "2026-06-02T00:00:00.000Z",
+          summary: "new answer",
+          messages: [
+            { role: "user", text: "new question", attachments: null },
+            { role: "assistant", text: "new answer", attachments: null },
+          ],
+        },
       ]),
     );
     const { container } = render(<AiChatModule lang="en" />);
@@ -272,7 +303,7 @@ describe("AiChatModule integration (I)", () => {
     });
     expect(container.querySelectorAll(".ai-msg").length).toBeGreaterThan(0);
 
-    // Click an existing row → messages cleared, active swapped.
+    // Click an existing row → stored messages load, active swapped.
     const rows = container.querySelectorAll<HTMLLIElement>(".ai-convo-row");
     // Find the row whose title is "older".
     let olderRow: HTMLLIElement | null = null;
@@ -286,7 +317,9 @@ describe("AiChatModule integration (I)", () => {
     act(() => {
       fireEvent.click(olderRow!);
     });
-    expect(container.querySelectorAll(".ai-msg").length).toBe(0);
+    expect(container.querySelectorAll(".ai-msg").length).toBe(2);
+    expect(container.textContent).toContain("old question");
+    expect(container.textContent).toContain("old answer");
     const newRows = container.querySelectorAll<HTMLLIElement>(".ai-convo-row");
     let activeText = "";
     for (const r of newRows) {
@@ -296,6 +329,49 @@ describe("AiChatModule integration (I)", () => {
       }
     }
     expect(activeText).toContain("older");
+  });
+
+  it("I14b: persisted active conversation restores after remount", async () => {
+    localStorage.setItem(accountScope.physicalKey("xai_ai_convos"),
+      JSON.stringify([
+        {
+          id: "c-restored",
+          title: "restored",
+          time: "Just now",
+          activeAt: "2026-06-01T00:00:00.000Z",
+          messages: [
+            { role: "user", text: "persisted user", attachments: null },
+            { role: "assistant", text: "persisted assistant", attachments: null },
+          ],
+        },
+      ]),
+    );
+    const { container } = render(<AiChatModule lang="en" />);
+    expect(container.textContent).toContain("persisted user");
+    expect(container.textContent).toContain("persisted assistant");
+  });
+
+  it("I14c: deleting a conversation removes it from storage and clears active thread", async () => {
+    localStorage.setItem(accountScope.physicalKey("xai_ai_convos"),
+      JSON.stringify([
+        {
+          id: "c-delete",
+          title: "delete me",
+          time: "Just now",
+          activeAt: "2026-06-01T00:00:00.000Z",
+          messages: [{ role: "user", text: "delete question", attachments: null }],
+        },
+      ]),
+    );
+    const { container } = render(<AiChatModule lang="en" />);
+    expect(container.textContent).toContain("delete question");
+    const deleteButton = screen.getByRole("button", { name: /Delete chat: delete me/i });
+    act(() => {
+      fireEvent.click(deleteButton);
+    });
+    expect(container.textContent).not.toContain("delete question");
+    const parsed = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_ai_convos")) ?? "[]") as unknown[];
+    expect(parsed.length).toBe(0);
   });
 
   it("I15: rapid double Enter queues FIFO — both user bubbles immediate, replies serialized in send order", async () => {
@@ -732,7 +808,7 @@ describe("AiChatModule integration (I)", () => {
     );
 
     // Capture localStorage BEFORE render
-    const taskColsBefore = localStorage.getItem("xai_task_cols");
+    const taskColsBefore = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
 
     const { container } = render(<AiChatModule lang="en" />);
     const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
@@ -749,7 +825,7 @@ describe("AiChatModule integration (I)", () => {
     });
 
     // KEY ASSERTION: localStorage has NOT changed — no silent write occurred
-    const taskColsAfter = localStorage.getItem("xai_task_cols");
+    const taskColsAfter = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(taskColsAfter).toBe(taskColsBefore); // no store mutation before Confirm
 
     // Also verify NO web:tasks:create-requested event was emitted
@@ -789,7 +865,7 @@ describe("AiChatModule integration (I)", () => {
       },
     );
 
-    const taskColsBefore = localStorage.getItem("xai_task_cols");
+    const taskColsBefore = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
 
     const { container } = render(<AiChatModule lang="en" />);
     const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
@@ -818,7 +894,7 @@ describe("AiChatModule integration (I)", () => {
     });
 
     // KEY ASSERTION: no store mutation on Cancel (tool_result is LLM conversation only)
-    const taskColsAfter = localStorage.getItem("xai_task_cols");
+    const taskColsAfter = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(taskColsAfter).toBe(taskColsBefore);
 
     // Wait for final acknowledgement stream + thinking cleared
@@ -871,7 +947,12 @@ describe("AiChatModule integration (I)", () => {
     // Spy on emitWebEvent to capture the write event.
     const { onWebEvent } = await import("@repo/xai-web-event-bus");
     const emittedEvents: unknown[] = [];
-    const unsub = onWebEvent("web:tasks:create-requested", (e) => emittedEvents.push(e));
+    // This adapter-boundary test supplies an explicit successful business receipt.
+    // Actual native storage failure/receipt behavior has separate integration tests.
+    const unsub = onWebEvent("web:tasks:create-requested", (e) => {
+      emittedEvents.push(e);
+      emitWebEvent("web:ai:tool-write-receipt", { requestId: e.requestId, requestChannel: "web:tasks:create-requested", attemptId: e.attemptId, owner: e.owner!, ok: true });
+    });
 
     try {
       const { container } = render(<AiChatModule lang="en" />);
@@ -954,7 +1035,10 @@ describe("AiChatModule integration (I)", () => {
 
     const { onWebEvent } = await import("@repo/xai-web-event-bus");
     const allWriteEvents: unknown[] = [];
-    const unsub1 = onWebEvent("web:tasks:create-requested", (e) => allWriteEvents.push({ type: "task", e }));
+    const unsub1 = onWebEvent("web:tasks:create-requested", (e) => {
+      allWriteEvents.push({ type: "task", e });
+      emitWebEvent("web:ai:tool-write-receipt", { requestId: e.requestId, requestChannel: "web:tasks:create-requested", attemptId: e.attemptId, owner: e.owner!, ok: true });
+    });
     const unsub2 = onWebEvent("web:calendar:create-requested", (e) => allWriteEvents.push({ type: "calendar", e }));
 
     try {
@@ -1024,7 +1108,7 @@ describe("AiChatModule integration (I)", () => {
       return origEmit(channel as Parameters<typeof origEmit>[0], ...args as [Parameters<typeof origEmit>[1]]);
     });
 
-    const taskColsBefore = localStorage.getItem("xai_task_cols");
+    const taskColsBefore = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
 
     const { container } = render(<AiChatModule lang="en" />);
     const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
@@ -1039,7 +1123,7 @@ describe("AiChatModule integration (I)", () => {
     // NOT clicking Confirm → no write event
     expect(emitted).not.toContain("web:tasks:delete-requested");
     // localStorage unchanged
-    expect(localStorage.getItem("xai_task_cols")).toBe(taskColsBefore);
+    expect(localStorage.getItem(accountScope.physicalKey("xai_task_cols"))).toBe(taskColsBefore);
 
     vi.restoreAllMocks();
   });
@@ -1182,8 +1266,13 @@ describe("AiChatModule integration (I)", () => {
 
     const emittedPayloads: Array<{ channel: string; payload?: unknown }> = [];
     const eventBus = await import("@repo/xai-web-event-bus");
+    const actualEmit = eventBus.emitWebEvent;
     vi.spyOn(eventBus, "emitWebEvent").mockImplementation((channel, payload) => {
       emittedPayloads.push({ channel: channel as string, payload });
+      if (channel === "web:tasks:delete-requested") {
+        const request = payload as import("@repo/xai-web-event-bus").WebEventMap["web:tasks:delete-requested"];
+        actualEmit("web:ai:tool-write-receipt", { requestId: request.requestId, requestChannel: channel, attemptId: request.attemptId, owner: request.owner!, ok: true });
+      }
     });
 
     const { container } = render(<AiChatModule lang="en" />);
@@ -1381,7 +1470,7 @@ describe("AiChatModule integration (I)", () => {
     const taskCols = [
       { id: "next7", tasks: [{ id: "t-ctx-1", title: SENTINEL_TASK_TITLE, done: false }] },
     ];
-    localStorage.setItem("xai_task_cols", JSON.stringify(taskCols));
+    localStorage.setItem(accountScope.physicalKey("xai_task_cols"), JSON.stringify(taskCols));
 
     // Capture streamCompleteChat calls from AiChatModule.
     const streamMod = await import("../internal/claudeStreamAdapter.js");
@@ -1419,7 +1508,7 @@ describe("AiChatModule integration (I)", () => {
     // When the real streamCompleteChat runs, buildTodayContext reads this and injects context.
     // The data is present — injection would happen in the non-mocked adapter.
     // (Full injection assertion is at claudeStreamAdapter.test.ts level via fetch body capture.)
-    const rawCols = localStorage.getItem("xai_task_cols");
+    const rawCols = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(rawCols).not.toBeNull();
     expect(rawCols).toContain(SENTINEL_TASK_TITLE);
   });

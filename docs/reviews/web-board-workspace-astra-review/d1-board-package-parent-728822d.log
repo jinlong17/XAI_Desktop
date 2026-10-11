@@ -1,0 +1,95 @@
+revision=728822d
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-NqHCVK/packages/plugin-web-board-workspaces
+
+ ✓ src/__tests__/InboxPanel.test.tsx (12 tests) 48ms
+ ✓ src/__tests__/BoardSwitcher.test.tsx (16 tests) 111ms
+ ✓ src/__tests__/CardDetailDialog.test.tsx (16 tests) 94ms
+ ✓ src/__tests__/BoardCreator.test.tsx (10 tests) 127ms
+ ✓ src/__tests__/FilterPopover.test.tsx (12 tests) 236ms
+ ✓ src/__tests__/StatusOverviewBanner.test.tsx (10 tests) 106ms
+ ✓ src/__tests__/ShareModal.test.tsx (10 tests) 150ms
+ ✓ src/__tests__/PlannerPanel.test.tsx (15 tests) 214ms
+ ✓ src/__tests__/BoardComposerRecovery.test.tsx (4 tests) 725ms
+ ✓ src/__tests__/BoardCreateRecovery.test.tsx (5 tests) 933ms
+ ✓ src/__tests__/BoardDeleteConfirmDialog.test.tsx (11 tests) 56ms
+ ✓ src/__tests__/taskLinkCommand.test.ts (11 tests) 26ms
+ ✓ src/__tests__/BoardRecoveryInitialization.test.tsx (2 tests) 15ms
+ ✓ src/__tests__/shareUrl.test.ts (6 tests) 7ms
+ ✓ src/__tests__/shareContract.test.ts (3 tests) 16ms
+ ✓ src/__tests__/WorkspaceSaveRecovery.test.tsx (6 tests) 21ms
+ ✓ src/__tests__/panelOps.test.ts (19 tests) 5ms
+ ✓ src/__tests__/ringMath.test.ts (16 tests) 4ms
+ ✓ src/__tests__/savedFilters.test.ts (5 tests) 5ms
+ ✓ src/__tests__/index-barrel.test.ts (4 tests) 4ms
+ ✓ src/__tests__/filterState.test.ts (8 tests) 6ms
+ ✓ src/__tests__/guards.test.ts (12 tests) 7ms
+ ✓ src/__tests__/registration.test.tsx (6 tests) 3ms
+ ✓ src/__tests__/responsiveStyles.test.ts (3 tests) 2ms
+ ✓ src/__tests__/types.test.ts (3 tests) 2ms
+ ✓ src/__tests__/BoardWorkspacesModule.test.tsx (93 tests) 3815ms
+
+ Test Files  26 passed (26)
+      Tests  318 passed (318)
+   Start at  17:11:05
+   Duration  6.28s (transform 1.57s, setup 3.95s, collect 7.51s, tests 6.74s, environment 12.22s, prepare 1.89s)
+
+
+stderr | src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > canonical quota retains latest editor and never selects nonexistent board
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardComposerRecovery.test.tsx > Card/list composer confirmed persistence > card quota keeps latest draft and stable id through repeated attempts
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardComposerRecovery.test.tsx > Card/list composer confirmed persistence > list quota keeps latest draft and stable id through repeated attempts
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > active selection quota is partial success; retry only opens one existing board
+[plugin-web-storage] quota exceeded for xai_active_board.
+
+stderr | src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > newer raw wins over a failed create retry
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardComposerRecovery.test.tsx > Card/list composer confirmed persistence > newer raw and subsequent account switch preserve the draft without retry/export mutation
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > old owner cannot retry or export its failed creation into B
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > intent write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > acknowledgement write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18b: json-null board storage is preserved through mount, automatic automation, and manual automation
+[plugin-web-storage] decode failed for xai_boards_v2: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-NqHCVK/packages/plugin-web-storage/src/internal/storage.ts:107:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-NqHCVK/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-NqHCVK/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-NqHCVK/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at BoardWorkspacesModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-NqHCVK/packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:336:37)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18b: syntax-invalid board storage is preserved through mount, automatic automation, and manual automation
+[plugin-web-storage] decode failed for xai_boards_v2: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-NqHCVK/packages/plugin-web-storage/src/internal/storage.ts:107:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-NqHCVK/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-NqHCVK/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-NqHCVK/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at BoardWorkspacesModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-NqHCVK/packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:336:37)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | src/__tests__/shareUrl.test.ts > generateShareUrl > SU-6 crypto.subtle === undefined fallback returns boardId.slice(0,8)
+[shareUrl] SubtleCrypto unavailable; using boardId slice fallback

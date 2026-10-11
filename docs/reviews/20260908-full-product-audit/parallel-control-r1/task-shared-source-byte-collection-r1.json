@@ -1,0 +1,68 @@
+{
+  "id": "SHARED/SOURCE-BYTE-COLLECTION1",
+  "workflow": "A",
+  "module": "web",
+  "role": "fresh low-risk evidence-only installed dependency byte collector; no design or method repair",
+  "model": "gpt-6-luna",
+  "fixed_input": "61b6644d2eac5af6c70749bf672839ba7ba79bca",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "f667a0b6996b4039d2c4e5ca28657953703e830b",
+    "bdc06bd5b57f026caf6d7838563bfdae6f8684c9"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-shared-source-byte-collection-r1/collection.md",
+    "docs/reviews/audit-parallel-shared-source-byte-collection-r1/source-bytes.json",
+    "docs/reviews/audit-parallel-shared-source-byte-collection-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Only gather actualexisting permissible byteinputs for approvedfullfive-rowbasis beforeTASK/METLASTsource3; doNOT reviseexhaustedsharedauthor3/noauthor4disguise/no newmethod/design/code. Rootread-onlydependencyroot permitted originalgoal, no other-sessionworktree access. StartingReactDOM/react/scheduler/actual@supabaseSDK roots andactual package.json recursive import dependencyrefs withinrootnode_modules/.pnpm; up to24package roots4096regularfiles32MiBraw; enumerate finiteexactpaths BEFOREread and rejectlimit/drift. Allregularsource/manifest/license/entrysourcefiles retained in source-bytes.json UTF8orbase64 entries withlogicalpackagepath/originalabsoluteprovider/sha256/bytecount/exactpackageversion. No secret/env/cache/arbitraryuserfiles, no fetch/install/processimport or code execution. FilecontentstoredimmutableGit makes futureauthorsavailable without installedsource reliance.",
+    "Bind P0lockdf05f2dd/appsweb/authpackage manifests+auth-generation-client/publicAppProviders/mainstartup/conditions plus full2863review/full2842sourceandpredecessors/TASK477MET2663 caseconfigs. Installedversion/lock mismatches refuse notproof; observable packageexport/browser/development/production/source/transitive conditions report actual evidence and missinggraph boundaries no guess. Recordsource locations for ReactDOM defineProperty/inputtracker forwarding/untracking and SDKsession/APIconfig as retrievalfacts ONLY, independentreviewmustjudge source/configclosure. Rawpackagetrees arentactualfutureconsumption: actualcopy destinationrehash+loadedresolution/config/descriptorcapabilities remainqualification mandatory. Do not labelstaticbytecollection sourcequalified/runtimesafe.",
+    "Inventory exactexisting rootcapture/supervisor/bootstrap source in fixedGit/controllerdocuments/TASK/MET priorfiles; identify actualcode+digests ifpresent and report absence otherwise. Controller manualleases/metadata scripts not falsely rootcapture implementation. No newcode/method/sourcegrant, if prerequisite impossible preciseBLOCKEDmissinginput continueotheraudit. NO author4 or deliberatelyincomplete finalsource3. Freshindependentbytes/forwardingconfiguration evidence review before anycaller3release; rootonlyadoption/caller exact amendedcards later.",
+    "Fullfivebases/alloriginalTASK111+112/4440+5072/64/59/MET89/2437/2497/protectedAppearancefileblockfunction/G1§14E1-E25E24Rules/budgets/312939 unchanged. Exact3ADDonly no protectedwrite/runtime/network/install/tests/build/lint/browser/native/server/qualification/probes/vendor/children/push. ReadvalidateALLinputs/constructALLTHREEbuffers beforeANYwrite/static1commandfailurestopsnoretry/FULLexecsessiondrain. Collections1/3 genuinelynewevidencepurpose notsemanticrepair, priorfailed/exhausted histories retained. Complete or truthfulpartial/BLOCKED report+immutablebytes ifpossible notmethodadoption."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/sharedCSS/storage/schema/account/host/config/lockfile",
+    "all original contracts/runners/failures/evidence",
+    "globalcontrols/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "static_pass": 1,
+    "evidence_collection_iteration": 1,
+    "evidence_collection_cap": 3
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported producttradeoff or weakeningstandards",
+    "runtime orprotectedwrite need"
+  ],
+  "no_children": true,
+  "original_item": null,
+  "read_only_dependency_root": "/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop",
+  "permitted_dependency_start_packages": [
+    "react-dom",
+    "react",
+    "scheduler",
+    "@supabase/supabase-js"
+  ],
+  "source_limits": {
+    "recursive_package_roots": 24,
+    "regular_files": 4096,
+    "raw_bytes": 33554432
+  },
+  "no_network_install": true,
+  "no_module_execution": true
+}

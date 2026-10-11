@@ -1,0 +1,58 @@
+{
+  "id": "MET-05/RUNNER-SOURCE",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent versioned evidence machinery source author, not qualifier",
+  "model": "gpt-6.1-sol",
+  "fixed_input": "23e7a34421fbe2141fe4a25ed0f8e331aec5c8f2",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "ced574944f5defd14e9bf558cd9e8dbe55eb8ec6",
+    "adf06b6936efa9c6cc0437c603159302aaa0c88a"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-met05-runner-source-r1/driver.mjs",
+    "docs/reviews/audit-parallel-met05-runner-source-r1/fixture.tsx",
+    "docs/reviews/audit-parallel-met05-runner-source-r1/vite.config.mjs",
+    "docs/reviews/audit-parallel-met05-runner-source-r1/qualification-controls.test.mjs",
+    "docs/reviews/audit-parallel-met05-runner-source-r1/execution-manifest.json",
+    "docs/reviews/audit-parallel-met05-runner-source-r1/qualification.md",
+    "docs/reviews/audit-parallel-met05-runner-source-r1/inputs.sha256",
+    "docs/reviews/audit-parallel-met05-runner-source-r1/source.patch"
+  ],
+  "acceptance": [
+    "Executable source for completeM1-M9 accepted contract:12surface configurations/48pointer attempts/twoWeightcontrols/8keyboardwalks/14entries/realhost account/source/M8failure+retry qualification controls; manifest concrete allrow memberships/source and exactfinite future artifact paths",
+    "Preserve independentlyreviewed newPlanned units sourcebound novelty, distinct fromM8 historicalREL05save-retry/native lowerbound2 lifetime unknown; M8 cannotlaunch, renamed transportoractor notreset. Preserve alloldfailures/regressionunit histories andrealhost/frozenmethod gates",
+    "Build truthful actualmodule andactualhost lanes with narrowqualified seams needed for synthetic accounts; no reference/mock component replacedforactualproduct. Unsupported adapters/preconditions explicitblocked, notfalsePASS. Shared fullhostpublicAuthadapter logicaldependency source-onlyplanning allowed, no product/API/sourcewrites; futureuse onlyexact independentlyqualified/adopted identity",
+    "Stream immutablearchive/requestedresolvedSHA/lockhash/@repoaliasclosure guard, nooverwrite, completejournal/stdoutstderr/finaloutcome evenfailures, boundeddeadline/teardown; native CDPpipe trusted passiveaudit no nativeVirtualKeyCode; originalbacdbbc pixelFocusWalk allfile/block/function hashes unchanged, no threshold/settle/visibility weakening",
+    "Positive-negative executablequalification source formissinglabel/enabledsideeffect/Logfailure/hash/alias/trust failures plus lifecycle/stream/deadline/latecleanup failures; no author runtests. Qualification separatefresh actor/cap3 thenrootadoption beforebusiness",
+    "Source report candidexecutable coverage/gaps/source hashes/patchserialization, allrequiredvendor/freshAST/affectedregression/nochangebefore/verify/inventorygates retained; no assumptionof implementation orbefore readiness"
+  ],
+  "protected": [
+    "allnonallowedpaths",
+    "product/tests/CSS/config/lockfiles/sharedsources",
+    "originalrunners/contracts/failurelogs",
+    "globalcontrols/threeledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "source_author_iteration": 1,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification_runs": 0,
+    "probes": 0,
+    "permanent_histories": "new units require purpose/source novelty registration after review; correspondingM8/oldunits retain unknown/exhausted and cannotlaunch"
+  },
+  "stop": [
+    "hash/scope/dirty",
+    "unsupportedadapter orprotectedsource needed",
+    "runtime orqualification needed duringsourcepass",
+    "budget reset orfrozenmethodcontradiction"
+  ],
+  "no_children": true
+}

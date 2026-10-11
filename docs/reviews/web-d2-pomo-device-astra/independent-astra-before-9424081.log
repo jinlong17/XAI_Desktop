@@ -1,0 +1,330 @@
+revision=9424081 fixed_commit=94240814af78449802e99cfc3fab23f94ef9dc59
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-em2SIR
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx (21 tests | 10 failed) 576ms
+   × preset: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 50ms
+     → expected '"focus-30"' to be '"focus-25"' // Object.is equality
+   ✓ preset: physical fault retains current choice and actual Retry persists only the unresolved intent 62ms
+   × custom_minutes: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 24ms
+     → expected '47' to be '45' // Object.is equality
+   ✓ custom_minutes: physical fault retains current choice and actual Retry persists only the unresolved intent 40ms
+   × display_style: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 19ms
+     → expected '"minimal"' to be '"apple"' // Object.is equality
+   ✓ display_style: physical fault retains current choice and actual Retry persists only the unresolved intent 33ms
+   × theme: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 22ms
+     → expected '"blue"' to be '"coral"' // Object.is equality
+   ✓ theme: physical fault retains current choice and actual Retry persists only the unresolved intent 32ms
+   × sound: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 18ms
+     → expected '"bell"' to be '"soft-chime"' // Object.is equality
+   ✓ sound: physical fault retains current choice and actual Retry persists only the unresolved intent 36ms
+   × muted: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 17ms
+     → expected 'true' to be 'false' // Object.is equality
+   ✓ muted: physical fault retains current choice and actual Retry persists only the unresolved intent 30ms
+   × invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting 18ms
+     → preset: expected '"focus-25"' to be '"not-a-preset"' // Object.is equality
+     → preset: expected [ Array(1) ] to deeply equal []
+     → custom_minutes: expected '45' to be 'null' // Object.is equality
+     → custom_minutes: expected [ [ …(2) ] ] to deeply equal []
+     → display_style: expected '"apple"' to be '{}' // Object.is equality
+     → display_style: expected [ [ …(2) ] ] to deeply equal []
+     → theme: expected '"coral"' to be '"plaid"' // Object.is equality
+     → theme: expected [ [ 'xai_pref_pomodoro_theme', …(1) ] ] to deeply equal []
+     → sound: expected '"soft-chime"' to be 'false' // Object.is equality
+     → sound: expected [ [ 'xai_pref_pomodoro_sound', …(1) ] ] to deeply equal []
+     → muted: expected 'false' to be '"false"' // Object.is equality
+     → muted: expected [ [ 'xai_pref_pomodoro_muted', …(1) ] ] to deeply equal []
+     → expected null not to be null
+   ✓ an unavailable theme read cannot seed its rendered fallback and shows preference recovery 10ms
+   ✓ custom minutes partial success retries only failed minutes and preserves a newer successful-sibling preset 34ms
+   × a clean cross-document theme update projects without creating a write 19ms
+     → expected 'false' to be 'true' // Object.is equality
+   × dirty queued theme keeps local selection but refuses an external replacement and Retry cannot overwrite it 20ms
+     → expected null not to be null
+   × uncertain unchanged theme Retry verifies one physical write and does not fake Saved early 16ms
+     → expected null not to be null
+   ✓ pending device theme survives A to B to locked account with the same key and newest local selection 21ms
+   ✓ two rapid mute clicks retain the latest false choice after a queued first toggle 10ms
+   ✓ partial preference export is actual latest six-value JSON and download setup failure retains choices 45ms
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 11 passed (21)
+   Start at  21:07:24
+   Duration  1.96s (transform 268ms, setup 0ms, collect 464ms, tests 576ms, environment 580ms, prepare 106ms)
+
+
+stderr | docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > preset: physical fault retains current choice and actual Retry persists only the unresolved intent
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+[plugin-web-storage] decode failed for xai_pref_pomodoro_custom_minutes: Error: Cannot decode stored value with codec "json"
+    at getPrefAutosave (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-em2SIR/packages/plugin-web-storage/src/internal/storage.ts:372:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-em2SIR/packages/plugin-web-pomodoro/src/PomodoroModule.tsx:212:19
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at PomodoroModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-em2SIR/packages/plugin-web-pomodoro/src/PomodoroModule.tsx:211:45)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > preset: actual control waits for its physical key lock; UI stays current and timer bytes remain separate
+AssertionError: expected '"focus-30"' to be '"focus-25"' // Object.is equality
+
+Expected: ""focus-25""
+Received: ""focus-30""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:7:340
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > custom_minutes: actual control waits for its physical key lock; UI stays current and timer bytes remain separate
+AssertionError: expected '47' to be '45' // Object.is equality
+
+Expected: "45"
+Received: "47"
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:7:340
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > display_style: actual control waits for its physical key lock; UI stays current and timer bytes remain separate
+AssertionError: expected '"minimal"' to be '"apple"' // Object.is equality
+
+Expected: ""apple""
+Received: ""minimal""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:7:340
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > theme: actual control waits for its physical key lock; UI stays current and timer bytes remain separate
+AssertionError: expected '"blue"' to be '"coral"' // Object.is equality
+
+Expected: ""coral""
+Received: ""blue""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:7:340
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > sound: actual control waits for its physical key lock; UI stays current and timer bytes remain separate
+AssertionError: expected '"bell"' to be '"soft-chime"' // Object.is equality
+
+Expected: ""soft-chime""
+Received: ""bell""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:7:340
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > muted: actual control waits for its physical key lock; UI stays current and timer bytes remain separate
+AssertionError: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:7:340
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: preset: expected '"focus-25"' to be '"not-a-preset"' // Object.is equality
+
+Expected: ""not-a-preset""
+Received: ""focus-25""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:536
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: preset: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_pomodoro_preset",
++     "\"focus-25\"",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:618
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: custom_minutes: expected '45' to be 'null' // Object.is equality
+
+Expected: "null"
+Received: "45"
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:536
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: custom_minutes: expected [ [ …(2) ] ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_pomodoro_custom_minutes",
++     "45",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:618
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: display_style: expected '"apple"' to be '{}' // Object.is equality
+
+Expected: "{}"
+Received: ""apple""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:536
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: display_style: expected [ [ …(2) ] ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_pomodoro_display_style",
++     "\"apple\"",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:618
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: theme: expected '"coral"' to be '"plaid"' // Object.is equality
+
+Expected: ""plaid""
+Received: ""coral""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:536
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: theme: expected [ [ 'xai_pref_pomodoro_theme', …(1) ] ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_pomodoro_theme",
++     "\"coral\"",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:618
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: sound: expected '"soft-chime"' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: ""soft-chime""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:536
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: sound: expected [ [ 'xai_pref_pomodoro_sound', …(1) ] ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_pomodoro_sound",
++     "\"soft-chime\"",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:618
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: muted: expected 'false' to be '"false"' // Object.is equality
+
+Expected: ""false""
+Received: "false"
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:536
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: muted: expected [ [ 'xai_pref_pomodoro_muted', …(1) ] ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_pomodoro_muted",
++     "false",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:618
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:657
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > a clean cross-document theme update projects without creating a write
+AssertionError: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:13:282
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > dirty queued theme keeps local selection but refuses an external replacement and Retry cannot overwrite it
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:14:479
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/22]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > uncertain unchanged theme Retry verifies one physical write and does not fake Saved early
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:15:647
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/22]⎯

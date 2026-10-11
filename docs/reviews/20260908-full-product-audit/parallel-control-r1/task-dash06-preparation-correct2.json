@@ -1,0 +1,51 @@
+{
+  "id": "DASH-06/PREPARE-CORRECT2",
+  "workflow": "C",
+  "module": "web",
+  "role": "fresh independent bounded contract corrector, not previous author or reviewer",
+  "model": "gpt-6-astra",
+  "fixed_input": "85065cccad251747da97944a80dd805c4dae44ef",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "f8546788d28106aac17b96797dcb08469717dcdc",
+    "c269ae212135f3b7729f843825ece70c7a00a724"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-dash06-preparation-r2/contract.md",
+    "docs/reviews/audit-parallel-dash06-preparation-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "Address fresh review R1/R2 throughout entire contract: existing accepted true count/dots8/localday/readonly and original explicit scale alternative authorize bounded S; remove unsupported S/G owner question/dependency. G inactive future separate request, no new goal key/editor/default/writer/schema grant",
+    "Preserve complete original DASH06 action/acceptance/all16D06rows/nine conditional candidate paths/source-error D06-08 impact prerequisite/full current canonicalClockr2G1 E1-E25+E24subrows/affected judging copies/before/fullqualification/vendor/freshacceptance/reconcile/inventory and all protected boundaries. No display-only fullcalleracceptance",
+    "Finite actual-purpose correspondence distinguishes sourcebound genuinelynew visibleENZH scale explanation and truthfullocalized above8AX from inherited package/count/date/owner/account/recovery/host/native/Clockmethod histories. No corresponding old semanticpurpose found based on source comparison permits root first bounded source task, not mixed runtime counts reset. Unknown/exhaustedold units stay blocked; refusal counts and previous actors/cost preserved",
+    "Full312 original fields retained with39 reversible module normalizations/original_module, 933 original+6TT08 evidence939/status13/3/3/293 unchanged. Preserve r1 andreview1; freshcontractreview2 follows, no direct product dispatch"
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "all product/tests/runner/CSS/tokens/storage/schema/host/config/lockfiles",
+    "all original contracts/methods/evidence/failures",
+    "global controls/three ledgers/inventory/other worktrees",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "preparation_author_iteration": 2,
+    "preparation_author_cap": 3,
+    "prior_contract_review_used": 1,
+    "contract_review_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "native": 0,
+    "browser": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported explicit product conflict; freeze precise condition without invention",
+    "need protected write/runtime or broadened scope"
+  ],
+  "no_children": true
+}

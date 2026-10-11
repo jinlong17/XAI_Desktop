@@ -1,0 +1,60 @@
+{
+  "requestedRef": "2b666ed",
+  "revision": "2b666eda345268efe9e0697bfc1fc8dc4474dc63",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 80779,
+  "reopenedPid": 80879,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "absent-six-keys",
+        "pass": true
+      },
+      {
+        "name": "held-device-mute",
+        "pass": true
+      }
+    ],
+    "checkpoint": {
+      "snapshot": {
+        "xai_pref_pomodoro_preset": "\"focus-25\"",
+        "xai_pref_pomodoro_custom_minutes": "45",
+        "xai_pref_pomodoro_display_style": "\"apple\"",
+        "xai_pref_pomodoro_theme": "\"coral\"",
+        "xai_pref_pomodoro_sound": "\"soft-chime\"",
+        "xai_pref_pomodoro_muted": "true"
+      }
+    },
+    "scope": "Actual Pomodoro preferences, real native Web Locks, isolated synthetic account, idle timer byte controls only; CSS omitted"
+  },
+  "after": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "six-device-keys-after-process-reopen",
+        "pass": true,
+        "actual": {
+          "xai_pref_pomodoro_preset": "\"focus-25\"",
+          "xai_pref_pomodoro_custom_minutes": "45",
+          "xai_pref_pomodoro_display_style": "\"apple\"",
+          "xai_pref_pomodoro_theme": "\"coral\"",
+          "xai_pref_pomodoro_sound": "\"soft-chime\"",
+          "xai_pref_pomodoro_muted": "true"
+        },
+        "expected": {
+          "xai_pref_pomodoro_preset": "\"focus-25\"",
+          "xai_pref_pomodoro_custom_minutes": "45",
+          "xai_pref_pomodoro_display_style": "\"apple\"",
+          "xai_pref_pomodoro_theme": "\"coral\"",
+          "xai_pref_pomodoro_sound": "\"soft-chime\"",
+          "xai_pref_pomodoro_muted": "true"
+        }
+      }
+    ],
+    "scope": "Final saved six-key device checkpoint after process reopen; not six independent cases or unsaved draft recovery"
+  }
+}

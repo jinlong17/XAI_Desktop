@@ -1,0 +1,205 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ❯ docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx (11 tests | 9 failed) 272ms
+   × widget allocates only 10 minutes after midnight from a 23:50–00:10 entry 7ms
+     → expected +0 to be 600000 // Object.is equality
+   × main day view allocates 10 minutes to each adjacent day, retaining the source record 135ms
+     → expected [ '0m · 0', '20m · 1' ] to deeply equal [ '10m · 1', '10m · 1' ]
+   × future closed records contribute zero to today and this week 1ms
+     → expected [ 3600000, 3600000, 1 ] to deeply equal [ +0, +0, +0 ]
+   × a segment ending after now contributes elapsed time only 0ms
+     → expected 1200000 to be 600000 // Object.is equality
+   × week boundary includes the intersecting Monday portion of a Sunday-started entry 0ms
+     → expected +0 to be 600000 // Object.is equality
+   × custom insight month-total includes a prior-month entry intersecting this month 54ms
+     → expected '0m' to be '10m' // Object.is equality
+   × spring DST natural day gets its actual elapsed intersection 35ms
+     → expected '0m · 0' to be '23h 00m · 1' // Object.is equality
+   × fall DST natural day gets its actual elapsed intersection 38ms
+     → expected '0m · 0' to be '25h 00m · 1' // Object.is equality
+   × paused multi-segment entry counts the later-day segment without counting the pause 1ms
+     → expected +0 to be 300000 // Object.is equality
+   ✓ control: a segment ending exactly at today start contributes nothing today 0ms
+   ✓ control: absolute lifetime segment duration already handles spring/fall elapsed hours 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx > widget allocates only 10 minutes after midnight from a 23:50–00:10 entry
+AssertionError: expected +0 to be 600000 // Object.is equality
+
+- Expected
++ Received
+
+- 600000
++ 0
+
+ ❯ docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx:17:48
+     15| it('widget allocates only 10 minutes after midnight from a 23:50–00:10…
+     16|  writeTimeTrackerEntries([entry('2026-04-30T23:50:00','2026-05-01T00:1…
+     17|  expect(getTimeTrackerSnapshot().todayTotalMs).toBe(10*minute);
+       |                                                ^
+     18| });
+     19| it('main day view allocates 10 minutes to each adjacent day, retaining…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx > main day view allocates 10 minutes to each adjacent day, retaining the source record
+AssertionError: expected [ '0m · 0', '20m · 1' ] to deeply equal [ '10m · 1', '10m · 1' ]
+
+- Expected
++ Received
+
+  [
+-   "10m · 1",
+-   "10m · 1",
++   "0m · 0",
++   "20m · 1",
+  ]
+
+ ❯ docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx:22:28
+     20|  writeTimeTrackerEntries([entry('2026-04-30T23:50:00','2026-05-01T00:1…
+     21|  const today=dayTotal();fireEvent.click(screen.getByLabelText('Previou…
+     22|  expect([today,yesterday]).toEqual(['10m · 1','10m · 1']);
+       |                            ^
+     23| });
+     24| it('future closed records contribute zero to today and this week',()=>{
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx > future closed records contribute zero to today and this week
+AssertionError: expected [ 3600000, 3600000, 1 ] to deeply equal [ +0, +0, +0 ]
+
+- Expected
++ Received
+
+  [
+-   0,
+-   0,
+-   0,
++   3600000,
++   3600000,
++   1,
+  ]
+
+ ❯ docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx:26:117
+     24| it('future closed records contribute zero to today and this week',()=>{
+     25|  writeTimeTrackerEntries([entry('2026-05-02T13:00:00','2026-05-02T14:0…
+     26|  const snapshot=getTimeTrackerSnapshot();expect([snapshot.todayTotalMs…
+       |                                                                                                                     ^
+     27| });
+     28| it('a segment ending after now contributes elapsed time only',()=>{
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx > a segment ending after now contributes elapsed time only
+AssertionError: expected 1200000 to be 600000 // Object.is equality
+
+- Expected
++ Received
+
+- 600000
++ 1200000
+
+ ❯ docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx:30:48
+     28| it('a segment ending after now contributes elapsed time only',()=>{
+     29|  writeTimeTrackerEntries([entry('2026-05-01T11:50:00','2026-05-01T12:1…
+     30|  expect(getTimeTrackerSnapshot().todayTotalMs).toBe(10*minute);
+       |                                                ^
+     31| });
+     32| it('week boundary includes the intersecting Monday portion of a Sunday…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx > week boundary includes the intersecting Monday portion of a Sunday-started entry
+AssertionError: expected +0 to be 600000 // Object.is equality
+
+- Expected
++ Received
+
+- 600000
++ 0
+
+ ❯ docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx:34:47
+     32| it('week boundary includes the intersecting Monday portion of a Sunday…
+     33|  vi.setSystemTime(at('2026-05-04T12:00:00'));writeTimeTrackerEntries([…
+     34|  expect(getTimeTrackerSnapshot().weekTotalMs).toBe(10*minute);
+       |                                               ^
+     35| });
+     36| it('custom insight month-total includes a prior-month entry intersecti…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx > custom insight month-total includes a prior-month entry intersecting this month
+AssertionError: expected '0m' to be '10m' // Object.is equality
+
+Expected: "10m"
+Received: "0m"
+
+ ❯ docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx:41:111
+     39|  render(<TimeTrackerModule lang="en" />);fireEvent.click(screen.getAll…
+     40|  const card=Array.from(document.querySelectorAll('.tt-ins-card')).find…
+     41|  expect(card,'month card exists').toBeTruthy();expect(card?.querySelec…
+       |                                                                                                               ^
+     42| });
+     43| it.each([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx > spring DST natural day gets its actual elapsed intersection
+AssertionError: expected '0m · 0' to be '23h 00m · 1' // Object.is equality
+
+Expected: "23h 00m · 1"
+Received: "0m · 0"
+
+ ❯ docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx:48:76
+     46| ])('%s DST natural day gets its actual elapsed intersection',(_label,s…
+     47|  vi.setSystemTime(at(now));writeTimeTrackerEntries([entry(start,end)])…
+     48|  fireEvent.click(screen.getByLabelText('Previous day'));expect(dayTota…
+       |                                                                            ^
+     49| });
+     50| it('paused multi-segment entry counts the later-day segment without co…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx > fall DST natural day gets its actual elapsed intersection
+AssertionError: expected '0m · 0' to be '25h 00m · 1' // Object.is equality
+
+Expected: "25h 00m · 1"
+Received: "0m · 0"
+
+ ❯ docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx:48:76
+     46| ])('%s DST natural day gets its actual elapsed intersection',(_label,s…
+     47|  vi.setSystemTime(at(now));writeTimeTrackerEntries([entry(start,end)])…
+     48|  fireEvent.click(screen.getByLabelText('Previous day'));expect(dayTota…
+       |                                                                            ^
+     49| });
+     50| it('paused multi-segment entry counts the later-day segment without co…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx > paused multi-segment entry counts the later-day segment without counting the pause
+AssertionError: expected +0 to be 300000 // Object.is equality
+
+- Expected
++ Received
+
+- 300000
++ 0
+
+ ❯ docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx:53:48
+     51|  const value=entry('2026-04-30T23:50:00','2026-04-30T23:55:00');
+     52|  writeTimeTrackerEntries([{...value,segments:[...value.segments,{start…
+     53|  expect(getTimeTrackerSnapshot().todayTotalMs).toBe(5*minute);
+       |                                                ^
+     54| });
+     55| it('control: a segment ending exactly at today start contributes nothi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 2 passed (11)
+   Start at  12:06:10
+   Duration  1.79s (transform 300ms, setup 0ms, collect 430ms, tests 272ms, environment 763ms, prepare 113ms)
+

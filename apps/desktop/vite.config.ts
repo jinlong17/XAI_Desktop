@@ -43,4 +43,43 @@ export default defineConfig(async () => ({
       ignored: ["**/src-tauri/**"],
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (
+            id.includes("/node_modules/react/") ||
+            id.includes("/node_modules/react-dom/") ||
+            id.includes("/node_modules/scheduler/")
+          ) {
+            return "vendor-react";
+          }
+          if (
+            id.includes("/node_modules/@dnd-kit/") ||
+            id.includes("/node_modules/react-draggable/")
+          ) {
+            return "vendor-interaction";
+          }
+          if (id.includes("/packages/plugin-organizer/")) {
+            return "plugin-organizer";
+          }
+          if (id.includes("/packages/plugin-account/")) {
+            return "plugin-account";
+          }
+          if (
+            id.includes("/packages/plugin-ai-cube/") ||
+            id.includes("/packages/plugin-console/")
+          ) {
+            return "plugin-tools";
+          }
+          if (id.includes("/packages/core-data/")) {
+            return "core-data";
+          }
+          if (id.includes("/packages/core/")) {
+            return "core";
+          }
+        },
+      },
+    },
+  },
 }));

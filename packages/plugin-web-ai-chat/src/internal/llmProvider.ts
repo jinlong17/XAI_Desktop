@@ -16,13 +16,16 @@ import { getPref } from "@repo/plugin-web-storage";
 import type { AiModelId } from "../types.js";
 import type { AnthropicToolDef, ContentBlock, ToolUseBlock, ToolResultBlock } from "./toolUseTypes.js";
 import { toOpenAiTools, toOpenAiToolChoice } from "./toolUseTypes.js";
+import { getAiProviderPreset } from "./providerPresets.js";
 
 // ---- Model id constants (pinned per Rec3, 2026-05-25) ----------------------
 // Exact Anthropic model id strings — pinned to known-good versions.
 // Update here when Anthropic releases a new model version.
 // Ref: https://docs.anthropic.com/en/docs/models-overview (checked 2026-05-25)
 
-export const ANTHROPIC_MODEL_IDS: Readonly<Record<AiModelId, string>> = Object.freeze({
+type AnthropicModelId = Extract<AiModelId, "haiku" | "sonnet" | "opus">;
+
+export const ANTHROPIC_MODEL_IDS: Readonly<Record<AnthropicModelId, string>> = Object.freeze({
   haiku: "claude-haiku-4-5-20251101",
   sonnet: "claude-sonnet-4-5-20251001",
   opus: "claude-opus-4-5-20251001",
@@ -32,6 +35,7 @@ const OPENAI_COMPATIBLE_ALLOWED_ORIGINS = new Set([
   "https://api.openai.com",
   "https://api.groq.com",
   "https://generativelanguage.googleapis.com",
+  "https://api.deepseek.com",
 ]);
 
 // OpenAI-compatible model id pass-through: the user's model string is used as-is.
@@ -68,8 +72,8 @@ export interface ProviderConfig {
     /** Optional: tool_choice override (default "auto" when tools present). */
     toolChoice?: { type: "auto" | "any" | "none" } | { type: "tool"; name: string };
   }): Record<string, unknown>;
-  /** The real provider-specific model id for the given AiModelId. */
-  resolveModelId(model: AiModelId): string;
+  /** The real provider-specific model id for the given model value. */
+  resolveModelId(model: AiModelId | string): string;
   /** Provider kind — for error categorization. */
   provider: AiProviderKind;
 }
@@ -160,9 +164,12 @@ function _translateMessagesToOpenAi(
  */
 export function resolveProvider(apiKey: string): ProviderConfig {
   const provider = (getPref("xai_ai_provider") as string) || "anthropic";
-  const baseUrl = (getPref("xai_ai_base_url") as string) || "";
+  const preset = getAiProviderPreset(provider);
+  const baseUrl = preset.managedBaseUrl
+    ? preset.baseUrl
+    : (getPref("xai_ai_base_url") as string) || "";
 
-  if (provider === "openai-compatible") {
+  if (preset.transport === "openai-compatible") {
     if (!baseUrl.trim()) {
       throw new Error(
         "[llmProvider] OpenAI-compatible selected but no base URL configured. " +
@@ -213,9 +220,9 @@ export function resolveProvider(apiKey: string): ProviderConfig {
         return body;
       },
       resolveModelId(model) {
-        // OpenAI-compatible: pass the AiModelId through as-is — the user's
-        // provider is responsible for mapping model names.
-        return model;
+        // OpenAI-compatible: pass the model string through as-is. Managed
+        // presets write provider-native model ids; custom endpoints may too.
+        return String(model || preset.defaultModel);
       },
       provider: "openai-compatible",
     };
@@ -249,7 +256,11 @@ export function resolveProvider(apiKey: string): ProviderConfig {
       return body;
     },
     resolveModelId(model) {
-      return ANTHROPIC_MODEL_IDS[model] ?? ANTHROPIC_MODEL_IDS["haiku"];
+      const anthropicModel =
+        model === "sonnet" || model === "opus" || model === "haiku"
+          ? model
+          : "haiku";
+      return ANTHROPIC_MODEL_IDS[anthropicModel];
     },
     provider: "anthropic",
   };

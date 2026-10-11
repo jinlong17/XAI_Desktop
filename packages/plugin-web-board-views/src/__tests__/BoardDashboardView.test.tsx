@@ -133,3 +133,38 @@ describe("BoardDashboardView", () => {
     expect(labelsZh[0]!.textContent).toBe("卡片总数");
   });
 });
+
+describe("BoardDashboardView — priority chart (W2)", () => {
+  test("BD-P1 renders per-priority bars only when priorities exist", () => {
+    const lists = [
+      {
+        id: "l1",
+        key: "todo",
+        cards: [
+          { id: "c1", title: { en: "A", zh: "A" }, priority: "high" },
+          { id: "c2", title: { en: "B", zh: "B" }, priority: "high" },
+          { id: "c3", title: { en: "C", zh: "C" }, priority: "low" },
+          { id: "c4", title: { en: "D", zh: "D" } },
+        ],
+      },
+    ] as unknown as Parameters<typeof BoardDashboardView>[0]["lists"];
+    render(<BoardDashboardView lists={lists} lang="en" />);
+    expect(screen.getByTestId("bd-per-priority")).toBeInTheDocument();
+    const rows = screen.getAllByTestId("bd-bar-row-priority");
+    expect(rows).toHaveLength(2);
+    expect(rows[0]!.textContent).toContain("High");
+    expect(rows[0]!.textContent).toContain("2");
+  });
+
+  test("BD-P2 chart hidden when no card has a priority", () => {
+    const lists = [
+      {
+        id: "l1",
+        key: "todo",
+        cards: [{ id: "c1", title: { en: "A", zh: "A" } }],
+      },
+    ] as unknown as Parameters<typeof BoardDashboardView>[0]["lists"];
+    render(<BoardDashboardView lists={lists} lang="en" />);
+    expect(screen.queryByTestId("bd-per-priority")).not.toBeInTheDocument();
+  });
+});

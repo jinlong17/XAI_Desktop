@@ -119,7 +119,8 @@ export function isFileDropPayload(payload: unknown): payload is OrganizerFileDro
 
 export function toDroppedFile(path: string): DroppedFile {
   const normalizedPath = path.trim().replace(/\/+$/, "");
-  const name = normalizedPath.split("/").filter(Boolean).at(-1) ?? normalizedPath;
+  const pathParts = normalizedPath.split("/").filter(Boolean);
+  const name = pathParts[pathParts.length - 1] ?? normalizedPath;
   const lower = normalizedPath.toLowerCase();
   const kind =
     lower.endsWith(".app") ? "app" :

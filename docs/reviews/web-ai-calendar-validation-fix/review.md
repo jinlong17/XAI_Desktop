@@ -1,0 +1,64 @@
+# AI Calendar input validation A1 — author verification
+
+Product module: **web**. Product source fixed by this batch: Calendar AI create/update subscribers and the AI tool registry's Calendar conversion path. This is the approved A1 semantic-validity repair; it does **not** close AI-02, durable replay, cross-reload idempotency, or any release item.
+
+## Defect and contract
+
+The retained pre-fix evidence at `../web-ai-calendar-invalid-date/` (commit `dd10cb8`) proved that real subscriber calls for `2026-02-31` returned `ok: true` and persisted the impossible local date for both create and update.
+
+`isValidCivilDate` now requires an exact four-digit `0001`–`9999` local date and UTC year/month/day round-trip. It therefore rejects invalid month/day combinations and non-leap February 29 without depending on local DST midnight normalization. `setUTCFullYear` avoids the JavaScript constructor's 1900 offset for years `0001`–`0099`.
+
+At the subscriber boundary:
+
+- Create defaults only genuinely omitted `date`, `startTime`, and `durationMin` for legacy callers. Explicit invalid values are rejected; they are never rewritten as today, `09:00`, or a rounded/clamped duration.
+- Update validates supplied date, time, and duration before a storage write. Both paths require a finite integer duration of at least five minutes and reject a duration that cannot end by `23:55` on the requested local date.
+- Invalid writes return the existing `invalid` receipt and do not enter the success-only page-lifetime request cache. A corrected operation with the same request ID can therefore commit once.
+- The AI tool registry no longer turns an explicit Calendar value into a fallback or removes it from an update patch. Confirmation text shows supplied values, while omitted optional create time/duration are shown and committed as the documented `09:00`/60-minute defaults. The subscriber remains the single runtime semantic validator.
+
+## Verification
+
+All checks were run from the repository root against this working-tree source on 2026-09-09.
+
+```sh
+pnpm --filter @repo/plugin-web-calendar test
+# 48 files passed, 359 tests passed
+
+pnpm --filter @repo/plugin-web-calendar check-types
+pnpm --filter @repo/plugin-web-calendar lint
+# both passed
+
+pnpm --filter @repo/plugin-web-ai-chat test
+pnpm --filter @repo/plugin-web-ai-chat typecheck
+pnpm --filter @repo/plugin-web-ai-chat lint
+# 32 files passed, 280 tests passed; typecheck and lint passed
+
+node packages/core/node_modules/vitest/vitest.mjs run --config docs/reviews/web-ai-calendar-validation-fix/verify.config.mjs
+# 1 file, 6 registry-to-subscriber contract cases passed
+
+node packages/core/node_modules/vitest/vitest.mjs run --config docs/reviews/web-ai-calendar-invalid-date/verify.config.mjs
+# retained original evidence: 1 file, 2 cases passed
+```
+
+The targeted subscriber tests exercise the real typed event bus, calendar subscriber hooks, account-scoped Storage adapter and resulting physical storage value. They assert invalid month/day, non-leap February 29, invalid time, non-finite/type/non-integer duration, no write, no request-ID consumption, a valid `2024-02-29` corrected retry, the legal `23:50 + 5 = 23:55` boundary, and rejection instead of cross-day silent clamping. The separate registry-to-subscriber test proves explicit invalid values survive conversion and are rejected as a whole operation, while an omitted optional time/duration reaches the documented defaults.
+
+This is synthetic jsdom integration evidence, not native-browser or independent acceptance. A fixed product commit is required for Sol's independent native validation before any broader AI-02 claim.
+
+## Fixed-snapshot before/after evidence
+
+The registry-to-subscriber assertions at commit `afd10ff` were copied byte-for-byte into a detached `e50ca1c` worktree. Both test and base config SHA-1 values matched the committed `afd10ff` files before execution. The isolated runner aliases the event-bus and storage package imports to the detached worktree solely so the subscriber and test share the same fixed-snapshot singleton; it does not alter an assertion or product source.
+
+```sh
+# from each detached worktree, using the shared repository Vitest binary
+/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/core/node_modules/.bin/vitest run \
+  --config docs/reviews/web-ai-calendar-validation-fix/verify.config.mjs
+```
+
+At `e50ca1c`, the same six assertions produced **5 correct FAIL / 1 control PASS**; see `registry-subscriber-before-e50ca1c.log`. The control is the direct Calendar-subscriber rejection of `date: "bad"`, which was already repaired by `e50ca1c`. The five failures preserve the upstream conversion defects: omitted values were eagerly inserted, create duration text/decimal values were defaulted or rounded into successful writes, and update invalid date/decimal-duration fields were discarded or rounded so the mutation succeeded.
+
+At `afd10ff`, all **6/6** assertions pass; see `registry-subscriber-after-afd10ff.log`. This bounds the evidence to A1 conversion plus subscriber semantics. It remains synthetic jsdom integration evidence and does not replace Sol's native independent verification or Astra review.
+
+## Follow-up: array time must be invalid, not storage
+
+Sol's independent fixed-`afd10ff` Chrome probe (`ecb588c`, retained separately in `../web-ai-calendar-sol-independent/`) found one remaining semantic receipt failure: update `startTime: ["09:00"]` made no write, but JavaScript's regex coercion accepted the array and the later `.split()` exception was reported as `storage`. The subscriber now checks `typeof p.startTime === "string"` before `HHMM_RE`.
+
+The added package regression asserts that array value with the existing invalid update cases, requires every receipt to be `{ ok: false, reason: "invalid" }`, and preserves raw storage bytes. `update-array-time-before.log` retains the correct pre-fix failure; `update-array-time-after.log` records the passing run. This remains a narrow follow-up requiring Sol's fixed-new-hash native rerun and Astra review.

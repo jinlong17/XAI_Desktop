@@ -1,14 +1,17 @@
+import { accountScope, generationMarkerKey, readCanonicalCommandState, setCanonicalCommandActivationForTests } from "@repo/plugin-web-storage";
 /**
  * BWM1..BWM18 + BWM-EXT-1..6 — top-level orchestrator integration tests.
  * Gap-closure row #6 additions: BWM-EXT-1..6 (Filter + Share)
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, act } from "@testing-library/react";
-import { makeDefaultBoards, isoDateFromOffset } from "@repo/plugin-web-board-core";
+import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
+import { useLayoutEffect } from "react";
+import { BOARD_COVER_PRESETS, DEFAULT_BOARD_LABELS, makeDefaultBoards, isoDateFromOffset } from "@repo/plugin-web-board-core";
 import type { Board, BoardCardData } from "@repo/plugin-web-board-core";
 import type { TaskCol } from "@repo/plugin-web-tasks";
 import { BoardWorkspacesModule } from "../BoardWorkspacesModule.js";
+import { createTestLockManager } from "./webLocksHarness.js";
 
 // Mock xai-web-event-bus for ShareModal's emitWebEvent
 vi.mock("@repo/xai-web-event-bus", () => ({
@@ -23,6 +26,10 @@ HTMLDialogElement.prototype.close = vi.fn();
 
 beforeEach(() => {
   localStorage.clear();
+  accountScope.activate(accountScope.lock("consumer-test"), "fixture");
+  localStorage.setItem(generationMarkerKey("consumer-test"), JSON.stringify({ generation: "fixture", migrationId: "test", previous: null }));
+  setCanonicalCommandActivationForTests(true);
+  vi.stubGlobal("navigator", { locks: createTestLockManager() });
 });
 
 function getStoredCard(cardId: string): BoardCardData {
@@ -37,22 +44,24 @@ function getStoredCard(cardId: string): BoardCardData {
 }
 
 function getStoredBoards(): Board[] {
-  const raw = localStorage.getItem("xai_boards_v2");
+  const raw = localStorage.getItem(accountScope.physicalKey("xai_boards_v2"));
   if (!raw) throw new Error("xai_boards_v2 not persisted");
   return JSON.parse(raw) as Board[];
 }
 
 function getStoredTaskCols(): TaskCol[] {
-  const raw = localStorage.getItem("xai_task_cols");
+  const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
   if (!raw) throw new Error("xai_task_cols not persisted");
-  return JSON.parse(raw) as TaskCol[];
+  const state = readCanonicalCommandState<TaskCol[]>(JSON.parse(raw));
+  if (state.status === "legacy" || state.status === "envelope") return state.data;
+  throw new Error("xai_task_cols was not valid");
 }
 
 function getStoredBoardFilters(): Record<
   string,
   { labels?: string[]; members?: string[]; dueRange?: string }
 > {
-  const raw = localStorage.getItem("xai_board_filter_by_id");
+  const raw = localStorage.getItem(accountScope.physicalKey("xai_board_filter_by_id"));
   return raw ? JSON.parse(raw) as Record<
     string,
     { labels?: string[]; members?: string[]; dueRange?: string }
@@ -84,9 +93,9 @@ function seedAltView(view: "table" | "calendar" | "timeline") {
     ...seed[0]!.lists[0]!.cards[0]!,
     dueDate: isoDateFromOffset(0, today),
   };
-  localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-  localStorage.setItem("xai_active_board", "b-default");
-  localStorage.setItem("xai_board_view_by_id", JSON.stringify({ "b-default": view }));
+  localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+  localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
+  localStorage.setItem(accountScope.physicalKey("xai_board_view_by_id"), JSON.stringify({ "b-default": view }));
 }
 
 describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
@@ -105,10 +114,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   it("BWM2: defensive seed persists makeDefaultBoards on mount with null prefs", async () => {
     render(<BoardWorkspacesModule lang="en" />);
     // useEffect fires post-mount → flush microtasks
-    await act(async () => {
-      await Promise.resolve();
-    });
-    const raw = localStorage.getItem("xai_boards_v2");
+    await waitFor(() => expect(getStoredCard("bc1").taskLink?.pending).toBeUndefined());
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_boards_v2"));
     expect(raw).toBeTruthy();
     const parsed = JSON.parse(raw!);
     expect(Array.isArray(parsed)).toBe(true);
@@ -137,9 +144,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
       target: { value: "My New Board" },
     });
     fireEvent.click(screen.getByTestId("bc-submit"));
-    await act(async () => {
-      await Promise.resolve();
-    });
+    await waitFor(() => expect(getStoredCard("bc1").taskLink?.pending).toBeUndefined());
     expect(screen.queryByTestId("bs-scrim")).not.toBeInTheDocument();
     expect(screen.queryByTestId("bc-scrim")).not.toBeInTheDocument();
     // Active board title flipped to the new one
@@ -148,8 +153,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
 
   it("BWM6: clicking another board card in switcher sets active + closes modal", () => {
     const seed = makeDefaultBoards();
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getByTestId("board-title-btn"));
     fireEvent.click(screen.getByTestId("bs-card-b-pm"));
@@ -159,8 +164,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
 
   it("BWM7: deleting a board via dialog confirm removes it (B-12 new confirmation flow)", () => {
     const seed = makeDefaultBoards();
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getByTestId("board-title-btn"));
     // Click trash on a non-active board (b-pm) → triggers BoardDeleteConfirmDialog
@@ -180,7 +185,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     await act(async () => {
       await Promise.resolve();
     });
-    const raw = localStorage.getItem("xai_board_panels");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_board_panels"));
     expect(raw).toBeTruthy();
     const parsed = JSON.parse(raw!);
     expect(Array.isArray(parsed)).toBe(true);
@@ -196,7 +201,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
       await Promise.resolve();
     });
     // Invariant kept board: true; panel still rendered
-    const raw = localStorage.getItem("xai_board_panels");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_board_panels"));
     const parsed = JSON.parse(raw!);
     expect(parsed[0].board).toBe(true);
   });
@@ -215,8 +220,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
 
   it("BWM12: PM template board + overview toggle mounts StatusOverviewBanner", () => {
     const seed = makeDefaultBoards();
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-pm");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-pm");
     render(<BoardWorkspacesModule lang="en" />);
     expect(screen.queryByTestId("status-overview")).not.toBeInTheDocument();
     fireEvent.click(screen.getByTestId("overview-toggle"));
@@ -225,8 +230,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
 
   it("BWM13: non-PM board → overview toggle is disabled", () => {
     const seed = makeDefaultBoards();
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default"); // kanban
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default"); // kanban
     render(<BoardWorkspacesModule lang="en" />);
     const btn = screen.getByTestId("overview-toggle") as HTMLButtonElement;
     expect(btn.disabled).toBe(true);
@@ -241,7 +246,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     await act(async () => {
       await Promise.resolve();
     });
-    const raw = localStorage.getItem("xai_board_inbox");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_board_inbox"));
     expect(raw).toBeTruthy();
     const parsed = JSON.parse(raw!);
     expect(Array.isArray(parsed)).toBe(true);
@@ -249,13 +254,13 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   });
 
   it("BWM15: malformed xai_board_panels → renders seed without crash", () => {
-    localStorage.setItem("xai_board_panels", '"garbage"');
+    localStorage.setItem(accountScope.physicalKey("xai_board_panels"), '"garbage"');
     expect(() => render(<BoardWorkspacesModule lang="en" />)).not.toThrow();
     expect(screen.getByTestId("board-panels").className).toContain("board-panels-single");
   });
 
   it("BWM16: malformed xai_board_inbox → renders seed inbox when inbox opened", () => {
-    localStorage.setItem("xai_board_inbox", '"garbage"');
+    localStorage.setItem(accountScope.physicalKey("xai_board_inbox"), '"garbage"');
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getByTestId("bv-inbox"));
     // Seed inbox has the 3 messages — confirm en first one
@@ -271,17 +276,120 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(screen.getByText("切换看板")).toBeInTheDocument();
   });
 
-  it("BWM18: 0 boards forced → defensive seed populates on mount", async () => {
-    localStorage.setItem("xai_boards_v2", JSON.stringify([]));
+  it("BWM18: an empty persisted board array renders the fallback without crashing", async () => {
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify([]));
     render(<BoardWorkspacesModule lang="en" />);
     await act(async () => {
       await Promise.resolve();
     });
-    // pickActiveBoard on empty array → makeDefaultBoards()[0]; subsequent persistence will re-seed via effect since rawBoards is null only — for [] we still recover via pickActiveBoard.
+    // The UI has a safe fallback, but the stored empty array is not authorized
+    // to be replaced by the fallback data.
     expect(screen.getByTestId("board-title-btn").textContent).toContain(
       makeDefaultBoards()[0]!.name.en,
     );
   });
+
+  it.each([
+    ["schema-invalid", '[{"id":"valuable-board","workspaceId":"empty","title":"Recover me"}]'],
+    ["json-null", "null"],
+    ["syntax-invalid", "{broken"],
+    ["empty-array", "[]"],
+  ])(
+    "BWM18b: %s board storage is preserved through mount, automatic automation, and manual automation",
+    async (_kind, boardRaw) => {
+      const boardKey = accountScope.physicalKey("xai_boards_v2");
+      const activeKey = accountScope.physicalKey("xai_active_board");
+      localStorage.setItem(boardKey, boardRaw);
+      localStorage.setItem(activeKey, "valuable-board");
+
+      render(<BoardWorkspacesModule lang="en" />);
+      await act(async () => {
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+
+      expect(localStorage.getItem(boardKey)).toBe(boardRaw);
+      expect(localStorage.getItem(activeKey)).toBe("valuable-board");
+      expect(screen.getByRole("alert")).toHaveTextContent("Existing data was kept");
+
+      fireEvent.click(screen.getByTestId("automation-run-btn"));
+      await act(async () => {
+        await Promise.resolve();
+      });
+
+      expect(localStorage.getItem(boardKey)).toBe(boardRaw);
+      expect(localStorage.getItem(activeKey)).toBe("valuable-board");
+    },
+  );
+
+  it("BWM18c: a stable valid source corrects an unknown active board id", async () => {
+    localStorage.setItem(
+      accountScope.physicalKey("xai_boards_v2"),
+      JSON.stringify(makeDefaultBoards()),
+    );
+    const activeKey = accountScope.physicalKey("xai_active_board");
+    localStorage.setItem(activeKey, "stale-id");
+
+    render(<BoardWorkspacesModule lang="en" />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(localStorage.getItem(activeKey)).toBe("b-default");
+  });
+
+  function ReplaceSelectionSourceInLayout({ replace }: { replace: () => void }) {
+    useLayoutEffect(() => {
+      replace();
+    }, [replace]);
+    return null;
+  }
+
+  it.each(["active-only", "board-replaced", "board-removed"] as const)(
+    "BWM18d: queued correction refuses same-account %s writes before it runs",
+    async (mode) => {
+      const boardKey = accountScope.physicalKey("xai_boards_v2");
+      const activeKey = accountScope.physicalKey("xai_active_board");
+      const boards = makeDefaultBoards();
+      localStorage.setItem(boardKey, JSON.stringify(boards));
+      localStorage.setItem(activeKey, "stale-id");
+      let expectedActive = "stale-id";
+      let expectedBoard: string | null = JSON.stringify(boards);
+
+      const replace = () => {
+        if (mode === "active-only") {
+          expectedActive = "b-pm";
+          localStorage.setItem(activeKey, expectedActive);
+        }
+        if (mode === "board-replaced") {
+          const replacement = makeDefaultBoards();
+          replacement[0]!.id = "stale-id";
+          expectedBoard = JSON.stringify(replacement);
+          localStorage.setItem(boardKey, expectedBoard);
+        }
+        if (mode === "board-removed") {
+          expectedBoard = null;
+          localStorage.removeItem(boardKey);
+        }
+      };
+
+      render(
+        <>
+          <BoardWorkspacesModule lang="en" />
+          <ReplaceSelectionSourceInLayout replace={replace} />
+        </>,
+      );
+      await act(async () => {
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+
+      expect(localStorage.getItem(activeKey)).toBe(expectedActive);
+      if (mode !== "active-only") {
+        expect(localStorage.getItem(boardKey)).toBe(expectedBoard);
+      }
+    },
+  );
 
   it("BWM19: Inbox toggles on immediately while an alternate board view is active", () => {
     render(<BoardWorkspacesModule lang="en" />);
@@ -374,7 +482,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     render(<BoardWorkspacesModule lang="en" />);
     await act(async () => { await Promise.resolve(); });
 
-    const boardsBefore = localStorage.getItem("xai_boards_v2");
+    const boardsBefore = localStorage.getItem(accountScope.physicalKey("xai_boards_v2"));
     fireEvent.click(screen.getByTestId("filter-btn"));
     fireEvent.click(screen.getByTestId("fp-label-l1"));
     fireEvent.click(screen.getByTestId("fp-member-u1"));
@@ -384,13 +492,14 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(stored["b-default"]).toEqual({
       labels: ["l1"],
       members: ["u1"],
+      priorities: [],
       dueRange: "today",
     });
-    expect(localStorage.getItem("xai_boards_v2")).toBe(boardsBefore);
+    expect(localStorage.getItem(accountScope.physicalKey("xai_boards_v2"))).toBe(boardsBefore);
   });
 
   it("BWM-SAVED-FILTER-1: remount restores the saved filter for the active board", async () => {
-    localStorage.setItem("xai_board_filter_by_id", JSON.stringify({
+    localStorage.setItem(accountScope.physicalKey("xai_board_filter_by_id"), JSON.stringify({
       "b-default": { labels: ["l1"], members: ["u1"], dueRange: "today" },
     }));
 
@@ -407,9 +516,9 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   });
 
   it("BWM-SAVED-FILTER-2: board switch restores each board's own saved filter", async () => {
-    localStorage.setItem("xai_boards_v2", JSON.stringify(makeDefaultBoards()));
-    localStorage.setItem("xai_active_board", "b-default");
-    localStorage.setItem("xai_board_filter_by_id", JSON.stringify({
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(makeDefaultBoards()));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_board_filter_by_id"), JSON.stringify({
       "b-default": { labels: ["l1"], members: [], dueRange: "today" },
       "b-pm": { labels: ["pm-forms"], members: ["u2"], dueRange: "overdue" },
     }));
@@ -438,7 +547,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   });
 
   it("BWM-SAVED-FILTER-3: Clear persists the active board reset", async () => {
-    localStorage.setItem("xai_board_filter_by_id", JSON.stringify({
+    localStorage.setItem(accountScope.physicalKey("xai_board_filter_by_id"), JSON.stringify({
       "b-default": { labels: ["l1"], members: ["u1"], dueRange: "today" },
     }));
 
@@ -449,6 +558,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(getStoredBoardFilters()["b-default"]).toEqual({
       labels: [],
       members: [],
+      priorities: [],
       dueRange: "all",
     });
     expect(screen.getByTestId("fp-label-l1")).not.toBeChecked();
@@ -562,7 +672,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   });
 
   it("BWM-DETAIL-4: invalid attachment URL is rejected without mutating the card", async () => {
-    localStorage.setItem("xai_boards_v2", JSON.stringify(makeDefaultBoards()));
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(makeDefaultBoards()));
     render(<BoardWorkspacesModule lang="en" />);
 
     fireEvent.click(screen.getAllByTestId("board-card")[1]!);
@@ -658,8 +768,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
         },
       ],
     };
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
 
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getAllByTestId("board-card")[0]!);
@@ -749,8 +859,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
       dueLate: true,
       dueDate: undefined,
     };
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
 
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getAllByTestId("board-card")[0]!);
@@ -798,8 +908,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
       ],
       checklist: { done: 1, total: 2 },
     };
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
 
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getAllByTestId("board-card")[0]!);
@@ -914,8 +1024,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   it("BWM-LIST-2: add-card targets listId after archived gaps, not visible index", async () => {
     const seed = makeDefaultBoards() as Board[];
     seed[0]!.lists[1] = { ...seed[0]!.lists[1]!, archived: true };
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
 
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getAllByTestId("add-card-btn")[1]!);
@@ -977,9 +1087,9 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   it("BWM-LIST-4: archived lists are hidden from alternate table view", () => {
     const seed = makeDefaultBoards() as Board[];
     seed[0]!.lists[0] = { ...seed[0]!.lists[0]!, archived: true };
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
-    localStorage.setItem("xai_board_view_by_id", JSON.stringify({ "b-default": "table" }));
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_board_view_by_id"), JSON.stringify({ "b-default": "table" }));
 
     render(<BoardWorkspacesModule lang="en" />);
 
@@ -1084,9 +1194,9 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
       ...seed[0]!.lists[0]!.cards[0]!,
       archived: true,
     };
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
-    localStorage.setItem("xai_board_view_by_id", JSON.stringify({ "b-default": "table" }));
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_board_view_by_id"), JSON.stringify({ "b-default": "table" }));
 
     render(<BoardWorkspacesModule lang="en" />);
 
@@ -1131,8 +1241,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
         ],
       },
     ];
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
 
     render(<BoardWorkspacesModule lang="en" />);
     await act(async () => {
@@ -1167,8 +1277,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
         ],
       },
     ];
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
 
     render(<BoardWorkspacesModule lang="en" />);
     await act(async () => {
@@ -1202,8 +1312,8 @@ describe("BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-2
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
-    localStorage.setItem("xai_boards_v2", JSON.stringify(makeDefaultBoards()));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(makeDefaultBoards()));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
   });
 
   it("BW-Del-Board-1: click trash in BoardSwitcher → BoardDeleteConfirmDialog mounts with mode='board'", () => {
@@ -1261,7 +1371,7 @@ describe("BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-2
   it("BW-Del-Card-1: click × in InboxPanel → BoardDeleteConfirmDialog mounts with mode='card'", () => {
     // Seed an inbox card
     localStorage.setItem(
-      "xai_board_inbox",
+      accountScope.physicalKey("xai_board_inbox"),
       JSON.stringify([{ id: "ix-test", text: { en: "Test idea", zh: "测试想法" } }]),
     );
     render(<BoardWorkspacesModule lang="en" />);
@@ -1279,7 +1389,7 @@ describe("BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-2
 
   it("BW-Del-Card-2: Cancel → dialog unmounts + inbox card still present", () => {
     localStorage.setItem(
-      "xai_board_inbox",
+      accountScope.physicalKey("xai_board_inbox"),
       JSON.stringify([{ id: "ix-test", text: { en: "Keep me", zh: "保留" } }]),
     );
     render(<BoardWorkspacesModule lang="en" />);
@@ -1295,7 +1405,7 @@ describe("BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-2
 
   it("BW-Del-Card-3: Confirm → dialog unmounts + inbox card removed", () => {
     localStorage.setItem(
-      "xai_board_inbox",
+      accountScope.physicalKey("xai_board_inbox"),
       JSON.stringify([{ id: "ix-test", text: { en: "Delete me", zh: "删掉" } }]),
     );
     render(<BoardWorkspacesModule lang="en" />);
@@ -1310,7 +1420,7 @@ describe("BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-2
 
   it("BW-Del-Card-4: Cancel for card A, then open dialog for card B → state is per-pending-delete (no stale label)", () => {
     localStorage.setItem(
-      "xai_board_inbox",
+      accountScope.physicalKey("xai_board_inbox"),
       JSON.stringify([
         { id: "ix-a", text: { en: "Card A", zh: "卡片A" } },
         { id: "ix-b", text: { en: "Card B", zh: "卡片B" } },
@@ -1508,8 +1618,8 @@ describe("BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5)", () => {
     localStorage.clear();
     vi.clearAllMocks();
     // Seed boards for a deterministic active board
-    localStorage.setItem("xai_boards_v2", JSON.stringify(makeDefaultBoards()));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(makeDefaultBoards()));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
   });
 
   it("BW-Open-0: CardDetailDialog is not in DOM on initial render (conditional mount)", () => {
@@ -1566,4 +1676,246 @@ describe("BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5)", () => {
     fireEvent.click(screen.getByTestId("card-detail-close"));
     expect(screen.queryByTestId("card-detail-modal")).not.toBeInTheDocument();
   });
+});
+
+// ---- BWM-CAT — Wave 1: board-scoped label/member catalogs + priority -------
+
+describe("BWM-CAT — label/member catalogs + priority", () => {
+  it("BWM-CAT-1: priority selector patches and persists card.priority; re-click clears it", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-priority-high"));
+    await act(async () => { await Promise.resolve(); });
+    expect(getStoredCard("bc1").priority).toBe("high");
+
+    fireEvent.click(screen.getByTestId("card-detail-priority-high"));
+    await act(async () => { await Promise.resolve(); });
+    expect(getStoredCard("bc1").priority).toBeUndefined();
+  });
+
+  it("BWM-CAT-2: creating a label materializes board.labels (defaults + new) and the label is assignable", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-labels-manage"));
+    fireEvent.change(screen.getByTestId("card-detail-label-new-name"), {
+      target: { value: "Spec" },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-label-new-add"));
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    const created = board.labels?.find((l) => l.name.en === "Spec");
+    expect(created).toBeDefined();
+    expect(board.labels!.length).toBe(DEFAULT_BOARD_LABELS.length + 1);
+
+    fireEvent.click(screen.getByTestId(`card-detail-label-${created!.id}`));
+    await act(async () => { await Promise.resolve(); });
+    expect(getStoredCard("bc1").labels).toContain(created!.id);
+  });
+
+  it("BWM-CAT-3: deleting a label removes it from the catalog AND strips it from cards", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    expect(getStoredCard("bc1").labels ?? []).toContain("l1");
+    fireEvent.click(screen.getByTestId("card-detail-labels-manage"));
+    fireEvent.click(screen.getByTestId("card-detail-label-delete-l1"));
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    expect(board.labels!.some((l) => l.id === "l1")).toBe(false);
+    expect(getStoredCard("bc1").labels ?? []).not.toContain("l1");
+  });
+
+  it("BWM-CAT-4: creating a member persists to board.members and the member is assignable", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-members-manage"));
+    fireEvent.change(screen.getByTestId("card-detail-member-new-name"), {
+      target: { value: "Dave" },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-member-new-add"));
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    const dave = board.members?.find((m) => m.name === "Dave");
+    expect(dave).toBeDefined();
+
+    fireEvent.click(screen.getByTestId(`card-detail-member-${dave!.id}`));
+    await act(async () => { await Promise.resolve(); });
+    expect(getStoredCard("bc1").members).toContain(dave!.id);
+  });
+
+  it("BWM-CAT-5: renaming a member persists the new name in the board directory", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-members-manage"));
+    fireEvent.change(screen.getByTestId("card-detail-member-name-u1"), {
+      target: { value: "Alicia" },
+    });
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    expect(board.members!.find((m) => m.id === "u1")!.name).toBe("Alicia");
+  });
+});
+
+// ---- BWM-SET — Wave 2: board metadata editing + priority filter ------------
+
+describe("BWM-SET — board settings + priority filter", () => {
+  it("BWM-SET-1: settings modal renames the board and picks a cover preset, persisted", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-settings-btn"));
+    expect(screen.getByTestId("board-settings-modal")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByTestId("board-settings-name"), {
+      target: { value: "Sprint Board" },
+    });
+    fireEvent.click(screen.getByTestId("board-settings-cover-3"));
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    expect(board.name.en).toBe("Sprint Board");
+    expect(board.cover).toBe(BOARD_COVER_PRESETS[3]);
+  });
+
+  it("BWM-SET-2: icon + description persist; icon renders in the header title", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-settings-btn"));
+
+    fireEvent.change(screen.getByTestId("board-settings-icon"), {
+      target: { value: "🚀" },
+    });
+    fireEvent.change(screen.getByTestId("board-settings-description"), {
+      target: { value: "Quarterly launch work" },
+    });
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    expect(board.icon).toBe("🚀");
+    expect(board.description).toBe("Quarterly launch work");
+    expect(screen.getByTestId("board-title-icon").textContent).toBe("🚀");
+  });
+
+  it("BWM-FILTER-P: priority filter narrows the board to matching cards and persists", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+
+    // Give bc1 a priority through the card detail modal.
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+    fireEvent.click(screen.getByTestId("card-detail-priority-high"));
+    fireEvent.click(screen.getByTestId("card-detail-close"));
+    await act(async () => { await Promise.resolve(); });
+
+    const before = screen.getAllByTestId("board-card").length;
+    expect(before).toBeGreaterThan(1);
+
+    fireEvent.click(screen.getByTestId("filter-btn"));
+    fireEvent.click(screen.getByTestId("fp-priority-high"));
+    await act(async () => { await Promise.resolve(); });
+
+    expect(screen.getAllByTestId("board-card")).toHaveLength(1);
+    expect(getStoredBoardFilters()["b-default"]).toMatchObject({
+      priorities: ["high"],
+    });
+  });
+});
+
+// ---- BWM-WS — Wave 3: workspace CRUD ----------------------------------------
+
+function getStoredWorkspaces(): { id: string; name: { en: string; zh: string }; color: string }[] {
+  const raw = localStorage.getItem(accountScope.physicalKey("xai_board_workspaces"));
+  if (!raw) throw new Error("xai_board_workspaces not persisted");
+  return JSON.parse(raw) as { id: string; name: { en: string; zh: string }; color: string }[];
+}
+
+describe("BWM-WS — workspace CRUD", () => {
+  it("BWM-WS-1: creating a workspace persists it (seed + new) and renders its group", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+
+    fireEvent.click(screen.getByTestId("bs-new-workspace"));
+    fireEvent.change(screen.getByTestId("bs-ws-new-name"), {
+      target: { value: "Client Projects" },
+    });
+    fireEvent.click(screen.getByTestId("bs-ws-new-add"));
+    await act(async () => { await Promise.resolve(); });
+
+    const stored = getStoredWorkspaces();
+    expect(stored).toHaveLength(3); // 2 seeds materialized + 1 new
+    const created = stored.find((ws) => ws.name.en === "Client Projects");
+    expect(created).toBeDefined();
+    // Renders in both the scope tab and the group header.
+    expect(screen.getAllByText("Client Projects").length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("BWM-WS-2: renaming a workspace persists the new name", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+
+    fireEvent.click(screen.getByTestId("bs-ws-rename-ws-personal"));
+    const input = screen.getByTestId("bs-ws-rename-input-ws-personal");
+    fireEvent.change(input, { target: { value: "My Stuff" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+    await act(async () => { await Promise.resolve(); });
+
+    const stored = getStoredWorkspaces();
+    expect(stored.find((ws) => ws.id === "ws-personal")!.name.en).toBe("My Stuff");
+  });
+
+  it("BWM-WS-3: delete affordance only on empty workspaces; deleting removes it", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+
+    // Seed workspaces both hold boards → no delete buttons for them.
+    expect(screen.queryByTestId("bs-ws-delete-ws-personal")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("bs-ws-delete-ws-team")).not.toBeInTheDocument();
+
+    // Create an empty workspace — it gets a delete affordance.
+    fireEvent.click(screen.getByTestId("bs-new-workspace"));
+    fireEvent.change(screen.getByTestId("bs-ws-new-name"), {
+      target: { value: "Temp" },
+    });
+    fireEvent.click(screen.getByTestId("bs-ws-new-add"));
+    await act(async () => { await Promise.resolve(); });
+
+    const temp = getStoredWorkspaces().find((ws) => ws.name.en === "Temp")!;
+    fireEvent.click(screen.getByTestId(`bs-ws-delete-${temp.id}`));
+    await act(async () => { await Promise.resolve(); });
+
+    expect(getStoredWorkspaces().some((ws) => ws.id === temp.id)).toBe(false);
+  });
+
+  it("BWM-WS-4: recolor cycles the workspace color", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+
+    const before = (() => {
+      try { return getStoredWorkspaces().find((w) => w.id === "ws-personal")!.color; }
+      catch { return "oklch(60% 0.10 165)"; } // seed color before materialization
+    })();
+    fireEvent.click(screen.getByTestId("bs-ws-recolor-ws-personal"));
+    await act(async () => { await Promise.resolve(); });
+
+    const after = getStoredWorkspaces().find((w) => w.id === "ws-personal")!.color;
+    expect(after).not.toBe(before);
+  });
+});
+
+it("TASK02 failed Task write retains pending Board intent across remount and actual Retry completes once", async () => {
+  const view=render(<BoardWorkspacesModule lang="en"/>);
+  fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+  const key=accountScope.physicalKey("xai_task_cols"),native=Storage.prototype.setItem;
+  const fail=vi.spyOn(Storage.prototype,"setItem").mockImplementation(function(this:Storage,k,v){if(k===key)throw new DOMException("quota","QuotaExceededError");native.call(this,k,v)});
+  fireEvent.click(screen.getByTestId("card-detail-create-task"));
+  await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("task creation failed"));
+  expect(getStoredCard("bc1").taskLink?.pending).toBeDefined();
+  fail.mockRestore();view.unmount();render(<BoardWorkspacesModule lang="en"/>);
+  fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+  fireEvent.click(screen.getByTestId("card-detail-retry-task"));
+  await waitFor(() => expect(getStoredCard("bc1").taskLink?.pending).toBeUndefined());
+  expect(getStoredTask("bt-b-default-bc1").task.source?.cardId).toBe("bc1");
 });

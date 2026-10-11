@@ -35,3 +35,18 @@ export { AppearancePane } from "./AppearancePane.js";
 
 // ---- Registry entry --------------------------------------------------------
 export { appearancePane } from "./internal/appearancePane.js";
+
+// ---- App-scoped controller (CP-APPEARANCE-01) ------------------------------
+// App creates the controller once with useAppearanceController() and provides
+// it with <AppearanceProvider>; the pane and <AppearanceStatus> are its views.
+export type {
+  AppearanceController,
+  AppearanceFieldId,
+  AppearanceFieldState,
+  AppearanceProviderProps,
+  AppearanceStatusLine,
+  AppearanceStatusProps,
+  AppearanceValues,
+} from "./types.js";
+export { AppearanceProvider, useAppearanceController } from "./internal/appearanceController.js";
+export { AppearanceStatus } from "./internal/AppearanceStatus.js";

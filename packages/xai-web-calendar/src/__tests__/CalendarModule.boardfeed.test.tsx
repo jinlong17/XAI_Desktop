@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { makeDefaultBoards } from "@repo/plugin-web-board-core";
@@ -19,7 +20,7 @@ function seedBoardCardDueDate(dueDate: string): void {
     ...boards[0]!.lists[0]!.cards[0]!,
     dueDate,
   };
-  localStorage.setItem("xai_boards_v2", JSON.stringify(boards));
+  localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(boards));
 }
 
 function chipsForDay(container: HTMLElement, day: string): HTMLElement[] {
@@ -48,7 +49,7 @@ describe("CalendarModule Board feed", () => {
 
   it("BCF-MOD-3: Board card dueDate appears in Week view all-day strip", () => {
     seedBoardCardDueDate("2026-05-22");
-    localStorage.setItem("xai_calendar_view", "week");
+    localStorage.setItem(accountScope.physicalKey("xai_calendar_view"), "week");
 
     render(<CalendarModule lang="en" />);
 

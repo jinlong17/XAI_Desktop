@@ -1,0 +1,9 @@
+file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-auth-session-cleanup/verify-native-generation-client.mjs:26
+ if(typeof result!=='string'||!result.startsWith('{')||!JSON.parse(result).pass)throw Error(String(result));
+                                                                                      ^
+
+Error: {"pass":false,"delayedSignOutPreserved":true,"oldLogout":{"failed":true,"reason":"active-changed"},"oldBroadcastIgnored":true,"sdkFailureRetained":true,"failedSave":{"failed":true,"reason":"transaction-failed"},"oldRefreshRejected":true,"oldRefresh":{"failed":true,"reason":"active-changed"},"boundOwnerPreserved":false,"wrongOwnerLogin":{"failed":false,"reason":null},"currentOwner":"O","persistedUser":"P","oldClientStillCallsNetwork":true,"lateOldLogin":{"failed":true,"reason":"active-changed"},"boundary":"Actual installed SDK + native IDB/sessionStorage/BroadcastChannel, synthetic auth HTTP, isolated profile. No coordinator or host UI integration; old client network requests remain possible."}
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-auth-session-cleanup/verify-native-generation-client.mjs:26:87
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v24.16.0

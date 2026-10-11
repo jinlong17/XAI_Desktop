@@ -1,0 +1,158 @@
+revision=d129950 fixed_commit=d12995059eb0388cdc2f5b34c18a3f0077681797
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-XL6Vg1
+
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.async.test.tsx (5 tests) 548ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx (7 tests) 235ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx (16 tests) 602ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.remove.test.tsx (4 tests) 191ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx (12 tests) 202ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx (26 tests) 231ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx (13 tests) 475ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.picker.test.tsx (6 tests) 287ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx (23 tests) 445ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardSlotHost.composition.test.tsx (8 tests) 617ms
+   ✓ DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 5: DashboardSlotHost forwards the array, NOT the empty default  354ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx (10 tests) 454ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx (4 tests) 632ms
+   ✓ Dashboard header persistence recovery > keeps latest draft on quota, retries it, and warns before unload only while dirty  385ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/EmptyState.test.tsx (5 tests) 87ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx (9 tests) 29ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.render.test.tsx (5 tests) 139ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx (11 tests) 120ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.removeWidget.test.tsx (6 tests) 19ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.addWidget.test.tsx (5 tests) 35ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.lang.test.tsx (3 tests) 76ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/greeting.test.ts (7 tests) 18ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetAppearance.test.tsx (5 tests) 31ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts (14 tests) 7ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetLayout.test.tsx (4 tests) 14ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/index-barrel.test.ts (5 tests) 3ms
+
+ Test Files  24 passed (24)
+      Tests  213 passed (213)
+   Start at  20:33:37
+   Duration  7.63s (transform 2.96s, setup 9.83s, collect 8.94s, tests 5.50s, environment 16.11s, prepare 2.29s)
+
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > order failure control retains original persisted and rendered order
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > latest layout proposal retries once while committed view stays unchanged
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > appearance latest change and reset are recoverable; old owner export is blocked
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/DashHeader.async.test.tsx > DashHeader async note session > masks an old account's committed text after an editor session freezes
+An update to DashHeader inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DashHeader inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DashHeader inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DashHeader inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > actual add retry emits once only after saving and closes picker; removal retry commits
+[plugin-web-storage] quota exceeded for xai_dash_order.
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > failed order reconciliation remains pending and can retry rather than marking it saved
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx > DashboardModule with widgets (P2 grid) > duplicate ids in widgets[] → first wins, no crash, dev-warn handled silently in test env
+[@repo/plugin-web-dashboard-grid] Duplicate widget id "alpha" — keeping first occurrence, dropping later one(s).
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > DashboardSlotHost > deep-links from calendar widget change the app route
+An update to DashboardGrid inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DashboardGrid inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DashboardModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DashboardModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx > Dashboard header persistence recovery > retains latest position on quota and refuses newer device raw on retry
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_header_note_x.
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_header_note_x.

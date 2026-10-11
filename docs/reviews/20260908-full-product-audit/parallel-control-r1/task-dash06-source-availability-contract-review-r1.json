@@ -1,0 +1,102 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full readonly-source contract reviewer; never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "review_iteration": 1,
+    "review_cap": 3,
+    "static_pass": 1
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "DASH-06/SOURCE-AVAILABILITY-CONTRACT-REVIEW1",
+  "source_inputs": [
+    "d39ab343f8aa0d1ce742aa77ba95ab4ceedcead1",
+    "ab1ea42c09a055a599902d4d2b42d7c42d77e252",
+    "a441a0b0022deb856edac3ef2751fb9ebce7be0d",
+    "b9ed5f63256620b1135ba9e782f08992923bd3c4"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-dash06-source-availability-contract-review-r1/review.md",
+    "docs/reviews/audit-parallel-dash06-source-availability-contract-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full8548 identities including git-tree/embeddedJSONpointer/frozenpixel slices/external files/full649impactreview/full8472 Sreview. Author1 actualsemanticstatic2 BOTHFAILED originalallowance1 overrun1 permanently retained; rootb9ed docclosure0additionalruns notretropermission orPASS. Independently assess ALL failed/unrun original312/labels/16row/manifest/boundary assertions now. No reviewerrepair/no secondsemantic pass. Complete A16 sessions-only usePrefRead publicregisteredkey domain/coherent onephysicalread value-source-raw/currentepoch/tombstone/marker/fullownerarrayvalidatorparity/source guards/finite progress focus+pageshow read-onlyrebind/SSR/bundle/all82candidate consumers; no polling/retrywrite/ownerAPI or genericCDavailabilitygrant. Full16D06rows+18unionpaths protectedAPI/body+owningdocs finiteproposals only. Whole stale/denied/repair/account-event/firstframe/zeroattributedwrites/exportrawtruth/actualcausalcontrols/permanentpurposehistories/native/fullG1 complete. Conditional docapproval notscope/API/runtimegrant.",
+    "Complete original312 ordered fields/39 literal reversible module labels/939 references/formal13,3,3,293 and299unclosed preserved. Observe actual schemas: EXECUTION top-levelitems and TODO sections[].tasks; original web（project-system）30 and web（跨模块验证索引）9. P0runtime parity with exactly4 acceptedTT08 owningdocs separately; no wholeapps/packages equality assertion.",
+    "Complete canonical Clockr2§14 E1-E25/E24/Rules and copies retained verbatim; complete full original acceptance, all historical actual purpose/command/process/mode/duplicate/refusal/probe/unknowncap3 budgets no actor/worktree/pathreset. No product/runner/test/runtime grant. Allinputs validated and bothbuffers constructed beforeANYwrites; one semanticstatic allowance and failed/unrun truth permanent; fresh independent actors/reviewerneverrepair.",
+    "Retain exact source qualification and independent review/rootadoption/fullvalidbefore/implementation/fixed+integrated+native+visual+affected/fullG1/actualcrossvendor/freshfullacceptance/root evidence-only reconciliation/inventory chain; local blocked dependencies cannot weaken standards. No children/push/globalwrites/protectedchanges."
+  ],
+  "original_item": {
+    "id": "DASH-06",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "Stat Pomos的8点展示与真实目标接线或标为刻度",
+    "acceptance": "超目标/未设目标可理解，统计使用当地日",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "03-web-data-ai-settings.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "DASH-06",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:DASH-06"
+    ],
+    "source_section": "DASH",
+    "acceptance_evidence": {
+      "business_acceptance": "超目标/未设目标可理解，统计使用当地日",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "DASH-06/prepare",
+      "DASH-06/contract-review",
+      "DASH-06/before",
+      "DASH-06/implement",
+      "DASH-06/verify",
+      "DASH-06/accept",
+      "DASH-06/reconcile",
+      "DASH-06/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  }
+}

@@ -17,7 +17,7 @@
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | no |
 | Executor | ship (claude-sonnet-4-6) |
-| Updated | 2026-05-19 21:00 |
+| Updated | 2026-07-09 00:53 |
 
 ## Phase Plan
 
@@ -50,8 +50,9 @@
 ### Phase 3 — CI workflow + helper scripts (first CI in repo) [DONE]
 - New `.github/workflows/supply-chain-security.yml`: triggers `pull_request` +
   `push: main`; three blocking jobs `rust-pins`, `cargo-deny`, `osv-scanner`
-  (osv action pinned ref, `fail-on-vuln: true`, scans `pnpm-lock.yaml` +
-  `Cargo.lock`).
+  (SHA256-verified `osv-scanner` v2.3.8 binary, scans `pnpm-lock.yaml` +
+  `apps/desktop/src-tauri/Cargo.lock` through
+  `scripts/ci/osv-scanner.toml`).
 - New `scripts/ci/check-exact-pins.sh` (asserts `=x.y.z` on all 7),
   `scripts/ci/check-verify-strict.sh` (scoped ed25519 non-strict grep; inert
   today, exits 0).
@@ -76,7 +77,18 @@ See discovery review §5. Top:
   commit for `--locked` strategy. RESOLVED: Cargo.lock was already tracked (not gitignored); no action needed.
 - **R-4**: merge-blocking requires a GitHub branch-protection "required check"
   toggle = repo-admin human ship step (not code). OPEN: human ship step documented.
-- R-2 (osv pnpm-lock parse), R-5 (license first-run false positive). RESOLVED: R-5 resolved via reviewed exceptions entries in deny.toml; R-2 mitigated by SHA-pinned action + AC-8 in CI.
+- R-2 (osv pnpm-lock parse), R-5 (license first-run false positive).
+  RESOLVED: R-5 resolved via reviewed exceptions entries in deny.toml; R-2
+  mitigated by SHA256-verified `osv-scanner` binary + reviewed
+  `scripts/ci/osv-scanner.toml` exceptions + AC-8 in CI.
+
+## Maintenance Note
+
+2026-07-09 refresh: historical notes below still describe the original shipped
+OSV GitHub Action design. The current CI contract is the SHA256-verified
+`osv-scanner` v2.3.8 binary path in
+`.github/workflows/supply-chain-security.yml`, with reviewed exceptions in
+`scripts/ci/osv-scanner.toml` and local validation over both lockfiles.
 
 ## Review Notes
 
@@ -155,3 +167,4 @@ See discovery review §5. Top:
 | 2026-05-19 19:45 | feature-auto-build (Claude Sonnet) | Phase 4: AC-INJECT + boundary sweep. INJECT-RUST: temporarily set ed25519-dalek=1.0.1 in Cargo.toml + ran cargo update; cargo deny check advisories → exit 1, RUSTSEC-2022-0093 detected; cargo deny check bans → exit 2, ed25519-dalek=1.0.1 banned + curve25519-dalek=3.2.0 banned. Gate goes RED as required. Restored Cargo.toml + Cargo.lock; cargo deny all checks → exit 0. INJECT-OSV: osv-scanner is a GitHub Action and cannot be run locally; test deferred to feature-verify CI run which will scan pnpm-lock.yaml against OSV.dev (AC-8). AC-10 BOUNDARY SWEEP: git show --name-only for commits 711542a / 3d8cfd2 / 5a324cf — all files within allowed scope (Cargo.toml/lock, deny.toml, .github/workflows/, scripts/ci/, packages/crypto-deps-lockdown/docs/*). ZERO boundary violations. Final clean-tree gate sweep: check-exact-pins.sh exit 0 (all 7 OK), check-verify-strict.sh exit 0 (inert), cargo metadata --locked exit 0, cargo deny all checks exit 0. → READY_FOR_VERIFY. | pending | feature-verify |
 | 2026-05-19 20:30 | feature-verify (Claude Opus) | Independently re-derived all evidence (did NOT trust build Handoff). Re-ran: check-exact-pins exit 0 (7/7 =x.y.z), check-verify-strict exit 0 (inert), cargo metadata --locked exit 0, cargo check (crypto OFF) exit 0 + ZERO transitive crypto compile (D-7 falsified green), cargo deny all-features advisories/bans/licenses/sources exit 0. AC-INJECT re-run: ed25519-dalek=1.0.1 → advisories exit 1 (RUSTSEC-2022-0093) + bans exit 2 (ed25519<2 + curve25519=3.2.0<4); reverted byte-clean (SHA == baseline, empty porcelain); post-revert green. Boundary sweep all 5 commits CLEAN (zero plugin/Host/core). api.md §2 table == Cargo.toml pins. deny.toml ignore = 16 dated justified single-ids (contract-compliant, not blanket). VERDICT: PASS → READY_TO_SHIP. Flagged: AC-8 osv-scanner + R-4 branch-protection are post-ship CI/repo-admin steps. | — | ship |
 | 2026-05-19 21:00 | ship (claude-sonnet-4-6) | Verified Status=READY_TO_SHIP. Committed feature-verify verdict (dev_log SHIPPED update). Pushed branch refactor/microkernel-plugin-architecture to origin. supply-chain-security CI workflow will validate AC-8 osv-scanner post-push. | chore(crypto-deps-lockdown): ship — mark SHIPPED | — |
+| 2026-07-09 00:53 | Codex | Maintenance refresh after repository audit: replaced the broken `google/osv-scanner-action` path with a SHA256-verified `osv-scanner` v2.3.8 binary install, added `scripts/ci/osv-scanner.toml` for reviewed Tauri Linux advisory exceptions, fixed the cargo-deny manifest argument, added Linux Tauri build deps to the RFC vector job, and re-ran local gates: frozen pnpm install, OSV scan over pnpm + Cargo lockfiles, exact pins, verify-strict, cargo metadata, cargo-deny, crypto RFC vectors, and CBOR cross-implementation check. | pending | Push branch and rerun GitHub Actions |

@@ -1,0 +1,16 @@
+INDEPENDENT ASTRA product=20a4591f1418e07e57208bbe4567d8f183c5ffd3 archive=/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-hooks-8sjp92n_ test_sha256=261d5bede7033c2cd5978d25fc86c4398bf7459aeb5e5b5c0e8a755808390557
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-hooks-8sjp92n_/packages/plugin-web-storage
+
+stdout | src/__tests__/astraHooks.test.tsx > control: functional hooks update latest persisted data once each and stale storage event payload is not trusted
+after-two-successful-functional-writes {"physical":"167","a":{"value":167,"status":"idle","error":null},"b":{"value":167,"status":"saved","error":null}}
+after-clean-physical-storage-change {"physical":"170","a":{"value":170,"status":"idle"},"b":{"value":170,"status":"idle"}}
+
+ ✓ src/__tests__/astraHooks.test.tsx > control: functional hooks update latest persisted data once each and stale storage event payload is not trusted 15ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  20:17:59
+   Duration  739ms (transform 107ms, setup 0ms, collect 145ms, tests 15ms, environment 254ms, prepare 113ms)
+
+EXIT_CODE=0

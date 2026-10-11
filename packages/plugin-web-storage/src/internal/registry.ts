@@ -84,6 +84,7 @@ export type ClockStyle = "classic" | "split" | "minimal" | "analog";
 export type PetPos = { x: number; y: number };
 export type TaskColsState = Record<string, boolean>;
 export type BoardsState = unknown;
+export type BoardWorkspacesState = unknown;
 export type BoardPanelState = unknown;
 export type InboxCard = unknown;
 export type BoardFilterByIdState = Record<string, unknown>;
@@ -226,6 +227,17 @@ export const PREF_REGISTRY = {
     category: "module",
   } satisfies PrefEntry<string>,
 
+  // Workspace directory (W3). `null` default → seed DEFAULT_WORKSPACES; the
+  // owner narrows via loadWorkspacesOrDefault (board-core guard).
+  xai_board_workspaces: {
+    key: "xai_board_workspaces",
+    codec: "json",
+    default: null as BoardWorkspacesState,
+    schemaVersion: 1,
+    owner: "plugin-web-board-workspaces",
+    category: "module",
+  } satisfies PrefEntry<BoardWorkspacesState>,
+
   xai_board_panels: {
     key: "xai_board_panels",
     codec: "json",
@@ -350,6 +362,11 @@ export const PREF_REGISTRY = {
   // in their own feature-plan. A rename triggers a one-line migration via the
   // future registerMigration helper.
 
+  xai_pomodoro_active: {
+    key: "xai_pomodoro_active", codec: "json", default: null as unknown, schemaVersion: 1,
+    owner: "xai-web-pomodoro", category: "module",
+  } satisfies PrefEntry<unknown>,
+
   xai_pomodoro_sessions: {
     key: "xai_pomodoro_sessions",
     codec: "json",
@@ -440,6 +457,11 @@ export const PREF_REGISTRY = {
   // ---- Meditation (§S8 — declared by xai-web-meditation #16) ----------------
   // Opaque storage type; canonical declarations live in @repo/plugin-web-meditation.
   // proposed: false — canonical name approved by worker brief #16.
+  xai_meditation_active: {
+    key: "xai_meditation_active", codec: "json", default: null as unknown, schemaVersion: 1,
+    owner: "xai-web-meditation", category: "module",
+  } satisfies PrefEntry<unknown>,
+
   xai_meditation_prefs: {
     key: "xai_meditation_prefs",
     codec: "json",

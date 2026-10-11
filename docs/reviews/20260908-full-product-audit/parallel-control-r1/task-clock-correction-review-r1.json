@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "id": "CLOCK/CORRECT-REVIEW",
+  "workflow": "D",
+  "role": "fresh independent Astra actual source reviewer; never repair",
+  "model": "gpt-6-astra",
+  "fixed_card_input": "f4cc65291aa5d0b97ec30a6654e30dfd3136474c",
+  "dispatch_parent": "resolve this registration commit before launch",
+  "source_inputs": [
+    "a6a78097120094464701bf833a51bf0014d1d8d0",
+    "f37c8607ef30fc5bd927425ae1ee6837f7276c53",
+    "686e98b6251364aee1fa26c63ad30e6af15c3b25",
+    "213aafd92e4ea3a43d943fb766efa73fb4cbbe96",
+    "710fd8421ed651ec366c5bb5e3b15fa5151ec7e6"
+  ],
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "depends_on": [
+    "CLOCK/CORRECT-IMPL"
+  ],
+  "allowed_files": [
+    "docs/reviews/web-dashboard-clock-recovery-correction-review-r1/review.md",
+    "docs/reviews/web-dashboard-clock-recovery-correction-review-r1/inputs.sha256"
+  ],
+  "no_children": true,
+  "scope": "Read-only actual18outputs/driver/helper/generatedsource/retainedfaultjournals review against accepted impact; no testing rerun. Report remaining immutable unstable-metadata gap for separate independent impact; this task cannot authorize or repair that expansion. No qualification/adoption.",
+  "acceptance": [
+    "All291fixed/original inputhashes,18outputs/patch/six byte-identical copies, all generated source freeze and previous iteration snapshots verified",
+    "Review everychangedline vs impact§3-5: durable appendbeforecleanup, errorseparation, owned startup/process/stream barriers, deadlines and precise cleanupscope",
+    "Causal predicates rejectunrelatedcauses and actual raw metadata supports each except explicitlyBLOCKEDinstability; no genericregex qualification",
+    "Permanentoriginal formal reservations and guards/nooverwrite/pipeCDP/nativekey policy, seven full matrices, expectedold/newexits preserved",
+    "Synthetic3/3 exhausted145assertions41/42cases is source evidence only; no replay, independent review APP/REVISE distinct from qualificationQ2",
+    "Identify executable defects precisely withfile/line and correction scope ifany; keep allgatesandoldcosts; never repair"
+  ],
+  "budgets": {
+    "source_review_iteration": 1,
+    "family_cap": 3,
+    "retention_suite": "3/3 exhausted; no rerun",
+    "new_runtime_browser_native_probe_package": 0,
+    "Q1": "focus1/3, six0/3 unchanged"
+  },
+  "forbidden": [
+    "nonallowed writes",
+    "product/source/CSS/canonical/r1/r2runner repairs",
+    "globalstates/ledgers",
+    "testsuite/formal/browser/native/probes",
+    "otherworktree/profiledelete/processkill",
+    "push/merge/rebase/deploy/release/promotion/D3"
+  ],
+  "stop": [
+    "hash/scopeconflict",
+    "neednewruntimeevidence",
+    "budgetexhausted",
+    "unjustifiedcausalassumption"
+  ]
+}

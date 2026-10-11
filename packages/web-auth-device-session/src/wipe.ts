@@ -1,38 +1,7 @@
 /**
- * wipe.ts — Account-delete local-data wipe helpers.
- *
- * Extension 2026-05-26 — gap-closure row #9 (Account-delete wire).
- *
- * Exports:
- * - ACCOUNT_LOCAL_WIPE_IDB_NAMES: frozen list of known IDB database names.
- * - wipeRegisteredIDB(): clears all databases in the above list via
- *   indexedDB.deleteDatabase() (parallel via Promise.allSettled).
- *
- * IMPORTANT: This list MUST be manually extended whenever a new package
- * introduces a new IndexedDB database. See JSDoc on ACCOUNT_LOCAL_WIPE_IDB_NAMES.
- *
- * NOT using indexedDB.databases() because Safari + older browsers do not
- * implement that API consistently (FA-7 of design.md §"2026-05-26 Extension").
- *
- * API contract: packages/web-auth-device-session/docs/api.md §"Account-delete helper"
- */
-
-/**
- * Known IndexedDB database names used by the web client.
- *
- * MUST be extended whenever a new package introduces a new IDB database.
- * Used by the account-delete flow to clear durable encrypted local data
- * after a successful backend deletion.
- *
- * NOT derived from `indexedDB.databases()` because Safari + older browsers
- * do not implement that API consistently.
- *
- * Databases at row-#9-time (2026-05-26):
- * - "web-encrypted-cache" — core-data indexeddb-sync-blob (WEB_CACHE_DB_PREFIX)
- * - "xai-web-ai-secrets" — xai-web-ai-chat encrypted secrets IDB
- * - "xai-web-auth" — web-auth-device-session Supabase auth storage
- *
- * @since 2026-05-26 (gap-closure row #9)
+ * Legacy, origin-wide database reset. Not an account deletion participant.
+ * Shared auth/AI databases contain other owners: account cleanup must use
+ * their captured-owner row erasers instead. Do not extend this historical list.
  */
 export const ACCOUNT_LOCAL_WIPE_IDB_NAMES: readonly string[] = Object.freeze([
   "web-encrypted-cache",
@@ -41,33 +10,32 @@ export const ACCOUNT_LOCAL_WIPE_IDB_NAMES: readonly string[] = Object.freeze([
 ]);
 
 /**
- * Deletes all IndexedDB databases listed in ACCOUNT_LOCAL_WIPE_IDB_NAMES
- * using Promise.allSettled (parallel; best-effort — individual failures are
- * non-throwing, consistent with R1 of design.md §"2026-05-26 Extension").
- *
- * Called AFTER a successful backend account-delete + signOut, as part of the
- * local-clear sequence:
- *   1. registry-list localStorage wipe (PREF_REGISTRY keys via removePref)
- *   2. IDB wipe (this function)
- *   3. window.location.assign("/")
- *
- * @since 2026-05-26 (gap-closure row #9)
+ * @deprecated Origin-wide legacy reset, never suitable for deleting one account.
+ * Resolves only when every delete request reports success. A blocked request
+ * rejects even if it later completes: deleteDatabase cannot be cancelled and
+ * callers must inspect/retry instead of reporting complete cleanup.
  */
 export async function wipeRegisteredIDB(): Promise<void> {
   if (typeof indexedDB === "undefined") {
-    // SSR / non-browser environment — no-op.
-    return;
+    throw new Error("IndexedDB is unavailable; database cleanup was not performed");
   }
-
-  await Promise.allSettled(
-    ACCOUNT_LOCAL_WIPE_IDB_NAMES.map(
-      (name) =>
-        new Promise<void>((resolve) => {
-          const req = indexedDB.deleteDatabase(name);
-          req.onsuccess = () => resolve();
-          req.onerror = () => resolve(); // best-effort
-          req.onblocked = () => resolve(); // best-effort
-        }),
-    ),
+  const results = await Promise.allSettled(
+    ACCOUNT_LOCAL_WIPE_IDB_NAMES.map(name => new Promise<void>((resolve, reject) => {
+      const failure = (reason: string, cause?: unknown) => {
+        const error = new Error(`Database ${name} was not confirmed deleted: ${reason}`, { cause });
+        error.name = "DatabaseWipeError";
+        reject(error);
+      };
+      try {
+        const request = indexedDB.deleteDatabase(name);
+        request.onsuccess = () => resolve();
+        request.onerror = () => failure("request failed", request.error);
+        request.onblocked = () => failure("blocked by an open connection; close it and retry");
+      } catch (error) {
+        failure("request could not start", error);
+      }
+    })),
   );
+  const failures = results.flatMap(result => result.status === "rejected" ? [result.reason] : []);
+  if (failures.length) throw new AggregateError(failures, "Database cleanup is incomplete; some requests may finish later");
 }

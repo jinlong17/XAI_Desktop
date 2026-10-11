@@ -1,0 +1,4 @@
+{"name":"baseline","commit":"2a536c1","browser":"Chrome/152.0.7977.83"}
+{"name":"actual-device-controls","checked":["false","false"],"raw":[null,null],"attempts":["xai_pref_collab_show_avatars","xai_pref_collab_mention_notify"],"text":"Collaborate\n\nShow collaborator avatars\nNot saved\n\nRetry\nDiscard\n\nNotify on @ mentions\nNot saved\n\nRetry\nDiscard\nExport current draft\nShow collaborator avatars\nDefault share permission\nCan comment\nCan edit\nView only\nNotify on @ mentions"}
+{"name":"device-failure-recovery","pass":true,"scope":"Two actual device controls under quota; account default-share and full mixed-scope contract are separate"}
+{"name":"runtime-errors","pass":true,"count":0}

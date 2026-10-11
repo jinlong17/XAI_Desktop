@@ -1,0 +1,399 @@
+- complementary:
+  - button "Open account menu":
+  - button "Tasks":
+  - button "Boards":
+  - button "Dashboard":
+  - button "Calendar":
+  - button "Matrix":
+  - button "Pomodoro":
+  - button "Time Tracker":
+  - button "Habits":
+  - button "Meditation":
+  - button "Countdown":
+  - button "XAI Chat":
+  - button "Statistics":
+  - button "Bookkeeping":
+  - button "Metrics":
+  - button "Pet":
+- banner:
+  - button "Search tasks, habits, notes…":
+    - generic: Search tasks, habits, notes…
+    - generic: ⌘K
+  - button "EN · Light · Comfortable":
+    - generic: EN · Light · Comfortable
+- main:
+  - heading "Time Tracker" [level=1]:
+    - text: Time Tracker
+  - paragraph: Start a category, pause when interrupted, and keep your day honest.
+  - generic "Time tracker view":
+    - button "Tracker"
+    - button "Insights"
+  - button "Add record":
+    - text: Add record
+  - main:
+    - heading "Active sessions" [level=2]
+    - generic: "1"
+    - article:
+      - button "Enter focus mode Code":
+        - strong:
+          - text: Code
+          - generic: · Study
+        - generic: Running · 16:17
+      - generic: 00:00:00
+      - button "Pause":
+        - generic: Pause
+      - button "End":
+        - generic: End
+    - heading "Time status" [level=2]
+    - generic: Sep 8 · 16:17
+    - button "Add status card":
+    - button "Hide time status":
+    - article:
+      - emphasis: Current date
+      - strong: Tuesday
+      - generic: September 2026 · Sep 8
+      - button "Remove status card Current date":
+    - article:
+      - emphasis: Month progress
+      - strong: 22 days left
+      - generic: left this month
+      - button "Remove status card Month progress":
+      - generic: 26%
+      - generic "Month progress 26%"
+    - article:
+      - emphasis: Year progress
+      - strong: 114 days left
+      - generic: left this year
+      - button "Remove status card Year progress":
+      - generic: 69%
+      - generic "Year progress 69%"
+    - article:
+      - emphasis: Today total
+      - strong: 0m
+      - generic: "Today remaining: 7h 42m"
+      - button "Remove status card Today total":
+    - article:
+      - emphasis: Current running
+      - strong: Running
+      - generic: Code · Study
+      - button "Remove status card Current running":
+    - heading "Categories" [level=2]
+    - generic: "4"
+    - button "New category":
+    - article:
+      - button "Study 0m / 120m goal":
+        - heading "Study" [level=3]
+        - generic: 0m / 120m goal
+      - button "Start Study":
+        - generic: Start
+      - button "Hide subcategories Study" [expanded]:
+      - button "Add subcategory Study":
+      - button "Edit category":
+      - generic: 4 Subcategory
+      - generic: "1"
+      - button "Start Code" [active]:
+        - strong: Code
+        - emphasis: Study
+        - generic: "1"
+      - button "Start Paper":
+        - strong: Paper
+        - emphasis: Study
+      - button "Start Reading":
+        - strong: Reading
+        - emphasis: Study
+      - button "Start Course":
+        - strong: Course
+        - emphasis: Study
+    - article:
+      - button "Work 0m / 240m goal":
+        - heading "Work" [level=3]
+        - generic: 0m / 240m goal
+      - button "Start Work":
+        - generic: Start
+      - button "Hide subcategories Work" [expanded]:
+      - button "Add subcategory Work":
+      - button "Edit category":
+      - generic: 3 Subcategory
+      - button "Start Product Design":
+        - strong: Product Design
+        - emphasis: Work
+      - button "Start Development":
+        - strong: Development
+        - emphasis: Work
+      - button "Start Meeting":
+        - strong: Meeting
+        - emphasis: Work
+    - article:
+      - button "Life 0m / 90m goal":
+        - heading "Life" [level=3]
+        - generic: 0m / 90m goal
+      - button "Start Life":
+        - generic: Start
+      - button "Hide subcategories Life" [expanded]:
+      - button "Add subcategory Life":
+      - button "Edit category":
+      - generic: 3 Subcategory
+      - button "Start Fitness":
+        - strong: Fitness
+        - emphasis: Life
+      - button "Start Shopping":
+        - strong: Shopping
+        - emphasis: Life
+      - button "Start Commute":
+        - strong: Commute
+        - emphasis: Life
+    - article:
+      - button "Rest 0m / 60m goal":
+        - heading "Rest" [level=3]
+        - generic: 0m / 60m goal
+      - button "Start Rest":
+        - generic: Start
+      - button "Hide subcategories Rest" [expanded]:
+      - button "Add subcategory Rest":
+      - button "Edit category":
+      - generic: Whole
+      - button "Start Whole category":
+        - strong: Whole category
+        - emphasis: Rest
+    - button "Previous day":
+    - heading "Today" [level=2]
+    - generic: Sep 8
+    - button "Next day" [disabled]:
+    - generic: 0m · 0
+    - button "Hide records" [expanded]:
+    - strong: No records for this day yet.
+    - generic: Start a category or add a manual record.
+  - complementary:
+    - generic: Today total
+    - strong: 0m
+    - generic: Running × 1
+    - heading "Where time went" [level=2]
+    - button "Hide insight preview":
+    - strong: 0m
+    - generic: 1 categories
+    - list:
+      - strong: Study
+      - generic: 100%
+      - emphasis: 0m
+    - heading "7-day trend" [level=2]
+    - generic: 0m
+    - button "Hide insight preview":
+    - button "W":
+      - emphasis: W
+    - button "T":
+      - emphasis: T
+    - button "F":
+      - emphasis: F
+    - button "S":
+      - emphasis: S
+    - button "S":
+      - emphasis: S
+    - button "M":
+      - emphasis: M
+    - button "T":
+      - emphasis: T
+    - button "Insights":
+      - text: Insights
+- paragraph: Hi! Don't forget to drink water 💧
+- button "🐾 Change pet (Mochi)"
+- button "Change pet":
+---CLOSE-REOPEN---
+- complementary:
+  - button "Open account menu":
+  - button "Tasks":
+  - button "Boards":
+  - button "Dashboard":
+  - button "Calendar":
+  - button "Matrix":
+  - button "Pomodoro":
+  - button "Time Tracker":
+  - button "Habits":
+  - button "Meditation":
+  - button "Countdown":
+  - button "XAI Chat":
+  - button "Statistics":
+  - button "Bookkeeping":
+  - button "Metrics":
+  - button "Pet":
+- banner:
+  - button "Search tasks, habits, notes…":
+    - generic: Search tasks, habits, notes…
+    - generic: ⌘K
+  - button "EN · Light · Comfortable":
+    - generic: EN · Light · Comfortable
+- main:
+  - heading "Time Tracker" [level=1]:
+    - text: Time Tracker
+  - paragraph: Start a category, pause when interrupted, and keep your day honest.
+  - generic "Time tracker view":
+    - button "Tracker"
+    - button "Insights"
+  - button "Add record":
+    - text: Add record
+  - main:
+    - heading "Active sessions" [level=2]
+    - generic: "1"
+    - article:
+      - button "Enter focus mode Code":
+        - strong:
+          - text: Code
+          - generic: · Study
+        - generic: Running · 16:17
+      - generic: 00:00:01
+      - button "Pause":
+        - generic: Pause
+      - button "End":
+        - generic: End
+    - heading "Time status" [level=2]
+    - generic: Sep 8 · 16:17
+    - button "Add status card":
+    - button "Hide time status":
+    - article:
+      - emphasis: Current date
+      - strong: Tuesday
+      - generic: September 2026 · Sep 8
+      - button "Remove status card Current date":
+    - article:
+      - emphasis: Month progress
+      - strong: 22 days left
+      - generic: left this month
+      - button "Remove status card Month progress":
+      - generic: 26%
+      - generic "Month progress 26%"
+    - article:
+      - emphasis: Year progress
+      - strong: 114 days left
+      - generic: left this year
+      - button "Remove status card Year progress":
+      - generic: 69%
+      - generic "Year progress 69%"
+    - article:
+      - emphasis: Today total
+      - strong: 0m
+      - generic: "Today remaining: 7h 42m"
+      - button "Remove status card Today total":
+    - article:
+      - emphasis: Current running
+      - strong: Running
+      - generic: Code · Study
+      - button "Remove status card Current running":
+    - heading "Categories" [level=2]
+    - generic: "4"
+    - button "New category":
+    - article:
+      - button "Study 0m / 120m goal":
+        - heading "Study" [level=3]
+        - generic: 0m / 120m goal
+      - button "Start Study":
+        - generic: Start
+      - button "Hide subcategories Study" [expanded]:
+      - button "Add subcategory Study":
+      - button "Edit category":
+      - generic: 4 Subcategory
+      - generic: "1"
+      - button "Start Code":
+        - strong: Code
+        - emphasis: Study
+        - generic: "1"
+      - button "Start Paper":
+        - strong: Paper
+        - emphasis: Study
+      - button "Start Reading":
+        - strong: Reading
+        - emphasis: Study
+      - button "Start Course":
+        - strong: Course
+        - emphasis: Study
+    - article:
+      - button "Work 0m / 240m goal":
+        - heading "Work" [level=3]
+        - generic: 0m / 240m goal
+      - button "Start Work":
+        - generic: Start
+      - button "Hide subcategories Work" [expanded]:
+      - button "Add subcategory Work":
+      - button "Edit category":
+      - generic: 3 Subcategory
+      - button "Start Product Design":
+        - strong: Product Design
+        - emphasis: Work
+      - button "Start Development":
+        - strong: Development
+        - emphasis: Work
+      - button "Start Meeting":
+        - strong: Meeting
+        - emphasis: Work
+    - article:
+      - button "Life 0m / 90m goal":
+        - heading "Life" [level=3]
+        - generic: 0m / 90m goal
+      - button "Start Life":
+        - generic: Start
+      - button "Hide subcategories Life" [expanded]:
+      - button "Add subcategory Life":
+      - button "Edit category":
+      - generic: 3 Subcategory
+      - button "Start Fitness":
+        - strong: Fitness
+        - emphasis: Life
+      - button "Start Shopping":
+        - strong: Shopping
+        - emphasis: Life
+      - button "Start Commute":
+        - strong: Commute
+        - emphasis: Life
+    - article:
+      - button "Rest 0m / 60m goal":
+        - heading "Rest" [level=3]
+        - generic: 0m / 60m goal
+      - button "Start Rest":
+        - generic: Start
+      - button "Hide subcategories Rest" [expanded]:
+      - button "Add subcategory Rest":
+      - button "Edit category":
+      - generic: Whole
+      - button "Start Whole category":
+        - strong: Whole category
+        - emphasis: Rest
+    - button "Previous day":
+    - heading "Today" [level=2]
+    - generic: Sep 8
+    - button "Next day" [disabled]:
+    - generic: 0m · 0
+    - button "Hide records" [expanded]:
+    - strong: No records for this day yet.
+    - generic: Start a category or add a manual record.
+  - complementary:
+    - generic: Today total
+    - strong: 0m
+    - generic: Running × 1
+    - heading "Where time went" [level=2]
+    - button "Hide insight preview":
+    - strong: 0m
+    - generic: 1 categories
+    - list:
+      - strong: Study
+      - generic: 100%
+      - emphasis: 0m
+    - heading "7-day trend" [level=2]
+    - generic: 0m
+    - button "Hide insight preview":
+    - button "W":
+      - emphasis: W
+    - button "T":
+      - emphasis: T
+    - button "F":
+      - emphasis: F
+    - button "S":
+      - emphasis: S
+    - button "S":
+      - emphasis: S
+    - button "M":
+      - emphasis: M
+    - button "T":
+      - emphasis: T
+    - button "Insights":
+      - text: Insights
+- paragraph: Hi! Don't forget to drink water 💧
+- button "🐾 Change pet (Mochi)"
+- button "Change pet":

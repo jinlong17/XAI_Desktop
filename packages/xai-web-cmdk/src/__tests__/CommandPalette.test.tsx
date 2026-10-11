@@ -35,7 +35,7 @@ vi.mock("@repo/xai-web-shell", () => ({
 vi.mock("../internal/readModuleStates.js", () => ({
   readModuleStates: () => Object.freeze({
     tasks: {}, board: {}, dashboard: {}, calendar: {}, matrix: {},
-    pomodoro: [], habits: {}, meditation: {}, countdown: [], statistics: {},
+    pomodoro: [], habits: {}, meditation: {}, countdown: [], statistics: {}, metrics: {},
     settings: [], ai: {}, search: {},
   }),
 }));

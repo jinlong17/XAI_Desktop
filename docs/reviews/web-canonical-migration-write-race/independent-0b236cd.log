@@ -1,0 +1,89 @@
+revision=0b236cd
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-canonical-migration-Hse7WC
+
+stdout | docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful ordinary Tasks save remains visible across migration: before
+{
+  timing: 'before',
+  migrationRejected: false,
+  visibleGeneration: 'migration-move-before',
+  oldGenerationHasLatest: true,
+  visibleGenerationHasLatest: true
+}
+
+stdout | docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful ordinary Tasks save remains visible across migration: stage
+{
+  timing: 'stage',
+  migrationRejected: false,
+  visibleGeneration: 'migration-move-stage',
+  oldGenerationHasLatest: true,
+  visibleGenerationHasLatest: false
+}
+
+stdout | docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful ordinary Tasks save remains visible across migration: verify
+{
+  timing: 'verify',
+  migrationRejected: false,
+  visibleGeneration: 'migration-move-verify',
+  oldGenerationHasLatest: true,
+  visibleGenerationHasLatest: false
+}
+
+stdout | docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful account autosave remains visible across migration: before
+{
+  domain: 'account-autosave',
+  timing: 'before',
+  rejected: false,
+  visibleGeneration: 'migration-autosave-before',
+  visibleHasLatest: true
+}
+
+stdout | docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful account autosave remains visible across migration: stage
+{
+  domain: 'account-autosave',
+  timing: 'stage',
+  rejected: false,
+  visibleGeneration: 'migration-autosave-stage',
+  visibleHasLatest: false
+}
+
+ ❯ docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts (5 tests | 3 failed) 13ms
+   ✓ successful ordinary Tasks save remains visible across migration: before 4ms
+   × successful ordinary Tasks save remains visible across migration: stage 6ms
+     → expected '[{"id":"overdue","key":"overdue","cou…' to be '[{"id":"overdue","key":"overdue","cou…' // Object.is equality
+   × successful ordinary Tasks save remains visible across migration: verify 1ms
+     → expected '[{"id":"overdue","key":"overdue","cou…' to be '[{"id":"overdue","key":"overdue","cou…' // Object.is equality
+   ✓ successful account autosave remains visible across migration: before 1ms
+   × successful account autosave remains visible across migration: stage 1ms
+     → expected '{"text":"Initial preference"}' to be '{"text":"Acknowledged latest account …' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 2 passed (5)
+   Start at  17:15:47
+   Duration  820ms (transform 88ms, setup 0ms, collect 103ms, tests 13ms, environment 438ms, prepare 86ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful ordinary Tasks save remains visible across migration: stage
+ FAIL  docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful ordinary Tasks save remains visible across migration: verify
+AssertionError: expected '[{"id":"overdue","key":"overdue","cou…' to be '[{"id":"overdue","key":"overdue","cou…' // Object.is equality
+
+Expected: "[{"id":"overdue","key":"overdue","count":10,"action":"postpone","tasks":[{"id":"t1","title":{"en":"Successfully saved while migration runs","zh":"迁移期间成功保存"},"tag":"study","date":"7/31","inbox":true},{"id":"t2","title":{"en":"Tidy up Google Drive personal files","zh":"整理 Google Drive 个人文件"},"tag":"todo","date":"7/31","inbox":true},{"id":"t3","title":{"en":"Update TIV DA homepage & Github code","zh":"更新 TIV DA 主页和 Github 代码"},"tag":"study","date":"7/31","inbox":true},{"id":"t4","title":{"en":"Polish LinkedIn résumé","zh":"优化 LinkedIn 简历"},"tag":"personal","date":"7/31","inbox":true},{"id":"t5","title":{"en":"Sort ICRA 2024 CrossData GitHub","zh":"整理 ICRA 2024 CrossData GitHub"},"tag":"study","date":"7/31","inbox":true},{"id":"t6","title":{"en":"Find paper-sync reader, local + cloud","zh":"找一款本地+云端的论文同步阅读软件"},"tag":"study","date":"9/10","inbox":true},{"id":"t7","title":{"en":"Refresh personal homepage","zh":"更新一下个人主页"},"tag":"personal","date":"9/16","inbox":true},{"id":"t8","title":{"en":"Paper: source Grounding/Video QA set","zh":"论文：找一些 Grounding 或 Video QA"},"tag":"study","date":"9/17","inbox":true},{"id":"t9","title":{"en":"Cross-platform tab cleanup","zh":"全平台浏览器标签断舍离"},"tag":"personal","date":"10/24","inbox":true},{"id":"t10","title":{"en":"TaskLine_Overview_2025 declutter","zh":"TaskLine_Overview_2025 断舍离"},"tag":"personal","date":"10/24","inbox":true}]},{"id":"next7","key":"next_7_days","count":2,"action":"add","tasks":[{"id":"t11","title":{"en":"Memorial Day","zh":"阵亡将士纪念日"},"sub":{"en":"Next Mon","zh":"下周一"}},{"id":"t12","title":{"en":"Eid al-Adha","zh":"古尔邦节"},"sub":{"en":"The exact date of this holiday is different…","zh":"该节日的具体日期每年不同…"},"dateLabel":{"en":"Next Wed","zh":"下周三"}}]},{"id":"later","key":"later","count":13,"action":"add","tasks":[{"id":"t13","title":{"en":"Flag Day","zh":"国旗日"},"date":"Jun 14","dateZh":"6 月 14 日"},{"id":"t14","title":{"en":"Juneteenth","zh":"六月节"},"date":"Jun 19","dateZh":"6 月 19 日"},{"id":"t15","title":{"en":"Father's Day","zh":"父亲节"},"date":"Jun 21","dateZh":"6 月 21 日"},{"id":"t16","title":{"en":"Ashura","zh":"阿舒拉节"},"date":"Jun 26","dateZh":"6 月 26 日","sub":{"en":"The exact date of this holiday is diff…","zh":"该节日的具体日期不同…"}},{"id":"t17","title":{"en":"Independence Day (observed)","zh":"独立日（观察日）"},"date":"Jul 3","dateZh":"7 月 3 日"},{"id":"t18","title":{"en":"Independence Day","zh":"独立日"},"date":"Jul 4","dateZh":"7 月 4 日"},{"id":"t19","title":{"en":"Labor Day","zh":"劳动节"},"date":"Sep 7","dateZh":"9 月 7 日"},{"id":"t20","title":{"en":"Rosh Hashanah","zh":"犹太新年"},"date":"Sep 12","dateZh":"9 月 12 日","sub":{"en":"Holiday starts at sundown on the d…","zh":"节日从前一日日落开始…"}},{"id":"t21","title":{"en":"Rosh Hashanah (day 2)","zh":"犹太新年（第 2 天）"},"date":"Sep 13","dateZh":"9 月 13 日"},{"id":"t22","title":{"en":"Yom Kippur","zh":"赎罪日"},"date":"Sep 21","dateZh":"9 月 21 日"},{"id":"t23","title":{"en":"Columbus Day","zh":"哥伦布日"},"date":"Oct 12","dateZh":"10 月 12 日","sub":{"en":"This is not a nation-wide holiday; it…","zh":"非全国性节日；…"}},{"id":"t24","title":{"en":"Indigenous Peoples' Day","zh":"原住民日"},"date":"Oct 12","dateZh":"10 月 12 日","sub":{"en":"This is not a nation-wide holiday; it…","zh":"非全国性节日；…"}},{"id":"t25","title":{"en":"Halloween","zh":"万圣节"},"date":"Oct 31","dateZh":"10 月 31 日"}]},{"id":"nodate","key":"no_date","count":1,"action":"add","tasks":[{"id":"t26","title":{"en":"Post about my own work on LinkedIn","zh":"在 LinkedIn 上分享一下自己的工作"},"tag":"work","inbox":true}],"completed":[{"id":"c1","title":{"en":"EB1B preparation plan","zh":"EB1B 准备计划"},"inbox":true},{"id":"c2","title":{"en":"Review: IEEE ITS Transactions T-ITS-25-09-4493","zh":"审稿：IEEE ITS Transactions T-ITS-25-09-4493"},"tag":"study","inbox":true},{"id":"c3","title":{"en":"Review: Artificial Intelligence Review","zh":"审稿：Artificial Intelligence Review"},"tag":"study","inbox":true},{"id":"c4","title":{"en":"Review: Discover Artificial Intelligence","zh":"审稿：Discover Artificial Intelligence"},"tag":"study","inbox":true},{"id":"c5","title":{"en":"Review: Multimedia Systems","zh":"审稿：Multimedia Systems"},"tag":"study","inbox":true},{"id":"c6","title":{"en":"Plan one daily task for dingfu","zh":"每天给 dingfu 安排一个 task"},"tag":"work","inbox":true}]}]"
+Received: "[{"id":"overdue","key":"overdue","count":10,"action":"postpone","tasks":[{"id":"t1","title":{"en":"Github: CVPR2024 dataset pipeline pull","zh":"Github：CVPR2024 数据集 pipeline 拉取"},"tag":"study","date":"7/31","inbox":true},{"id":"t2","title":{"en":"Tidy up Google Drive personal files","zh":"整理 Google Drive 个人文件"},"tag":"todo","date":"7/31","inbox":true},{"id":"t3","title":{"en":"Update TIV DA homepage & Github code","zh":"更新 TIV DA 主页和 Github 代码"},"tag":"study","date":"7/31","inbox":true},{"id":"t4","title":{"en":"Polish LinkedIn résumé","zh":"优化 LinkedIn 简历"},"tag":"personal","date":"7/31","inbox":true},{"id":"t5","title":{"en":"Sort ICRA 2024 CrossData GitHub","zh":"整理 ICRA 2024 CrossData GitHub"},"tag":"study","date":"7/31","inbox":true},{"id":"t6","title":{"en":"Find paper-sync reader, local + cloud","zh":"找一款本地+云端的论文同步阅读软件"},"tag":"study","date":"9/10","inbox":true},{"id":"t7","title":{"en":"Refresh personal homepage","zh":"更新一下个人主页"},"tag":"personal","date":"9/16","inbox":true},{"id":"t8","title":{"en":"Paper: source Grounding/Video QA set","zh":"论文：找一些 Grounding 或 Video QA"},"tag":"study","date":"9/17","inbox":true},{"id":"t9","title":{"en":"Cross-platform tab cleanup","zh":"全平台浏览器标签断舍离"},"tag":"personal","date":"10/24","inbox":true},{"id":"t10","title":{"en":"TaskLine_Overview_2025 declutter","zh":"TaskLine_Overview_2025 断舍离"},"tag":"personal","date":"10/24","inbox":true}]},{"id":"next7","key":"next_7_days","count":2,"action":"add","tasks":[{"id":"t11","title":{"en":"Memorial Day","zh":"阵亡将士纪念日"},"sub":{"en":"Next Mon","zh":"下周一"}},{"id":"t12","title":{"en":"Eid al-Adha","zh":"古尔邦节"},"sub":{"en":"The exact date of this holiday is different…","zh":"该节日的具体日期每年不同…"},"dateLabel":{"en":"Next Wed","zh":"下周三"}}]},{"id":"later","key":"later","count":13,"action":"add","tasks":[{"id":"t13","title":{"en":"Flag Day","zh":"国旗日"},"date":"Jun 14","dateZh":"6 月 14 日"},{"id":"t14","title":{"en":"Juneteenth","zh":"六月节"},"date":"Jun 19","dateZh":"6 月 19 日"},{"id":"t15","title":{"en":"Father's Day","zh":"父亲节"},"date":"Jun 21","dateZh":"6 月 21 日"},{"id":"t16","title":{"en":"Ashura","zh":"阿舒拉节"},"date":"Jun 26","dateZh":"6 月 26 日","sub":{"en":"The exact date of this holiday is diff…","zh":"该节日的具体日期不同…"}},{"id":"t17","title":{"en":"Independence Day (observed)","zh":"独立日（观察日）"},"date":"Jul 3","dateZh":"7 月 3 日"},{"id":"t18","title":{"en":"Independence Day","zh":"独立日"},"date":"Jul 4","dateZh":"7 月 4 日"},{"id":"t19","title":{"en":"Labor Day","zh":"劳动节"},"date":"Sep 7","dateZh":"9 月 7 日"},{"id":"t20","title":{"en":"Rosh Hashanah","zh":"犹太新年"},"date":"Sep 12","dateZh":"9 月 12 日","sub":{"en":"Holiday starts at sundown on the d…","zh":"节日从前一日日落开始…"}},{"id":"t21","title":{"en":"Rosh Hashanah (day 2)","zh":"犹太新年（第 2 天）"},"date":"Sep 13","dateZh":"9 月 13 日"},{"id":"t22","title":{"en":"Yom Kippur","zh":"赎罪日"},"date":"Sep 21","dateZh":"9 月 21 日"},{"id":"t23","title":{"en":"Columbus Day","zh":"哥伦布日"},"date":"Oct 12","dateZh":"10 月 12 日","sub":{"en":"This is not a nation-wide holiday; it…","zh":"非全国性节日；…"}},{"id":"t24","title":{"en":"Indigenous Peoples' Day","zh":"原住民日"},"date":"Oct 12","dateZh":"10 月 12 日","sub":{"en":"This is not a nation-wide holiday; it…","zh":"非全国性节日；…"}},{"id":"t25","title":{"en":"Halloween","zh":"万圣节"},"date":"Oct 31","dateZh":"10 月 31 日"}]},{"id":"nodate","key":"no_date","count":1,"action":"add","tasks":[{"id":"t26","title":{"en":"Post about my own work on LinkedIn","zh":"在 LinkedIn 上分享一下自己的工作"},"tag":"work","inbox":true}],"completed":[{"id":"c1","title":{"en":"EB1B preparation plan","zh":"EB1B 准备计划"},"inbox":true},{"id":"c2","title":{"en":"Review: IEEE ITS Transactions T-ITS-25-09-4493","zh":"审稿：IEEE ITS Transactions T-ITS-25-09-4493"},"tag":"study","inbox":true},{"id":"c3","title":{"en":"Review: Artificial Intelligence Review","zh":"审稿：Artificial Intelligence Review"},"tag":"study","inbox":true},{"id":"c4","title":{"en":"Review: Discover Artificial Intelligence","zh":"审稿：Discover Artificial Intelligence"},"tag":"study","inbox":true},{"id":"c5","title":{"en":"Review: Multimedia Systems","zh":"审稿：Multimedia Systems"},"tag":"study","inbox":true},{"id":"c6","title":{"en":"Plan one daily task for dingfu","zh":"每天给 dingfu 安排一个 task"},"tag":"work","inbox":true}]}]"
+
+ ❯ docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts:47:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful account autosave remains visible across migration: stage
+AssertionError: expected '{"text":"Initial preference"}' to be '{"text":"Acknowledged latest account …' // Object.is equality
+
+Expected: "{"text":"Acknowledged latest account preference"}"
+Received: "{"text":"Initial preference"}"
+
+ ❯ docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts:79:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯

@@ -1,3 +1,4 @@
+import { testStorage } from "./accountTestHarness.js";
 // @vitest-environment jsdom
 /**
  * Regression tests for the xai_pref_* autosave read-path.
@@ -140,7 +141,7 @@ describe("AC-AUTO-RP-4: consumer seeds initial state from getPrefAutosave (api.m
       (FirstMount as { setDensity?: (v: "comfortable" | "compact") => void })
         .setDensity?.("compact");
     });
-    expect(localStorage.getItem("xai_pref_seed_test_density")).toBe(
+    expect(testStorage.getItem("xai_pref_seed_test_density")).toBe(
       '"compact"',
     );
 
@@ -221,7 +222,7 @@ describe("AC-AUTO-RP-6: removePrefAutosave restores default on read", () => {
 
 describe("AC-AUTO-RP-7: decode failure falls back to defaultValue", () => {
   it("corrupt JSON in xai_pref_${suffix} returns defaultValue and warns", () => {
-    localStorage.setItem("xai_pref_corrupt_rp", "{not valid json}");
+    testStorage.setItem("xai_pref_corrupt_rp", "{not valid json}");
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const result = getPrefAutosave<{ ok: boolean }>("corrupt_rp", {
       defaultValue: { ok: false },

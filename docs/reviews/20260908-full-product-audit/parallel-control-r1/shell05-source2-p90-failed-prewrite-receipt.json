@@ -1,0 +1,32 @@
+{
+  "id": "SHELL-05/SOURCE-DISCOVERY2",
+  "actor": "/root/parallel_c_shell05_web_pet_whole_source_correction_r2",
+  "parent": "ac6d1e7daf5d26a7c0cfa244620f5bd2514035a7",
+  "fixed_input": "6715c4367799366a10a9337a863f78036ec07ed9",
+  "result": "FAILED_WRONG_CARD_FIELD_PREWRITE_NO_ARTIFACT",
+  "family_iteration": 2,
+  "family_cap": 3,
+  "concluding_invocations": 1,
+  "pid": 57693,
+  "numeric_exit": 1,
+  "tool_chunk": "b2aeeb",
+  "tool_wall_seconds": 0.326133458,
+  "reported_process_seconds": 0.363,
+  "stdout": "STATIC_PID=57693\n",
+  "stderr": "FAIL: task card owner gate\n",
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "drain_method": "Popen.communicate",
+  "separate_drain_seconds": "UNKNOWN",
+  "session": null,
+  "filesystem_writes": 0,
+  "retries": 0,
+  "commits": 0,
+  "source_findings": "UNVALIDATED no adoption",
+  "cause": "guessed top-level gate_obligations; actual gate remains original_items[0].gate_obligations",
+  "raw_provenance": {
+    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/shell05-source2-p90-original-tool-records.json",
+    "sha256": "c2faa1c6a196f4dcd12f2aa7d24b143a2f4b5ae2fdbe9bdbc2aa53e07b3c42bb"
+  },
+  "new_budget_grant": []
+}

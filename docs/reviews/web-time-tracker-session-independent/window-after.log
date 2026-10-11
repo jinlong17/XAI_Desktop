@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-tt02-independent-q5b_xf8_
+
+ ✓ docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx (11 tests) 265ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  12:56:02
+   Duration  2.20s (transform 335ms, setup 0ms, collect 609ms, tests 265ms, environment 949ms, prepare 72ms)
+

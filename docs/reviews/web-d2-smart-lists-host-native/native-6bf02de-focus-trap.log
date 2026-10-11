@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"6bf02de","browser":"Chrome/152.0.7977.83"}
+{"name":"actual-host-departure","pass":false,"error":"AssertionError [ERR_ASSERTION]: Native Tab escaped modal instead of wrapping"}

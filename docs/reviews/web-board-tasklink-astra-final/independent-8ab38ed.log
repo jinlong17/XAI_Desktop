@@ -1,0 +1,11 @@
+revision=8ab38ed
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-tHev4B
+
+ ✓ docs/reviews/web-board-tasklink-astra-final/detail-contract.test.tsx (3 tests) 4ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  19:26:43
+   Duration  1.58s (transform 230ms, setup 307ms, collect 18ms, tests 4ms, environment 726ms, prepare 169ms)

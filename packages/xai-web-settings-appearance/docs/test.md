@@ -43,47 +43,49 @@ All tests run under Vitest + jsdom. No real browser required for the unit + inte
 - **AC-CONST-6**: Every entry's `.name`/`.label` carries non-empty `en` AND `zh`.
 - **AC-CONST-7**: `Object.isFrozen(BG_TONES) === true` and `BG_TONES[0]` is also frozen (deep-freeze test for one entry).
 
-### A3. `AppearancePane.live-binding.test.tsx` — live DOM apply
+### A3. `AppearancePane.live-binding.test.tsx` — live DOM apply (CP-APPEARANCE-01 dispositions)
 
-Mounted via `<AppearancePane lang="en" />` with a `ShellFixture`-style wrapper. Spy on `emitWebEvent` and on `document.documentElement.setAttribute`. Use real `localStorage` (jsdom).
+Mounted via `<AppearancePane lang="en" />` (standalone controller) with the local Web Lock fixture installed (`appearanceLockFixture.ts`); real completion is awaited before byte assertions. The pane emits no `web:settings:preference-changed`, so the old emission assertions are dropped.
 
-- **AC-LIVE-1**: Clicking the `Dark` theme card → `data-theme="dark"` set on `<html>` BEFORE the next macrotask + one `emitWebEvent("web:settings:preference-changed", { key:"theme", value:"dark", changedAt:<iso> })` call.
-- **AC-LIVE-2**: Clicking `Compact` density button → `data-density="compact"` + emit `{ key:"density", value:"compact" }`.
-- **AC-LIVE-3**: Dragging hue slider to value `220` → `localStorage.xai_accent_hue === "220"` + emit `{ key:"accentHue", value:220 }`. (DOM `--accent-hue` applied via App.tsx useEffect — tested in integration A8.)
-- **AC-LIVE-4**: Clicking the `Ocean` swatch → `xai_accent_hue === "230"` + emit.
-- **AC-LIVE-5**: Clicking the `Lavender` bg-tone card → `xai_bg_tone === "lavender"` AND `xai_accent_hue === "295"` (verbatim source line 584) AND TWO emits (bgTone first then accentHue).
-- **AC-LIVE-6**: Clicking `Right` rail-position card → `xai_rail_pos === "right"` + emit `{ key:"railPos", value:"right" }`.
-- **AC-LIVE-7**: Setting font slider to `0.85` → `html.style.fontSize === "13.6px"` + emit `{ key:"fontScale", value:0.85 }`.
-- **AC-LIVE-8**: Clicking `简体中文` segment → no DOM apply (lang has no DOM channel) + emit `{ key:"lang", value:"zh" }`.
+- **AC-LIVE-1**: Clicking the `Dark` theme card → `data-theme="dark"` immediately and after completion; `xai_pref_theme` = `"dark"`.
+- **AC-LIVE-2**: Clicking `Compact` → `data-density="compact"`; `xai_pref_density` = `"compact"`.
+- **AC-LIVE-3**: Hue slider to `220` → after completion `getPref("xai_accent_hue") === 220`.
+- **AC-LIVE-4**: `Ocean` swatch → `xai_accent_hue === 230`.
+- **AC-LIVE-5**: `Lavender` tone → `xai_bg_tone === "lavender"` and `xai_accent_hue === 295`.
+- **AC-LIVE-6**: `Right` rail card → `xai_rail_pos === "right"`.
+- **AC-LIVE-7**: Font slider `0.85` → `font-size: 13.6px` immediately and after completion; `xai_pref_font_scale` = `0.85`.
+- **AC-LIVE-8** (replaced): choosing `简体中文` persists `"zh"` and marks it selected; still no `data-lang` attribute.
 
 ### A4. `AppearancePane.rendering.test.tsx` — DOM contract
 
 - **AC-RENDER-1**: Renders 7 `SettingRow` elements (one per dim) in DESIGN.md order.
 - **AC-RENDER-2**: 3 theme cards + 6 hue swatches + 6 bg-tone cards + 4 rail-pos cards visible.
-- **AC-RENDER-3**: Theme card matching current `data-theme` has `.active` class.
+- **AC-RENDER-3**: Theme card matching current `data-theme` has `.active` class. (Disposition: seeds the stored bytes `xai_pref_theme` = `"dark"` instead of DOM state; same assertions.)
 - **AC-RENDER-4**: Hue swatch with `Math.abs(accentHue - p.hue) < 3` has `.active` class; others do not.
 - **AC-RENDER-5**: Bg-tone card matching current `xai_bg_tone` has `.active` class.
 - **AC-RENDER-6**: Rail-pos card matching current `xai_rail_pos` has `.active` class.
 - **AC-RENDER-7**: Hue slider value attribute reflects current `accentHue`; `<span class="slider-val">` shows `<rounded>°`.
-- **AC-RENDER-8**: Font slider value reflects fontScale; companion `<span class="slider-val">` shows `<rounded>%`.
+- **AC-RENDER-8**: Font slider value reflects fontScale; companion `<span class="slider-val">` shows `<rounded>%`. (Disposition: seeds `xai_pref_font_scale` = `1.1` instead of DOM state; same assertions.)
 
 ### A5. `AppearancePane.bilingual.test.tsx` — i18n parity
 
 - **AC-I18N-1**: With `lang="zh"`, the language seg shows "简体中文" / "English"; theme cards show 浅色/深色/跟随系统; density shows 舒适/紧凑.
 - **AC-I18N-2**: Accent / Background palette / Sidebar position labels render the new ZH keys appended in P1.
 - **AC-I18N-3**: All BG_TONES options render their `zh` names; switching `lang="en"` re-renders to `en` names with no remount required (prop change only).
-- **AC-I18N-4** (revised per M1): Reset confirm prompt is owned by the chassis `SettingsFooter` — bilingual prompt verification is the chassis's responsibility (chassis test.md). For this row, assert that `<SettingsFooter lang={lang}>` is rendered with the correct `lang` prop so the chassis emits the right bilingual prompt. Direct prompt-string assertion is OUT OF SCOPE for the pane (would duplicate chassis tests).
+- **AC-I18N-4** (replaced, CP-APPEARANCE-01): the pane-local Reset to defaults shows 恢复默认 in ZH; no shared settings footer is rendered.
 
-### A6. `AppearancePane.save-reset.test.tsx` — chassis SettingsFooter integration
+### A6. `AppearancePane.save-reset.test.tsx` — pane-local bottom action area (CP-APPEARANCE-01 dispositions)
 
-- **AC-SAVE-1**: Clicking Save → 7 `emitWebEvent` calls (one per dim) within the same tick + chassis "Saved" flash appears (testing via `.is-saved` class on the button).
-- **AC-SAVE-2**: After 1800ms (use `vi.useFakeTimers`), `.is-saved` is removed.
-- **AC-RESET-1**: jsdom `window.confirm` stubbed to return `true` (chassis `SettingsFooter.handleReset` calls `confirmAction` → falls through to `window.confirm`). Click Reset → `removePref` called for `xai_accent_hue`, `xai_rail_pos`, `xai_bg_tone` + `applyTheme("light")` + `applyDensity("comfortable")` + `applyFontScale(1)`.
-- **AC-RESET-2**: Click Reset → 6 emits with default values (`theme=light`, `density=comfortable`, `fontScale=1`, `accentHue=165`, `railPos="left"`, `bgTone="default"`). NO `lang` emit.
-- **AC-RESET-3** (M1 — chassis owns confirm): jsdom `window.confirm` stubbed to return `false`. Click Reset → chassis `handleReset` aborts before calling `onReset` → NO `removePref`, NO `applyX`, NO `emitWebEvent`. State unchanged. (Test stubs the CHASSIS confirm path, not a pane-level helper — the pane no longer has its own `confirmAction`.)
-- **AC-RESET-4**: Reset re-paints DOM: `data-theme="light"`, `data-density="comfortable"`, `data-bg-tone` removed (since default = `"default"` → `applyBgTone` removes attr).
-- **AC-RESET-5**: Idempotent — calling Reset twice yields the same end state.
-- **AC-RESET-6** (M1 — no double-prompt): mount pane, stub `window.confirm` with a `vi.fn()` returning `true`, click Reset. Assert `confirm` was called EXACTLY ONCE (NOT twice — would indicate a residual pane-level `confirmAction`).
+AC-SAVE-1/2 are retired with the shared footer ("Save & apply" and its unconditional "Saved" flash) and replaced by Retry all tests; AC-RESET-* drive the pane-local Reset to defaults. Attempt-logging Storage spies and the local Web Lock fixture are installed.
+
+- **AC-SAVE-1** (replaced): with no settled unsuccessful draft, Retry all is rendered with `aria-disabled="true"` (no `disabled` attribute, no description); there is no "Save & apply", "Saved" or "已保存"; one activation makes zero storage attempts and the status line stays empty.
+- **AC-SAVE-2** (replaced): with a failed accent draft, Retry all is enabled; one activation re-attempts exactly the failed key once (and only it); no "Appearance settings saved." until a genuine latest success, after which the button is disabled again.
+- **AC-RESET-1** (adapted): confirm = true → six verified absences, DOM defaults, `xai_pref_lang` bytes unchanged, "Defaults restored.".
+- **AC-RESET-2** (replaced): six reset intents (one removal per seeded key), zero `web:settings:preference-changed` emissions, language untouched.
+- **AC-RESET-3**: confirm = false → zero get/set/remove attempts (counting injector) and no state change.
+- **AC-RESET-4**: Reset re-paints `<html>` to the defaults immediately and after completion.
+- **AC-RESET-5**: two Resets yield the same end state.
+- **AC-RESET-6**: `window.confirm` is called exactly once, with the truthful text naming the six fields and keeping language.
 
 ### A7. `appearancePane.registry.test.ts` — pane object surface
 
@@ -91,6 +93,23 @@ Mounted via `<AppearancePane lang="en" />` with a `ShellFixture`-style wrapper. 
 - **AC-REG-2**: `appearancePane.i18nKey === "settings.appearance"`.
 - **AC-REG-3**: `appearancePane.icon === "sun"` (valid `WebShellIconName` matching chassis `paneRegistry` placeholder at `packages/plugin-web-settings-shell/src/internal/paneRegistry.tsx:55`). The earlier planned literal `"type"` is NOT a member of the `WebShellIconName` union (packages/xai-web-shell/src/types.ts:21-43) — fixed in revise pass (B1).
 - **AC-REG-4**: `appearancePane.render({ lang: "en" })` returns a `<AppearancePane lang="en" />` React element.
+
+### A8. `AppearanceRetryAll.test.tsx` — Retry all at the hook layer (RA1..RA27)
+
+Standalone pane, real engine, the local exclusive Web Lock fixture and attempt-logging Storage spies (record, then delegate once). jsdom cannot synthesize the browser's Enter/Space → click activation, so keyboard activation is modelled as focus + click; native keyboard evidence is E15/E26.
+
+- **A2.2 render and enabled state** (RA1–RA7): rendered in the clean, pending-only and source-only states with `aria-disabled="true"`, no `disabled`, no `aria-describedby`, a Tab stop between the font slider and Reset; clicks are inert (zero storage attempts, zero lock requests, focus kept, status line unchanged). One failed field enables it, described by the count line; ZH label and count lines; an open pass with E empty is disabled and described by the in-flight line; a newly failed field during a pass enables it and the second activation retries only that field.
+- **A2.3 scope and attempts** (RA8–RA16): one write per member in display order and none elsewhere; a background choice as two members (or one); failed Reset items as one removal each and "Defaults restored."; a valid edit over malformed bytes refused again and a conflict never overwritten; an uncertain write reconciled with one total write; a failed predecessor then the queued latest; exclusions of pending, source-only and draft-free fields; no duplicates for a same-turn double activation, an activation while pending, a per-field Retry during a pass and a Retry all during a per-field Retry.
+- **Attribution and late completions** (RA17–RA20): a pane edit supersedes a held member; Discard and Discard all during an open pass (focus to Reset); unmount during an open pass — late completions never write or claim success.
+- **A2.4 / A2.5** (RA21–RA26): rule 1 wins over a member that failed again, then rule 3; ZH in-flight and saved lines; rule 2 export failure cleared by the next action and never shown once clean; focus kept on the button when a full-success pass disables it, after a partial result, and when a held member fails on release.
+- **RA27**: no Retry all activation writes any key outside the seven Appearance keys.
+
+### A9. `AppearanceController.test.tsx` — the App-scoped controller (AC1..AC17 + AC4 ×33)
+
+- **A3**: a fresh mount displays and applies the stored values with zero writes (ruling 3: no DOM mirrors); one controller, two views (a pane edit is visible to another view in the same frame and vice versa); no `StorageEvent` dispatch.
+- **A6**: every contract §5 item 2 malformed value at load (33 values) → no throw, the default displayed and applied, a Reload-only source alert, no Retry/Discard/Export, no unload warning, zero writes, bytes kept; a throwing read is source-only and Reload of repaired bytes clears the alert without a saved claim; slider bounds store exact bytes.
+- **A5**: the Topbar status renders nothing while clean or only pending, renders the named button for a settled failure, calls `onReview` once without storage access and disappears after a successful Retry (EN and ZH); `beforeunload` warns only while drafts exist, with zero storage attempts; the sign-out step (no drafts → `true`, no prompt, no storage; Cancel → `false`, everything kept; OK → drafts discarded with zero writes) and its ZH prompt.
+- **Recovery and export**: targeted Discard rereads only its field and focuses the field's selected control; Reload refuses an actual draft; a successful Retry returns focus from the unmounting block; memory-only export under total storage denial with the set/reset envelope, one URL created and revoked, the anchor removed; Reset never touches `xai_pref_lang` or any other key; a missing Web Lock refuses writes; a success while no pane is mounted makes no claim later.
 
 ## B. Integration tests
 
@@ -101,30 +120,17 @@ Mounted via `<AppearancePane lang="en" />` with a `ShellFixture`-style wrapper. 
 - **AC-COMP-3**: Entry where `id==="features"` is still `featuresPane` (row #23 not broken).
 - **AC-COMP-4**: All 11 other entries are reference-equal to their `paneRegistry` source.
 
-### B2. App.tsx-level integration
+### B2. App-level integration (`apps/web/src/__tests__/App.appearance.test.tsx`, APP-AP1..APP-AP12)
 
-- **AC-APP-1**: Mount full `<App>` with `MemoryRouter`. Navigate to `/app/settings`. Click `Appearance` sidebar entry. The pane renders.
-- **AC-APP-2**: From the rendered pane, click `Dark` theme card → `document.documentElement.getAttribute("data-theme") === "dark"` AND `<App>`'s `theme` useState became `"dark"` (verified via subsequent render of a probe consumer of the Topbar theme seg).
-- **AC-APP-3**: Drag hue slider to `100` → `localStorage.xai_accent_hue === "100"` AND `document.documentElement.style.getPropertyValue("--accent-hue") === "100"` (proves App.tsx useEffect re-fires via usePref auto-bus).
-- **AC-APP-4**: Click `bottom` rail position card → `document.documentElement.getAttribute("data-rail-pos") === "bottom"`.
-- **AC-APP-5**: Click `Mist` bg-tone card → `data-bg-tone="mist"` AND `--accent-hue` updated to 230 (verbatim source side-effect).
-- **AC-APP-6**: Click Save → seven events observed by a test-side `onWebEvent` listener within one tick.
+The production route table in a memory router with only the auth session and route gates substituted; an exclusive Web Lock fixture and attempt-logging Storage spies.
 
-### B3. Persistence round-trip
+- **APP-AP1** (replaces Topbar TP1-Persist … TP3b-Persist): every Topbar choice persists today's exact bytes through the controller (one write each, one per-key lock request per edit) and reads back through the unchanged `readLocalPref`; mounting writes nothing.
+- **APP-AP2** (replaces TP-Persist-Quota-Safe): a failing Topbar write keeps the choice checked and applied and shows the Topbar status; `beforeunload` warns. **APP-AP2b**: a held Topbar write shows no status and writes exactly once after release.
+- **APP-AP3–AP5**: one controller (pane ↔ Topbar in the same act); the Topbar status Review emits the shortcut event once and navigates once to the pane; the Settings sidebar is never held and the draft survives the round trip.
+- **APP-AP6–AP8**: the sign-out step before `requestSettingsDeparture` in the fallback branch (no drafts → no confirm; Cancel/OK) and the coordinator branch (Cancel).
+- **APP-AP9–AP12**: the ten crashing values of H6 (including `"EN"`) leave `/app` rendering with defaults and zero writes; an `Infinity` accent from another document is source-only without a throw; a committed root change from another document is reflected live; edits, Retry all and Reset emit no `web:settings:preference-changed`.
 
-- **AC-PERSIST-1**: Set accentHue=200 via slider → unmount `<App>` → remount → `accentHue` reads back as 200 from localStorage and slider renders at 200.
-- **AC-PERSIST-2**: Same flow for `xai_rail_pos`, `xai_bg_tone`.
-- **AC-PERSIST-3**: theme/density/fontScale are NOT persisted — remount restores them to App.tsx useState defaults (light/comfortable/1). Verified by reading localStorage and confirming the 3 keys are NOT present.
-
-### B4. Reset round-trip
-
-- **AC-RESET-INT-1**: Set all 6 dims to non-defaults (theme=dark, density=compact, fontScale=1.15, accentHue=300, railPos="top", bgTone="peach"). Click Reset (stubbed confirm=true). All 6 dims return to defaults; DOM attributes match.
-- **AC-RESET-INT-2**: After Reset, `lang` is unchanged from whatever it was before Reset (verbatim source).
-
-### B5. Event channel listener (cross-module subscriber prototype)
-
-- **AC-EVT-1**: Mount the pane plus a test-side subscriber that captures every `web:settings:preference-changed` event. Drive every control once. Capture must contain exactly 7 distinct `key` values across the run.
-- **AC-EVT-2**: All payloads carry a valid ISO 8601 `changedAt` string.
+The frozen Sol, parent host, native and F1 oracles under `docs/reviews/web-appearance-recovery-*` remain the acceptance matrix; these are the packages' own regression tests.
 
 ## C. Type tests
 
@@ -138,33 +144,34 @@ Mounted via `<AppearancePane lang="en" />` with a `ShellFixture`-style wrapper. 
 - `pnpm --filter @repo/plugin-web-settings-appearance typecheck` must pass.
 - Existing packages whose registry/host files this row edits must continue passing their lint:
   - `@repo/plugin-web-tokens` (i18n.ts append).
-  - host `web` Vite app (App.tsx subscription edit + settingsPaneComposition.ts branch).
+  - host `web` Vite app (App.tsx controller wiring + settingsPaneComposition.ts branch) and `@repo/xai-web-shell` (Topbar slot).
 
 ## E. Mock strategy
 
-- Use real `usePref` / `setPref` / `removePref` against `localStorage` (jsdom). Clear `localStorage` in `beforeEach`.
-- Use real `emitWebEvent` / `onWebEvent` — no mocks; instead spy on `emitWebEvent` via `vi.spyOn` when assertion needed.
-- `applyX` helpers are imported from `@repo/plugin-web-tokens` and tested against real `document.documentElement` mutations.
-- **Reset confirm** (M1): stub `window.confirm` directly (jsdom global) via `vi.spyOn(window, "confirm").mockReturnValue(true | false)`. The chassis `SettingsFooter.handleReset` is the sole caller — the pane no longer ships its own `confirmAction` seam. AC-RESET-3 verifies the abort path; AC-RESET-6 verifies single-call (no double-prompt).
+- **Web Locks** (CP-APPEARANCE-01): jsdom has no `navigator.locks`; `src/__tests__/appearanceLockFixture.ts` installs an exclusive asynchronous FIFO lock manager per test (hold, deny, missing capability, request log) and uninstalls it when the test finishes. A pass-through stub cannot prove a held lock.
+- **Storage attempts**: `vi.spyOn(Storage.prototype, ...)` wrappers record each attempt and delegate exactly once to the captured native method; faults throw before delegating.
+
+- Use the real `usePrefAutosaveAsync` engine against `localStorage` (jsdom); `localStorage` is cleared after each test by `vitest.setup.ts`. Tests seed stored bytes directly (or through the legacy `setPref`) before mounting.
+- The pane emits nothing on the event bus; where a test proves that, it spies on `emitWebEvent` via `vi.mock(..., importOriginal)`.
+- `applyX` helpers are imported from `@repo/plugin-web-tokens` (through the controller) and tested against real `document.documentElement` mutations.
+- **Reset confirm**: stub `window.confirm` directly (jsdom global) via `vi.spyOn(window, "confirm").mockReturnValue(true | false)`. The pane-local Reset to defaults is the sole caller; AC-RESET-3 verifies the abort path (zero storage attempts); AC-RESET-6 verifies a single call with the truthful text.
 - **Defaults parity** (M2): import the PUBLIC `resetAllPrefs` from `@repo/plugin-web-settings-shell`. Subscribe a test-side listener via `onWebEvent("web:settings:preference-changed", ...)` BEFORE calling `resetAllPrefs()`. Capture the emit set into a `Map<WebPreferenceKey, unknown>`. Build the appearance-subset object (drop `lang`) and deep-equal against `appearanceDefaults`. Do NOT import chassis `defaults.ts` directly (it's `@internal`).
-- `vi.useFakeTimers` for the 1800ms Saved flash assertion.
 
 ## F. Acceptance criteria (from seed brief — mapped to tests)
 
 | Seed AC | Covered by |
 |---------|-----------|
 | Flip every Appearance control | A3 (live-bind) + A4 (rendering) + B2 (App-level) |
-| See live UI update | A3 (AC-LIVE-1..8) + B2 (AC-APP-2..5) |
-| Reload preserves persisted dims | B3 (AC-PERSIST-1/2/3) |
-| Reset returns to defaults | A6 (AC-RESET-1..5) + B4 (AC-RESET-INT-1/2) |
-| Bilingual | A5 (AC-I18N-1..4) |
-| Live hue slider mutates `--accent-hue` | A3 AC-LIVE-3 + B2 AC-APP-3 |
-| Save persists to xai_accent_hue / xai_rail_pos / xai_bg_tone / xai_pref_* | A3 + B3 (note: no new xai_pref_appearance_* keys per Frozen Assumption 5) |
+| See live UI update | A3 (AC-LIVE-1..8) + A9 (AC1, AC2) + B2 (APP-AP3) |
+| Reload preserves persisted dims | A4 (AC-RENDER-3/8 seed stored bytes) + A9 AC1 + B2 APP-AP1 |
+| Reset returns to defaults | A6 (AC-RESET-1..6) + A8 (RA10) + B2 APP-AP12 |
+| Bilingual | A5 (AC-I18N-1..4) + A8 (RA5, RA22) + A9 (AC8, AC11) |
+| Live hue slider mutates `--accent-hue` | A3 AC-LIVE-3 + A9 AC6 |
+| Every change persists exact bytes (autosave) | A3 + A9 + B2 APP-AP1 (no new keys) |
 | Rail-position preview cards | A4 AC-RENDER-2 + visual snapshot in styles.css verification |
-| Reset to defaults per DESIGN.md §5/§7 | A1 parity tests + A6 + B4 |
+| Reset to defaults per DESIGN.md §5/§7 | A1 parity tests + A6 |
 | Bilingual via useI18n | A5 |
-| Cross-module updates via @repo/xai-web-event-bus | A3 emit assertions + B5 cross-module subscriber |
-| 2-3 phases | dev_log.md Phase Plan = 2 phases |
+| Truthful recovery (Retry, Discard, Reload, Retry all, export, Topbar status, unload, sign-out step) | A8 + A9 + B2 (CP-APPEARANCE-01) |
 | Verify Cross-vendor: yes | queued for ship-time per W4b Parallel-Agent manifest header |
 
 ## G. Coverage target

@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * AC-EVENT-1..5: web:matrix:priority-tagged event emission tests.
  */
@@ -98,7 +99,7 @@ describe("MatrixModule event emission", () => {
 
   it("AC-EVENT-3: no event on cross-tab storage hydration", async () => {
     localStorage.setItem(
-      MATRIX_STORAGE_KEY,
+      accountScope.physicalKey(MATRIX_STORAGE_KEY),
       JSON.stringify({ schemaVersion: 1, q1: [], q2: [], q3: [], q4: [] })
     );
     render(
@@ -117,7 +118,7 @@ describe("MatrixModule event emission", () => {
     await act(async () => {
       window.dispatchEvent(
         new StorageEvent("storage", {
-          key: MATRIX_STORAGE_KEY,
+          key: accountScope.physicalKey(MATRIX_STORAGE_KEY),
           newValue: JSON.stringify(newState),
           storageArea: localStorage,
         })

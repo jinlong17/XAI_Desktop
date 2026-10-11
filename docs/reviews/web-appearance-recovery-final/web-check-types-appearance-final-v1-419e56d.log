@@ -1,0 +1,129 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+mode=web-check-types
+suffix=appearance-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-final/verify-packages.mjs 419e56d web-check-types appearance-final-v1
+output_dir=docs/reviews/web-appearance-recovery-final
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+runner_sha256=8f9fb90f38717515c9ba9606b4f99c643d61c0523a07adbbe071982adb864e80
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/web (apps/web) kind=tsc script=check-types: "tsc --noEmit"
+archive_file_sha256 apps/web/package.json=769eb4a83c52b9537f74eca7c68969177d3adeda62f7c1b5e7e20ff491fc3eb7 apps/web/tsconfig.json=212b521f8420ea4923ee99448b7ac9ff81cacf5e9fddfc8867ee716c44e6dc34 apps/web/vitest.config.ts=9431a08609a793bd1771a1bfe3988d4b9ca5dff8e9854e679b893baf31a915d7 apps/web/eslint.config.js=21b303fd60d2626a094eb49983d7a89be314296a3060a591c5e4d5812ad6f81a
+package_tree=23f1070ec28841df45d13c12f0523e679f46dcba appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+node_modules_links third_party=448 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-console->packages/plugin-console @repo/plugin-productivity->packages/plugin-productivity @repo/plugin-web-ai-chat->packages/plugin-web-ai-chat @repo/plugin-web-board-core->packages/plugin-web-board-core @repo/plugin-web-board-views->packages/plugin-web-board-views @repo/plugin-web-board-workspaces->packages/plugin-web-board-workspaces @repo/plugin-web-bookkeeping->packages/plugin-web-bookkeeping @repo/plugin-web-calendar->packages/xai-web-calendar @repo/plugin-web-countdown->packages/plugin-web-countdown @repo/plugin-web-dashboard-grid->packages/xai-web-dashboard-grid @repo/plugin-web-dashboard-widgets->packages/xai-web-dashboard-widgets @repo/plugin-web-habits->packages/xai-web-habits @repo/plugin-web-matrix->packages/xai-web-matrix @repo/plugin-web-meditation->packages/xai-web-meditation @repo/plugin-web-metric-tracker->packages/plugin-web-metric-tracker @repo/plugin-web-pet->packages/xai-web-pet @repo/plugin-web-pomodoro->packages/plugin-web-pomodoro @repo/plugin-web-settings-appearance->packages/xai-web-settings-appearance @repo/plugin-web-settings-features-panel->packages/xai-web-settings-features-panel @repo/plugin-web-settings-rest->packages/plugin-web-settings-rest @repo/plugin-web-settings-shell->packages/plugin-web-settings-shell @repo/plugin-web-statistics->packages/plugin-web-statistics @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tasks->packages/xai-web-tasks @repo/plugin-web-time-tracker->packages/plugin-web-time-tracker @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/web-auth-device-session->packages/web-auth-device-session @repo/xai-web-cmdk->packages/xai-web-cmdk @repo/xai-web-event-bus->packages/xai-web-event-bus @repo/xai-web-shell->packages/xai-web-shell
+tsconfig_extends_checked=46 unresolved=none own=@repo/web:@repo/typescript-config/base.json->packages/typescript-config/base.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps/web/node_modules/.bin/tsc
+args=--noEmit --listFiles
+typescript=node_modules/.pnpm/typescript@5.9.2/node_modules/typescript@5.9.2
+tool_exit=0
+harness_checks=PASS (6/6)
+exit=0
+---- stdout ----
+[--listFiles output: 1384 paths, summarised in the runner summary]
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS archive package.json script "check-types" is "tsc --noEmit" (found "tsc --noEmit")
+harness PASS program file list parsed (--listFiles)
+harness PASS no program file from a checkout's packages/, apps/ or docs/
+harness PASS every program file is inside the archive or the dependency store node_modules/.pnpm
+harness PASS required product files in the type program (9 present of 9 listed)
+harness PASS own tsconfig extends resolves inside the archive (@repo/web:@repo/typescript-config/base.json->packages/typescript-config/base.json)
+tsc_exit=0 diagnostics_lines=0
+program_files=1384 archive=667 store=717 elsewhere=0 forbidden=0
+archive_files_by_package apps/web=63 packages/core-data=13 packages/core=13 packages/plugin-productivity=9 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=17 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=22 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=6 packages/web-auth-device-session=20 packages/xai-web-calendar=47 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=41 packages/xai-web-event-bus=5 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=10 packages/xai-web-tasks=23
+archive_file_list_sha256=012b67f4618e81ead8771cf0a80688f91778ec25d56e2ae371715d18c87445d1
+pin_required_provenance apps/web/src/App.tsx apps/web/src/routes/modules/departureCoordinator.tsx packages/xai-web-settings-appearance/src/index.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearanceController.tsx packages/xai-web-settings-appearance/src/internal/AppearanceStatus.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/types.ts
+pin_required_provenance_missing=none
+program apps/web/src/App.tsx
+program apps/web/src/__tests__/App.appearance.test.tsx
+program apps/web/src/__tests__/App.lazy-init.test.tsx
+program apps/web/src/__tests__/App.signout.test.tsx
+program apps/web/src/__tests__/accountFixture.ts
+program apps/web/src/__tests__/build-manifest.test.ts
+program apps/web/src/__tests__/cmdkIntegration.test.tsx
+program apps/web/src/__tests__/csp.test.ts
+program apps/web/src/__tests__/event-bus.smoke.test.tsx
+program apps/web/src/__tests__/settingsPaneComposition.appearance.test.ts
+program apps/web/src/__tests__/settingsPaneComposition.rest.test.ts
+program apps/web/src/__tests__/shell.smoke.test.tsx
+program apps/web/src/__tests__/shell.theme.test.tsx
+program apps/web/src/dev/seedAiConfigFromEnv.ts
+program apps/web/src/host/capabilities.test.ts
+program apps/web/src/host/capabilities.ts
+program apps/web/src/main.tsx
+program apps/web/src/observability/consent.ts
+program apps/web/src/observability/controller.test.ts
+program apps/web/src/observability/controller.ts
+program apps/web/src/observability/privacy.test.ts
+program apps/web/src/observability/privacy.ts
+program apps/web/src/observability/reporting.ts
+program apps/web/src/observability/routeGroup.test.ts
+program apps/web/src/observability/routeGroup.ts
+program apps/web/src/observability/rum.ts
+program apps/web/src/observability/runtime.ts
+program apps/web/src/observability/sentry.test.ts
+program apps/web/src/observability/sentry.ts
+program apps/web/src/observability/transport.test.ts
+program apps/web/src/observability/transport.ts
+program apps/web/src/observability/types.ts
+program apps/web/src/pages/AppShellPage.tsx
+program apps/web/src/pages/AuthPage.tsx
+program apps/web/src/pages/NotFoundPage.tsx
+program apps/web/src/pages/TokensSmokePage.tsx
+program apps/web/src/providers/AccountStorageGate.tsx
+program apps/web/src/providers/AppProviders.tsx
+program apps/web/src/routes/RouteErrorBoundary.tsx
+program apps/web/src/routes/RouteGateElements.tsx
+program apps/web/src/routes/__tests__/router-modules.integration.test.tsx
+program apps/web/src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx
+program apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx
+program apps/web/src/routes/modules/__tests__/settingsPaneComposition.test.tsx
+program apps/web/src/routes/modules/__tests__/shellRegistrations.integration.test.tsx
+program apps/web/src/routes/modules/buildModuleRoutes.test.ts
+program apps/web/src/routes/modules/buildModuleRoutes.tsx
+program apps/web/src/routes/modules/composedSettingsRegistration.tsx
+program apps/web/src/routes/modules/dashboardRegistration.tsx
+program apps/web/src/routes/modules/departureCoordinator.tsx
+program apps/web/src/routes/modules/pomodoroRegistration.tsx
+program apps/web/src/routes/modules/settingsDeparture.ts
+program apps/web/src/routes/modules/settingsPaneComposition.ts
+program apps/web/src/routes/modules/shellRegistrations.tsx
+program apps/web/src/routes/router.integration.test.tsx
+program apps/web/src/routes/router.tsx
+program apps/web/src/security/cspPolicy.ts
+program apps/web/src/security/cspReport.test.ts
+program apps/web/src/security/cspReport.ts
+program apps/web/src/security/nonce.test.ts
+program apps/web/src/security/nonce.ts
+program apps/web/src/service-worker/register.ts
+program apps/web/vite.config.ts
+program packages/xai-web-settings-appearance/src/AppearancePane.tsx
+program packages/xai-web-settings-appearance/src/appearanceDefaults.ts
+program packages/xai-web-settings-appearance/src/constants.ts
+program packages/xai-web-settings-appearance/src/index.ts
+program packages/xai-web-settings-appearance/src/internal/AppearanceActions.tsx
+program packages/xai-web-settings-appearance/src/internal/AppearanceStatus.tsx
+program packages/xai-web-settings-appearance/src/internal/appearanceController.tsx
+program packages/xai-web-settings-appearance/src/internal/appearancePane.tsx
+program packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts
+program packages/xai-web-settings-appearance/src/types.ts
+program packages/xai-web-shell/src/AppRail.tsx
+program packages/xai-web-shell/src/AvatarMenu.tsx
+program packages/xai-web-shell/src/Shell.tsx
+program packages/xai-web-shell/src/SignOutConfirmDialog.tsx
+program packages/xai-web-shell/src/Topbar.tsx
+program packages/xai-web-shell/src/icons.tsx
+program packages/xai-web-shell/src/index.ts
+program packages/xai-web-shell/src/internal/dnd.ts
+program packages/xai-web-shell/src/registry.tsx
+program packages/xai-web-shell/src/types.ts

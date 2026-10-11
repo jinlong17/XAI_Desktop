@@ -90,3 +90,22 @@ rg -n "Supabase|IndexedDB|device_register|device_heartbeat|X-Device-Id|next allo
 - Reviewers can tell exactly where auth/session logic is allowed to live.
 - Later build work has phase-scoped file boundaries and observable gates.
 - The docs separate this row cleanly from later browser crypto runtime and sync-driver rows.
+
+## REL-02 actual IndexedDB regression layer (2026-09-09)
+
+`src/storage-indexeddb.test.ts` uses a fresh `fake-indexeddb` factory per case, directly exercising package adapters rather than memory substitutes. Ten cases cover session/device creation in both orders and concurrently; schema v2 store membership; read/write/delete isolation; migration from each v1 single-store shape preserving values; custom names and added stores; versionchange closure and higher-version reopen; blocked upgrade rejection/retry; asynchronous open failure retry; late successful request connection cleanup. The final two open lifecycle faults are injected; migrations and actual blocked behavior use IndexedDB transactions and connections.
+
+Baseline first regression failed with NotFoundError (device store absent). After repair, package suite: 12 files / 52 tests passed; package and Web type checks passed. Real Safari/Chromium browser-specific persistence and live Supabase sign-in remain external verification gates, not claimed by the emulator suite.
+
+REL-02 follow-up: warm custom database alpha write concurrent with first beta write reproduced InvalidStateError before the operation queue fix. Package regression now contains 53 passing tests. The standalone real-Chromium probe at docs/reviews/web-auth-device-session/verify-browser-idb.mjs verifies six scenarios including this race in an isolated profile. Cross-vendor review remains unavailable (Claude OAuth revoked); these results do not close that gate.
+
+REL-03: session-lifecycle.test.tsx adds six independently authored React Provider checks for late bootstrap, token refresh, synchronous clear, unmount, client replacement and explicit session changes. auth-actions.test.ts additionally checks frozen deletion Authorization and disabled automatic sign-out. Current package run: 13 files, 60 tests PASS. These use synthetic sessions and do not prove hosted authentication or remote account deletion.
+
+## REL-06 generic 404 regression (2026-09-09)
+
+13 files / 70 tests pass, including 24 auth-actions cases. Uses actual installed Supabase `FunctionsHttpError` with native `Response`: function-not-found, invented already_deleted code, HTML and malformed body 404 all reject; 401/403/500 map from context status; response-only 404 rejects; normal HTTP 200/204 succeeds; captured-token/no-sign-out behavior remains. Error body remains readable. No live server account deleted. Independent verification and wider REL-06 gates remain pending.
+
+
+## REL-06 legacy database reset result contract
+
+REL-06 legacy wipe: five focused tests cover all-success, mixed blocked/error with late success, successful retry, unavailable IndexedDB and synchronous request refusal. Auth package full suite 14 files/75 tests and typecheck PASS. Native Chrome probe docs/reviews/web-account-deletion-reliability/verify-browser-wipe.mjs holds a connection in a second page context, observes named aggregate failure, releases it, retries and verifies every database has no stores. Uses an isolated temporary profile; not two physical tabs, production data or account-erasure acceptance.

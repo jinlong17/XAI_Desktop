@@ -1,5 +1,9 @@
 # API — plugin-web-settings-rest
 
+## 2026-09-09 account deletion receipt amendment
+
+Live coordinator deletion captures both the business generation and authentication generation before the server call. A version-2 local receipt records the original auth generation; completion requires business erasure, AI secret cleanup and that captured generation's local auth cleanup. `AccountDeletionRecoveryNotice` accepts a `clearAuth` callback supplied by the host provider bridge. It retries only the recorded original session, never a mutable current-session lookup or another server deletion. Missing cleanup support leaves the receipt pending. Version-1 local-only receipts retain their original scope; unknown-server intents are not authority to erase data.
+
 > **Package**: `@repo/plugin-web-settings-rest`
 > **Public surface**: `src/index.ts`
 
@@ -46,6 +50,7 @@ interface Pane {
 
 interface PaneRenderProps {
   lang: Lang;              // "en" | "zh"
+  registerDepartureGuard?: (guard: PaneDepartureGuard) => (() => void);
 }
 ```
 
@@ -116,11 +121,25 @@ Persists to `xai_pref_smart_lists` (JSON codec, object keyed by SmartListId).
 - `xai_pref_notif_quiet` — quiet hours master toggle
 - `xai_pref_notif_quiet_start` / `_quiet_end` — time inputs (visible only when quiet=true)
 
+Each device-owned field uses the asynchronous preference binding and keeps its
+own draft until its matching verified persistence result succeeds. Recovery is
+available even when quiet-time controls are hidden. The optional departure
+guard exports or discards only current work; its sparse `notifications-draft.json`
+contains unresolved device fields under `values.device`.
+
 ### §4.5 dateTimePane — id: "date_time"
 
 5 controls:
 - `xai_pref_dt_start_week` — select (monday/sunday/saturday)
 - `xai_pref_dt_lunar` / `_week_numbers` / `_holidays` / `_timezone` — toggles
+
+Each device-owned field uses the asynchronous preference binding and retains a
+field-local draft until its matching verified write succeeds. When current work
+exists, the pane supplies the optional `registerDepartureGuard` bridge with
+blocking, export and discard callbacks. Its sparse recovery download is named
+`date-time-draft.json` and contains only current unresolved device fields under
+`values.device`; source-only read errors expose Reload without creating a draft
+or a departure block.
 
 ### §4.6 morePane — id: "more"
 
@@ -149,6 +168,38 @@ No SettingsFooter (source uses live onChange).
 StickyColorPalette (13 swatches) + font size select (4 options) +
 pin-default toggle + restore-size toggle + 4 spacing buttons.
 Keys: `xai_pref_sticky_color`, `_font`, `_pin_default`, `_restore_size`, `_grid_spacing`.
+All five are unscoped device keys (registry defaults `sun` / `large` / `true` /
+`false` / `normal`); the pane never touches an account key, lock or marker.
+
+Recovery caller (contract `docs/reviews/web-sticky-recovery-contract/contract.md`):
+- Each field binds `usePrefAutosaveAsync` with a strict caller domain: the 13
+  palette ids (the stored `random` sentinel included), `small|normal|large|xl`,
+  booleans, and `none|normal|large|xl`. Mounts and rerenders write nothing;
+  absent keys display the registry default.
+- A valid edit creates a field-local draft (identity before enqueue) that
+  displays at once, even behind a held per-key lock. Only that exact draft's
+  verified success clears the field; switches invert the latest intent. A
+  failure (quota, read or lock fault, conflict, readback uncertainty) keeps the
+  choice with `<Label> was not saved.`, `Retry <Label>` and `Discard <Label>`;
+  pending work reads `<Label> is saving.`. Retry while pending is inert.
+- Invalid or unreadable stored bytes show `Saved <Label> is unavailable. Reload
+  it; this is not a new unsaved change.` with `Reload <Label>` only, display the
+  default and are never rewritten; Reload refuses while the field holds a draft.
+- A malformed font select value keeps the prior value with `<Label> has an
+  invalid value.` and makes no write; a valid choice clears only that error.
+- Discard and `Discard all changes` detach the drafts first, then reread only
+  those fields with zero writes. There is no reset and no Save footer.
+- `Sticky Note settings saved.` appears only after a genuine latest success with
+  no draft, pending operation, source error or input error.
+- While a draft exists the pane registers the optional `registerDepartureGuard`
+  bridge (label Sticky Note / 便签) and a `beforeunload` warning. An account
+  epoch change renews the decision token: old guards and inline callbacks refuse
+  at once, and the fresh guard protects the surviving device drafts.
+- `Export Sticky Note draft` downloads a memory-only `sticky-draft.json`:
+  `{"version":1,"kind":"sticky-draft","values":{"device":{…}}}` with exactly the
+  current unresolved drafts. Permission is rechecked before setup, after URL
+  creation and after append (just before the click); a failure shows
+  `Export failed. Please retry.` and keeps drafts and guard.
 
 ### §4.10 hotkeysPane — id: "hotkeys"
 
@@ -863,3 +914,26 @@ P4 of the phase plan adds two new sections to `apps/web/deploy/README.md`:
 - Existing `deleteModal.title / .body / .cancel / .confirm` i18n keys — PRESERVED VERBATIM (still used as Step 1 fallback).
 - Existing `web:settings:rest:account-delete-confirmed` EventMap entry — PRESERVED with `@deprecated` annotation; emit-site moves from Step-1-confirm to Step-1-continue.
 
+
+
+## REL-03 account-local Settings contract (2026-09-09)
+
+- More reset captures the rendered scope and uses the storage public API. It resets only the existing More-owned options: explicitly selected device options retain their original reset semantics; private list/tag defaults target the current account. Stale handlers cannot reset a newly selected account. Other panes, accounts and unowned legacy values remain unchanged.
+- Account adds current-generation local JSON export and an entry to AccountDataGate import/rollback. Export excludes authentication, BYOK ciphertext/plaintext, other accounts, device preferences and unowned archives. Download feedback says request initiated and explicitly does not claim a cloud backup.
+- Integration OAuth pending state is bound to initiating account/demo kind and generation. In-document epoch handles are revoked on transitions, clearing the pending attempt. On a full OAuth navigation, serialized owner/generation and TTL are checked against resolved authentication; process-local epoch numbers are not assumed stable across reloads. Delayed authorization URL creation cannot navigate after its captured account changes. Legacy attempts without owner metadata are rejected.
+- Server account deletion binds the request to the captured access token with implicit SDK sign-out disabled. Only after server success does it begin captured-owner local cleanup. Later completion under B cannot clear B authentication or navigate B away. Registered origin-wide database erasure is no longer used.
+- A durable JSON tombstone (`accountPrefix + deleted`) stores only version/accountId/kind/generation/phase/updatedAt before any local deletion. Storage erasure preserves it, all non-null tombstones revoke old readers/writers, and the phase becomes complete only after scoped LS and AI-secret cleanup both finish. No token, key or business content is included. Failure keeps the receipt retryable.
+- `AccountDeletionRecoveryNotice({ lang?: 'en' | 'zh' })` is public and can mount outside authenticated routes. It enumerates valid pending tombstones and shows generic copy without account identities/content. Its keyboard-accessible retry only finishes already-authorized local cleanup; it makes no server request, changes no authentication and leaves B/device/unowned data intact. Parent AppProviders mounts this notice globally; host integration is independently verified by the parent.
+- `readAccountDeletionReceipt(accountId, demo?)` and `resumeAccountLocalDeletion(receipt)` are public browser-only recovery APIs. A malformed/mismatched receipt cannot authorize cleanup. Completed receipts remain metadata for recovery/audit; this module does not claim cloud synchronization or complete deletion of every future registered backend.
+
+Scope limit: this closes REL-03 compatibility for Settings and the implemented local LS/BYOK stores. Full REL-04/REL-06 deletion inventory, future encrypted-cache namespaces, remote revocation and hosted account-deletion acceptance are not marked complete here. Tests use synthetic accounts and mock the server/AI deletion seam; no real account was deleted.
+
+
+## REL-04 export scope and device recovery
+
+Account settings now downloads account records with a lifecycle manifest. A separate DeviceRecoveryExport control calls exportDeviceRecoveryData with includeLegacy/includeArchives, both false initially. This is a read-only JSON preservation export, not a restore API. Known device preferences are included; current account namespaces, authentication stores and BYOK stores are excluded. Unsafe/unrecognized selected history is omitted with manifest reasons and visible omission counts.
+
+
+## REL-06 durable pre-request intent
+
+Before a live account-delete request, the orchestrator writes and reads back an account-scoped deletion-intent containing only owner, generation, operation ID, phase and timestamp. Storage refusal prevents the server call. The intent is NOT a local deletion authorization. A confirmed durable deletion receipt supersedes it; only that receipt enables local cleanup. Uncertain network/server outcomes remain discoverable. Authorization denials discard only their matching operation intent.

@@ -1,0 +1,15 @@
+revision=e9fb5e7
+testOnlyOverlay=packages/xai-web-tasks/vitest.setup.ts,packages/xai-web-tasks/src/__tests__/webLocksHarness.ts,packages/xai-web-tasks/src/__tests__/canonicalSubscriberHarness.ts,packages/xai-web-tasks/src/__tests__/saveRecovery.test.tsx
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-8RqVfg
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx > Complete then title edit in the same detail session must retain the successful completion
+complete-then-edit {"done":true,"completedAt":"2026-09-09T19:00:00.000Z","originalCompletedAt":"2026-09-09T19:00:00.000Z"}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx (5 tests) 853ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  17:52:50
+   Duration  1.58s (transform 201ms, setup 0ms, collect 318ms, tests 853ms, environment 196ms, prepare 59ms)

@@ -1,0 +1,51 @@
+{
+  "id": "SHARED/OUTER-CAPTURE-ADMISSION-IMPACT-REVIEW2",
+  "result": "FAILED_STATIC_NO_INTEGRITY_VERDICT_NO_ARTIFACT",
+  "parent": "dce3ea904104da8a89b0ca5a4d6482b6e8dc6e93",
+  "fixed_input": "2cfd71ada03bb13017c703c37ec7a9a604edd9cb",
+  "review_iteration": 2,
+  "review_cap": 3,
+  "static_invocations": 1,
+  "static_cap": 1,
+  "process": {
+    "pid": 98572,
+    "chunk": "60031f",
+    "exit": 1,
+    "elapsed_seconds": 1.973,
+    "session": null,
+    "fully_drained": true,
+    "child_pids": null,
+    "child_pids_status": "externallyUNKNOWN retained only failedprocessmemory; sequentialcommunicate drained andwaited reported"
+  },
+  "failed_guard": "ValueError Unrecognized identity 094fc86815a07143636a36ed1ccdfa4c7f96b461:AGENTS.md checkerline79/58/47",
+  "classification": "valid inherited bareSHA:path rejected by checker normalization; not proven sourcecorruption",
+  "prechecker_read_errors": [
+    "truncatedlargeMarkdowninventory JSONparse readserialization failure checkerunlaunched",
+    "guessedabsent sourcebyte-review path lookup exit1 resolvedviaimmutableinventory"
+  ],
+  "unrun": [
+    "whole hash/matrix/patch integrity certification",
+    "both complete finalbuffers",
+    "all writes",
+    "stage",
+    "commit"
+  ],
+  "substantive_assessment": "reported BLOCKED B1 O12 no admittedactualViteReactmanagedSDKfixture andB2f6673.3/7boundary vs5 prerequisite; NOcompletedintegrity verdict/NOartifact/NOTaccepted businessdisposition",
+  "mechanical": {
+    "chunk": "1bc797",
+    "exit": 0,
+    "clean": true,
+    "no_outputs": true
+  },
+  "output_hashes": null,
+  "source_commit": null,
+  "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-outer-capture-review2-20261010/XAI_Desktop",
+  "runtime": 0,
+  "descendant_holds": [
+    "sharedbytescollection3review3exhausted",
+    "TASKMETsource3held",
+    "Clockretentionvisual3",
+    "M8RELunknown"
+  ],
+  "remaining": "freshFULLreview3 onlyafterrootregister/launch; no sameactorretry/no4/budgetreset"
+}

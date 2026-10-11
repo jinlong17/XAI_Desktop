@@ -4,8 +4,9 @@
  * active board safely when the persisted `xai_active_board` id is stale.
  */
 
-import type { Board } from "../types.js";
-import { makeDefaultBoards } from "./seed/board-data.js";
+import type { Board, BoardWorkspace } from "../types.js";
+import { DEFAULT_WORKSPACES, makeDefaultBoards } from "./seed/board-data.js";
+import { isBoardWorkspaceArray } from "./isBoardArray.js";
 import { readBoardStorage } from "./storageContract.js";
 
 /**
@@ -24,6 +25,19 @@ export function loadBoardsOrDefault(raw: unknown): Board[] {
     return makeDefaultBoards();
   }
   return read.boards;
+}
+
+/**
+ * Read the workspace directory from a `usePref("xai_board_workspaces")` raw
+ * value. `null` (registry default), malformed shape, or an empty array all
+ * fall back to the seed `DEFAULT_WORKSPACES` — boards always need at least
+ * one workspace to group under.
+ */
+export function loadWorkspacesOrDefault(raw: unknown): BoardWorkspace[] {
+  if (isBoardWorkspaceArray(raw) && raw.length > 0) {
+    return raw;
+  }
+  return [...DEFAULT_WORKSPACES];
 }
 
 /**

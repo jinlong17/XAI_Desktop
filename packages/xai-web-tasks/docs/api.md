@@ -1,3 +1,14 @@
+## REL-01 local due-date contract (2026-09-09)
+
+This section supersedes historical yearless/bucket-only date rules below (including D-QT and old dateForCol offsets).
+
+- `TaskCard.dueDate` / `NewTaskDraft.dueDate` are optional strict `YYYY-MM-DD` local calendar identities. Legacy `date`, `dateZh`, and `dateLabel` are display data only: never infer a year, shift their day, or delete a historical task because no real due date exists. Invalid string dates remain visible for manual repair; predicates do not count them.
+- Today includes dated tasks due today **and overdue**; Tomorrow is exactly the next local day; Next 7 Days is `(today, today + 7 calendar days]`. These predicates inspect dates across all stored columns, including completed groups, and never mutate input.
+- The rendered/persisted time columns regroup known dates as Today / Overdue (`<= today`), Next 7 Days, and Later. Legacy unknown dates retain their original column; moving a list or tag does not fabricate a date. Shared `useLocalDayClock` refreshes midnight and browser resume. Date identity survives reload and DST.
+- Composer explicitly accepts a date; detail edits accept a date or clear it. Date edits regroup immediately. Clearing a date moves to No Date. An explicit cross-time-column move schedules Today / Overdue = today, Next 7 Days = tomorrow, Later = eight days from today; No Date clears dueDate and stale date labels. Same-column moves are no-ops. Source, subtitle, notes, tags, list, and completion survive moves.
+- `TaskCardPatch.dueDate`: omitted preserves date; null clears; valid string replaces; invalid string rejects the patch. Legacy `withDate` callers remain supported through the same date presets. Board-linked inputs retain validated dueDate and source.
+- Uses only public `@repo/plugin-web-tokens` date helpers. Device-local persistence only; does not enable cloud sync or guarantee background JavaScript execution when a tab is closed.
+
 # API — `@repo/plugin-web-tasks`
 
 > Interface contracts for the Tasks module.
@@ -473,7 +484,7 @@ export interface TaskComposerProps {
   /** Bucket pre-selected when the dialog opens (the column whose + was clicked). */
   defaultBucket: BucketId;
   /** Called after validation passes with the draft + chosen bucket. */
-  onSave: (draft: NewTaskDraft, targetBucket: BucketId) => void;
+  onSave: (draft: NewTaskDraft, targetBucket: BucketId) => boolean | void;
   /** Called on ESC / backdrop click / Cancel (changes discarded). */
   onClose: () => void;
 }
@@ -680,3 +691,16 @@ New empty-state strings append to `src/internal/strings.ts` (en+zh), mirroring t
 | Any filter applied | always | `localStorage.getItem("xai_task_cols")` is byte-identical before/after (T-FILT-NOMUT). The filter writes nothing. |
 
 No error UI beyond the honest empty state.
+
+
+## REL-05 — save and recovery contract
+
+`TaskComposer.onSave` supports an explicit `false` result for a rejected write (legacy void callbacks remain compatible). The module's handler returns the actual committed result; rejected saves retain the dialog and complete draft. Details and list/tag editors likewise display failed state without publishing proposed values as committed. Retry is the existing Save action on the latest form; successful create commits once and closes. `Export draft` downloads versioned JSON containing the editable fields, not account credentials. Export and retry are denied after the captured account scope is revoked.
+
+`persistCols`, `persistLists` and `persistTags` now return the write outcome. Metadata state is updated after the write; bulk/detail deletion clears selection or closes only after successful persistence. A failed non-editor action offers its retained proposal as an explicit retry/export; no background replay writes it into a later account.
+
+## TASK-02 completion and Board source contract (2026-09-09)
+
+`TaskCard.completedAt?: string` records the actual UTC ISO completion instant. A transition from absent/false to true sets it; an idempotent true leaves existing data unchanged (legacy undated completion stays undated). Undo removes it; a later completion records a new instant. Date/list/tag moves and metadata edits preserve it. Legacy `completed[]` implies `done: true` only if the field is missing; explicit false is respected. Targeted legacy rows are materialized into normal tasks when edited/moved/restored, and the legacy completion checkbox now supports undo.
+
+Board source identity is `(boardId, cardId)`. `source.listId` is historical location metadata, never a permanent identity constraint. Board lookup recognizes `done` in normal tasks and compatibility completion rows. `upsertBoardLinkedTask` accepts optional fourth argument `preserveExisting` (default false for compatibility); retrying link creation passes true so existing user edits, completion time and task ID are not replaced by the old Board draft. Board archive does not cancel Task completion. Statistics may use only valid actual timestamps for dated history and must disclose undated legacy totals.

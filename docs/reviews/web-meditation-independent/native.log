@@ -1,0 +1,30 @@
+{
+  "commit": "6887879",
+  "autoplayBypass": false,
+  "pass": true,
+  "checks": [
+    "Actual start/pause controls persist absolute elapsed without counting paused absence",
+    "Native default autoplay policy: trusted Retry audio starts real AudioContext after visible injected denial",
+    "Actual module unmount stops every native ambient source",
+    "Whole Chrome process close/reopen keeps running deadline and requires explicit audio opening",
+    "Past deadline ends once at deadline, stops native sources and creates no duplicate terminal write",
+    "Native Storage quota preserves original active bytes and explicit retry commits pause",
+    "Native Web Locks: while A stays held, B can start; late A cannot mutate B or erase A",
+    "Two actual pages: stale pause and duplicate start reject without trapping new commands; concurrent end writes terminal once"
+  ],
+  "trustedClicks": [
+    "Open saved meditation",
+    "End",
+    "Start session",
+    "Pause",
+    "Retry session save"
+  ],
+  "nativeAudio": {
+    "starts": 2,
+    "stops": 2
+  },
+  "pids": [
+    50081,
+    50172
+  ]
+}

@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"115efb2","browser":"Chrome/152.0.7977.83"}
+{"name":"actual-device-controls","checked":["true","true"],"raw":[null,null],"attempts":["xai_pref_collab_show_avatars","xai_pref_collab_mention_notify"],"text":"Collaborate\nShow collaborator avatars\nDefault share permission\nCan comment\nCan edit\nView only\nNotify on @ mentions"}
+{"name":"device-failure-recovery","pass":false,"error":"AssertionError [ERR_ASSERTION]: Latest failed device choices not retained\n+ actual - expected\n\n  [\n+   'true',\n+   'true'\n-   'false',\n-   'false'\n  ]\n"}

@@ -291,3 +291,7 @@ runs.
     `type(scope): summary` body).
 14. `dev_log.md` `Status Panel` is `READY_TO_SHIP` + `Suggested Next:
     ship`.
+
+## 2026-09-09 save-failure regressions
+
+`MeditationModule.saveRecovery.test.tsx` checks quota-failed new scene then latest-draft retry exactly once; failed delete leaves editor/store intact; a newer raw value survives retry; Blob JSON includes both latest editor and failed proposal; old-account retry/export refuses A/B mutation. Package run 14 files / 117 PASS and check-types PASS. These use real React + jsdom Storage faults, with anchor click intercepted for Blob inspection: not a native download/close/restart claim. The independent before probe is in `docs/reviews/web-save-consumer-inventory`; its passing assertion proves the old defect and should not be rewritten as the after acceptance.

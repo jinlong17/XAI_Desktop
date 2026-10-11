@@ -73,7 +73,7 @@ export function TaskColumn({
       onDrop={(e) => onDrop(e, col.id)}
     >
       <header className="task-col-head">
-        <h2>{s(`common.${col.key}`)}</h2>
+        <h2>{col.id === "overdue" ? (lang === "zh" ? "今天 / 过期" : "Today / Overdue") : s(`common.${col.key}`)}</h2>
         <span className="col-count">{col.tasks.length}</span>
         <span className="grow" />
         {col.action === "postpone" && (
@@ -123,7 +123,7 @@ export function TaskColumn({
           </div>
         )}
         {col.completed && (
-          <CompletedGroup tasks={col.completed} lang={lang} lists={lists} tags={tags} />
+          <CompletedGroup tasks={col.completed} lang={lang} onToggle={onToggle} lists={lists} tags={tags} />
         )}
       </div>
     </section>

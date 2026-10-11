@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"357d862","browser":"Chrome/152.0.7977.83"}
+{"name":"rail-observation","path":"/app/dashboard","dialog":false}
+{"name":"departure","pass":false,"error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '/app/dashboard'\n- '/app/pomodoro'\n        ^\n"}

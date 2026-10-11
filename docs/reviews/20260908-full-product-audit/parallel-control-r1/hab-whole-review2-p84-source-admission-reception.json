@@ -1,0 +1,57 @@
+{
+  "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY-REVIEW2",
+  "source": "2190bb260f521a8239c3a9482de4efa6a02bea95",
+  "parent": "66060a9caa7bd4c5443c202bf8fad99469e1e123",
+  "integration": "6102651bcfc108914992f3caef5b1e97ac618042",
+  "archive_ref": "codex/archive/parallel-hab01-hab05-review2-20261010",
+  "inputs_checked": 185,
+  "outputs": {
+    "docs/reviews/audit-parallel-hab01-hab05-source-discovery-review-r2/inputs.sha256": "e90112a5ea8f7e92f19fd027638a59667831241d42397e33073c3a2463de0b2b",
+    "docs/reviews/audit-parallel-hab01-hab05-source-discovery-review-r2/review.md": "30aef323076f912032888723ce57cb9faa884a096cb95e5d414462a4c30217a6"
+  },
+  "disposition": {
+    "source": "e7d113e01bbe5b1df47d5fb51821779b30916bf0",
+    "source_integration": "8a05231add157e43f31bb1f853b3b2fadb69cace",
+    "whole_review": "2190bb260f521a8239c3a9482de4efa6a02bea95",
+    "review_integration": "6102651bcfc108914992f3caef5b1e97ac618042",
+    "disposition": "WHOLE_SOURCE_DISCOVERY_ONLY_ADOPTED",
+    "no_contract_or_execution_grant": true,
+    "source_family": "2/3",
+    "source_review_family": "2/3",
+    "nonblocking_note": ".hcell HabitRow weeklystrip .cal-cell MonthCalendar; actualsurfacecoveragealreadyretained; nextcontractusesactualproducers"
+  },
+  "static": {
+    "pid": 46867,
+    "numeric_exit": 0,
+    "internal_seconds": 0.2701838749926537,
+    "process_wall_ms": 430,
+    "EOF_stdout_stderr": true,
+    "stderr_empty": true,
+    "stdin_error": null,
+    "Git_children": [
+      46869,
+      46870,
+      46871
+    ],
+    "all_Git_exits": 0,
+    "session_chunk": "UNKNOWN",
+    "before_anywrite": true
+  },
+  "finalization": {
+    "commit_pid": 47401,
+    "commit_exit": 0,
+    "clean_pid": 47433,
+    "clean_exit": 0,
+    "measured_minutes": 5.442367,
+    "initial_untimed": "UNKNOWN",
+    "precheck_preparation_errors": 3
+  },
+  "formal_counts": [
+    13,
+    3,
+    3,
+    293
+  ],
+  "refs": 939,
+  "root_business_checker": 0
+}

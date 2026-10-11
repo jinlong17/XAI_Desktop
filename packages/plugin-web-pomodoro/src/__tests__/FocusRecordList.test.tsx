@@ -75,7 +75,8 @@ describe("FocusRecordList", () => {
     // Duration should be "25:00"
     expect(durEl?.textContent).toBe("25:00");
     // Time should match HH:MM format
-    expect(timeEl?.textContent).toMatch(/^\d{2}:\d{2}$/);
+    expect(timeEl?.textContent).toMatch(/^\d{2}:\d{2}/);
+    expect(container.querySelector('.rec-state')?.textContent).toBe('Completed');
   });
 
   // FRL6: bilingual date labels (en + zh)
@@ -90,12 +91,16 @@ describe("FocusRecordList", () => {
     expect(zh.querySelector(".record-date")?.textContent).toBe("今天");
   });
 
-  // Non-completed sessions excluded
-  it("non-completed focus sessions excluded", () => {
-    const { container } = render(
-      <FocusRecordList sessions={[FIXTURE_FOCUS_TODAY_PARTIAL]} lang="en" />,
+  it("early endings retain measured duration and explicit incomplete status in both languages", () => {
+    const sessions = [{ ...FIXTURE_FOCUS_TODAY_PARTIAL, elapsedMs: 60_000 }];
+    const { container, rerender } = render(
+      <FocusRecordList sessions={sessions} lang="en" />,
     );
-    expect(container.querySelectorAll(".record-group")).toHaveLength(0);
+    expect(container.querySelectorAll(".record-row")).toHaveLength(1);
+    expect(container.querySelector('.rec-dur')?.textContent).toBe('1:00');
+    expect(container.querySelector('.rec-state')?.textContent).toBe('Ended early · Incomplete');
+    rerender(<FocusRecordList sessions={sessions} lang="zh" />);
+    expect(container.querySelector('.rec-state')?.textContent).toBe('提前结束 · 未完成');
   });
 
   // Non-focus sessions excluded

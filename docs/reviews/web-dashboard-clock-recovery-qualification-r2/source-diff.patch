@@ -1,0 +1,529 @@
+--- verify-qualification.mjs:Q1-r1
++++ verify-qualification.mjs:retention-r2
+@@ -14,0 +15 @@
++import {createJournal,exclusiveWrite,trackOwned,closeOwned,finalizeEvidence,bounded,streamChild,nextReservation,inducedCause,errorInfo} from './evidence-retention.mjs';
+@@ -135 +136,28 @@
+- return {source,sha256:sha256(source),originalSha256:sha256(original),changes,original};
++ const retention=retentionSource(source);return {...retention,originalSha256:sha256(original),changes:[...changes,...retention.changes],original};
++}
++
++// Lifecycle-only generated-source adapter. Exact anchors and original line map are frozen.
++export function retentionSource(original){
++ let source=original;const changes=[];
++ const change=(reason,from,to)=>{const at=source.indexOf(from);if(at<0)throw Error('Retention adapter anchor '+reason);changes.push({reason,from,to,sourceLine:source.slice(0,at).split('\n').length});source=source.replace(from,to);};
++ change('Evidence lifecycle import','import { createHash } from "node:crypto";','import { createHash } from "node:crypto";\nimport {createJournal,trackOwned,closeOwned,finalizeEvidence,bounded,exclusiveWrite,errorInfo} from "./q1-evidence-retention.mjs";');
++ const overwrite=source.includes('if (existsSync(evidencePath)) throw Error("Evidence exists; use a distinct suffix");')?'if (existsSync(evidencePath)) throw Error("Evidence exists; use a distinct suffix");':'if (existsSync(evidencePath) || readdirSync(evidenceDir).some((name) => name.startsWith(`${prefix}-`))) throw Error("Evidence exists; use a distinct suffix");';
++ change('Journal before owned directory/server/browser acquisition',overwrite,overwrite+'\nconst q1Journal=createJournal(evidencePath),q1Owners=[];\nconst q1Record=(name,value={})=>q1Journal.record(name,value);');
++ change('Every structured raw record durable at production','records.push({ name, ...value });','q1Journal.record(name,value);records.push({ name, ...value });');
++ const begin=source.indexOf('async function launch() {'),spawnEnd=source.indexOf('\n  ], { stdio: ["ignore", "ignore", "ignore", "pipe", "pipe"] });',begin);
++ if(begin<0||spawnEnd<0)throw Error('Exact generated child ownership anchor');
++ const line=source.slice(spawnEnd,source.indexOf('\n',spawnEnd+1));
++ change('Track child immediately, including failed startup',line,line+'\n  q1Owners.push(trackOwned(proc,profile,q1Record));');
++ const closeStart=source.indexOf('async function closeBrowser() {');
++ if(closeStart>=0){const closeEnd=source.indexOf('\n}\n',closeStart)+3;change('Bound existing browser close; retained exact profiles',source.slice(closeStart,closeEnd),'async function closeBrowser(){const current=browser;browser=null;const outcomes=[];for(const owner of q1Owners)if(!owner.closed)outcomes.push(await closeOwned(owner,current?()=>current.send("Browser.close"):null,q1Record));return{complete:outcomes.every(x=>x.complete),errors:outcomes.flatMap(x=>x.errors),outcomes};}\n');}
++ // Persisted original result remains intact. Primary exit is set before guarded cleanup.
++ const writeStart=source.lastIndexOf('  writeFileSync(evidencePath,');
++ const exitStart=source.indexOf('  process.exitCode = ',writeStart),exitEnd=source.indexOf('\n',exitStart);
++ if(writeStart<0||exitStart<0)throw Error('Generated terminal anchors');
++ const exitLine=source.slice(exitStart,exitEnd);
++ const terminal=`${exitLine}\n  const q1PrimaryExit=process.exitCode;\n  const q1Final={status:"UNQUALIFIED",primaryExit:q1PrimaryExit,primaryError:harnessError?errorInfo(harnessError):null};\n  await finalizeEvidence({journal:q1Journal,status:q1Final,resultName:"evidence-finalization",finalizers:[["owned-browsers",async()=>{const outcomes=[];for(const owner of q1Owners)if(!owner.closed)outcomes.push(await closeOwned(owner,browser?()=>browser.send("Browser.close"):null,q1Record));return{complete:outcomes.every(x=>x.complete),errors:outcomes.flatMap(x=>x.errors),outcomes};}],["server-close",()=>new Promise((r,j)=>{if(!server)return r();server.closeAllConnections?.();server.close(e=>e&&e.code!=="ERR_SERVER_NOT_RUNNING"?j(e):r());})],["directory-retention",()=>{q1Record("directory-retained",{path:directory,reason:"descendant quiescence uncertain; no profile deletion"});return{complete:true,retained:directory};}]]});\n  process.exitCode=q1Final.cleanupErrors.length||q1Final.persistenceErrors.length?1:q1PrimaryExit;`;
++ change('Primary durable before guarded finalizers; preserve historical exit2',source.slice(writeStart,exitEnd),terminal);
++ // Screenshot data is fsynced before its existing metadata record. No pixels or names changed.
++ source=source.replaceAll('writeFileSync(join(evidenceDir, file), buffer, { flag: "wx" });','exclusiveWrite(join(evidenceDir, file),buffer);');
++ changes.push({reason:'PNG persistence only',from:'writeFileSync(join(evidenceDir, file), buffer, { flag: "wx" });',to:'exclusiveWrite(join(evidenceDir, file),buffer);'});
++ return{source,changes,sha256:sha256(source),originalSha256:sha256(original),original};
+@@ -139 +167 @@
+-async function browser(){
++async function browser(record,ownership){
+@@ -141,0 +170 @@
++ const owner=trackOwned(proc,profile,record);ownership.owner=owner;
+@@ -143,0 +173 @@
++ proc.on('error',e=>{for(const p of pending.values())p.reject(e);pending.clear();});
+@@ -145 +175 @@
+- const send=(method,params={},sessionId)=>new Promise((resolve,reject)=>{const id=++seq;pending.set(id,{resolve,reject});proc.stdio[3].write(JSON.stringify({id,method,params,...(sessionId?{sessionId}:{})})+'\0');});
++ const send=(method,params={},sessionId)=>bounded('CDP '+method,()=>new Promise((resolve,reject)=>{const id=++seq;pending.set(id,{resolve,reject});proc.stdio[3].write(JSON.stringify({id,method,params,...(sessionId?{sessionId}:{})})+'\0',e=>{if(e){pending.delete(id);reject(e);}});}),5000);
+@@ -149 +179,2 @@
+- return{cdp,events,version:await send('Browser.getVersion'),async close(){try{await send('Browser.close');}catch{}if(proc.exitCode===null)proc.kill('SIGTERM');rmSync(profile,{recursive:true,force:true});}};
++ ownership.send=()=>send('Browser.close');
++ return{cdp,events,version:await send('Browser.getVersion'),close:()=>closeOwned(owner,ownership.send,record)};
+@@ -171,2 +202,2 @@
+- const records=[],files=[],presses=[],result={status:'UNQUALIFIED',formal:!calibration,unit,iteration,checks:0,failures:0};
+- const record=(name,value={})=>records.push({name,...value});
++ const journal=createJournal(logPath),records=journal.records,files=[],presses=[],ownership={},result={status:'UNQUALIFIED',formal:!calibration,unit,iteration,checks:0,failures:0};
++ const record=(name,value={})=>journal.record(name,value);
+@@ -177 +207,0 @@
+- await new Promise(r=>server.listen(0,'127.0.0.1',r));const origin='http://127.0.0.1:'+server.address().port;
+@@ -180 +210,2 @@
+-  b=await browser();record('baseline',{product:P0,parent:PARENT,browser:b.version,origin,isolatedInertFixture:true,source:Object.fromEntries(['verify-qualification.mjs','pixel-focus-qualified-r1.mjs','focus-controls.html','reload-controls.html','verify-native-geometry-reload-r1.mjs'].map(f=>[f,sha256(readFileSync(join(output,f)))]))});
++  await bounded('server listen',()=>new Promise((r,j)=>{server.once('error',j);server.listen(0,'127.0.0.1',r);}),5000);const origin='http://127.0.0.1:'+server.address().port;
++  b=await browser(record,ownership);record('baseline',{product:P0,parent:PARENT,browser:b.version,origin,isolatedInertFixture:true,source:Object.fromEntries(['verify-qualification.mjs','pixel-focus-qualified-r1.mjs','focus-controls.html','reload-controls.html','verify-native-geometry-reload-r1.mjs'].map(f=>[f,sha256(readFileSync(join(output,f)))]))});
+@@ -182 +213 @@
+-  const input=async(type,params)=>{await b.cdp(type,params);};
++  const input=async(type,params)=>{record('trusted-input-dispatch',{type,params,variant,pressCount});await b.cdp(type,params);};
+@@ -187 +218 @@
+-  const saveShot=async(name,data,details)=>{const path=`q1-${unit}-${P0}-${calibration?'development-calibration':'controls'}-${name}-i${iteration}.png`;writeFileSync(join(output,path),Buffer.from(data,'base64'),{flag:'wx'});const item={file:path,sha256:sha256(Buffer.from(data,'base64')),...details};files.push(item);record('screenshot',item);return item;};
++  const saveShot=async(name,data,details)=>{const path=`q1-${unit}-${P0}-${calibration?'development-calibration':'controls'}-${name}-i${iteration}.png`;exclusiveWrite(join(output,path),Buffer.from(data,'base64'));const item={file:path,sha256:sha256(Buffer.from(data,'base64')),...details};files.push(item);record('screenshot',item);return item;};
+@@ -192,0 +224 @@
++   record('scenario-enter',{id,test,lang,theme,width,field});
+@@ -207 +239 @@
+-    if(test==='transformed')pre(id+':original-transformed-aligned-refusal-preserved',!!oldError&&/stable-aligned|aligned|captured-twice/.test(oldError),{oldError});
++    if(test==='transformed'){const refusal=records.findLast(r=>r.name==='check'&&!r.pass&&r.id===id+':pixel-walk-completed-a-full-cycle-with-every-stop-captured-twice-in-stable-aligned-frames:original');pre(id+':original-transformed-aligned-refusal-preserved',!!oldError&&!!refusal,{oldError,refusal});}
+@@ -211 +243 @@
+-    let actual=null,error=null;
++    let actual=null,error=null;const candidateStart=records.length;
+@@ -214 +246 @@
+-    record('focus-control',{id,actual,error,expected,expectedDisposition:expected==='invalid'?'intentionally-induced-measurement-precondition-refusal':expected===false?'valid-measurement-visible-focus-or-body-landing-failure':'valid-measurement-visible-focus-pass'});pre(id+':candidate-discrimination',expected==='invalid'?!!error&&new RegExp(['missing-stop','duplicate-stop','excess-body'].includes(test)?'census|full-native-cycle-census-closure':test==='closure'?'full-native-cycle-census-closure':'all-stops-valid-stable-attributable-captures').test(error):error===null&&actual===expected,{actual,error,expected});
++    record('focus-control',{id,actual,error,expected,expectedDisposition:expected==='invalid'?'intentionally-induced-measurement-precondition-refusal':expected===false?'valid-measurement-visible-focus-or-body-landing-failure':'valid-measurement-visible-focus-pass'});const candidateAudit=await evaluate('keyAudit'),candidateTrace=presses.slice();const cause=expected==='invalid'?inducedCause(test,id,error,records.slice(candidateStart),candidateAudit,candidateTrace):null;record('candidate-causal-disposition',{id,test,cause,audit:candidateAudit,trace:candidateTrace});pre(id+':candidate-discrimination',expected==='invalid'?cause.pass:error===null&&actual===expected,{actual,error,expected,cause});
+@@ -219,2 +251,2 @@
+- }catch(e){result.status='BLOCKED';result.error=e.stack;result.failures++;record('stop',{error:e.stack});process.exitCode=1;}
+- finally{if(b)await b.close();await new Promise(r=>server.close(r));result.artifacts=files;record('result',result);writeFileSync(logPath,records.map(x=>JSON.stringify(x)).join('\n')+'\n',{flag:'wx'});writeFileSync(join(output,prefix+'.json'),JSON.stringify(result,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({log:logPath,...result,artifacts:files.length}));}
++ }catch(e){result.status='BLOCKED';result.error=e.stack;result.primaryError=errorInfo(e);result.failures++;try{record('stop',{error:e.stack});if(b){const r=await b.cdp('Runtime.evaluate',{expression:'keyAudit',returnByValue:true});record('failure-key-audit',{audit:r.result.value,trace:presses});}}catch(p){result.persistenceOrAuditError=errorInfo(p);}process.exitCode=1;}
++ finally{result.artifacts=files;await finalizeEvidence({journal,status:result,summaryPath:join(output,prefix+'.json'),finalizers:[['owned-browser',()=>closeOwned(ownership.owner,ownership.send,record)],['server-close',()=>new Promise((r,j)=>{server.closeAllConnections?.();server.close(e=>e&&e.code!=='ERR_SERVER_NOT_RUNNING'?j(e):r());})]]});if(result.status==='BLOCKED')process.exitCode=1;console.log(JSON.stringify({log:logPath,...result,artifacts:files.length}));}
+@@ -225 +257 @@
+-async function matchingCheckout(evidence){
++async function matchingCheckout(evidence,record){
+@@ -227 +259 @@
+- await streamArchive(evidence,checkout);execFileSync('git',['init','-q',checkout]);
++ record('checkout-acquired',{checkout,evidence,retainedOnFailure:true});await streamArchive(evidence,checkout);execFileSync('git',['init','-q',checkout]);
+@@ -233 +265 @@
+-function subprocess(command,args,env){return new Promise((resolve,reject)=>{const p=spawn(command,args,{cwd:root,env:{...process.env,...env},stdio:['ignore','pipe','pipe']});let stdout='',stderr='';p.stdout.on('data',b=>{stdout+=b;process.stdout.write(b);});p.stderr.on('data',b=>{stderr+=b;process.stderr.write(b);});p.on('error',reject);p.on('close',(code,signal)=>resolve({code,signal,stdout,stderr}));});}
++function subprocess(command,args,env,record,label){return streamChild(command,args,{cwd:root,env:{...process.env,...env},stdoutPath:join(output,label+'-stdout.log'),stderrPath:join(output,label+'-stderr.log'),record});}
+@@ -235 +267 @@
+- const path=phase==='old'?'docs/reviews/web-dashboard-clock-recovery-native/verify-native-geometry.mjs':'docs/reviews/web-dashboard-clock-recovery-qualification-r1/verify-native-geometry-reload-r1.mjs';
++ const path=phase==='old'?'docs/reviews/web-dashboard-clock-recovery-native/verify-native-geometry.mjs':'docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-native-geometry-reload-r1.mjs';
+@@ -245 +277 @@
+- return {source,sha256:sha256(source),originalSha256:sha256(original),changes,original};
++ const retention=retentionSource(source);return {...retention,originalSha256:sha256(original),changes:[...changes,...retention.changes],original};
+@@ -251 +283 @@
+- const records=[],status={unit,iteration,status:'UNQUALIFIED',product,evidence,formal:true,children:[]};let checkout;
++ const journal=createJournal(logFile),records=journal.records,record=(name,value={})=>journal.record(name,value),status={unit,iteration,status:'UNQUALIFIED',product,evidence,formal:true,children:[]};let checkout;
+@@ -253 +285 @@
+-  checkout=await matchingCheckout(evidence);const dir=join(checkout,'docs/reviews/web-dashboard-clock-recovery-qualification-r1');mkdirSync(dir,{recursive:true});
++  checkout=await matchingCheckout(evidence,record);const dir=join(checkout,'docs/reviews/web-dashboard-clock-recovery-qualification-r1');mkdirSync(dir,{recursive:true});
+@@ -257 +289 @@
+-   const driver=join(historicalDir,`q1-${unit}-driver.mjs`);writeFileSync(driver,generated.source,{flag:'wx'});
++   const driver=join(historicalDir,`q1-${unit}-driver.mjs`);writeFileSync(driver,generated.source,{flag:'wx'});writeFileSync(join(dirname(driver),'q1-evidence-retention.mjs'),readFileSync(join(output,'evidence-retention.mjs')),{flag:'wx'});
+@@ -259,2 +291,2 @@
+-    const child=await subprocess(process.execPath,[driver,product,'keyboard-'+lang,'i'+iteration],{XAI_Q1_OUT:output,XAI_DEPS_ROOT:'/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop'});
+-    status.children.push({mode:'keyboard-'+lang,...child,sourceSha256:generated.sha256});records.push({name:'child-exit',mode:'keyboard-'+lang,...child});
++    const child=await subprocess(process.execPath,[driver,product,'keyboard-'+lang,'i'+iteration],{XAI_Q1_OUT:output,XAI_DEPS_ROOT:'/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop'},record,`q1-${unit}-${product}-${lang}-i${iteration}`);
++    status.children.push({mode:'keyboard-'+lang,...child,sourceSha256:generated.sha256});record('historical-child-outcome',{mode:'keyboard-'+lang,...child});
+@@ -263 +295 @@
+-    const expectedFail=unit==='appearance-fapp1'||unit==='appearance-fapp2';if(!result?.harnessValid||child.code!==(expectedFail?2:0))throw Error('Historical native outcome contradiction '+JSON.stringify(result));
++    const expectedFail=unit==='appearance-fapp1'||unit==='appearance-fapp2';if(child.persistenceErrors.length||child.startupError||!result?.harnessValid||child.code!==(expectedFail?2:0))throw Error('Historical native outcome contradiction '+JSON.stringify(result));
+@@ -268,2 +300,2 @@
+-    const generated=geometrySource(phase),driver=join(dir,'q1-geometry-'+phase+'.mjs');writeFileSync(driver,generated.source,{flag:'wx'});
+-    const child=await subprocess(process.execPath,[driver,P0,'geometry','i'+iteration],{XAI_Q1_OUT:output,XAI_DEPS_ROOT:'/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop'});status.children.push({phase,...child,sourceSha256:generated.sha256});records.push({name:'child-exit',phase,...child});
++    const generated=geometrySource(phase),driver=join(dir,'q1-geometry-'+phase+'.mjs');writeFileSync(driver,generated.source,{flag:'wx'});if(!existsSync(join(dir,'q1-evidence-retention.mjs')))writeFileSync(join(dir,'q1-evidence-retention.mjs'),readFileSync(join(output,'evidence-retention.mjs')),{flag:'wx'});
++    const child=await subprocess(process.execPath,[driver,P0,'geometry','i'+iteration],{XAI_Q1_OUT:output,XAI_DEPS_ROOT:'/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop'},record,`q1-${unit}-${product}-${phase}-i${iteration}`);status.children.push({phase,...child,sourceSha256:generated.sha256});record('geometry-child-outcome',{phase,...child});
+@@ -273 +305 @@
+-    if(child.code!==0||JSON.stringify(actual)!==JSON.stringify({obstruction:48,failedMissing:30,sourceMissing:20,overflowPass:60}))throw Error('P0 original/corrected full geometry contradiction '+JSON.stringify(actual));records.push({name:'geometry-preserved-before',phase,actual});
++    if(child.persistenceErrors.length||child.startupError||child.code!==0||JSON.stringify(actual)!==JSON.stringify({obstruction:48,failedMissing:30,sourceMissing:20,overflowPass:60}))throw Error('P0 original/corrected full geometry contradiction '+JSON.stringify(actual));record('geometry-preserved-before',{phase,actual});
+@@ -277,2 +309,2 @@
+- }catch(e){status.status='BLOCKED';status.error=e.stack;process.exitCode=1;records.push({name:'stop',error:e.stack});}
+- finally{if(checkout)rmSync(checkout,{recursive:true,force:true});records.push({name:'result',...status});writeFileSync(logFile,records.map(x=>JSON.stringify(x)).join('\n')+'\n',{flag:'wx'});writeFileSync(summaryFile,JSON.stringify(status,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({unit,status:status.status,logFile}));}
++ }catch(e){status.status='BLOCKED';status.error=e.stack;status.primaryError=errorInfo(e);process.exitCode=1;try{record('stop',{error:e.stack});}catch{}}
++ finally{await finalizeEvidence({journal,status,summaryPath:summaryFile,finalizers:[['checkout-retention',()=>{record('checkout-retained',{path:checkout??null,reason:'uncertain descendant/resource quiescence; exact task path retained'});return{complete:true,retained:checkout??null};}]]});if(status.status==='BLOCKED')process.exitCode=1;console.log(JSON.stringify({unit,status:status.status,logFile}));}
+@@ -288,2 +320,4 @@
+- const prior=readdirSync(output).filter(n=>n.startsWith(prefix)&&/-i[123]\.json$/.test(n));
+- if(prior.length>=3||iteration!==prior.length+1)throw Error('Cumulative formal cap/order: '+unit+' used '+prior.length);
++ const oldOutput=join(root,'docs/reviews/web-dashboard-clock-recovery-qualification-r1');
++ const historical=readdirSync(oldOutput).filter(n=>n.startsWith(prefix)&&/-i[123]\.json$/.test(n)).map(n=>{const bytes=readFileSync(join(oldOutput,n));if(!bytes.equals(git('show','686e98b6251364aee1fa26c63ad30e6af15c3b25:docs/reviews/web-dashboard-clock-recovery-qualification-r1/'+n)))throw Error('Historical reservation identity drift');return JSON.parse(bytes);});
++ const current=readdirSync(output).filter(n=>n.startsWith(prefix)&&/-i[123]\.json$/.test(n)).map(n=>JSON.parse(readFileSync(join(output,n),'utf8').split('\n')[0]));
++ nextReservation(unit,iteration,historical,current);
+@@ -291 +325 @@
+- writeFileSync(path,JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});
++ const reservation=createJournal(path);reservation.record('reservation',receipt);
+@@ -293,0 +328 @@
++  if(!frozen.data.independentCorrectionReview)throw Error('UNQUALIFIED correction: independent review and metadata impact unresolved');
+@@ -300,2 +335,2 @@
+- }catch(e){receipt.status='REFUSED_FORMAL_DIAGNOSTIC';receipt.error=e.stack;writeFileSync(path,JSON.stringify(receipt,null,2)+'\n');throw e;}
+- writeFileSync(path,JSON.stringify(receipt,null,2)+'\n');return path;
++ }catch(e){receipt.status='REFUSED_FORMAL_DIAGNOSTIC';receipt.error=e.stack;reservation.record('reservation-refused',receipt);reservation.close();throw e;}
++ reservation.record('reservation-preflight',receipt);reservation.close();return path;
+@@ -306 +341 @@
+-else if(command==='--calibrate'){if(unit!=='focus-controls')throw Error('Only isolated focus static calibration registered');await isolated(unit,Number(iterationText),true);}
++else if(command==='--calibrate'){throw Error('Correction candidate: calibration forbidden');if(unit!=='focus-controls')throw Error('Only isolated focus static calibration registered');await isolated(unit,Number(iterationText),true);}
+--- evidence-retention.mjs:Q1-r1
++++ evidence-retention.mjs:retention-r2
+@@ -0,0 +1,94 @@
++/** Evidence lifecycle only. No pixel measurement, fixture, or product semantics. */
++import {openSync,closeSync,writeSync,fsyncSync,readFileSync,realpathSync,lstatSync} from 'node:fs';
++import {spawn} from 'node:child_process';
++import {isDeepStrictEqual as equal} from 'node:util';
++export const errorInfo=e=>({name:e?.name??'Error',message:String(e?.message??e),code:e?.code??null,stack:e?.stack??null});
++export function exclusiveWrite(path,bytes,io={openSync,closeSync,writeSync,fsyncSync}) {
++ const fd=io.openSync(path,'wx');try{writeAll(fd,Buffer.from(bytes),io);io.fsyncSync(fd);}finally{io.closeSync(fd);}
++}
++function writeAll(fd,bytes,io){let offset=0;while(offset<bytes.length){const n=io.writeSync(fd,bytes,offset,bytes.length-offset);if(n<=0)throw Error('Zero evidence write');offset+=n;}}
++export function createJournal(path,io={openSync,closeSync,writeSync,fsyncSync}) {
++ const fd=io.openSync(path,'wx');const state={path,records:[],persistenceErrors:[],closed:false};
++ const failure=e=>{state.persistenceErrors.push(errorInfo(e));process.stderr.write('EVIDENCE PERSISTENCE FAILED '+JSON.stringify(errorInfo(e))+'\n');};
++ return Object.assign(state,{
++  record(name,value={}){const item={name,...value};state.records.push(item);try{writeAll(fd,Buffer.from(JSON.stringify(item)+'\n'),io);io.fsyncSync(fd);}catch(e){failure(e);throw e;}return item;},
++  flush(){try{io.fsyncSync(fd);}catch(e){failure(e);throw e;}},
++  close(){if(state.closed)return;try{io.fsyncSync(fd);}catch(e){failure(e);throw e;}finally{state.closed=true;io.closeSync(fd);}},
++ });
++}
++export function readJournal(path){const text=readFileSync(path,'utf8'),lines=text.split('\n'),tail=lines.pop(),records=[];let invalid=null;for(const [index,line] of lines.entries()){try{records.push(JSON.parse(line));}catch(e){invalid={index,line,error:errorInfo(e)};break;}}return{records,tail,invalid,complete:tail===''&&!invalid};}
++export async function bounded(label,operation,ms=2000){if(ms>5000||ms<=0)throw Error('Operation deadline outside policy');let timer;try{return await Promise.race([Promise.resolve().then(operation),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Object.assign(Error(label+' deadline'),{code:'DEADLINE'})),ms);})]);}finally{clearTimeout(timer);}}
++export function trackOwned(proc,profile,record){
++ const safeRecord=(name,value)=>{try{record(name,value);}catch(e){owner.recordErrors.push(errorInfo(e));}};
++ let canonical=null;if(profile)try{canonical=realpathSync(profile);}catch{}
++ const owner={recordErrors:[],proc,pid:proc.pid??null,profile,canonical,closed:false,exit:null,startupError:null};
++ owner.closedPromise=new Promise(resolve=>{proc.once('error',e=>{owner.startupError=errorInfo(e);safeRecord('owned-startup-error',owner.startupError);});proc.once('close',(code,signal)=>{owner.closed=true;owner.exit={code,signal};safeRecord('owned-streams-closed',{pid:owner.pid,...owner.exit});resolve(owner.exit);});});
++ safeRecord('owned-acquired',{pid:owner.pid,profile,canonical:owner.canonical});return owner;
++}
++export async function closeOwned(owner,send,record,{termMs=1500,killMs=1500,closeMs=500}={}){
++ const errors=[...(owner?.recordErrors??[])];const note=(name,value)=>{try{record(name,value);}catch(e){errors.push(errorInfo(e));}};
++ if(!owner)return{complete:true,errors,profileRetained:null};
++ if(send)try{await bounded('CDP close',send,closeMs);}catch(e){errors.push(errorInfo(e));note('close-command-error',errorInfo(e));}
++ if(!owner.closed){note('owned-signal',{pid:owner.pid,signal:'SIGTERM'});try{owner.proc.kill('SIGTERM');await bounded('owned TERM exit and streams',()=>owner.closedPromise,termMs);}catch(e){errors.push(errorInfo(e));}}
++ if(!owner.closed){note('owned-signal',{pid:owner.pid,signal:'SIGKILL'});try{owner.proc.kill('SIGKILL');await bounded('owned KILL exit and streams',()=>owner.closedPromise,killMs);}catch(e){errors.push(errorInfo(e));}}
++ // A parent close cannot establish descendant profile quiescence. Retention is intentional.
++ const profileRetained=owner.profile?{path:owner.profile,reason:'descendant quiescence not independently established'}:null;
++ note('owned-cleanup-result',{pid:owner.pid,complete:owner.closed,exit:owner.exit,errors,profileRetained});
++ return{complete:owner.closed,errors,profileRetained};
++}
++export function assertExactOwner(owner,path){if(!owner||path!==owner.profile||lstatSync(path).isSymbolicLink()||realpathSync(path)!==owner.canonical)throw Error('Exact new profile ownership not established');return true;}
++export async function finalizeEvidence({journal,status,summaryPath,finalizers=[],write=exclusiveWrite,resultName='result'}){
++ status.primaryError??=null;status.cleanupErrors??=[];status.persistenceErrors??=[];
++ const persist=(name,value)=>{try{journal.record(name,value);}catch(e){status.persistenceErrors.push(errorInfo(e));}};
++ persist('primary-outcome',JSON.parse(JSON.stringify(status)));
++ for(const [name,operation] of finalizers){persist('cleanup-start',{finalizer:name});try{const outcome=await bounded(name,operation,5000);if(outcome?.errors?.length)status.cleanupErrors.push(...outcome.errors.map(error=>({finalizer:name,...error})));if(outcome?.complete===false)status.cleanupErrors.push({finalizer:name,message:'Cleanup incomplete'});persist('cleanup-complete',{finalizer:name,outcome});}catch(e){status.cleanupErrors.push({finalizer:name,...errorInfo(e)});persist('cleanup-error',{finalizer:name,...errorInfo(e)});}}
++ status.persistenceErrors.push(...journal.persistenceErrors);
++ if(status.primaryError||status.cleanupErrors.length||status.persistenceErrors.length)status.status='BLOCKED';
++ persist(resultName,JSON.parse(JSON.stringify(status)));
++ if(status.persistenceErrors.length)status.status='BLOCKED';
++ if(summaryPath)try{write(summaryPath,JSON.stringify(status,null,2)+'\n');}catch(e){status.persistenceErrors.push(errorInfo(e));status.status='BLOCKED';persist('summary-write-failure',errorInfo(e));}
++ try{journal.close();}catch(e){status.persistenceErrors.push(errorInfo(e));status.status='BLOCKED';}
++ return status;
++}
++export async function streamChild(command,args,{cwd,env,stdoutPath,stderrPath,record,spawnFn=spawn}){
++ const out=openSync(stdoutPath,'wx');let err;
++ try{err=openSync(stderrPath,'wx');}catch(e){closeSync(out);throw e;}
++ const persistenceErrors=[];let stdout='',stderr='',proc,owner;
++ const capture=(fd,b,kind)=>{try{writeAll(fd,b,{writeSync});fsyncSync(fd);}catch(e){persistenceErrors.push(errorInfo(e));}if(kind==='stdout')stdout+=b;else stderr+=b;};
++ try{
++  record('child-spawn',{command,args,cwd,stdoutPath,stderrPath});proc=spawnFn(command,args,{cwd,env,stdio:['ignore','pipe','pipe']});owner=trackOwned(proc,null,record);
++  proc.stdout.on('data',b=>capture(out,b,'stdout'));proc.stderr.on('data',b=>capture(err,b,'stderr'));
++  const exit=await owner.closedPromise;const result={...exit,stdout,stderr,pid:owner.pid,startupError:owner.startupError,persistenceErrors};record('child-exit',result);return result;
++ }finally{for(const fd of [out,err])try{fsyncSync(fd);}finally{closeSync(fd);}}
++}
++export const Q1_UNITS=['focus-controls','reload-controls','appearance-fapp1','appearance-fapp2','appearance-accepted','apprail-accepted','geometry-reload-p0'];
++export function nextReservation(unit,iteration,historical,current){
++ if(!Q1_UNITS.includes(unit)||![1,2,3].includes(iteration))throw Error('Unregistered formal unit/cap');
++ const entries=[...historical,...current].filter(x=>x.unit===unit),indices=entries.map(x=>x.iteration).sort();
++ const minimum=unit==='focus-controls'?1:0;
++ if(entries.length<minimum||new Set(indices).size!==indices.length||indices.some((n,i)=>n!==i+1)||entries.length>=3||iteration!==entries.length+1)throw Error('Permanent cumulative formal reservation refused');return entries.length;
++}
++/** Only existing raw structured details are used. Any unrelated failed precondition rejects. */
++export function inducedCause(test,id,error,records,audit,trace){
++ const failed=records.filter(r=>r.name==='check'&&r.kind==='precondition'&&!r.pass);
++ if(!error||failed.length!==1||!audit?.length||!audit.every(x=>x.trusted)||!equal(audit.map(({type,key,shiftKey})=>({type,key,shiftKey})),trace))return{pass:false,reason:'missing cause, unrelated refusal or invalid trusted trace'};
++ const f=failed[0],closure=id+':full-native-cycle-census-closure';let cause=false;
++ if(test==='missing-stop')cause=f.id.startsWith(id+':census-unchanged-at-')&&f.initial?.length>f.census?.length&&f.initial.filter(n=>!f.census.some(c=>c.node===n.node)).length===1&&!f.census.some(c=>c.node===f.initial[0].node);
++ else if(['duplicate-stop','excess-body','closure'].includes(test)&&f.id===closure){const visits=f.nodeVisits??[],body=(f.visited??[]).filter(x=>x==='body').length;cause=test==='duplicate-stop'?new Set(visits).size<visits.length:test==='excess-body'?body>1:!f.closed&&f.rows===1&&visits.length===2;}
++ else if(f.id===id+':all-stops-valid-stable-attributable-captures'&&f.invalid?.length===1){
++  const r=f.invalid[0],a=r.first,b=r.again,m=a?.meta,n=b?.meta;const target=['outside:target','clock:target:'+test].includes(r.desc),view=m&&n&&['scale','width','height','dpr'].every(k=>m.window[k]===n.window[k]);
++  if(target&&view){
++   const windowChanged=!equal(m.window,n.window),ancestorsChanged=!equal(m.ancestors,n.ancestors),hoverChanged=!equal(m.hover,n.hover);
++   const ancestorScrollSame=m.ancestors.length===n.ancestors.length&&m.ancestors.every((x,i)=>x.node===n.ancestors[i].node&&x.transform===n.ancestors[i].transform&&equal(x.scroll,n.ancestors[i].scroll));
++   if(test==='scroll-drift')cause=windowChanged&&ancestorScrollSame&&!hoverChanged&&(m.window.x!==n.window.x||m.window.y!==n.window.y)&&m.running===0&&n.running===0;
++   if(test==='ancestor-scroll')cause=!windowChanged&&ancestorsChanged&&!hoverChanged&&m.ancestors.some((x,i)=>x.node===n.ancestors[i]?.node&&!equal(x.scroll,n.ancestors[i]?.scroll));
++   if(test==='hover-drift')cause=!windowChanged&&!ancestorsChanged&&hoverChanged&&records.some(x=>x.name==='trusted-input-dispatch'&&x.type==='Input.dispatchMouseEvent'&&x.variant==='hover-drift'&&x.pressCount===2&&x.params?.x===150&&x.params?.y===100);
++   if(test==='next-overlap')cause=r.context&&r.ambiguousNext===true&&r.targetMoved===false&&b.next?.node&&m.census.some(x=>x.node===b.next.node&&!equal(x.rect,b.next.rect));
++   if(test==='clipped')cause=r.targetMoved&&r.context&&r.union===null&&[a,b].some(p=>p.clip&&(p.clip.x<p.vis.left||p.clip.x+p.clip.width>p.vis.right||p.clip.y<p.vis.top||p.clip.y+p.clip.height>p.vis.bottom));
++   if(test==='partial-occluded'||test==='ring-occluded')cause=r.targetMoved&&r.context&&r.comparison?.fullyOccluded===false&&r.comparison?.occluded>0&&(test==='partial-occluded'?m.occluders?.some(x=>x.pixels>0&&x.chain?.some(y=>y.className==='occluder')):m.paintOverlaps?.some(x=>x.className==='occluder'&&x.pointerEvents==='none'));
++   // Existing invalid metadata lacks bounded capture attempts/hashes for instability. Refuse until separately scoped metadata exists.
++   if(test==='unstable')cause=false;
++  }
++ }
++ return{pass:!!cause,reason:cause?'exact induced cause preserved':'specific cause insufficient; freeze for impact review',failed};
++}
+--- verify-evidence-retention.mjs:Q1-r1
++++ verify-evidence-retention.mjs:retention-r2
+@@ -0,0 +1,43 @@
++/** Deterministic correction validation. No browser, product, native, probe or package invocation. */
++import assert from 'node:assert/strict';
++import * as fs from 'node:fs';
++import {join} from 'node:path';
++import {tmpdir} from 'node:os';
++import {fileURLToPath} from 'node:url';
++import {createHash} from 'node:crypto';
++import {spawn,execFileSync} from 'node:child_process';
++import {createJournal,exclusiveWrite,readJournal,finalizeEvidence,trackOwned,closeOwned,streamChild,assertExactOwner,nextReservation,inducedCause,Q1_UNITS} from './evidence-retention.mjs';
++const output=fileURLToPath(new URL('./',import.meta.url)),iteration=Number(process.argv[2]);
++assert([1,2,3].includes(iteration));
++for(let i=1;i<iteration;i++)assert(fs.existsSync(join(output,`retention-checks-i${i}.json`)),'Previous validation receipt required');
++const journal=createJournal(join(output,`retention-checks-i${iteration}.log`));
++const sources=Object.fromEntries(['evidence-retention.mjs','verify-evidence-retention.mjs','verify-qualification.mjs'].map(n=>[n,{sha256:createHash('sha256').update(fs.readFileSync(join(output,n))).digest('hex'),source:fs.readFileSync(join(output,n),'utf8')}]));
++journal.record('validation-source-freeze',{iteration,sources,formal:0,probes:0,browserNative:0});
++const scratch=fs.mkdtempSync(join(tmpdir(),'xai-retention-synthetic-')),cases=[];let checks=0;
++const check=(condition,message)=>{checks++;assert(condition,message);};
++const fail=message=>Object.assign(Error(message),{code:'INJECTED'});
++async function test(name,run){journal.record('case-enter',{name});try{await run();cases.push({name,pass:true});journal.record('case-complete',{name,pass:true});}catch(e){cases.push({name,pass:false,error:e.stack,stderr:e.stderr?.toString()??null});journal.record('case-complete',{name,pass:false,error:e.stack,stderr:e.stderr?.toString()??null});}}
++const path=n=>join(scratch,n);
++const state=()=>({status:'AUTHOR_SYNTHETIC_PASS_UNQUALIFIED'});
++try{
++ await test('01-primary-plus-cleanup-failure',async()=>{const j=createJournal(path('primary.log')),s={...state(),primaryError:{message:'primary business observation'}},order=[];j.record('raw',{sequence:1});await finalizeEvidence({journal:j,status:s,summaryPath:path('primary.json'),finalizers:[['cleanup',()=>{order.push(readJournal(j.path).records.at(-2)?.name);throw fail('cleanup');}],['remaining',()=>{order.push('remaining');return{complete:true};}]]});journal.record('fault-disposition',{status:s,raw:readJournal(j.path)});check(s.primaryError.message==='primary business observation'&&s.cleanupErrors.length===1&&s.status==='BLOCKED','independent errors');check(order.includes('remaining')&&readJournal(j.path).records.some(x=>x.name==='primary-outcome'),'primary before remaining guarded finalizers');});
++ await test('02-cleanup-only-failure',async()=>{const j=createJournal(path('cleanup.log')),s=state();j.record('business',{pass:true});await finalizeEvidence({journal:j,status:s,finalizers:[['cleanup',()=>{throw fail('cleanup only');}]]});journal.record('fault-disposition',{status:s,raw:readJournal(j.path)});check(s.primaryError===null&&s.cleanupErrors.length===1&&s.status==='BLOCKED','cleanup cannot replace business outcome');check(readJournal(j.path).records[0].pass===true,'business preserved');});
++ await test('03-slow-no-exit-owned-signals',async()=>{const profile=fs.mkdtempSync(join(scratch,'owned-')),events=[],p=spawn(process.execPath,['-e',"process.on('SIGTERM',()=>{});process.stdout.write('ready');setInterval(()=>{},1000)"],{stdio:['ignore','pipe','pipe']}),o=trackOwned(p,profile,(name,value)=>events.push({name,...value}));await new Promise(r=>p.stdout.once('data',r));const started=Date.now(),result=await closeOwned(o,null,(name,value)=>events.push({name,...value}),{termMs:80,killMs:1000,closeMs:80});journal.record('owned-disposition',{result,events,exit:o.exit});check(result.complete&&o.exit.signal==='SIGKILL','owned child actual close');check(Date.now()-started<5000&&events.filter(e=>e.name==='owned-signal').length===2,'finite signals');check(fs.existsSync(profile)&&result.profileRetained.path===profile,'uncertain profile retained');});
++ await test('04-CDP-close-rejection',async()=>{const events=[],p=spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{stdio:['ignore','pipe','pipe']}),o=trackOwned(p,null,(name,value)=>events.push({name,...value})),r=await closeOwned(o,()=>Promise.reject(fail('close rejection')),(name,value)=>events.push({name,...value}));journal.record('owned-disposition',{result:r,events});check(r.complete&&r.errors.some(e=>e.message==='close rejection'),'close rejection secondary, owned exit retained');});
++ await test('05-startup-before-handle',async()=>{const events=[],p=spawn(path('nonexistent-program'),[],{stdio:['ignore','pipe','pipe']}),o=trackOwned(p,null,(name,value)=>events.push({name,...value}));await o.closedPromise;journal.record('startup-disposition',{events,startupError:o.startupError,exit:o.exit});check(o.closed&&o.startupError.code==='ENOENT'&&events.some(e=>e.name==='owned-acquired'),'failed startup tracked before returned handle');});
++ await test('06-journal-and-result-write-failure',async()=>{let writes=0;const io={...fs,writeSync(...args){if(++writes>1)throw fail('journal write');return fs.writeSync(...args);}},j=createJournal(path('write-failure.log'),io),s=state(),finalizers=[];j.record('durable-before-fault',{pass:true});await finalizeEvidence({journal:j,status:s,summaryPath:path('write-failure.json'),write:()=>{throw fail('result write');},finalizers:[['remaining',()=>{finalizers.push(true);return{complete:true};}]]});journal.record('fault-disposition',{status:s,raw:readJournal(j.path)});check(s.status==='BLOCKED'&&s.persistenceErrors.length>0&&finalizers.length===1,'persistence independently fatal; remaining finalizer attempted');check(readJournal(j.path).records[0].name==='durable-before-fault','earlier raw survives failed later writes');});
++ await test('07-stream-partial-child-nonzero-exit2',async()=>{const events=[],out=path('child-out.log'),err=path('child-err.log');const pending=streamChild(process.execPath,['-e',"process.stdout.write('partial-out');process.stderr.write('partial-err');setTimeout(()=>process.exit(2),120)"],{cwd:scratch,env:process.env,stdoutPath:out,stderrPath:err,record:(name,value)=>events.push({name,...value})});let seen=false;for(let i=0;i<50;i++){await new Promise(r=>setTimeout(r,5));if(fs.readFileSync(out,'utf8')==='partial-out'){seen=true;break;}}check(seen,'stdout streamed before close');const result=await pending;journal.record('stream-disposition',{result,events});check(result.code===2&&result.signal===null&&fs.readFileSync(err,'utf8')==='partial-err','real historical exit2 and stderr preserved');check(result.persistenceErrors.length===0&&events.some(e=>e.name==='owned-streams-closed'),'stream closure retained');});
++ await test('08-checkout-cleanup-failure',async()=>{const j=createJournal(path('checkout.log')),s=state(),order=[];j.record('child-exit',{code:2});await finalizeEvidence({journal:j,status:s,finalizers:[['checkout',()=>{check(readJournal(j.path).records.some(x=>x.name==='primary-outcome'),'primary persisted before checkout cleanup');throw fail('ENOTEMPTY checkout');}],['last',()=>{order.push('last');return{complete:true};}]]});journal.record('fault-disposition',{status:s,raw:readJournal(j.path)});check(order.length===1&&s.cleanupErrors[0].message==='ENOTEMPTY checkout'&&readJournal(j.path).records[0].code===2,'checkout cleanup cannot lose child exit');});
++ await test('09-overwrite-refusal',async()=>{exclusiveWrite(path('no-overwrite'),Buffer.from('original'));assert.throws(()=>exclusiveWrite(path('no-overwrite'),'replacement'),e=>e.code==='EEXIST');checks++;check(fs.readFileSync(path('no-overwrite'),'utf8')==='original','no overwritten original');assert.throws(()=>createJournal(path('no-overwrite')),e=>e.code==='EEXIST');checks++;});
++ await test('10-interrupted-tail-visible',async()=>{const j=createJournal(path('tail.log'));j.record('complete-before-tail',{pass:true});j.close();fs.appendFileSync(j.path,'{"interrupted":');const r=readJournal(j.path);check(!r.complete&&r.tail==='{"interrupted":'&&r.records.length===1,'incomplete tail exposed, no manufactured pass');});
++ await test('11-permanent-cumulative-reservations',async()=>{const historical=[{unit:'focus-controls',iteration:1,status:'PREFLIGHT_PASSED'}];check(nextReservation('focus-controls',2,historical,[])===1,'new directory imports original focus1');assert.throws(()=>nextReservation('focus-controls',1,historical,[]));checks++;assert.throws(()=>nextReservation('focus-controls',1,[],[]));checks++;for(const unit of Q1_UNITS.slice(1))check(nextReservation(unit,1,historical,[])===0,'other six start0');assert.throws(()=>nextReservation('focus-controls',3,historical,[{unit:'focus-controls',iteration:2},{unit:'focus-controls',iteration:3}]));checks++;assert.throws(()=>nextReservation('focus-controls',2,historical,[{unit:'focus-controls',iteration:1}]));checks++;});
++ await test('12-exact-ownership',async()=>{const profile=fs.mkdtempSync(join(scratch,'profile-')),o={profile,canonical:fs.realpathSync(profile)};check(assertExactOwner(o,profile),'exact synthetic own profile');assert.throws(()=>assertExactOwner(o,scratch));checks++;const link=path('profile-link');fs.symlinkSync(profile,link);assert.throws(()=>assertExactOwner({...o,profile:link},link));checks++;check(fs.existsSync(profile),'ownership refusal never deletes profile');});
++ await test('13-unrelated-causal-refusal-rejected',async()=>{const audit=[{type:'keydown',key:'Tab',shiftKey:false,trusted:true}],trace=[{type:'keydown',key:'Tab',shiftKey:false}],records=[{name:'check',kind:'precondition',id:'case:all-stops-valid-stable-attributable-captures',pass:false,invalid:[{desc:'outside:next',first:{},again:{}}]}];check(!inducedCause('scroll-drift','case','PRECONDITION',records,audit,trace).pass,'unrelated failed target rejected');check(!inducedCause('unstable','case','PRECONDITION',records,audit,trace).pass,'insufficient bounded instability metadata blocked');const missing=[{name:'check',kind:'precondition',id:'case:census-unchanged-at-1',pass:false,initial:[{node:1},{node:2}],census:[{node:2}]}];check(inducedCause('missing-stop','case','PRECONDITION',missing,audit,trace).pass,'specific missing node census cause');check(!inducedCause('duplicate-stop','case','PRECONDITION',missing,audit,trace).pass,'missing is not duplicate');const meta={window:{x:0,y:0,vx:0,vy:0,width:375,height:900,dpr:1,scale:1},ancestors:[{node:3,scroll:{x:0,y:0},transform:'none'}],hover:[],running:0};const first={meta},again={meta:structuredClone(meta)};again.meta.ancestors[0].scroll.y=33;const ancestor=[{name:'check',kind:'precondition',id:'case:all-stops-valid-stable-attributable-captures',pass:false,invalid:[{desc:'clock:target:ancestor-scroll',first,again}]}];check(inducedCause('ancestor-scroll','case','PRECONDITION',ancestor,audit,trace).pass,'actual nested scroll metadata cause');check(!inducedCause('scroll-drift','case','PRECONDITION',ancestor,audit,trace).pass,'ancestor drift cannot be accepted as window drift');again.meta.ancestors[0].scroll.y=0;again.meta.window.y=33;ancestor[0].invalid[0].desc='clock:target:scroll-drift';check(inducedCause('scroll-drift','case','PRECONDITION',ancestor,audit,trace).pass,'actual window scroll metadata cause');check(!inducedCause('hover-drift','case','PRECONDITION',ancestor,audit,trace).pass,'window drift cannot be accepted as hover cause');});
++ await test('14-static-generated-adapter-source-freeze',async()=>{const argv=process.argv;process.argv=argv.slice(0,2);let driver;try{driver=await import('./verify-qualification.mjs');}finally{process.argv=argv;}const inventory=driver.inventory(),generated={};for(const ref of inventory.historical){const g=driver.historicalSource(ref);generated[ref.unit]=g;journal.record('generated-unit-source',{unit:ref.unit,...g});execFileSync(process.execPath,['--check','--input-type=module'],{input:g.source,stdio:['pipe','pipe','pipe']});checks++;check(g.source.includes('q1Journal.record(name,value)')&&g.source.includes('trackOwned(proc,profile,q1Record)')&&g.source.includes('directory-retained'),'generated raw/ownership/retention adapter');}for(const phase of ['old','new']){const g=driver.geometrySource(phase);generated['geometry-'+phase]=g;journal.record('generated-unit-source',{unit:'geometry-'+phase,...g});execFileSync(process.execPath,['--check','--input-type=module'],{input:g.source,stdio:['pipe','pipe','pipe']});checks++;check(g.source.includes('q1PrimaryExit')&&g.source.includes('q1Final.persistenceErrors'),'geometry preserves primary/secondary');}journal.record('generated-source-freeze',{generated,inventory});});
++}finally{
++ // Only this exact newly created synthetic root is removed; no historical profile or glob.
++ const raw=[];const retain=dir=>{for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=join(dir,e.name);if(e.isDirectory())retain(p);else if(e.isSymbolicLink())raw.push({path:p,symlink:fs.readlinkSync(p)});else{const bytes=fs.readFileSync(p);raw.push({path:p,sha256:createHash('sha256').update(bytes).digest('hex'),text:bytes.toString('utf8')});}}};retain(scratch);journal.record('synthetic-raw-files',{files:raw});
++ journal.record('synthetic-scratch-cleanup',{path:scratch,ownership:'exact mkdtemp returned path'});fs.rmSync(scratch,{recursive:true,force:true});
++ const result={status:cases.every(x=>x.pass)?'CORRECTION_VALIDATION_PASS_UNQUALIFIED':'BLOCKED',iteration,cases,checks,formal:0,probes:0,browserNative:0,sourceHashes:Object.fromEntries(Object.entries(sources).map(([n,v])=>[n,v.sha256]))};
++ journal.record('validation-result',result);journal.close();exclusiveWrite(join(output,`retention-checks-i${iteration}.json`),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));if(result.status==='BLOCKED')process.exitCode=1;
++}
+--- generated/appearance-fapp1:Q1-r1
++++ generated/appearance-fapp1:retention-r2
+@@ -56,0 +57 @@
++import {createJournal,trackOwned,closeOwned,finalizeEvidence,bounded,exclusiveWrite,errorInfo} from "./q1-evidence-retention.mjs";
+@@ -104,0 +106,2 @@
++const q1Journal=createJournal(evidencePath),q1Owners=[];
++const q1Record=(name,value={})=>q1Journal.record(name,value);
+@@ -121 +124 @@
+-  records.push({ name, ...value });
++  q1Journal.record(name,value);records.push({ name, ...value });
+@@ -370,0 +374 @@
++  q1Owners.push(trackOwned(proc,profile,q1Record));
+@@ -474,14 +478 @@
+-async function closeBrowser() {
+-  const current = browser;
+-  if (!current) return { graceful: true };
+-  browser = null;
+-  current.send("Browser.close").catch(() => {});
+-  const graceful = await Promise.race([current.exited.then(() => true), delay(8000).then(() => false)]);
+-  if (!graceful) {
+-    current.proc.kill("SIGTERM");
+-    await Promise.race([current.exited, delay(3000)]);
+-    if (current.proc.exitCode === null && current.proc.signalCode === null) current.proc.kill("SIGKILL");
+-  }
+-  current.open = false;
+-  return { graceful };
+-}
++async function closeBrowser(){const current=browser;browser=null;const outcomes=[];for(const owner of q1Owners)if(!owner.closed)outcomes.push(await closeOwned(owner,current?()=>current.send("Browser.close"):null,q1Record));return{complete:outcomes.every(x=>x.complete),errors:outcomes.flatMap(x=>x.errors),outcomes};}
+@@ -947 +938 @@
+-  writeFileSync(join(evidenceDir, file), buffer, { flag: "wx" });
++  exclusiveWrite(join(evidenceDir, file),buffer);
+@@ -2253,6 +2243,0 @@
+-  writeFileSync(evidencePath, `${records.map((entry) => JSON.stringify(entry)).join("\n")}\n`, { flag: "wx" });
+-  await closeBrowser().catch(() => {});
+-  server?.closeAllConnections?.();
+-  server?.close();
+-  await delay(300);
+-  rmSync(directory, { recursive: true, force: true });
+@@ -2259,0 +2245,4 @@
++  const q1PrimaryExit=process.exitCode;
++  const q1Final={status:"UNQUALIFIED",primaryExit:q1PrimaryExit,primaryError:harnessError?errorInfo(harnessError):null};
++  await finalizeEvidence({journal:q1Journal,status:q1Final,resultName:"evidence-finalization",finalizers:[["owned-browsers",async()=>{const outcomes=[];for(const owner of q1Owners)if(!owner.closed)outcomes.push(await closeOwned(owner,browser?()=>browser.send("Browser.close"):null,q1Record));return{complete:outcomes.every(x=>x.complete),errors:outcomes.flatMap(x=>x.errors),outcomes};}],["server-close",()=>new Promise((r,j)=>{if(!server)return r();server.closeAllConnections?.();server.close(e=>e&&e.code!=="ERR_SERVER_NOT_RUNNING"?j(e):r());})],["directory-retention",()=>{q1Record("directory-retained",{path:directory,reason:"descendant quiescence uncertain; no profile deletion"});return{complete:true,retained:directory};}]]});
++  process.exitCode=q1Final.cleanupErrors.length||q1Final.persistenceErrors.length?1:q1PrimaryExit;
+--- generated/appearance-fapp2:Q1-r1
++++ generated/appearance-fapp2:retention-r2
+@@ -86,0 +87 @@
++import {createJournal,trackOwned,closeOwned,finalizeEvidence,bounded,exclusiveWrite,errorInfo} from "./q1-evidence-retention.mjs";
+@@ -139,0 +141,2 @@
++const q1Journal=createJournal(evidencePath),q1Owners=[];
++const q1Record=(name,value={})=>q1Journal.record(name,value);
+@@ -156 +159 @@
+-  records.push({ name, ...value });
++  q1Journal.record(name,value);records.push({ name, ...value });
+@@ -407,0 +411 @@
++  q1Owners.push(trackOwned(proc,profile,q1Record));
+@@ -511,14 +515 @@
+-async function closeBrowser() {
+-  const current = browser;
+-  if (!current) return { graceful: true };
+-  browser = null;
+-  current.send("Browser.close").catch(() => {});
+-  const graceful = await Promise.race([current.exited.then(() => true), delay(8000).then(() => false)]);
+-  if (!graceful) {
+-    current.proc.kill("SIGTERM");
+-    await Promise.race([current.exited, delay(3000)]);
+-    if (current.proc.exitCode === null && current.proc.signalCode === null) current.proc.kill("SIGKILL");
+-  }
+-  current.open = false;
+-  return { graceful };
+-}
++async function closeBrowser(){const current=browser;browser=null;const outcomes=[];for(const owner of q1Owners)if(!owner.closed)outcomes.push(await closeOwned(owner,current?()=>current.send("Browser.close"):null,q1Record));return{complete:outcomes.every(x=>x.complete),errors:outcomes.flatMap(x=>x.errors),outcomes};}
+@@ -984 +975 @@
+-  writeFileSync(join(evidenceDir, file), buffer, { flag: "wx" });
++  exclusiveWrite(join(evidenceDir, file),buffer);
+@@ -2989,6 +2979,0 @@
+-  writeFileSync(evidencePath, `${records.map((entry) => JSON.stringify(entry)).join("\n")}\n`, { flag: "wx" });
+-  await closeBrowser().catch(() => {});
+-  server?.closeAllConnections?.();
+-  server?.close();
+-  await delay(300);
+-  rmSync(directory, { recursive: true, force: true });
+@@ -2995,0 +2981,4 @@
++  const q1PrimaryExit=process.exitCode;
++  const q1Final={status:"UNQUALIFIED",primaryExit:q1PrimaryExit,primaryError:harnessError?errorInfo(harnessError):null};
++  await finalizeEvidence({journal:q1Journal,status:q1Final,resultName:"evidence-finalization",finalizers:[["owned-browsers",async()=>{const outcomes=[];for(const owner of q1Owners)if(!owner.closed)outcomes.push(await closeOwned(owner,browser?()=>browser.send("Browser.close"):null,q1Record));return{complete:outcomes.every(x=>x.complete),errors:outcomes.flatMap(x=>x.errors),outcomes};}],["server-close",()=>new Promise((r,j)=>{if(!server)return r();server.closeAllConnections?.();server.close(e=>e&&e.code!=="ERR_SERVER_NOT_RUNNING"?j(e):r());})],["directory-retention",()=>{q1Record("directory-retained",{path:directory,reason:"descendant quiescence uncertain; no profile deletion"});return{complete:true,retained:directory};}]]});
++  process.exitCode=q1Final.cleanupErrors.length||q1Final.persistenceErrors.length?1:q1PrimaryExit;
+--- generated/appearance-accepted:Q1-r1
++++ generated/appearance-accepted:retention-r2
+@@ -108,0 +109 @@
++import {createJournal,trackOwned,closeOwned,finalizeEvidence,bounded,exclusiveWrite,errorInfo} from "./q1-evidence-retention.mjs";
+@@ -163,0 +165,2 @@
++const q1Journal=createJournal(evidencePath),q1Owners=[];
++const q1Record=(name,value={})=>q1Journal.record(name,value);
+@@ -180 +183 @@
+-  records.push({ name, ...value });
++  q1Journal.record(name,value);records.push({ name, ...value });
+@@ -435,0 +439 @@
++  q1Owners.push(trackOwned(proc,profile,q1Record));
+@@ -539,14 +543 @@
+-async function closeBrowser() {
+-  const current = browser;
+-  if (!current) return { graceful: true };
+-  browser = null;
+-  current.send("Browser.close").catch(() => {});
+-  const graceful = await Promise.race([current.exited.then(() => true), delay(8000).then(() => false)]);
+-  if (!graceful) {
+-    current.proc.kill("SIGTERM");
+-    await Promise.race([current.exited, delay(3000)]);
+-    if (current.proc.exitCode === null && current.proc.signalCode === null) current.proc.kill("SIGKILL");
+-  }
+-  current.open = false;
+-  return { graceful };
+-}
++async function closeBrowser(){const current=browser;browser=null;const outcomes=[];for(const owner of q1Owners)if(!owner.closed)outcomes.push(await closeOwned(owner,current?()=>current.send("Browser.close"):null,q1Record));return{complete:outcomes.every(x=>x.complete),errors:outcomes.flatMap(x=>x.errors),outcomes};}
+@@ -1012 +1003 @@
+-  writeFileSync(join(evidenceDir, file), buffer, { flag: "wx" });
++  exclusiveWrite(join(evidenceDir, file),buffer);
+@@ -3484,6 +3474,0 @@
+-  writeFileSync(evidencePath, `${records.map((entry) => JSON.stringify(entry)).join("\n")}\n`, { flag: "wx" });
+-  await closeBrowser().catch(() => {});
+-  server?.closeAllConnections?.();
+-  server?.close();
+-  await delay(300);
+-  rmSync(directory, { recursive: true, force: true });
+@@ -3490,0 +3476,4 @@
++  const q1PrimaryExit=process.exitCode;
++  const q1Final={status:"UNQUALIFIED",primaryExit:q1PrimaryExit,primaryError:harnessError?errorInfo(harnessError):null};
++  await finalizeEvidence({journal:q1Journal,status:q1Final,resultName:"evidence-finalization",finalizers:[["owned-browsers",async()=>{const outcomes=[];for(const owner of q1Owners)if(!owner.closed)outcomes.push(await closeOwned(owner,browser?()=>browser.send("Browser.close"):null,q1Record));return{complete:outcomes.every(x=>x.complete),errors:outcomes.flatMap(x=>x.errors),outcomes};}],["server-close",()=>new Promise((r,j)=>{if(!server)return r();server.closeAllConnections?.();server.close(e=>e&&e.code!=="ERR_SERVER_NOT_RUNNING"?j(e):r());})],["directory-retention",()=>{q1Record("directory-retained",{path:directory,reason:"descendant quiescence uncertain; no profile deletion"});return{complete:true,retained:directory};}]]});
++  process.exitCode=q1Final.cleanupErrors.length||q1Final.persistenceErrors.length?1:q1PrimaryExit;
+--- generated/apprail-accepted:Q1-r1
++++ generated/apprail-accepted:retention-r2
+@@ -55,0 +56 @@
++import {createJournal,trackOwned,closeOwned,finalizeEvidence,bounded,exclusiveWrite,errorInfo} from "./q1-evidence-retention.mjs";
+@@ -125,0 +127,2 @@
++const q1Journal=createJournal(evidencePath),q1Owners=[];
++const q1Record=(name,value={})=>q1Journal.record(name,value);
+@@ -143 +146 @@
+-  records.push({ name, ...value });
++  q1Journal.record(name,value);records.push({ name, ...value });
+@@ -362,0 +366 @@
++  q1Owners.push(trackOwned(proc,profile,q1Record));
+@@ -929 +933 @@
+-  writeFileSync(join(evidenceDir, file), buffer, { flag: "wx" });
++  exclusiveWrite(join(evidenceDir, file),buffer);
+@@ -1876,14 +1879,0 @@
+-  writeFileSync(evidencePath, `${records.map((entry) => JSON.stringify(entry)).join("\n")}\n`, { flag: "wx" });
+-  if (browser) {
+-    browser.send("Browser.close").catch(() => {});
+-    const graceful = await Promise.race([browser.exited.then(() => true), delay(8000).then(() => false)]);
+-    if (!graceful) {
+-      browser.proc.kill("SIGTERM");
+-      await Promise.race([browser.exited, delay(3000)]);
+-      if (browser.proc.exitCode === null && browser.proc.signalCode === null) browser.proc.kill("SIGKILL");
+-    }
+-  }
+-  server?.closeAllConnections?.();
+-  server?.close();
+-  await delay(300);
+-  rmSync(directory, { recursive: true, force: true });
+@@ -1890,0 +1881,4 @@
++  const q1PrimaryExit=process.exitCode;
++  const q1Final={status:"UNQUALIFIED",primaryExit:q1PrimaryExit,primaryError:harnessError?errorInfo(harnessError):null};
++  await finalizeEvidence({journal:q1Journal,status:q1Final,resultName:"evidence-finalization",finalizers:[["owned-browsers",async()=>{const outcomes=[];for(const owner of q1Owners)if(!owner.closed)outcomes.push(await closeOwned(owner,browser?()=>browser.send("Browser.close"):null,q1Record));return{complete:outcomes.every(x=>x.complete),errors:outcomes.flatMap(x=>x.errors),outcomes};}],["server-close",()=>new Promise((r,j)=>{if(!server)return r();server.closeAllConnections?.();server.close(e=>e&&e.code!=="ERR_SERVER_NOT_RUNNING"?j(e):r());})],["directory-retention",()=>{q1Record("directory-retained",{path:directory,reason:"descendant quiescence uncertain; no profile deletion"});return{complete:true,retained:directory};}]]});
++  process.exitCode=q1Final.cleanupErrors.length||q1Final.persistenceErrors.length?1:q1PrimaryExit;
+--- generated/geometry-old:Q1-r1
++++ generated/geometry-old:retention-r2
+@@ -8,0 +9 @@
++import {createJournal,trackOwned,closeOwned,finalizeEvidence,bounded,exclusiveWrite,errorInfo} from "./q1-evidence-retention.mjs";
+@@ -45,0 +47,2 @@
++const q1Journal=createJournal(evidencePath),q1Owners=[];
++const q1Record=(name,value={})=>q1Journal.record(name,value);
+@@ -61 +64 @@
+-  records.push({ name, ...value });
++  q1Journal.record(name,value);records.push({ name, ...value });
+@@ -230,0 +234 @@
++  q1Owners.push(trackOwned(proc,profile,q1Record));
+@@ -435 +439 @@
+-  writeFileSync(join(evidenceDir, file), buffer, { flag: "wx" });
++  exclusiveWrite(join(evidenceDir, file),buffer);
+@@ -1307 +1311 @@
+-    writeFileSync(join(evidenceDir, file), buffer, { flag: "wx" });
++    exclusiveWrite(join(evidenceDir, file),buffer);
+@@ -1776,14 +1779,0 @@
+-  writeFileSync(evidencePath, `${records.map((entry) => JSON.stringify(entry)).join("\n")}\n`, { flag: "wx" });
+-  if (browser) {
+-    browser.send("Browser.close").catch(() => {});
+-    const graceful = await Promise.race([browser.exited.then(() => true), delay(8000).then(() => false)]);
+-    if (!graceful) {
+-      browser.proc.kill("SIGTERM");
+-      await Promise.race([browser.exited, delay(3000)]);
+-      if (browser.proc.exitCode === null && browser.proc.signalCode === null) browser.proc.kill("SIGKILL");
+-    }
+-  }
+-  server?.closeAllConnections?.();
+-  server?.close();
+-  await delay(300);
+-  rmSync(directory, { recursive: true, force: true });
+@@ -1790,0 +1781,4 @@
++  const q1PrimaryExit=process.exitCode;
++  const q1Final={status:"UNQUALIFIED",primaryExit:q1PrimaryExit,primaryError:harnessError?errorInfo(harnessError):null};
++  await finalizeEvidence({journal:q1Journal,status:q1Final,resultName:"evidence-finalization",finalizers:[["owned-browsers",async()=>{const outcomes=[];for(const owner of q1Owners)if(!owner.closed)outcomes.push(await closeOwned(owner,browser?()=>browser.send("Browser.close"):null,q1Record));return{complete:outcomes.every(x=>x.complete),errors:outcomes.flatMap(x=>x.errors),outcomes};}],["server-close",()=>new Promise((r,j)=>{if(!server)return r();server.closeAllConnections?.();server.close(e=>e&&e.code!=="ERR_SERVER_NOT_RUNNING"?j(e):r());})],["directory-retention",()=>{q1Record("directory-retained",{path:directory,reason:"descendant quiescence uncertain; no profile deletion"});return{complete:true,retained:directory};}]]});
++  process.exitCode=q1Final.cleanupErrors.length||q1Final.persistenceErrors.length?1:q1PrimaryExit;
+--- generated/geometry-new:Q1-r1
++++ generated/geometry-new:retention-r2
+@@ -8,0 +9 @@
++import {createJournal,trackOwned,closeOwned,finalizeEvidence,bounded,exclusiveWrite,errorInfo} from "./q1-evidence-retention.mjs";
+@@ -46,0 +48,2 @@
++const q1Journal=createJournal(evidencePath),q1Owners=[];
++const q1Record=(name,value={})=>q1Journal.record(name,value);
+@@ -70 +73 @@
+-  records.push({ name, ...value });
++  q1Journal.record(name,value);records.push({ name, ...value });
+@@ -239,0 +243 @@
++  q1Owners.push(trackOwned(proc,profile,q1Record));
+@@ -444 +448 @@
+-  writeFileSync(join(evidenceDir, file), buffer, { flag: "wx" });
++  exclusiveWrite(join(evidenceDir, file),buffer);
+@@ -1346 +1350 @@
+-    writeFileSync(join(evidenceDir, file), buffer, { flag: "wx" });
++    exclusiveWrite(join(evidenceDir, file),buffer);
+@@ -1815,14 +1818,0 @@
+-  writeFileSync(evidencePath, `${records.map((entry) => JSON.stringify(entry)).join("\n")}\n`, { flag: "wx" });
+-  if (browser) {
+-    browser.send("Browser.close").catch(() => {});
+-    const graceful = await Promise.race([browser.exited.then(() => true), delay(8000).then(() => false)]);
+-    if (!graceful) {
+-      browser.proc.kill("SIGTERM");
+-      await Promise.race([browser.exited, delay(3000)]);
+-      if (browser.proc.exitCode === null && browser.proc.signalCode === null) browser.proc.kill("SIGKILL");
+-    }
+-  }
+-  server?.closeAllConnections?.();
+-  server?.close();
+-  await delay(300);
+-  rmSync(directory, { recursive: true, force: true });
+@@ -1829,0 +1820,4 @@
++  const q1PrimaryExit=process.exitCode;
++  const q1Final={status:"UNQUALIFIED",primaryExit:q1PrimaryExit,primaryError:harnessError?errorInfo(harnessError):null};
++  await finalizeEvidence({journal:q1Journal,status:q1Final,resultName:"evidence-finalization",finalizers:[["owned-browsers",async()=>{const outcomes=[];for(const owner of q1Owners)if(!owner.closed)outcomes.push(await closeOwned(owner,browser?()=>browser.send("Browser.close"):null,q1Record));return{complete:outcomes.every(x=>x.complete),errors:outcomes.flatMap(x=>x.errors),outcomes};}],["server-close",()=>new Promise((r,j)=>{if(!server)return r();server.closeAllConnections?.();server.close(e=>e&&e.code!=="ERR_SERVER_NOT_RUNNING"?j(e):r());})],["directory-retention",()=>{q1Record("directory-retained",{path:directory,reason:"descendant quiescence uncertain; no profile deletion"});return{complete:true,retained:directory};}]]});
++  process.exitCode=q1Final.cleanupErrors.length||q1Final.persistenceErrors.length?1:q1PrimaryExit;

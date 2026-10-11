@@ -1,0 +1,891 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+features_package_tree=074659c050fadd11ed3ff99274e441b48771b490
+mode=host
+suffix=before1
+include=docs/reviews/web-features-recovery-independent/host.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-independent/verify-fixed.mjs f359be6 host before1
+runner_checkout_head=c49dd505a9d84aac17dc0d5fcdb3a2648bd15a41
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-features-panel/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-host-78L5Xj/features-host-host.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-host-78L5Xj/.report-host.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 host.test.tsx=816e870ac123f12fced9a35285936627c8d86c3390fb0b905bcf0419d5f722f6 verify-fixed.mjs=d92901b477567a08ced08ec0c37318b5af31e2f459320dfa9b0caa7e93de72c1
+archive_file_sha256 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx=987c38250554f05eee185073f92fdfafc504b5e3f9c183658fc5aeb583ce50ea packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx=14053daaffeee27f151221a197756ae043a2de3a8823d15342722eea5855e993 packages/xai-web-settings-features-panel/src/types.ts=bd6b35990e4f9de9719303ff528630b17a1c6ed02bbb06dfd96c5878cf727c53 packages/xai-web-settings-features-panel/src/index.ts=cf89e7454252927a457f48f9e4bcf9190219b94862d896240999626a1b097c68 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/xai-web-shell/src/Shell.tsx=7d46423f40adc5412f54b701c2c93ab4f7529e329dc22766f387d78f614f8df0 packages/xai-web-shell/src/AppRail.tsx=6312caa162a7d194774bf95282c203ddc633ccc54068edcd2854dfbfd4633f67 apps/web/src/routes/modules/composedSettingsRegistration.tsx=bd2ba2dd92da486ce9d3890fe74af6d3878b3394ed410014313412fdceee377d apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 apps/web/src/routes/modules/settingsDeparture.ts=80c3a5787df8eb02102c4a508f2fe67c1fbd6a6b8ba7f16b3a65c3f542c8548b apps/web/src/routes/modules/shellRegistrations.tsx=c003c499ca3330ff6e3b7e738df4e3366d0daca141d65327dacc3d3665e1b8fe
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+forbidden_source_roots /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0eeecab325f25ea7/packages /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0eeecab325f25ea7/apps /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0eeecab325f25ea7/docs
+vitest_exit=1
+harness_checks=PASS (6/6)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-host-78L5Xj
+
+ ✓ docs/reviews/web-features-recovery-independent/host.test.tsx > FIXTURE field table matches the archive; storage injector, Web Lock, confirm, StorageEvent, history and error recorders work 28ms
+stdout | docs/reviews/web-features-recovery-independent/host.test.tsx > FIXTURE the host observers detect a real AccountDataGate relock and remount (generation-marker StorageEvent)
+OBSERVED FIXTURE-marker-event {"confirmCalls":0,"confirmMessages":[],"featureSetAttempts":0,"featureRemoveAttempts":[],"bytesAfter":{"tasks":"true","board":"false","dashboard":"true","calendar":"false","matrix":"true","pomodoro":"false","habits":"true","meditation":"false"},"nullKeyStorageEvents":0,"keyedStorageEvents":["xai:account:v1:features-host-parent-A:committed-generation"],"scopeChanged":true,"scopeTransitions":[{"kind":"locked","accountId":"features-host-parent-A","generation":null,"epochDelta":1},{"kind":"account","accountId":"features-host-parent-A","generation":"g1","epochDelta":2}],"accountGateShown":true,"remounted":{"featuresPane":true,"settingsSidebar":true,"appRail":true,"originalSwitchesDetached":8},"ariaCheckedMutationsOnOriginalSwitches":[],"displayedAfter":{"tasks":"true","board":"false","dashboard":"true","calendar":"false","matrix":"true","pomodoro":"false","habits":"true","meditation":"false"},"dialogOpen":false}
+
+ ✓ docs/reviews/web-features-recovery-independent/host.test.tsx > FIXTURE jsdom browser history reaches the production router factory as a blockable POP 73ms
+stdout | docs/reviews/web-features-recovery-independent/host.test.tsx > PC1 clean Features: zero Features writes at mount, an undisturbed host, no unload warning, sign-out and sidebar departure proceed
+OBSERVED PC1-beforeunload {"prevented":false,"storageAttempts":0}
+
+ ✓ docs/reviews/web-features-recovery-independent/host.test.tsx > FIXTURE the host observers detect a real AccountDataGate relock and remount (generation-marker StorageEvent) 116ms
+ ✓ docs/reviews/web-features-recovery-independent/host.test.tsx > PC1 clean Features: zero Features writes at mount, an undisturbed host, no unload warning, sign-out and sidebar departure proceed 120ms
+ ✓ docs/reviews/web-features-recovery-independent/host.test.tsx > PC2 unfaulted toggles of all 8 switches write exact unscoped bytes, and departure then proceeds 225ms
+stdout | docs/reviews/web-features-recovery-independent/host.test.tsx > PC4 an accepted, unfaulted Reset to defaults removes all 8 keys without writing, and departure then proceeds
+OBSERVED PC4-clean-reset {"confirmCalls":1,"confirmMessages":["Reset every preference to defaults? This clears saved theme, layout, and module toggles."],"featureSetAttempts":0,"featureRemoveAttempts":[{"key":"xai_pref_features_tasks","threw":false},{"key":"xai_pref_features_board","threw":false},{"key":"xai_pref_features_dashboard","threw":false},{"key":"xai_pref_features_calendar","threw":false},{"key":"xai_pref_features_matrix","threw":false},{"key":"xai_pref_features_pomodoro","threw":false},{"key":"xai_pref_features_habits","threw":false},{"key":"xai_pref_features_meditation","threw":false}],"bytesAfter":{"tasks":null,"board":null,"dashboard":null,"calendar":null,"matrix":null,"pomodoro":null,"habits":null,"meditation":null},"nullKeyStorageEvents":1,"keyedStorageEvents":[],"scopeChanged":true,"scopeTransitions":[{"kind":"locked","accountId":"features-host-parent-A","generation":null,"epochDelta":1},{"kind":"account","accountId":"features-host-parent-A","generation":"g1","epochDelta":2}],"accountGateShown":true,"remounted":{"featuresPane":true,"settingsSidebar":true,"appRail":true,"originalSwitchesDetached":8},"ariaCheckedMutationsOnOriginalSwitches":[],"displayedAfter":{"tasks":"true","board":"true","dashboard":"true","calendar":"true","matrix":"true","pomodoro":"true","habits":"true","meditation":"true"},"dialogOpen":false}
+
+ ✓ docs/reviews/web-features-recovery-independent/host.test.tsx > PC3 clean Features: programmatic, Back, Forward, relative-with-state, sidebar and AppRail navigation all proceed 255ms
+ ✓ docs/reviews/web-features-recovery-independent/host.test.tsx > PC4 an accepted, unfaulted Reset to defaults removes all 8 keys without writing, and departure then proceeds 130ms
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'tasks': a denied physical write keeps the latest choice displayed [H1 host] 58ms
+   → H1(host) Tasks: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'board': a denied physical write keeps the latest choice displayed [H1 host] 56ms
+   → H1(host) Boards: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'dashboard': a denied physical write keeps the latest choice displayed [H1 host] 57ms
+   → H1(host) Dashboard: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'calendar': a denied physical write keeps the latest choice displayed [H1 host] 59ms
+   → H1(host) Calendar: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'matrix': a denied physical write keeps the latest choice displayed [H1 host] 60ms
+   → H1(host) Matrix: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'pomodoro': a denied physical write keeps the latest choice displayed [H1 host] 58ms
+   → H1(host) Pomodoro: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'habits': a denied physical write keeps the latest choice displayed [H1 host] 58ms
+   → H1(host) Habits: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'meditation': a denied physical write keeps the latest choice displayed [H1 host] 59ms
+   → H1(host) Meditation: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'tasks': a Settings sidebar departure is held after a denied write [H8 route] 83ms
+   → H8(host) Settings sidebar row: the router stays on Features while the failed Tasks choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'board': a Settings sidebar departure is held after a denied write [H8 route] 84ms
+   → H8(host) Settings sidebar row: the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'dashboard': a Settings sidebar departure is held after a denied write [H8 route] 81ms
+   → H8(host) Settings sidebar row: the router stays on Features while the failed Dashboard choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'calendar': a Settings sidebar departure is held after a denied write [H8 route] 82ms
+   → H8(host) Settings sidebar row: the router stays on Features while the failed Calendar choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'matrix': a Settings sidebar departure is held after a denied write [H8 route] 80ms
+   → H8(host) Settings sidebar row: the router stays on Features while the failed Matrix choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'pomodoro': a Settings sidebar departure is held after a denied write [H8 route] 75ms
+   → H8(host) Settings sidebar row: the router stays on Features while the failed Pomodoro choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'habits': a Settings sidebar departure is held after a denied write [H8 route] 78ms
+   → H8(host) Settings sidebar row: the router stays on Features while the failed Habits choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'meditation': a Settings sidebar departure is held after a denied write [H8 route] 76ms
+   → H8(host) Settings sidebar row: the router stays on Features while the failed Meditation choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'tasks': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out] 70ms
+   → H8(host) sign-out Tasks: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'board': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out] 76ms
+   → H8(host) sign-out Boards: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'dashboard': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out] 77ms
+   → H8(host) sign-out Dashboard: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'calendar': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out] 75ms
+   → H8(host) sign-out Calendar: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'matrix': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out] 73ms
+   → H8(host) sign-out Matrix: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'pomodoro': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out] 78ms
+   → H8(host) sign-out Pomodoro: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'habits': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out] 73ms
+   → H8(host) sign-out Habits: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'meditation': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out] 74ms
+   → H8(host) sign-out Meditation: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > N-rail board: an AppRail module button departure is held [H8 AppRail] 86ms
+   → H8(host) AppRail Tasks button: the router stays on Features while the failed Boards choice is unsaved: expected '/app/tasks' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > N-programmatic board: programmatic module navigation is held [H8 programmatic] 83ms
+   → H8(host) router.navigate("/app/dashboard"): the router stays on Features while the failed Boards choice is unsaved: expected '/app/dashboard' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > N-back-pop board: a browser Back traversal (POP through the blocker) is held [H8 Back] 94ms
+   → H8(host) browser Back (history POP): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > N-forward-pop board: a browser Forward traversal (POP through the blocker) is held [H8 Forward] 121ms
+   → H8(host) browser Forward (history POP): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > N-back-delta board: programmatic history Back router.navigate(-1) is held [H8 Back] 86ms
+   → H8(host) router.navigate(-1): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > N-forward-delta board: programmatic history Forward router.navigate(1) is held [H8 Forward] 127ms
+   → H8(host) router.navigate(1): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+stdout | docs/reviews/web-features-recovery-independent/host.test.tsx > N-beforeunload board: a cancelable beforeunload warns synchronously with zero storage attempts [H8 beforeunload]
+OBSERVED N-beforeunload-board {"prevented":false,"storageAttempts":0}
+
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > N-relative board: path-relative navigation with state is held [H8 relative] 76ms
+   → H8(host) router.navigate("../hotkeys", { relative: "path", state }): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > N-beforeunload board: a cancelable beforeunload warns synchronously with zero storage attempts [H8 beforeunload] 58ms
+   → H8(host) beforeunload: the failed Boards choice makes a cancelable beforeunload warn (event canceled): expected false to be true // Object.is equality
+stdout | docs/reviews/web-features-recovery-independent/host.test.tsx > R-route calendar: after an accepted Reset to defaults whose Calendar removal is denied, a sidebar departure is held [H5/H8 route]
+OBSERVED R-route-failed-reset {"confirmCalls":1,"confirmMessages":["Reset every preference to defaults? This clears saved theme, layout, and module toggles."],"featureSetAttempts":0,"featureRemoveAttempts":[{"key":"xai_pref_features_tasks","threw":false},{"key":"xai_pref_features_board","threw":false},{"key":"xai_pref_features_dashboard","threw":false},{"key":"xai_pref_features_calendar","threw":true},{"key":"xai_pref_features_matrix","threw":false},{"key":"xai_pref_features_pomodoro","threw":false},{"key":"xai_pref_features_habits","threw":false},{"key":"xai_pref_features_meditation","threw":false}],"bytesAfter":{"tasks":null,"board":null,"dashboard":null,"calendar":"false","matrix":null,"pomodoro":null,"habits":null,"meditation":null},"nullKeyStorageEvents":1,"keyedStorageEvents":[],"scopeChanged":true,"scopeTransitions":[{"kind":"locked","accountId":"features-host-parent-A","generation":null,"epochDelta":1},{"kind":"account","accountId":"features-host-parent-A","generation":"g1","epochDelta":2}],"accountGateShown":true,"remounted":{"featuresPane":true,"settingsSidebar":true,"appRail":true,"originalSwitchesDetached":8},"ariaCheckedMutationsOnOriginalSwitches":[],"displayedAfter":{"tasks":"true","board":"true","dashboard":"true","calendar":"false","matrix":"true","pomodoro":"true","habits":"true","meditation":"true"},"dialogOpen":false}
+
+ × docs/reviews/web-features-recovery-independent/host.test.tsx > R-route calendar: after an accepted Reset to defaults whose Calendar removal is denied, a sidebar departure is held [H5/H8 route] 107ms
+   → H8(host) failed reset, then Settings sidebar row: the router stays on Features while the failed Calendar reset is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  33 failed | 7 passed (40)
+   Start at  03:10:10
+   Duration  6.74s (transform 1.74s, setup 0ms, collect 2.60s, tests 3.49s, environment 369ms, prepare 76ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-host-78L5Xj/.report-host.json
+
+---- stderr ----
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'tasks': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_features_tasks.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'board': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'dashboard': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_features_dashboard.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'calendar': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'matrix': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_features_matrix.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'pomodoro': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_features_pomodoro.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'habits': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_features_habits.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'meditation': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_features_meditation.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'tasks': a Settings sidebar departure is held after a denied write [H8 route]
+[plugin-web-storage] quota exceeded for xai_pref_features_tasks.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'board': a Settings sidebar departure is held after a denied write [H8 route]
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'dashboard': a Settings sidebar departure is held after a denied write [H8 route]
+[plugin-web-storage] quota exceeded for xai_pref_features_dashboard.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'calendar': a Settings sidebar departure is held after a denied write [H8 route]
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'matrix': a Settings sidebar departure is held after a denied write [H8 route]
+[plugin-web-storage] quota exceeded for xai_pref_features_matrix.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'pomodoro': a Settings sidebar departure is held after a denied write [H8 route]
+[plugin-web-storage] quota exceeded for xai_pref_features_pomodoro.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'habits': a Settings sidebar departure is held after a denied write [H8 route]
+[plugin-web-storage] quota exceeded for xai_pref_features_habits.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'meditation': a Settings sidebar departure is held after a denied write [H8 route]
+[plugin-web-storage] quota exceeded for xai_pref_features_meditation.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'tasks': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_features_tasks.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'board': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'dashboard': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_features_dashboard.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'calendar': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'matrix': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_features_matrix.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'pomodoro': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_features_pomodoro.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'habits': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_features_habits.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'meditation': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_features_meditation.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > N-rail board: an AppRail module button departure is held [H8 AppRail]
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > N-programmatic board: programmatic module navigation is held [H8 programmatic]
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > N-back-pop board: a browser Back traversal (POP through the blocker) is held [H8 Back]
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > N-forward-pop board: a browser Forward traversal (POP through the blocker) is held [H8 Forward]
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > N-back-delta board: programmatic history Back router.navigate(-1) is held [H8 Back]
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > N-forward-delta board: programmatic history Forward router.navigate(1) is held [H8 Forward]
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > N-relative board: path-relative navigation with state is held [H8 relative]
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-independent/host.test.tsx > N-beforeunload board: a cancelable beforeunload warns synchronously with zero storage attempts [H8 beforeunload]
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 33 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'tasks': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) Tasks: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:824:136
+    822|   expectFeaturesReady(host, "F-a mount");
+    823|   await failedEdit(entry);
+    824|   expect(displayed(entry), `H1(host) ${entry.label}: the latest choice…
+       |                                                                                                                                        ^
+    825|   expect(runtimeErrors, `contract §5 ${entry.label}: a failed toggle r…
+    826| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'board': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) Boards: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:824:136
+    822|   expectFeaturesReady(host, "F-a mount");
+    823|   await failedEdit(entry);
+    824|   expect(displayed(entry), `H1(host) ${entry.label}: the latest choice…
+       |                                                                                                                                        ^
+    825|   expect(runtimeErrors, `contract §5 ${entry.label}: a failed toggle r…
+    826| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'dashboard': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) Dashboard: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:824:136
+    822|   expectFeaturesReady(host, "F-a mount");
+    823|   await failedEdit(entry);
+    824|   expect(displayed(entry), `H1(host) ${entry.label}: the latest choice…
+       |                                                                                                                                        ^
+    825|   expect(runtimeErrors, `contract §5 ${entry.label}: a failed toggle r…
+    826| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'calendar': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) Calendar: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:824:136
+    822|   expectFeaturesReady(host, "F-a mount");
+    823|   await failedEdit(entry);
+    824|   expect(displayed(entry), `H1(host) ${entry.label}: the latest choice…
+       |                                                                                                                                        ^
+    825|   expect(runtimeErrors, `contract §5 ${entry.label}: a failed toggle r…
+    826| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'matrix': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) Matrix: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:824:136
+    822|   expectFeaturesReady(host, "F-a mount");
+    823|   await failedEdit(entry);
+    824|   expect(displayed(entry), `H1(host) ${entry.label}: the latest choice…
+       |                                                                                                                                        ^
+    825|   expect(runtimeErrors, `contract §5 ${entry.label}: a failed toggle r…
+    826| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'pomodoro': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) Pomodoro: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:824:136
+    822|   expectFeaturesReady(host, "F-a mount");
+    823|   await failedEdit(entry);
+    824|   expect(displayed(entry), `H1(host) ${entry.label}: the latest choice…
+       |                                                                                                                                        ^
+    825|   expect(runtimeErrors, `contract §5 ${entry.label}: a failed toggle r…
+    826| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'habits': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) Habits: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:824:136
+    822|   expectFeaturesReady(host, "F-a mount");
+    823|   await failedEdit(entry);
+    824|   expect(displayed(entry), `H1(host) ${entry.label}: the latest choice…
+       |                                                                                                                                        ^
+    825|   expect(runtimeErrors, `contract §5 ${entry.label}: a failed toggle r…
+    826| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-a 'meditation': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) Meditation: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:824:136
+    822|   expectFeaturesReady(host, "F-a mount");
+    823|   await failedEdit(entry);
+    824|   expect(displayed(entry), `H1(host) ${entry.label}: the latest choice…
+       |                                                                                                                                        ^
+    825|   expect(runtimeErrors, `contract §5 ${entry.label}: a failed toggle r…
+    826| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'tasks': a Settings sidebar departure is held after a denied write [H8 route]
+AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Tasks choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:835:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'board': a Settings sidebar departure is held after a denied write [H8 route]
+AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:835:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'dashboard': a Settings sidebar departure is held after a denied write [H8 route]
+AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Dashboard choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:835:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'calendar': a Settings sidebar departure is held after a denied write [H8 route]
+AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Calendar choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:835:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'matrix': a Settings sidebar departure is held after a denied write [H8 route]
+AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Matrix choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:835:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'pomodoro': a Settings sidebar departure is held after a denied write [H8 route]
+AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Pomodoro choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:835:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'habits': a Settings sidebar departure is held after a denied write [H8 route]
+AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Habits choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:835:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-b 'meditation': a Settings sidebar departure is held after a denied write [H8 route]
+AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Meditation choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:835:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'tasks': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+AssertionError: H8(host) sign-out Tasks: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:844:162
+    842|   const start = departureStart(host);
+    843|   const signOut = await requestSignOut();
+    844|   expect(signOut.outcome, `H8(host) sign-out ${entry.label}: voluntary…
+       |                                                                                                                                                                  ^
+    845|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+    846|   expect(dialog, `contract §9 row e ${entry.label}: the held sign-out …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'board': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+AssertionError: H8(host) sign-out Boards: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:844:162
+    842|   const start = departureStart(host);
+    843|   const signOut = await requestSignOut();
+    844|   expect(signOut.outcome, `H8(host) sign-out ${entry.label}: voluntary…
+       |                                                                                                                                                                  ^
+    845|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+    846|   expect(dialog, `contract §9 row e ${entry.label}: the held sign-out …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'dashboard': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+AssertionError: H8(host) sign-out Dashboard: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:844:162
+    842|   const start = departureStart(host);
+    843|   const signOut = await requestSignOut();
+    844|   expect(signOut.outcome, `H8(host) sign-out ${entry.label}: voluntary…
+       |                                                                                                                                                                  ^
+    845|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+    846|   expect(dialog, `contract §9 row e ${entry.label}: the held sign-out …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'calendar': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+AssertionError: H8(host) sign-out Calendar: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:844:162
+    842|   const start = departureStart(host);
+    843|   const signOut = await requestSignOut();
+    844|   expect(signOut.outcome, `H8(host) sign-out ${entry.label}: voluntary…
+       |                                                                                                                                                                  ^
+    845|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+    846|   expect(dialog, `contract §9 row e ${entry.label}: the held sign-out …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'matrix': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+AssertionError: H8(host) sign-out Matrix: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:844:162
+    842|   const start = departureStart(host);
+    843|   const signOut = await requestSignOut();
+    844|   expect(signOut.outcome, `H8(host) sign-out ${entry.label}: voluntary…
+       |                                                                                                                                                                  ^
+    845|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+    846|   expect(dialog, `contract §9 row e ${entry.label}: the held sign-out …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'pomodoro': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+AssertionError: H8(host) sign-out Pomodoro: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:844:162
+    842|   const start = departureStart(host);
+    843|   const signOut = await requestSignOut();
+    844|   expect(signOut.outcome, `H8(host) sign-out ${entry.label}: voluntary…
+       |                                                                                                                                                                  ^
+    845|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+    846|   expect(dialog, `contract §9 row e ${entry.label}: the held sign-out …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'habits': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+AssertionError: H8(host) sign-out Habits: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:844:162
+    842|   const start = departureStart(host);
+    843|   const signOut = await requestSignOut();
+    844|   expect(signOut.outcome, `H8(host) sign-out ${entry.label}: voluntary…
+       |                                                                                                                                                                  ^
+    845|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+    846|   expect(dialog, `contract §9 row e ${entry.label}: the held sign-out …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > F-c 'meditation': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+AssertionError: H8(host) sign-out Meditation: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:844:162
+    842|   const start = departureStart(host);
+    843|   const signOut = await requestSignOut();
+    844|   expect(signOut.outcome, `H8(host) sign-out ${entry.label}: voluntary…
+       |                                                                                                                                                                  ^
+    845|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+    846|   expect(dialog, `contract §9 row e ${entry.label}: the held sign-out …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > N-rail board: an AppRail module button departure is held [H8 AppRail]
+AssertionError: H8(host) AppRail Tasks button: the router stays on Features while the failed Boards choice is unsaved: expected '/app/tasks' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/tasks"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:871:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > N-programmatic board: programmatic module navigation is held [H8 programmatic]
+AssertionError: H8(host) router.navigate("/app/dashboard"): the router stays on Features while the failed Boards choice is unsaved: expected '/app/dashboard' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/dashboard"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:881:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > N-back-pop board: a browser Back traversal (POP through the blocker) is held [H8 Back]
+AssertionError: H8(host) browser Back (history POP): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:894:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > N-forward-pop board: a browser Forward traversal (POP through the blocker) is held [H8 Forward]
+AssertionError: H8(host) browser Forward (history POP): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:910:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > N-back-delta board: programmatic history Back router.navigate(-1) is held [H8 Back]
+AssertionError: H8(host) router.navigate(-1): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:923:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > N-forward-delta board: programmatic history Forward router.navigate(1) is held [H8 Forward]
+AssertionError: H8(host) router.navigate(1): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:939:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > N-relative board: path-relative navigation with state is held [H8 relative]
+AssertionError: H8(host) router.navigate("../hotkeys", { relative: "path", state }): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:949:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > N-beforeunload board: a cancelable beforeunload warns synchronously with zero storage attempts [H8 beforeunload]
+AssertionError: H8(host) beforeunload: the failed Boards choice makes a cancelable beforeunload warn (event canceled): expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:958:133
+    956|   const unload = dispatchBeforeUnload();
+    957|   observed("N-beforeunload-board", unload);
+    958|   expect(unload.prevented, "H8(host) beforeunload: the failed Boards c…
+       |                                                                                                                                     ^
+    959|   expect(unload.storageAttempts, "contract §9: the beforeunload handle…
+    960| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/33]⎯
+
+ FAIL  docs/reviews/web-features-recovery-independent/host.test.tsx > R-route calendar: after an accepted Reset to defaults whose Calendar removal is denied, a sidebar departure is held [H5/H8 route]
+AssertionError: H8(host) failed reset, then Settings sidebar row: the router stays on Features while the failed Calendar reset is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+
+Expected: "/app/settings/features"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-features-recovery-independent/host.test.tsx:435:122
+    433|  */
+    434| async function expectHeldThenStay(host: Host, entry: FieldCase, expect…
+    435|   expect(host.router.state.location.pathname, `H8(host) ${form}: the r…
+       |                                                                                                                          ^
+    436|   expect(window.location.pathname, `H8(host) ${form}: the URL stays on…
+    437|   const dialog = host.ui.queryByRole("dialog", { name: DIALOG });
+ ❯ docs/reviews/web-features-recovery-independent/host.test.tsx:987:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/33]⎯
+
+
+---- runner summary ----
+json_report=success=false numTotalTests=40 numPassedTests=7 numFailedTests=33 numPendingTests=0 numTodoTests=0
+totals cases=40 passed=7 failed=33 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 runtime_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles [], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (21)
+harness PASS no test-file suite error
+case 001 PASSED | FIXTURE field table matches the archive; storage injector, Web Lock, confirm, StorageEvent, history and error recorders work
+case 002 PASSED | FIXTURE jsdom browser history reaches the production router factory as a blockable POP
+case 003 PASSED | FIXTURE the host observers detect a real AccountDataGate relock and remount (generation-marker StorageEvent)
+case 004 PASSED | PC1 clean Features: zero Features writes at mount, an undisturbed host, no unload warning, sign-out and sidebar departure proceed
+case 005 PASSED | PC2 unfaulted toggles of all 8 switches write exact unscoped bytes, and departure then proceeds
+case 006 PASSED | PC3 clean Features: programmatic, Back, Forward, relative-with-state, sidebar and AppRail navigation all proceed
+case 007 PASSED | PC4 an accepted, unfaulted Reset to defaults removes all 8 keys without writing, and departure then proceeds
+case 008 FAILED | F-a 'tasks': a denied physical write keeps the latest choice displayed [H1 host]
+    first: AssertionError: H1(host) Tasks: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+case 009 FAILED | F-a 'board': a denied physical write keeps the latest choice displayed [H1 host]
+    first: AssertionError: H1(host) Boards: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+case 010 FAILED | F-a 'dashboard': a denied physical write keeps the latest choice displayed [H1 host]
+    first: AssertionError: H1(host) Dashboard: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+case 011 FAILED | F-a 'calendar': a denied physical write keeps the latest choice displayed [H1 host]
+    first: AssertionError: H1(host) Calendar: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+case 012 FAILED | F-a 'matrix': a denied physical write keeps the latest choice displayed [H1 host]
+    first: AssertionError: H1(host) Matrix: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+case 013 FAILED | F-a 'pomodoro': a denied physical write keeps the latest choice displayed [H1 host]
+    first: AssertionError: H1(host) Pomodoro: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+case 014 FAILED | F-a 'habits': a denied physical write keeps the latest choice displayed [H1 host]
+    first: AssertionError: H1(host) Habits: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+case 015 FAILED | F-a 'meditation': a denied physical write keeps the latest choice displayed [H1 host]
+    first: AssertionError: H1(host) Meditation: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+case 016 FAILED | F-b 'tasks': a Settings sidebar departure is held after a denied write [H8 route]
+    first: AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Tasks choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 017 FAILED | F-b 'board': a Settings sidebar departure is held after a denied write [H8 route]
+    first: AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 018 FAILED | F-b 'dashboard': a Settings sidebar departure is held after a denied write [H8 route]
+    first: AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Dashboard choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 019 FAILED | F-b 'calendar': a Settings sidebar departure is held after a denied write [H8 route]
+    first: AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Calendar choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 020 FAILED | F-b 'matrix': a Settings sidebar departure is held after a denied write [H8 route]
+    first: AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Matrix choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 021 FAILED | F-b 'pomodoro': a Settings sidebar departure is held after a denied write [H8 route]
+    first: AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Pomodoro choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 022 FAILED | F-b 'habits': a Settings sidebar departure is held after a denied write [H8 route]
+    first: AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Habits choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 023 FAILED | F-b 'meditation': a Settings sidebar departure is held after a denied write [H8 route]
+    first: AssertionError: H8(host) Settings sidebar row: the router stays on Features while the failed Meditation choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 024 FAILED | F-c 'tasks': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+    first: AssertionError: H8(host) sign-out Tasks: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+case 025 FAILED | F-c 'board': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+    first: AssertionError: H8(host) sign-out Boards: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+case 026 FAILED | F-c 'dashboard': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+    first: AssertionError: H8(host) sign-out Dashboard: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+case 027 FAILED | F-c 'calendar': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+    first: AssertionError: H8(host) sign-out Calendar: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+case 028 FAILED | F-c 'matrix': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+    first: AssertionError: H8(host) sign-out Matrix: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+case 029 FAILED | F-c 'pomodoro': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+    first: AssertionError: H8(host) sign-out Pomodoro: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+case 030 FAILED | F-c 'habits': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+    first: AssertionError: H8(host) sign-out Habits: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+case 031 FAILED | F-c 'meditation': voluntary sign-out is held and resolves false on Stay after a denied write [H8 sign-out]
+    first: AssertionError: H8(host) sign-out Meditation: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+case 032 FAILED | N-rail board: an AppRail module button departure is held [H8 AppRail]
+    first: AssertionError: H8(host) AppRail Tasks button: the router stays on Features while the failed Boards choice is unsaved: expected '/app/tasks' to be '/app/settings/features' // Object.is equality
+case 033 FAILED | N-programmatic board: programmatic module navigation is held [H8 programmatic]
+    first: AssertionError: H8(host) router.navigate("/app/dashboard"): the router stays on Features while the failed Boards choice is unsaved: expected '/app/dashboard' to be '/app/settings/features' // Object.is equality
+case 034 FAILED | N-back-pop board: a browser Back traversal (POP through the blocker) is held [H8 Back]
+    first: AssertionError: H8(host) browser Back (history POP): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 035 FAILED | N-forward-pop board: a browser Forward traversal (POP through the blocker) is held [H8 Forward]
+    first: AssertionError: H8(host) browser Forward (history POP): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 036 FAILED | N-back-delta board: programmatic history Back router.navigate(-1) is held [H8 Back]
+    first: AssertionError: H8(host) router.navigate(-1): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 037 FAILED | N-forward-delta board: programmatic history Forward router.navigate(1) is held [H8 Forward]
+    first: AssertionError: H8(host) router.navigate(1): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 038 FAILED | N-relative board: path-relative navigation with state is held [H8 relative]
+    first: AssertionError: H8(host) router.navigate("../hotkeys", { relative: "path", state }): the router stays on Features while the failed Boards choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+case 039 FAILED | N-beforeunload board: a cancelable beforeunload warns synchronously with zero storage attempts [H8 beforeunload]
+    first: AssertionError: H8(host) beforeunload: the failed Boards choice makes a cancelable beforeunload warn (event canceled): expected false to be true // Object.is equality
+case 040 FAILED | R-route calendar: after an accepted Reset to defaults whose Calendar removal is denied, a sidebar departure is held [H5/H8 route]
+    first: AssertionError: H8(host) failed reset, then Settings sidebar row: the router stays on Features while the failed Calendar reset is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/features' // Object.is equality
+observed_lines=5
+observed FIXTURE-marker-event {"confirmCalls":0,"confirmMessages":[],"featureSetAttempts":0,"featureRemoveAttempts":[],"bytesAfter":{"tasks":"true","board":"false","dashboard":"true","calendar":"false","matrix":"true","pomodoro":"false","habits":"true","meditation":"false"},"nullKeyStorageEvents":0,"keyedStorageEvents":["xai:account:v1:features-host-parent-A:committed-generation"],"scopeChanged":true,"scopeTransitions":[{"kind":"locked","accountId":"features-host-parent-A","generation":null,"epochDelta":1},{"kind":"account","accountId":"features-host-parent-A","generation":"g1","epochDelta":2}],"accountGateShown":true,"remounted":{"featuresPane":true,"settingsSidebar":true,"appRail":true,"originalSwitchesDetached":8},"ariaCheckedMutationsOnOriginalSwitches":[],"displayedAfter":{"tasks":"true","board":"false","dashboard":"true","calendar":"false","matrix":"true","pomodoro":"false","habits":"true","meditation":"false"},"dialogOpen":false}
+observed PC1-beforeunload {"prevented":false,"storageAttempts":0}
+observed PC4-clean-reset {"confirmCalls":1,"confirmMessages":["Reset every preference to defaults? This clears saved theme, layout, and module toggles."],"featureSetAttempts":0,"featureRemoveAttempts":[{"key":"xai_pref_features_tasks","threw":false},{"key":"xai_pref_features_board","threw":false},{"key":"xai_pref_features_dashboard","threw":false},{"key":"xai_pref_features_calendar","threw":false},{"key":"xai_pref_features_matrix","threw":false},{"key":"xai_pref_features_pomodoro","threw":false},{"key":"xai_pref_features_habits","threw":false},{"key":"xai_pref_features_meditation","threw":false}],"bytesAfter":{"tasks":null,"board":null,"dashboard":null,"calendar":null,"matrix":null,"pomodoro":null,"habits":null,"meditation":null},"nullKeyStorageEvents":1,"keyedStorageEvents":[],"scopeChanged":true,"scopeTransitions":[{"kind":"locked","accountId":"features-host-parent-A","generation":null,"epochDelta":1},{"kind":"account","accountId":"features-host-parent-A","generation":"g1","epochDelta":2}],"accountGateShown":true,"remounted":{"featuresPane":true,"settingsSidebar":true,"appRail":true,"originalSwitchesDetached":8},"ariaCheckedMutationsOnOriginalSwitches":[],"displayedAfter":{"tasks":"true","board":"true","dashboard":"true","calendar":"true","matrix":"true","pomodoro":"true","habits":"true","meditation":"true"},"dialogOpen":false}
+observed N-beforeunload-board {"prevented":false,"storageAttempts":0}
+observed R-route-failed-reset {"confirmCalls":1,"confirmMessages":["Reset every preference to defaults? This clears saved theme, layout, and module toggles."],"featureSetAttempts":0,"featureRemoveAttempts":[{"key":"xai_pref_features_tasks","threw":false},{"key":"xai_pref_features_board","threw":false},{"key":"xai_pref_features_dashboard","threw":false},{"key":"xai_pref_features_calendar","threw":true},{"key":"xai_pref_features_matrix","threw":false},{"key":"xai_pref_features_pomodoro","threw":false},{"key":"xai_pref_features_habits","threw":false},{"key":"xai_pref_features_meditation","threw":false}],"bytesAfter":{"tasks":null,"board":null,"dashboard":null,"calendar":"false","matrix":null,"pomodoro":null,"habits":null,"meditation":null},"nullKeyStorageEvents":1,"keyedStorageEvents":[],"scopeChanged":true,"scopeTransitions":[{"kind":"locked","accountId":"features-host-parent-A","generation":null,"epochDelta":1},{"kind":"account","accountId":"features-host-parent-A","generation":"g1","epochDelta":2}],"accountGateShown":true,"remounted":{"featuresPane":true,"settingsSidebar":true,"appRail":true,"originalSwitchesDetached":8},"ariaCheckedMutationsOnOriginalSwitches":[],"displayedAfter":{"tasks":"true","board":"true","dashboard":"true","calendar":"false","matrix":"true","pomodoro":"true","habits":"true","meditation":"true"},"dialogOpen":false}
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-host-78L5Xj","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-host-78L5Xj/.features-host-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":[],"include":["docs/reviews/web-features-recovery-independent/host.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-features-panel/src/FeaturesPane.tsx packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx packages/xai-web-settings-features-panel/src/featureIds.ts packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/storage.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-settings-shell/src/SettingsFooter.tsx packages/plugin-web-settings-shell/src/Toggle.tsx packages/plugin-web-settings-shell/src/internal/confirmAction.ts packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/registry.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/settingsPaneComposition.ts apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/routes/modules/settingsDeparture.ts
+pin_modules=558 by package: apps/web=7 docs/reviews=1 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=21 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-settings-appearance=6 packages/xai-web-settings-features-panel=10 packages/xai-web-shell=9 packages/xai-web-tasks=23

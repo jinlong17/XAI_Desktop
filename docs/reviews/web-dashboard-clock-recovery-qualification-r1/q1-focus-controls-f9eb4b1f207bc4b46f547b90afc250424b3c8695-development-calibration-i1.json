@@ -1,0 +1,93 @@
+{
+  "status": "BLOCKED",
+  "formal": false,
+  "unit": "focus-controls",
+  "iteration": 1,
+  "checks": 17,
+  "failures": 1,
+  "error": "Error: PRECONDITION: en-light-375-transformed-style:candidate-discrimination\n    at pre (file:///Users/lijinlong/.codex/worktrees/audit-clock-qualification-q1-20261010/XAI_Desktop/docs/reviews/web-dashboard-clock-recovery-qualification-r1/verify-qualification.mjs:71:143)\n    at isolated (file:///Users/lijinlong/.codex/worktrees/audit-clock-qualification-q1-20261010/XAI_Desktop/docs/reviews/web-dashboard-clock-recovery-qualification-r1/verify-qualification.mjs:104:56)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async file:///Users/lijinlong/.codex/worktrees/audit-clock-qualification-q1-20261010/XAI_Desktop/docs/reviews/web-dashboard-clock-recovery-qualification-r1/verify-qualification.mjs:114:126",
+  "artifacts": [
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-initial-i1.png",
+      "sha256": "f5518c30d9ea156536a56ed2b1630f9775a12df7efb4684071cbfa401c59032c",
+      "width": 375,
+      "height": 900
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-0-outside-target-focused-i1.png",
+      "sha256": "5324aedb76044a47c9e2c10c632222438b27c8487afffa088be0d16db21ec535",
+      "state": "focused",
+      "clip": null,
+      "first": {
+        "left": 53.80000305175781,
+        "top": 110.04000091552734,
+        "right": 168.1999969482422,
+        "bottom": 159.95999145507812
+      },
+      "again": {
+        "left": 56,
+        "top": 111,
+        "right": 166,
+        "bottom": 159
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-0-outside-target-focused-repeat-i1.png",
+      "sha256": "5324aedb76044a47c9e2c10c632222438b27c8487afffa088be0d16db21ec535",
+      "state": "focused-repeat",
+      "clip": null,
+      "first": {
+        "left": 53.80000305175781,
+        "top": 110.04000091552734,
+        "right": 168.1999969482422,
+        "bottom": 159.95999145507812
+      },
+      "again": {
+        "left": 56,
+        "top": 111,
+        "right": 166,
+        "bottom": 159
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-1-outside-next-focused-i1.png",
+      "sha256": "3d039b49efe4e885b62e75c8807acdad9a87248388f27c648581629940d146e9",
+      "state": "focused",
+      "clip": null,
+      "first": {
+        "left": 182,
+        "top": 111,
+        "right": 292,
+        "bottom": 159
+      },
+      "again": {
+        "left": 182,
+        "top": 111,
+        "right": 292,
+        "bottom": 159
+      },
+      "nativeFullViewport": true
+    },
+    {
+      "file": "q1-focus-controls-f9eb4b1f207bc4b46f547b90afc250424b3c8695-development-calibration-en-light-375-transformed-style-1-outside-next-focused-repeat-i1.png",
+      "sha256": "3d039b49efe4e885b62e75c8807acdad9a87248388f27c648581629940d146e9",
+      "state": "focused-repeat",
+      "clip": null,
+      "first": {
+        "left": 182,
+        "top": 111,
+        "right": 292,
+        "bottom": 159
+      },
+      "again": {
+        "left": 182,
+        "top": 111,
+        "right": 292,
+        "bottom": 159
+      },
+      "nativeFullViewport": true
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { parseLocalDateKey } from "@repo/plugin-web-tokens";
 /**
  * Public helpers for creating and resolving Tasks that originate from Board
  * cards. This keeps Board integrations on the public package surface instead
@@ -41,6 +42,7 @@ export function boardLinkedTaskId(
 }
 
 function parseIsoDateOnly(value: string): { year: number; month: number; day: number } | null {
+  if (!parseLocalDateKey(value)) return null;
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
   if (!match) return null;
   const year = Number(match[1]);
@@ -68,7 +70,7 @@ export function bucketIdForBoardDueDate(
   const parts = parseIsoDateOnly(dueDate);
   if (!parts) return "nodate";
   const delta = dayNumberUtc(parts) - todayNumberUtc(now);
-  if (delta < 0) return "overdue";
+  if (delta <= 0) return "overdue";
   if (delta <= 7) return "next7";
   return "later";
 }
@@ -98,6 +100,7 @@ export function taskCardFromBoardLink(input: BoardLinkedTaskInput): TaskCard {
       listId: input.listId,
       cardId: input.cardId,
     },
+    ...(input.dueDate && parseIsoDateOnly(input.dueDate) ? { dueDate: input.dueDate } : {}),
     ...dateDisplayFromIso(input.dueDate),
   };
 }
@@ -106,7 +109,6 @@ function sourceMatches(task: TaskCard, source: BoardTaskLinkSource): boolean {
   return (
     task.source?.type === "board-card" &&
     task.source.boardId === source.boardId &&
-    task.source.listId === source.listId &&
     task.source.cardId === source.cardId
   );
 }
@@ -122,9 +124,9 @@ export function findBoardLinkedTask(
 ): BoardLinkedTaskLookup | null {
   for (const col of cols) {
     const task = col.tasks.find((entry) => sourceMatches(entry, source));
-    if (task) return { task, bucketId: col.id, completed: false };
+    if (task) return { task, bucketId: col.id, completed: task.done === true };
     const completed = col.completed?.find((entry) => sourceMatches(entry, source));
-    if (completed) return { task: completed, bucketId: col.id, completed: true };
+    if (completed) return { task: completed, bucketId: col.id, completed: completed.done !== false };
   }
   return null;
 }
@@ -133,18 +135,19 @@ export function upsertBoardLinkedTask(
   cols: readonly TaskCol[],
   task: TaskCard,
   bucketId: BucketId = "nodate",
+  preserveExisting = false,
 ): TaskCol[] {
   let updatedExisting = false;
   const withoutDuplicate = cols.map((col) => {
     const tasks = col.tasks.map((entry) => {
       if (!sameLinkedTask(entry, task)) return entry;
       updatedExisting = true;
-      return task;
+      return preserveExisting ? entry : task;
     });
     const completed = col.completed?.map((entry) => {
       if (!sameLinkedTask(entry, task)) return entry;
       updatedExisting = true;
-      return task;
+      return preserveExisting ? entry : task;
     });
     return {
       ...col,

@@ -1,0 +1,133 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+features_package_tree=3f25c84b5b582719d74fda8872db4e6e1db388f1
+mode=queues
+suffix=fixed1
+include=docs/reviews/web-features-recovery-sol/queues.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-sol/verify-fixed.mjs 5cd63ff all fixed1
+runner_checkout_head=c516fced2ec8c6fb6a8054c6e6858c315fa4b84c
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-features-panel/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-GaswCs/features-sol-queues.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-GaswCs/.report-queues.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=f0b5d272695026f8e60df6dd2dbf5889790b3d2e834256259e86bb0432050ef8 bytes.test.tsx=904cb0de88eb5047365309df501ebbb8cb725a485963d23df022e7bbd26aba14 fields.test.tsx=506d54cbc39d0b69c53e7f45d4e3fa90ae77ae99f2ea68beb23d7540f08c0bc4 reset.test.tsx=dc4ee31e52a5800f30e7dbd924834e25f6f8a77dd5e88c8262443e1c322ac8e9 queues.test.tsx=d58160748187b7d7a7aeabfc620b694e7bc1e2714d37491aa99dbf8d8cb16f2b continuity-export.test.tsx=1e3066f963edc15ba161937d26cbee949cb2886f1c3122740fd4c7c143c5a55a downstream.test.tsx=88cf89c821b5f51abf2e4f373d1047304d51bb8817b33a1d7b8094516d38624d verify-fixed.mjs=b5ac75fa1bc5ff65352afb5b598dc7309fb7435aa9ca96518dfd1d7ffb2f2f16
+archive_file_sha256 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx=54a3f10c90fdc415a9c1bb89801fe4cdc1870022235752229e9180a2a683d701 packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx=572bdd478954059f02dde83c8ec7383f992ca0f6f33f8b5e2c96ba85e7f935a7 packages/xai-web-settings-features-panel/src/types.ts=f97c4e6212d99723d9baeb1133866f05860db7b97ce274ba2be0b27128cd8406 packages/xai-web-settings-features-panel/src/styles.css=65fdf6f08b299c242bf79397a5e731fa0b605cc2f5a7476e2778a4caa350b5c3 packages/xai-web-settings-features-panel/src/index.ts=cf89e7454252927a457f48f9e4bcf9190219b94862d896240999626a1b097c68 packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx=993f0d069b9dc23de53d910d5dda4967eca2e436596ec3fbc2b33fad16ed1d64 packages/xai-web-settings-features-panel/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-features-panel/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+vitest_exit=0
+harness_checks=PASS (6/6)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-GaswCs
+
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > Q1 Boards: the predecessor succeeds while the latest fails; Retry settles only the latest 163ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > Q2 Boards: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest 161ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > Q3 Boards: a Retry while the field is pending is inert 120ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > Q4 Boards: an equal-value successor after intervening input stays its own operation 133ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > Q5 Boards: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write 118ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > Q6 Boards: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes 128ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > Q7 Boards: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default 134ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > Q8 Boards: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation 115ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > Q9 Boards: new work after a discard survives; the discarded held operation never writes 98ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'tasks' > H3 tasks: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 70ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'board' > H3 board: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 67ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'dashboard' > H3 dashboard: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 68ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'calendar' > H3 calendar: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 67ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'matrix' > H3 matrix: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 62ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'pomodoro' > H3 pomodoro: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 66ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'habits' > H3 habits: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 69ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'meditation' > H3 meditation: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 66ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'tasks' > H4 tasks: two same-turn activations invert the latest intent and return to the original through two operations 51ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'board' > H4 board: two same-turn activations invert the latest intent and return to the original through two operations 41ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'dashboard' > H4 dashboard: two same-turn activations invert the latest intent and return to the original through two operations 42ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'calendar' > H4 calendar: two same-turn activations invert the latest intent and return to the original through two operations 43ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'matrix' > H4 matrix: two same-turn activations invert the latest intent and return to the original through two operations 42ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'pomodoro' > H4 pomodoro: two same-turn activations invert the latest intent and return to the original through two operations 46ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'habits' > H4 habits: two same-turn activations invert the latest intent and return to the original through two operations 42ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'meditation' > H4 meditation: two same-turn activations invert the latest intent and return to the original through two operations 43ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 H4 two Boards activations during a held lock return to the original through two operations 76ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O1 habits: pending set → Reset to defaults; the reset is the latest intent and its completion governs 93ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O2 habits: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed 95ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O3 habits: reset → set → reset; the queued set is superseded silently and the final reset governs 120ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O4 habits: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces 76ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O5 habits: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces 74ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O6 habits: a failed set and a failed reset with equal displayed values stay distinct intents 122ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O7 habits: discard of a reset draft, then new same-field work survives 83ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O1 matrix: pending set → Reset to defaults; the reset is the latest intent and its completion governs 83ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O2 matrix: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed 81ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O3 matrix: reset → set → reset; the queued set is superseded silently and the final reset governs 104ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O4 matrix: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces 67ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O5 matrix: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces 75ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O6 matrix: a failed set and a failed reset with equal displayed values stay distinct intents 116ms
+ ✓ docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O7 matrix: discard of a reset draft, then new same-field work survives 98ms
+
+ Test Files  1 passed (1)
+      Tests  40 passed (40)
+   Start at  05:01:30
+   Duration  4.36s (transform 276ms, setup 45ms, collect 417ms, tests 3.42s, environment 237ms, prepare 64ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-GaswCs/.report-queues.json
+
+---- stderr ----
+
+---- runner summary ----
+json_report=success=true numTotalTests=40 numPassedTests=40 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals cases=40 passed=40 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-features-panel/vitest.setup.ts], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (6)
+harness PASS no test-file suite error
+case 001 PASSED | Q1 Boards: the predecessor succeeds while the latest fails; Retry settles only the latest
+case 002 PASSED | Q2 Boards: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+case 003 PASSED | Q3 Boards: a Retry while the field is pending is inert
+case 004 PASSED | Q4 Boards: an equal-value successor after intervening input stays its own operation
+case 005 PASSED | Q5 Boards: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+case 006 PASSED | Q6 Boards: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes
+case 007 PASSED | Q7 Boards: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default
+case 008 PASSED | Q8 Boards: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation
+case 009 PASSED | Q9 Boards: new work after a discard survives; the discarded held operation never writes
+case 010 PASSED | H3 'tasks' H3 tasks: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+case 011 PASSED | H3 'board' H3 board: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+case 012 PASSED | H3 'dashboard' H3 dashboard: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+case 013 PASSED | H3 'calendar' H3 calendar: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+case 014 PASSED | H3 'matrix' H3 matrix: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+case 015 PASSED | H3 'pomodoro' H3 pomodoro: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+case 016 PASSED | H3 'habits' H3 habits: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+case 017 PASSED | H3 'meditation' H3 meditation: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+case 018 PASSED | H4 'tasks' H4 tasks: two same-turn activations invert the latest intent and return to the original through two operations
+case 019 PASSED | H4 'board' H4 board: two same-turn activations invert the latest intent and return to the original through two operations
+case 020 PASSED | H4 'dashboard' H4 dashboard: two same-turn activations invert the latest intent and return to the original through two operations
+case 021 PASSED | H4 'calendar' H4 calendar: two same-turn activations invert the latest intent and return to the original through two operations
+case 022 PASSED | H4 'matrix' H4 matrix: two same-turn activations invert the latest intent and return to the original through two operations
+case 023 PASSED | H4 'pomodoro' H4 pomodoro: two same-turn activations invert the latest intent and return to the original through two operations
+case 024 PASSED | H4 'habits' H4 habits: two same-turn activations invert the latest intent and return to the original through two operations
+case 025 PASSED | H4 'meditation' H4 meditation: two same-turn activations invert the latest intent and return to the original through two operations
+case 026 PASSED | H3 H4 two Boards activations during a held lock return to the original through two operations
+case 027 PASSED | §6 orderings 'habits' O1 habits: pending set → Reset to defaults; the reset is the latest intent and its completion governs
+case 028 PASSED | §6 orderings 'habits' O2 habits: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed
+case 029 PASSED | §6 orderings 'habits' O3 habits: reset → set → reset; the queued set is superseded silently and the final reset governs
+case 030 PASSED | §6 orderings 'habits' O4 habits: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+case 031 PASSED | §6 orderings 'habits' O5 habits: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces
+case 032 PASSED | §6 orderings 'habits' O6 habits: a failed set and a failed reset with equal displayed values stay distinct intents
+case 033 PASSED | §6 orderings 'habits' O7 habits: discard of a reset draft, then new same-field work survives
+case 034 PASSED | §6 orderings 'matrix' O1 matrix: pending set → Reset to defaults; the reset is the latest intent and its completion governs
+case 035 PASSED | §6 orderings 'matrix' O2 matrix: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed
+case 036 PASSED | §6 orderings 'matrix' O3 matrix: reset → set → reset; the queued set is superseded silently and the final reset governs
+case 037 PASSED | §6 orderings 'matrix' O4 matrix: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+case 038 PASSED | §6 orderings 'matrix' O5 matrix: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces
+case 039 PASSED | §6 orderings 'matrix' O6 matrix: a failed set and a failed reset with equal displayed values stay distinct intents
+case 040 PASSED | §6 orderings 'matrix' O7 matrix: discard of a reset draft, then new same-field work survives
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-GaswCs","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-GaswCs/.features-sol-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-GaswCs/packages/xai-web-settings-features-panel/vitest.setup.ts"],"include":["docs/reviews/web-features-recovery-sol/queues.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-features-panel/src/FeaturesPane.tsx packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts
+pin_modules=72 by package: docs/reviews=2 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-settings-features-panel=13 packages/xai-web-shell=9

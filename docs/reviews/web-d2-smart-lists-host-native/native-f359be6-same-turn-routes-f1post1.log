@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"f359be6","browser":"Chrome/154.0.8037.97"}
+{"name":"same-turn-first-intent","pass":true,"mode":"same-turn-routes","scope":"Two actual router/delegate calls in one Chrome Runtime.evaluate without yielding between them"}
+{"name":"actual-host-departure","pass":true,"scope":"Actual composedSettingsRegistration with data router and WebShellProvider, real sidebar; initial departure blocked. Full Stay/Export/Discard flows require their separate final contract checks"}

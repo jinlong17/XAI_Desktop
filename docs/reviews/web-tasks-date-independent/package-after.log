@@ -1,0 +1,74 @@
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-tasks-date-independent-kg2doam1/packages/xai-web-tasks
+
+ ✓ src/__tests__/TasksSidebar.test.tsx (6 tests) 607ms
+ ✓ src/__tests__/registration.test.tsx (5 tests) 1046ms
+   ✓ tasksWebModuleRegistration — T-REG-2 RTL render > T-REG-2: TasksModuleRoute inside WebShellProvider renders EN Tasks heading  1041ms
+ ✓ src/__tests__/TaskComposer.test.tsx (11 tests) 1476ms
+   ✓ TaskComposer — T-TC-1 open renders correctly > T-TC-1: renders dialog with defaultBucket pre-selected  419ms
+   ✓ TaskComposer — T-TC-3 valid save with tag > T-TC-3: title + tag work + Save → onSave({title, tag:'work', withDate:false}, 'later') called once  353ms
+ ✓ src/__tests__/dueDate.test.tsx (3 tests) 2537ms
+   ✓ REL-01 dueDate lifecycle > actual composer → detail edit → reload → local midnight refresh  2526ms
+ ✓ src/__tests__/aiCreateSubscriber.test.tsx (7 tests) 231ms
+ ✓ src/__tests__/aiMutateSubscriber.test.tsx (8 tests) 116ms
+ ✓ src/__tests__/filterCardsByList.test.ts (24 tests) 138ms
+ ✓ src/__tests__/persistence.test.tsx (10 tests) 5415ms
+   ✓ TasksModule persistence > T-PER-1: empty localStorage → renders seed (Overdue column has 10 cards)  579ms
+   ✓ TasksModule persistence > T-PER-2: after DnD move, localStorage xai_task_cols is a JSON array with updated cols  740ms
+   ✓ TasksModule persistence > T-PER-3: bogus localStorage falls back to seed + console.warn fired once  333ms
+   ✓ TasksModule create flow + persistence (T-CR) > T-CR-1: create card → appears at top of target column + localStorage round-trips it  848ms
+   ✓ TasksModule create flow + persistence (T-CR) > T-CR-2: create card → card prepended and column count +1  454ms
+   ✓ TasksModule create flow + persistence (T-CR) > T-CR-3: created card survives unmount + re-mount (simulates page reload)  382ms
+   ✓ TasksModule completion persistence (T-PER-DONE) > T-PER-DONE-1: click checkbox → localStorage round-trips with done:true for that card  513ms
+   ✓ TasksModule completion persistence (T-PER-DONE) > T-PER-DONE-2: toggled card shows is-completed after unmount + re-mount (simulates page reload)  574ms
+   ✓ filterCardsByList — T-FILT-COUNT storage byte-identical (FP2) > T-FILT-COUNT: persisted xai_task_cols count field is not mutated after applying filters  718ms
+ ✓ src/__tests__/TasksModule.test.tsx (15 tests) 6078ms
+   ✓ TasksModule — T-MOD-1 EN column headers > T-MOD-1: renders 4 column headers in correct order for lang=en  924ms
+   ✓ TasksModule — T-MOD-2 ZH column headers > T-MOD-2: renders 4 column headers in correct order for lang=zh  434ms
+   ✓ TasksModule — T-MOD-3 checkbox toggle > T-MOD-3: clicking checkbox toggles is-completed class on card  507ms
+   ✓ TasksModule — T-MOD-4 DnD overdue → nodate > T-MOD-4: dragging a card from overdue to nodate strips its date element  439ms
+   ✓ TasksModule — T-MOD-5 drop-target highlight > T-MOD-5: while dragging over later column, it has drop-target class  394ms
+   ✓ TasksModule — T-COL-1 + button opens composer > T-COL-1: clicking + on a column with action===add opens the composer with that bucket pre-selected  655ms
+   ✓ TasksModule — collection overview boards > renders All lists as list-grouped cards instead of time buckets  482ms
+   ✓ TasksModule — collection overview boards > renders All tags as tag-grouped cards instead of time buckets  691ms
+   ✓ TasksModule — collection overview boards > can switch an All lists overview back to time buckets  738ms
+ ✓ src/__tests__/tasksReducer.test.ts (29 tests) 61ms
+ ✓ src/__tests__/validate.test.ts (9 tests) 9ms
+ ✓ src/__tests__/dateForCol.test.ts (5 tests) 8ms
+ ✓ src/__tests__/taskLink.test.ts (7 tests) 7ms
+ ✓ src/__tests__/index-barrel.test.ts (11 tests) 13ms
+ ✓ src/__tests__/saveRecovery.test.tsx (6 tests) 8867ms
+   ✓ Tasks recoverable writes > retains and exports the latest composer draft, then retries exactly once  2720ms
+   ✓ Tasks recoverable writes > retains failed detail edits and commits their latest values on retry  493ms
+   ✓ Tasks recoverable writes > does not publish failed list metadata and retains its editor for retry  1540ms
+   ✓ Tasks recoverable writes > does not publish failed tag metadata and retains its editor for retry  1734ms
+   ✓ Tasks recoverable writes > does not close failed detail deletion or delete list metadata before task references commit  1375ms
+   ✓ Tasks recoverable writes > revokes failed composer retry and export after switching to B  1002ms
+ ✓ src/__tests__/seed.test.ts (4 tests) 28ms
+ ✓ src/__tests__/ids.test.ts (2 tests) 13ms
+
+ Test Files  17 passed (17)
+      Tests  162 passed (162)
+   Start at  13:09:13
+   Duration  11.70s (transform 1.29s, setup 8.91s, collect 3.48s, tests 26.65s, environment 28.78s, prepare 3.05s)
+
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > retains and exports the latest composer draft, then retries exactly once
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > retains failed detail edits and commits their latest values on retry
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not publish failed list metadata and retains its editor for retry
+[plugin-web-storage] quota exceeded for xai_pref_task_lists.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not publish failed tag metadata and retains its editor for retry
+[plugin-web-storage] quota exceeded for xai_pref_task_tags.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not close failed detail deletion or delete list metadata before task references commit
+[plugin-web-storage] quota exceeded for xai_task_cols.
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > revokes failed composer retry and export after switching to B
+[plugin-web-storage] quota exceeded for xai_task_cols.
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+

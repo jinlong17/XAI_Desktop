@@ -16,7 +16,7 @@ export { PaletteResultRow } from "./PaletteResultRow";  // test convenience
 // Hook
 export { useCommandPalette } from "./registration";
 
-// Adapter registration (consumer modules can register additional adapters; v1 11 are bundled)
+// Adapter registration (consumer modules can register additional adapters; v1 12 are bundled)
 export { registerSearchAdapter } from "./internal/registry";
 
 // Test helpers (gated by NODE_ENV — usable by sibling-package tests; not by production code)
@@ -229,6 +229,7 @@ Mapping (frozen):
 | `habits` | `xai_habits_state` |
 | `meditation` | `xai_meditation_prefs` |
 | `countdown` | `xai_countdowns` |
+| `metrics` | `xai_metric_tracker_state_v1` |
 | `statistics` | (none — empty `{}`) |
 | `settings` | (paneRegistry imported from `@repo/plugin-web-settings-shell`; no localStorage read here) |
 

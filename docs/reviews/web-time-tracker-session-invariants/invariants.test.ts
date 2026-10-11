@@ -1,0 +1,9 @@
+import {it,expect} from 'vitest';
+import {createTimeTrackerEntry,resumeTimeTrackerEntry,pauseTimeTrackerEntry,finishTimeTrackerEntry} from '../../../packages/plugin-web-time-tracker/src/internal/storage';
+import {entryDuration} from '../../../packages/plugin-web-time-tracker/src/internal/time';
+const paused=()=>({...createTimeTrackerEntry('cat_work',null,0,1000,{en:'',zh:''}),done:false});
+it('resume is idempotent while already running: one open segment',()=>{const a=resumeTimeTrackerEntry(paused(),2000);const b=resumeTimeTrackerEntry(a,3000);expect(b.segments.filter(s=>s.end===null)).toHaveLength(1);expect(entryDuration(b,4000)).toBe(3000)});
+it('ended sessions reject stale resume and stay finite',()=>{const ended=finishTimeTrackerEntry(resumeTimeTrackerEntry(paused(),2000),3000);const replay=resumeTimeTrackerEntry(ended,4000);expect(replay).toEqual(ended);expect(entryDuration(replay,5000)).toBe(2000)});
+it('finish repairs multiple opens so done duration never grows',()=>{const malformed={...paused(),segments:[{start:0,end:1000},{start:2000,end:null},{start:3000,end:null}]};const ended=finishTimeTrackerEntry(malformed,4000);expect(ended.segments.filter(s=>s.end===null)).toHaveLength(0);expect(entryDuration(ended,5000)).toBe(entryDuration(ended,6000))});
+it('normal pause/resume/end counts only elapsed working intervals',()=>{const a=createTimeTrackerEntry('cat_work',null,0,null,{en:'',zh:''});const b=pauseTimeTrackerEntry(a,1000);const c=resumeTimeTrackerEntry(b,3000);const d=finishTimeTrackerEntry(c,5000);expect(entryDuration(d,10000)).toBe(3000);expect(entryDuration(finishTimeTrackerEntry(d,12000),15000)).toBe(3000)});
+it('out of order command cannot persist a negative duration segment',()=>{const a=createTimeTrackerEntry('cat_work',null,5000,null,{en:'',zh:''});const ended=finishTimeTrackerEntry(a,4000);expect(ended.segments.every(s=>s.end===null||s.end>=s.start)).toBe(true)});

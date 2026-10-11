@@ -1,0 +1,47 @@
+{
+  "requestedRef": "2c5dc31",
+  "revision": "2c5dc319126541085e7620c4c9ae23413db2c816",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "held-account-lock",
+      "pass": true
+    },
+    {
+      "name": "quota-retains-latest-draft",
+      "pass": true
+    },
+    {
+      "name": "two-document-functional",
+      "pass": true
+    },
+    {
+      "name": "account-switch-pending",
+      "pass": true
+    },
+    {
+      "name": "readback-uncertain",
+      "pass": false,
+      "error": "Error: Retry did not reconcile already-written value into Saved"
+    }
+  ],
+  "checkpoint": {
+    "held-account-lock": {
+      "raw": "edit"
+    },
+    "quota-retains-latest-draft": {
+      "raw": "edit"
+    },
+    "two-document-functional": {
+      "raw": "2"
+    },
+    "account-switch-pending": {
+      "raw": "comment",
+      "extraKey": "xai:account:v1:async-pref-native-account-switch-pending-B:g1:xai_pref_collab_default_share",
+      "extraRaw": "view"
+    }
+  },
+  "scope": "Actual Collaborate select, native account WebLocks and physical preference string in isolated synthetic profile; no other settings or full writer activation claim"
+}

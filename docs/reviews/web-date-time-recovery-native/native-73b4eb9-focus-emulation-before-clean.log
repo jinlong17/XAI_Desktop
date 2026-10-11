@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"73b4eb9","browser":"Chrome/152.0.7977.83"}
+{"name":"select-input","events":[{"name":"keydown","key":"ArrowDown","value":"monday","trusted":true,"prevented":false},{"name":"keyup","key":"ArrowDown","value":"monday","trusted":true,"prevented":false},{"name":"keydown","key":"Enter","value":"monday","trusted":true,"prevented":false},{"name":"keyup","key":"Enter","value":"monday","trusted":true,"prevented":false}],"value":"monday","raw":["monday","true","true","true","true"]}
+{"name":"native","pass":false,"mode":"clean","error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'monday' !== 'sunday'\n","runtimeErrors":[]}

@@ -1,0 +1,311 @@
+requested_fixed=419e56d
+resolved_fixed_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_fixed_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+requested_earlier=24073b5
+resolved_earlier_commit=24073b522262d8b4bec0abfa29347db28adbdd9e
+resolved_earlier_tree=95b4aaff59927eee82248a6133e357e9c70e04ec
+suffix=appearance-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-final/verify-delta.mjs 419e56d 24073b5 appearance-final-v1
+output_dir=docs/reviews/web-appearance-recovery-final
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+runner_sha256=a5b02d192304222a390131c81bad92ed2aecd749f4a9ad6a7f43a29e20473bb9
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+temporary_base=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+fixed_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 earlier_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfiles 24073b5@xai-appearance-final-vite-jgI37s=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 419e56d@xai-appearance-final-vite-MumcRQ=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 24073b5@xai-appearance-final-delta-JdnAUg/n0/n1/source=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 419e56d@xai-appearance-final-delta-AzWPUo/n0/n1/source=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 24073b5@xai-appearance-final-delta-fbFTkL/n0/n1/source-24073b5=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 24073b5@xai-appearance-final-delta-fAsD8T/source-24073b5=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 24073b5@xai-appearance-final-delta-ebhWZP/n0/source-24073b5=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 419e56d@xai-appearance-final-delta-ocvJc8/n0/source-419e56d=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 24073b5@xai-appearance-final-delta-AkIX6I/n0/n1/source-24073b5=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 24073b5@xai-appearance-final-delta-pXIlMa/source-24073b5=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 24073b5@xai-appearance-final-delta-PIDrPr/n0/source-24073b5=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 419e56d@xai-appearance-final-delta-yzVPwg/n0/source-419e56d=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+repo_pin=vite build: private node_modules with @repo links to the archive's packages (as verify-packages.mjs), checked through every source map; esbuild: the native runners' exact-export pin and checkout guard
+## A. Source delta 24073b5..419e56d
+product-scope diff (-- apps packages package.json pnpm-lock.yaml): 3 entries
+  numstat 169 0 packages/xai-web-settings-appearance/src/__tests__/AppearancePane.focus-ring.test.tsx
+  numstat 331 0 packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx
+  numstat 22 0 packages/xai-web-settings-appearance/src/styles.css
+full unrestricted diff: 294 entries, 291 under docs/, 3 outside docs/
+  outside-docs A packages/xai-web-settings-appearance/src/__tests__/AppearancePane.focus-ring.test.tsx
+  outside-docs A packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx
+  outside-docs M packages/xai-web-settings-appearance/src/styles.css
+product commits 24073b5..419e56d: 2
+  5bbf473872073472188957f430057412e8798131 fix(settings): show focus ring on Appearance font scale slider
+  419e56de9f23e4467fea806fbd4a990e1f429941 fix(settings): show focus on selected Appearance options
+  step 24073b5 -> 5bbf473: styles.css 12491 -> 12956 bytes; prefix equal=true; sha256 c3d3393d48b98b61 -> 2a417677e2160ccc; appended 9 lines sha256=2f4cb1a78243e977
+  step 5bbf473 -> 419e56d: styles.css 12956 -> 13693 bytes; prefix equal=true; sha256 2a417677e2160ccc -> cd95e4a921e334d7; appended 13 lines sha256=f5290ea3af3478cc
+appended text 24073b5..419e56d (22 lines, sha256=fd05b7cf969701abdcbfdcdb8918998e2f9e044a0a961718446748618206b22f):
+  | 
+  | /* F-APP-1: the Font scale slider showed no keyboard focus. The shared
+  |    `.slider-row input[type="range"] { outline: none }` in plugin-web-tokens
+  |    layout.css (0,2,1) outranks the global `input:focus-visible` ring in
+  |    tokens.css (0,1,1); this pane-scoped rule (0,4,1) restores that same ring. */
+  | .appearance-pane .slider-row input[type="range"]:focus-visible {
+  |   outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
+  |   outline-offset: 2px;
+  | }
+  | 
+  | /* F-APP-2: the selected accent swatch showed no keyboard focus. Its selection
+  |    ring `.accent-sw.active { outline: 2px solid var(--text-1); outline-offset:
+  |    2px }` (0,2,0), in plugin-web-tokens layout.css and above in this file,
+  |    outranks the global `button:focus-visible` ring in tokens.css (0,1,1) and
+  |    does not change with focus. This pane-scoped rule (0,4,0) draws the global
+  |    ring 2px further out and keeps the selection as a 2px box-shadow ring in the
+  |    selection colour inside it. Outline and box-shadow take no layout space. */
+  | .appearance-pane .accent-sw.active:focus-visible {
+  |   outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
+  |   outline-offset: 4px;
+  |   box-shadow: 0 0 0 2px var(--text-1);
+  | }
+  | 
+  source rules: rules=2 selectors=[".appearance-pane .slider-row input[type=\"range\"]:focus-visible",".appearance-pane .accent-sw.active:focus-visible"] declarations=[[["outline","2px solid color-mix(in oklch, var(--accent) 58%, transparent)"],["outline-offset","2px"]],[["outline","2px solid color-mix(in oklch, var(--accent) 58%, transparent)"],["outline-offset","4px"],["box-shadow","0 0 0 2px var(--text-1)"]]] leftover="" at_rules=false important=false
+new test packages/xai-web-settings-appearance/src/__tests__/AppearancePane.focus-ring.test.tsx sha256=caea5da64db325d3d0e7484ec9ce1a527cf6a061fe3d45bda379146172d708a5
+new test packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx sha256=598f3418b4ca12cd168d907b2c45d76bcf79ab839ebb6c3a0e40938144cd9dcd
+## B. Production bundle: `vite build` of apps/web in an immutable archive of each revision
+vite_build_environment: VITE_* variables removed=none present; NODE_ENV=unset; NO_COLOR=1
+vite build @24073b5 (24073b522262d8b4bec0abfa29347db28adbdd9e): exit=0 seconds=3.2 bin=apps/web/node_modules/.bin/vite vite=7.3.6 node_modules_links third_party=448 workspace=281
+  stdout | vite v7.3.6 building client environment for production...
+  stdout | transforming...
+  stdout | ✓ 1037 modules transformed.
+  stdout | rendering chunks...
+  stdout | [strip-csp-nonce-placeholder] Removing nonce placeholders from index.html (static deploy — Decision 3 Candidate A.1)
+  stdout | computing gzip size...
+  stdout | dist/index.html                                    1.96 kB │ gzip:   0.67 kB
+  stdout | dist/.vite/manifest.json                           4.07 kB │ gzip:   0.68 kB
+  stdout | dist/assets/feature-settings-DsrI76yg.css         31.20 kB │ gzip:   5.44 kB
+  stdout | dist/assets/feature-wellbeing-xVroBQuj.css        53.75 kB │ gzip:   9.51 kB
+  stdout | dist/assets/feature-utilities-tu9wXLg2.css        93.43 kB │ gzip:  16.13 kB
+  stdout | dist/assets/feature-board-planning-C8nb59Kb.css  116.04 kB │ gzip:  23.31 kB
+  stdout | dist/assets/index-CjQjEzbp.css                   117.67 kB │ gzip:  19.75 kB
+  stdout | dist/assets/feature-ai-chat-B3dgEa-M.css         150.80 kB │ gzip:  26.27 kB
+  stdout | dist/assets/map-view-DRzi1wBI.js                   2.85 kB │ gzip:   1.42 kB │ map:    10.65 kB
+  stdout | dist/assets/vendor-observability-BsvgmO2t.js      94.20 kB │ gzip:  32.54 kB │ map:   654.94 kB
+  stdout | dist/assets/feature-wellbeing-CSxJdJte.js        105.90 kB │ gzip:  32.79 kB │ map:   386.67 kB
+  stdout | dist/assets/feature-settings-CNtartZe.js         115.12 kB │ gzip:  33.92 kB │ map:   386.19 kB
+  stdout | dist/assets/leaflet-src-CBVIyuD7.js              149.91 kB │ gzip:  43.49 kB │ map:   680.07 kB
+  stdout | dist/assets/feature-ai-chat-BQcn4TqV.js          157.39 kB │ gzip:  49.39 kB │ map:   627.46 kB
+  stdout | dist/assets/feature-auth-BjxSTteg.js             249.83 kB │ gzip:  66.89 kB │ map: 1,321.84 kB
+  stdout | dist/assets/feature-utilities-DeWzzM1V.js        259.47 kB │ gzip:  74.99 kB │ map:   845.34 kB
+  stdout | dist/assets/feature-board-planning-C9cXuL6C.js   283.78 kB │ gzip:  82.74 kB │ map: 1,129.34 kB
+  stdout | dist/assets/vendor-react-BUE3egDO.js             284.95 kB │ gzip:  91.42 kB │ map: 1,473.89 kB
+  stdout | dist/assets/index-BqSMclxF.js                    355.48 kB │ gzip: 105.74 kB │ map: 1,482.85 kB
+  stdout | ✓ built in 2.95s
+  emitted files=32: 12 .js, 6 .css, 11 .map
+  file _headers size=887 sha256=d854b9427e8b30af2c59190354bb06bf869b4f8818279e83dce8e7dc95c3a043
+  file .vite/manifest.json size=4066 sha256=9ca1f6172ee5a726a824f852e2ec3e483c5a7db1b8a401a0281d31adc5eb8f53
+  file assets/feature-ai-chat-B3dgEa-M.css size=150798 sha256=e443a20912b384a8f685b8d352e87810a873f8025c2d105183f352555fcac6ad
+  file assets/feature-ai-chat-BQcn4TqV.js size=157394 sha256=3fab48541eadb34018c50a05ea8f576306470ef62c53d98a84a8784919f382fb
+  file assets/feature-ai-chat-BQcn4TqV.js.map size=627459 sha256=dfcb190cc6c6f5b56cc2387f91379ee951f840d114b58ce52f475a9bf8e5a5f6
+  file assets/feature-auth-BjxSTteg.js size=249832 sha256=536860b14ad56fa50f346689a7740ef5ebbdb58d94905487dfdc74172a3c2256
+  file assets/feature-auth-BjxSTteg.js.map size=1321841 sha256=ef9d0fa2951210d1e488d1d0f7c9af56ade9ec98dd0992f431c5db9c4eaf10fc
+  file assets/feature-board-planning-C8nb59Kb.css size=116036 sha256=9f5301b217ae19d64cdbd9630fc75fd77fd15615110ba096a838f8f664ea950c
+  file assets/feature-board-planning-C9cXuL6C.js size=283779 sha256=8d3fbe38f3930bbde2ab4067d9000289c78e42be97547393c321a7570e490f81
+  file assets/feature-board-planning-C9cXuL6C.js.map size=1129343 sha256=04c0da3ae6f85637b1af4cc20206f95adcca3e0a36e7cc8bfa9184c65d03eca6
+  file assets/feature-settings-CNtartZe.js size=115122 sha256=17bf97cc53b4c474284ad90f0d98ca807125ed310bf5830d518d87ed13158600
+  file assets/feature-settings-CNtartZe.js.map size=386189 sha256=d19a23b394a89a2a51db1f3194d3ba5ac8011361154151c0f9af472a82bc125b
+  file assets/feature-settings-DsrI76yg.css size=31196 sha256=2da4666205f9804665dacab13651105243ea4c0cf074e6a2cd10221445036d4b
+  file assets/feature-utilities-DeWzzM1V.js size=259474 sha256=779c6997eb82c690fef5ba1ebd85d98c7c0b44a36d1ff9c40d6d2a181f27e5e7
+  file assets/feature-utilities-DeWzzM1V.js.map size=845344 sha256=7eb722e565bf30d03cbcb76fa183bc9f45cf9bcf7fca47262acdbcd07c56673b
+  file assets/feature-utilities-tu9wXLg2.css size=93433 sha256=798d24f567095da983efb12fda4ec413a972d056284ad2fe4b7c0bc3a478425a
+  file assets/feature-wellbeing-CSxJdJte.js size=105896 sha256=3b35ec4501b8a08f9341cbc91dd7c219554b8db9ef6d8f8be1f311a60b954487
+  file assets/feature-wellbeing-CSxJdJte.js.map size=386672 sha256=90538706866d9eb2aebcec803c3f7e19cc11324bb9e0d4fe830c65ad616cc217
+  file assets/feature-wellbeing-xVroBQuj.css size=53748 sha256=a5840047b500811302bf7613aa5dd9b96ea4181169b9dace815ea97be2922374
+  file assets/index-BqSMclxF.js size=355475 sha256=ba1a354e628d98fcb686bd49980bd266b287256c1147d9006a2d966e0551ac50
+  file assets/index-BqSMclxF.js.map size=1482852 sha256=3dbfe2160741e8db20a0a398f4370a8280cd0956f6aa75bba5a6eb21abdef255
+  file assets/index-CjQjEzbp.css size=117674 sha256=3553424dd3311d28537d62ef16307c0db2e849342add6e52ef5a8280ba182735
+  file assets/leaflet-src-CBVIyuD7.js size=149908 sha256=4169b4ec39493fef176e3123180e32e50d2b5dec1c9c94755385d17cccb760a1
+  file assets/leaflet-src-CBVIyuD7.js.map size=680074 sha256=6a7491258d0ad4b1b036ffdaadf81054ceeb619870108f7f55b9cbdeaf238714
+  file assets/map-view-DRzi1wBI.js size=2847 sha256=d6f0fff10670c38835ed9410e99e959262721af154bcd23b14e7adada01714bf
+  file assets/map-view-DRzi1wBI.js.map size=10645 sha256=b1d7b8302e1e438ea8f89ca209700ccf290b08151569229af93faa12f8c1dc0c
+  file assets/vendor-observability-BsvgmO2t.js size=94202 sha256=18daac2e7e66c2d9c02a1c46a352382cc8ef4f4a3af922f103d4d7ec7f27372c
+  file assets/vendor-observability-BsvgmO2t.js.map size=654935 sha256=bfe4aa9e1e09fee15a84e7e9863da1f098fc45cb813034e0d75bc65b04a7f927
+  file assets/vendor-react-BUE3egDO.js size=284954 sha256=6f420b0f7cbb9347e5830fa9468a700cc2710d9826ac3d20d5097681f433a8d2
+  file assets/vendor-react-BUE3egDO.js.map size=1473888 sha256=c752aa8ec73c411faf76d5e5545a3f109a063d1388b99d242d101749342558f0
+  file index.html size=1959 sha256=3923353e946e6867c19cee05458a0ef614725aed9885ea9099e3ef0e837122bc
+  file sw.js size=1032 sha256=ae7bc15d75bcc603d470fc1199a71fa93a4cda448e01cacb378b08c8b3fffa6e
+  provenance maps=11 sources=695 archive=531 store=164 virtual(non-file)=0 elsewhere=0 forbidden=0 archive_by_package apps/web=30 packages/core=2 packages/core-data=3 packages/plugin-productivity=8 packages/plugin-web-ai-chat=28 packages/plugin-web-board-core=16 packages/plugin-web-board-views=12 packages/plugin-web-board-workspaces=28 packages/plugin-web-bookkeeping=11 packages/plugin-web-countdown=15 packages/plugin-web-metric-tracker=8 packages/plugin-web-pomodoro=18 packages/plugin-web-settings-rest=37 packages/plugin-web-settings-shell=4 packages/plugin-web-statistics=24 packages/plugin-web-storage=19 packages/plugin-web-time-tracker=7 packages/plugin-web-tokens=4 packages/web-auth-device-session=17 packages/xai-web-calendar=44 packages/xai-web-cmdk=24 packages/xai-web-dashboard-grid=17 packages/xai-web-dashboard-widgets=40 packages/xai-web-event-bus=3 packages/xai-web-habits=23 packages/xai-web-matrix=17 packages/xai-web-meditation=17 packages/xai-web-pet=8 packages/xai-web-settings-appearance=8 packages/xai-web-settings-features-panel=10 packages/xai-web-shell=8 packages/xai-web-tasks=21
+vite build @419e56d (419e56de9f23e4467fea806fbd4a990e1f429941): exit=0 seconds=3.2 bin=apps/web/node_modules/.bin/vite vite=7.3.6 node_modules_links third_party=448 workspace=281
+  stdout | vite v7.3.6 building client environment for production...
+  stdout | transforming...
+  stdout | ✓ 1037 modules transformed.
+  stdout | rendering chunks...
+  stdout | [strip-csp-nonce-placeholder] Removing nonce placeholders from index.html (static deploy — Decision 3 Candidate A.1)
+  stdout | computing gzip size...
+  stdout | dist/index.html                                    1.96 kB │ gzip:   0.67 kB
+  stdout | dist/.vite/manifest.json                           4.07 kB │ gzip:   0.68 kB
+  stdout | dist/assets/feature-settings-DsrI76yg.css         31.20 kB │ gzip:   5.44 kB
+  stdout | dist/assets/feature-wellbeing-xVroBQuj.css        53.75 kB │ gzip:   9.51 kB
+  stdout | dist/assets/feature-utilities-tu9wXLg2.css        93.43 kB │ gzip:  16.13 kB
+  stdout | dist/assets/feature-board-planning-C8nb59Kb.css  116.04 kB │ gzip:  23.31 kB
+  stdout | dist/assets/index-BvZai5Q-.css                   117.99 kB │ gzip:  19.79 kB
+  stdout | dist/assets/feature-ai-chat-B3dgEa-M.css         150.80 kB │ gzip:  26.27 kB
+  stdout | dist/assets/map-view-DRzi1wBI.js                   2.85 kB │ gzip:   1.42 kB │ map:    10.65 kB
+  stdout | dist/assets/vendor-observability-BsvgmO2t.js      94.20 kB │ gzip:  32.54 kB │ map:   654.94 kB
+  stdout | dist/assets/feature-wellbeing-CSxJdJte.js        105.90 kB │ gzip:  32.79 kB │ map:   386.67 kB
+  stdout | dist/assets/feature-settings-CNtartZe.js         115.12 kB │ gzip:  33.92 kB │ map:   386.19 kB
+  stdout | dist/assets/leaflet-src-CBVIyuD7.js              149.91 kB │ gzip:  43.49 kB │ map:   680.07 kB
+  stdout | dist/assets/feature-ai-chat-BQcn4TqV.js          157.39 kB │ gzip:  49.39 kB │ map:   627.46 kB
+  stdout | dist/assets/feature-auth-BjxSTteg.js             249.83 kB │ gzip:  66.89 kB │ map: 1,321.84 kB
+  stdout | dist/assets/feature-utilities-DeWzzM1V.js        259.47 kB │ gzip:  74.99 kB │ map:   845.34 kB
+  stdout | dist/assets/feature-board-planning-C9cXuL6C.js   283.78 kB │ gzip:  82.74 kB │ map: 1,129.34 kB
+  stdout | dist/assets/vendor-react-BUE3egDO.js             284.95 kB │ gzip:  91.42 kB │ map: 1,473.89 kB
+  stdout | dist/assets/index-uLn9obA9.js                    355.48 kB │ gzip: 105.74 kB │ map: 1,482.85 kB
+  stdout | ✓ built in 2.99s
+  emitted files=32: 12 .js, 6 .css, 11 .map
+  file _headers size=887 sha256=d854b9427e8b30af2c59190354bb06bf869b4f8818279e83dce8e7dc95c3a043
+  file .vite/manifest.json size=4066 sha256=83d63ddbb1cca000dc47e82ca665dd258ed75b5a3b017a8bcd6f671b7df55f84
+  file assets/feature-ai-chat-B3dgEa-M.css size=150798 sha256=e443a20912b384a8f685b8d352e87810a873f8025c2d105183f352555fcac6ad
+  file assets/feature-ai-chat-BQcn4TqV.js size=157394 sha256=3fab48541eadb34018c50a05ea8f576306470ef62c53d98a84a8784919f382fb
+  file assets/feature-ai-chat-BQcn4TqV.js.map size=627459 sha256=dfcb190cc6c6f5b56cc2387f91379ee951f840d114b58ce52f475a9bf8e5a5f6
+  file assets/feature-auth-BjxSTteg.js size=249832 sha256=536860b14ad56fa50f346689a7740ef5ebbdb58d94905487dfdc74172a3c2256
+  file assets/feature-auth-BjxSTteg.js.map size=1321841 sha256=ef9d0fa2951210d1e488d1d0f7c9af56ade9ec98dd0992f431c5db9c4eaf10fc
+  file assets/feature-board-planning-C8nb59Kb.css size=116036 sha256=9f5301b217ae19d64cdbd9630fc75fd77fd15615110ba096a838f8f664ea950c
+  file assets/feature-board-planning-C9cXuL6C.js size=283779 sha256=8d3fbe38f3930bbde2ab4067d9000289c78e42be97547393c321a7570e490f81
+  file assets/feature-board-planning-C9cXuL6C.js.map size=1129343 sha256=04c0da3ae6f85637b1af4cc20206f95adcca3e0a36e7cc8bfa9184c65d03eca6
+  file assets/feature-settings-CNtartZe.js size=115122 sha256=17bf97cc53b4c474284ad90f0d98ca807125ed310bf5830d518d87ed13158600
+  file assets/feature-settings-CNtartZe.js.map size=386189 sha256=d19a23b394a89a2a51db1f3194d3ba5ac8011361154151c0f9af472a82bc125b
+  file assets/feature-settings-DsrI76yg.css size=31196 sha256=2da4666205f9804665dacab13651105243ea4c0cf074e6a2cd10221445036d4b
+  file assets/feature-utilities-DeWzzM1V.js size=259474 sha256=779c6997eb82c690fef5ba1ebd85d98c7c0b44a36d1ff9c40d6d2a181f27e5e7
+  file assets/feature-utilities-DeWzzM1V.js.map size=845344 sha256=7eb722e565bf30d03cbcb76fa183bc9f45cf9bcf7fca47262acdbcd07c56673b
+  file assets/feature-utilities-tu9wXLg2.css size=93433 sha256=798d24f567095da983efb12fda4ec413a972d056284ad2fe4b7c0bc3a478425a
+  file assets/feature-wellbeing-CSxJdJte.js size=105896 sha256=3b35ec4501b8a08f9341cbc91dd7c219554b8db9ef6d8f8be1f311a60b954487
+  file assets/feature-wellbeing-CSxJdJte.js.map size=386672 sha256=90538706866d9eb2aebcec803c3f7e19cc11324bb9e0d4fe830c65ad616cc217
+  file assets/feature-wellbeing-xVroBQuj.css size=53748 sha256=a5840047b500811302bf7613aa5dd9b96ea4181169b9dace815ea97be2922374
+  file assets/index-BvZai5Q-.css size=117993 sha256=7361592668bc305b16f083b3ad5925209aa061e97a1ae66c65b1d02fe58da269
+  file assets/index-uLn9obA9.js size=355475 sha256=ba1a354e628d98fcb686bd49980bd266b287256c1147d9006a2d966e0551ac50
+  file assets/index-uLn9obA9.js.map size=1482852 sha256=fcc4d8c8739d2c49febb142b543579bc231ad710f9ccfc215e4bca73e8e7f684
+  file assets/leaflet-src-CBVIyuD7.js size=149908 sha256=4169b4ec39493fef176e3123180e32e50d2b5dec1c9c94755385d17cccb760a1
+  file assets/leaflet-src-CBVIyuD7.js.map size=680074 sha256=6a7491258d0ad4b1b036ffdaadf81054ceeb619870108f7f55b9cbdeaf238714
+  file assets/map-view-DRzi1wBI.js size=2847 sha256=d6f0fff10670c38835ed9410e99e959262721af154bcd23b14e7adada01714bf
+  file assets/map-view-DRzi1wBI.js.map size=10645 sha256=b1d7b8302e1e438ea8f89ca209700ccf290b08151569229af93faa12f8c1dc0c
+  file assets/vendor-observability-BsvgmO2t.js size=94202 sha256=18daac2e7e66c2d9c02a1c46a352382cc8ef4f4a3af922f103d4d7ec7f27372c
+  file assets/vendor-observability-BsvgmO2t.js.map size=654935 sha256=bfe4aa9e1e09fee15a84e7e9863da1f098fc45cb813034e0d75bc65b04a7f927
+  file assets/vendor-react-BUE3egDO.js size=284954 sha256=6f420b0f7cbb9347e5830fa9468a700cc2710d9826ac3d20d5097681f433a8d2
+  file assets/vendor-react-BUE3egDO.js.map size=1473888 sha256=c752aa8ec73c411faf76d5e5545a3f109a063d1388b99d242d101749342558f0
+  file index.html size=1959 sha256=5bf7d36838c72dd7cb7656d9fb15612104a8a298f37dc2314aa387f57a611cd3
+  file sw.js size=1032 sha256=ae7bc15d75bcc603d470fc1199a71fa93a4cda448e01cacb378b08c8b3fffa6e
+  provenance maps=11 sources=695 archive=531 store=164 virtual(non-file)=0 elsewhere=0 forbidden=0 archive_by_package apps/web=30 packages/core=2 packages/core-data=3 packages/plugin-productivity=8 packages/plugin-web-ai-chat=28 packages/plugin-web-board-core=16 packages/plugin-web-board-views=12 packages/plugin-web-board-workspaces=28 packages/plugin-web-bookkeeping=11 packages/plugin-web-countdown=15 packages/plugin-web-metric-tracker=8 packages/plugin-web-pomodoro=18 packages/plugin-web-settings-rest=37 packages/plugin-web-settings-shell=4 packages/plugin-web-statistics=24 packages/plugin-web-storage=19 packages/plugin-web-time-tracker=7 packages/plugin-web-tokens=4 packages/web-auth-device-session=17 packages/xai-web-calendar=44 packages/xai-web-cmdk=24 packages/xai-web-dashboard-grid=17 packages/xai-web-dashboard-widgets=40 packages/xai-web-event-bus=3 packages/xai-web-habits=23 packages/xai-web-matrix=17 packages/xai-web-meditation=17 packages/xai-web-pet=8 packages/xai-web-settings-appearance=8 packages/xai-web-settings-features-panel=10 packages/xai-web-shell=8 packages/xai-web-tasks=21
+vite JS comparison: 24073b5 12 .js, 419e56d 12 .js; multiset of SHA-256 identical: true; same name and bytes: 11; renamed with identical bytes: 1
+  js assets/feature-ai-chat-BQcn4TqV.js 24073b5=3fab48541eadb34018c50a05ea8f576306470ef62c53d98a84a8784919f382fb 419e56d=3fab48541eadb34018c50a05ea8f576306470ef62c53d98a84a8784919f382fb same name, same bytes
+  js assets/feature-auth-BjxSTteg.js 24073b5=536860b14ad56fa50f346689a7740ef5ebbdb58d94905487dfdc74172a3c2256 419e56d=536860b14ad56fa50f346689a7740ef5ebbdb58d94905487dfdc74172a3c2256 same name, same bytes
+  js assets/feature-board-planning-C9cXuL6C.js 24073b5=8d3fbe38f3930bbde2ab4067d9000289c78e42be97547393c321a7570e490f81 419e56d=8d3fbe38f3930bbde2ab4067d9000289c78e42be97547393c321a7570e490f81 same name, same bytes
+  js assets/feature-settings-CNtartZe.js 24073b5=17bf97cc53b4c474284ad90f0d98ca807125ed310bf5830d518d87ed13158600 419e56d=17bf97cc53b4c474284ad90f0d98ca807125ed310bf5830d518d87ed13158600 same name, same bytes
+  js assets/feature-utilities-DeWzzM1V.js 24073b5=779c6997eb82c690fef5ba1ebd85d98c7c0b44a36d1ff9c40d6d2a181f27e5e7 419e56d=779c6997eb82c690fef5ba1ebd85d98c7c0b44a36d1ff9c40d6d2a181f27e5e7 same name, same bytes
+  js assets/feature-wellbeing-CSxJdJte.js 24073b5=3b35ec4501b8a08f9341cbc91dd7c219554b8db9ef6d8f8be1f311a60b954487 419e56d=3b35ec4501b8a08f9341cbc91dd7c219554b8db9ef6d8f8be1f311a60b954487 same name, same bytes
+  js assets/index-BqSMclxF.js 24073b5=ba1a354e628d98fcb686bd49980bd266b287256c1147d9006a2d966e0551ac50 419e56d=ba1a354e628d98fcb686bd49980bd266b287256c1147d9006a2d966e0551ac50 as assets/index-uLn9obA9.js RENAMED, same bytes
+  js assets/leaflet-src-CBVIyuD7.js 24073b5=4169b4ec39493fef176e3123180e32e50d2b5dec1c9c94755385d17cccb760a1 419e56d=4169b4ec39493fef176e3123180e32e50d2b5dec1c9c94755385d17cccb760a1 same name, same bytes
+  js assets/map-view-DRzi1wBI.js 24073b5=d6f0fff10670c38835ed9410e99e959262721af154bcd23b14e7adada01714bf 419e56d=d6f0fff10670c38835ed9410e99e959262721af154bcd23b14e7adada01714bf same name, same bytes
+  js assets/vendor-observability-BsvgmO2t.js 24073b5=18daac2e7e66c2d9c02a1c46a352382cc8ef4f4a3af922f103d4d7ec7f27372c 419e56d=18daac2e7e66c2d9c02a1c46a352382cc8ef4f4a3af922f103d4d7ec7f27372c same name, same bytes
+  js assets/vendor-react-BUE3egDO.js 24073b5=6f420b0f7cbb9347e5830fa9468a700cc2710d9826ac3d20d5097681f433a8d2 419e56d=6f420b0f7cbb9347e5830fa9468a700cc2710d9826ac3d20d5097681f433a8d2 same name, same bytes
+  js sw.js 24073b5=ae7bc15d75bcc603d470fc1199a71fa93a4cda448e01cacb378b08c8b3fffa6e 419e56d=ae7bc15d75bcc603d470fc1199a71fa93a4cda448e01cacb378b08c8b3fffa6e same name, same bytes
+vite differing paths (8):
+  .vite/manifest.json: 24073b5=9ca1f6172ee5a726a824f852e2ec3e483c5a7db1b8a401a0281d31adc5eb8f53 419e56d=83d63ddbb1cca000dc47e82ca665dd258ed75b5a3b017a8bcd6f671b7df55f84
+  assets/index-BqSMclxF.js: 24073b5=ba1a354e628d98fcb686bd49980bd266b287256c1147d9006a2d966e0551ac50 419e56d=absent
+  assets/index-BqSMclxF.js.map: 24073b5=3dbfe2160741e8db20a0a398f4370a8280cd0956f6aa75bba5a6eb21abdef255 419e56d=absent
+  assets/index-BvZai5Q-.css: 24073b5=absent 419e56d=7361592668bc305b16f083b3ad5925209aa061e97a1ae66c65b1d02fe58da269
+  assets/index-CjQjEzbp.css: 24073b5=3553424dd3311d28537d62ef16307c0db2e849342add6e52ef5a8280ba182735 419e56d=absent
+  assets/index-uLn9obA9.js: 24073b5=absent 419e56d=ba1a354e628d98fcb686bd49980bd266b287256c1147d9006a2d966e0551ac50
+  assets/index-uLn9obA9.js.map: 24073b5=absent 419e56d=fcc4d8c8739d2c49febb142b543579bc231ad710f9ccfc215e4bca73e8e7f684
+  index.html: 24073b5=3923353e946e6867c19cee05458a0ef614725aed9885ea9099e3ef0e837122bc 419e56d=5bf7d36838c72dd7cb7656d9fb15612104a8a298f37dc2314aa387f57a611cd3
+vite CSS assets: renamed ["assets/index-CjQjEzbp.css"] -> ["assets/index-BvZai5Q-.css"]; same-name CSS differing []
+  minified CSS insertion at offset 9180: removed "" inserted ".appearance-pane .slider-row input[type=range]:focus-visible{outline:2px solid color-mix(in oklch,var(--accent) 58%,transparent);outline-offset:2px}.appearance-pane .accent-sw.active:focus-visible{outline:2px solid color-mix(in oklch,var(--accent) 58%,transparent);outline-offset:4px;box-shadow:0 0 0 2px var(--text-1)}"
+  production CSS insertion: rules=2 selectors=[".appearance-pane .slider-row input[type=range]:focus-visible",".appearance-pane .accent-sw.active:focus-visible"] declarations=[[["outline","2px solid color-mix(in oklch,var(--accent) 58%,transparent)"],["outline-offset","2px"]],[["outline","2px solid color-mix(in oklch,var(--accent) 58%,transparent)"],["outline-offset","4px"],["box-shadow","0 0 0 2px var(--text-1)"]]] leftover="" at_rules=false important=false
+vite renames: assets/index-BqSMclxF.js -> assets/index-uLn9obA9.js; assets/index-CjQjEzbp.css -> assets/index-BvZai5Q-.css
+  source map assets/index-BqSMclxF.js.map -> assets/index-uLn9obA9.js.map: identical after substituting the renamed names = true
+  .vite/manifest.json: identical after substituting the renamed names = true
+  index.html: identical after substituting the renamed names = true
+vite differing paths that are neither a renamed asset nor its source map (each checked above after substitution): .vite/manifest.json, index.html
+## C. Native evidence bundles rebuilt with the frozen runners' esbuild options
+esbuild=0.28.1 from node_modules/.pnpm/esbuild@0.28.1
+### E9-E11 verify-native-fixed.mjs (controls, reset, export)
+  logged docs/reviews/web-appearance-recovery-native/native-24073b5-fixed1-controls.log (sha256=ccf7acb2d3152e8b1db7340dc9a60185d38c40c5a99362e0e7f4f04ca87384fa): js=be21e32d499af3485b36c270d418e52124243b52e4524e8bc8cf9ce6d62b3e05 css=d58dfc44acd68008145cf09c17d90334164b2c6edc2b05a7a95c66bd8d259d24 revision=24073b522262d8b4bec0abfa29347db28adbdd9e fixture_sha256=27bdc8e6a29532482f8510538a004d984c0e68754b022d02788d5b69694af4d7 runner_sha256=6249155657986667e47cf9fe52f34f29d0dce2abbf6010a0bfe259b8ea1003ad
+  logged docs/reviews/web-appearance-recovery-native/native-24073b5-fixed1-reset.log (sha256=5b6fe71481c0049694f4919b0c1991678b6d125263d9b3efa951448176157809): js=be21e32d499af3485b36c270d418e52124243b52e4524e8bc8cf9ce6d62b3e05 css=d58dfc44acd68008145cf09c17d90334164b2c6edc2b05a7a95c66bd8d259d24 revision=24073b522262d8b4bec0abfa29347db28adbdd9e fixture_sha256=27bdc8e6a29532482f8510538a004d984c0e68754b022d02788d5b69694af4d7 runner_sha256=6249155657986667e47cf9fe52f34f29d0dce2abbf6010a0bfe259b8ea1003ad
+  logged docs/reviews/web-appearance-recovery-native/native-24073b5-fixed1-export.log (sha256=c3ac58b0e1d6096525c28991f46b5b26e6762e4fe2ca69a6625a7481a20e3e9c): js=be21e32d499af3485b36c270d418e52124243b52e4524e8bc8cf9ce6d62b3e05 css=d58dfc44acd68008145cf09c17d90334164b2c6edc2b05a7a95c66bd8d259d24 revision=24073b522262d8b4bec0abfa29347db28adbdd9e fixture_sha256=27bdc8e6a29532482f8510538a004d984c0e68754b022d02788d5b69694af4d7 runner_sha256=6249155657986667e47cf9fe52f34f29d0dce2abbf6010a0bfe259b8ea1003ad
+  rebuild @24073b5 snapshot depth 10: js=be21e32d499af3485b36c270d418e52124243b52e4524e8bc8cf9ce6d62b3e05 css=d58dfc44acd68008145cf09c17d90334164b2c6edc2b05a7a95c66bd8d259d24 inputs=1017 archive_modules=625 foreign=0 guard_violations=0 = logged (fidelity reproduced)
+  rebuild @419e56d snapshot depth 10: js=be21e32d499af3485b36c270d418e52124243b52e4524e8bc8cf9ce6d62b3e05 css=60ce850af515c4af4a4862135fb68940f7373193a8c30485ef98d0ab23bef937 inputs=1017 archive_modules=625 foreign=0 guard_violations=0
+  CSS 24073b5 -> 419e56d: common prefix 12433 lines, common suffix 20693 lines, removed 0 lines, inserted 9 lines:
+    + .appearance-pane .slider-row input[type=range]:focus-visible {
+    +   outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
+    +   outline-offset: 2px;
+    + }
+    + .appearance-pane .accent-sw.active:focus-visible {
+    +   outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
+    +   outline-offset: 4px;
+    +   box-shadow: 0 0 0 2px var(--text-1);
+    + }
+  E9-E11 verify-native-fixed.mjs (controls, reset, export) CSS insertion: rules=2 selectors=[".appearance-pane .slider-row input[type=range]:focus-visible",".appearance-pane .accent-sw.active:focus-visible"] declarations=[[["outline","2px solid color-mix(in oklch, var(--accent) 58%, transparent)"],["outline-offset","2px"]],[["outline","2px solid color-mix(in oklch, var(--accent) 58%, transparent)"],["outline-offset","4px"],["box-shadow","0 0 0 2px var(--text-1)"]]] leftover="" at_rules=false important=false
+### E12/E13/E26 verify-native-host-retryall.mjs variant fixed (host, downstream, retryall)
+  logged docs/reviews/web-appearance-recovery-native/native-24073b5-fixed1-host.log (sha256=57ba2c11dc53391831f64d666a7211dbcee79ed95be828b388ccff6eeb1a0d06): js=4474593b139670c98ac5587a9e4b7e7ebf9e326da971650c4d16c74148dc0dc7 css=560080dbad3a288c3f88d0497ff83ee5a5945db66c784a9658bda4cd6fb84021 revision=24073b522262d8b4bec0abfa29347db28adbdd9e fixture_sha256=118f565783fc99e2642341e39ff9afa2df4a6cb937dc016ca41ab13ab1721c19 runner_sha256=8af7adf4d7be3281f6575bddedd3d6f76a85d0f8f0cfd9b367a92828cbcb4fad
+  logged docs/reviews/web-appearance-recovery-native/native-24073b5-fixed1-downstream.log (sha256=8da81f7e0101bae29e9c98fc33916afe84f66bbc4573c4f785e0247cf1eaa472): js=4474593b139670c98ac5587a9e4b7e7ebf9e326da971650c4d16c74148dc0dc7 css=560080dbad3a288c3f88d0497ff83ee5a5945db66c784a9658bda4cd6fb84021 revision=24073b522262d8b4bec0abfa29347db28adbdd9e fixture_sha256=118f565783fc99e2642341e39ff9afa2df4a6cb937dc016ca41ab13ab1721c19 runner_sha256=8af7adf4d7be3281f6575bddedd3d6f76a85d0f8f0cfd9b367a92828cbcb4fad
+  logged docs/reviews/web-appearance-recovery-native/native-24073b5-fixed1-retryall.log (sha256=dc7f27e859d99408e1607f8628cd5e83e64acd6e6b6132633f7577c09ef75d42): js=4474593b139670c98ac5587a9e4b7e7ebf9e326da971650c4d16c74148dc0dc7 css=560080dbad3a288c3f88d0497ff83ee5a5945db66c784a9658bda4cd6fb84021 revision=24073b522262d8b4bec0abfa29347db28adbdd9e fixture_sha256=118f565783fc99e2642341e39ff9afa2df4a6cb937dc016ca41ab13ab1721c19 runner_sha256=8af7adf4d7be3281f6575bddedd3d6f76a85d0f8f0cfd9b367a92828cbcb4fad
+  rebuild @24073b5 snapshot depth 10: js=be14eb3167c65fe2a2388658aea671311035f896f41e4840eac810d53fa590b5 css=d58dfc44acd68008145cf09c17d90334164b2c6edc2b05a7a95c66bd8d259d24 inputs=1017 archive_modules=625 foreign=0 guard_violations=0
+  rebuild @24073b5 snapshot depth 8: js=e8fc28f7f48802740b40f918e8e2fe7a036d1fa6829f3013bc2d2b02d6895d6a css=018673749f0084cafb2b58d97dc852635e280158034d8755a8db9cf3dbce476b inputs=1017 archive_modules=625 foreign=0 guard_violations=0
+  rebuild @24073b5 snapshot depth 9: js=4474593b139670c98ac5587a9e4b7e7ebf9e326da971650c4d16c74148dc0dc7 css=560080dbad3a288c3f88d0497ff83ee5a5945db66c784a9658bda4cd6fb84021 inputs=1017 archive_modules=625 foreign=0 guard_violations=0 = logged (fidelity reproduced)
+  rebuild @419e56d snapshot depth 9: js=4474593b139670c98ac5587a9e4b7e7ebf9e326da971650c4d16c74148dc0dc7 css=f31c566420b660981b6263028756582c3440e4899c7ffd3246bd692bdee37307 inputs=1017 archive_modules=625 foreign=0 guard_violations=0
+  CSS 24073b5 -> 419e56d: common prefix 12433 lines, common suffix 20693 lines, removed 0 lines, inserted 9 lines:
+    + .appearance-pane .slider-row input[type=range]:focus-visible {
+    +   outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
+    +   outline-offset: 2px;
+    + }
+    + .appearance-pane .accent-sw.active:focus-visible {
+    +   outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
+    +   outline-offset: 4px;
+    +   box-shadow: 0 0 0 2px var(--text-1);
+    + }
+  E12/E13/E26 verify-native-host-retryall.mjs variant fixed (host, downstream, retryall) CSS insertion: rules=2 selectors=[".appearance-pane .slider-row input[type=range]:focus-visible",".appearance-pane .accent-sw.active:focus-visible"] declarations=[[["outline","2px solid color-mix(in oklch, var(--accent) 58%, transparent)"],["outline-offset","2px"]],[["outline","2px solid color-mix(in oklch, var(--accent) 58%, transparent)"],["outline-offset","4px"],["box-shadow","0 0 0 2px var(--text-1)"]]] leftover="" at_rules=false important=false
+### E12 verify-native-host-retryall.mjs variant fixed-coord (host coordinator branch)
+  logged docs/reviews/web-appearance-recovery-native/native-24073b5-fixed1-host.log (sha256=57ba2c11dc53391831f64d666a7211dbcee79ed95be828b388ccff6eeb1a0d06): js=1b43c07323202840c38b4650ddd1a5ea906b37314c3c051d6488c05a9284b83a css=560080dbad3a288c3f88d0497ff83ee5a5945db66c784a9658bda4cd6fb84021 revision=24073b522262d8b4bec0abfa29347db28adbdd9e fixture_sha256=118f565783fc99e2642341e39ff9afa2df4a6cb937dc016ca41ab13ab1721c19 runner_sha256=8af7adf4d7be3281f6575bddedd3d6f76a85d0f8f0cfd9b367a92828cbcb4fad
+  rebuild @24073b5 snapshot depth 10: js=e6f065312390621fc5c40b4b3daed872f9018f93f6bebda1cf47191dce1b4470 css=d58dfc44acd68008145cf09c17d90334164b2c6edc2b05a7a95c66bd8d259d24 inputs=1018 archive_modules=625 foreign=0 guard_violations=0
+  rebuild @24073b5 snapshot depth 8: js=2112afbc858cf553f8e8b71d20d1e93c5b129faf27c2012d60ca4e9942bc56bf css=018673749f0084cafb2b58d97dc852635e280158034d8755a8db9cf3dbce476b inputs=1018 archive_modules=625 foreign=0 guard_violations=0
+  rebuild @24073b5 snapshot depth 9: js=1b43c07323202840c38b4650ddd1a5ea906b37314c3c051d6488c05a9284b83a css=560080dbad3a288c3f88d0497ff83ee5a5945db66c784a9658bda4cd6fb84021 inputs=1018 archive_modules=625 foreign=0 guard_violations=0 = logged (fidelity reproduced)
+  rebuild @419e56d snapshot depth 9: js=1b43c07323202840c38b4650ddd1a5ea906b37314c3c051d6488c05a9284b83a css=f31c566420b660981b6263028756582c3440e4899c7ffd3246bd692bdee37307 inputs=1018 archive_modules=625 foreign=0 guard_violations=0
+  CSS 24073b5 -> 419e56d: common prefix 12433 lines, common suffix 20693 lines, removed 0 lines, inserted 9 lines:
+    + .appearance-pane .slider-row input[type=range]:focus-visible {
+    +   outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
+    +   outline-offset: 2px;
+    + }
+    + .appearance-pane .accent-sw.active:focus-visible {
+    +   outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
+    +   outline-offset: 4px;
+    +   box-shadow: 0 0 0 2px var(--text-1);
+    + }
+  E12 verify-native-host-retryall.mjs variant fixed-coord (host coordinator branch) CSS insertion: rules=2 selectors=[".appearance-pane .slider-row input[type=range]:focus-visible",".appearance-pane .accent-sw.active:focus-visible"] declarations=[[["outline","2px solid color-mix(in oklch, var(--accent) 58%, transparent)"],["outline-offset","2px"]],[["outline","2px solid color-mix(in oklch, var(--accent) 58%, transparent)"],["outline-offset","4px"],["box-shadow","0 0 0 2px var(--text-1)"]]] leftover="" at_rules=false important=false
+## Checks
+PASS [assert] A: product-scope diff 24073b5..419e56d is exactly M styles.css + A the two guard tests :: A packages/xai-web-settings-appearance/src/__tests__/AppearancePane.focus-ring.test.tsx, A packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx, M packages/xai-web-settings-appearance/src/styles.css
+PASS [assert] A: full unrestricted diff outside docs/ is exactly the same three files :: A packages/xai-web-settings-appearance/src/__tests__/AppearancePane.focus-ring.test.tsx, A packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx, M packages/xai-web-settings-appearance/src/styles.css
+PASS [assert] A: the product delta removes no line (numstat deletions 0) :: deletions=0
+PASS [assert] A: along every product commit, styles.css starts with its predecessor byte for byte (append-only)
+PASS [assert] A: the appended CSS is exactly the two :focus-visible rules scoped under .appearance-pane, declaring only outline, outline-offset and box-shadow (no at-rule, no !important)
+PASS [assert] A: no non-test, non-Markdown file under apps/ or packages/ references the two new test files
+PASS [harness] B: 24073b5 archive apps/web package.json script "build" is "vite build" (found "vite build")
+PASS [harness] B: vite build @24073b5 exited 0 and emitted .js files
+PASS [harness] B: vite build @24073b5 source-map provenance: every source in the archive, the dependency store or virtual; none from a checkout (531 archive, 164 store, 0 virtual)
+PASS [harness] B: vite build @24073b5 bundled the Appearance package from the archive (source maps reference 8 of its files)
+PASS [harness] B: 419e56d archive apps/web package.json script "build" is "vite build" (found "vite build")
+PASS [harness] B: vite build @419e56d exited 0 and emitted .js files
+PASS [harness] B: vite build @419e56d source-map provenance: every source in the archive, the dependency store or virtual; none from a checkout (531 archive, 164 store, 0 virtual)
+PASS [harness] B: vite build @419e56d bundled the Appearance package from the archive (source maps reference 8 of its files)
+PASS [assert] B: every production .js file built from 419e56d has exactly the bytes of one built from 24073b5 (12 files; SHA-256 multisets equal)
+PASS [assert] B: the only .js name changes are renames of byte-identical chunks (no .js file differs in content under any name)
+PASS [assert] B: the production CSS difference is one renamed stylesheet whose only change is the insertion of the two focus rules
+PASS [assert] B: source map of the renamed chunk index-BqSMclxF.js.map is identical after substituting the renamed names
+PASS [assert] B: .vite/manifest.json differs only by the renamed asset names
+PASS [assert] B: index.html differs only by the renamed asset names
+PASS [harness] C: the coordinatorWrapper used here is the frozen E12 runner's source text, verbatim
+PASS [harness] C: E9-E11 verify-native-fixed.mjs (controls, reset, export): every cited log records the same JS and CSS bundle hashes at 24073b5
+PASS [harness] C: E9-E11 verify-native-fixed.mjs (controls, reset, export): this checkout's fixture and runner equal the files the logged run recorded (27bdc8e6a2953248, 6249155657986667)
+PASS [assert] C: E9-E11 verify-native-fixed.mjs (controls, reset, export): the logged 24073b5 JS be21e32d499af348 and CSS d58dfc44acd68008 are reproduced exactly by this rebuild (fidelity control)
+PASS [harness] C: E9-E11 verify-native-fixed.mjs (controls, reset, export): no module from a checkout in either rebuild
+PASS [assert] C: E9-E11 verify-native-fixed.mjs (controls, reset, export): the JS bundle built from 419e56d is byte-identical to the one built from 24073b5 (= the logged bundle the native run executed)
+PASS [assert] C: E9-E11 verify-native-fixed.mjs (controls, reset, export): the CSS bundle differs only by the insertion of the two focus rules
+PASS [harness] C: E12/E13/E26 verify-native-host-retryall.mjs variant fixed (host, downstream, retryall): every cited log records the same JS and CSS bundle hashes at 24073b5
+PASS [harness] C: E12/E13/E26 verify-native-host-retryall.mjs variant fixed (host, downstream, retryall): this checkout's fixture and runner equal the files the logged run recorded (118f565783fc99e2, 8af7adf4d7be3281)
+PASS [assert] C: E12/E13/E26 verify-native-host-retryall.mjs variant fixed (host, downstream, retryall): the logged 24073b5 JS 4474593b139670c9 and CSS 560080dbad3a288c are reproduced exactly by this rebuild (fidelity control)
+PASS [harness] C: E12/E13/E26 verify-native-host-retryall.mjs variant fixed (host, downstream, retryall): no module from a checkout in either rebuild
+PASS [assert] C: E12/E13/E26 verify-native-host-retryall.mjs variant fixed (host, downstream, retryall): the JS bundle built from 419e56d is byte-identical to the one built from 24073b5 (= the logged bundle the native run executed)
+PASS [assert] C: E12/E13/E26 verify-native-host-retryall.mjs variant fixed (host, downstream, retryall): the CSS bundle differs only by the insertion of the two focus rules
+PASS [harness] C: E12 verify-native-host-retryall.mjs variant fixed-coord (host coordinator branch): every cited log records the same JS and CSS bundle hashes at 24073b5
+PASS [harness] C: E12 verify-native-host-retryall.mjs variant fixed-coord (host coordinator branch): this checkout's fixture and runner equal the files the logged run recorded (118f565783fc99e2, 8af7adf4d7be3281)
+PASS [assert] C: E12 verify-native-host-retryall.mjs variant fixed-coord (host coordinator branch): the logged 24073b5 JS 1b43c07323202840 and CSS 560080dbad3a288c are reproduced exactly by this rebuild (fidelity control)
+PASS [harness] C: E12 verify-native-host-retryall.mjs variant fixed-coord (host coordinator branch): no module from a checkout in either rebuild
+PASS [assert] C: E12 verify-native-host-retryall.mjs variant fixed-coord (host coordinator branch): the JS bundle built from 419e56d is byte-identical to the one built from 24073b5 (= the logged bundle the native run executed)
+PASS [assert] C: E12 verify-native-host-retryall.mjs variant fixed-coord (host coordinator branch): the CSS bundle differs only by the insertion of the two focus rules
+assertions=21/21 harness=18/18
+exit=0

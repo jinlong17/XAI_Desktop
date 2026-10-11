@@ -1,0 +1,12 @@
+{"name":"baseline","head":"a61f92d","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":390}
+{"name":"profile-real-export","filename":"xai-metric-unsaved-draft.json"}
+{"name":"latest-profile-retry","pass":true,"visible":"64","persisted":64,"alert":false}
+{"name":"cross-operation-retention","pass":true,"persisted":70,"alert":true}
+{"name":"closed-record-real-export","filename":"xai-metric-unsaved-draft.json"}
+{"name":"latest-closed-record-export","pass":true,"recordDraft":{"id":null,"weight":"82","unit":"kg","dateMode":"today","date":"2026-09-09","time":"12:13","note":"native metric note"},"snapshotWeight":81}
+{"name":"latest-closed-record-retry","pass":true,"count":10,"before":9,"latest":{"id":"mw_mtuh7i75_z10e13","metricId":"weight","value":82,"unit":"kg","measuredAt":"2026-09-09T19:13:00.000Z","note":"native metric note","createdAt":"2026-09-09T19:13:06.785Z","updatedAt":"2026-09-09T19:13:06.785Z"}}
+{"name":"conflict-real-export","filename":"xai-metric-unsaved-draft.json"}
+{"name":"conflict","newerRawRetained":true,"failedDraftExported":true}
+{"name":"390px-recovery","left":33,"right":347,"viewport":390,"height":328.609375}
+{"name":"account-boundary","BPreserved":true,"staleExportRejected":true}
+{"name":"PASS","downloads":3,"checks":[true,true,true,true],"scope":"profile latest retry, operation retention, latest closed record draft, conflict/B boundary, actual native downloads"}

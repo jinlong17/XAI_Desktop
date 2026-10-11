@@ -1,0 +1,2313 @@
+revision=afbfb24 fixed_commit=afbfb24d6f7311366b77852eda927d08467478c2
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-more-sol-BXlOmV
+
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx (10 tests | 10 failed) 952ms
+   × missing and rejected Web Locks retain exact device/account edit and reset intents 91ms
+     → expected 'window' to be 'tray' // Object.is equality
+   × invalid and unavailable sources retain requested reset intents without purging raw bytes 301ms
+     → expected null to be 'invalid-bool' // Object.is equality
+   × missing committed marker lets device resets settle but retains both private reset intents 66ms
+     → expected null to be 'study' // Object.is equality
+   × deleted tombstone lets device resets settle but retains both private reset intents 70ms
+     → No More Blob
+   × a held account lifecycle lock leaves device reset independent and private reset pending 58ms
+     → expected null to be 'study' // Object.is equality
+   × setting an exact registry default stores bytes while Reset Default removes them 50ms
+     → expected undefined to be false // Object.is equality
+   × a same-field source Reload cannot erase an actual failed edit draft 115ms
+     → expected 'tray' to be 'window' // Object.is equality
+   × targeted discard rereads only its field with zero mutations and preserves a failed sibling 157ms
+     → Unable to find an accessible element with the role "button" and name "Discard Choose window type when launching"
+
+Here are the accessible roles:
+
+  combobox:
+
+  Name "Language":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Language"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Choose window type when launching":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Choose window type when launching"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default Date":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default Date"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default Reminders (Due time task)":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default Reminders (Due time task)"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default Reminders (All day task)":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default Reminders (All day task)"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default Priority":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default Priority"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default Tag":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default Tag"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default List":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default List"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default Add to":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default Add to"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Overdue Section shows at":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Overdue Section shows at"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Follow System":
+  [36m<option[39m
+    [33mvalue[39m=[32m"follow"[39m
+  [36m/>[39m
+
+  Name "Window":
+  [36m<option[39m
+    [33mvalue[39m=[32m"window"[39m
+  [36m/>[39m
+
+  Name "Tray":
+  [36m<option[39m
+    [33mvalue[39m=[32m"tray"[39m
+  [36m/>[39m
+
+  Name "Fullscreen":
+  [36m<option[39m
+    [33mvalue[39m=[32m"full"[39m
+  [36m/>[39m
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "Today":
+  [36m<option[39m
+    [33mvalue[39m=[32m"today"[39m
+  [36m/>[39m
+
+  Name "Tomorrow":
+  [36m<option[39m
+    [33mvalue[39m=[32m"tomorrow"[39m
+  [36m/>[39m
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "On time":
+  [36m<option[39m
+    [33mvalue[39m=[32m"on_time"[39m
+  [36m/>[39m
+
+  Name "5 min before":
+  [36m<option[39m
+    [33mvalue[39m=[32m"5min"[39m
+  [36m/>[39m
+
+  Name "15 min before":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15min"[39m
+  [36m/>[39m
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "At 9:00 AM":
+  [36m<option[39m
+    [33mvalue[39m=[32m"9am"[39m
+  [36m/>[39m
+
+  Name "Day before":
+  [36m<option[39m
+    [33mvalue[39m=[32m"day_before"[39m
+  [36m/>[39m
+
+  Name "No Priority":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "Low":
+  [36m<option[39m
+    [33mvalue[39m=[32m"low"[39m
+  [36m/>[39m
+
+  Name "Medium":
+  [36m<option[39m
+    [33mvalue[39m=[32m"med"[39m
+  [36m/>[39m
+
+  Name "High":
+  [36m<option[39m
+    [33mvalue[39m=[32m"high"[39m
+  [36m/>[39m
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "Study":
+  [36m<option[39m
+    [33mvalue[39m=[32m"study"[39m
+  [36m/>[39m
+
+  Name "Work":
+  [36m<option[39m
+    [33mvalue[39m=[32m"work"[39m
+  [36m/>[39m
+
+  Name "Personal":
+  [36m<option[39m
+    [33mvalue[39m=[32m"personal"[39m
+  [36m/>[39m
+
+  Name "Inbox":
+  [36m<option[39m
+    [33mvalue[39m=[32m"inbox"[39m
+  [36m/>[39m
+
+  Name "Today":
+  [36m<option[39m
+    [33mvalue[39m=[32m"today"[39m
+  [36m/>[39m
+
+  Name "Top of List":
+  [36m<option[39m
+    [33mvalue[39m=[32m"top"[39m
+  [36m/>[39m
+
+  Name "Bottom of List":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bottom"[39m
+  [36m/>[39m
+
+  Name "Top of List":
+  [36m<option[39m
+    [33mvalue[39m=[32m"top"[39m
+  [36m/>[39m
+
+  Name "Bottom of List":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bottom"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Launch at Login":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Launch at Login"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Minimize app when auto launching":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Minimize app when auto launching"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Date Recognition":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Date Recognition"[39m
+    [33mclass[39m=[32m"toggle"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "URL Parsing":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"URL Parsing"[39m
+    [33mclass[39m=[32m"toggle"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Smart Recognition":
+  [36m<h4[39m
+    [33mclass[39m=[32m"pane-h-block"[39m
+  [36m/>[39m
+
+  Name "Task Default":
+  [36m<h4[39m
+    [33mclass[39m=[32m"pane-h-block"[39m
+  [36m/>[39m
+
+  Name "Task Template":
+  [36m<h4[39m
+    [33mclass[39m=[32m"pane-h-block"[39m
+  [36m/>[39m
+
+  Name "Daily prep":
+  [36m<h5 />[39m
+
+  Name "Daily journal":
+  [36m<h5 />[39m
+
+  Name "Travel checklist":
+  [36m<h5 />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Reset Default":
+  [36m<div[39m
+    [33mclass[39m=[32m"reset-link"[39m
+    [33mdata-testid[39m=[32m"more-reset-default"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul />[39m
+
+  Name "":
+  [36m<ul />[39m
+
+  Name "":
+  [36m<ul />[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"more-pane"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mLanguage[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Language"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"follow"[39m
+              [36m>[39m
+                [0mFollow System[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+        [33mstyle[39m=[32m"margin-top: 14px;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mChoose window type when launching[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Choose window type when launching"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"window"[39m
+              [36m>[39m
+                [0mWindow[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"tray"[39m
+              [36m>[39m
+                [0mTray[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"full"[39m
+              [36m>[39m
+                [0mFullscreen[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mLaunch at Login[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Launch at Login"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mMinimize app when auto launching[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Minimize app when auto launching"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<h4[39m
+        [33mclass[39m=[32m"pane-h-block"[39m
+      [36m>[39m
+        [0mSmart Recognition[0m
+      [36m</h4>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDate Recognition[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-desc"[39m
+            [36m>[39m
+              [0mWhen adding tasks, recognize date and time information and automatically set reminders.[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33maria-label[39m=[32m"Date Recognition"[39m
+              [33mclass[39m=[32m"toggle"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mRemove text in tasks[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"check-inline"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"cbx checked"[39m
+              [36m/>[39m
+            [36m</label>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mTag Recognition[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-desc"[39m
+            [36m>[39m
+              [0mYou can select to keep or remove tags from task name.[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"check-inline"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mRemove tags from task name[0m
+              [36m</span>[39m
+            [36m</label>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mURL Parsing[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-desc"[39m
+            [36m>[39m
+              [0mWhen the task name is a URL, it will be parsed as the URL title.[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33maria-label[39m=[32m"URL Parsing"[39m
+              [33mclass[39m=[32m"toggle"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<h4[39m
+        [33mclass[39m=[32m"pane-h-block"[39m
+      [36m>[39m
+        [0mTask Default[0m
+      [36m</h4>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault Date[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default Date"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"none"[39m
+              [36m>[39m
+                [0mNone[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"today"[39m
+              [36m>[39m
+                [0mToday[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"tomorrow"[39m
+              [36m>[39m
+                [0mTomorrow[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault Reminders (Due time task)[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default Reminders (Due time task)"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"none"[39m
+              [36m>[39m
+                [0mNone[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"on_time"[39m
+              [36m>[39m
+                [0mOn time[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"5min"[39m
+              [36m>[39m
+                [0m5 min before[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"15min"[39m
+              [36m>[39m
+                [0m15 min before[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault Reminders (All day task)[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default Reminders (All day task)"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"none"[39m
+              [36m>[39m
+                [0mNone[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"9am"[39m
+              [36m>[39m
+                [0mAt 9:00 AM[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"day_before"[39m
+              [36m>[39m
+                [0mDay before[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+        [33mstyle[39m=[32m"margin-top: 14px;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault Priority[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default Priority"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"none"[39m
+              [36m>[39m
+                [0mNo Priority[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"low"[39m
+              [36m>[39m
+                [0mLow[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"med"[39m
+              [36m>[39m
+                [0mMedium[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"high"[39m
+              [36m>[39m
+                [0mHigh[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault Tag[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default Tag"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"none"[39m
+              [36m>[39m
+                [0mNone[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"study"[39m
+              [36m>[39m
+                [0mStudy[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"work"[39m
+              [36m>[39m
+                [0mWork[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"personal"[39m
+              [36m>[39m
+                [0mPersonal[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault List[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default List"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"inbox"[39m
+              [36m>[39m
+                [0mInbox[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"today"[39m
+              [36m>[39m
+                [0mToday[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+        [33mstyle[39m=[32m"margin-top: 14px;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault Add to[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default Add to"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"top"[39m
+              [36m>[39m
+                [0mTop of List[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"bottom"[39m
+              [36m>[39m
+                [0mBottom of List[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mOverdue Section shows at[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Overdue Section shows at"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"top"[39m
+              [36m>[39m
+                [0mTop of List[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"bottom"[39m
+              [36m>[39m
+                [0mBottom of List[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"reset-link"[39m
+        [33mdata-testid[39m=[32m"more-reset-default"[39m
+        [33mrole[39m=[32m"button"[39m
+        [33mtabindex[39m=[32m"0"[39m
+      [36m>[39m
+        [0mReset Default[0m
+      [36m</div>[39m
+      [36m<h4[39m
+        [33mclass[39m=[32m"pane-h-block"[39m
+      [36m>[39m
+        [0mTask Template[0m
+      [36m</h4>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"template-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"template-card"[39m
+        [36m>[39m
+          [36m<h5>[39m
+            [0mDaily prep[0m
+          [36m</h5>[39m
+          [36m<ul>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mQuick recap of yesterday[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mSpend time on email[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mReview smart list 'Tod…'[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mPick the most important…[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mPick the hardest task…[0m
+              [36m</span>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"template-card"[39m
+        [36m>[39m
+          [36m<h5>[39m
+            [0mDaily journal[0m
+          [36m</h5>[39m
+          [36m<ul>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mWhat did I finish today?[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mWhat was noteworthy?[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mWhat surprises came up?[0m
+              [36m</span>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"template-card"[39m
+        [36m>[39m
+          [36m<h5>[39m
+            [0mTravel checklist[0m
+          [36m</h5>[39m
+          [36m<ul>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mID / Passport / Visa…[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mChargers / cables[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mUmbrella[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mLight backpack[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mClothes: tops / bottoms[0m
+              [36m</span>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   × an external conflict coexists with an unrelated quota failure and Retry preserves external bytes 22ms
+     → hold is not defined
+   × all-discard visits only current drafts and a later same-field reset survives old completion 20ms
+     → hold is not defined
+
+ Test Files  1 failed (1)
+      Tests  10 failed (10)
+   Start at  06:16:04
+   Duration  3.93s (transform 564ms, setup 553ms, collect 455ms, tests 952ms, environment 671ms, prepare 223ms)
+
+
+stderr | docs/reviews/web-more-recovery-sol/boundaries.test.tsx > a same-field source Reload cannot erase an actual failed edit draft
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > missing and rejected Web Locks retain exact device/account edit and reset intents
+AssertionError: expected 'window' to be 'tray' // Object.is equality
+
+Expected: "tray"
+Received: "window"
+
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:11:145
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > invalid and unavailable sources retain requested reset intents without purging raw bytes
+AssertionError: expected null to be 'invalid-bool' // Object.is equality
+
+- Expected: 
+"invalid-bool"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:20:59
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > missing committed marker lets device resets settle but retains both private reset intents
+AssertionError: expected null to be 'study' // Object.is equality
+
+- Expected: 
+"study"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:30:114
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > deleted tombstone lets device resets settle but retains both private reset intents
+Error: No More Blob
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-more-sol-BXlOmV/docs/reviews/web-more-recovery-sol/fixture.tsx:81:122
+
+ ❯ Object.read ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-more-sol-BXlOmV/docs/reviews/web-more-recovery-sol/fixture.tsx:81:62
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:31:70
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > a held account lifecycle lock leaves device reset independent and private reset pending
+AssertionError: expected null to be 'study' // Object.is equality
+
+- Expected: 
+"study"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:40:213
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > setting an exact registry default stores bytes while Reset Default removes them
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected: 
+false
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:45:230
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > a same-field source Reload cannot erase an actual failed edit draft
+AssertionError: expected 'tray' to be 'window' // Object.is equality
+
+Expected: "window"
+Received: "tray"
+
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:50:272
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > targeted discard rereads only its field with zero mutations and preserves a failed sibling
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Discard Choose window type when launching"
+
+Here are the accessible roles:
+
+  combobox:
+
+  Name "Language":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Language"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Choose window type when launching":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Choose window type when launching"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default Date":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default Date"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default Reminders (Due time task)":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default Reminders (Due time task)"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default Reminders (All day task)":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default Reminders (All day task)"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default Priority":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default Priority"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default Tag":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default Tag"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default List":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default List"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Default Add to":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Default Add to"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  Name "Overdue Section shows at":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Overdue Section shows at"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Follow System":
+  [36m<option[39m
+    [33mvalue[39m=[32m"follow"[39m
+  [36m/>[39m
+
+  Name "Window":
+  [36m<option[39m
+    [33mvalue[39m=[32m"window"[39m
+  [36m/>[39m
+
+  Name "Tray":
+  [36m<option[39m
+    [33mvalue[39m=[32m"tray"[39m
+  [36m/>[39m
+
+  Name "Fullscreen":
+  [36m<option[39m
+    [33mvalue[39m=[32m"full"[39m
+  [36m/>[39m
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "Today":
+  [36m<option[39m
+    [33mvalue[39m=[32m"today"[39m
+  [36m/>[39m
+
+  Name "Tomorrow":
+  [36m<option[39m
+    [33mvalue[39m=[32m"tomorrow"[39m
+  [36m/>[39m
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "On time":
+  [36m<option[39m
+    [33mvalue[39m=[32m"on_time"[39m
+  [36m/>[39m
+
+  Name "5 min before":
+  [36m<option[39m
+    [33mvalue[39m=[32m"5min"[39m
+  [36m/>[39m
+
+  Name "15 min before":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15min"[39m
+  [36m/>[39m
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "At 9:00 AM":
+  [36m<option[39m
+    [33mvalue[39m=[32m"9am"[39m
+  [36m/>[39m
+
+  Name "Day before":
+  [36m<option[39m
+    [33mvalue[39m=[32m"day_before"[39m
+  [36m/>[39m
+
+  Name "No Priority":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "Low":
+  [36m<option[39m
+    [33mvalue[39m=[32m"low"[39m
+  [36m/>[39m
+
+  Name "Medium":
+  [36m<option[39m
+    [33mvalue[39m=[32m"med"[39m
+  [36m/>[39m
+
+  Name "High":
+  [36m<option[39m
+    [33mvalue[39m=[32m"high"[39m
+  [36m/>[39m
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "Study":
+  [36m<option[39m
+    [33mvalue[39m=[32m"study"[39m
+  [36m/>[39m
+
+  Name "Work":
+  [36m<option[39m
+    [33mvalue[39m=[32m"work"[39m
+  [36m/>[39m
+
+  Name "Personal":
+  [36m<option[39m
+    [33mvalue[39m=[32m"personal"[39m
+  [36m/>[39m
+
+  Name "Inbox":
+  [36m<option[39m
+    [33mvalue[39m=[32m"inbox"[39m
+  [36m/>[39m
+
+  Name "Today":
+  [36m<option[39m
+    [33mvalue[39m=[32m"today"[39m
+  [36m/>[39m
+
+  Name "Top of List":
+  [36m<option[39m
+    [33mvalue[39m=[32m"top"[39m
+  [36m/>[39m
+
+  Name "Bottom of List":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bottom"[39m
+  [36m/>[39m
+
+  Name "Top of List":
+  [36m<option[39m
+    [33mvalue[39m=[32m"top"[39m
+  [36m/>[39m
+
+  Name "Bottom of List":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bottom"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Launch at Login":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Launch at Login"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Minimize app when auto launching":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Minimize app when auto launching"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Date Recognition":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Date Recognition"[39m
+    [33mclass[39m=[32m"toggle"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "URL Parsing":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"URL Parsing"[39m
+    [33mclass[39m=[32m"toggle"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Smart Recognition":
+  [36m<h4[39m
+    [33mclass[39m=[32m"pane-h-block"[39m
+  [36m/>[39m
+
+  Name "Task Default":
+  [36m<h4[39m
+    [33mclass[39m=[32m"pane-h-block"[39m
+  [36m/>[39m
+
+  Name "Task Template":
+  [36m<h4[39m
+    [33mclass[39m=[32m"pane-h-block"[39m
+  [36m/>[39m
+
+  Name "Daily prep":
+  [36m<h5 />[39m
+
+  Name "Daily journal":
+  [36m<h5 />[39m
+
+  Name "Travel checklist":
+  [36m<h5 />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Reset Default":
+  [36m<div[39m
+    [33mclass[39m=[32m"reset-link"[39m
+    [33mdata-testid[39m=[32m"more-reset-default"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul />[39m
+
+  Name "":
+  [36m<ul />[39m
+
+  Name "":
+  [36m<ul />[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"more-pane"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mLanguage[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Language"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"follow"[39m
+              [36m>[39m
+                [0mFollow System[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+        [33mstyle[39m=[32m"margin-top: 14px;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mChoose window type when launching[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Choose window type when launching"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"window"[39m
+              [36m>[39m
+                [0mWindow[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"tray"[39m
+              [36m>[39m
+                [0mTray[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"full"[39m
+              [36m>[39m
+                [0mFullscreen[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mLaunch at Login[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Launch at Login"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mMinimize app when auto launching[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Minimize app when auto launching"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<h4[39m
+        [33mclass[39m=[32m"pane-h-block"[39m
+      [36m>[39m
+        [0mSmart Recognition[0m
+      [36m</h4>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDate Recognition[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-desc"[39m
+            [36m>[39m
+              [0mWhen adding tasks, recognize date and time information and automatically set reminders.[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33maria-label[39m=[32m"Date Recognition"[39m
+              [33mclass[39m=[32m"toggle"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mRemove text in tasks[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"check-inline"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"cbx checked"[39m
+              [36m/>[39m
+            [36m</label>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mTag Recognition[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-desc"[39m
+            [36m>[39m
+              [0mYou can select to keep or remove tags from task name.[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"check-inline"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mRemove tags from task name[0m
+              [36m</span>[39m
+            [36m</label>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mURL Parsing[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-desc"[39m
+            [36m>[39m
+              [0mWhen the task name is a URL, it will be parsed as the URL title.[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33maria-label[39m=[32m"URL Parsing"[39m
+              [33mclass[39m=[32m"toggle"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<h4[39m
+        [33mclass[39m=[32m"pane-h-block"[39m
+      [36m>[39m
+        [0mTask Default[0m
+      [36m</h4>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault Date[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default Date"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"none"[39m
+              [36m>[39m
+                [0mNone[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"today"[39m
+              [36m>[39m
+                [0mToday[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"tomorrow"[39m
+              [36m>[39m
+                [0mTomorrow[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault Reminders (Due time task)[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default Reminders (Due time task)"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"none"[39m
+              [36m>[39m
+                [0mNone[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"on_time"[39m
+              [36m>[39m
+                [0mOn time[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"5min"[39m
+              [36m>[39m
+                [0m5 min before[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"15min"[39m
+              [36m>[39m
+                [0m15 min before[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault Reminders (All day task)[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default Reminders (All day task)"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"none"[39m
+              [36m>[39m
+                [0mNone[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"9am"[39m
+              [36m>[39m
+                [0mAt 9:00 AM[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"day_before"[39m
+              [36m>[39m
+                [0mDay before[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+        [33mstyle[39m=[32m"margin-top: 14px;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault Priority[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default Priority"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"none"[39m
+              [36m>[39m
+                [0mNo Priority[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"low"[39m
+              [36m>[39m
+                [0mLow[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"med"[39m
+              [36m>[39m
+                [0mMedium[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"high"[39m
+              [36m>[39m
+                [0mHigh[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault Tag[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default Tag"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"none"[39m
+              [36m>[39m
+                [0mNone[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"study"[39m
+              [36m>[39m
+                [0mStudy[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"work"[39m
+              [36m>[39m
+                [0mWork[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"personal"[39m
+              [36m>[39m
+                [0mPersonal[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault List[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default List"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"inbox"[39m
+              [36m>[39m
+                [0mInbox[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"today"[39m
+              [36m>[39m
+                [0mToday[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+        [33mstyle[39m=[32m"margin-top: 14px;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mDefault Add to[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Default Add to"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"top"[39m
+              [36m>[39m
+                [0mTop of List[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"bottom"[39m
+              [36m>[39m
+                [0mBottom of List[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mOverdue Section shows at[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Overdue Section shows at"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"top"[39m
+              [36m>[39m
+                [0mTop of List[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"bottom"[39m
+              [36m>[39m
+                [0mBottom of List[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"reset-link"[39m
+        [33mdata-testid[39m=[32m"more-reset-default"[39m
+        [33mrole[39m=[32m"button"[39m
+        [33mtabindex[39m=[32m"0"[39m
+      [36m>[39m
+        [0mReset Default[0m
+      [36m</div>[39m
+      [36m<h4[39m
+        [33mclass[39m=[32m"pane-h-block"[39m
+      [36m>[39m
+        [0mTask Template[0m
+      [36m</h4>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"template-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"template-card"[39m
+        [36m>[39m
+          [36m<h5>[39m
+            [0mDaily prep[0m
+          [36m</h5>[39m
+          [36m<ul>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mQuick recap of yesterday[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mSpend time on email[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mReview smart list 'Tod…'[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mPick the most important…[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mPick the hardest task…[0m
+              [36m</span>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"template-card"[39m
+        [36m>[39m
+          [36m<h5>[39m
+            [0mDaily journal[0m
+          [36m</h5>[39m
+          [36m<ul>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mWhat did I finish today?[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mWhat was noteworthy?[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mWhat surprises came up?[0m
+              [36m</span>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"template-card"[39m
+        [36m>[39m
+          [36m<h5>[39m
+            [0mTravel checklist[0m
+          [36m</h5>[39m
+          [36m<ul>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mID / Passport / Visa…[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mChargers / cables[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mUmbrella[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mLight backpack[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"cbx"[39m
+              [36m/>[39m
+              [36m<span>[39m
+                [0mClothes: tops / bottoms[0m
+              [36m</span>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:56:178
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > an external conflict coexists with an unrelated quota failure and Retry preserves external bytes
+ReferenceError: hold is not defined
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:61:108
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > all-discard visits only current drafts and a later same-field reset survives old completion
+ReferenceError: hold is not defined
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:68:79
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯

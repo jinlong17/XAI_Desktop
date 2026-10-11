@@ -1,0 +1,29 @@
+{
+  "id": "SHELL-05/SOURCE-DISCOVERY3",
+  "actor": "/root/parallel_c_shell05_web_pet_final_whole_source_r3",
+  "parent": "396f2e6e0e4f171586b85328ccdf0f49ec5ec647",
+  "fixed_input": "965a66a7991b426007dea316e6045f30ecade1ec",
+  "result": "FAILED_INTENDED_PREWRITE_FINAL3of3_EXHAUSTED_NO_ARTIFACT",
+  "concluding_invocations": 1,
+  "numeric_exit": 1,
+  "tool_wall_seconds": 0.846289875,
+  "raw_call": "call_fu9WZ40P9T6AxkMAj2bw2vNl",
+  "error": "RuntimeError STATIC_FAIL original formal-count baseline unavailable; guessed literal13 completed in goal",
+  "full_manifest_and_BOTHbuffers": "UNRUN after fragileearlyguard notfreepretool",
+  "pid_stdout_stderr_EOF_drain_children": "UNKNOWN notemitted",
+  "source_findings": "UNVALIDATED in-memory noartifact/adoption",
+  "input_inventory_reported": {
+    "pid": 62525,
+    "numeric_exit": 0,
+    "stdout_sha256": "b3e6ecc74e500896c84ee8cc1c51cfea60705c8af532cbdcc8703309f142f717",
+    "EOF_drain": "UNKNOWN"
+  },
+  "filesystem_writes": 0,
+  "retries": 0,
+  "commits": 0,
+  "source_family": "3/3 EXHAUSTED no4",
+  "raw_path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/shell05-source3-failure-p96-original-tool-records.json",
+  "raw_sha256": "5d7088b23424fb899851911392fa704a0677bd479f81d408b7a2f74f4263d617",
+  "P1_gate_unchanged": true,
+  "new_budget_grants": []
+}

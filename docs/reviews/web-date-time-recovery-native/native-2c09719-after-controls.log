@@ -1,0 +1,8 @@
+{"name":"baseline","commit":"2c09719","browser":"Chrome/152.0.7977.83"}
+{"name":"select-input","events":[{"name":"keydown","key":"s","value":"monday","trusted":true,"prevented":false},{"name":"input","value":"sunday","trusted":true,"prevented":false},{"name":"change","value":"sunday","trusted":true,"prevented":false},{"name":"keyup","key":"s","value":"sunday","trusted":true,"prevented":false}],"value":"sunday","raw":["monday","true","true","true","true"]}
+{"name":"field-0","pass":true,"state":{"week":"sunday","toggles":["true","true","true","true"]},"raw":["monday","true","true","true","true"],"error":null}
+{"name":"field-1","pass":true,"state":{"week":"sunday","toggles":["false","true","true","true"]},"raw":["monday","true","true","true","true"],"error":null}
+{"name":"field-2","pass":true,"state":{"week":"sunday","toggles":["false","false","true","true"]},"raw":["monday","true","true","true","true"],"error":null}
+{"name":"field-3","pass":true,"state":{"week":"sunday","toggles":["false","false","false","true"]},"raw":["monday","true","true","true","true"],"error":null}
+{"name":"field-4","pass":true,"state":{"week":"sunday","toggles":["false","false","false","false"]},"raw":["monday","true","true","true","true"],"error":null}
+{"name":"native","pass":true,"mode":"controls","runtimeErrors":0}

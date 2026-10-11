@@ -1,0 +1,5203 @@
+{
+  "schema_version": 1,
+  "task": "PARALLEL/LOCK-CORRECT",
+  "finding": "D-R1-01",
+  "status": "STATIC_CORRECTION_PASS_UNACCEPTED",
+  "fixed_dispatch_parent": "fb95dd39117ca98a9b5a038a29b40d015936fe85",
+  "original_map_registration": "7bb8df1631b94295bb7c3f928fcd9924b1337873",
+  "review_source": "4ba9c44a60fe97eeee8d5489c320eaedf2e342cc",
+  "review_receipt": "0d6124dac872e040e8eac389b44bb5e52602197a",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "budget": {
+    "static_correction_pass": 1,
+    "review_iterations_consumed": 1,
+    "next_fresh_review_iteration": 2,
+    "review_cap": 3,
+    "runtime_browser_native_package_invocations": 0,
+    "diagnostic_probes": 0
+  },
+  "assertions": {
+    "ordered_task_ids_exact": true,
+    "external_gates_exact": true,
+    "non_resource_completion_edges_exact": true,
+    "reverse_transform_all_node_fields_exact": true,
+    "original_top_level_fields_exact": true,
+    "unknown_references_zero": true,
+    "completion_DAG_acyclic": true,
+    "resource_namespace_not_completion_gate": true,
+    "root_only_global_mutation_default_mandatory": true,
+    "explicit_clock_adopt_baseline_ledger_links": true,
+    "no_worker_controller_authority": true,
+    "scope_records_and_ordered_evidence_exact": true,
+    "product_tree_unchanged": true,
+    "original_failure_review_immutable": true,
+    "fresh_review_required_before_root_adoption": true
+  },
+  "output_sha256": {
+    "dependencies.json": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
+    "scheduler.md": "b77b8dd703868c3cda270ab5bd1521465393adb0702a04d3381ee570ea73f7b4",
+    "inputs.sha256": "16e656ec832b1a86aa69f10ef7b0d7717f906e0e47ae2893034eba5688e7b3b2"
+  },
+  "verifier_sha256": "9ee5a478507aae3c5a1fb325b7cad384a0fbf862713c04efbdc3958ed0375f6e",
+  "results": {
+    "node_count": 2420,
+    "external_gate_count": 36,
+    "resource_count": 1,
+    "controller_operation_count": 10,
+    "completion_refs_before": 2565,
+    "completion_refs_after": 2266,
+    "unknown_before": {
+      "controller-receipt-lock": 299
+    },
+    "unknown_after": 0,
+    "cycle_count": 0,
+    "visited_nodes": 2420,
+    "typed_resource_node_count": 302,
+    "transformation_count": 299,
+    "transforms": [
+      {
+        "node_index_zero_based": 7,
+        "node_id": "REL-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 15,
+        "node_id": "REL-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 23,
+        "node_id": "REL-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 31,
+        "node_id": "REL-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 39,
+        "node_id": "REL-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 47,
+        "node_id": "REL-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 55,
+        "node_id": "REL-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 63,
+        "node_id": "REL-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 71,
+        "node_id": "REL-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 79,
+        "node_id": "REL-11/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 87,
+        "node_id": "REL-12/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 98,
+        "node_id": "TT-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 106,
+        "node_id": "TT-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 114,
+        "node_id": "TT-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 122,
+        "node_id": "TT-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 130,
+        "node_id": "TT-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 141,
+        "node_id": "POMO-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 149,
+        "node_id": "POMO-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 159,
+        "node_id": "MED-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 167,
+        "node_id": "MED-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 177,
+        "node_id": "TASK-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 185,
+        "node_id": "TASK-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 193,
+        "node_id": "TASK-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 201,
+        "node_id": "TASK-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 209,
+        "node_id": "TASK-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 217,
+        "node_id": "HAB-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 225,
+        "node_id": "HAB-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 233,
+        "node_id": "HAB-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 241,
+        "node_id": "HAB-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 249,
+        "node_id": "HAB-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 257,
+        "node_id": "CAL-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 265,
+        "node_id": "CAL-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 273,
+        "node_id": "CAL-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 281,
+        "node_id": "CAL-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 289,
+        "node_id": "CAL-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 297,
+        "node_id": "MAT-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 305,
+        "node_id": "MAT-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 313,
+        "node_id": "MAT-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 321,
+        "node_id": "CD-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 329,
+        "node_id": "CD-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 337,
+        "node_id": "CD-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 347,
+        "node_id": "STAT-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 355,
+        "node_id": "STAT-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 363,
+        "node_id": "BRD-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 371,
+        "node_id": "BRD-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 379,
+        "node_id": "BRD-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 387,
+        "node_id": "BRD-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 395,
+        "node_id": "BRD-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 403,
+        "node_id": "BRD-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 411,
+        "node_id": "BRD-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 419,
+        "node_id": "BRD-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 427,
+        "node_id": "BRD-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 435,
+        "node_id": "BRD-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 443,
+        "node_id": "BRD-11/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 451,
+        "node_id": "BRD-12/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 459,
+        "node_id": "BRD-13/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 467,
+        "node_id": "BRD-14/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 475,
+        "node_id": "BRD-15/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 483,
+        "node_id": "BRD-16/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 491,
+        "node_id": "BRD-17/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 499,
+        "node_id": "BRD-18/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 507,
+        "node_id": "BRD-19/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 515,
+        "node_id": "BRD-20/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 523,
+        "node_id": "BRD-21/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 531,
+        "node_id": "BRD-22/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 539,
+        "node_id": "BRD-23/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 547,
+        "node_id": "BRD-24/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 555,
+        "node_id": "BRD-25/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 563,
+        "node_id": "BRD-26/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 571,
+        "node_id": "BRD-27/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 579,
+        "node_id": "BRD-28/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 587,
+        "node_id": "BRD-29/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 595,
+        "node_id": "DASH-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 603,
+        "node_id": "DASH-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 611,
+        "node_id": "DASH-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 619,
+        "node_id": "DASH-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 627,
+        "node_id": "DASH-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 635,
+        "node_id": "DASH-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 643,
+        "node_id": "DASH-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 651,
+        "node_id": "DASH-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 659,
+        "node_id": "DASH-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 667,
+        "node_id": "DASH-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 675,
+        "node_id": "DASH-11/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 683,
+        "node_id": "DASH-12/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 691,
+        "node_id": "AI-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 699,
+        "node_id": "AI-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 707,
+        "node_id": "AI-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 715,
+        "node_id": "AI-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 723,
+        "node_id": "AI-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 731,
+        "node_id": "AI-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 739,
+        "node_id": "AI-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 747,
+        "node_id": "AI-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 755,
+        "node_id": "AI-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 763,
+        "node_id": "BK-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 771,
+        "node_id": "BK-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 779,
+        "node_id": "BK-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 787,
+        "node_id": "BK-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 795,
+        "node_id": "BK-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 803,
+        "node_id": "BK-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 811,
+        "node_id": "BK-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 819,
+        "node_id": "BK-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 827,
+        "node_id": "BK-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 835,
+        "node_id": "BK-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 843,
+        "node_id": "BK-11/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 851,
+        "node_id": "BK-12/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 859,
+        "node_id": "MET-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 867,
+        "node_id": "MET-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 875,
+        "node_id": "MET-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 883,
+        "node_id": "MET-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 891,
+        "node_id": "MET-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 899,
+        "node_id": "SET-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 907,
+        "node_id": "SET-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 915,
+        "node_id": "SET-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 923,
+        "node_id": "SET-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 931,
+        "node_id": "SET-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 939,
+        "node_id": "SET-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 947,
+        "node_id": "SET-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 955,
+        "node_id": "SET-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 963,
+        "node_id": "SET-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 971,
+        "node_id": "SET-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 979,
+        "node_id": "SET-11/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 987,
+        "node_id": "SET-12/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 995,
+        "node_id": "SET-13/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1003,
+        "node_id": "SET-14/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1011,
+        "node_id": "SET-15/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1019,
+        "node_id": "SHELL-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1027,
+        "node_id": "SHELL-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1035,
+        "node_id": "SHELL-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1043,
+        "node_id": "SHELL-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1051,
+        "node_id": "SHELL-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1059,
+        "node_id": "SHELL-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1067,
+        "node_id": "SHELL-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1075,
+        "node_id": "UX-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1083,
+        "node_id": "UX-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1091,
+        "node_id": "UX-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1099,
+        "node_id": "UX-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1107,
+        "node_id": "UX-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1115,
+        "node_id": "UX-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1123,
+        "node_id": "UX-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1131,
+        "node_id": "DEP-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1139,
+        "node_id": "DEP-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1147,
+        "node_id": "DEP-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1155,
+        "node_id": "DEP-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1163,
+        "node_id": "DEP-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1171,
+        "node_id": "DEP-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1179,
+        "node_id": "DEP-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1187,
+        "node_id": "DEP-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1195,
+        "node_id": "DEP-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1203,
+        "node_id": "DEP-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1211,
+        "node_id": "DEP-11/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1219,
+        "node_id": "DEP-12/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1227,
+        "node_id": "JOB-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1235,
+        "node_id": "JOB-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1243,
+        "node_id": "JOB-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1251,
+        "node_id": "JOB-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1259,
+        "node_id": "JOB-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1267,
+        "node_id": "JOB-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1275,
+        "node_id": "JOB-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1283,
+        "node_id": "JOB-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1291,
+        "node_id": "JOB-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1299,
+        "node_id": "JOB-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1307,
+        "node_id": "GOV-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1315,
+        "node_id": "GOV-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1323,
+        "node_id": "GOV-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1331,
+        "node_id": "GOV-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1339,
+        "node_id": "GOV-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1347,
+        "node_id": "GOV-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1355,
+        "node_id": "GOV-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1363,
+        "node_id": "GOV-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1371,
+        "node_id": "GOV-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1379,
+        "node_id": "GOV-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1387,
+        "node_id": "GOV-11/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1395,
+        "node_id": "GOV-12/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1403,
+        "node_id": "GOV-13/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1411,
+        "node_id": "GOV-14/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1419,
+        "node_id": "GOV-15/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1427,
+        "node_id": "GOV-16/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1435,
+        "node_id": "SK-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1443,
+        "node_id": "SK-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1451,
+        "node_id": "SK-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1459,
+        "node_id": "SK-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1467,
+        "node_id": "SK-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1475,
+        "node_id": "SK-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1483,
+        "node_id": "SK-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1491,
+        "node_id": "SK-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1499,
+        "node_id": "SK-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1507,
+        "node_id": "SK-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1515,
+        "node_id": "SK-11/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1523,
+        "node_id": "SK-12/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1531,
+        "node_id": "SK-13/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1539,
+        "node_id": "SK-14/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1547,
+        "node_id": "APP-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1555,
+        "node_id": "APP-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1563,
+        "node_id": "APP-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1571,
+        "node_id": "APP-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1579,
+        "node_id": "APP-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1587,
+        "node_id": "APP-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1595,
+        "node_id": "APP-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1603,
+        "node_id": "APP-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1611,
+        "node_id": "APP-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1619,
+        "node_id": "APP-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1627,
+        "node_id": "APP-11/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1635,
+        "node_id": "APP-12/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1643,
+        "node_id": "APP-13/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1651,
+        "node_id": "APP-14/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1659,
+        "node_id": "APP-15/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1667,
+        "node_id": "APP-16/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1675,
+        "node_id": "APP-17/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1683,
+        "node_id": "APP-18/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1691,
+        "node_id": "APP-19/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1699,
+        "node_id": "APP-20/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1707,
+        "node_id": "APP-21/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1715,
+        "node_id": "APP-22/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1723,
+        "node_id": "PLAT-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1731,
+        "node_id": "PLAT-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1739,
+        "node_id": "PLAT-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1747,
+        "node_id": "PLAT-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1755,
+        "node_id": "PLAT-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1763,
+        "node_id": "PLAT-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1771,
+        "node_id": "PLAT-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1779,
+        "node_id": "PLAT-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1787,
+        "node_id": "PLAT-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1795,
+        "node_id": "PLAT-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1803,
+        "node_id": "PLUG-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1811,
+        "node_id": "PLUG-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1819,
+        "node_id": "PLUG-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1827,
+        "node_id": "PLUG-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1835,
+        "node_id": "PLUG-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1843,
+        "node_id": "PLUG-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1851,
+        "node_id": "SYN-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1859,
+        "node_id": "SYN-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1867,
+        "node_id": "SYN-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1875,
+        "node_id": "SYN-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1883,
+        "node_id": "SYN-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1891,
+        "node_id": "SYN-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1899,
+        "node_id": "SYN-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1907,
+        "node_id": "SYN-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1915,
+        "node_id": "SYN-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1923,
+        "node_id": "SYN-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1931,
+        "node_id": "SYN-11/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1939,
+        "node_id": "SYN-12/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1947,
+        "node_id": "SYN-13/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1955,
+        "node_id": "SYN-14/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1963,
+        "node_id": "SYN-15/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1971,
+        "node_id": "SYN-16/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1979,
+        "node_id": "SYN-17/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1987,
+        "node_id": "SYN-18/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 1995,
+        "node_id": "SYN-19/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2003,
+        "node_id": "CRY-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2011,
+        "node_id": "CRY-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2019,
+        "node_id": "CRY-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2027,
+        "node_id": "CRY-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2035,
+        "node_id": "CRY-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2043,
+        "node_id": "CRY-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2051,
+        "node_id": "CRY-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2059,
+        "node_id": "CRY-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2067,
+        "node_id": "CRY-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2075,
+        "node_id": "CRY-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2083,
+        "node_id": "CRY-11/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2091,
+        "node_id": "CRY-12/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2099,
+        "node_id": "CRY-13/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2107,
+        "node_id": "CRY-14/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2115,
+        "node_id": "CRY-15/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2123,
+        "node_id": "CRY-16/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2131,
+        "node_id": "CRY-17/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2139,
+        "node_id": "CRY-18/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2147,
+        "node_id": "CRY-19/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2155,
+        "node_id": "CRY-20/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2163,
+        "node_id": "CRY-21/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2171,
+        "node_id": "CRY-22/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2179,
+        "node_id": "ADM-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2187,
+        "node_id": "ADM-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2195,
+        "node_id": "ADM-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2203,
+        "node_id": "ADM-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2211,
+        "node_id": "ADM-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2219,
+        "node_id": "ADM-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2227,
+        "node_id": "ADM-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2235,
+        "node_id": "ADM-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2243,
+        "node_id": "ADM-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2251,
+        "node_id": "ADM-10/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2259,
+        "node_id": "ADM-11/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2267,
+        "node_id": "ADM-12/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2275,
+        "node_id": "ADM-13/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2283,
+        "node_id": "ADM-14/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2291,
+        "node_id": "ADM-15/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2299,
+        "node_id": "ADM-16/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2307,
+        "node_id": "SITE-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2315,
+        "node_id": "SITE-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2323,
+        "node_id": "SITE-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2331,
+        "node_id": "SITE-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2339,
+        "node_id": "QA-01/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2347,
+        "node_id": "QA-02/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2355,
+        "node_id": "QA-03/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2363,
+        "node_id": "QA-04/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2371,
+        "node_id": "QA-05/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2379,
+        "node_id": "QA-06/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2387,
+        "node_id": "QA-07/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2395,
+        "node_id": "QA-08/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      },
+      {
+        "node_index_zero_based": 2403,
+        "node_id": "QA-09/reconcile",
+        "depends_on_index_zero_based": 1,
+        "from": {
+          "field": "depends_on",
+          "value": "controller-receipt-lock"
+        },
+        "to": {
+          "field": "requires_resources",
+          "value": {
+            "type": "resource",
+            "id": "controller-receipt-lock",
+            "mode": "exclusive"
+          }
+        }
+      }
+    ],
+    "formal_counts": {
+      "completed": 13,
+      "verification_pending": 3,
+      "in_progress": 3,
+      "pending": 293
+    },
+    "audit_items": 312,
+    "evidence_entries": 933,
+    "input_entries": 84,
+    "product_tree_entries": 4,
+    "conceptual_scenarios": [
+      {
+        "first_outcome": "success",
+        "trace": [
+          "deny-worker",
+          "acquire:R-A",
+          "release:R-A",
+          "acquire:R-B",
+          "release:R-B"
+        ],
+        "failed_attempts": [],
+        "simultaneous_writers_max": 1,
+        "final_state": "free",
+        "remaining_queue": 0
+      },
+      {
+        "first_outcome": "error",
+        "trace": [
+          "deny-worker",
+          "acquire:R-A",
+          "error-release:R-A",
+          "acquire:R-B",
+          "release:R-B",
+          "acquire:R-A-repaired",
+          "release:R-A-repaired"
+        ],
+        "failed_attempts": [
+          "R-A"
+        ],
+        "simultaneous_writers_max": 1,
+        "final_state": "free",
+        "remaining_queue": 0
+      }
+    ]
+  },
+  "patch_hashdiff": {
+    "dependencies.json": {
+      "source_sha256": "e43e3b03a8215d56d3ad6432ac07fb85dfca75f1ab24fbfadff1de7f533e6ffc",
+      "output_sha256": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
+      "unified_diff_sha256": "30c794f5a97699827317a3040944f22702e79a85452ba8dfe8c6777a01982893",
+      "unified_diff_bytes": 357352,
+      "unified_diff_lines": 12552
+    },
+    "scheduler.md": {
+      "source_sha256": "7b468294baa5e3448a481af957485679125f4b4ae18be5ba1dc5c746291d9a39",
+      "output_sha256": "b77b8dd703868c3cda270ab5bd1521465393adb0702a04d3381ee570ea73f7b4",
+      "unified_diff_sha256": "82431f00955ae09bea898daa5e7910d91fcc555b28f93e7f97c80a2867e91f9a",
+      "unified_diff_bytes": 7399,
+      "unified_diff_lines": 40
+    }
+  }
+}

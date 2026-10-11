@@ -1,0 +1,149 @@
+/* ---- Rail-order status (CP-APPRAIL-01) ---------------------------------- */
+/* The Topbar status for the sidebar (rail) order and its non-modal panel.
+   Every selector below begins with .rail-order-status. No rule targets the
+   rail, the Topbar, .topbar-controls, .topbar-pref* or any element selector,
+   so the clean-state chrome is unchanged; the tokens stylesheets stay as they
+   are. Contract: docs/reviews/web-apprail-order-recovery-contract/contract.md
+   r1 §9 "Sizing and CSS". */
+
+/* One root inside .topbar-controls: the status button, then (while open) the
+   panel, which follows it in DOM order. */
+.rail-order-status {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+/* The disclosure button: at least 44x44 at every width. */
+.rail-order-status-button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in oklch, var(--amber) 55%, var(--border-1));
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--amber) 16%, var(--bg-panel));
+  color: var(--text-1);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.rail-order-status-button:hover,
+.rail-order-status-button[aria-expanded="true"] {
+  background: color-mix(in oklch, var(--amber) 26%, var(--bg-panel));
+}
+.rail-order-status-icon {
+  flex: 0 0 auto;
+}
+
+/* The panel: non-modal, below the button, end-aligned with the status root. */
+.rail-order-status-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+  width: min(300px, calc(100vw - 24px));
+  padding: 12px;
+  border: 1px solid color-mix(in oklch, var(--border-1) 72%, transparent);
+  border-radius: 16px;
+  background: var(--bg-panel);
+  color: var(--text-1);
+  box-shadow: var(--shadow-2);
+  white-space: normal;
+}
+.rail-order-status-message {
+  margin: 0;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text-1);
+}
+.rail-order-status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  min-inline-size: 0;
+}
+
+/* Every action is at least 44x44 and sized to its content. */
+.rail-order-status-action {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  max-inline-size: 100%;
+  padding: 0 14px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  background: var(--bg-panel-2);
+  color: var(--text-1);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.rail-order-status-action:hover {
+  background: var(--bg-hover);
+}
+.rail-order-status-action--primary {
+  border-color: color-mix(in oklch, var(--amber) 55%, var(--border-1));
+  background: color-mix(in oklch, var(--amber) 16%, var(--bg-panel));
+}
+.rail-order-status-action--primary:hover {
+  background: color-mix(in oklch, var(--amber) 26%, var(--bg-panel));
+}
+/* Retry while its draft is pending: inert (aria-disabled, never the disabled
+   attribute, so it stays focusable and focus never drops to <body>). */
+.rail-order-status-action[aria-disabled="true"] {
+  border-color: var(--border-1);
+  background: var(--bg-panel-2);
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+
+/* Visible focus on every new control (lessons F-APP-1/F-APP-2/F-APP-3): the
+   global button ring, restated at a higher specificity so that no shared rule
+   can suppress it. Outline takes no layout space. */
+.rail-order-status-button:focus-visible,
+.rail-order-status-action:focus-visible {
+  outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
+  outline-offset: 2px;
+}
+
+/* Icon only where the Topbar summary is hidden (the Appearance breakpoint
+   erratum: 767 px and below); the panel then spans the viewport under the
+   Topbar like the appearance popover. */
+@media (max-width: 767px) {
+  .rail-order-status-button {
+    width: 44px;
+    padding: 0;
+  }
+  .rail-order-status-text {
+    display: none;
+  }
+  .rail-order-status-panel {
+    position: fixed;
+    top: calc(var(--topbar-h) + 8px);
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-height: calc(100dvh - var(--topbar-h) - 96px);
+    overflow: auto;
+  }
+}

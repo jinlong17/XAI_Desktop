@@ -1,0 +1,218 @@
+{
+  "id": "SHELL-01+SHELL-02+SHELL-03/SOURCE-DISCOVERY1",
+  "workflow": "C",
+  "primary_workflow": "B",
+  "module": "web",
+  "role": "fresh independent bounded whole Web navigation and command palette original three-item source discovery1/3",
+  "model": "gpt-6-luna",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "a68c2295c1aa0db359b0a62cb38317b29168c24c",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "no_children": true,
+  "budgets": {
+    "discovery_iteration": 1,
+    "discovery_cap": 3,
+    "static_pass": 1,
+    "total_wall_minutes": 30,
+    "static_seconds": 120,
+    "owned_process_drain_seconds": 30,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "network": 0,
+    "children": 0
+  },
+  "original_items": [
+    {
+      "id": "SHELL-01",
+      "priority": "P2",
+      "kind": "优化",
+      "action": "主导航提供清晰模块名称和常用/更多入口",
+      "acceptance": "移动端账户/设置可达；图标不完全依赖hover记忆",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "03-web-data-ai-settings.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "SHELL-01",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "SHELL",
+      "acceptance_evidence": {
+        "business_acceptance": "移动端账户/设置可达；图标不完全依赖hover记忆",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "SHELL-01/prepare",
+        "SHELL-01/contract-review",
+        "SHELL-01/before",
+        "SHELL-01/implement",
+        "SHELL-01/verify",
+        "SHELL-01/accept",
+        "SHELL-01/reconcile",
+        "SHELL-01/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "SHELL-02",
+      "priority": "P2",
+      "kind": "修复",
+      "action": "CmdK补日历事件、AI会话、时间记录、账单及指标实体索引",
+      "acceptance": "统一模块/记录分组，禁用功能不泄漏入口，结果定位实体",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "03-web-data-ai-settings.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "SHELL-02",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "SHELL",
+      "acceptance_evidence": {
+        "business_acceptance": "统一模块/记录分组，禁用功能不泄漏入口，结果定位实体",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "SHELL-02/prepare",
+        "SHELL-02/contract-review",
+        "SHELL-02/before",
+        "SHELL-02/implement",
+        "SHELL-02/verify",
+        "SHELL-02/accept",
+        "SHELL-02/reconcile",
+        "SHELL-02/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "SHELL-03",
+      "priority": "P2",
+      "kind": "优化",
+      "action": "CmdK定义索引更新和无结果策略",
+      "acceptance": "修改后重新打开结果最新；若需开着实时更新则订阅数据版本；键盘焦点回收正常",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "03-web-data-ai-settings.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "SHELL-03",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "SHELL",
+      "acceptance_evidence": {
+        "business_acceptance": "修改后重新打开结果最新；若需开着实时更新则订阅数据版本；键盘焦点回收正常",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "SHELL-03/prepare",
+        "SHELL-03/contract-review",
+        "SHELL-03/before",
+        "SHELL-03/implement",
+        "SHELL-03/verify",
+        "SHELL-03/accept",
+        "SHELL-03/reconcile",
+        "SHELL-03/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    }
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-shell01-shell02-shell03-source-discovery-r1/discovery.md",
+    "docs/reviews/audit-parallel-shell01-shell02-shell03-source-discovery-r1/inputs.sha256"
+  ],
+  "protected": [
+    "ALLnonallowed files/source/contracts/runner/evidence/failurelogs",
+    "globalcontrol/ledgers/otherworktrees/canonicaldocs/skills/generator/registry",
+    "module/ownerdecisions/caps/measurementstandards",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "logical_locks": {
+    "write": [
+      "new_shell01-shell02-shell03_source_report_only"
+    ],
+    "read": [
+      "actual Web shell/navigation/command registry and imported entity search adapters"
+    ],
+    "future_writer": "all actual shared module/storage/host components locked until separate exact single writer grant"
+  },
+  "stop": [
+    "actualinput/dirty/hash/protecteddrift",
+    "need new undecidedproductrule or unauthorizedexec",
+    "actual concluding staticFAIL immediatelyfreeze no retry/materialization/commit"
+  ],
+  "read_paths": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "docs/workflow/project/workflow.md",
+    "docs/workflow/project/multi-machine-development.md",
+    "docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/authority-overlay.md",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/scope-map.json",
+    "docs/reviews/20260908-full-product-audit/03-web-data-ai-settings.md",
+    "docs/reviews/20260908-full-product-audit/05-visual-ux-audit.md"
+  ],
+  "source_roots": [
+    "actual Web shell/navigation/command registry and imported entity search adapters"
+  ],
+  "acceptance": [
+    "WHOLE three original actions and acceptance. SHELL01 module names/usual-more navigation and mobile account/settings reachable without hover; SHELL02 CmdK event/AIconversation/time-record/bill/metric entity index grouped module/record, feature-disabled entries hidden, result locates exact entity; SHELL03 mutations visible on reopen, open-palette live updates only when existing owning rules require, honest noresults and keyboard/focus return. Each requirement origin is original audit or actual owning accepted decision; source behavior not owner policy.",
+    "Actual finite Git inventory resolves Shell/rail/header/CmdK/search registry/host/module disabled gates/all original entity stores and route locators/owning docs/fixtures first. Historical accepted AppRail/Appearance/Features/More recovery scopes retained and read as immutable evidence, no historical runner reexecution or misleading business acceptance. All shared navigation/registry/root/storage/cross-tab/account/date/AI/key lifecycle writers locked; source proposal must enumerate exact finite future candidates and independent impact/dependency requirements. No product code or shared runner implementation. New source phase covers unscheduled original three distinct item actions, not AppRail recovery reimplementation or P1 WebPet gate waiver.",
+    "Full per-original-item matrix requirements origin/current static facts/gaps/exact finite candidate writer paths+logical locks/contract+before+future fixture/source qualification/fixed/affected regressions/full G1/native/independent business acceptance/ledger/inventory gates, phase budgets missing history UNKNOWN not0. Existing owning decisions FIRST; unresolved minimum policy recorded without choice or user question; continue independent rows. Formal312unique13/3/3/293299unclosed939refs unchanged no product or release grant.",
+    "ALL actually used complete inputs individually exact immutable SHA/file hashbound; finite actual Git inventory first, parse actual card nested structures and manifest grammar, ignore manifest comments; no guessed filenames/prose/headline/minsize/count/P0docsparity. ALL input checks AND BOTH entire final buffers validated+hashed IN MEMORY BEFORE ANY filesystem writes including interim draft/index. One own meaningful static <=120s, wall30min, owneddrain30s. Safe UTF8 literal/base64 transport no JS-template newline conversion. Popen actualPID not CompletedProcess.pid; capture numeric exit/stdoutstderr EOF/drain/sessionchunk before printing, UNKNOWNnot0; every readonly Git child accounted separately. Actual meaningful FAIL/UNKNOWN freezes no retry/materialization/commit. Runtime/tests/build/lint/browser/native/server/businessparser/generator/productimports/qualification/probes/vendor/network/delegation0. Exact2ADD single hooksdisabled conventional commit realnewline Why/What/Scope/Risk/Docs/Tests clean; no amend/push/sync/cleanup. Independent fresh WHOLE review required before source-only adoption; root alone serial reception/global state."
+  ],
+  "source_admission": "proposal source-only no canonical/before/qualification/code grant",
+  "future_execution": "separate exact independent impact/contract/before/admission and writer grant required"
+}

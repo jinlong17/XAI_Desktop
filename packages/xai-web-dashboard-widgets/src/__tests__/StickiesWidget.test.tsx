@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * StickiesWidget tests — SHIPPED AC-STICKIES-1..3 re-homed under empty-store branch
  * + new AC-STICKIES-CREATE-1..8 for user-sticky create + delete + persist.
@@ -11,7 +12,7 @@ import { STICKY_DEFAULT_SIZE } from "../internal/stickiesStore/types.js";
 
 function seedTaskCols(): void {
   localStorage.setItem(
-    "xai_task_cols",
+    accountScope.physicalKey("xai_task_cols"),
     JSON.stringify([
       {
         id: "overdue",
@@ -42,7 +43,7 @@ function seedTaskCols(): void {
 
 function seedNoDateTaskCols(): void {
   localStorage.setItem(
-    "xai_task_cols",
+    accountScope.physicalKey("xai_task_cols"),
     JSON.stringify([
       {
         id: "nodate",
@@ -266,7 +267,7 @@ describe("StickiesWidget — user sticky create + delete", () => {
     expect(sticky.textContent).toContain("Work");
     expect(sticky.textContent).toContain("Jun 3");
 
-    const raw = localStorage.getItem("xai_dashboard_stickies");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_dashboard_stickies"));
     const stored = Object.values(JSON.parse(raw!) as Record<string, { source?: { title?: string; tagLabel?: string } }>);
     expect(stored[0]!.source?.title).toBe("Finish grant proposal");
     expect(stored[0]!.source?.tagLabel).toBe("Work");
@@ -345,7 +346,7 @@ describe("StickiesWidget — user sticky create + delete", () => {
       fireEvent.pointerUp(window, { pointerId: 9, clientX: 76, clientY: 44 });
     });
 
-    const raw = localStorage.getItem("xai_dashboard_stickies");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_dashboard_stickies"));
     const stored = Object.values(JSON.parse(raw!) as Record<string, { width?: number; height?: number }>);
     expect(stored[0]!.width).toBe(260);
     expect(stored[0]!.height).toBe(136);
@@ -388,7 +389,7 @@ describe("StickiesWidget — user sticky create + delete", () => {
       fireEvent.pointerUp(window, { pointerId: 12, clientX: 185, clientY: 130 });
     });
 
-    const raw = localStorage.getItem("xai_dashboard_stickies");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_dashboard_stickies"));
     const stored = Object.values(JSON.parse(raw!) as Record<string, { text: string; x?: number; y?: number }>);
     expect(stored[0]!.text).toBe("Free move note");
     expect(stored[0]!.x).toBe(177);

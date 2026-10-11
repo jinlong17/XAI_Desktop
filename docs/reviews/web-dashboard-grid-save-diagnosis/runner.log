@@ -1,0 +1,605 @@
+stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+
+stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+
+stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery
+[plugin-web-storage] quota exceeded for xai_dash_order.
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > order failure control retains original persisted and rendered order
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions
+AssertionError: expected { cols: 8, minHeight: 300 } to deeply equal { cols: 2, minHeight: 118 }
+
+- Expected
++ Received
+
+  {
+-   "cols": 2,
+-   "minHeight": 118,
++   "cols": 8,
++   "minHeight": 300,
+  }
+
+ ❯ src/__tests__/independent-save.test.tsx:16:406
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color
+AssertionError: expected { tone: 'rose', alpha: 0.6 } to deeply equal { tone: 'clear', alpha: 0.42 }
+
+- Expected
++ Received
+
+  {
+-   "alpha": 0.42,
+-   "tone": "clear",
++   "alpha": 0.6,
++   "tone": "rose",
+  }
+
+ ❯ src/__tests__/independent-save.test.tsx:19:415
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/__tests__/independent-save.test.tsx:22:445
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success
+AssertionError: expected [ { widgetId: 'bravo', …(1) } ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/__tests__/independent-save.test.tsx:25:590
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > layout physical storage notification must refresh rendered saved size
+AssertionError: expected { cols: 2, minHeight: 118 } to deeply equal { cols: 6, minHeight: 240 }
+
+- Expected
++ Received
+
+  {
+-   "cols": 6,
+-   "minHeight": 240,
++   "cols": 2,
++   "minHeight": 118,
+  }
+
+ ❯ src/__tests__/independent-save.test.tsx:28:446
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > old A layout callback must not seed A map into B
+AssertionError: expected '{"alpha":{"cols":9,"minHeight":300},"…' to be null // Object.is equality
+
+- Expected: 
+null
+
++ Received: 
+"{\"alpha\":{\"cols\":9,\"minHeight\":300},\"bravo\":{\"cols\":4,\"minHeight\":200}}"
+
+ ❯ src/__tests__/independent-save.test.tsx:31:415
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > a newer external layout entry must survive a local edit of another widget
+AssertionError: expected { cols: 2, minHeight: 118 } to deeply equal { cols: 8, minHeight: 250 }
+
+- Expected
++ Received
+
+  {
+-   "cols": 8,
+-   "minHeight": 250,
++   "cols": 2,
++   "minHeight": 118,
+  }
+
+ ❯ src/__tests__/independent-save.test.tsx:34:391
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+node:internal/errors:985
+  const err = new Error(message);
+              ^
+
+Error: Command failed: /Users/lijinlong/.local/node-v24.16.0/bin/node /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-grid/node_modules/vitest/vitest.mjs run --config /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-iJIse0/source/packages/xai-web-dashboard-grid/independent.config.mjs
+stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+
+stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+
+stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery
+[plugin-web-storage] quota exceeded for xai_dash_order.
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > order failure control retains original persisted and rendered order
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions
+AssertionError: expected { cols: 8, minHeight: 300 } to deeply equal { cols: 2, minHeight: 118 }
+
+- Expected
++ Received
+
+  {
+-   "cols": 2,
+-   "minHeight": 118,
++   "cols": 8,
++   "minHeight": 300,
+  }
+
+ ❯ src/__tests__/independent-save.test.tsx:16:406
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color
+AssertionError: expected { tone: 'rose', alpha: 0.6 } to deeply equal { tone: 'clear', alpha: 0.42 }
+
+- Expected
++ Received
+
+  {
+-   "alpha": 0.42,
+-   "tone": "clear",
++   "alpha": 0.6,
++   "tone": "rose",
+  }
+
+ ❯ src/__tests__/independent-save.test.tsx:19:415
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/__tests__/independent-save.test.tsx:22:445
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success
+AssertionError: expected [ { widgetId: 'bravo', …(1) } ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/__tests__/independent-save.test.tsx:25:590
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > layout physical storage notification must refresh rendered saved size
+AssertionError: expected { cols: 2, minHeight: 118 } to deeply equal { cols: 6, minHeight: 240 }
+
+- Expected
++ Received
+
+  {
+-   "cols": 6,
+-   "minHeight": 240,
++   "cols": 2,
++   "minHeight": 118,
+  }
+
+ ❯ src/__tests__/independent-save.test.tsx:28:446
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > old A layout callback must not seed A map into B
+AssertionError: expected '{"alpha":{"cols":9,"minHeight":300},"…' to be null // Object.is equality
+
+- Expected: 
+null
+
++ Received: 
+"{\"alpha\":{\"cols\":9,\"minHeight\":300},\"bravo\":{\"cols\":4,\"minHeight\":200}}"
+
+ ❯ src/__tests__/independent-save.test.tsx:31:415
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > a newer external layout entry must survive a local edit of another widget
+AssertionError: expected { cols: 2, minHeight: 118 } to deeply equal { cols: 8, minHeight: 250 }
+
+- Expected
++ Received
+
+  {
+-   "cols": 8,
+-   "minHeight": 250,
++   "cols": 2,
++   "minHeight": 118,
+  }
+
+ ❯ src/__tests__/independent-save.test.tsx:34:391
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+    at genericNodeError (node:internal/errors:985:15)
+    at wrappedFn (node:internal/errors:539:14)
+    at checkExecSyncError (node:child_process:925:11)
+    at execFileSync (node:child_process:961:15)
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-dashboard-grid-save-diagnosis/verify.mjs:31:15
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:633:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  status: 1,
+  signal: null,
+  output: [
+    null,
+    '\n' +
+      ' RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-iJIse0/source/packages/xai-web-dashboard-grid\n' +
+      '\n' +
+      ' ❯ src/__tests__/independent-save.test.tsx (8 tests | 7 failed) 104ms\n' +
+      '   × Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions 16ms\n' +
+      '     → expected { cols: 8, minHeight: 300 } to deeply equal { cols: 2, minHeight: 118 }\n' +
+      '   × Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color 3ms\n' +
+      "     → expected { tone: 'rose', alpha: 0.6 } to deeply equal { tone: 'clear', alpha: 0.42 }\n" +
+      '   × Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery 65ms\n' +
+      '     → expected false to be true // Object.is equality\n' +
+      '   × Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success 14ms\n' +
+      "     → expected [ { widgetId: 'bravo', …(1) } ] to have a length of +0 but got 1\n" +
+      '   × Independent Dashboard grid failure business oracles > layout physical storage notification must refresh rendered saved size 1ms\n' +
+      '     → expected { cols: 2, minHeight: 118 } to deeply equal { cols: 6, minHeight: 240 }\n' +
+      '   × Independent Dashboard grid failure business oracles > old A layout callback must not seed A map into B 1ms\n' +
+      `     → expected '{"alpha":{"cols":9,"minHeight":300},"…' to be null // Object.is equality\n` +
+      '   × Independent Dashboard grid failure business oracles > a newer external layout entry must survive a local edit of another widget 2ms\n' +
+      '     → expected { cols: 2, minHeight: 118 } to deeply equal { cols: 8, minHeight: 250 }\n' +
+      '   ✓ Independent Dashboard grid failure business oracles > order failure control retains original persisted and rendered order 1ms\n' +
+      '\n' +
+      ' Test Files  1 failed (1)\n' +
+      '      Tests  7 failed | 1 passed (8)\n' +
+      '   Start at  14:10:51\n' +
+      '   Duration  1.69s (transform 232ms, setup 291ms, collect 143ms, tests 104ms, environment 581ms, prepare 175ms)\n' +
+      '\n',
+    'stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions\n' +
+      '[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.\n' +
+      '\n' +
+      'stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color\n' +
+      '[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.\n' +
+      '\n' +
+      'stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery\n' +
+      '[plugin-web-storage] quota exceeded for xai_dash_order.\n' +
+      '[plugin-web-storage] quota exceeded for xai_dash_order.\n' +
+      '\n' +
+      'stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success\n' +
+      '[plugin-web-storage] quota exceeded for xai_dash_order.\n' +
+      '\n' +
+      'stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > order failure control retains original persisted and rendered order\n' +
+      '[plugin-web-storage] quota exceeded for xai_dash_order.\n' +
+      '\n' +
+      '\n' +
+      '⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯\n' +
+      '\n' +
+      ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions\n' +
+      'AssertionError: expected { cols: 8, minHeight: 300 } to deeply equal { cols: 2, minHeight: 118 }\n' +
+      '\n' +
+      '- Expected\n' +
+      '+ Received\n' +
+      '\n' +
+      '  {\n' +
+      '-   "cols": 2,\n' +
+      '-   "minHeight": 118,\n' +
+      '+   "cols": 8,\n' +
+      '+   "minHeight": 300,\n' +
+      '  }\n' +
+      '\n' +
+      ' ❯ src/__tests__/independent-save.test.tsx:16:406\n' +
+      '\n' +
+      '\n' +
+      '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯\n' +
+      '\n' +
+      ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color\n' +
+      "AssertionError: expected { tone: 'rose', alpha: 0.6 } to deeply equal { tone: 'clear', alpha: 0.42 }\n" +
+      '\n' +
+      '- Expected\n' +
+      '+ Received\n' +
+      '\n' +
+      '  {\n' +
+      '-   "alpha": 0.42,\n' +
+      '-   "tone": "clear",\n' +
+      '+   "alpha": 0.6,\n' +
+      '+   "tone": "rose",\n' +
+      '  }\n' +
+      '\n' +
+      ' ❯ src/__tests__/independent-save.test.tsx:19:415\n' +
+      '\n' +
+      '\n' +
+      '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯\n' +
+      '\n' +
+      ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery\n' +
+      'AssertionError: expected false to be true // Object.is equality\n' +
+      '\n' +
+      '- Expected\n' +
+      '+ Received\n' +
+      '\n' +
+      '- true\n' +
+      '+ false\n' +
+      '\n' +
+      ' ❯ src/__tests__/independent-save.test.tsx:22:445\n' +
+      '\n' +
+      '\n' +
+      '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯\n' +
+      '\n' +
+      ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success\n' +
+      "AssertionError: expected [ { widgetId: 'bravo', …(1) } ] to have a length of +0 but got 1\n" +
+      '\n' +
+      '- Expected\n' +
+      '+ Received\n' +
+      '\n' +
+      '- 0\n' +
+      '+ 1\n' +
+      '\n' +
+      ' ❯ src/__tests__/independent-save.test.tsx:25:590\n' +
+      '\n' +
+      '\n' +
+      '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯\n' +
+      '\n' +
+      ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > layout physical storage notification must refresh rendered saved size\n' +
+      'AssertionError: expected { cols: 2, minHeight: 118 } to deeply equal { cols: 6, minHeight: 240 }\n' +
+      '\n' +
+      '- Expected\n' +
+      '+ Received\n' +
+      '\n' +
+      '  {\n' +
+      '-   "cols": 6,\n' +
+      '-   "minHeight": 240,\n' +
+      '+   "cols": 2,\n' +
+      '+   "minHeight": 118,\n' +
+      '  }\n' +
+      '\n' +
+      ' ❯ src/__tests__/independent-save.test.tsx:28:446\n' +
+      '\n' +
+      '\n' +
+      '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯\n' +
+      '\n' +
+      ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > old A layout callback must not seed A map into B\n' +
+      `AssertionError: expected '{"alpha":{"cols":9,"minHeight":300},"…' to be null // Object.is equality\n` +
+      '\n' +
+      '- Expected: \n' +
+      'null\n' +
+      '\n' +
+      '+ Received: \n' +
+      '"{\\"alpha\\":{\\"cols\\":9,\\"minHeight\\":300},\\"bravo\\":{\\"cols\\":4,\\"minHeight\\":200}}"\n' +
+      '\n' +
+      ' ❯ src/__tests__/independent-save.test.tsx:31:415\n' +
+      '\n' +
+      '\n' +
+      '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯\n' +
+      '\n' +
+      ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > a newer external layout entry must survive a local edit of another widget\n' +
+      'AssertionError: expected { cols: 2, minHeight: 118 } to deeply equal { cols: 8, minHeight: 250 }\n' +
+      '\n' +
+      '- Expected\n' +
+      '+ Received\n' +
+      '\n' +
+      '  {\n' +
+      '-   "cols": 8,\n' +
+      '-   "minHeight": 250,\n' +
+      '+   "cols": 2,\n' +
+      '+   "minHeight": 118,\n' +
+      '  }\n' +
+      '\n' +
+      ' ❯ src/__tests__/independent-save.test.tsx:34:391\n' +
+      '\n' +
+      '\n' +
+      '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯\n' +
+      '\n'
+  ],
+  pid: 69598,
+  stdout: '\n' +
+    ' RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-iJIse0/source/packages/xai-web-dashboard-grid\n' +
+    '\n' +
+    ' ❯ src/__tests__/independent-save.test.tsx (8 tests | 7 failed) 104ms\n' +
+    '   × Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions 16ms\n' +
+    '     → expected { cols: 8, minHeight: 300 } to deeply equal { cols: 2, minHeight: 118 }\n' +
+    '   × Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color 3ms\n' +
+    "     → expected { tone: 'rose', alpha: 0.6 } to deeply equal { tone: 'clear', alpha: 0.42 }\n" +
+    '   × Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery 65ms\n' +
+    '     → expected false to be true // Object.is equality\n' +
+    '   × Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success 14ms\n' +
+    "     → expected [ { widgetId: 'bravo', …(1) } ] to have a length of +0 but got 1\n" +
+    '   × Independent Dashboard grid failure business oracles > layout physical storage notification must refresh rendered saved size 1ms\n' +
+    '     → expected { cols: 2, minHeight: 118 } to deeply equal { cols: 6, minHeight: 240 }\n' +
+    '   × Independent Dashboard grid failure business oracles > old A layout callback must not seed A map into B 1ms\n' +
+    `     → expected '{"alpha":{"cols":9,"minHeight":300},"…' to be null // Object.is equality\n` +
+    '   × Independent Dashboard grid failure business oracles > a newer external layout entry must survive a local edit of another widget 2ms\n' +
+    '     → expected { cols: 2, minHeight: 118 } to deeply equal { cols: 8, minHeight: 250 }\n' +
+    '   ✓ Independent Dashboard grid failure business oracles > order failure control retains original persisted and rendered order 1ms\n' +
+    '\n' +
+    ' Test Files  1 failed (1)\n' +
+    '      Tests  7 failed | 1 passed (8)\n' +
+    '   Start at  14:10:51\n' +
+    '   Duration  1.69s (transform 232ms, setup 291ms, collect 143ms, tests 104ms, environment 581ms, prepare 175ms)\n' +
+    '\n',
+  stderr: 'stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions\n' +
+    '[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.\n' +
+    '\n' +
+    'stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color\n' +
+    '[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.\n' +
+    '\n' +
+    'stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery\n' +
+    '[plugin-web-storage] quota exceeded for xai_dash_order.\n' +
+    '[plugin-web-storage] quota exceeded for xai_dash_order.\n' +
+    '\n' +
+    'stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success\n' +
+    '[plugin-web-storage] quota exceeded for xai_dash_order.\n' +
+    '\n' +
+    'stderr | src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > order failure control retains original persisted and rendered order\n' +
+    '[plugin-web-storage] quota exceeded for xai_dash_order.\n' +
+    '\n' +
+    '\n' +
+    '⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯\n' +
+    '\n' +
+    ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions\n' +
+    'AssertionError: expected { cols: 8, minHeight: 300 } to deeply equal { cols: 2, minHeight: 118 }\n' +
+    '\n' +
+    '- Expected\n' +
+    '+ Received\n' +
+    '\n' +
+    '  {\n' +
+    '-   "cols": 2,\n' +
+    '-   "minHeight": 118,\n' +
+    '+   "cols": 8,\n' +
+    '+   "minHeight": 300,\n' +
+    '  }\n' +
+    '\n' +
+    ' ❯ src/__tests__/independent-save.test.tsx:16:406\n' +
+    '\n' +
+    '\n' +
+    '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯\n' +
+    '\n' +
+    ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color\n' +
+    "AssertionError: expected { tone: 'rose', alpha: 0.6 } to deeply equal { tone: 'clear', alpha: 0.42 }\n" +
+    '\n' +
+    '- Expected\n' +
+    '+ Received\n' +
+    '\n' +
+    '  {\n' +
+    '-   "alpha": 0.42,\n' +
+    '-   "tone": "clear",\n' +
+    '+   "alpha": 0.6,\n' +
+    '+   "tone": "rose",\n' +
+    '  }\n' +
+    '\n' +
+    ' ❯ src/__tests__/independent-save.test.tsx:19:415\n' +
+    '\n' +
+    '\n' +
+    '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯\n' +
+    '\n' +
+    ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery\n' +
+    'AssertionError: expected false to be true // Object.is equality\n' +
+    '\n' +
+    '- Expected\n' +
+    '+ Received\n' +
+    '\n' +
+    '- true\n' +
+    '+ false\n' +
+    '\n' +
+    ' ❯ src/__tests__/independent-save.test.tsx:22:445\n' +
+    '\n' +
+    '\n' +
+    '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯\n' +
+    '\n' +
+    ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success\n' +
+    "AssertionError: expected [ { widgetId: 'bravo', …(1) } ] to have a length of +0 but got 1\n" +
+    '\n' +
+    '- Expected\n' +
+    '+ Received\n' +
+    '\n' +
+    '- 0\n' +
+    '+ 1\n' +
+    '\n' +
+    ' ❯ src/__tests__/independent-save.test.tsx:25:590\n' +
+    '\n' +
+    '\n' +
+    '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯\n' +
+    '\n' +
+    ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > layout physical storage notification must refresh rendered saved size\n' +
+    'AssertionError: expected { cols: 2, minHeight: 118 } to deeply equal { cols: 6, minHeight: 240 }\n' +
+    '\n' +
+    '- Expected\n' +
+    '+ Received\n' +
+    '\n' +
+    '  {\n' +
+    '-   "cols": 6,\n' +
+    '-   "minHeight": 240,\n' +
+    '+   "cols": 2,\n' +
+    '+   "minHeight": 118,\n' +
+    '  }\n' +
+    '\n' +
+    ' ❯ src/__tests__/independent-save.test.tsx:28:446\n' +
+    '\n' +
+    '\n' +
+    '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯\n' +
+    '\n' +
+    ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > old A layout callback must not seed A map into B\n' +
+    `AssertionError: expected '{"alpha":{"cols":9,"minHeight":300},"…' to be null // Object.is equality\n` +
+    '\n' +
+    '- Expected: \n' +
+    'null\n' +
+    '\n' +
+    '+ Received: \n' +
+    '"{\\"alpha\\":{\\"cols\\":9,\\"minHeight\\":300},\\"bravo\\":{\\"cols\\":4,\\"minHeight\\":200}}"\n' +
+    '\n' +
+    ' ❯ src/__tests__/independent-save.test.tsx:31:415\n' +
+    '\n' +
+    '\n' +
+    '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯\n' +
+    '\n' +
+    ' FAIL  src/__tests__/independent-save.test.tsx > Independent Dashboard grid failure business oracles > a newer external layout entry must survive a local edit of another widget\n' +
+    'AssertionError: expected { cols: 2, minHeight: 118 } to deeply equal { cols: 8, minHeight: 250 }\n' +
+    '\n' +
+    '- Expected\n' +
+    '+ Received\n' +
+    '\n' +
+    '  {\n' +
+    '-   "cols": 8,\n' +
+    '-   "minHeight": 250,\n' +
+    '+   "cols": 2,\n' +
+    '+   "minHeight": 118,\n' +
+    '  }\n' +
+    '\n' +
+    ' ❯ src/__tests__/independent-save.test.tsx:34:391\n' +
+    '\n' +
+    '\n' +
+    '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯\n' +
+    '\n'
+}
+
+Node.js v24.16.0

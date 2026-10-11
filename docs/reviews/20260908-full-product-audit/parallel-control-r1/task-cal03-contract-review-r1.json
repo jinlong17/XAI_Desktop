@@ -1,0 +1,101 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full original Calendar recurrence scope contract reviewer; never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "936c197dcf732bddf27bac00a6fc694fd010f6d1",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "review_iteration": 1,
+    "review_cap": 3,
+    "static_pass": 1,
+    "prior_source_author_used": 1
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "CAL-03/CONTRACT-REVIEW1",
+  "source_inputs": [
+    "57b2bfe7a94ed06f5359952a73b0f728759868a4",
+    "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-cal03-contract-review-r1/review.md",
+    "docs/reviews/audit-parallel-cal03-contract-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full3634 immutableinputs/all18C03rows/originalfull action 补重复事件本次/此后/全部编辑语义、例外与跨日范围 and acceptance 重复编辑前给范围选择；daily/weekly及时区边界不误改其他发生项 intact; no all-only shrinking. All owningrules/historicalevidence/failures/formalvsprobe/commands/unknownpurposecap3 preserved; authorstatic1PASS isnotruntime oradoption.",
+    "Freshfullindependentreview searches exactlater acceptedownerdecisions beforeendorsing draft Q-C03. Existing Calendar design+AC-RECUR6/7 whole-series-only authority/time localfloating/same-day prohibition/REL01earlierfold rule distinct fromoriginalauditscope. Originalaudit alreadyauthorizes three-scope productwork, no redundant requesttoapprove doingthatwork; identify ONLY unresolved exception/lineage policy when this-following/all changesanchor/time/dailyweekly/deleted-moved exceptions. Existing authority wins; no assumption that implementation default or technicalschema decidesproductbehavior. If ownerquestion needed, precise minimum without redundanttimezone/crossday confirmations. Keepfull18rows/trialproducers/sharedreader recurrence invariance/dailyweekly/timezone/DST/crossday rejection andbadlegacyrecord no silentnormalization.",
+    "Full publicCalendar route/EventComposer/expandRecurrence/eventStore/command receipts/AI/board+widget+command-menu+consumer scope source. Renderedoccurrences currentlyretainonlymasterID andlateoccurrenceedit reopensanchor; actualactivationclosed returnsdisabled beforelocks. Before runtime cannotpromote oldfixture/native into productionwriteacceptance. Realaccountgeneration/tombstone/firstframe/locks/queue/conflict/retry/sourceavailability/exportactualdisk+ownerchange/import/migration/compatibility/oldclients/publicextensionfiniteproposal separatelyreviewed; no API/schema/sharedwriter grant. Future master/exception/split productsemantics and paths awaitexactreview/adoption/before.",
+    "Full canonicalClockr2§14 E1-E25/E24/Rules verbatim+jcopies/sourcequalifiedbefore/implementation/fixed+integrated/affected/native/visual/trustedkeyboard/actualvendor/freshfullacceptance/rootappend-onlyreconcile/inventory mandatory. Original312 orderedfields/39 literal reversiblelabels/939references/formal13,3,3,293 and299unclosed preserved; actualEXECUTIONitems vsTODOsections.tasks. Exact4TT08owningdocs separatefromP0runtimeparity, notwholeapps/packages equality. No historicalmethod/runner/failure overwrite/waiver or callerbudget0 inference. Allinputsvalidated/bothbuffersbeforeANYwrite/semanticstatic1 failedstops/no rerun; actualruntime/tests/build/lint/browser/native/server/qualification/probes/vendor0/nochildrenpush."
+  ],
+  "original_item": {
+    "id": "CAL-03",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "补重复事件本次/此后/全部编辑语义、例外与跨日范围",
+    "acceptance": "重复编辑前给范围选择；daily/weekly及时区边界不误改其他发生项",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "CAL-03",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:CAL-03"
+    ],
+    "source_section": "CAL",
+    "acceptance_evidence": {
+      "business_acceptance": "重复编辑前给范围选择；daily/weekly及时区边界不误改其他发生项",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "CAL-03/prepare",
+      "CAL-03/contract-review",
+      "CAL-03/before",
+      "CAL-03/implement",
+      "CAL-03/verify",
+      "CAL-03/accept",
+      "CAL-03/reconcile",
+      "CAL-03/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "MAT-01+MAT-02+MAT-03/SOURCE-DISCOVERY2",
+  "parent": "e913502cc2b47546fce6566babb9d6f723db8e42",
+  "fixed_input": "66060a9caa7bd4c5443c202bf8fad99469e1e123",
+  "actor": "/root/parallel_c_mat01_mat03_whole_source_correction_r2",
+  "result": "FAILED_PREWRITE_STATIC_NO_ARTIFACT",
+  "family_iteration": 2,
+  "family_cap": 3,
+  "concluding_invocations": 1,
+  "numeric_exit": 1,
+  "tool_elapsed_seconds": 3.276,
+  "chunk": "7da6d0f9-f9a6-4aca-beb6-9921744f303c",
+  "pid": "UNKNOWN",
+  "session": "UNKNOWN",
+  "stdout_stderr_split_EOF_drain": "UNKNOWN",
+  "exact_captured_output": "Traceback (most recent call last):\n  File \"<stdin>\", line 98, in <module>\nRuntimeError: cap/child mismatch",
+  "cause": "author checked discovery_iteration/discovery_cap at card top-level, actual authoritative fields nested budgets",
+  "report_buffer": "assembled transient string bytes/hash UNKNOWN",
+  "manifest_buffer": "NOTCONSTRUCTED",
+  "all_complete_buffers_validated_before_write": false,
+  "filesystem_writes": 0,
+  "retries": 0,
+  "materializations": 0,
+  "commits": 0,
+  "final_root_metadata_clean_parent_output_absence": true,
+  "prior_preparation_errors": [
+    "two JS parse errors before process",
+    "inventory formatter CompletedProcess.pid error followed instrumented inventory PID47527 exit0 EOF stdout741451",
+    "launcher missing sys PID49068exit1 stdout0stderr111 EOF/drained before staticworker"
+  ],
+  "originalsource1FAILED_retained": true,
+  "new_budget_grant": []
+}

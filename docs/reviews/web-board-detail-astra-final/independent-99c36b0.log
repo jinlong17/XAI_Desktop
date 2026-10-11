@@ -1,0 +1,15 @@
+revision=99c36b0
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-H1Ap2r
+
+ ✓ docs/reviews/web-board-detail-astra-final/detail-contract.test.tsx (8 tests) 235ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  18:38:07
+   Duration  2.06s (transform 599ms, setup 293ms, collect 735ms, tests 235ms, environment 317ms, prepare 87ms)
+
+
+stderr | docs/reviews/web-board-detail-astra-final/detail-contract.test.tsx > discard clears only failed append, retains other typed input, never appends via close
+[plugin-web-storage] quota exceeded for xai_boards_v2.

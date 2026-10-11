@@ -1,0 +1,117 @@
+{
+  "fixed_registration_input": "e041c2bc293b70db367444c62c4300231976dbf7",
+  "max_total_slots": 4,
+  "max_workers": 3,
+  "controller": "root",
+  "wave": "P1",
+  "tasks": [
+    {
+      "id": "CLOCK/R1",
+      "workflow": "A",
+      "actor_role": "Astra reviewer",
+      "model": "gpt-6-astra",
+      "allowed_files": [
+        "docs/reviews/web-dashboard-clock-recovery-qualification-impact-r1/impact.md",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-impact-r1/inputs.sha256"
+      ],
+      "budget": "one static review; no browser/native/probe/package invocation; Q1 focus1/3 and six0/3 preserved",
+      "acceptance": "Causal source/stderr account; loss distinguished from unknown business outcome; narrow correction lines and permitted technical amendment; exact inputs hashes; no repairs",
+      "stop": "hash conflict, unsupported causal claim, need for native reproduction, scope crossing",
+      "registration_sha": "resolve the commit containing this exact task card at dispatch; never use a later moving HEAD",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "state": "registered_not_launched",
+      "iteration": 1,
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "protect": [
+        "all paths outside allowed_files",
+        "all original frozen evidence/contracts/ledgers",
+        "other-session worktrees"
+      ],
+      "no_children": true
+    },
+    {
+      "id": "TT-08/prepare",
+      "workflow": "C",
+      "actor_role": "independent contract author",
+      "model": "gpt-6-astra",
+      "allowed_files": [
+        "docs/reviews/audit-parallel-tt08-preparation-r1/contract.md",
+        "docs/reviews/audit-parallel-tt08-preparation-r1/inputs.sha256"
+      ],
+      "budget": "one static discovery/contract pass; zero product edits/runtime runs",
+      "acceptance": "Freeze single/multi actual consumers, current implementation/docs and original TT08 scope; exact future allowed docs, acceptance/evidence and affected regression matrix; no invented behavior or status promotion",
+      "stop": "unknown owner behavior; conflicting existing approved rule; any product change required",
+      "registration_sha": "resolve the commit containing this exact task card at dispatch; never use a later moving HEAD",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "state": "registered_not_launched",
+      "iteration": 1,
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "protect": [
+        "all paths outside allowed_files",
+        "all original frozen evidence/contracts/ledgers",
+        "other-session worktrees"
+      ],
+      "no_children": true
+    },
+    {
+      "id": "PARALLEL/MAP-REVIEW",
+      "workflow": "D",
+      "actor_role": "independent Astra reviewer",
+      "model": "gpt-6-astra",
+      "allowed_files": [
+        "docs/reviews/audit-parallel-control-review-r1/review.md",
+        "docs/reviews/audit-parallel-control-review-r1/inputs.sha256"
+      ],
+      "budget": "one static exact-snapshot review; zero runtime or product repair",
+      "acceptance": "All312 IDs/actions/acceptance/status/evidence preserved once; original full goal obligations included; gated lines not activated; DAG/locks/independence/receipt safeguards and R2 preservation checked; discrepancies exact",
+      "stop": "any missing/duplicate/unscoped item or authorization/acceptance weakening",
+      "registration_sha": "resolve the commit containing this exact task card at dispatch; never use a later moving HEAD",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "state": "registered_not_launched",
+      "iteration": 1,
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "protect": [
+        "all paths outside allowed_files",
+        "all original frozen evidence/contracts/ledgers",
+        "other-session worktrees"
+      ],
+      "no_children": true
+    }
+  ],
+  "retry_counters": {
+    "clock_q1": {
+      "focus-controls": {
+        "used": 1,
+        "cap": 3
+      },
+      "reload-controls": {
+        "used": 0,
+        "cap": 3
+      },
+      "appearance-fapp1": {
+        "used": 0,
+        "cap": 3
+      },
+      "appearance-fapp2": {
+        "used": 0,
+        "cap": 3
+      },
+      "appearance-accepted": {
+        "used": 0,
+        "cap": 3
+      },
+      "apprail-accepted": {
+        "used": 0,
+        "cap": 3
+      },
+      "geometry-reload-p0": {
+        "used": 0,
+        "cap": 3
+      }
+    },
+    "b70": "Exact prior raw counts retained in original CP/B70 receipt; responsive visual3/3 exhausted, focus2 each language, no third launch. Never reset by new suffix/actor/worktree."
+  }
+}

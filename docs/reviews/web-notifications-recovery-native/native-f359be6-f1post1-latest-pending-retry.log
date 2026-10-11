@@ -1,0 +1,4 @@
+{"name":"baseline","commit":"f359be6","browser":"Chrome/154.0.8037.97"}
+{"name":"second-sound-input","events":[{"value":"chime","trusted":true,"type":"select-one","label":"Sound"},{"value":"bell","trusted":true,"type":"select-one","label":"Sound"}],"selected":{"sound":"bell","toggles":["true","true","true","false","true"],"times":["22:00","07:00"]}}
+{"name":"queue-native","mode":"latest-pending-retry","attempts":{"xai_pref_notif_done_sound":3},"raw":["true","bell","true","true","false","true","22:00","07:00"]}
+{"name":"native","pass":true,"mode":"latest-pending-retry","runtimeErrors":0}

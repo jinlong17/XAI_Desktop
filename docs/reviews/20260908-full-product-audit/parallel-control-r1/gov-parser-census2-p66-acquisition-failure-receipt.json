@@ -1,0 +1,23 @@
+{
+  "id": "GOV-01+GOV-02/PARSER-PURPOSE-PROVENANCE-CENSUS2",
+  "parent": "b27b38fa924feaecf9766f9aa81fae0ee5d2c246",
+  "worktree": "/Users/lijinlong/.codex/worktrees/audit-gov-parser-census2-20261010/XAI_Desktop",
+  "iteration": 2,
+  "cap": 3,
+  "preparation_invocations": 1,
+  "preparation_exit": 1,
+  "chunk": "6e6e89",
+  "session": null,
+  "session_status": "synchronous no continuation session reported",
+  "pid": null,
+  "pid_status": "UNKNOWN",
+  "git_show_exit": 128,
+  "concluding_static_invocations": 0,
+  "concluding_static_state": "not reached reported",
+  "missing_guessed_input": "19c55bad0a7d5a002a262e47c79c1a3ff74f21a3:docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov01-gov02-source-contract-impact-review-r1.json",
+  "no_outputs": true,
+  "no_commit": true,
+  "clean_readonly_confirmed": true,
+  "whole_census_incomplete": true,
+  "root_disposition": "freeze attempt2 acrossactors; register fresh final3 withinoriginalcap; no parser/admissiongrant"
+}

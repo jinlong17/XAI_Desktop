@@ -1,0 +1,11 @@
+revision=f64ad44 fixed_commit=f64ad44e9e13f56db243471c206cea7a63271b2a
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-Txr3XZ
+
+ ✓ docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx (5 tests) 741ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  00:50:53
+   Duration  11.89s (transform 5.36s, setup 0ms, collect 9.27s, tests 741ms, environment 653ms, prepare 255ms)

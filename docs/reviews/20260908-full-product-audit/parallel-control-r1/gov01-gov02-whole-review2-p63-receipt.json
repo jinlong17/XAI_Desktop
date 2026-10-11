@@ -1,0 +1,53 @@
+{
+  "source": "5045c5556a13b23ec96c156deb7a761a701fbd6d",
+  "integration": "2434373d391b6cfafec0a3883623650a57a0a366",
+  "archive_ref": "codex/archive/parallel-gov01-gov02-source-full-review-r2-20261010",
+  "parent": "7c21e7900bdc252674c10df65003ee82a4fa95fa",
+  "fixed_input": "f7ba38de07dc41d4d1a29be75a142afe89ac4524",
+  "outputs": {
+    "docs/reviews/audit-parallel-gov01-gov02-source-contract-impact-review-r2/review.md": "081a9378653ec48553237f164bc460863926c296f9bf847580644d941149ca8b",
+    "docs/reviews/audit-parallel-gov01-gov02-source-contract-impact-review-r2/inputs.sha256": "c510374382da853e2b4a487445bb34fe32bd76990f3a199e246a35efdc382b35"
+  },
+  "all_input_hashes_checked": 1288,
+  "review_iteration": 2,
+  "review_cap": 3,
+  "verdict": "APPROVED fulltechnicalDOCUMENTONLY",
+  "static": {
+    "invocations": 1,
+    "result": "PASS",
+    "pid": 53001,
+    "session": 86620,
+    "final_chunk": "ba50bd",
+    "exit": 0,
+    "prewrite_assertions": 6660,
+    "total_assertions": 6664,
+    "owned_streams": "fullyEOFdrained",
+    "runtime": 0
+  },
+  "finalization": {
+    "pids": [
+      59601,
+      59602,
+      59603,
+      59604,
+      59606,
+      59607,
+      59611
+    ],
+    "all_exit": 0,
+    "chunk": "a343b5",
+    "chunk_exit": 0,
+    "default_format": "PASS",
+    "clean": true,
+    "amend": 0
+  },
+  "pretool_transport_error": "one read-onlydisplay JSassemblySyntaxError no shell/checker/write invocation",
+  "adoption": {
+    "source": "d116728b145a9a4608ca0be1b6504163038574e5",
+    "hash": "f52592359f98fc357a42cfce8d9ea235b6b751a51eeada57dc9132e2fb33e68e",
+    "scope": "whole conditionaltechnicalDOCUMENTONLY",
+    "all_actual_admission": "HELD unknownparserhistory/sourcequalification/before/code/fixedintegratedfixtures/consumerUI/vendor/fullcaller"
+  },
+  "root_role": "metadataonly",
+  "controller_print_residual": "P62 script terminal printed known120 obsolete literal; committed state/events actually121, unchanged authoritativebasis"
+}

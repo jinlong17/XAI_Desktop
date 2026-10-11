@@ -1,0 +1,13 @@
+--- a/docs/reviews/web-more-recovery-sol/boundaries.test.tsx
++++ b/docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx
+@@ -15,8 +15,8 @@
+ });
+ 
+ it("invalid and unavailable sources retain requested reset intents without purging raw bytes", async () => {
+-  const invalid = deviceCases[1]!, unavailable = accountCases[0]!; nativeSet.call(localStorage, physical(invalid), "invalid-bool"); const base = Storage.prototype.getItem;
+-  vi.spyOn(Storage.prototype, "getItem").mockImplementation(function (this: Storage, key) { if (String(key) === physical(unavailable)) throw new Error("unavailable"); return base.call(this, key); }); const ui = mount(); await flush(); reset(ui); await flush(30);
++  const invalid = deviceCases[1]!, unavailable = accountCases[0]!; nativeSet.call(localStorage, physical(invalid), "invalid-bool"); const base = Storage.prototype.getItem; const unavailableKey = physical(unavailable);
++  vi.spyOn(Storage.prototype, "getItem").mockImplementation(function (this: Storage, key) { if (String(key) === unavailableKey) throw new Error("unavailable"); return base.call(this, key); }); const ui = mount(); await flush(); reset(ui); await flush(30);
+   await waitFor(() => { for (const entry of cases) if (entry !== invalid && entry !== unavailable) expect(nativeGet.call(localStorage, physical(entry)), entry.field).toBeNull(); });
+   expect(nativeGet.call(localStorage, physical(invalid))).toBe("invalid-bool"); expect(nativeGet.call(localStorage, physical(unavailable))).toBe(encode(unavailable.initial)); expect(controlValue(ui, invalid)).toBe(invalid.default); expect(controlValue(ui, unavailable)).toBe(unavailable.default); expect(guard()?.isBlocking()).toBe(true);
+   const file = download(); guard()?.exportDraft(); expect(await file.read()).toEqual(expectedDraft([{ entry: invalid, operation: "reset" }, { entry: unavailable, operation: "reset" }]));

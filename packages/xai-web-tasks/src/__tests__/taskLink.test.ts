@@ -26,6 +26,7 @@ describe("board task link helpers", () => {
     const now = new Date("2026-06-03T12:00:00.000Z");
     expect(bucketIdForBoardDueDate(undefined, now)).toBe("nodate");
     expect(bucketIdForBoardDueDate("2026-06-02", now)).toBe("overdue");
+    expect(bucketIdForBoardDueDate("2026-06-03", now)).toBe("overdue");
     expect(bucketIdForBoardDueDate("2026-06-10", now)).toBe("next7");
     expect(bucketIdForBoardDueDate("2026-06-11", now)).toBe("later");
     expect(bucketIdForBoardDueDate("not-a-date", now)).toBe("nodate");

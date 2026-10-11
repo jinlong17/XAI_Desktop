@@ -1,3 +1,4 @@
+import { prepareAccountFixture } from "../__tests__/accountFixture.js";
 // @vitest-environment jsdom
 
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -57,6 +58,7 @@ function findButton(container: HTMLElement, label: string): HTMLButtonElement {
 }
 
 async function mountRouter(initialEntries: string[], initialIndex?: number): Promise<MountedApp> {
+  prepareAccountFixture("router-test-account");
   const container = document.createElement("div");
   document.body.appendChild(container);
   const root = createRoot(container);

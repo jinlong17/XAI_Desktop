@@ -1,0 +1,11 @@
+Command:
+cd packages/plugin-web-storage && ./node_modules/.bin/vitest run src/__tests__/canonicalCommandCommit.test.ts
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage
+
+ ✓ src/__tests__/canonicalCommandCommit.test.ts (15 tests) 18ms
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  15:48:59
+   Duration  1.64s (transform 118ms, setup 0ms, collect 144ms, tests 18ms, environment 1.03s, prepare 80ms)

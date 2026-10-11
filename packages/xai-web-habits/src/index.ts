@@ -1,3 +1,4 @@
+import "./internal/accountMigration.js";
 /**
  * @repo/plugin-web-habits — public surface.
  *

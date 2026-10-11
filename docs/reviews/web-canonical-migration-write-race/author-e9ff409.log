@@ -1,0 +1,74 @@
+revision=e9ff409
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-canonical-migration-AzePpp
+
+stdout | docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful ordinary Tasks save remains visible across migration: before
+{
+  timing: 'before',
+  migrationRejected: false,
+  visibleGeneration: 'migration-move-before',
+  oldGenerationHasLatest: true,
+  visibleGenerationHasLatest: true
+}
+
+stdout | docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful ordinary Tasks save remains visible across migration: stage
+{
+  timing: 'stage',
+  migrationRejected: true,
+  visibleGeneration: 'initial',
+  oldGenerationHasLatest: true,
+  visibleGenerationHasLatest: true
+}
+
+stdout | docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful ordinary Tasks save remains visible across migration: verify
+{
+  timing: 'verify',
+  migrationRejected: true,
+  visibleGeneration: 'initial',
+  oldGenerationHasLatest: true,
+  visibleGenerationHasLatest: true
+}
+
+stdout | docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful account autosave remains visible across migration: before
+{
+  domain: 'account-autosave',
+  timing: 'before',
+  rejected: false,
+  visibleGeneration: 'migration-autosave-before',
+  visibleHasLatest: true
+}
+
+stdout | docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > successful account autosave remains visible across migration: stage
+{
+  domain: 'account-autosave',
+  timing: 'stage',
+  rejected: true,
+  visibleGeneration: 'initial',
+  visibleHasLatest: true
+}
+
+stdout | docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > migration must preserve the complete current source key set after a successful add
+{
+  mutation: 'add',
+  migrationRejected: true,
+  visibleGeneration: 'initial',
+  expected: '{"text":"New acknowledged key"}',
+  visible: '{"text":"New acknowledged key"}'
+}
+
+stdout | docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts > migration must preserve the complete current source key set after a successful remove
+{
+  mutation: 'remove',
+  migrationRejected: true,
+  visibleGeneration: 'initial',
+  expected: null,
+  visible: null
+}
+
+ ✓ docs/reviews/web-canonical-migration-write-race/migration-write-race.test.ts (7 tests) 6ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  17:40:33
+   Duration  718ms (transform 88ms, setup 0ms, collect 103ms, tests 6ms, environment 312ms, prepare 83ms)

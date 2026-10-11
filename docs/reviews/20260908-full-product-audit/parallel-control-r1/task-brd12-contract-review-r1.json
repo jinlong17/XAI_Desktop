@@ -1,0 +1,48 @@
+{
+  "id": "BRD-12/CONTRACT-REVIEW",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full original-obligation contract reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "83508ec199a6d759c4eba07460131ea91e417b82",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "5d1f28a0f81ae01155a213fac93133730f7bad51"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-brd12-contract-review-r1/review.md",
+    "docs/reviews/audit-parallel-brd12-contract-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Verify complete5083inputidentities including5072 fixedparentfiles/6historicalblobs/4rawtreeobjectbytes/goal, original BRD12 full nofakeItem1 +explainable/reversibleDone action and312states/933original+sixTT08evidence939. ActualWeb source/persistence/append+ordinaryfield+threeDoneautomation entrypoints andDesktopstore separateprotected, full proposed scope onlyconditional",
+    "Independently apply user existingclear-rules-first to minimalQLlegacycount/QUundolifetime choices. No repeatedDone semantics/triggerquestion alreadyexplicit; scrutinize whether originalnoinventedtitles andexistingownerdata-preservation rules can authorize boundedtruthfullegacy representation and minimumreversibleoperation withoutnewownerask, or exactunresolvedexplicitproductchoice remains. Searchfullowningdesign/acceptedrulings; do notinventschema or lifetime/default/ownerpreference. Onlytruequestions aftersourceproof, no reviewerdecision outsideauthority",
+    "CompleteB01-B12/R01-R12/rawpremount andpostmount/migration/format/realIDs/provenance ambiguity/consumer/actualhost/account/byteconflict/latestdraft/exactinverse/errorrecovery/export/visualtrustednative/fullcanonicalr2G1/affectedjudgecopies/nativefocus qualifications/currentlocked dependencies. Historicalinventedrowtests requireversionedcorrector review notsilentscope orstandardswaiver, no Desktop/sharedstore/CSS/moduleboundarycross",
+    "Actualpermanent runningunit lineage vsassertion/logcounts/calibration/probes dedup sourcebound; ≥namedfiles notunique invocations, reusedoldappend/package/native unknown/exhaustedpreserved, genuinelynewloss/provenance/inversepurposes groundednotgenericcallerunknown. Fullbudget/actorindependence/exactfuture24pathgrant remainsnotactive; allvalidhistoricalproofreuse applicabilityreview no unneededrerun",
+    "Returncoordinate-specific APPROVEDconditionalproposal orREVISE exactboundednewversioned correction paths author1/review1 retained, minimalgenuineownerconditionsonly. No product repair, runtime qualification orcalleracceptance/formalclosure"
+  ],
+  "protected": [
+    "allnonallowedpaths",
+    "product/tests/sharedsource/CSS/config/lockfile",
+    "originalcontracts/runners/evidence/failures/otherworktrees",
+    "globalcontrol/threeledgers/inventory",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "contract_review_iteration": 1,
+    "contract_review_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "native": 0,
+    "browser": 0,
+    "qualification": 0,
+    "probes": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "runtime need or protectedboundary",
+    "unsupportedproductdecision orweakeningacceptance"
+  ],
+  "no_children": true
+}

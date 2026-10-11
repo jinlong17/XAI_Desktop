@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * useUserCalEvents — React hook bridging EventStore + usePref.
  * 8 cases including AC-PERSIST-CREATE-4 (cross-tab storage event).
@@ -16,10 +17,10 @@ describe("useUserCalEvents — initial state", () => {
 });
 
 describe("useUserCalEvents — CRUD", () => {
-  it("create() adds an event + persists via setPref", () => {
+  it("create() adds an event + persists via setPref", async () => {
     const { result } = renderHook(() => useUserCalEvents());
-    act(() => {
-      result.current.create({
+    await act(async () => {
+      await result.current.create({
         title: "First",
         startISO: "2026-05-22T09:00",
         endISO: "2026-05-22T10:00",
@@ -30,68 +31,68 @@ describe("useUserCalEvents — CRUD", () => {
     expect(result.current.list).toHaveLength(1);
     expect(result.current.list[0]?.title).toBe("First");
     // Persistence: read raw localStorage value.
-    const raw = localStorage.getItem("xai_calendar_events");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_calendar_events"));
     expect(raw).toBeTruthy();
-    expect(JSON.parse(raw!)).toHaveProperty(result.current.list[0]!.id);
+    expect(JSON.parse(raw!).data).toHaveProperty(result.current.list[0]!.id);
   });
 
   it("update() patches title + bumps updatedAt", async () => {
     const { result } = renderHook(() => useUserCalEvents());
     let id = "";
-    act(() => {
-      id = result.current.create({
+    await act(async () => {
+      id = (await result.current.create({
         title: "Before",
         startISO: "2026-05-22T09:00",
         endISO: "2026-05-22T10:00",
         colorPreset: "mint",
         recurrence: null,
-      }).id;
+      }))!.id;
     });
     await new Promise((r) => setTimeout(r, 5));
-    act(() => {
-      result.current.update(id, { title: "After" });
+    await act(async () => {
+      await result.current.update(id, { title: "After" });
     });
     expect(result.current.events[id]?.title).toBe("After");
   });
 
-  it("update() returns null when id missing — no state change", () => {
+  it("update() returns null when id missing — no state change", async () => {
     const { result } = renderHook(() => useUserCalEvents());
     let returned: unknown = "uninit";
-    act(() => {
-      returned = result.current.update("nope", { title: "x" });
+    await act(async () => {
+      returned = await result.current.update("nope", { title: "x" });
     });
     expect(returned).toBeNull();
   });
 
-  it("remove() deletes the event", () => {
+  it("remove() deletes the event", async () => {
     const { result } = renderHook(() => useUserCalEvents());
     let id = "";
-    act(() => {
-      id = result.current.create({
+    await act(async () => {
+      id = (await result.current.create({
         title: "To delete",
         startISO: "2026-05-22T09:00",
         endISO: "2026-05-22T10:00",
         colorPreset: "mint",
         recurrence: null,
-      }).id;
+      }))!.id;
     });
-    act(() => {
-      result.current.remove(id);
+    await act(async () => {
+      await result.current.remove(id);
     });
     expect(result.current.list).toHaveLength(0);
   });
 
-  it("getById() returns the event or null", () => {
+  it("getById() returns the event or null", async () => {
     const { result } = renderHook(() => useUserCalEvents());
     let id = "";
-    act(() => {
-      id = result.current.create({
+    await act(async () => {
+      id = (await result.current.create({
         title: "Lookup",
         startISO: "2026-05-22T09:00",
         endISO: "2026-05-22T10:00",
         colorPreset: "mint",
         recurrence: null,
-      }).id;
+      }))!.id;
     });
     expect(result.current.getById(id)?.title).toBe("Lookup");
     expect(result.current.getById("missing")).toBeNull();
@@ -99,10 +100,33 @@ describe("useUserCalEvents — CRUD", () => {
 });
 
 describe("useUserCalEvents — persistence round-trip", () => {
-  it("remount sees the event that was created in a previous mount (HC4)", () => {
+  it("edits an envelope baseline while retaining its original receipt", async () => {
+    const raw = JSON.stringify({
+      format: "xai-command-state", version: 1, revision: 2, data: {},
+      receipts: {
+        "ai:calendar-create": {
+          operationVersion: 1, signature: "calendar:create:v1",
+          result: { ok: true, targetId: "older-event" },
+          committedAt: "2026-09-09T12:00:00.000Z",
+        },
+      },
+    });
+    localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), raw);
+    const { result } = renderHook(() => useUserCalEvents());
+    expect(result.current.events).toEqual({});
+    await act(async () => { await result.current.create({
+      title: "Blocked until canonical writer", startISO: "2026-05-22T09:00",
+      endISO: "2026-05-22T10:00", colorPreset: "mint", recurrence: null,
+    }); });
+    const persisted = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_calendar_events"))!);
+    expect(persisted.receipts).toEqual(JSON.parse(raw).receipts);
+    expect(Object.keys(persisted.data)).toHaveLength(1);
+  });
+
+  it("remount sees the event that was created in a previous mount (HC4)", async () => {
     const { result: r1, unmount } = renderHook(() => useUserCalEvents());
-    act(() => {
-      r1.current.create({
+    await act(async () => {
+      await r1.current.create({
         title: "Persisted",
         startISO: "2026-05-22T09:00",
         endISO: "2026-05-22T10:00",
@@ -135,10 +159,10 @@ describe("useUserCalEvents — cross-tab sync (AC-PERSIST-CREATE-4)", () => {
       },
     };
     act(() => {
-      localStorage.setItem("xai_calendar_events", JSON.stringify(externalValue));
+      localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), JSON.stringify(externalValue));
       window.dispatchEvent(
         new StorageEvent("storage", {
-          key: "xai_calendar_events",
+          key: accountScope.physicalKey("xai_calendar_events"),
           newValue: JSON.stringify(externalValue),
           oldValue: null,
           storageArea: localStorage,

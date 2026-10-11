@@ -1,0 +1,1549 @@
+revision=9424081 fixed_commit=94240814af78449802e99cfc3fab23f94ef9dc59
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-XFlhIS
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx (24 tests | 13 failed) 3026ms
+   × preset: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 303ms
+     → expected '"focus-30"' to be '"focus-25"' // Object.is equality
+   ✓ preset: physical fault retains current choice and actual Retry persists only the unresolved intent  501ms
+   × custom_minutes: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 222ms
+     → expected '47' to be '45' // Object.is equality
+   ✓ custom_minutes: physical fault retains current choice and actual Retry persists only the unresolved intent 71ms
+   × display_style: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 22ms
+     → expected '"minimal"' to be '"apple"' // Object.is equality
+   ✓ display_style: physical fault retains current choice and actual Retry persists only the unresolved intent 117ms
+   × theme: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 131ms
+     → expected '"blue"' to be '"coral"' // Object.is equality
+   ✓ theme: physical fault retains current choice and actual Retry persists only the unresolved intent 78ms
+   × sound: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 33ms
+     → expected '"bell"' to be '"soft-chime"' // Object.is equality
+   ✓ sound: physical fault retains current choice and actual Retry persists only the unresolved intent 94ms
+   × muted: actual control waits for its physical key lock; UI stays current and timer bytes remain separate 109ms
+     → expected 'true' to be 'false' // Object.is equality
+   ✓ muted: physical fault retains current choice and actual Retry persists only the unresolved intent 120ms
+   × invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting 87ms
+     → preset: expected '"focus-25"' to be '"not-a-preset"' // Object.is equality
+     → preset: expected [ Array(1) ] to deeply equal []
+     → custom_minutes: expected '45' to be 'null' // Object.is equality
+     → custom_minutes: expected [ [ …(2) ] ] to deeply equal []
+     → display_style: expected '"apple"' to be '{}' // Object.is equality
+     → display_style: expected [ [ …(2) ] ] to deeply equal []
+     → theme: expected '"coral"' to be '"plaid"' // Object.is equality
+     → theme: expected [ [ 'xai_pref_pomodoro_theme', …(1) ] ] to deeply equal []
+     → sound: expected '"soft-chime"' to be 'false' // Object.is equality
+     → sound: expected [ [ 'xai_pref_pomodoro_sound', …(1) ] ] to deeply equal []
+     → muted: expected 'false' to be '"false"' // Object.is equality
+     → muted: expected [ [ 'xai_pref_pomodoro_muted', …(1) ] ] to deeply equal []
+     → expected null not to be null
+   ✓ an unavailable theme read cannot seed its rendered fallback and shows preference recovery 105ms
+   ✓ custom minutes partial success retries only failed minutes and preserves a newer successful-sibling preset 118ms
+   × a clean cross-document theme update projects without creating a write 74ms
+     → expected 'false' to be 'true' // Object.is equality
+   × dirty queued theme keeps local selection but refuses an external replacement and Retry cannot overwrite it 111ms
+     → expected null not to be null
+   × uncertain unchanged theme Retry verifies one physical write and does not fake Saved early 48ms
+     → expected null not to be null
+   ✓ pending device theme survives A to B to locked account with the same key and newest local selection 56ms
+   ✓ two rapid mute clicks retain the latest false choice after a queued first toggle 54ms
+   ✓ partial preference export is actual latest six-value JSON and download setup failure retains choices 227ms
+   × ordinary theme conflict offers explicit reload/discard and adopts the external value only by that user choice 34ms
+     → expected null not to be null
+   × reloading repaired invalid sound cannot discard unrelated latest failed theme draft or its retry 277ms
+     → Unable to find an accessible element with the role "button" and name `/reload/i`
+
+Here are the accessible roles:
+
+  alert:
+
+  Name "":
+  [36m<section[39m
+    [33mclass[39m=[32m"pomo-notice pomo-recovery"[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Retry preferences":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Export current preferences":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mute":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mute"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"mute-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enter fullscreen":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Enter fullscreen"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"icon-btn pomo-fullscreen-btn"[39m
+    [33mdata-testid[39m=[32m"fullscreen-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "More":
+  [36m<button[39m
+    [33maria-label[39m=[32m"More"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"dots-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Current mode":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Current mode"[39m
+    [33mclass[39m=[32m"focus-pill"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Start":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Start"[39m
+    [33mclass[39m=[32m"btn primary"[39m
+    [33mdata-testid[39m=[32m"start-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Reset":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Reset"[39m
+    [33mclass[39m=[32m"btn ghost"[39m
+    [33mdata-testid[39m=[32m"reset-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "25 min":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"dur-chip active"[39m
+    [33mdata-testid[39m=[32m"preset-focus-25"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "30 min":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-focus-30"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "15 min":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-focus-15"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "5 min break":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-break-5"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "10 min break":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-break-10"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "15 min break":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-break-15"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Custom":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-custom"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Digital":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-digital"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Ring":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-ring"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Clockwise":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-clockwise"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Apple":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"pomo-style-btn active"[39m
+    [33mdata-testid[39m=[32m"style-apple"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Minimal":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-minimal"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Focus":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-focus"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Coral":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Coral"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-coral"[39m
+    [33mstyle[39m=[32m"--accent-hue: 25;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Amber":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Amber"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-amber"[39m
+    [33mstyle[39m=[32m"--accent-hue: 72;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Sage":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Sage"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-sage"[39m
+    [33mstyle[39m=[32m"--accent-hue: 145;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Teal":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Teal"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-teal"[39m
+    [33mstyle[39m=[32m"--accent-hue: 185;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Blue":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Blue"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-blue"[39m
+    [33mstyle[39m=[32m"--accent-hue: 245;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Violet":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Violet"[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"pomo-color-dot active"[39m
+    [33mdata-testid[39m=[32m"theme-violet"[39m
+    [33mstyle[39m=[32m"--accent-hue: 285;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rose":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rose"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-rose"[39m
+    [33mstyle[39m=[32m"--accent-hue: 340;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Preview":
+  [36m<button[39m
+    [33mclass[39m=[32m"btn ghost pomo-preview-btn"[39m
+    [33mdata-testid[39m=[32m"sound-preview-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Add manually":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Add manually"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"add-record-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "More":
+  [36m<button[39m
+    [33maria-label[39m=[32m"More"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"record-dots-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"module-head pomo-head"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Pomodoro":
+  [36m<h1[39m
+    [33mclass[39m=[32m"module-title"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<h2[39m
+    [33mclass[39m=[32m"side-h"[39m
+  [36m/>[39m
+
+  Name "Focus Record":
+  [36m<h2[39m
+    [33mclass[39m=[32m"side-h"[39m
+    [33mstyle[39m=[32m"flex: 1 1 0%;"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  region:
+
+  Name "Pomodoro settings":
+  [36m<section[39m
+    [33maria-label[39m=[32m"Pomodoro settings"[39m
+    [33mclass[39m=[32m"pomo-control-panel"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"dur-row"[39m
+    [33mrole[39m=[32m"list"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-style-grid"[39m
+    [33mrole[39m=[32m"list"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Overview"[39m
+    [33mclass[39m=[32m"pomo-stats"[39m
+    [33mrole[39m=[32m"list"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Select alert sound":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Select alert sound"[39m
+    [33mclass[39m=[32m"pomo-select"[39m
+    [33mdata-testid[39m=[32m"sound-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Soft Chime":
+  [36m<option[39m
+    [33mvalue[39m=[32m"soft-chime"[39m
+  [36m/>[39m
+
+  Name "Bell":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bell"[39m
+  [36m/>[39m
+
+  Name "Digital":
+  [36m<option[39m
+    [33mvalue[39m=[32m"digital"[39m
+  [36m/>[39m
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  complementary:
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"pomo-side"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"module module-pomo"[39m
+      [33mdata-display-style[39m=[32m"apple"[39m
+      [33mdata-fullscreen[39m=[32m"false"[39m
+      [33mdata-running[39m=[32m"false"[39m
+      [33mstyle[39m=[32m"--accent-hue: 285;"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"pomo-notice pomo-recovery"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0mSome preferences were not saved. Current choices still apply on this page; retry or export before reopening.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mRetry preferences[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mExport current preferences[0m
+        [36m</button>[39m
+      [36m</section>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"module-head pomo-head"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"pomo-title-block"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mPomodoro[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"pomo-head-sub"[39m
+          [36m>[39m
+            [0mFocus[0m
+            [0m · [0m
+            [0mApple[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"pomo-status-chip"[39m
+          [33mdata-testid[39m=[32m"pomo-status-chip"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"pomo-status-dot"[39m
+          [36m/>[39m
+          [0mReady[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Mute"[39m
+          [33mclass[39m=[32m"icon-btn"[39m
+          [33mdata-testid[39m=[32m"mute-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<polygon[39m
+              [33mpoints[39m=[32m"11 5 6 9 2 9 2 15 6 15 11 19 11 5"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M15.54 8.46a5 5 0 0 1 0 7.07"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Enter fullscreen"[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"icon-btn pomo-fullscreen-btn"[39m
+          [33mdata-testid[39m=[32m"fullscreen-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<polyline[39m
+              [33mpoints[39m=[32m"15 3 21 3 21 9"[39m
+            [36m/>[39m
+            [36m<polyline[39m
+              [33mpoints[39m=[32m"9 21 3 21 3 15"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"21"[39m
+              [33mx2[39m=[32m"14"[39m
+              [33my1[39m=[32m"3"[39m
+              [33my2[39m=[32m"10"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"3"[39m
+              [33mx2[39m=[32m"10"[39m
+              [33my1[39m=[32m"21"[39m
+              [33my2[39m=[32m"14"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"More"[39m
+          [33mclass[39m=[32m"icon-btn"[39m
+          [33mdata-testid[39m=[32m"dots-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"5"[39m
+              [33mr[39m=[32m"1"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"12"[39m
+              [33mr[39m=[32m"1"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"19"[39m
+              [33mr[39m=[32m"1"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"pomo-shell"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"pomo-main"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"pomo-stage"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"pomo-stage-top"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Current mode"[39m
+                [33mclass[39m=[32m"focus-pill"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mFocus[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[3...
+   × rejected native lock Promise becomes visible retryable preference failure without fallback write 33ms
+     → expected '"blue"' to be '"coral"' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  13 failed | 11 passed (24)
+   Start at  21:10:07
+   Duration  6.98s (transform 1.41s, setup 0ms, collect 2.53s, tests 3.03s, environment 896ms, prepare 124ms)
+
+
+stderr | docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > preset: physical fault retains current choice and actual Retry persists only the unresolved intent
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+[plugin-web-storage] decode failed for xai_pref_pomodoro_custom_minutes: Error: Cannot decode stored value with codec "json"
+    at getPrefAutosave (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-XFlhIS/packages/plugin-web-storage/src/internal/storage.ts:372:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-XFlhIS/packages/plugin-web-pomodoro/src/PomodoroModule.tsx:212:19
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at PomodoroModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-XFlhIS/packages/plugin-web-pomodoro/src/PomodoroModule.tsx:211:45)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+
+stderr | docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > reloading repaired invalid sound cannot discard unrelated latest failed theme draft or its retry
+[plugin-web-storage] decode failed for xai_pref_pomodoro_sound: Error: Cannot decode stored value with codec "json"
+    at getPrefAutosave (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-XFlhIS/packages/plugin-web-storage/src/internal/storage.ts:372:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-XFlhIS/packages/plugin-web-pomodoro/src/PomodoroModule.tsx:230:19
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at PomodoroModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-XFlhIS/packages/plugin-web-pomodoro/src/PomodoroModule.tsx:229:33)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > preset: actual control waits for its physical key lock; UI stays current and timer bytes remain separate
+AssertionError: expected '"focus-30"' to be '"focus-25"' // Object.is equality
+
+Expected: ""focus-25""
+Received: ""focus-30""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:7:340
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > custom_minutes: actual control waits for its physical key lock; UI stays current and timer bytes remain separate
+AssertionError: expected '47' to be '45' // Object.is equality
+
+Expected: "45"
+Received: "47"
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:7:340
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > display_style: actual control waits for its physical key lock; UI stays current and timer bytes remain separate
+AssertionError: expected '"minimal"' to be '"apple"' // Object.is equality
+
+Expected: ""apple""
+Received: ""minimal""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:7:340
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > theme: actual control waits for its physical key lock; UI stays current and timer bytes remain separate
+AssertionError: expected '"blue"' to be '"coral"' // Object.is equality
+
+Expected: ""coral""
+Received: ""blue""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:7:340
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > sound: actual control waits for its physical key lock; UI stays current and timer bytes remain separate
+AssertionError: expected '"bell"' to be '"soft-chime"' // Object.is equality
+
+Expected: ""soft-chime""
+Received: ""bell""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:7:340
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > muted: actual control waits for its physical key lock; UI stays current and timer bytes remain separate
+AssertionError: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:7:340
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: preset: expected '"focus-25"' to be '"not-a-preset"' // Object.is equality
+
+Expected: ""not-a-preset""
+Received: ""focus-25""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:536
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: preset: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_pomodoro_preset",
++     "\"focus-25\"",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:618
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: custom_minutes: expected '45' to be 'null' // Object.is equality
+
+Expected: "null"
+Received: "45"
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:536
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: custom_minutes: expected [ [ …(2) ] ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_pomodoro_custom_minutes",
++     "45",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:618
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: display_style: expected '"apple"' to be '{}' // Object.is equality
+
+Expected: "{}"
+Received: ""apple""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:536
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: display_style: expected [ [ …(2) ] ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_pomodoro_display_style",
++     "\"apple\"",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:618
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: theme: expected '"coral"' to be '"plaid"' // Object.is equality
+
+Expected: ""plaid""
+Received: ""coral""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:536
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: theme: expected [ [ 'xai_pref_pomodoro_theme', …(1) ] ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_pomodoro_theme",
++     "\"coral\"",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:618
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: sound: expected '"soft-chime"' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: ""soft-chime""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:536
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: sound: expected [ [ 'xai_pref_pomodoro_sound', …(1) ] ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_pomodoro_sound",
++     "\"soft-chime\"",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:618
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: muted: expected 'false' to be '"false"' // Object.is equality
+
+Expected: ""false""
+Received: "false"
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:536
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: muted: expected [ [ 'xai_pref_pomodoro_muted', …(1) ] ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_pomodoro_muted",
++     "false",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:618
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > invalid domains for all six remain byte-for-byte and expose preference recovery without default rewriting
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:10:657
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > a clean cross-document theme update projects without creating a write
+AssertionError: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:13:282
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > dirty queued theme keeps local selection but refuses an external replacement and Retry cannot overwrite it
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:14:479
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > uncertain unchanged theme Retry verifies one physical write and does not fake Saved early
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:15:647
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > ordinary theme conflict offers explicit reload/discard and adopts the external value only by that user choice
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:19:389
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > reloading repaired invalid sound cannot discard unrelated latest failed theme draft or its retry
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/reload/i`
+
+Here are the accessible roles:
+
+  alert:
+
+  Name "":
+  [36m<section[39m
+    [33mclass[39m=[32m"pomo-notice pomo-recovery"[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Retry preferences":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Export current preferences":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mute":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mute"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"mute-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enter fullscreen":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Enter fullscreen"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"icon-btn pomo-fullscreen-btn"[39m
+    [33mdata-testid[39m=[32m"fullscreen-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "More":
+  [36m<button[39m
+    [33maria-label[39m=[32m"More"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"dots-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Current mode":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Current mode"[39m
+    [33mclass[39m=[32m"focus-pill"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Start":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Start"[39m
+    [33mclass[39m=[32m"btn primary"[39m
+    [33mdata-testid[39m=[32m"start-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Reset":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Reset"[39m
+    [33mclass[39m=[32m"btn ghost"[39m
+    [33mdata-testid[39m=[32m"reset-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "25 min":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"dur-chip active"[39m
+    [33mdata-testid[39m=[32m"preset-focus-25"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "30 min":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-focus-30"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "15 min":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-focus-15"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "5 min break":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-break-5"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "10 min break":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-break-10"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "15 min break":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-break-15"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Custom":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"dur-chip"[39m
+    [33mdata-testid[39m=[32m"preset-custom"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Digital":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-digital"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Ring":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-ring"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Clockwise":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-clockwise"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Apple":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"pomo-style-btn active"[39m
+    [33mdata-testid[39m=[32m"style-apple"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Minimal":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-minimal"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Focus":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-style-btn"[39m
+    [33mdata-testid[39m=[32m"style-focus"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Coral":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Coral"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-coral"[39m
+    [33mstyle[39m=[32m"--accent-hue: 25;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Amber":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Amber"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-amber"[39m
+    [33mstyle[39m=[32m"--accent-hue: 72;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Sage":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Sage"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-sage"[39m
+    [33mstyle[39m=[32m"--accent-hue: 145;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Teal":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Teal"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-teal"[39m
+    [33mstyle[39m=[32m"--accent-hue: 185;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Blue":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Blue"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-blue"[39m
+    [33mstyle[39m=[32m"--accent-hue: 245;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Violet":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Violet"[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"pomo-color-dot active"[39m
+    [33mdata-testid[39m=[32m"theme-violet"[39m
+    [33mstyle[39m=[32m"--accent-hue: 285;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rose":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rose"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"pomo-color-dot"[39m
+    [33mdata-testid[39m=[32m"theme-rose"[39m
+    [33mstyle[39m=[32m"--accent-hue: 340;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Preview":
+  [36m<button[39m
+    [33mclass[39m=[32m"btn ghost pomo-preview-btn"[39m
+    [33mdata-testid[39m=[32m"sound-preview-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Add manually":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Add manually"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"add-record-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "More":
+  [36m<button[39m
+    [33maria-label[39m=[32m"More"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"record-dots-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"module-head pomo-head"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Pomodoro":
+  [36m<h1[39m
+    [33mclass[39m=[32m"module-title"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<h2[39m
+    [33mclass[39m=[32m"side-h"[39m
+  [36m/>[39m
+
+  Name "Focus Record":
+  [36m<h2[39m
+    [33mclass[39m=[32m"side-h"[39m
+    [33mstyle[39m=[32m"flex: 1 1 0%;"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  region:
+
+  Name "Pomodoro settings":
+  [36m<section[39m
+    [33maria-label[39m=[32m"Pomodoro settings"[39m
+    [33mclass[39m=[32m"pomo-control-panel"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"dur-row"[39m
+    [33mrole[39m=[32m"list"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-style-grid"[39m
+    [33mrole[39m=[32m"list"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Overview"[39m
+    [33mclass[39m=[32m"pomo-stats"[39m
+    [33mrole[39m=[32m"list"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Select alert sound":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Select alert sound"[39m
+    [33mclass[39m=[32m"pomo-select"[39m
+    [33mdata-testid[39m=[32m"sound-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Soft Chime":
+  [36m<option[39m
+    [33mvalue[39m=[32m"soft-chime"[39m
+  [36m/>[39m
+
+  Name "Bell":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bell"[39m
+  [36m/>[39m
+
+  Name "Digital":
+  [36m<option[39m
+    [33mvalue[39m=[32m"digital"[39m
+  [36m/>[39m
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  complementary:
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"pomo-side"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"pomo-stat card"[39m
+    [33mrole[39m=[32m"listitem"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"module module-pomo"[39m
+      [33mdata-display-style[39m=[32m"apple"[39m
+      [33mdata-fullscreen[39m=[32m"false"[39m
+      [33mdata-running[39m=[32m"false"[39m
+      [33mstyle[39m=[32m"--accent-hue: 285;"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"pomo-notice pomo-recovery"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0mSome preferences were not saved. Current choices still apply on this page; retry or export before reopening.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mRetry preferences[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mExport current preferences[0m
+        [36m</button>[39m
+      [36m</section>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"module-head pomo-head"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"pomo-title-block"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mPomodoro[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"pomo-head-sub"[39m
+          [36m>[39m
+            [0mFocus[0m
+            [0m · [0m
+            [0mApple[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"pomo-status-chip"[39m
+          [33mdata-testid[39m=[32m"pomo-status-chip"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"pomo-status-dot"[39m
+          [36m/>[39m
+          [0mReady[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Mute"[39m
+          [33mclass[39m=[32m"icon-btn"[39m
+          [33mdata-testid[39m=[32m"mute-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<polygon[39m
+              [33mpoints[39m=[32m"11 5 6 9 2 9 2 15 6 15 11 19 11 5"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M15.54 8.46a5 5 0 0 1 0 7.07"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Enter fullscreen"[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"icon-btn pomo-fullscreen-btn"[39m
+          [33mdata-testid[39m=[32m"fullscreen-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<polyline[39m
+              [33mpoints[39m=[32m"15 3 21 3 21 9"[39m
+            [36m/>[39m
+            [36m<polyline[39m
+              [33mpoints[39m=[32m"9 21 3 21 3 15"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"21"[39m
+              [33mx2[39m=[32m"14"[39m
+              [33my1[39m=[32m"3"[39m
+              [33my2[39m=[32m"10"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"3"[39m
+              [33mx2[39m=[32m"10"[39m
+              [33my1[39m=[32m"21"[39m
+              [33my2[39m=[32m"14"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"More"[39m
+          [33mclass[39m=[32m"icon-btn"[39m
+          [33mdata-testid[39m=[32m"dots-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"5"[39m
+              [33mr[39m=[32m"1"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"12"[39m
+              [33mr[39m=[32m"1"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"19"[39m
+              [33mr[39m=[32m"1"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"pomo-shell"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"pomo-main"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"pomo-stage"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"pomo-stage-top"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Current mode"[39m
+                [33mclass[39m=[32m"focus-pill"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mFocus[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[3...
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:20:689
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/25]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx > rejected native lock Promise becomes visible retryable preference failure without fallback write
+AssertionError: expected '"blue"' to be '"coral"' // Object.is equality
+
+Expected: ""coral""
+Received: ""blue""
+
+ ❯ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx:21:519
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/25]⎯

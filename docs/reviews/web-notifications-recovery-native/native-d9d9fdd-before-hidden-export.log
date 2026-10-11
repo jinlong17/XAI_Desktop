@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"d9d9fdd","browser":"Chrome/153.0.8010.36"}
+{"name":"native","pass":false,"mode":"hidden-export","error":"AssertionError [ERR_ASSERTION]: Hidden failed times did not hold signout\n\ntrue !== 'pending'\n","runtimeErrors":[]}

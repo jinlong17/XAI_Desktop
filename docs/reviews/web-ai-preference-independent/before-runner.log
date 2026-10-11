@@ -1,0 +1,24 @@
+baseline {"head":"187225ef63fb9057fae32314c7cb5860c81c3a7c","requestedRef":"24da17d^","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":390}
+insights-pending-json {"filename":"ai-chat-unsaved.json"}
+insights-quota-exact-desired-retry {"pass":true}
+voice-pending-json {"filename":"ai-chat-unsaved.json"}
+voice-quota-exact-desired-retry {"pass":true}
+insights-discard-observation {"raw":"false","on":true,"writes":0}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Discard must display current stored preference
+
+true !== false
+
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-ai-preference-independent/verify-native.mjs:78:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: true,
+  expected: false,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.16.0

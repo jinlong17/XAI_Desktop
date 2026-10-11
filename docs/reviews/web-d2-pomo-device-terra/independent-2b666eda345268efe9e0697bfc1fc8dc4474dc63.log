@@ -1,0 +1,11 @@
+revision=2b666eda345268efe9e0697bfc1fc8dc4474dc63
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-DZTQs1
+
+ ✓ docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx (2 tests) 79ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  21:04:03
+   Duration  1.38s (transform 289ms, setup 0ms, collect 492ms, tests 79ms, environment 443ms, prepare 94ms)

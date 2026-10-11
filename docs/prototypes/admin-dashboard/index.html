@@ -1189,6 +1189,7 @@
   const PROVIDERS=[
     {key:"gemini", name:"Google Gemini", color:"#6d5efc", status:"on", secretHandle:"handle://admin/provider/gemini/live", secretState:"verified", rotation:"14 天前", usage:"194M", cost:"$1,420", def:"gemini-3.1-flash-lite", models:[
       {id:"gemini-3.1-flash-lite", tag:"极快·省", tiers:{free:1,pro:1,team:1}},
+      {id:"gemini-3.5-flash",      tag:"稳定·智能",tiers:{free:0,pro:1,team:1}},
       {id:"gemini-3.1-flash",      tag:"均衡",    tiers:{free:0,pro:1,team:1}},
       {id:"gemini-3.1-pro",        tag:"高质量",  tiers:{free:0,pro:0,team:1}},
     ]},
@@ -1546,7 +1547,7 @@
   const OVERBADGE={block:["阻断","b-danger"],throttle:["降速","b-warning"],alert:["仅告警","b-info"]};
   const ROUTING=[
     {plan:"Free",model:"Gemini 3.1 Flash-Lite",fb:"GPT-4o-mini",cap:"$0",req:"200 / 天",over:"block"},
-    {plan:"Pro",model:"Gemini 3.1 Flash",fb:"Flash-Lite",cap:"$40 / 席位",req:"5k / 天",over:"throttle"},
+    {plan:"Pro",model:"Gemini 3.5 Flash",fb:"Gemini 3.1 Flash-Lite",cap:"$40 / 席位",req:"5k / 天",over:"throttle"},
     {plan:"Team",model:"GPT-4o",fb:"Gemini Flash",cap:"$60 / 席位",req:"15k / 天",over:"throttle"},
     {plan:"Enterprise",model:"Claude Opus 4.8",fb:"Sonnet 4.6",cap:"自定义",req:"无限",over:"alert"},
   ];

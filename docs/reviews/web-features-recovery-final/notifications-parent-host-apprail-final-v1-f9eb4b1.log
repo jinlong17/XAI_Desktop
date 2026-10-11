@@ -1,0 +1,88 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+mode=notifications-parent-host
+suffix=apprail-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc node docs/reviews/web-features-recovery-final/verify-callers.mjs f9eb4b1 all apprail-final-v1
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=9aeec39ecc3d9da70837e97b9660837fe887b765
+runner_sha256=7e1aa8b244ed9f63568fa78de79052f980df21a0bad2245a3bbccb2f6ca3454c
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+reproduces=docs/reviews/web-notifications-recovery-independent/verify-fixed.mjs mode host
+include=docs/reviews/web-notifications-recovery-independent/host.test.tsx
+setup_files=none
+copied docs/reviews/web-notifications-recovery-independent/host.test.tsx run=147a84cfc9fa5822f1a6854078ba72dbdf13d6dafc807928487493ba679ba0bc archive_committed=147a84cfc9fa5822f1a6854078ba72dbdf13d6dafc807928487493ba679ba0bc (same)
+archive docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts run=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 checkout=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 (same)
+product_file_sha256 packages/plugin-web-settings-rest/src/panes/notificationsPane.tsx=04930bd98b4ba05346f1472cc70f849238db14ce6cb5b4d1165132719ffbc87f apps/web/src/routes/modules/composedSettingsRegistration.tsx=bd2ba2dd92da486ce9d3890fe74af6d3878b3394ed410014313412fdceee377d apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 apps/web/src/routes/modules/settingsDeparture.ts=80c3a5787df8eb02102c4a508f2fe67c1fbd6a6b8ba7f16b3a65c3f542c8548b apps/web/src/routes/modules/shellRegistrations.tsx=c003c499ca3330ff6e3b7e738df4e3366d0daca141d65327dacc3d3665e1b8fe
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages/plugin-web-board-workspaces/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-I7eYcu/final-notifications-parent-host.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-I7eYcu/.final-guard/report-notifications-parent-host.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 (react/@testing-library/react from packages/plugin-web-board-workspaces; react-router as aliased by the older runner)
+node_modules_links third_party=449 workspace=281
+tsconfig_extends_checked=46 unresolved=none
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs
+accepted_count=12
+vitest_exit=0
+harness_checks=PASS (8/8)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-I7eYcu
+
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'enabled' 111ms
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'done_sound' 54ms
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'push_task' 50ms
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'push_pomo' 47ms
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'push_habit' 52ms
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'quiet' 52ms
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'quiet_start' 40ms
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual pane retains failed latest 'quiet_end' 42ms
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual route holds failed notification work 59ms
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx > actual signout holds failed hidden times after quiet disabled 79ms
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx > reenabling quiet reveals both retained latest failed times 85ms
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx > clean notifications permits departure with zero seeded writes 39ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  07:59:41
+   Duration  3.66s (transform 1.73s, setup 0ms, collect 2.50s, tests 710ms, environment 226ms, prepare 53ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-I7eYcu/.final-guard/report-notifications-parent-host.json
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-independent/host.test.tsx
+harness PASS single react, react-router and @testing-library/react instance across the archive and the oracle links (react=1 react-router=1 @testing-library/react=1)
+harness PASS JSON report parsed
+harness PASS reported test files equal the requested include
+harness PASS older runner's config in effect (environment jsdom, globals true, setupFiles [], include, root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product and helper modules loaded from the archive (6 of 6)
+harness PASS no test-file suite error
+json_report=success=true numTotalTestSuites=1 numTotalTests=12 numPassedTests=12 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals cases=12 passed=12 failed=0 other=0 suite_errors=0 unhandled_error_lines=0 console_blocks=0 act_warning_lines=0
+accepted_count=12 count_matches_accepted=true
+file docs/reviews/web-notifications-recovery-independent/host.test.tsx status=passed tests=12 passed=12 failed=0
+case 001 PASSED | actual pane retains failed latest 'enabled'
+case 002 PASSED | actual pane retains failed latest 'done_sound'
+case 003 PASSED | actual pane retains failed latest 'push_task'
+case 004 PASSED | actual pane retains failed latest 'push_pomo'
+case 005 PASSED | actual pane retains failed latest 'push_habit'
+case 006 PASSED | actual pane retains failed latest 'quiet'
+case 007 PASSED | actual pane retains failed latest 'quiet_start'
+case 008 PASSED | actual pane retains failed latest 'quiet_end'
+case 009 PASSED | actual route holds failed notification work
+case 010 PASSED | actual signout holds failed hidden times after quiet disabled
+case 011 PASSED | reenabling quiet reveals both retained latest failed times
+case 012 PASSED | clean notifications permits departure with zero seeded writes
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-I7eYcu","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-I7eYcu/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":[],"include":["docs/reviews/web-notifications-recovery-independent/host.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/plugin-web-settings-rest/src/panes/notificationsPane.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/routes/modules/settingsDeparture.ts apps/web/src/routes/modules/shellRegistrations.tsx docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts
+pin_required_provenance_missing=none
+pin_modules=570 by package: apps/web=7 docs/reviews/web-board-workspace-astra-review=1 docs/reviews/web-notifications-recovery-independent=1 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=21 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=14 packages/xai-web-tasks=23

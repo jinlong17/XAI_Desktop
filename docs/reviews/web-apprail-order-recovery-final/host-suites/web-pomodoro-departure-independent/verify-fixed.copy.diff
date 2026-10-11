@@ -1,0 +1,30 @@
+--- a/docs/reviews/web-pomodoro-departure-independent/verify-fixed.mjs	2026-10-09 07:40:55
++++ b/docs/reviews/web-apprail-order-recovery-final/host-suites/web-pomodoro-departure-independent/verify-fixed.mjs	2026-10-09 08:04:20
+@@ -1,17 +1,25 @@
++// CP-APPRAIL-01 batch 64 (contract r1 §13 last row, §15 E23) COPY of ../../../web-pomodoro-departure-independent/verify-fixed.mjs
++// (SHA-256 ca14e264d43a192fe20c719de4f4841c009417874ccdcb62ffef34151f0eb4ae, frozen, not modified). The frozen runner reads `git archive` into a 100 MiB buffer; the archive is
++// 74,393,600 bytes at f359be6 (where its last accepted logs ran) but 125,992,960 at 419e56d and 148,408,320 at f9eb4b1,
++// so it aborts with `spawnSync git ENOBUFS` before any test runs, at both revisions (refusal transcript
++// ../../frozen-host-suite-refusals-apprail-final-v1.log). Exactly two changes, both marked "E23 copy": (1) the archive
++// buffer is 1 GiB; (2) `root` climbs two more levels because this copy sits two directories deeper. The test files beside
++// it are byte-identical copies of the frozen ones and are staged at the frozen runner's own archive path, exactly as
++// before. Modes, config, aliases, Vitest binary, log format and exit handling are the frozen runner's code.
+ /** Reviewer runner: product/tests from immutable git archive; independent assertions from this directory. */
+ import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, symlinkSync, writeFileSync, copyFileSync, rmSync } from 'node:fs';
+ import { tmpdir } from 'node:os';
+ import { join } from 'node:path';
+ import { fileURLToPath } from 'node:url';
+ import { execFileSync, spawnSync } from 'node:child_process';
+-const root = fileURLToPath(new URL('../../../', import.meta.url));
++const root = fileURLToPath(new URL('../../../../../', import.meta.url)); // E23 copy, change 2: two levels deeper
+ const evidence = fileURLToPath(new URL('./', import.meta.url));
+ const revision = process.argv[2];
+ if (!revision) throw Error('Pinned revision required');
+ const commit = execFileSync('git',['rev-parse',revision],{cwd:root,encoding:'utf8'}).trim();
+ const dir = mkdtempSync(join(tmpdir(), 'xai-detail-review-'));
+ try {
+- execFileSync('tar', ['-x', '-C', dir], { input: execFileSync('git', ['archive', commit], { cwd: root, maxBuffer: 100 * 1024 * 1024 }) });
++ execFileSync('tar', ['-x', '-C', dir], { input: execFileSync('git', ['archive', commit], { cwd: root, maxBuffer: 1024 * 1024 * 1024 /* E23 copy, change 1: was 100 * 1024 * 1024 */ }) });
+  symlinkSync(join(root, 'node_modules'), join(dir, 'node_modules'));
+  const aliases = [];
+  for (const name of readdirSync(join(dir, 'packages'))) {

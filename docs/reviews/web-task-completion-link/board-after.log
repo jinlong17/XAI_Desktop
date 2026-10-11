@@ -1,0 +1,54 @@
+
+> @repo/plugin-web-board-workspaces@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-workspaces
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-workspaces
+
+ ✓ src/__tests__/BoardSwitcher.test.tsx (16 tests) 184ms
+ ✓ src/__tests__/CardDetailDialog.test.tsx (16 tests) 125ms
+ ✓ src/__tests__/StatusOverviewBanner.test.tsx (10 tests) 169ms
+ ✓ src/__tests__/PlannerPanel.test.tsx (15 tests) 220ms
+ ✓ src/__tests__/BoardCreator.test.tsx (10 tests) 223ms
+ ✓ src/__tests__/FilterPopover.test.tsx (12 tests) 357ms
+ ✓ src/__tests__/InboxPanel.test.tsx (12 tests) 196ms
+stderr | src/__tests__/shareUrl.test.ts > generateShareUrl > SU-6 crypto.subtle === undefined fallback returns boardId.slice(0,8)
+[shareUrl] SubtleCrypto unavailable; using boardId slice fallback
+
+ ✓ src/__tests__/shareUrl.test.ts (6 tests) 17ms
+ ✓ src/__tests__/BoardDeleteConfirmDialog.test.tsx (11 tests) 75ms
+stderr | src/__tests__/taskLinkCommand.test.ts > intent write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > task write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > acknowledgement write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > pending link follows stable card through move and card/list archive restoration
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+ ✓ src/__tests__/taskLinkCommand.test.ts (5 tests) 37ms
+ ✓ src/__tests__/ShareModal.test.tsx (10 tests) 122ms
+ ✓ src/__tests__/shareContract.test.ts (3 tests) 16ms
+ ✓ src/__tests__/index-barrel.test.ts (4 tests) 11ms
+ ✓ src/__tests__/panelOps.test.ts (19 tests) 5ms
+ ✓ src/__tests__/guards.test.ts (12 tests) 3ms
+ ✓ src/__tests__/ringMath.test.ts (16 tests) 15ms
+ ✓ src/__tests__/filterState.test.ts (8 tests) 4ms
+ ✓ src/__tests__/registration.test.tsx (6 tests) 3ms
+ ✓ src/__tests__/types.test.ts (3 tests) 10ms
+ ✓ src/__tests__/responsiveStyles.test.ts (3 tests) 2ms
+ ✓ src/__tests__/savedFilters.test.ts (5 tests) 6ms
+stderr | src/__tests__/BoardWorkspacesModule.test.tsx > TASK02 failed Task write retains pending Board intent across remount and actual Retry completes once
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+ ✓ src/__tests__/BoardWorkspacesModule.test.tsx (85 tests) 4580ms
+   ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM1: first render with empty localStorage seeds boards + renders header + bottom switcher  470ms
+
+ Test Files  22 passed (22)
+      Tests  287 passed (287)
+   Start at  13:21:46
+   Duration  8.21s (transform 2.81s, setup 5.24s, collect 10.03s, tests 6.38s, environment 16.87s, prepare 2.28s)
+

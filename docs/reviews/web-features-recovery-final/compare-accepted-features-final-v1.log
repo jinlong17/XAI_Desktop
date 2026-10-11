@@ -1,0 +1,247 @@
+comparison=features-final-v1
+## A. Sticky Sol and host (existing runners) vs accepted post1 logs at f359be6
+MATCH sticky bytes: 13/13 vs accepted 13/13 (contract count 13)
+      new web-sticky-recovery-sol/bytes-features-final-v1-5cd63ff.log sha256=4e8ad2a6b5ae8233a60a4b5872423b8bb1ed92e13995a461b3793837f9e02936 exit=0 tests="13 passed (13)" console_blocks=0 preconditions=0
+      accepted web-sticky-recovery-sol/bytes-post1-f359be6.log sha256=422d61b3bbe2a86b11cbfb94947c0d13560f26b99d5a8ed9754ffbde39c2dffe exit=0 tests="13 passed (13)" console_blocks=0 preconditions=0
+      ordered test titles equal=true (13); oracle_sha256 header equal=true
+MATCH sticky fields: 47/47 vs accepted 47/47 (contract count 47)
+      new web-sticky-recovery-sol/fields-features-final-v1-5cd63ff.log sha256=63ba493f62f01428ecbe431549c610c47e2225fcff8f91cbfd089f85010515b3 exit=0 tests="47 passed (47)" console_blocks=0 preconditions=0
+      accepted web-sticky-recovery-sol/fields-post1-f359be6.log sha256=75cfd385b7ec452ab169fab2bfa6be82444a14495116a89301b137c2efddec89 exit=0 tests="47 passed (47)" console_blocks=0 preconditions=0
+      ordered test titles equal=true (47); oracle_sha256 header equal=true
+MATCH sticky queues: 27/27 vs accepted 27/27 (contract count 27)
+      new web-sticky-recovery-sol/queues-features-final-v1-5cd63ff.log sha256=72d7950c87027ef577c90486b6eacdc9aa9a93d612bd36218bc167a52cb19890 exit=0 tests="27 passed (27)" console_blocks=0 preconditions=0
+      accepted web-sticky-recovery-sol/queues-post1-f359be6.log sha256=4b378cc5df7a49996abf2c27bc2b147430081b0f7d9ce62cbf8a5f98e8a505f0 exit=0 tests="27 passed (27)" console_blocks=0 preconditions=0
+      ordered test titles equal=true (27); oracle_sha256 header equal=true
+MATCH sticky continuity-export: 22/22 vs accepted 22/22 (contract count 22)
+      new web-sticky-recovery-sol/continuity-export-features-final-v1-5cd63ff.log sha256=6c51cfc93a408be68a909b248af304c737cd3a3f2dce8a98962066b5e13f897a exit=0 tests="22 passed (22)" console_blocks=0 preconditions=0
+      accepted web-sticky-recovery-sol/continuity-export-post1-f359be6.log sha256=850af870007d4712c63293e753fac872b4ac12d5dc3ae61f9dfd85331f94a96c exit=0 tests="22 passed (22)" console_blocks=0 preconditions=0
+      ordered test titles equal=true (22); oracle_sha256 header equal=true
+MATCH sticky original: 10/10 vs accepted 10/10 (contract count 10)
+      new web-sticky-recovery-sol/original-features-final-v1-5cd63ff.log sha256=6dde7c086c8a180a4a57f39779dd54ea6d9012f9560f7293bdc0852c72b539ba exit=0 tests="10 passed (10)" console_blocks=0 preconditions=0
+      accepted web-sticky-recovery-sol/original-post1-f359be6.log sha256=743ae8d842060e1ebf65de044ae4c2d8452fc10df12490e12785dba053c7b0db exit=0 tests="10 passed (10)" console_blocks=0 preconditions=0
+      ordered test titles equal=true (10); oracle_sha256 header equal=true
+MATCH sticky host: 28/28 vs accepted 28/28 (contract count 28)
+      new web-sticky-recovery-independent/host-features-final-v1-5cd63ff.log sha256=3e0d08f18f9aab46a653048761624d67da99f84b0edd08f9aed34733f33cd622 exit=0 tests="28 passed (28)" console_blocks=0 preconditions=0
+      accepted web-sticky-recovery-independent/host-post1-f359be6.log sha256=9f108542cc616587ba9f9059b6e2efe1211d7fcbbf567a6e04e409cd8e9d6443 exit=0 tests="28 passed (28)" console_blocks=0 preconditions=0
+      ordered test titles equal=true (28); oracle_sha256 header equal=true
+## B. Features Sol bytes (E20) vs E7 fixed1 and E2 before2
+MATCH features-sol bytes: 17/17 vs bytes-fixed1-5cd63ff.log 17/17; lifecycle case (bytes.test.tsx L174-191, assertions L186-187) PASSED
+      new web-features-recovery-sol/bytes-features-final-v1-5cd63ff.log sha256=0d2f23da630919de1c167434c356b1b5d6fbb2c9ec9f31efbf9c2b0171099012 exit=0 tests="17 passed (17)" console_blocks=0 preconditions=0
+      accepted web-features-recovery-sol/bytes-fixed1-5cd63ff.log sha256=4d11dba35115be267792648fae4a9778f5ee1c5014c79573be0e64938b5c0899 exit=0 tests="17 passed (17)" console_blocks=0 preconditions=0
+      case names equal=true statuses equal=true oracle_sha256 header equal=true
+MATCH features-sol bytes: 17/17 vs bytes-before2-f359be6.log 17/17; lifecycle case (bytes.test.tsx L174-191, assertions L186-187) PASSED
+      new web-features-recovery-sol/bytes-features-final-v1-5cd63ff.log sha256=0d2f23da630919de1c167434c356b1b5d6fbb2c9ec9f31efbf9c2b0171099012 exit=0 tests="17 passed (17)" console_blocks=0 preconditions=0
+      accepted web-features-recovery-sol/bytes-before2-f359be6.log sha256=0fa71cffbda4712682ce406c2d53dff7b450849478ead57d9fb01769b06bf14b exit=0 tests="17 passed (17)" console_blocks=0 preconditions=0
+      case names equal=true statuses equal=true oracle_sha256 header equal=true
+## C. More, Notifications and Date & Time suites (verify-callers.mjs) vs accepted older-runner logs
+MATCH more-fields features-final-v1 @5cd63ff: 22/22 vs accepted 22/22 (contract count 22)
+      new web-features-recovery-final/more-fields-features-final-v1-5cd63ff.log sha256=cd24aa343a4c309853b2d48b89ac8df9f735534f0f4a35bb60ef2c1f98727891 exit=0 tests="22 passed (22)" console_blocks=0 preconditions=0
+      accepted web-more-recovery-sol/fields-sticky-final-v1-f359be6.log sha256=507c5254eb95c2e058675774e37f1bfdce9b0a1f6f00973f790ae75a92573daa exit=0 tests="22 passed (22)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/fields.test.tsx=22); console blocks new/accepted=0/0
+MATCH more-fields features-final-v1 @f359be6: 22/22 vs accepted 22/22 (contract count 22)
+      new web-features-recovery-final/more-fields-features-final-v1-f359be6.log sha256=d4a8eb8c2edcf70e36658fd26406780860cd8e51c36656d37f4dfa28c519b9fb exit=0 tests="22 passed (22)" console_blocks=0 preconditions=0
+      accepted web-more-recovery-sol/fields-sticky-final-v1-f359be6.log sha256=507c5254eb95c2e058675774e37f1bfdce9b0a1f6f00973f790ae75a92573daa exit=0 tests="22 passed (22)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/fields.test.tsx=22); console blocks new/accepted=0/0
+MATCH more-reset features-final-v1 @5cd63ff: 20/20 vs accepted 20/20 (contract count 20)
+      new web-features-recovery-final/more-reset-features-final-v1-5cd63ff.log sha256=a082c0c4055fa1c65e06a85e74780097d5d5ea111c75def977d86748e6f0fee4 exit=0 tests="20 passed (20)" console_blocks=18 preconditions=0
+      accepted web-more-recovery-sol/reset-sticky-final-v1-f359be6.log sha256=d326bc9281415c7dcedb359f69ca6b6938e132cc0586499d42cffc979d9312ab exit=0 tests="20 passed (20)" console_blocks=18 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/reset.test.tsx=20); console blocks new/accepted=18/18
+MATCH more-reset features-final-v1 @f359be6: 20/20 vs accepted 20/20 (contract count 20)
+      new web-features-recovery-final/more-reset-features-final-v1-f359be6.log sha256=92aadde59c26a64666a8c0c04a9e89862ff8194f5871d20be384b77b175b37f4 exit=0 tests="20 passed (20)" console_blocks=18 preconditions=0
+      accepted web-more-recovery-sol/reset-sticky-final-v1-f359be6.log sha256=d326bc9281415c7dcedb359f69ca6b6938e132cc0586499d42cffc979d9312ab exit=0 tests="20 passed (20)" console_blocks=18 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/reset.test.tsx=20); console blocks new/accepted=18/18
+MATCH more-queues features-final-v1 @5cd63ff: 14/14 vs accepted 14/14 (contract count 14)
+      new web-features-recovery-final/more-queues-features-final-v1-5cd63ff.log sha256=ab9350a85480aa1142750dd5d909eaac075f49f834fcc0402ca627fcc38ec4d3 exit=0 tests="14 passed (14)" console_blocks=3 preconditions=0
+      accepted web-more-recovery-sol/queues-sticky-final-v1-f359be6.log sha256=90f1ae424a624b42b6133a2caac167941c979c7db498074b242ca1d3896d233f exit=0 tests="14 passed (14)" console_blocks=3 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/queues.test.tsx=14); console blocks new/accepted=3/3
+MATCH more-queues features-final-v1 @f359be6: 14/14 vs accepted 14/14 (contract count 14)
+      new web-features-recovery-final/more-queues-features-final-v1-f359be6.log sha256=7f526a2d2d3b3c935d7b4f734648618c0f2e6998f251a8bbdd078d0dd4bfdfac exit=0 tests="14 passed (14)" console_blocks=3 preconditions=0
+      accepted web-more-recovery-sol/queues-sticky-final-v1-f359be6.log sha256=90f1ae424a624b42b6133a2caac167941c979c7db498074b242ca1d3896d233f exit=0 tests="14 passed (14)" console_blocks=3 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/queues.test.tsx=14); console blocks new/accepted=3/3
+MATCH more-boundaries features-final-v1 @5cd63ff: 10/10 vs accepted 10/10 (contract count 10)
+      new web-features-recovery-final/more-boundaries-features-final-v1-5cd63ff.log sha256=224822b9632a4a484d71b0375ad678cd391780e903974e1a1ed6798d47555955 exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      accepted web-more-recovery-sol/boundaries-sticky-final-v1-f359be6.log sha256=ce688dd7c404d664f6fb08e365dec10eed42a104e66bcee9a40f46b7ca70bb05 exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/boundaries.test.tsx=10); console blocks new/accepted=8/8
+DIFF  more-boundaries features-final-v1 @f359be6: 9/10 vs accepted 10/10 (contract count 10)
+      new web-features-recovery-final/more-boundaries-features-final-v1-f359be6.log sha256=61cf6a305b5bf7488e897081f9ee678dca606d0ab0f3a35ac02535e53fe03ff5 exit=1 tests="1 failed | 9 passed (10)" console_blocks=7 preconditions=0
+      accepted web-more-recovery-sol/boundaries-sticky-final-v1-f359be6.log sha256=ce688dd7c404d664f6fb08e365dec10eed42a104e66bcee9a40f46b7ca70bb05 exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/boundaries.test.tsx=10); console blocks new/accepted=7/8; FAILED: invalid and unavailable sources retain requested reset intents without purging raw bytes; first: AssertionError: date_recognition: expected 'false' to be null
+DIFF  more-boundaries features-final-v2 @5cd63ff: 9/10 vs accepted 10/10 (contract count 10)
+      new web-features-recovery-final/more-boundaries-features-final-v2-5cd63ff.log sha256=f63fbaa6a8d6fa75d703888b80039b417d3af78d4fb7beec9ac6a62477b332f7 exit=1 tests="1 failed | 9 passed (10)" console_blocks=7 preconditions=0
+      accepted web-more-recovery-sol/boundaries-sticky-final-v1-f359be6.log sha256=ce688dd7c404d664f6fb08e365dec10eed42a104e66bcee9a40f46b7ca70bb05 exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/boundaries.test.tsx=10); console blocks new/accepted=7/8; FAILED: invalid and unavailable sources retain requested reset intents without purging raw bytes; first: AssertionError: remove_date_text: expected 'true' to be null
+MATCH more-boundaries features-final-v2 @f359be6: 10/10 vs accepted 10/10 (contract count 10)
+      new web-features-recovery-final/more-boundaries-features-final-v2-f359be6.log sha256=d912c34af13d68ccf8d9d80b5616ab50f585d5f25d3e40d9e0de5e5de6ec03ad exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      accepted web-more-recovery-sol/boundaries-sticky-final-v1-f359be6.log sha256=ce688dd7c404d664f6fb08e365dec10eed42a104e66bcee9a40f46b7ca70bb05 exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/boundaries.test.tsx=10); console blocks new/accepted=8/8
+MATCH more-owner-export features-final-v1 @5cd63ff: 13/13 vs accepted 13/13 (contract count 13)
+      new web-features-recovery-final/more-owner-export-features-final-v1-5cd63ff.log sha256=9794de10ddd8a1c1014d257fd21642ab578cae2342a585c0c8eeb9b9a60c8c29 exit=0 tests="13 passed (13)" console_blocks=13 preconditions=0
+      accepted web-more-recovery-sol/owner-export-sticky-final-v1-f359be6.log sha256=f596560b654fbe6d5aca543ee9b0702a6dfa33ce229f590404dc4fc95fb45d59 exit=0 tests="13 passed (13)" console_blocks=13 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/owner-export.test.tsx=13); console blocks new/accepted=13/13
+MATCH more-owner-export features-final-v1 @f359be6: 13/13 vs accepted 13/13 (contract count 13)
+      new web-features-recovery-final/more-owner-export-features-final-v1-f359be6.log sha256=b701648a7db3647424685fb58e3a71af8a0fc5f1fe2078f1b56b465f64795860 exit=0 tests="13 passed (13)" console_blocks=13 preconditions=0
+      accepted web-more-recovery-sol/owner-export-sticky-final-v1-f359be6.log sha256=f596560b654fbe6d5aca543ee9b0702a6dfa33ce229f590404dc4fc95fb45d59 exit=0 tests="13 passed (13)" console_blocks=13 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-sol/owner-export.test.tsx=13); console blocks new/accepted=13/13
+MATCH more-original features-final-v1 @5cd63ff: 15/15 vs accepted 15/15 (contract count 15)
+      new web-features-recovery-final/more-original-features-final-v1-5cd63ff.log sha256=93c3d8ac8718145b1f49ae50b842b1c45e460157ca916702e369a18a4f45d7b3 exit=0 tests="15 passed (15)" console_blocks=0 preconditions=0
+      accepted web-more-recovery-sol/original-sticky-final-v1-f359be6.log sha256=ddf638b464303f04109aae63a3ba339cd21d34a9a06f8b9e14f7d2ee3d2d7b62 exit=0 tests="15 passed (15)" console_blocks=0 preconditions=0
+      per-file counts equal=true (packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx=15); console blocks new/accepted=0/0
+MATCH more-original features-final-v1 @f359be6: 15/15 vs accepted 15/15 (contract count 15)
+      new web-features-recovery-final/more-original-features-final-v1-f359be6.log sha256=17c361ff522df505e20ef46492ad0dfa94450d340fb4a1e13fcffafc3285f618 exit=0 tests="15 passed (15)" console_blocks=0 preconditions=0
+      accepted web-more-recovery-sol/original-sticky-final-v1-f359be6.log sha256=ddf638b464303f04109aae63a3ba339cd21d34a9a06f8b9e14f7d2ee3d2d7b62 exit=0 tests="15 passed (15)" console_blocks=0 preconditions=0
+      per-file counts equal=true (packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx=15); console blocks new/accepted=0/0
+MATCH more-host features-final-v1 @5cd63ff: 11/11 vs accepted 11/11 (contract count 11)
+      new web-features-recovery-final/more-host-features-final-v1-5cd63ff.log sha256=14c3777f2b0ea36fa87a1907beb82ff3af4c67f16627bb33e9281a1cb9876990 exit=0 tests="11 passed (11)" console_blocks=0 preconditions=0
+      accepted web-more-recovery-independent/host-sticky-final-v1-f359be6.log sha256=bad00c8b82c03183ba5da0d27dc3a2742f200ea07f3f90b788d5ffd4ccc5b1c7 exit=0 tests="11 passed (11)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-independent/host.test.tsx=11); console blocks new/accepted=0/0
+MATCH more-host features-final-v1 @f359be6: 11/11 vs accepted 11/11 (contract count 11)
+      new web-features-recovery-final/more-host-features-final-v1-f359be6.log sha256=aff897198d7705202ab1ebbce4c92014c6dd57d48bbf29ad38f068d00dbd26b2 exit=0 tests="11 passed (11)" console_blocks=0 preconditions=0
+      accepted web-more-recovery-independent/host-sticky-final-v1-f359be6.log sha256=bad00c8b82c03183ba5da0d27dc3a2742f200ea07f3f90b788d5ffd4ccc5b1c7 exit=0 tests="11 passed (11)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-more-recovery-independent/host.test.tsx=11); console blocks new/accepted=0/0
+MATCH notifications-core features-final-v1 @5cd63ff: 11/11 vs accepted 11/11 (contract count 11)
+      new web-features-recovery-final/notifications-core-features-final-v1-5cd63ff.log sha256=2c37add4c4910ab1b7a41532e80d26dac386f0b95ac1c3a22413289ca9128c64 exit=0 tests="11 passed (11)" console_blocks=0 preconditions=0
+      accepted web-notifications-recovery-sol/core-sticky-final-v1-f359be6.log sha256=b9461a3dca829f96c8ca8a00efc9476f44a4356435224d00fb38c8ba04ac5369 exit=0 tests="11 passed (11)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/core.test.tsx=11); console blocks new/accepted=0/0
+MATCH notifications-core features-final-v1 @f359be6: 11/11 vs accepted 11/11 (contract count 11)
+      new web-features-recovery-final/notifications-core-features-final-v1-f359be6.log sha256=8eede0f58b65dcdff69bbdb415e30ad79d5fd2e09fb40346781fff0e942a1ccd exit=0 tests="11 passed (11)" console_blocks=0 preconditions=0
+      accepted web-notifications-recovery-sol/core-sticky-final-v1-f359be6.log sha256=b9461a3dca829f96c8ca8a00efc9476f44a4356435224d00fb38c8ba04ac5369 exit=0 tests="11 passed (11)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/core.test.tsx=11); console blocks new/accepted=0/0
+MATCH notifications-recovery features-final-v1 @5cd63ff: 3/3 vs accepted 3/3 (contract count 3)
+      new web-features-recovery-final/notifications-recovery-features-final-v1-5cd63ff.log sha256=401fe924a216da8b7cf9c92858a292a8012dbc4e4d3d96c49d090e16c2ca4216 exit=0 tests="3 passed (3)" console_blocks=2 preconditions=0
+      accepted web-notifications-recovery-sol/recovery-sticky-final-v1-f359be6.log sha256=e85c5916fbc9d559d49a2e8c7a9af90193443c48e01320508beb40f9a0350874 exit=0 tests="3 passed (3)" console_blocks=2 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/recovery.test.tsx=3); console blocks new/accepted=2/2
+MATCH notifications-recovery features-final-v1 @f359be6: 3/3 vs accepted 3/3 (contract count 3)
+      new web-features-recovery-final/notifications-recovery-features-final-v1-f359be6.log sha256=e8d23eb7ee818fa765bc13195acad8ae672e9badec30a0998221342adab25d7b exit=0 tests="3 passed (3)" console_blocks=2 preconditions=0
+      accepted web-notifications-recovery-sol/recovery-sticky-final-v1-f359be6.log sha256=e85c5916fbc9d559d49a2e8c7a9af90193443c48e01320508beb40f9a0350874 exit=0 tests="3 passed (3)" console_blocks=2 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/recovery.test.tsx=3); console blocks new/accepted=2/2
+MATCH notifications-operations features-final-v1 @5cd63ff: 2/2 vs accepted 2/2 (contract count 2)
+      new web-features-recovery-final/notifications-operations-features-final-v1-5cd63ff.log sha256=b39266a086510d9949ac76c8959313239ee6dcfb28309766a2d45d8bd58474eb exit=0 tests="2 passed (2)" console_blocks=2 preconditions=0
+      accepted web-notifications-recovery-sol/operations-sticky-final-v1-f359be6.log sha256=f9bbe2972e1483090ec1ef01a2b6503542005881bf2e388cb249ba69c74bd450 exit=0 tests="2 passed (2)" console_blocks=2 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/operations.test.tsx=2); console blocks new/accepted=2/2
+MATCH notifications-operations features-final-v1 @f359be6: 2/2 vs accepted 2/2 (contract count 2)
+      new web-features-recovery-final/notifications-operations-features-final-v1-f359be6.log sha256=7f6352f8e1d0ea5ab76f40a3a1ef589e40e7dbd3b36ebaac6ce5797330866c15 exit=0 tests="2 passed (2)" console_blocks=2 preconditions=0
+      accepted web-notifications-recovery-sol/operations-sticky-final-v1-f359be6.log sha256=f9bbe2972e1483090ec1ef01a2b6503542005881bf2e388cb249ba69c74bd450 exit=0 tests="2 passed (2)" console_blocks=2 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/operations.test.tsx=2); console blocks new/accepted=2/2
+MATCH notifications-boundaries features-final-v1 @5cd63ff: 4/4 vs accepted 4/4 (contract count 4)
+      new web-features-recovery-final/notifications-boundaries-features-final-v1-5cd63ff.log sha256=d282b991a6f06ea19e8206d5445e26f155c15ffcc3cbb7dd6ec24376d988f1c8 exit=0 tests="4 passed (4)" console_blocks=1 preconditions=0
+      accepted web-notifications-recovery-sol/boundaries-sticky-final-v1-f359be6.log sha256=5cab7c4cc1f325cc59ae1bc1d8fd63c7491feb6072d5cacf06be168409f57f9d exit=0 tests="4 passed (4)" console_blocks=1 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/boundaries.test.tsx=4); console blocks new/accepted=1/1
+MATCH notifications-boundaries features-final-v1 @f359be6: 4/4 vs accepted 4/4 (contract count 4)
+      new web-features-recovery-final/notifications-boundaries-features-final-v1-f359be6.log sha256=c38d69a030399e85ac38ae5272a6d177f9bcbf1fc4c249975bf8cc15ef1a3483 exit=0 tests="4 passed (4)" console_blocks=1 preconditions=0
+      accepted web-notifications-recovery-sol/boundaries-sticky-final-v1-f359be6.log sha256=5cab7c4cc1f325cc59ae1bc1d8fd63c7491feb6072d5cacf06be168409f57f9d exit=0 tests="4 passed (4)" console_blocks=1 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/boundaries.test.tsx=4); console blocks new/accepted=1/1
+MATCH notifications-extended features-final-v1 @5cd63ff: 10/10 vs accepted 10/10 (contract count 10)
+      new web-features-recovery-final/notifications-extended-features-final-v1-5cd63ff.log sha256=9c1ce65178076ac65fa4aa056f25305903b309487376cda20ac007e94724d2ec exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      accepted web-notifications-recovery-sol/extended-sticky-final-v1-f359be6.log sha256=c826d6fbcae93dfceddd4a6a92236738703591cb00f7b6a1fef441b56abf7a07 exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/extended.test.tsx=10); console blocks new/accepted=8/8
+MATCH notifications-extended features-final-v1 @f359be6: 10/10 vs accepted 10/10 (contract count 10)
+      new web-features-recovery-final/notifications-extended-features-final-v1-f359be6.log sha256=a4994ae03ec75997f97c6e0e65a545fd51ab283ac7a304b5db3a363ed07ba6ce exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      accepted web-notifications-recovery-sol/extended-sticky-final-v1-f359be6.log sha256=c826d6fbcae93dfceddd4a6a92236738703591cb00f7b6a1fef441b56abf7a07 exit=0 tests="10 passed (10)" console_blocks=8 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-sol/extended.test.tsx=10); console blocks new/accepted=8/8
+MATCH notifications-original features-final-v1 @5cd63ff: 11/11 vs accepted 11/11 (contract count 11)
+      new web-features-recovery-final/notifications-original-features-final-v1-5cd63ff.log sha256=0c7464ecb7955f9ae95928bca1f44ff1fac1bab463e929d0301f3dde1729c9c2 exit=0 tests="11 passed (11)" console_blocks=1 preconditions=0
+      accepted web-notifications-recovery-sol/original-sticky-final-v1-f359be6.log sha256=1dd7bc31946974c0bf6d2981202aa2a206859312b3bd793db675f0ebb1ef58e3 exit=0 tests="11 passed (11)" console_blocks=1 preconditions=0
+      per-file counts equal=true (packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx=11); console blocks new/accepted=1/1
+MATCH notifications-original features-final-v1 @f359be6: 11/11 vs accepted 11/11 (contract count 11)
+      new web-features-recovery-final/notifications-original-features-final-v1-f359be6.log sha256=c245894fb828145694588d8da6e45009cc03e1734ddedc6997be20496f62a3b8 exit=0 tests="11 passed (11)" console_blocks=1 preconditions=0
+      accepted web-notifications-recovery-sol/original-sticky-final-v1-f359be6.log sha256=1dd7bc31946974c0bf6d2981202aa2a206859312b3bd793db675f0ebb1ef58e3 exit=0 tests="11 passed (11)" console_blocks=1 preconditions=0
+      per-file counts equal=true (packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx=11); console blocks new/accepted=1/1
+MATCH notifications-astra-boundaries features-final-v1 @5cd63ff: 24/24 vs accepted 24/24 (contract count 24)
+      new web-features-recovery-final/notifications-astra-boundaries-features-final-v1-5cd63ff.log sha256=c230eb96d71f421f94b7d84445bce640067f9315d184bcdce24c6aaa8cf164da exit=0 tests="24 passed (24)" console_blocks=2 preconditions=0
+      accepted web-notifications-recovery-astra/boundaries-sticky-final-v1-f359be6.log sha256=983ea49eb71739d344a941b5f5c5d54a0cc431f566e0ca9b9ce68aae584f4a87 exit=0 tests="24 passed (24)" console_blocks=2 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-astra/boundaries.test.tsx=24); console blocks new/accepted=2/2
+MATCH notifications-astra-boundaries features-final-v1 @f359be6: 24/24 vs accepted 24/24 (contract count 24)
+      new web-features-recovery-final/notifications-astra-boundaries-features-final-v1-f359be6.log sha256=c24258d786650303c6e60bee9f16d9929a02db9f3899c4ff918c03f6c23b7a04 exit=0 tests="24 passed (24)" console_blocks=2 preconditions=0
+      accepted web-notifications-recovery-astra/boundaries-sticky-final-v1-f359be6.log sha256=983ea49eb71739d344a941b5f5c5d54a0cc431f566e0ca9b9ce68aae584f4a87 exit=0 tests="24 passed (24)" console_blocks=2 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-astra/boundaries.test.tsx=24); console blocks new/accepted=2/2
+MATCH notifications-astra-host features-final-v1 @5cd63ff: 15/15 vs accepted 15/15 (contract count 15)
+      new web-features-recovery-final/notifications-astra-host-features-final-v1-5cd63ff.log sha256=b0e881a33eebbcdf350b442825d323ebd908c6379b7e8b751622cc832158d4c6 exit=0 tests="15 passed (15)" console_blocks=0 preconditions=0
+      accepted web-notifications-recovery-astra/host-sticky-final-v1-f359be6.log sha256=57166dc4ac8c6378ff1268489054008f9cedd4dd3f3cc4d92005b78156a5ceb3 exit=0 tests="15 passed (15)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-astra/host.test.tsx=15); console blocks new/accepted=0/0
+MATCH notifications-astra-host features-final-v1 @f359be6: 15/15 vs accepted 15/15 (contract count 15)
+      new web-features-recovery-final/notifications-astra-host-features-final-v1-f359be6.log sha256=60a974546dd7abef46c0a976929a0801bd27cd5a0235dccc594a450df89a0f70 exit=0 tests="15 passed (15)" console_blocks=0 preconditions=0
+      accepted web-notifications-recovery-astra/host-sticky-final-v1-f359be6.log sha256=57166dc4ac8c6378ff1268489054008f9cedd4dd3f3cc4d92005b78156a5ceb3 exit=0 tests="15 passed (15)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-astra/host.test.tsx=15); console blocks new/accepted=0/0
+MATCH notifications-parent-host features-final-v1 @5cd63ff: 12/12 vs accepted 12/12 (contract count 12)
+      new web-features-recovery-final/notifications-parent-host-features-final-v1-5cd63ff.log sha256=401114d0779f527b1eeee86cc37240753fd43ac3782edba3d6387622a7194588 exit=0 tests="12 passed (12)" console_blocks=0 preconditions=0
+      accepted web-notifications-recovery-independent/host-sticky-final-v1-f359be6.log sha256=78dfff1b7b2f85837212de82289b1c7874809ba353673cceeab14a120f84eb3c exit=0 tests="12 passed (12)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-independent/host.test.tsx=12); console blocks new/accepted=0/0
+MATCH notifications-parent-host features-final-v1 @f359be6: 12/12 vs accepted 12/12 (contract count 12)
+      new web-features-recovery-final/notifications-parent-host-features-final-v1-f359be6.log sha256=cfb39fdae2a2b991f9c4b9e12a294bf90392302f81af454123b646a52b5e8b1f exit=0 tests="12 passed (12)" console_blocks=0 preconditions=0
+      accepted web-notifications-recovery-independent/host-sticky-final-v1-f359be6.log sha256=78dfff1b7b2f85837212de82289b1c7874809ba353673cceeab14a120f84eb3c exit=0 tests="12 passed (12)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-notifications-recovery-independent/host.test.tsx=12); console blocks new/accepted=0/0
+MATCH datetime features-final-v1 @5cd63ff: 7/7 vs accepted 7/7 (contract count 7)
+      new web-features-recovery-final/datetime-features-final-v1-5cd63ff.log sha256=57ba484616d8e7a057120d8e603bc68ee0982e9ec98dbd41918e8a2f018a5789 exit=0 tests="7 passed (7)" console_blocks=0 preconditions=0
+      accepted web-notifications-recovery-astra/datetime-sticky-final-v1-f359be6.log sha256=b43909f4d4a073bdf7e30e6b9a094237bf024f6922acd7b8d011a5e72fc93461 exit=0 tests="7 passed (7)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx=7); console blocks new/accepted=0/0
+MATCH datetime features-final-v1 @f359be6: 7/7 vs accepted 7/7 (contract count 7)
+      new web-features-recovery-final/datetime-features-final-v1-f359be6.log sha256=86fad9ec1073c0f9c38190708a043be6e3037227be1f7c12c71b6d9e70516fb8 exit=0 tests="7 passed (7)" console_blocks=0 preconditions=0
+      accepted web-notifications-recovery-astra/datetime-sticky-final-v1-f359be6.log sha256=b43909f4d4a073bdf7e30e6b9a094237bf024f6922acd7b8d011a5e72fc93461 exit=0 tests="7 passed (7)" console_blocks=0 preconditions=0
+      per-file counts equal=true (docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx=7); console blocks new/accepted=0/0
+## D. Package gates (verify-packages.mjs)
+MATCH web-test @5cd63ff: files=28 tests=156 passed=156 vs accepted 28 files / 156
+      new web-features-recovery-final/web-test-features-final-v1-5cd63ff.log sha256=c70646978dad479295ed334c0269c5b2d0b42828966a68ccd34b803ab4cc716c exit=0 tests="156 passed (156)" console_blocks=2 preconditions=0
+      accepted web-more-recovery-final/web-test-sticky-final-v1-f359be6.log sha256=901bc99e3cf41ac7285e6408e0b9dce105860df9186e62dcf742a3052722cbdb exit=0 tests="156 passed (156)" console_blocks=2 preconditions=0
+      per-file counts equal=true
+MATCH web-test @f359be6: files=28 tests=156 passed=156 vs accepted 28 files / 156
+      new web-features-recovery-final/web-test-features-final-v1-f359be6.log sha256=9aa93a82b8ae9e7833037a199989bc24897cce83424a1bf66bf27304897ed7cd exit=0 tests="156 passed (156)" console_blocks=2 preconditions=0
+      accepted web-more-recovery-final/web-test-sticky-final-v1-f359be6.log sha256=901bc99e3cf41ac7285e6408e0b9dce105860df9186e62dcf742a3052722cbdb exit=0 tests="156 passed (156)" console_blocks=2 preconditions=0
+      per-file counts equal=true
+MATCH settings-rest-test @5cd63ff: files=44 tests=314 passed=314 vs accepted 44 files / 314
+      new web-features-recovery-final/settings-rest-test-features-final-v1-5cd63ff.log sha256=cf265ad048948e13b2e5cab9fccbcedf3a680cbbb35996c19ee9d60cf9bc4288 exit=0 tests="314 passed (314)" console_blocks=1 preconditions=0
+      accepted web-notifications-recovery-astra/package-sticky-final-v1-f359be6.log sha256=d32f45bb390157a7827a880bd5dadd3026ce494ae61c543b81b0426fd22ba614 exit=0 tests="314 passed (314)" console_blocks=1 preconditions=0
+      per-file counts equal=true
+MATCH settings-rest-test @f359be6: files=44 tests=314 passed=314 vs accepted 44 files / 314
+      new web-features-recovery-final/settings-rest-test-features-final-v1-f359be6.log sha256=d8972f4a556d30930a2a2d36ce0f1e3e0d3f02e5d89cbc45f7023d121fb18534 exit=0 tests="314 passed (314)" console_blocks=1 preconditions=0
+      accepted web-notifications-recovery-astra/package-sticky-final-v1-f359be6.log sha256=d32f45bb390157a7827a880bd5dadd3026ce494ae61c543b81b0426fd22ba614 exit=0 tests="314 passed (314)" console_blocks=1 preconditions=0
+      per-file counts equal=true
+MATCH storage-check-types @5cd63ff: exit=0 vs accepted exit=0
+      new web-features-recovery-final/storage-check-types-features-final-v1-5cd63ff.log sha256=df76f1e83868c79cccf3e9f0fb1fd5d0c7790466d9037d5cd89747ab3e13baf2 tsc_exit=0 diagnostics_lines=0 harness_checks=PASS (6/6)
+      accepted web-more-recovery-final/storage-check-types-sticky-final-v1-f359be6.log sha256=b43e6b54d301790890cf3b0c4de9e1b8134af9e276cb8b8044fba10f3f2b5cf4 exit=0
+MATCH storage-check-types @f359be6: exit=0 vs accepted exit=0
+      new web-features-recovery-final/storage-check-types-features-final-v1-f359be6.log sha256=3e4bc981ec8b3a613dfc8665b371aa1fae80b01738a9a8a8f0a33a21696278f6 tsc_exit=0 diagnostics_lines=0 harness_checks=PASS (6/6)
+      accepted web-more-recovery-final/storage-check-types-sticky-final-v1-f359be6.log sha256=b43e6b54d301790890cf3b0c4de9e1b8134af9e276cb8b8044fba10f3f2b5cf4 exit=0
+MATCH web-check-types @5cd63ff: exit=0 vs accepted exit=0
+      new web-features-recovery-final/web-check-types-features-final-v1-5cd63ff.log sha256=f55ff83bb48e8d5bcf823e532003acbccd4970c3a777cda7518f72567ebb13ef tsc_exit=0 diagnostics_lines=0 harness_checks=PASS (6/6)
+      accepted web-more-recovery-final/web-check-types-sticky-final-v1-f359be6.log sha256=8475cbd38517b5867fc2f6e0b2e91a035fd3bc6dfc281855ea8e4e4aec5950bf exit=0
+MATCH web-check-types @f359be6: exit=0 vs accepted exit=0
+      new web-features-recovery-final/web-check-types-features-final-v1-f359be6.log sha256=382aa498cbd874264992c718169b9d09b0e81247cff5b41390844700ce5cf651 tsc_exit=0 diagnostics_lines=0 harness_checks=PASS (6/6)
+      accepted web-more-recovery-final/web-check-types-sticky-final-v1-f359be6.log sha256=8475cbd38517b5867fc2f6e0b2e91a035fd3bc6dfc281855ea8e4e4aec5950bf exit=0
+MATCH web-lint @5cd63ff: exit=0 vs accepted exit=0
+      new web-features-recovery-final/web-lint-features-final-v1-5cd63ff.log sha256=5bd6589a5e9a057882b65eb235d18bf1ca466a93700d0d2e12d140f054d5a33d eslint_exit=0 files=82 errors=0 warnings=0 fatal=0 harness_checks=PASS (6/6)
+      accepted web-more-recovery-final/web-lint-sticky-final-v1-f359be6.log sha256=bb1366491719bbb4be4ca77f6d3179bf9f646a8a990974717ef3f6a7937ecf74 exit=0
+MATCH web-lint @f359be6: exit=0 vs accepted exit=0
+      new web-features-recovery-final/web-lint-features-final-v1-f359be6.log sha256=3e6687d7fef2b44bf373c24a21b93284f87ebdd939d68ee22a6cd45bfdac11d4 eslint_exit=0 files=82 errors=0 warnings=0 fatal=0 harness_checks=PASS (6/6)
+      accepted web-more-recovery-final/web-lint-sticky-final-v1-f359be6.log sha256=bb1366491719bbb4be4ca77f6d3179bf9f646a8a990974717ef3f6a7937ecf74 exit=0
+MATCH features-test: @5cd63ff 45/45 in 7 files (Terra commit message: 45/45) vs @f359be6 23/23 in 6 files; delta = added files src/__tests__/FeaturesPaneRecovery.test.tsx(22), changed counts none
+      fixed web-features-recovery-final/features-test-features-final-v1-5cd63ff.log sha256=9064c0690e9147c3e694043feb19294379c420c93bda641a045820364b7cb398 exit=0 tests="45 passed (45)" console_blocks=0 preconditions=0
+      before web-features-recovery-final/features-test-features-final-v1-f359be6.log sha256=192f557ec449a2f0499df75e078b32a0533f0b0df3ece8b776d03224e810f3a2 exit=0 tests="23 passed (23)" console_blocks=0 preconditions=0
+      fixed files src/__tests__/DisabledFeatureFallback.test.tsx=3 src/__tests__/FeaturesPane.test.tsx=6 src/__tests__/featuresPaneEntry.test.tsx=3 src/__tests__/FeaturesPaneRecovery.test.tsx=22 src/__tests__/filterModulesByFeaturePrefs.test.ts=4 src/__tests__/useFeaturePrefs.test.tsx=3 src/__tests__/withDisabledFallback.test.tsx=4
+      before files src/__tests__/DisabledFeatureFallback.test.tsx=3 src/__tests__/FeaturesPane.test.tsx=6 src/__tests__/featuresPaneEntry.test.tsx=3 src/__tests__/filterModulesByFeaturePrefs.test.ts=4 src/__tests__/useFeaturePrefs.test.tsx=3 src/__tests__/withDisabledFallback.test.tsx=4
+MATCH features-readers @5cd63ff: 17/17 (package config) vs Sol readers-features 17/17
+      new web-features-recovery-final/features-readers-features-final-v1-5cd63ff.log sha256=d491f6fb39d5f2fe793e8361c88776a16938c4850139ddc80a53cbf07cc0229c exit=0 tests="17 passed (17)" console_blocks=0 preconditions=0
+      sol web-features-recovery-sol/readers-features-fixed1-5cd63ff.log sha256=e6e34d87e4779fa887be547d6e0059e57c992af74d2d1b24e20bf5aa297c0213 exit=0 tests="17 passed (17)" console_blocks=0 preconditions=0
+      status+title multiset equal=true
+MATCH features-readers @f359be6: 17/17 (package config) vs Sol readers-features 17/17
+      new web-features-recovery-final/features-readers-features-final-v1-f359be6.log sha256=1d44db6b9b928e96b682aa1d9432d7d260278060522fbb7e68d66cd319135e8b exit=0 tests="17 passed (17)" console_blocks=0 preconditions=0
+      sol web-features-recovery-sol/readers-features-before2-f359be6.log sha256=cba3c7a7a320294203a2f7b6237b5795ac11e3c2a413a690875af277a80d1c31 exit=0 tests="17 passed (17)" console_blocks=0 preconditions=0
+      status+title multiset equal=true
+MATCH features-typecheck @5cd63ff: exit=0
+      new web-features-recovery-final/features-typecheck-features-final-v1-5cd63ff.log sha256=f9da49a4f4544a0973470eb53f480af9662b4c5a8d443a74ec62eb6b5ded22a6 tsc_exit=0 diagnostics_lines=0 harness_checks=PASS (6/6)
+MATCH features-typecheck @f359be6: exit=0
+      new web-features-recovery-final/features-typecheck-features-final-v1-f359be6.log sha256=22f1a44a22a85ae5412a19986b4533a882c0ecdf06e357f721544ab54078bf30 tsc_exit=0 diagnostics_lines=0 harness_checks=PASS (6/6)
+MATCH features-lint @5cd63ff: exit=0
+      new web-features-recovery-final/features-lint-features-final-v1-5cd63ff.log sha256=65d0028f5c794c49a97f79ecf1032b6ca1c6e9e152fc1a1fed2e4187bf92ccf8 eslint_exit=0 files=23 errors=0 warnings=0 fatal=0 harness_checks=PASS (6/6)
+MATCH features-lint @f359be6: exit=0
+      new web-features-recovery-final/features-lint-features-final-v1-f359be6.log sha256=21825587e203a724ff138455007b15c544e64d26c996ff38d62c55910659cce2 eslint_exit=0 files=19 errors=0 warnings=0 fatal=0 harness_checks=PASS (6/6)
+MATCH settings-shell-test @5cd63ff: exit=0
+      new web-features-recovery-final/settings-shell-test-features-final-v1-5cd63ff.log sha256=c684b28662db1e7478f8eac01c432888effe087eaec1342beed09526066e179f totals files=11 tests=54 passed=54 failed=0 other=0 suite_errors=0 unhandled_error_lines=0 harness_checks=PASS (8/8)
+MATCH settings-shell-test @f359be6: exit=0
+      new web-features-recovery-final/settings-shell-test-features-final-v1-f359be6.log sha256=e30f26fed66ac828dc4207f5d310b1783a3fc2e403bc779602644a5c480a5028 totals files=11 tests=54 passed=54 failed=0 other=0 suite_errors=0 unhandled_error_lines=0 harness_checks=PASS (8/8)
+MATCH settings-shell-test per-file counts @5cd63ff equal @f359be6 (no accepted independent receipt exists; historical author report 11 files / 54 tests)
+      5cd63ff src/__tests__/confirmAction.test.ts=2 src/__tests__/index-barrel.test.ts=3 src/__tests__/paneRegistry.test.tsx=3 src/__tests__/registration.test.tsx=3 src/__tests__/resetAllPrefs.test.ts=8 src/__tests__/SectionBlock.test.tsx=2 src/__tests__/SettingRow.test.tsx=4 src/__tests__/SettingsFooter.test.tsx=8 src/__tests__/SettingsModule.test.tsx=15 src/__tests__/Toggle.test.tsx=4 src/__tests__/types-paneIds.test.ts=2
+      f359be6 src/__tests__/confirmAction.test.ts=2 src/__tests__/index-barrel.test.ts=3 src/__tests__/paneRegistry.test.tsx=3 src/__tests__/registration.test.tsx=3 src/__tests__/resetAllPrefs.test.ts=8 src/__tests__/SectionBlock.test.tsx=2 src/__tests__/SettingRow.test.tsx=4 src/__tests__/SettingsFooter.test.tsx=8 src/__tests__/SettingsModule.test.tsx=15 src/__tests__/Toggle.test.tsx=4 src/__tests__/types-paneIds.test.ts=2
+## Summary: 62 MATCH, 2 DIFF
+DIFF more-boundaries features-final-v1 @f359be6: 9/10 vs accepted 10/10 (contract count 10)
+DIFF more-boundaries features-final-v2 @5cd63ff: 9/10 vs accepted 10/10 (contract count 10)
+exit=1

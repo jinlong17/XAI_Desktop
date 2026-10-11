@@ -1,0 +1,2 @@
+{"name":"baseline","head":"5803e86bc6dcde4906cee8eb27777407d59b1d13","requestedRef":"5803e86","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":390}
+{"name":"current-joined-account","status":"PASS","pass":true,"checks":["default opt-in","decide later no mount","empty choice","actual selected import","actual undo to previous generation","A key retained","B no A content/key","stale callback revoked","device and originals retained"]}

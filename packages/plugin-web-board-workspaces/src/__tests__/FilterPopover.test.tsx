@@ -3,7 +3,7 @@
  * Gap-closure row #6
  */
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { FilterPopover } from "../FilterPopover.js";
 import { EMPTY_FILTER } from "@repo/plugin-web-board-views";
 import type { FilterState } from "@repo/plugin-web-board-views";
@@ -114,6 +114,7 @@ describe("FilterPopover", () => {
     const activeFilter: FilterState = {
       labels: new Set(["urgent"]),
       members: new Set(),
+      priorities: new Set(),
       dueRange: "all",
     };
     renderPopover({ onChange, filter: activeFilter });
@@ -150,5 +151,43 @@ describe("FilterPopover", () => {
     expect(screen.getByTestId("fp-members-empty")).toBeInTheDocument();
     // Due range facet still renders
     expect(screen.getByTestId("fp-due-section")).toBeInTheDocument();
+  });
+});
+
+// ---- FP-P / FP-N — Wave 2: priority facet + catalog name resolution ---------
+
+describe("FilterPopover — priority facet + resolved names (W2)", () => {
+  test("FP-P1 renders the four priority checkboxes and toggles via onChange", () => {
+    const onChange = vi.fn();
+    renderPopover({ onChange });
+    expect(screen.getByTestId("fp-priority-section")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("fp-priority-high"));
+    expect(onChange).toHaveBeenCalledOnce();
+    const next = onChange.mock.calls[0]![0] as FilterState;
+    expect(next.priorities.has("high")).toBe(true);
+  });
+
+  test("FP-N1 label/member rows show catalog display names when catalogs provided", () => {
+    render(
+      <FilterPopover
+        lists={LISTS}
+        filter={EMPTY_FILTER}
+        onChange={vi.fn()}
+        onClose={vi.fn()}
+        lang="en"
+        labelCatalog={[
+          { id: "urgent", name: { en: "Urgent", zh: "紧急" }, color: "red" },
+        ]}
+        memberCatalog={[{ id: "alice", name: "Alice", color: "green" }]}
+      />,
+    );
+    const labels = within(screen.getByTestId("fp-labels-section"));
+    const members = within(screen.getByTestId("fp-members-section"));
+    expect(labels.getByText("Urgent")).toBeInTheDocument();
+    expect(members.getByText("Alice")).toBeInTheDocument();
+    // Uncataloged ids keep the raw-id fallback
+    expect(labels.getByText("low")).toBeInTheDocument();
+    expect(members.getByText("bob")).toBeInTheDocument();
   });
 });

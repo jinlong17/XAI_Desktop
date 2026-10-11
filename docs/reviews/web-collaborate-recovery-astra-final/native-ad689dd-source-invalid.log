@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"ad689dd","browser":"Chrome/152.0.7977.83"}
+{"name":"unrecovered-source-and-saved-sibling","statuses":[],"text":"Collaborate\n\nShow collaborator avatars\nSaved value needs recovery. Repair storage, then reload.\n\nReload\nShow collaborator avatars\nDefault share permission\nCan comment\nCan edit\nView only\nNotify on @ mentions","raw":["invalid-boolean",null,"edit"]}
+{"name":"runtime-errors","pass":true,"count":0}

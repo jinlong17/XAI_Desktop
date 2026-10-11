@@ -1,7 +1,7 @@
 /**
  * FocusRecordList — grouped focus session history (last 7 days).
  *
- * Filter: completed focus sessions only (mode === "focus" && completed === true).
+ * Filter: all ended focus sessions, including explicitly marked early endings.
  * Group by local date (YYYY-MM-DD in user's TZ), sorted today-first.
  * Cap: first 7 day-groups.
  * Each row shows local time (HH:MM) + duration (M:SS).
@@ -36,8 +36,7 @@ export function FocusRecordList({ sessions, lang }: FocusRecordListProps) {
   const groups = useMemo((): DayGroup[] => {
     const todayKey = localDateKey(new Date());
 
-    // Filter: completed focus sessions only
-    const focusSessions = sessions.filter((s) => s.mode === "focus" && s.completed);
+    const focusSessions = sessions.filter((s) => s.mode === "focus");
 
     // Group by local date
     const byDate = new Map<string, PomodoroSession[]>();
@@ -75,7 +74,11 @@ export function FocusRecordList({ sessions, lang }: FocusRecordListProps) {
               <span className="rec-dot" aria-hidden="true">
                 <IconTimer size={10} />
               </span>
-              <span className="rec-time">{formatLocalTime(s.finishedAt)}</span>
+              <span className="rec-time">{formatLocalTime(s.finishedAt)}
+                <span className="rec-state">{s.completed
+                  ? (lang === 'zh' ? '已完成' : 'Completed')
+                  : (lang === 'zh' ? '提前结束 · 未完成' : 'Ended early · Incomplete')}</span>
+              </span>
               <span className="rec-dur">{formatDuration(s.elapsedMs)}</span>
             </div>
           ))}

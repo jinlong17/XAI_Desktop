@@ -6,7 +6,7 @@ import type { DesktopItem, GridBox, Rect } from './grid';
 export type WebModuleId =
   | 'tasks' | 'habits' | 'pomodoro' | 'calendar' | 'matrix'
   | 'countdown' | 'settings' | 'board' | 'dashboard' | 'meditation'
-  | 'statistics' | 'timetrack' | 'ai' | 'search';
+  | 'statistics' | 'timetrack' | 'metrics' | 'ai' | 'search';
 
 /** Discriminated key for all user-configurable preferences. */
 export type WebPreferenceKey =
@@ -211,6 +211,9 @@ export interface EventMap {
 
   // Pomodoro session completion (owner: xai-web-pomodoro row #14) — declaration only in W1
   'web:pomodoro:session-finished': {
+    /** Durable settlement identity and first local commit time (v2 senders). */
+    sessionId?: string;
+    recordedAt?: string;
     /** Mode that just finished. */
     mode: 'focus' | 'short-break' | 'long-break';
     /** Duration in ms of the just-finished session. */
@@ -314,6 +317,10 @@ export interface EventMap {
   'web:tasks:update-requested': {
     /** Correlation id = Anthropic tool_use.id for tool_result round-trip. */
     requestId: string;
+    /** AI producers must bind the request to the captured account generation. */
+    owner?: { kind: "locked" | "account" | "demo"; accountId: string | null; generation: string | null; epoch: number };
+    /** Correlates one retry attempt; late earlier replies are ignored. */
+    attemptId?: string;
     /** Card id to update. */
     id: string;
     /** Patch: only provided fields are included (title / bucket / tag — all optional). */
@@ -327,12 +334,20 @@ export interface EventMap {
   };
   'web:tasks:delete-requested': {
     requestId: string;
+    /** AI producers must bind the request to the captured account generation. */
+    owner?: { kind: "locked" | "account" | "demo"; accountId: string | null; generation: string | null; epoch: number };
+    /** Correlates one retry attempt; late earlier replies are ignored. */
+    attemptId?: string;
     /** Card id to delete. */
     id: string;
     requestedAt: string;
   };
   'web:calendar:update-requested': {
     requestId: string;
+    /** AI producers must bind the request to the captured account generation. */
+    owner?: { kind: "locked" | "account" | "demo"; accountId: string | null; generation: string | null; epoch: number };
+    /** Correlates one retry attempt; late earlier replies are ignored. */
+    attemptId?: string;
     /** Event id to update. */
     id: string;
     /** Patch: only provided fields included (title / date / startTime / durationMin). */
@@ -349,6 +364,10 @@ export interface EventMap {
   };
   'web:calendar:delete-requested': {
     requestId: string;
+    /** AI producers must bind the request to the captured account generation. */
+    owner?: { kind: "locked" | "account" | "demo"; accountId: string | null; generation: string | null; epoch: number };
+    /** Correlates one retry attempt; late earlier replies are ignored. */
+    attemptId?: string;
     /** Event id to delete. */
     id: string;
     requestedAt: string;
@@ -361,6 +380,10 @@ export interface EventMap {
   'web:tasks:create-requested': {
     /** Correlation id = the Anthropic tool_use.id, so the AI can match the tool_result. */
     requestId: string;
+    /** AI producers must bind the request to the captured account generation. */
+    owner?: { kind: "locked" | "account" | "demo"; accountId: string | null; generation: string | null; epoch: number };
+    /** Correlates one retry attempt; late earlier replies are ignored. */
+    attemptId?: string;
     /** Trimmed, non-empty title. */
     title: string;
     /** Target bucket; defaults applied by producer. */
@@ -376,6 +399,10 @@ export interface EventMap {
   // api.md §13.4 (xai-web-ai-tool-layer)
   'web:calendar:create-requested': {
     requestId: string;
+    /** AI producers must bind the request to the captured account generation. */
+    owner?: { kind: "locked" | "account" | "demo"; accountId: string | null; generation: string | null; epoch: number };
+    /** Correlates one retry attempt; late earlier replies are ignored. */
+    attemptId?: string;
     title: string;
     /** "YYYY-MM-DD" local date. */
     date: string;
@@ -384,6 +411,16 @@ export interface EventMap {
     /** Minutes; producer clamps ≥5. */
     durationMin: number;
     requestedAt: string;
+  };
+
+  'web:ai:tool-write-receipt': {
+    requestId: string;
+    requestChannel: 'web:tasks:create-requested' | 'web:tasks:update-requested' | 'web:tasks:delete-requested' | 'web:calendar:create-requested' | 'web:calendar:update-requested' | 'web:calendar:delete-requested';
+    attemptId?: string;
+    owner: { kind: "locked" | "account" | "demo"; accountId: string | null; generation: string | null; epoch: number };
+    ok: boolean;
+    reason?: 'invalid' | 'not-found' | 'storage' | 'account-changed' | 'request-conflict' | 'capacity';
+    targetId?: string;
   };
 
   // AI Chat rate-limit (owner: plugin-web-ai-chat row #18 extension 2026-05-25)

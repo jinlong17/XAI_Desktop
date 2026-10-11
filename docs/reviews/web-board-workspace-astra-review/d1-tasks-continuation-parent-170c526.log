@@ -1,0 +1,65 @@
+revision=170c526
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-2dbOOl
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx > Complete then title edit in the same detail session must retain the successful completion
+complete-then-edit {"done":false,"originalCompletedAt":"2026-09-09T19:00:00.000Z"}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx (5 tests | 1 failed) 996ms
+   ✓ same detail session advances baseline through three sequential edits and a successful deletion  378ms
+   × Complete then title edit in the same detail session must retain the successful completion 126ms
+     → expected false to be true // Object.is equality
+     → expected false to be true // Object.is equality
+     → expected undefined to be '2026-09-09T19:00:00.000Z' // Object.is equality
+   ✓ receipt-only canonical change while editing remains admissible and preserves all receipts 77ms
+   ✓ close and reopen same ID while old save is pending keeps new operation and draft ownership 157ms
+   ✓ failed detail draft export and retry remain owned by A after switching to B 257ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  17:38:58
+   Duration  2.13s (transform 224ms, setup 0ms, collect 399ms, tests 996ms, environment 427ms, prepare 65ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx > Complete then title edit in the same detail session must retain the successful completion
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx:18:435
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx > Complete then title edit in the same detail session must retain the successful completion
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx:18:720
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx > Complete then title edit in the same detail session must retain the successful completion
+AssertionError: expected undefined to be '2026-09-09T19:00:00.000Z' // Object.is equality
+
+- Expected: 
+"2026-09-09T19:00:00.000Z"
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx:18:757
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯

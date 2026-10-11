@@ -1,0 +1,17 @@
+baseline {"head":"650f59ce183ce875b20c44c99a45e27b98d4a477","requestedRef":"650f59c","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":390}
+geometry {"toolbar":[{"top":12,"bottom":56,"left":12,"right":56,"width":44,"height":44},{"top":12,"bottom":56,"left":334,"right":378,"width":44,"height":44},{"top":12,"bottom":56,"left":198.546875,"right":326,"width":127.453125,"height":44}],"first":{"top":40,"bottom":87.1875,"left":244.140625,"right":366,"width":121.859375,"height":47.1875},"content":{"top":0,"bottom":540.03125,"left":0,"right":390,"width":390,"height":540.03125},"recovery":{"top":548.03125,"bottom":728.0625,"left":16,"right":374,"width":358,"height":180.03125},"composer":{"top":736.0625,"bottom":844,"left":0,"right":390,"width":390,"height":107.9375},"buttons":[{"top":615.0625,"bottom":659.0625,"left":33,"right":129.78125,"width":96.78125,"height":44},{"top":615.0625,"bottom":659.0625,"left":137.78125,"right":245.125,"width":107.34375,"height":44},{"top":667.0625,"bottom":711.0625,"left":33,"right":225.9375,"width":192.9375,"height":44},{"top":755.0625,"bottom":799.0625,"left":73,"right":267,"width":194,"height":44},{"top":755.0625,"bottom":799.0625,"left":323,"right":367,"width":44,"height":44}],"scrollWidth":390,"viewport":390}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: toolbar overlaps first message or lacks safe gap
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-ai-mobile-toolbar-fix/verify-native.mjs:61:2 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.16.0

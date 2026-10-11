@@ -1,0 +1,37 @@
+{
+  "id": "SHARED/SOURCE-BYTE-COLLECTION-REVIEW2",
+  "result": "FAILED_STATIC_NO_INTEGRITY_VERDICT",
+  "review_iteration": 2,
+  "review_cap": 3,
+  "static_invocations": 1,
+  "parent": "28ba1cf444f2545fb93dd0340204530e07f8f6f6",
+  "fixed_input": "2461db7d47e19b0a254fe14a9b82985152e94611",
+  "frozen_source": "b719ee3c54992c905b7f91d82eb3c8646d16df6f",
+  "process": {
+    "chunk": "02f132",
+    "exit": 1,
+    "synchronous": true,
+    "session": null,
+    "pid": null,
+    "catfile_pid": null
+  },
+  "failed_guard": "review-r2 registration card requested from fixedsource2461db7 where not yet added; gitcatfile blobunavailable",
+  "classification": "checker input identity assumption, NOT bundle corruption",
+  "completed": "manifest parsing only reported",
+  "unrun": [
+    "complete Gitrecord checks",
+    "payload integrity",
+    "dependency closure",
+    "provenance checks",
+    "both complete output buffers",
+    "allwrites",
+    "stage",
+    "commit"
+  ],
+  "source_commit": null,
+  "worktree_clean": true,
+  "collection_family_used": 3,
+  "collection_family_cap": 3,
+  "collector4": false,
+  "runtime": 0
+}

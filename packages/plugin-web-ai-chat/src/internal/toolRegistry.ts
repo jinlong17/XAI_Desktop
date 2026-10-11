@@ -84,8 +84,9 @@ function safeString(v: unknown, fallback = ""): string {
   return typeof v === "string" && v.trim().length > 0 ? v.trim() : fallback;
 }
 
-function safeNumber(v: unknown, fallback = 60): number {
-  return typeof v === "number" && Number.isFinite(v) && v > 0 ? Math.round(v) : fallback;
+function confirmationValue(value: unknown, omitted: string): string {
+  if (value === undefined) return omitted;
+  return typeof value === "string" ? value : String(value);
 }
 
 // ---- create_task tool -------------------------------------------------------
@@ -203,31 +204,27 @@ const createCalendarEventTool: AiToolDef = {
   ],
 
   toConfirmation(input) {
-    const title = safeString(input["title"], "(untitled)");
-    const date = safeString(input["date"] as unknown, "");
-    const startTime = safeString(input["startTime"] as unknown, "09:00");
-    const durationMin = safeNumber(input["durationMin"] as unknown, 60);
-    const timeDisplay = date ? ` on ${date} at ${startTime} (${durationMin} min)` : "";
+    const title = confirmationValue(input["title"], "(missing)");
+    const date = confirmationValue(input["date"], "today");
+    const startTime = confirmationValue(input["startTime"], "09:00");
+    const durationMin = confirmationValue(input["durationMin"], "60");
     return {
       label: "Add calendar event",
-      description: `"${title}"${timeDisplay}`,
+      description: `"${title}" on ${date} at ${startTime} (${durationMin} min)`,
     };
   },
 
   toWriteEvent(input, toolUseId) {
-    const title = safeString(input["title"], "Untitled event");
-    const date = safeString(input["date"] as unknown, "");
-    const startTime = safeString(input["startTime"] as unknown, "09:00");
-    const durationMin = safeNumber(input["durationMin"] as unknown, 60);
-
     return {
       channel: "web:calendar:create-requested",
       payload: {
         requestId: toolUseId,
-        title,
-        date,
-        startTime,
-        durationMin,
+        // Preserve model-provided values for the Calendar subscriber to
+        // validate. Only a truly omitted optional field may default there.
+        title: input["title"],
+        date: input["date"],
+        startTime: input["startTime"],
+        durationMin: input["durationMin"],
         requestedAt: new Date().toISOString(),
       },
     };
@@ -457,10 +454,10 @@ const updateCalendarEventTool: AiToolDef = {
   toConfirmation(input) {
     const id = safeString(input["id"] as unknown, "(unknown)");
     const parts: string[] = [];
-    if (input["title"]) parts.push(`title: "${input["title"]}"`);
-    if (input["date"]) parts.push(`date: ${input["date"]}`);
-    if (input["startTime"]) parts.push(`at: ${input["startTime"]}`);
-    if (input["durationMin"]) parts.push(`${input["durationMin"]} min`);
+    if (Object.hasOwn(input, "title")) parts.push(`title: "${confirmationValue(input["title"], "undefined")}"`);
+    if (Object.hasOwn(input, "date")) parts.push(`date: ${confirmationValue(input["date"], "undefined")}`);
+    if (Object.hasOwn(input, "startTime")) parts.push(`at: ${confirmationValue(input["startTime"], "undefined")}`);
+    if (Object.hasOwn(input, "durationMin")) parts.push(`${confirmationValue(input["durationMin"], "undefined")} min`);
     const detail = parts.length > 0 ? ` — ${parts.join(", ")}` : "";
     return {
       label: "Update event",
@@ -472,17 +469,10 @@ const updateCalendarEventTool: AiToolDef = {
   toWriteEvent(input, toolUseId) {
     const id = safeString(input["id"] as unknown, "");
     const patch: Record<string, unknown> = {};
-    if (typeof input["title"] === "string" && input["title"].trim()) {
-      patch["title"] = input["title"].trim();
-    }
-    if (typeof input["date"] === "string" && /^\d{4}-\d{2}-\d{2}$/.test(input["date"])) {
-      patch["date"] = input["date"];
-    }
-    if (typeof input["startTime"] === "string" && /^\d{2}:\d{2}$/.test(input["startTime"])) {
-      patch["startTime"] = input["startTime"];
-    }
-    if (typeof input["durationMin"] === "number" && input["durationMin"] > 0) {
-      patch["durationMin"] = Math.round(input["durationMin"]);
+    for (const field of ["title", "date", "startTime", "durationMin"] as const) {
+      if (Object.hasOwn(input, field)) {
+        patch[field] = input[field];
+      }
     }
 
     return {

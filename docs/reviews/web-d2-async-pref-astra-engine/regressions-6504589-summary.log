@@ -1,0 +1,93 @@
+c-primitive-independent exit=0 
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-c-hWB2KJ
+
+ ✓ docs/reviews/web-board-workspace-astra-review/c-primitive-contract.test.ts (29 tests) 17ms
+
+ Test Files  1 passed (1)
+      Tests  29 passed (29)
+   Start at  19:56:34
+   Duration  1.05s (transform 185ms, setup 0ms, collect 238ms, tests 17ms, environment 398ms, prepare 68ms)
+
+
+c-primitive-boundaries exit=0 
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-c-LxCyPO
+
+ ✓ docs/reviews/web-board-workspace-astra-review/c-primitive-boundaries.test.ts (8 tests) 25ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  19:56:37
+   Duration  869ms (transform 146ms, setup 0ms, collect 187ms, tests 25ms, environment 347ms, prepare 94ms)
+
+
+d1-shared-independent exit=0 
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d1-PMG9Vt
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-shared-writer.test.tsx (8 tests) 26ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  19:56:41
+   Duration  820ms (transform 157ms, setup 0ms, collect 284ms, tests 26ms, environment 240ms, prepare 73ms)
+
+
+d2-foundation-independent exit=0 ws/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses scoped rather than trusting generation alone
+incomplete-marker {"kind":"scoped","result":{"ok":false,"reason":"recovery-required"},"bytes":"[\"keep\"]"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses deletion rather than trusting generation alone
+incomplete-marker {"kind":"deletion","result":{"ok":false,"reason":"recovery-required"},"bytes":"[\"keep\"]"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > new scoped async set cannot discard a protected canonical receipt record
+scoped-canonical {"operation":"set","result":{"ok":false,"reason":"recovery-required"},"preserved":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > new scoped async remove cannot discard a protected canonical receipt record
+scoped-canonical {"operation":"remove","result":{"ok":false,"reason":"recovery-required"},"preserved":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > partial deletion can retry after the first pass removed its generation marker
+deletion-retry {"retry":{"ok":true},"remaining":null}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts (14 tests) 9ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  19:56:44
+   Duration  853ms (transform 151ms, setup 0ms, collect 200ms, tests 9ms, environment 254ms, prepare 46ms)
+
+
+d2-deletion-admission exit=0 t:v1:delete-admission:g1:xai_ai_convos":"[\"old retained\"]","xai:account:v1:delete-admission:g2:xai_ai_convos":"[\"new retained\"]"},"after":{"xai:account:v1:delete-admission:deleted":"not a deletion receipt","xai:account:v1:delete-admission:g1:xai_ai_convos":"[\"old retained\"]","xai:account:v1:delete-admission:g2:xai_ai_convos":"[\"new retained\"]"}}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts > deletion refuses unproven generation recovery: legacy-tombstone-conflicting-marker
+deletion-admission {"scenario":"legacy-tombstone-conflicting-marker","result":{"ok":false,"reason":"recovery-required"},"before":{"xai:account:v1:delete-admission:committed-generation":"{\"generation\":\"g2\",\"migrationId\":\"newer-migration\",\"previous\":\"g1\"}","xai:account:v1:delete-admission:deleted":"1","xai:account:v1:delete-admission:g1:xai_ai_convos":"[\"old retained\"]","xai:account:v1:delete-admission:g2:xai_ai_convos":"[\"new retained\"]"},"after":{"xai:account:v1:delete-admission:committed-generation":"{\"generation\":\"g2\",\"migrationId\":\"newer-migration\",\"previous\":\"g1\"}","xai:account:v1:delete-admission:deleted":"1","xai:account:v1:delete-admission:g1:xai_ai_convos":"[\"old retained\"]","xai:account:v1:delete-admission:g2:xai_ai_convos":"[\"new retained\"]"}}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts (2 tests) 3ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  19:56:47
+   Duration  716ms (transform 147ms, setup 0ms, collect 194ms, tests 3ms, environment 227ms, prepare 71ms)
+
+
+c-storage-package exit=0 ages/plugin-web-storage/src/__tests__/usePref.test.tsx (13 tests) 103ms
+ ✓ packages/plugin-web-storage/src/__tests__/AccountDataGate.test.tsx (5 tests) 111ms
+ ✓ packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx (14 tests) 33ms
+ ✓ packages/plugin-web-storage/src/__tests__/registry.test.ts (15 tests) 45ms
+ ✓ packages/plugin-web-storage/src/__tests__/dataExport.test.ts (8 tests) 13ms
+ ✓ packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx (3 tests) 45ms
+ ✓ packages/plugin-web-storage/src/__tests__/consumer.test.tsx (4 tests) 32ms
+ ✓ packages/plugin-web-storage/src/__tests__/accountCoordination.test.ts (11 tests) 7ms
+ ✓ packages/plugin-web-storage/src/__tests__/usePref.writeResult.test.tsx (3 tests) 15ms
+ ✓ packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx (7 tests) 17ms
+ ✓ packages/plugin-web-storage/src/__tests__/imperative.test.ts (16 tests) 11ms
+ ✓ packages/plugin-web-storage/src/__tests__/accountMigration.test.ts (10 tests) 8ms
+ ✓ packages/plugin-web-storage/src/__tests__/accountDataLifecycle.test.ts (7 tests) 5ms
+ ✓ packages/plugin-web-storage/src/__tests__/prefMutation.test.ts (5 tests) 5ms
+ ✓ packages/plugin-web-storage/src/__tests__/accountScope.test.ts (4 tests) 3ms
+ ✓ packages/plugin-web-storage/src/__tests__/parity-design-md.test.ts (2 tests) 4ms
+ ✓ packages/plugin-web-storage/src/__tests__/migrate.test.ts (5 tests) 2ms
+
+ Test Files  21 passed (21)
+      Tests  176 passed (176)
+   Start at  19:56:49
+   Duration  2.96s (transform 1.10s, setup 0ms, collect 2.04s, tests 1.25s, environment 10.25s, prepare 1.82s)
+
+

@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "controller": "214dc41c8c9677ef32e391c89c8b4ad3c1d0d6f4",
+  "original_remote_refs_checked": 70,
+  "integration_remote_ancestors_checked": 70,
+  "completed_owned_clean_heads_checked": 10,
+  "archived_recoverable_confirmed_by_app": [
+    "/Users/lijinlong/.codex/worktrees/audit-parallel-cal03-preparation-20261010/XAI_Desktop",
+    "/Users/lijinlong/.codex/worktrees/audit-parallel-cd03-machinery-impact1-20261010/XAI_Desktop",
+    "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-availability-review1-20261010/XAI_Desktop",
+    "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-impact-correct2-20261010/XAI_Desktop",
+    "/Users/lijinlong/.codex/worktrees/audit-parallel-bk07-preparation-20261010/XAI_Desktop",
+    "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-impact-final3-20261010/XAI_Desktop",
+    "/Users/lijinlong/.codex/worktrees/audit-parallel-med03-full-review2-20261010/XAI_Desktop",
+    "/Users/lijinlong/.codex/worktrees/audit-parallel-pomo04-machinery-impact1-20261010/XAI_Desktop",
+    "/Users/lijinlong/.codex/worktrees/audit-parallel-cal03-full-review1-20261010/XAI_Desktop",
+    "/Users/lijinlong/.codex/worktrees/audit-parallel-brd28-full-review1-20261010/XAI_Desktop"
+  ],
+  "active_workers_retained": 3,
+  "unrelated_other_session_worktrees_untouched": 5,
+  "all_stashes_remote": 23,
+  "normal": {
+    "exit_code": 0,
+    "failures": 0,
+    "warnings": 1,
+    "log_sha256": "d27a44d590fac7e57198ad9763b1d0e11c0999860c7469202c2163195bfbae92"
+  },
+  "deep": {
+    "exit_code": 1,
+    "failures": 1,
+    "warnings": 0,
+    "unreachable_count": 5,
+    "log_sha256": "ebd0a2c58918706470f3f8fc7728d39a636d63522fbb679b94e56b0f619d9be9",
+    "identity_caveat": "same count as earlierknownfive; no fullobjectidentityrescan thisbatch; literalfailure preserved, noobjectsdeleted/PASSclaim"
+  },
+  "ready_unlaunched_worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd28-full-review2-20261010/XAI_Desktop",
+  "failed_unknown_receipts_preserved": "sharedauthor2/BRDreview1FAILED and BKUNKNOWN rootreceipts remote/controlancestor; clean archivalnotbudgetreset"
+}

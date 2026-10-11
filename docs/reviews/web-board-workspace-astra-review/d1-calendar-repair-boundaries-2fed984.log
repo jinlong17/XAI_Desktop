@@ -1,0 +1,15 @@
+revision=2fed984
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d1-laKqq1
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-repair-boundaries.test.tsx > old pending delete completion must not close a newly opened editor
+old-delete-new-editor {"editorOpen":true,"latestDraft":"New editor after delete","oldEventDeleted":true}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-repair-boundaries.test.tsx (4 tests) 308ms
+   ✓ old pending delete completion must not close a newly opened editor  303ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  17:11:32
+   Duration  1.33s (transform 334ms, setup 201ms, collect 322ms, tests 308ms, environment 250ms, prepare 77ms)

@@ -1,0 +1,5 @@
+{"name":"baseline","commit":"f64ad44","browser":"Chrome/152.0.7977.83"}
+{"name":"keyboard-entry-observation","editor":true,"active":"dash-note__input","events":[{"name":"keydown","key":"Enter","target":"dash-note__display"},{"name":"keypress","key":"Enter","target":"dash-note__display"},{"name":"click","target":"dash-note__display"},{"name":"keyup","key":"Enter","target":""}]}
+{"name":"signout-observation","outcome":"pending","dialog":true}
+{"name":"departure","pass":true,"mode":"signout","runtimeErrors":0}
+{"name":"supplemental","pass":true,"mode":"signout","runtimeErrors":0}

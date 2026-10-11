@@ -1,0 +1,416 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+mode=web-test
+suffix=appearance-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-final/verify-packages.mjs 5cd63ff web-test appearance-final-v1
+output_dir=docs/reviews/web-appearance-recovery-final
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+runner_sha256=8f9fb90f38717515c9ba9606b4f99c643d61c0523a07adbbe071982adb864e80
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/web (apps/web) kind=vitest script=test: "vitest run"
+archive_file_sha256 apps/web/package.json=769eb4a83c52b9537f74eca7c68969177d3adeda62f7c1b5e7e20ff491fc3eb7 apps/web/tsconfig.json=212b521f8420ea4923ee99448b7ac9ff81cacf5e9fddfc8867ee716c44e6dc34 apps/web/vitest.config.ts=9431a08609a793bd1771a1bfe3988d4b9ca5dff8e9854e679b893baf31a915d7 apps/web/eslint.config.js=21b303fd60d2626a094eb49983d7a89be314296a3060a591c5e4d5812ad6f81a
+package_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a appearance_package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e shell_package_tree=0f0fed40fe94a9de5c79eb273d1103757a807a9c web_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a
+node_modules_links third_party=448 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-console->packages/plugin-console @repo/plugin-productivity->packages/plugin-productivity @repo/plugin-web-ai-chat->packages/plugin-web-ai-chat @repo/plugin-web-board-core->packages/plugin-web-board-core @repo/plugin-web-board-views->packages/plugin-web-board-views @repo/plugin-web-board-workspaces->packages/plugin-web-board-workspaces @repo/plugin-web-bookkeeping->packages/plugin-web-bookkeeping @repo/plugin-web-calendar->packages/xai-web-calendar @repo/plugin-web-countdown->packages/plugin-web-countdown @repo/plugin-web-dashboard-grid->packages/xai-web-dashboard-grid @repo/plugin-web-dashboard-widgets->packages/xai-web-dashboard-widgets @repo/plugin-web-habits->packages/xai-web-habits @repo/plugin-web-matrix->packages/xai-web-matrix @repo/plugin-web-meditation->packages/xai-web-meditation @repo/plugin-web-metric-tracker->packages/plugin-web-metric-tracker @repo/plugin-web-pet->packages/xai-web-pet @repo/plugin-web-pomodoro->packages/plugin-web-pomodoro @repo/plugin-web-settings-appearance->packages/xai-web-settings-appearance @repo/plugin-web-settings-features-panel->packages/xai-web-settings-features-panel @repo/plugin-web-settings-rest->packages/plugin-web-settings-rest @repo/plugin-web-settings-shell->packages/plugin-web-settings-shell @repo/plugin-web-statistics->packages/plugin-web-statistics @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tasks->packages/xai-web-tasks @repo/plugin-web-time-tracker->packages/plugin-web-time-tracker @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/web-auth-device-session->packages/web-auth-device-session @repo/xai-web-cmdk->packages/xai-web-cmdk @repo/xai-web-event-bus->packages/xai-web-event-bus @repo/xai-web-shell->packages/xai-web-shell
+tsconfig_extends_checked=46 unresolved=none own=@repo/web:@repo/typescript-config/base.json->packages/typescript-config/base.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/docs
+required_provenance_absent_from_archive=packages/xai-web-settings-appearance/src/internal/appearanceController.tsx,packages/xai-web-settings-appearance/src/internal/AppearanceStatus.tsx
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps/web/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-PyVKpu/apps/web/final-web-test.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-PyVKpu/.final-guard/report-web-test.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+tool_exit=0
+harness_checks=PASS (19/19)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-PyVKpu/apps/web
+
+ ✓ src/__tests__/csp.test.ts > CSP source-text guards > CSP1: connect-src includes https://api.anthropic.com 1ms
+ ✓ src/__tests__/csp.test.ts > CSP source-text guards > CSP2: connect-src + img-src both include https://tile.openstreetmap.org (MapView OSM tiles) 0ms
+ ✓ src/__tests__/csp.test.ts > CSP source-text guards > CSP3: connect-src includes OAuth token endpoints for Notion, GCal, and Linear (gap-closure #7) 1ms
+ ✓ src/__tests__/csp.test.ts > CSP source-text guards > CSP4 (codex finding #3 row #8): connect-src does NOT include Stripe hostnames — pure redirect mode needs ZERO Stripe entries (gap-closure #8 Premium Stripe stub) 0ms
+ ✓ src/__tests__/csp.test.ts > CSP source-text guards > CSP4-SCRIPT-SRC-CLEAN: script-src does NOT include any Stripe CDN URL (no Stripe.js bundle) 1ms
+ ✓ src/__tests__/csp.test.ts > CSP source-text guards > CSP4-FRAME-SRC-CLEAN: frame-src is NOT present in the CSP (no embedded Checkout iframe) 0ms
+ ✓ src/__tests__/csp.test.ts > CSP source-text guards > CSP5: connect-src includes https://generativelanguage.googleapis.com (Gemini via openai-compatible provider) 0ms
+ ✓ src/__tests__/csp.test.ts > CSP source-text guards > CSP6: connect-src includes supported OpenAI-compatible and Sentry ingest hosts 0ms
+ ✓ src/__tests__/csp.test.ts > CSP source-text guards > CSP7: connect-src includes https://api.deepseek.com for DeepSeek provider 0ms
+ ✓ src/__tests__/event-bus.smoke.test.tsx > event-bus cross-package smoke > A1: ModuleA emits web:shell:module-change; ModuleB listener observes typed payload 20ms
+ ✓ src/__tests__/event-bus.smoke.test.tsx > event-bus cross-package smoke > A2: ModuleA unmounts mid-test; ModuleB still listens; third source emits → B observes 3ms
+ ✓ src/__tests__/event-bus.smoke.test.tsx > event-bus cross-package smoke > A3: ModuleB unmounts; ModuleA re-emits → no observer increments; no throw (no-op safe) 2ms
+ ✓ src/__tests__/event-bus.smoke.test.tsx > event-bus cross-package smoke > A4 (bonus): onWebEvent imperative unsubscribe works from consumer context 0ms
+ ✓ src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live > a Retry-released Back proceeds the live blocker exactly once when the guard re-registers before the router transition renders 187ms
+ ✓ src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live > a completion-released Back proceeds the live blocker exactly once when the guard re-registers before the router transition renders 96ms
+ ✓ src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live > a discard-released Back whose discard re-registers the guard proceeds the live blocker exactly once 105ms
+ ✓ src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live > Stay followed by a re-registration never republishes the reset blocker; a fresh Back prompts and releases once 135ms
+ ✓ src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live > a second Back while the dialog is open rebinds the held intent to the live blocker 112ms
+ ✓ src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live > an epoch change resets the held blocker once and fresh protection still guards 142ms
+ ✓ src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live > a Back during a pending sign-out is reset once on the live blocker and the sign-out still resolves on Stay 105ms
+ ✓ src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live > unmounting with a held Back never touches the blocker React Router already removed 86ms
+ ✓ src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live > a Retry-released programmatic PUSH stays held without a blocker and commits exactly once 91ms
+ ✓ src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live > a discard-released programmatic PUSH stays held without a blocker and commits exactly once 90ms
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration > AC-SHELL-3: has exactly 15 entries 1ms
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration > AC-SHELL-3: matrix registration is at index 5 with moduleId='matrix' 0ms
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration > AC-SHELL-3: matrix entry is NOT a placeholder (has real render function, not ModuleRoutePlaceholderPage) 0ms
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration > AC-SHELL-3: all 15 entries have a moduleId 0ms
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration > AC-SHELL-2 (meditation row #16): meditation slot is swapped (not a placeholder) 0ms
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration > AC-TIMETRACK: time tracker slot is registered after pomodoro 0ms
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration > AC-BOOKKEEPING: bookkeeping slot is registered after time tracker 0ms
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration > AC-METRICS: metrics slot is registered after bookkeeping 0ms
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration > AC-HOST-1: exactly one entry has moduleId='dashboard' 0ms
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration > AC-HOST-2/3: dashboard slot is the real dashboardGridSlotRegistration (not a placeholder) 0ms
+ ✓ src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration > AC-HOST-4: dashboard rail order remains 4 0ms
+ ✓ src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A1 — App renders Shell with Topbar (search button present, xai-web-cmdk P4) 89ms
+ ✓ src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > live cleanup failure is visible and does not redirect or call shared cleanup 57ms
+ ✓ src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > superseded A cleanup cannot navigate away from a new B login 25ms
+ ✓ src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) > CI1 — CommandPalette is a sibling of the .app div (overlay pattern) 51ms
+ ✓ src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP1 — xai_pref_theme='dark' in localStorage → html data-theme='dark' on mount 44ms
+ ✓ src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP2 — xai_pref_lang='zh' in localStorage → Topbar marks 中文 as selected 53ms
+ ✓ src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A1b — App renders AppRail (aside.app-rail present) 16ms
+ ✓ src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A2 — StrictMode double-mount does not throw 39ms
+ ✓ src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A3 — App applies default theme on mount (data-theme is set) 12ms
+ ✓ src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A4 — App renders without crash when no child route matches 26ms
+ ✓ src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP3 — xai_pref_density='compact' in localStorage → html data-density='compact' on mount 16ms
+ ✓ src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP4 — localStorage empty → three dims use fallback (en/light/comfortable) 64ms
+ ✓ src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP5 — corrupt JSON in xai_pref_theme → JSON.parse fails → fallback to 'light' (no throw) 12ms
+ ✓ src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests > returns fallback when key absent 0ms
+ ✓ src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests > returns parsed value when key present with valid JSON 0ms
+ ✓ src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests > returns fallback when value is corrupt JSON 0ms
+ ✓ src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > live confirmed cleanup redirects through the coordinator only 31ms
+ ✓ src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO1 — happy path: signOut + clearSessionStorage + redirect all called 35ms
+ ✓ src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO2 — order: signOut before clearSessionStorage before assign 26ms
+ ✓ src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO3 — network error on signOut: clearSessionStorage + assign still called (best-effort) 21ms
+ ✓ src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO4 — null client: skips signOut, still calls clearSessionStorage + assign 20ms
+ ✓ src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) > CI2 — Ctrl+K opens the command palette modal (jsdom: non-Mac platform) 67ms
+ ✓ src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) > CI3 — Esc closes the command palette after it was opened 53ms
+ ✓ src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) > CI4 — topbar search button click opens the command palette 40ms
+ ✓ src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) > CI5 — App does not throw (CommandPaletteProvider is mounted) 18ms
+ ✓ src/routes/router.integration.test.tsx > web host router integration > renders authenticated module deep links and survives remount refresh 92ms
+ ✓ src/routes/router.integration.test.tsx > web host router integration > resolves route families consistently across history entries 31ms
+ ✓ src/routes/router.integration.test.tsx > web host router integration > keeps app shell stable when invoking todo module controls 32ms
+ ✓ src/routes/router.integration.test.tsx > web host router integration > RR1: /app/settings/integrations/callback route resolves and renders the callback page 14ms
+ ✓ src/routes/router.integration.test.tsx > web host router integration > RR-PREMIUM-1: /app/settings/premium/checkout/success route resolves and renders 29ms
+ ✓ src/routes/router.integration.test.tsx > web host router integration > RR-PREMIUM-2: /app/settings/premium/checkout/cancel route resolves and renders 12ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/ai: resolves to its real render function (not placeholder) 2ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/tasks: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/board: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/dashboard: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/calendar: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/matrix: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/pomodoro: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/timetrack: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/bookkeeping: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/metrics: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/habits: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/meditation: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/countdown: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/statistics: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/settings: resolves to its real render function (not placeholder) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations > AC-W6-FIX-LA/todos: legacy /app/todos still resolves (transitional shim) 0ms
+ ✓ src/__tests__/build-manifest.test.ts > Vite build manifest — MapView chunk budget (HC5) > BM-BUNDLE-1: MapView chunk exists as a separate JS file in the build manifest 1ms
+ ✓ src/__tests__/build-manifest.test.ts > Vite build manifest — MapView chunk budget (HC5) > BM-BUNDLE-2: MapView chunk file size is below 80 KB budget 0ms
+ ✓ src/security/cspReport.test.ts > normalizeCspReportPayload > normalizes legacy csp-report payload with scrubbed fields 3ms
+ ✓ src/security/cspReport.test.ts > normalizeCspReportPayload > normalizes reporting api payload 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) > AC-W6-FIX-1: /app/tasks renders <div class="module module-tasks"> (no W6 placeholder text) 243ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) > AC-W6-FIX-2: /app/matrix renders <div class="module module-matrix"> (no W6 placeholder text) 50ms
+ ✓ src/observability/transport.test.ts > createBrowserObservabilityTransport > initializes sentry with privacy-safe defaults 2ms
+ ✓ src/observability/transport.test.ts > createBrowserObservabilityTransport > captures error events only when initialized and flushes rum batches 5ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) > AC-W6-FIX-3: /app/calendar renders <div class="module module-cal"> (no W6 placeholder text) 90ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) > AC-W6-FIX-4: /app/pomodoro renders <div class="module module-pomo"> (no W6 placeholder text) 28ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) > AC-W6-FIX-5: /app/countdown renders <div class="module module-countdown"> (no W6 placeholder text) 81ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) > AC-W6-FIX-6: /app/statistics renders <div class="module module-stats"> (no W6 placeholder text) 90ms
+ ✓ src/__tests__/settingsPaneComposition.rest.test.ts > composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3) > CP1: composed pane list length equals 14 (full chassis after ai pane extension) 1ms
+ ✓ src/__tests__/settingsPaneComposition.rest.test.ts > composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3) > CP2: each of the 12 row #24 owned ids resolves to its exported Pane object 0ms
+ ✓ src/__tests__/settingsPaneComposition.rest.test.ts > composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3) > CP3: non-owned ids in the chassis registry have identity preserved 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) > AC-W6-FIX-7: /app/settings renders <div class="module module-settings"> (no W6 placeholder text) 14ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) > AC-BOOKKEEPING-1: /app/bookkeeping renders <div class="module module-bk"> (no W6 placeholder text) 79ms
+ ✓ src/routes/modules/buildModuleRoutes.test.ts > buildModuleRoutes > throws for duplicate module registrations 1ms
+ ✓ src/routes/modules/buildModuleRoutes.test.ts > buildModuleRoutes > resolves default module redirect path from first registration 0ms
+ ✓ src/routes/modules/buildModuleRoutes.test.ts > buildModuleRoutes > matches exact module child route 0ms
+ ✓ src/routes/modules/buildModuleRoutes.test.ts > buildModuleRoutes > matches wildcard child route when exact path is missing 0ms
+ ✓ src/routes/modules/buildModuleRoutes.test.ts > buildModuleRoutes > returns null for unknown module 0ms
+ ✓ src/routes/modules/buildModuleRoutes.test.ts > buildModuleRoutes > matches dynamic child routes 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) > AC-METRICS-1: /app/metrics renders <div class="module module-metrics"> (no W6 placeholder text) 27ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LC: webModuleRouteRegistrations is composed from the shell array + transitional todos shim > AC-W6-FIX-LC/length: webModuleRouteRegistrations.length === webShellModuleRegistrations.length + 1 1ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LC: webModuleRouteRegistrations is composed from the shell array + transitional todos shim > AC-W6-FIX-LC/order: shell entries come first, in shell-array order 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LC: webModuleRouteRegistrations is composed from the shell array + transitional todos shim > AC-W6-FIX-LC/shim: last entry is todoWebModuleRegistration (transitional /app/todos seam) 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LC: webModuleRouteRegistrations is composed from the shell array + transitional todos shim > AC-W6-FIX-LC/unique: every moduleId in the host array is unique 0ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views > AC-W8-VIEWS-FIX-LD/picker: /app/board renders the ViewPicker toolbar from @repo/plugin-web-board-views 44ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views > AC-W8-VIEWS-FIX-LD/btn-board: /app/board exposes the 'board' view-picker button 57ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views > AC-W8-VIEWS-FIX-LD/btn-table: /app/board exposes the 'table' view-picker button 30ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views > AC-W8-VIEWS-FIX-LD/btn-calendar: /app/board exposes the 'calendar' view-picker button 34ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views > AC-W8-VIEWS-FIX-LD/btn-dashboard: /app/board exposes the 'dashboard' view-picker button 33ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views > AC-W8-VIEWS-FIX-LD/btn-timeline: /app/board exposes the 'timeline' view-picker button 25ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views > AC-W8-VIEWS-FIX-LD/btn-map: /app/board exposes the 'map' view-picker button 23ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views > AC-W8-VIEWS-FIX-LD/default-board: /app/board's default view exposes the Kanban BoardView (active button = 'board') 42ms
+ ✓ src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views > AC-W8-VIEWS-FIX-LD/workspace-preserved: /app/board still renders the workspace + multi-board chrome (board-workspaces wraps board-views, not replaces it) 29ms
+ ✓ src/__tests__/settingsPaneComposition.appearance.test.ts > composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) > AC-COMP-1: composed pane list has same length as chassis (14 after ai pane extension) 1ms
+ ✓ src/__tests__/settingsPaneComposition.appearance.test.ts > composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) > AC-COMP-2: entry with id==='appearance' is appearancePane (NOT the placeholder) 0ms
+ ✓ src/__tests__/settingsPaneComposition.appearance.test.ts > composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) > AC-COMP-3: entry with id==='features' is still featuresPane (row #23 not broken) 0ms
+ ✓ src/__tests__/settingsPaneComposition.appearance.test.ts > composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) > AC-COMP-4: all non-substituted entries are reference-equal to their paneRegistry source 0ms
+ ✓ src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) > T1 — default theme=light sets <html data-theme='light'> 45ms
+ ✓ src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) > T2 — theme=system resolves via matchMedia (dark preference) 15ms
+ ✓ src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) > T3 — default density=comfortable sets <html data-density='comfortable'> 14ms
+ ✓ src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) > T3b — default railPos=left sets <html data-rail-pos='left'> 13ms
+ ✓ src/observability/sentry.test.ts > sentry privacy filters > removes id/token/user/query-bearing fields from events 2ms
+ ✓ src/observability/sentry.test.ts > sentry privacy filters > sanitizes breadcrumbs and strips sensitive data 1ms
+ ✓ src/routes/modules/__tests__/settingsPaneComposition.test.tsx > composeSettingsPaneRegistry > AC-COMP-1: returns the same length as upstream paneRegistry (14 after ai pane extension) 1ms
+ ✓ src/routes/modules/__tests__/settingsPaneComposition.test.tsx > composeSettingsPaneRegistry > AC-COMP-2: the 'features' entry is featuresPane (row #23 substitution) 0ms
+ ✓ src/routes/modules/__tests__/settingsPaneComposition.test.tsx > composeSettingsPaneRegistry > AC-COMP-3: all other entries pass through unchanged (id parity) 0ms
+ ✓ src/security/nonce.test.ts > nonce helpers > extracts nonce from meta seam first 6ms
+ ✓ src/security/nonce.test.ts > nonce helpers > extracts nonce from html token seam 1ms
+ ✓ src/security/nonce.test.ts > nonce helpers > applies nonce to runtime-created style elements 1ms
+ ✓ src/security/nonce.test.ts > nonce helpers > throws when runtime nonce is missing 6ms
+ ✓ src/observability/controller.test.ts > createObservabilityController > does not initialize or send events when consent is unknown 1ms
+ ✓ src/observability/controller.test.ts > createObservabilityController > does not initialize or send events when consent is denied 0ms
+ ✓ src/observability/controller.test.ts > createObservabilityController > initializes and sends only when consent is granted 0ms
+ ✓ src/host/capabilities.test.ts > createWebConsoleCapabilities > maps navigate route state into /app path 2ms
+ ✓ src/host/capabilities.test.ts > createWebConsoleCapabilities > returns unsupported result for native capability in browser host 0ms
+ ✓ src/host/capabilities.test.ts > createWebConsoleCapabilities > reports supported and unsupported status families 0ms
+ ✓ deploy/security/cspEndpoint.test.ts > ingestCspReport > accepts both legacy and reporting-api payloads through one scrub-first path 2ms
+ ✓ deploy/security/rumEndpoint.test.ts > ingestRumPayload > normalizes same-origin rum payloads and strips sensitive fields 3ms
+ ✓ src/routes/modules/__tests__/railFeatureFilter.test.tsx > rail feature filter against real webShellModuleRegistrations > AC-APP-1: default prefs (all true) → all real registrations pass through 8ms
+ ✓ src/routes/modules/__tests__/railFeatureFilter.test.tsx > rail feature filter against real webShellModuleRegistrations > AC-APP-2: flipping board off removes it from the filtered list 3ms
+ ✓ src/routes/modules/__tests__/railFeatureFilter.test.tsx > rail feature filter against real webShellModuleRegistrations > AC-APP-3: localStorage persistence — pref set survives a fresh hook mount 1ms
+ ✓ src/observability/privacy.test.ts > privacy helpers > strips query and hash data 1ms
+ ✓ src/observability/privacy.test.ts > privacy helpers > scrubs ids from URL-like paths 1ms
+ ✓ src/observability/privacy.test.ts > privacy helpers > scrubs identifier-like tokens from text 0ms
+ ✓ src/observability/privacy.test.ts > privacy helpers > drops sensitive object keys recursively 0ms
+ ✓ deploy/security/headers.test.ts > buildSecurityHeaders > builds report-only headers with nonce and reporting endpoints 1ms
+ ✓ deploy/security/headers.test.ts > buildSecurityHeaders > builds enforce mode headers 0ms
+ ✓ src/observability/routeGroup.test.ts > resolveRouteGroup > classifies landing routes 1ms
+ ✓ src/observability/routeGroup.test.ts > resolveRouteGroup > classifies auth routes 0ms
+ ✓ src/observability/routeGroup.test.ts > resolveRouteGroup > classifies app and module routes 0ms
+ ✓ src/observability/routeGroup.test.ts > resolveRouteGroup > falls back to unknown for unmatched routes 0ms
+
+ Test Files  28 passed (28)
+      Tests  156 passed (156)
+   Start at  13:29:43
+   Duration  6.20s (transform 2.77s, setup 0ms, collect 24.15s, tests 3.40s, environment 8.20s, prepare 1.40s)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-PyVKpu/.final-guard/report-web-test.json
+
+---- stderr ----
+stderr | src/__tests__/build-manifest.test.ts > Vite build manifest — MapView chunk budget (HC5) > BM-BUNDLE-1: MapView chunk exists as a separate JS file in the build manifest
+BM-BUNDLE-1 SKIPPED: dist/.vite/manifest.json not found. Run `pnpm --filter @repo/web build` first.
+
+stderr | src/__tests__/build-manifest.test.ts > Vite build manifest — MapView chunk budget (HC5) > BM-BUNDLE-2: MapView chunk file size is below 80 KB budget
+BM-BUNDLE-2 SKIPPED: dist/.vite/manifest.json not found. Run `pnpm --filter @repo/web build` first.
+
+
+---- runner summary ----
+harness PASS archive package.json script "test" is "vitest run" (found "vitest run")
+harness PASS JSON report parsed
+harness PASS reported test files equal the expected set (28 files, from the archive by the package include)
+harness PASS required test file ran: src/__tests__/App.lazy-init.test.tsx
+harness PASS required test file ran: src/__tests__/App.signout.test.tsx
+harness PASS required test file ran: src/__tests__/shell.smoke.test.tsx
+harness PASS required test file ran: src/__tests__/shell.theme.test.tsx
+harness PASS required test file ran: src/__tests__/settingsPaneComposition.appearance.test.ts
+harness PASS required test file ran: src/__tests__/settingsPaneComposition.rest.test.ts
+harness PASS required test file ran: src/routes/modules/__tests__/settingsPaneComposition.test.tsx
+harness PASS required test file ran: src/__tests__/cmdkIntegration.test.tsx
+harness PASS required test file ran: src/routes/modules/__tests__/railFeatureFilter.test.tsx
+harness PASS required test file ran: src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx
+harness PASS required test file ran: src/routes/router.integration.test.tsx
+harness PASS required test file ran: src/routes/__tests__/router-modules.integration.test.tsx
+harness PASS package config in effect (environment jsdom, globals false, setupFiles [], include ["src/**/*.test.{ts,tsx}","deploy/**/*.test.{ts,tsx}"], root = archive package)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (10 present of 12 listed)
+harness PASS no test-file suite error
+required_tests_absent_from_archive=src/__tests__/App.appearance.test.tsx
+json_report=success=true numTotalTestSuites=60 numTotalTests=156 numPassedTests=156 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals files=28 tests=156 passed=156 failed=0 other=0 suite_errors=0 unhandled_error_lines=0
+file deploy/security/cspEndpoint.test.ts status=passed tests=1 passed=1 failed=0
+file deploy/security/headers.test.ts status=passed tests=2 passed=2 failed=0
+file deploy/security/rumEndpoint.test.ts status=passed tests=1 passed=1 failed=0
+file src/__tests__/App.lazy-init.test.tsx status=passed tests=8 passed=8 failed=0
+file src/__tests__/App.signout.test.tsx status=passed tests=7 passed=7 failed=0
+file src/__tests__/build-manifest.test.ts status=passed tests=2 passed=2 failed=0
+file src/__tests__/cmdkIntegration.test.tsx status=passed tests=5 passed=5 failed=0
+file src/__tests__/csp.test.ts status=passed tests=9 passed=9 failed=0
+file src/__tests__/event-bus.smoke.test.tsx status=passed tests=4 passed=4 failed=0
+file src/__tests__/settingsPaneComposition.appearance.test.ts status=passed tests=4 passed=4 failed=0
+file src/__tests__/settingsPaneComposition.rest.test.ts status=passed tests=3 passed=3 failed=0
+file src/__tests__/shell.smoke.test.tsx status=passed tests=5 passed=5 failed=0
+file src/__tests__/shell.theme.test.tsx status=passed tests=4 passed=4 failed=0
+file src/host/capabilities.test.ts status=passed tests=3 passed=3 failed=0
+file src/observability/controller.test.ts status=passed tests=3 passed=3 failed=0
+file src/observability/privacy.test.ts status=passed tests=4 passed=4 failed=0
+file src/observability/routeGroup.test.ts status=passed tests=4 passed=4 failed=0
+file src/observability/sentry.test.ts status=passed tests=2 passed=2 failed=0
+file src/observability/transport.test.ts status=passed tests=2 passed=2 failed=0
+file src/routes/__tests__/router-modules.integration.test.tsx status=passed tests=38 passed=38 failed=0
+file src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx status=passed tests=10 passed=10 failed=0
+file src/routes/modules/__tests__/railFeatureFilter.test.tsx status=passed tests=3 passed=3 failed=0
+file src/routes/modules/__tests__/settingsPaneComposition.test.tsx status=passed tests=3 passed=3 failed=0
+file src/routes/modules/__tests__/shellRegistrations.integration.test.tsx status=passed tests=11 passed=11 failed=0
+file src/routes/modules/buildModuleRoutes.test.ts status=passed tests=6 passed=6 failed=0
+file src/routes/router.integration.test.tsx status=passed tests=6 passed=6 failed=0
+file src/security/cspReport.test.ts status=passed tests=2 passed=2 failed=0
+file src/security/nonce.test.ts status=passed tests=4 passed=4 failed=0
+case 001 PASSED | deploy/security/cspEndpoint.test.ts > ingestCspReport accepts both legacy and reporting-api payloads through one scrub-first path
+case 002 PASSED | deploy/security/headers.test.ts > buildSecurityHeaders builds report-only headers with nonce and reporting endpoints
+case 003 PASSED | deploy/security/headers.test.ts > buildSecurityHeaders builds enforce mode headers
+case 004 PASSED | deploy/security/rumEndpoint.test.ts > ingestRumPayload normalizes same-origin rum payloads and strips sensitive fields
+case 005 PASSED | src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP1 — xai_pref_theme='dark' in localStorage → html data-theme='dark' on mount
+case 006 PASSED | src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP2 — xai_pref_lang='zh' in localStorage → Topbar marks 中文 as selected
+case 007 PASSED | src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP3 — xai_pref_density='compact' in localStorage → html data-density='compact' on mount
+case 008 PASSED | src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP4 — localStorage empty → three dims use fallback (en/light/comfortable)
+case 009 PASSED | src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP5 — corrupt JSON in xai_pref_theme → JSON.parse fails → fallback to 'light' (no throw)
+case 010 PASSED | src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests returns fallback when key absent
+case 011 PASSED | src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests returns parsed value when key present with valid JSON
+case 012 PASSED | src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests returns fallback when value is corrupt JSON
+case 013 PASSED | src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) live cleanup failure is visible and does not redirect or call shared cleanup
+case 014 PASSED | src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) superseded A cleanup cannot navigate away from a new B login
+case 015 PASSED | src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) live confirmed cleanup redirects through the coordinator only
+case 016 PASSED | src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO1 — happy path: signOut + clearSessionStorage + redirect all called
+case 017 PASSED | src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO2 — order: signOut before clearSessionStorage before assign
+case 018 PASSED | src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO3 — network error on signOut: clearSessionStorage + assign still called (best-effort)
+case 019 PASSED | src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO4 — null client: skips signOut, still calls clearSessionStorage + assign
+case 020 PASSED | src/__tests__/build-manifest.test.ts > Vite build manifest — MapView chunk budget (HC5) BM-BUNDLE-1: MapView chunk exists as a separate JS file in the build manifest
+case 021 PASSED | src/__tests__/build-manifest.test.ts > Vite build manifest — MapView chunk budget (HC5) BM-BUNDLE-2: MapView chunk file size is below 80 KB budget
+case 022 PASSED | src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) CI1 — CommandPalette is a sibling of the .app div (overlay pattern)
+case 023 PASSED | src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) CI2 — Ctrl+K opens the command palette modal (jsdom: non-Mac platform)
+case 024 PASSED | src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) CI3 — Esc closes the command palette after it was opened
+case 025 PASSED | src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) CI4 — topbar search button click opens the command palette
+case 026 PASSED | src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) CI5 — App does not throw (CommandPaletteProvider is mounted)
+case 027 PASSED | src/__tests__/csp.test.ts > CSP source-text guards CSP1: connect-src includes https://api.anthropic.com
+case 028 PASSED | src/__tests__/csp.test.ts > CSP source-text guards CSP2: connect-src + img-src both include https://tile.openstreetmap.org (MapView OSM tiles)
+case 029 PASSED | src/__tests__/csp.test.ts > CSP source-text guards CSP3: connect-src includes OAuth token endpoints for Notion, GCal, and Linear (gap-closure #7)
+case 030 PASSED | src/__tests__/csp.test.ts > CSP source-text guards CSP4 (codex finding #3 row #8): connect-src does NOT include Stripe hostnames — pure redirect mode needs ZERO Stripe entries (gap-closure #8 Premium Stripe stub)
+case 031 PASSED | src/__tests__/csp.test.ts > CSP source-text guards CSP4-SCRIPT-SRC-CLEAN: script-src does NOT include any Stripe CDN URL (no Stripe.js bundle)
+case 032 PASSED | src/__tests__/csp.test.ts > CSP source-text guards CSP4-FRAME-SRC-CLEAN: frame-src is NOT present in the CSP (no embedded Checkout iframe)
+case 033 PASSED | src/__tests__/csp.test.ts > CSP source-text guards CSP5: connect-src includes https://generativelanguage.googleapis.com (Gemini via openai-compatible provider)
+case 034 PASSED | src/__tests__/csp.test.ts > CSP source-text guards CSP6: connect-src includes supported OpenAI-compatible and Sentry ingest hosts
+case 035 PASSED | src/__tests__/csp.test.ts > CSP source-text guards CSP7: connect-src includes https://api.deepseek.com for DeepSeek provider
+case 036 PASSED | src/__tests__/event-bus.smoke.test.tsx > event-bus cross-package smoke A1: ModuleA emits web:shell:module-change; ModuleB listener observes typed payload
+case 037 PASSED | src/__tests__/event-bus.smoke.test.tsx > event-bus cross-package smoke A2: ModuleA unmounts mid-test; ModuleB still listens; third source emits → B observes
+case 038 PASSED | src/__tests__/event-bus.smoke.test.tsx > event-bus cross-package smoke A3: ModuleB unmounts; ModuleA re-emits → no observer increments; no throw (no-op safe)
+case 039 PASSED | src/__tests__/event-bus.smoke.test.tsx > event-bus cross-package smoke A4 (bonus): onWebEvent imperative unsubscribe works from consumer context
+case 040 PASSED | src/__tests__/settingsPaneComposition.appearance.test.ts > composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) AC-COMP-1: composed pane list has same length as chassis (14 after ai pane extension)
+case 041 PASSED | src/__tests__/settingsPaneComposition.appearance.test.ts > composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) AC-COMP-2: entry with id==='appearance' is appearancePane (NOT the placeholder)
+case 042 PASSED | src/__tests__/settingsPaneComposition.appearance.test.ts > composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) AC-COMP-3: entry with id==='features' is still featuresPane (row #23 not broken)
+case 043 PASSED | src/__tests__/settingsPaneComposition.appearance.test.ts > composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) AC-COMP-4: all non-substituted entries are reference-equal to their paneRegistry source
+case 044 PASSED | src/__tests__/settingsPaneComposition.rest.test.ts > composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3) CP1: composed pane list length equals 14 (full chassis after ai pane extension)
+case 045 PASSED | src/__tests__/settingsPaneComposition.rest.test.ts > composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3) CP2: each of the 12 row #24 owned ids resolves to its exported Pane object
+case 046 PASSED | src/__tests__/settingsPaneComposition.rest.test.ts > composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3) CP3: non-owned ids in the chassis registry have identity preserved
+case 047 PASSED | src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) A1 — App renders Shell with Topbar (search button present, xai-web-cmdk P4)
+case 048 PASSED | src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) A1b — App renders AppRail (aside.app-rail present)
+case 049 PASSED | src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) A2 — StrictMode double-mount does not throw
+case 050 PASSED | src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) A3 — App applies default theme on mount (data-theme is set)
+case 051 PASSED | src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) A4 — App renders without crash when no child route matches
+case 052 PASSED | src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) T1 — default theme=light sets <html data-theme='light'>
+case 053 PASSED | src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) T2 — theme=system resolves via matchMedia (dark preference)
+case 054 PASSED | src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) T3 — default density=comfortable sets <html data-density='comfortable'>
+case 055 PASSED | src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) T3b — default railPos=left sets <html data-rail-pos='left'>
+case 056 PASSED | src/host/capabilities.test.ts > createWebConsoleCapabilities maps navigate route state into /app path
+case 057 PASSED | src/host/capabilities.test.ts > createWebConsoleCapabilities returns unsupported result for native capability in browser host
+case 058 PASSED | src/host/capabilities.test.ts > createWebConsoleCapabilities reports supported and unsupported status families
+case 059 PASSED | src/observability/controller.test.ts > createObservabilityController does not initialize or send events when consent is unknown
+case 060 PASSED | src/observability/controller.test.ts > createObservabilityController does not initialize or send events when consent is denied
+case 061 PASSED | src/observability/controller.test.ts > createObservabilityController initializes and sends only when consent is granted
+case 062 PASSED | src/observability/privacy.test.ts > privacy helpers strips query and hash data
+case 063 PASSED | src/observability/privacy.test.ts > privacy helpers scrubs ids from URL-like paths
+case 064 PASSED | src/observability/privacy.test.ts > privacy helpers scrubs identifier-like tokens from text
+case 065 PASSED | src/observability/privacy.test.ts > privacy helpers drops sensitive object keys recursively
+case 066 PASSED | src/observability/routeGroup.test.ts > resolveRouteGroup classifies landing routes
+case 067 PASSED | src/observability/routeGroup.test.ts > resolveRouteGroup classifies auth routes
+case 068 PASSED | src/observability/routeGroup.test.ts > resolveRouteGroup classifies app and module routes
+case 069 PASSED | src/observability/routeGroup.test.ts > resolveRouteGroup falls back to unknown for unmatched routes
+case 070 PASSED | src/observability/sentry.test.ts > sentry privacy filters removes id/token/user/query-bearing fields from events
+case 071 PASSED | src/observability/sentry.test.ts > sentry privacy filters sanitizes breadcrumbs and strips sensitive data
+case 072 PASSED | src/observability/transport.test.ts > createBrowserObservabilityTransport initializes sentry with privacy-safe defaults
+case 073 PASSED | src/observability/transport.test.ts > createBrowserObservabilityTransport captures error events only when initialized and flushes rum batches
+case 074 PASSED | src/routes/router.integration.test.tsx > web host router integration renders authenticated module deep links and survives remount refresh
+case 075 PASSED | src/routes/router.integration.test.tsx > web host router integration resolves route families consistently across history entries
+case 076 PASSED | src/routes/router.integration.test.tsx > web host router integration keeps app shell stable when invoking todo module controls
+case 077 PASSED | src/routes/router.integration.test.tsx > web host router integration RR1: /app/settings/integrations/callback route resolves and renders the callback page
+case 078 PASSED | src/routes/router.integration.test.tsx > web host router integration RR-PREMIUM-1: /app/settings/premium/checkout/success route resolves and renders
+case 079 PASSED | src/routes/router.integration.test.tsx > web host router integration RR-PREMIUM-2: /app/settings/premium/checkout/cancel route resolves and renders
+case 080 PASSED | src/security/cspReport.test.ts > normalizeCspReportPayload normalizes legacy csp-report payload with scrubbed fields
+case 081 PASSED | src/security/cspReport.test.ts > normalizeCspReportPayload normalizes reporting api payload
+case 082 PASSED | src/security/nonce.test.ts > nonce helpers extracts nonce from meta seam first
+case 083 PASSED | src/security/nonce.test.ts > nonce helpers extracts nonce from html token seam
+case 084 PASSED | src/security/nonce.test.ts > nonce helpers applies nonce to runtime-created style elements
+case 085 PASSED | src/security/nonce.test.ts > nonce helpers throws when runtime nonce is missing
+case 086 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/ai: resolves to its real render function (not placeholder)
+case 087 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/tasks: resolves to its real render function (not placeholder)
+case 088 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/board: resolves to its real render function (not placeholder)
+case 089 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/dashboard: resolves to its real render function (not placeholder)
+case 090 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/calendar: resolves to its real render function (not placeholder)
+case 091 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/matrix: resolves to its real render function (not placeholder)
+case 092 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/pomodoro: resolves to its real render function (not placeholder)
+case 093 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/timetrack: resolves to its real render function (not placeholder)
+case 094 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/bookkeeping: resolves to its real render function (not placeholder)
+case 095 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/metrics: resolves to its real render function (not placeholder)
+case 096 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/habits: resolves to its real render function (not placeholder)
+case 097 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/meditation: resolves to its real render function (not placeholder)
+case 098 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/countdown: resolves to its real render function (not placeholder)
+case 099 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/statistics: resolves to its real render function (not placeholder)
+case 100 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/settings: resolves to its real render function (not placeholder)
+case 101 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LA: all 12 shell modules resolve via webModuleRouteRegistrations AC-W6-FIX-LA/todos: legacy /app/todos still resolves (transitional shim)
+case 102 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) AC-W6-FIX-1: /app/tasks renders <div class="module module-tasks"> (no W6 placeholder text)
+case 103 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) AC-W6-FIX-2: /app/matrix renders <div class="module module-matrix"> (no W6 placeholder text)
+case 104 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) AC-W6-FIX-3: /app/calendar renders <div class="module module-cal"> (no W6 placeholder text)
+case 105 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) AC-W6-FIX-4: /app/pomodoro renders <div class="module module-pomo"> (no W6 placeholder text)
+case 106 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) AC-W6-FIX-5: /app/countdown renders <div class="module module-countdown"> (no W6 placeholder text)
+case 107 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) AC-W6-FIX-6: /app/statistics renders <div class="module module-stats"> (no W6 placeholder text)
+case 108 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) AC-W6-FIX-7: /app/settings renders <div class="module module-settings"> (no W6 placeholder text)
+case 109 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) AC-BOOKKEEPING-1: /app/bookkeeping renders <div class="module module-bk"> (no W6 placeholder text)
+case 110 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder) AC-METRICS-1: /app/metrics renders <div class="module module-metrics"> (no W6 placeholder text)
+case 111 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LC: webModuleRouteRegistrations is composed from the shell array + transitional todos shim AC-W6-FIX-LC/length: webModuleRouteRegistrations.length === webShellModuleRegistrations.length + 1
+case 112 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LC: webModuleRouteRegistrations is composed from the shell array + transitional todos shim AC-W6-FIX-LC/order: shell entries come first, in shell-array order
+case 113 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LC: webModuleRouteRegistrations is composed from the shell array + transitional todos shim AC-W6-FIX-LC/shim: last entry is todoWebModuleRegistration (transitional /app/todos seam)
+case 114 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W6-FIX-LC: webModuleRouteRegistrations is composed from the shell array + transitional todos shim AC-W6-FIX-LC/unique: every moduleId in the host array is unique
+case 115 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views AC-W8-VIEWS-FIX-LD/picker: /app/board renders the ViewPicker toolbar from @repo/plugin-web-board-views
+case 116 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views AC-W8-VIEWS-FIX-LD/btn-board: /app/board exposes the 'board' view-picker button
+case 117 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views AC-W8-VIEWS-FIX-LD/btn-table: /app/board exposes the 'table' view-picker button
+case 118 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views AC-W8-VIEWS-FIX-LD/btn-calendar: /app/board exposes the 'calendar' view-picker button
+case 119 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views AC-W8-VIEWS-FIX-LD/btn-dashboard: /app/board exposes the 'dashboard' view-picker button
+case 120 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views AC-W8-VIEWS-FIX-LD/btn-timeline: /app/board exposes the 'timeline' view-picker button
+case 121 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views AC-W8-VIEWS-FIX-LD/btn-map: /app/board exposes the 'map' view-picker button
+case 122 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views AC-W8-VIEWS-FIX-LD/default-board: /app/board's default view exposes the Kanban BoardView (active button = 'board')
+case 123 PASSED | src/routes/__tests__/router-modules.integration.test.tsx > AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views AC-W8-VIEWS-FIX-LD/workspace-preserved: /app/board still renders the workspace + multi-board chrome (board-workspaces wraps board-views, not replaces it)
+case 124 PASSED | src/routes/modules/buildModuleRoutes.test.ts > buildModuleRoutes throws for duplicate module registrations
+case 125 PASSED | src/routes/modules/buildModuleRoutes.test.ts > buildModuleRoutes resolves default module redirect path from first registration
+case 126 PASSED | src/routes/modules/buildModuleRoutes.test.ts > buildModuleRoutes matches exact module child route
+case 127 PASSED | src/routes/modules/buildModuleRoutes.test.ts > buildModuleRoutes matches wildcard child route when exact path is missing
+case 128 PASSED | src/routes/modules/buildModuleRoutes.test.ts > buildModuleRoutes returns null for unknown module
+case 129 PASSED | src/routes/modules/buildModuleRoutes.test.ts > buildModuleRoutes matches dynamic child routes
+case 130 PASSED | src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live a Retry-released Back proceeds the live blocker exactly once when the guard re-registers before the router transition renders
+case 131 PASSED | src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live a completion-released Back proceeds the live blocker exactly once when the guard re-registers before the router transition renders
+case 132 PASSED | src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live a discard-released Back whose discard re-registers the guard proceeds the live blocker exactly once
+case 133 PASSED | src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live Stay followed by a re-registration never republishes the reset blocker; a fresh Back prompts and releases once
+case 134 PASSED | src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live a second Back while the dialog is open rebinds the held intent to the live blocker
+case 135 PASSED | src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live an epoch change resets the held blocker once and fresh protection still guards
+case 136 PASSED | src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live a Back during a pending sign-out is reset once on the live blocker and the sign-out still resolves on Stay
+case 137 PASSED | src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live unmounting with a held Back never touches the blocker React Router already removed
+case 138 PASSED | src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live a Retry-released programmatic PUSH stays held without a blocker and commits exactly once
+case 139 PASSED | src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx > DepartureCoordinator settles each router blocker once, and only while it is live a discard-released programmatic PUSH stays held without a blocker and commits exactly once
+case 140 PASSED | src/routes/modules/__tests__/railFeatureFilter.test.tsx > rail feature filter against real webShellModuleRegistrations AC-APP-1: default prefs (all true) → all real registrations pass through
+case 141 PASSED | src/routes/modules/__tests__/railFeatureFilter.test.tsx > rail feature filter against real webShellModuleRegistrations AC-APP-2: flipping board off removes it from the filtered list
+case 142 PASSED | src/routes/modules/__tests__/railFeatureFilter.test.tsx > rail feature filter against real webShellModuleRegistrations AC-APP-3: localStorage persistence — pref set survives a fresh hook mount
+case 143 PASSED | src/routes/modules/__tests__/settingsPaneComposition.test.tsx > composeSettingsPaneRegistry AC-COMP-1: returns the same length as upstream paneRegistry (14 after ai pane extension)
+case 144 PASSED | src/routes/modules/__tests__/settingsPaneComposition.test.tsx > composeSettingsPaneRegistry AC-COMP-2: the 'features' entry is featuresPane (row #23 substitution)
+case 145 PASSED | src/routes/modules/__tests__/settingsPaneComposition.test.tsx > composeSettingsPaneRegistry AC-COMP-3: all other entries pass through unchanged (id parity)
+case 146 PASSED | src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration AC-SHELL-3: has exactly 15 entries
+case 147 PASSED | src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration AC-SHELL-3: matrix registration is at index 5 with moduleId='matrix'
+case 148 PASSED | src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration AC-SHELL-3: matrix entry is NOT a placeholder (has real render function, not ModuleRoutePlaceholderPage)
+case 149 PASSED | src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration AC-SHELL-3: all 15 entries have a moduleId
+case 150 PASSED | src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration AC-SHELL-2 (meditation row #16): meditation slot is swapped (not a placeholder)
+case 151 PASSED | src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration AC-TIMETRACK: time tracker slot is registered after pomodoro
+case 152 PASSED | src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration AC-BOOKKEEPING: bookkeeping slot is registered after time tracker
+case 153 PASSED | src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration AC-METRICS: metrics slot is registered after bookkeeping
+case 154 PASSED | src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration AC-HOST-1: exactly one entry has moduleId='dashboard'
+case 155 PASSED | src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration AC-HOST-2/3: dashboard slot is the real dashboardGridSlotRegistration (not a placeholder)
+case 156 PASSED | src/routes/modules/__tests__/shellRegistrations.integration.test.tsx > shellRegistrations integration AC-HOST-4: dashboard rail order remains 4
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-PyVKpu/apps/web","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-PyVKpu/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"include":["src/**/*.test.{ts,tsx}","deploy/**/*.test.{ts,tsx}"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance apps/web/src/App.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/settingsPaneComposition.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts packages/xai-web-cmdk/src/CommandPalette.tsx
+pin_required_provenance_missing=none
+pin_modules=653 by package: apps/web=62 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=6 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23

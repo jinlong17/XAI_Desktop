@@ -1,0 +1,161 @@
+
+> @repo/plugin-web-countdown@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-countdown
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-countdown
+
+ ✓ src/__tests__/cardsReducer.test.ts (16 tests) 14ms
+ ✓ src/__tests__/useDaysUntil.test.tsx (6 tests) 85ms
+ ✓ src/__tests__/AddCountdownCard.test.tsx (4 tests) 172ms
+ ✓ src/__tests__/CountdownCardView.test.tsx (11 tests) 412ms
+ ✓ src/__tests__/CountdownEditDialog.test.tsx (17 tests) 968ms
+stderr | src/__tests__/validate.test.ts > isCountdownCard > V2: rejects missing id
+[plugin-web-countdown] isCountdownCard: dropped entry — id missing or empty {
+  id: '',
+  title: { en: 'Weekend', zh: '周末' },
+  target_date: '2026-05-30',
+  variant: 'image',
+  cover_url: 'preset:dusk'
+}
+[plugin-web-countdown] isCountdownCard: dropped entry — id missing or empty {
+  id: undefined,
+  title: { en: 'Weekend', zh: '周末' },
+  target_date: '2026-05-30',
+  variant: 'image',
+  cover_url: 'preset:dusk'
+}
+
+stderr | src/__tests__/validate.test.ts > isCountdownCard > V3: rejects missing title.en
+[plugin-web-countdown] isCountdownCard: dropped entry — title.en or title.zh missing {
+  id: 'cd_test01',
+  title: { zh: '周末' },
+  target_date: '2026-05-30',
+  variant: 'image',
+  cover_url: 'preset:dusk'
+}
+
+stderr | src/__tests__/validate.test.ts > isCountdownCard > V4: rejects missing title.zh
+[plugin-web-countdown] isCountdownCard: dropped entry — title.en or title.zh missing {
+  id: 'cd_test01',
+  title: { en: 'Weekend' },
+  target_date: '2026-05-30',
+  variant: 'image',
+  cover_url: 'preset:dusk'
+}
+
+stderr | src/__tests__/validate.test.ts > isCountdownCard > V5: rejects missing / invalid target_date
+[plugin-web-countdown] isCountdownCard: dropped entry — target_date invalid {
+  id: 'cd_test01',
+  title: { en: 'Weekend', zh: '周末' },
+  target_date: '',
+  variant: 'image',
+  cover_url: 'preset:dusk'
+}
+[plugin-web-countdown] isCountdownCard: dropped entry — target_date invalid {
+  id: 'cd_test01',
+  title: { en: 'Weekend', zh: '周末' },
+  target_date: '2026/05/30',
+  variant: 'image',
+  cover_url: 'preset:dusk'
+}
+[plugin-web-countdown] isCountdownCard: dropped entry — target_date invalid {
+  id: 'cd_test01',
+  title: { en: 'Weekend', zh: '周末' },
+  target_date: 'not-a-date',
+  variant: 'image',
+  cover_url: 'preset:dusk'
+}
+[plugin-web-countdown] isCountdownCard: dropped entry — target_date invalid {
+  id: 'cd_test01',
+  title: { en: 'Weekend', zh: '周末' },
+  target_date: undefined,
+  variant: 'image',
+  cover_url: 'preset:dusk'
+}
+
+stderr | src/__tests__/validate.test.ts > isCountdownCard > V6: rejects variant=image with null cover_url
+[plugin-web-countdown] isCountdownCard: dropped entry — variant=image requires non-null string cover_url {
+  id: 'cd_test01',
+  title: { en: 'Weekend', zh: '周末' },
+  target_date: '2026-05-30',
+  variant: 'image',
+  cover_url: null
+}
+
+stderr | src/__tests__/validate.test.ts > isCountdownCard > V7: rejects variant=light with non-null cover_url
+[plugin-web-countdown] isCountdownCard: dropped entry — variant=light requires cover_url=null {
+  id: 'cd_test03',
+  title: { en: 'Spring Festival', zh: '春节' },
+  target_date: '2027-02-06',
+  variant: 'light',
+  cover_url: 'preset:dusk'
+}
+
+stderr | src/__tests__/validate.test.ts > isCountdownCard > rejects null
+[plugin-web-countdown] isCountdownCard: dropped entry — not an object null
+
+stderr | src/__tests__/validate.test.ts > isCountdownCard > rejects non-object primitives
+[plugin-web-countdown] isCountdownCard: dropped entry — not an object 42
+[plugin-web-countdown] isCountdownCard: dropped entry — not an object string
+[plugin-web-countdown] isCountdownCard: dropped entry — not an object undefined
+
+stderr | src/__tests__/validate.test.ts > isCountdownCard > rejects wrong variant value
+[plugin-web-countdown] isCountdownCard: dropped entry — variant=light requires cover_url=null {
+  id: 'cd_test01',
+  title: { en: 'Weekend', zh: '周末' },
+  target_date: '2026-05-30',
+  variant: 'dark',
+  cover_url: 'preset:dusk'
+}
+
+ ✓ src/__tests__/validate.test.ts (12 tests) 13ms
+ ✓ src/__tests__/presetCards.test.ts (2 tests) 5ms
+stderr | src/__tests__/saveRecovery.test.tsx > Countdown truthful saves > retains actual editor and latest fields on quota then saves one card
+[plugin-web-storage] quota exceeded for xai_countdowns.
+
+ ✓ src/__tests__/computeDaysUntil.test.ts (14 tests) 7ms
+stderr | src/__tests__/saveRecovery.test.tsx > Countdown truthful saves > delete failure retains editor; retry deletes the original id
+[plugin-web-storage] quota exceeded for xai_countdowns.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Countdown truthful saves > pin failure retains proposal and retries exactly that proposal
+[plugin-web-storage] quota exceeded for xai_countdowns.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Countdown truthful saves > hide failure retains proposal and retries exactly that proposal
+[plugin-web-storage] quota exceeded for xai_countdowns.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Countdown truthful saves > duplicate failure retains proposal and retries exactly that proposal
+[plugin-web-storage] quota exceeded for xai_countdowns.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Countdown truthful saves > delete failure retains proposal and retries exactly that proposal
+[plugin-web-storage] quota exceeded for xai_countdowns.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Countdown truthful saves > restore failure retains proposal and retries exactly that proposal
+[plugin-web-storage] quota exceeded for xai_countdowns.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Countdown truthful saves > reorder failure retains proposal and retries exactly that proposal
+[plugin-web-storage] quota exceeded for xai_countdowns.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Countdown truthful saves > baseline conflict preserves newer bytes and captured A cannot export or retry B
+[plugin-web-storage] quota exceeded for xai_countdowns.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Countdown truthful saves > automatic preset merge failure is visible and retry persists presets
+[plugin-web-storage] quota exceeded for xai_countdowns.
+
+ ✓ src/__tests__/saveRecovery.test.tsx (10 tests) 1728ms
+   ✓ Countdown truthful saves > retains actual editor and latest fields on quota then saves one card  1388ms
+ ✓ src/__tests__/index-barrel.test.ts (8 tests) 7ms
+ ✓ src/__tests__/presets.test.ts (5 tests) 4ms
+ ✓ src/__tests__/formatTargetLabel.test.ts (7 tests) 5ms
+ ✓ src/__tests__/registration.test.tsx (5 tests) 7ms
+ ✓ src/__tests__/CountdownModule.test.tsx (11 tests) 2899ms
+   ✓ CountdownModule — M1 empty state > M1: shows preset countdowns and AddCountdownCard when no cards stored  352ms
+   ✓ CountdownModule — M2 add card > M2: clicking AddCountdownCard opens modal and saving persists card  994ms
+   ✓ CountdownModule — M3 edit card > M3: clicking an existing card opens modal pre-filled; saving persists patch  552ms
+   ✓ CountdownModule — M4 delete > M4: deleting a card hides it from active view and stores history state  434ms
+
+ Test Files  14 passed (14)
+      Tests  128 passed (128)
+   Start at  13:52:49
+   Duration  4.96s (transform 1.03s, setup 4.11s, collect 3.46s, tests 6.33s, environment 9.69s, prepare 1.63s)
+

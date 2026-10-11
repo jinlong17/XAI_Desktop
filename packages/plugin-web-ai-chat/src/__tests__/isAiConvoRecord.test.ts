@@ -43,4 +43,29 @@ describe("isAiConvoRecord (V)", () => {
     expect(isAiConvoRecord({ id: "c1", title: "", time: "" })).toBe(true);
     expect(isAiConvoRecord({ id: "", title: "t", time: "t" })).toBe(false);
   });
+
+  it("V8: accepts persisted message history and rejects malformed messages", () => {
+    expect(
+      isAiConvoRecord({
+        id: "c1",
+        title: "t",
+        time: "Just now",
+        summary: "assistant answer",
+        updatedAt: "2026-06-01T00:00:00.000Z",
+        activeAt: "2026-06-01T00:00:01.000Z",
+        messages: [
+          { role: "user", text: "hello", attachments: null },
+          { role: "assistant", text: "hi", attachments: ["a.txt"] },
+        ],
+      }),
+    ).toBe(true);
+    expect(
+      isAiConvoRecord({
+        id: "c1",
+        title: "t",
+        time: "Just now",
+        messages: [{ role: "system", text: "bad", attachments: null }],
+      }),
+    ).toBe(false);
+  });
 });

@@ -1,0 +1,41 @@
+{
+  "source": "1603f5d650466f6d2cf5285e1f811d8c99746826",
+  "integration": "0f42d8f058e3febfd15630a5602bad57a37e6fad",
+  "archive_ref": "codex/archive/parallel-exhausted-purposes-full-review-r1-20261010",
+  "parent": "d9c6e3ff066908db590efaa6ece4f95ff85705c8",
+  "fixed_input": "2d01d827d7ede5aaddb853b3d4caad2a5a23adf4",
+  "outputs": {
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-review-r1/review.md": "352cd28fb2fe3fdc43c27da4f733f8fdb2244c716f6f5701d90650af98131c19",
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-review-r1/inputs.sha256": "b718e3a90205a8f9ba2b3b589d6d867c5a30644dd89a513fa91b0f3a5327901b"
+  },
+  "all_input_hashes_checked": 449,
+  "review_iteration": 1,
+  "review_cap": 3,
+  "verdict": "APPROVED wholeproposalonly",
+  "static": {
+    "invocations": 1,
+    "result": "PASS",
+    "pid": 62538,
+    "exit": 0,
+    "elapsed_seconds": 8.702,
+    "bytes": 268532195,
+    "session": null,
+    "chunk": null,
+    "session_chunk_status": "UNKNOWN node tool returned no identifiers",
+    "stdout_bytes": 11221,
+    "stderr_bytes": 0,
+    "owned_git_children": 453,
+    "all_children_exit": 0,
+    "all_EOF_drained_waited": true,
+    "both_finalbuffers_beforewrite": true
+  },
+  "finalization": {
+    "chunk": "2d3f0a",
+    "exit": 0,
+    "clean": true,
+    "amend": 0
+  },
+  "pretool_transport": "one JSstringconstruction error before Pythonlaunch/writes, no checkerretry",
+  "disposition": "owner consideration ready but no actualbudget/extra4/source/code/qualification grant; minimumselectedfive purposes only, Outer optionalnotrequested",
+  "root_role": "metadataonly"
+}

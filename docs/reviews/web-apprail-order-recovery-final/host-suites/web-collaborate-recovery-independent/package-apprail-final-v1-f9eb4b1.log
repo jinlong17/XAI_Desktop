@@ -1,0 +1,67 @@
+revision=f9eb4b1 fixed_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-L0JQKI
+
+ ✓ packages/plugin-web-settings-rest/src/__tests__/integrationConnectButton.test.tsx (5 tests) 275ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/integrationsPane.test.tsx (18 tests) 221ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/smartListsRecovery.test.tsx (4 tests) 386ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/dateTimePane.test.tsx (8 tests) 191ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/collaboratePane.test.tsx (11 tests) 236ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx (15 tests) 444ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx (11 tests) 170ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/smartListsPane.test.tsx (6 tests) 76ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/aiPane.test.tsx (13 tests) 220ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/accountPane.test.tsx (12 tests) 208ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx (10 tests) 157ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/DeviceRecoveryExport.test.tsx (4 tests) 79ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/accountDeletionRecovery.test.tsx (10 tests) 100ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPaneRecovery.test.tsx (14 tests) 1747ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/premiumPane.test.tsx (9 tests) 47ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/CheckoutCancelPage.test.tsx (6 tests) 61ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/DeleteAccountConfirmModal.test.tsx (19 tests) 72ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/CallbackPage.test.tsx (9 tests) 79ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/integrationDisconnectButton.test.tsx (3 tests) 53ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/useAccountDeleteOrchestrator.test.tsx (15 tests) 43ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/CheckoutSuccessPage.test.tsx (10 tests) 75ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/premiumUpgradeButton.test.tsx (5 tests) 43ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx (7 tests) 57ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/aboutPane.test.tsx (7 tests) 46ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/hotkeysPane.test.tsx (3 tests) 60ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/premiumCancelButton.test.tsx (5 tests) 27ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/premiumDisclosureBanner.test.tsx (3 tests) 21ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/PremiumTierBadge.test.tsx (2 tests) 16ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/pkce.test.ts (8 tests) 12ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/integrationStubBanner.test.tsx (2 tests) 18ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/usePremiumTier.test.tsx (6 tests) 17ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/oauthState.test.ts (12 tests) 5ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/no-stripe-js-bundle.test.ts (2 tests) 14ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/buildAuthorizeUrl.test.ts (6 tests) 11ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/no-math-random.test.ts (7 tests) 3ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/no-localstorage-clear.test.ts (2 tests) 7ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/no-stripe-secret-key.test.ts (2 tests) 8ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/no-hex-literals.test.ts (1 test) 4ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/index-barrel.test.ts (3 tests) 2ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/integrationProviders.test.ts (4 tests) 2ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/premiumTier.test.ts (4 tests) 2ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/usePremiumConfig.test.tsx (3 tests) 2ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/applyRestPanesToRegistry.test.ts (5 tests) 3ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/restPanesById.test.ts (3 tests) 2ms
+
+ Test Files  44 passed (44)
+      Tests  314 passed (314)
+   Start at  08:05:23
+   Duration  6.32s (transform 1.68s, setup 6.03s, collect 6.43s, tests 5.33s, environment 15.41s, prepare 2.52s)
+
+
+stderr | packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx > notificationsPane > NF5: enabling quiet hours shows time inputs
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act

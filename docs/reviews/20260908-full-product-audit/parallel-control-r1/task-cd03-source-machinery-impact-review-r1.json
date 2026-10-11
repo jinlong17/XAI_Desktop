@@ -1,0 +1,102 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent complete CD source machinery/protected dependency technical reviewer; never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "d75e4e1e619b36bc64f411f960603712df5479f1",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "review_iteration": 1,
+    "review_cap": 3,
+    "static_pass": 1,
+    "prior_source_author_used": 1
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "CD-03/SOURCE-MACHINERY-IMPACT-REVIEW1",
+  "source_inputs": [
+    "b5e6843bce9a6feb62afb6c451451e626b51c999",
+    "2a35488361bfbad596473fc355bd18d8feb5b164",
+    "fda069eb300704f24384eccacfd74ffc147aef37"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-cd03-source-machinery-impact-review-r1/review.md",
+    "docs/reviews/audit-parallel-cd03-source-machinery-impact-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full5807 immutableidentities/full3351review/full3326prep/shared2808+readonlyimpactreview649/full14CDrows11conditionalpaths+12newprotectedcandidates+18machinerycandidatefiles. OriginalCD03 date-difference/no-reminder existingauthorities unchanged; rootadoptedfullconditionaldoconly. ReviewWHOLEsourcefeasible technicalbasis and full originalobligation/case-emitter-control mapping, notsubset/staticreceiptclosure. Allhypothetical paths no presentimplementation/API/schema/domain grant.",
+    "FullrealpublicCountdown registration/managedAppProviders/mainstartup SDK/actualauxiliary/http deviceprefs/accountgeneration/tombstone/physicalkeys/currentcodecsourcevalidation/read-onlyCDdomain coherentphysicalread; DASHsessions-only observer draft notCDAPIgrant. Sourceerror absent-vs-invalid/unavailable/read-denial/malformed/lateownercallback guards/currentcontrolleddraft/visiblecount nofallbackproof. Exactfinitepublic storageexceptionvslocal paths newcandidate unions and fullconsumer attribution/no hiddenwrites/SSR/types/barrels/docs/canonicalowner unchanged; no genericengine/gate rewrite.",
+    "FullactualexportSnapshotRecovery/sourceguards/URLBlobanchorclick/diskack/lateownerchange/errorUI/revoke/forcedloss/dropafterbrowserhandoff. Explicitpreclick fences are notrevocationafterrealbrowserhandoff and no arbitraryreentrantclick atomicity isproved. Determine fulloriginal guarantee vs reviewedexistingforcedloss/exportlifetime limits without weakening standard or inventing productdecision. Sourcefeasible boundaries must be exact and controls actualcausal; if no viable boundedpath preciseREVISE orblockedtechnical with independent evidence; no partialapproval that closesrows07/09 or10/08.",
+    "All14 before/fixed/affected/integrated/native/trustedkeyboard/raster/fullG1/actualvendor/freshfullacceptance accounted exactcommand modes/realstdoutstderr/terminalquiescence/fullarchivecopy+loadedclosure/attribution/emitterartifacts. Allactualpermanentpurposehistory commands/source/mode/launchIDs/lowerbounds/duplicates/refusals/probes unknowncaps no caller0/actor/file reset. Newcomplete sourcepurpose finiteonlysourcegrounded; sharedfocusI1hold/finalauthor3unqualified/productionactivationclosed/retention3 visual3 RELunknown onlydependentholds. FullcanonicalClock§14 E1-E25/E24/Rules verbatim preserved; original312fields/39exactrawlabels/939/formal13,3,3,293/actualEXECUTIONitems vsTODOsections.tasks; P0runtimeparityvsfourTT08docs separate. Allinputsvalidated/bothbuffersbeforeANYwrite/reviewer1static1/allruntime0/nochildrenpush. Reviewer neverrepairs; exactAPPROVEDtechnicalbasis onlyorpreciseREVISE, freshamendment+fullreview+rootadoption/sourcequalification/fullvalidbefore stillrequired."
+  ],
+  "original_item": {
+    "id": "CD-03",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "定义重复/到期动作及是否提供提醒",
+    "acceptance": "无后台动作时明确只是日期差展示；新增提醒接JOB统一机制",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "CD-03",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:CD-03"
+    ],
+    "source_section": "CD",
+    "acceptance_evidence": {
+      "business_acceptance": "无后台动作时明确只是日期差展示；新增提醒接JOB统一机制",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "CD-03/prepare",
+      "CD-03/contract-review",
+      "CD-03/before",
+      "CD-03/implement",
+      "CD-03/verify",
+      "CD-03/accept",
+      "CD-03/reconcile",
+      "CD-03/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  }
+}

@@ -20,6 +20,8 @@
  */
 import { useCallback, useEffect, useRef } from "react";
 
+import { useOrderSaveRecovery } from "./useOrderSaveRecovery.js";
+import type { DashboardRecovery } from "../DashboardSaveRecovery.js";
 import { usePref } from "@repo/plugin-web-storage";
 
 import type { WidgetRegistration } from "../types.js";
@@ -30,15 +32,16 @@ export type UseDashOrderTuple = readonly [
   /** Working order — the sanitized id list to render. */
   order: string[],
   /** Setter — replaces the entire order (drag-to-reorder). */
-  setOrder: (next: string[]) => void,
+  setOrder: (next: string[]) => boolean,
   /** addWidget — appends id if not already present and registered. No-op otherwise. */
   addWidget: (id: string) => void,
   /** removeWidget — removes id from order if present. No-op if absent (idempotent). */
   removeWidget: (id: string) => void,
-];
+] & { readonly recovery: DashboardRecovery };
 
-export function useDashOrder(widgets: readonly WidgetRegistration[]): UseDashOrderTuple {
+export function useDashOrder(widgets: readonly WidgetRegistration[], reconcile = true): UseDashOrderTuple {
   const [persisted, setPref] = usePref("xai_dash_order");
+  const { save, recovery } = useOrderSaveRecovery(persisted, setPref);
   const sanitized = sanitizeOrder(persisted, widgets);
 
   // Write back the sanitized value once on mount (and again when widgets
@@ -48,12 +51,11 @@ export function useDashOrder(widgets: readonly WidgetRegistration[]): UseDashOrd
   // BroadcastChannel chatter.
   const lastWrittenRef = useRef<string[] | null>(null);
   useEffect(() => {
-    if (arraysEqual(persisted, sanitized)) return;
+    if (!reconcile || arraysEqual(persisted, sanitized)) return;
     if (lastWrittenRef.current && arraysEqual(lastWrittenRef.current, sanitized)) return;
-    lastWrittenRef.current = sanitized;
-    setPref(sanitized);
+    if (save(sanitized)) lastWrittenRef.current = sanitized;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [persisted.join("|"), sanitized.join("|")]);
+  }, [persisted.join("|"), sanitized.join("|"), reconcile]);
 
   // addWidget — api.md §S14.3 semantics:
   //   - if id is already in order → no-op
@@ -71,9 +73,9 @@ export function useDashOrder(widgets: readonly WidgetRegistration[]): UseDashOrd
       if (!knownIds.has(id)) return; // unknown id guard (AC-AWO-4)
       const current = sanitizedRef.current;
       if (current.includes(id)) return; // dedupe guard (AC-AWO-3)
-      setPref([...current, id]);
+      save([...current, id]);
     },
-    [widgets, setPref],
+    [widgets, save],
   );
 
   // removeWidget — Audit Top-10 #9 (D-06):
@@ -90,10 +92,10 @@ export function useDashOrder(widgets: readonly WidgetRegistration[]): UseDashOrd
     (id: string) => {
       const current = persistedRef.current;
       if (!current.includes(id)) return; // idempotent no-op (AC-RM-4)
-      setPref(current.filter((x) => x !== id));
+      save(current.filter((x) => x !== id));
     },
-    [setPref],
+    [save],
   );
 
-  return [sanitized, setPref, addWidget, removeWidget] as const;
+  return Object.assign([sanitized, save, addWidget, removeWidget] as const, { recovery });
 }

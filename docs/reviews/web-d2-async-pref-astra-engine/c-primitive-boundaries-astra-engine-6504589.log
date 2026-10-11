@@ -1,0 +1,11 @@
+revision=6504589
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-c-LxCyPO
+
+ ✓ docs/reviews/web-board-workspace-astra-review/c-primitive-boundaries.test.ts (8 tests) 25ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  19:56:37
+   Duration  869ms (transform 146ms, setup 0ms, collect 187ms, tests 25ms, environment 347ms, prepare 94ms)

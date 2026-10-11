@@ -1,0 +1,11 @@
+revision=115efb2 fixed_commit=115efb2337ac45f9cf6ba3113f9ea34d10ab985e
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-OeZMxD
+
+ ✓ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx (39 tests) 1313ms
+
+ Test Files  1 passed (1)
+      Tests  39 passed (39)
+   Start at  22:18:03
+   Duration  2.46s (transform 248ms, setup 0ms, collect 433ms, tests 1.31s, environment 288ms, prepare 77ms)

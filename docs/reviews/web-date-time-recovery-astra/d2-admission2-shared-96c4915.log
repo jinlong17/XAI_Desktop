@@ -1,0 +1,17 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4 original_assertions=docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-dLX7Xj
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts > deletion refuses unproven generation recovery: corrupt-tombstone-missing-marker
+deletion-admission {"scenario":"corrupt-tombstone-missing-marker","result":{"ok":false,"reason":"recovery-required"},"before":{"xai:account:v1:delete-admission:deleted":"not a deletion receipt","xai:account:v1:delete-admission:g1:xai_ai_convos":"[\"old retained\"]","xai:account:v1:delete-admission:g2:xai_ai_convos":"[\"new retained\"]"},"after":{"xai:account:v1:delete-admission:deleted":"not a deletion receipt","xai:account:v1:delete-admission:g1:xai_ai_convos":"[\"old retained\"]","xai:account:v1:delete-admission:g2:xai_ai_convos":"[\"new retained\"]"}}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts > deletion refuses unproven generation recovery: legacy-tombstone-conflicting-marker
+deletion-admission {"scenario":"legacy-tombstone-conflicting-marker","result":{"ok":false,"reason":"recovery-required"},"before":{"xai:account:v1:delete-admission:committed-generation":"{\"generation\":\"g2\",\"migrationId\":\"newer-migration\",\"previous\":\"g1\"}","xai:account:v1:delete-admission:deleted":"1","xai:account:v1:delete-admission:g1:xai_ai_convos":"[\"old retained\"]","xai:account:v1:delete-admission:g2:xai_ai_convos":"[\"new retained\"]"},"after":{"xai:account:v1:delete-admission:committed-generation":"{\"generation\":\"g2\",\"migrationId\":\"newer-migration\",\"previous\":\"g1\"}","xai:account:v1:delete-admission:deleted":"1","xai:account:v1:delete-admission:g1:xai_ai_convos":"[\"old retained\"]","xai:account:v1:delete-admission:g2:xai_ai_convos":"[\"new retained\"]"}}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts (2 tests) 7ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  01:31:26
+   Duration  2.55s (transform 707ms, setup 0ms, collect 1.27s, tests 7ms, environment 689ms, prepare 130ms)

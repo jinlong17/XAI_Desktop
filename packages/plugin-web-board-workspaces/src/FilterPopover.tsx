@@ -15,10 +15,20 @@
  */
 
 import { useEffect, useRef } from "react";
-import type { BoardListData } from "@repo/plugin-web-board-core";
+import type {
+  BoardLabel,
+  BoardListData,
+  BoardMemberOption,
+} from "@repo/plugin-web-board-core";
+import { BOARD_PRIORITIES } from "@repo/plugin-web-board-core";
 import type { FilterState } from "@repo/plugin-web-board-views";
 import { EMPTY_FILTER } from "@repo/plugin-web-board-views";
-import { toggleLabel, toggleMember, setDueRange } from "./internal/filterState.js";
+import {
+  toggleLabel,
+  toggleMember,
+  togglePriority,
+  setDueRange,
+} from "./internal/filterState.js";
 
 export interface FilterPopoverProps {
   lists: readonly BoardListData[];
@@ -26,12 +36,16 @@ export interface FilterPopoverProps {
   onChange: (next: FilterState) => void;
   onClose: () => void;
   lang: "en" | "zh";
+  /** Board catalogs for resolving label/member display names (fallback: raw id). */
+  labelCatalog?: readonly BoardLabel[];
+  memberCatalog?: readonly BoardMemberOption[];
 }
 
 const STR = {
   heading: { en: "Filter", zh: "筛选" },
   labels: { en: "Labels", zh: "标签" },
   members: { en: "Members", zh: "成员" },
+  priority: { en: "Priority", zh: "优先级" },
   dueRange: { en: "Due Range", zh: "截止日期" },
   clear: { en: "Clear", zh: "清除" },
   dueAll: { en: "All", zh: "全部" },
@@ -42,7 +56,15 @@ const STR = {
   noMembers: { en: "No members on cards", zh: "卡片没有成员" },
 } as const;
 
-export function FilterPopover({ lists, filter, onChange, onClose, lang }: FilterPopoverProps) {
+export function FilterPopover({
+  lists,
+  filter,
+  onChange,
+  onClose,
+  lang,
+  labelCatalog,
+  memberCatalog,
+}: FilterPopoverProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
 
   // Collect deduped labels + members across all cards
@@ -53,6 +75,11 @@ export function FilterPopover({ lists, filter, onChange, onClose, lang }: Filter
   const allMembers = [...new Set(
     lists.flatMap((l) => l.cards.flatMap((c) => c.members ?? [])),
   )].sort();
+
+  const labelName = (id: string): string =>
+    labelCatalog?.find((l) => l.id === id)?.name[lang] ?? id;
+  const memberName = (id: string): string =>
+    memberCatalog?.find((m) => m.id === id)?.name ?? id;
 
   // ESC closes
   useEffect(() => {
@@ -112,7 +139,7 @@ export function FilterPopover({ lists, filter, onChange, onClose, lang }: Filter
                     checked={filter.labels.has(labelId)}
                     onChange={() => onChange(toggleLabel(filter, labelId))}
                   />
-                  <span>{labelId}</span>
+                  <span>{labelName(labelId)}</span>
                 </label>
               </li>
             ))}
@@ -136,12 +163,33 @@ export function FilterPopover({ lists, filter, onChange, onClose, lang }: Filter
                     checked={filter.members.has(memberId)}
                     onChange={() => onChange(toggleMember(filter, memberId))}
                   />
-                  <span>{memberId}</span>
+                  <span>{memberName(memberId)}</span>
                 </label>
               </li>
             ))}
           </ul>
         )}
+      </section>
+
+      {/* Priority facet */}
+      <section className="fp-section" data-testid="fp-priority-section">
+        <h4 className="fp-section-title">{t("priority")}</h4>
+        <ul className="fp-checkbox-list">
+          {BOARD_PRIORITIES.map((p) => (
+            <li key={p.id}>
+              <label className="fp-checkbox-label">
+                <input
+                  type="checkbox"
+                  data-testid={`fp-priority-${p.id}`}
+                  checked={filter.priorities.has(p.id)}
+                  onChange={() => onChange(togglePriority(filter, p.id))}
+                />
+                <span className="fp-priority-dot" style={{ background: p.color }} />
+                <span>{p.name[lang]}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* Due Range facet */}

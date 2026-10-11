@@ -1,0 +1,102 @@
+{
+  "id": "CD-03/SOURCE-CONTRACT1",
+  "workflow": "A",
+  "module": "web",
+  "role": "fresh exact complete reviewed CD source-contract and finite semantic amendment author1; no implementation",
+  "model": "gpt-6-astra",
+  "fixed_input": "61b6644d2eac5af6c70749bf672839ba7ba79bca",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "b5e6843bce9a6feb62afb6c451451e626b51c999",
+    "a8a75d15c9c482547e50905dc237344c9b49d9c2",
+    "2a35488361bfbad596473fc355bd18d8feb5b164",
+    "fda069eb300704f24384eccacfd74ffc147aef37"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-cd03-source-contract-r1/contract.md",
+    "docs/reviews/audit-parallel-cd03-source-contract-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full5857independentreview/full5807impact/full3351review/full3326prep/shared2808+649/full14CDrow/allhistoricalreports complete. Rootadoptedexactconditionalb5impact+a8review basisONLY. Freeze WHOLEsourcecontract/admissionconfig/finiteexact23candidateproductpath subset+18machinerysourceexports/signatures/errorpolicy/readonlyS-CD xai_countdowns domain+ownerpredicate/backward optionalnormalization/SSR/nativeevents/no setterretryreset/actualexport action+disk causalboundary. No arbitraryclickatomicity/posthandoffrecall/durabledraft/diskUIack promise or waiver; sourcecontractresolves exactnative event/defaultactionqualification controls honestly full07/09, no reminder/JOB/date/CD01/CD02/newownerpolicy.",
+    "Fullactualpublicmanagedhost/mainstartup SDK/httpaux/device/todo/observability/copyarchive+consumedbytes/bootstrappreimport/passivecapture/queue/owner+generation/keytombstone/source raw-coherent state andfinitecausal emittersallC01-C14/K01-K14/Q01-Q18+fullG1 covered not declaration. Exactcommands/modes/resourcepairing/casecontrols/normal-positive+actualfaultcause/artifactemitters/immutablepatch/reusedoriginalcopies/nativefocuscontext/loadedclosure/stdoutstderr/quiescence/terminalfailure indexed. Freeze exactsourcewriting scope and laterqualification budget-purpose registry no executionnow; missingactualdependencybytes/rootcapture/focus/shared holds explicit, no mandatoryrefusingskeleton.",
+    "Completecurrentlyrequired full sourcequalification+indepreview/rootadoption/fullvalidP0before/boundedfreshimplementation/fullfixed/integrated/affected/native/trustedkeyboard/visual/G1/actualvendor/freshfulloriginalcalleracceptance/rootappend/inventory/remoteancestry unchanged. Permanentactualhistoricalpurpose/unit/command/mode/launch IDs/refusals/probes/unknown/exhausted cap3 retains mixedolderunits, no newlabel0/reset. Exact sourcecontractNEWtechnical phase fromapprovedbasis notoldimpactauthor reset; fullproposal/newfullindepreview before sourcegrant.",
+    "Fullcanonical Clockr2§14E1-E25/E24ANDRules verbatim. Whole312originalfields/39exactliteralreversiblelabels/939/formal13,3,3,293 intact; actualEXECUTIONitems vsTODOsections.tasks/dynamicexecution-state.tasks+card notinitialregistry. FourTT08docs vsP0runtimeparity separate. ValidateALLinputs/BOTHbuffersbeforeANYwrite/static1failurestopsnoretry/keepFULLexecsession+exitdrain. Allruntime/tests/build/lint/browser/native/server/qualification/probes/vendor0/nochildrenpush/exact2ADDonly."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/sharedCSS/storage/schema/account/host/config/lockfile",
+    "all original contracts/runners/failures/evidence",
+    "globalcontrols/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "static_pass": 1,
+    "source_contract_iteration": 1,
+    "source_contract_cap": 3
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported producttradeoff or weakeningstandards",
+    "runtime orprotectedwrite need"
+  ],
+  "no_children": true,
+  "original_item": {
+    "id": "CD-03",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "定义重复/到期动作及是否提供提醒",
+    "acceptance": "无后台动作时明确只是日期差展示；新增提醒接JOB统一机制",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "CD-03",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:CD-03"
+    ],
+    "source_section": "CD",
+    "acceptance_evidence": {
+      "business_acceptance": "无后台动作时明确只是日期差展示；新增提醒接JOB统一机制",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "CD-03/prepare",
+      "CD-03/contract-review",
+      "CD-03/before",
+      "CD-03/implement",
+      "CD-03/verify",
+      "CD-03/accept",
+      "CD-03/reconcile",
+      "CD-03/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  }
+}

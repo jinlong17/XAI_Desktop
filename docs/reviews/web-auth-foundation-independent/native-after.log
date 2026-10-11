@@ -1,0 +1,20 @@
+{
+  "ref": "cfc2d6da8f2650da490004c9bec1b3c96c665a77",
+  "result": {
+    "pass": true,
+    "checks": [
+      "native revoke abort reports failed/error, blocks automatic resurrection, explicit retry then reopen stays signed out",
+      "delayed captured local cleanup preserves newer session, OAuth envelope and exact SDK verifier",
+      "successful native revoke with denied transient removal remains partial/error, retry on reopen does not resurrect owner",
+      "server-consumed code plus native session-write abort remains error and never invents authenticated recovery",
+      "real peer SDK refresh persists same-generation token and reconciles first page",
+      "real second page bootstraps shared active owner",
+      "native coordinator BroadcastChannel reconciles new B generation",
+      "delayed A SDK logout preserves B snapshot and returns superseded",
+      "stale captured action rejected before network",
+      "full-page reload retains original OAuth generation and callback publishes its owner",
+      "migrated legacy survives replacements and logout reload stays unauthenticated without replay"
+    ],
+    "boundary": "Pinned source. Two real Chrome pages, native IDB/sessionStorage/BroadcastChannel and SDK. Synthetic responses, coordinator only; no React host or process-kill acceptance."
+  }
+}

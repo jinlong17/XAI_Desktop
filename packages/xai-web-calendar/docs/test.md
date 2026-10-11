@@ -1077,3 +1077,14 @@ XVENDOR-CREATE-1..6 + Codex 5 cold-read items may be DEFERRED at ship-time per A
 15. Lint passes with `--max-warnings 0` across all touched workspaces.
 16. Commit hygiene: one commit per phase, Why/What/Scope/Risk/Docs/Tests.
 17. Cross-vendor XVENDOR-CREATE-1..6 + Codex 5 cold-read items recorded OR formally DEFERRED per ADR-0008 carve-out + ADR-0009 §D2-G2 precedent.
+
+
+## REL-01 amendment — 2026-09-09 local civil time
+
+This section supersedes historical UTC-day / fixed-24-hour / 2026-Pacific-only assumptions above. User time zone currently follows the browser/device; `xai_pref_dt_timezone` is a display boolean, not a stored IANA choice. Civil `YYYY-MM-DD` keys are date identities and existing keys are not shifted. Absolute ISO/epoch values keep their instant. Natural-day boundaries use the next local midnight (23/24/25 hours and fractional DST days), not 86,400,000 milliseconds.
+
+Shared owner: `@repo/plugin-web-tokens` public `localDateKey`, `parseLocalDateKey`, `addLocalDays`, `startOfLocalDay`, `nextLocalDayStart`, `useLocalDayClock`. The hook refreshes on midnight, focus, pageshow, visible and a 60-second system-clock/time-zone calibration. It cleans timers/listeners on unmount and makes no closed-page execution promise. User-selected historical dates are preserved when today advances.
+
+Regression evidence is tracked in `docs/reviews/web-local-time-contract/dev_log.md`; focused localDate suites run under UTC, America/Los_Angeles, Asia/Shanghai and Australia/Lord_Howe. Full feature suites retain unrelated behavior coverage. Independent verification remains a separate workflow step.
+
+Calendar date-grid UTC Date carriers remain valid for calendar arithmetic; real “today” comes from local time. Hour rows follow actual elapsed intervals and fractional final rows; no synthetic blank DST row. Ambiguous floating HH:MM events select the earlier occurrence during fall-back; these wall-clock events do not claim offset/fold metadata. The now-line uses actual elapsed time since local midnight.

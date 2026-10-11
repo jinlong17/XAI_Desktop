@@ -1,0 +1,2 @@
+baseline {"commit":"b353cbb","scope":"normal stale selection correction with stable valid source"}
+normal-correction {"expectedActive":"b-default","activeAfter":"b-default","boardContainsTarget":true,"pass":true}

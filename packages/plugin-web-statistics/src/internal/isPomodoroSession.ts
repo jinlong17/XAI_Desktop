@@ -14,6 +14,8 @@
 export interface PomodoroSessionRecord {
   mode: "focus" | "short-break" | "long-break";
   durationMs: number;
+  /** Optional only for legacy records; missing/invalid values are unmeasured. */
+  elapsedMs?: number;
   /** ISO 8601 instant when the session ended. */
   finishedAt: string;
 }

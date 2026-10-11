@@ -1,0 +1,58 @@
+revision=a6ad06d
+test-fixture=review-owned only; package run unmodified
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-UPPwgd
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx (15 tests | 2 failed) 29ms
+   ✓ account deletion captures the initiating owner > modern successful cleanup completes the receipt then redirects without a second shared clear 10ms
+   × account deletion captures the initiating owner > modern cleanup after B replaces A still revokes only captured A and does not navigate B 4ms
+     → expected "spy" to be called with arguments: [ Array(2) ]
+
+Number of calls: 0
+
+   ✓ account deletion captures the initiating owner > does not finish its durable receipt before captured auth cleanup succeeds 2ms
+   ✓ account deletion captures the initiating owner > pins the server token, removes only A content/secrets, and preserves device, B and archive 2ms
+   ✓ account deletion captures the initiating owner > mock-auth deletes only the demo scope and never invokes the real server 1ms
+   ✓ account deletion captures the initiating owner > does not allow mock mode to delete a real account namespace 1ms
+   ✓ account deletion captures the initiating owner > server failure preserves all local content and exposes the failure 1ms
+   ✓ account deletion captures the initiating owner > already-deleted server outcome still performs scoped local cleanup 1ms
+   ✓ account deletion captures the initiating owner > secret cleanup failure is not reported as successful deletion 1ms
+   ✓ account deletion captures the initiating owner > suppresses duplicate submit while the server request is pending 1ms
+   × account deletion captures the initiating owner > A server completion after switching to B deletes only A and leaves B session/navigation alone 1ms
+     → expected 'A content' to be null
+   ✓ account deletion captures the initiating owner > switching during asynchronous secret cleanup does not clear B authentication 1ms
+   ✓ account deletion captures the initiating owner > switching during auth storage clearing does not navigate away from B 1ms
+   ✓ account deletion captures the initiating owner > a callback captured before account switch cannot start deletion as B 1ms
+   ✓ account deletion captures the initiating owner > locked scope rejects deletion before any backend or local action 1ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 13 passed (15)
+   Start at  18:12:25
+   Duration  1.09s (transform 192ms, setup 0ms, collect 385ms, tests 29ms, environment 388ms, prepare 85ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx > account deletion captures the initiating owner > modern cleanup after B replaces A still revokes only captured A and does not navigate B
+AssertionError: expected "spy" to be called with arguments: [ Array(2) ]
+
+Number of calls: 0
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx:71:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx > account deletion captures the initiating owner > A server completion after switching to B deletes only A and leaves B session/navigation alone
+AssertionError: expected 'A content' to be null
+
+- Expected: 
+null
+
++ Received: 
+"A content"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx:149:47
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯

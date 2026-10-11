@@ -1,0 +1,11 @@
+revision=afbfb24 fixed_commit=afbfb24d6f7311366b77852eda927d08467478c2
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-astra-q5ChQ5
+
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx (15 tests) 1812ms
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  05:38:23
+   Duration  5.32s (transform 1.96s, setup 0ms, collect 2.87s, tests 1.81s, environment 327ms, prepare 91ms)

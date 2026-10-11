@@ -1,0 +1,21 @@
+package-rerun exit=0 /InboxPanel.test.tsx (12 tests) 68ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/shareUrl.test.ts (6 tests) 14ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/WorkspaceSaveRecovery.test.tsx (6 tests) 68ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardRecoveryInitialization.test.tsx (2 tests) 34ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts (6 tests) 14ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/shareContract.test.ts (3 tests) 70ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/panelOps.test.ts (19 tests) 5ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/guards.test.ts (12 tests) 35ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/ringMath.test.ts (16 tests) 6ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/filterState.test.ts (8 tests) 2ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/savedFilters.test.ts (5 tests) 4ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/index-barrel.test.ts (4 tests) 4ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/registration.test.tsx (6 tests) 5ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/responsiveStyles.test.ts (3 tests) 3ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/types.test.ts (3 tests) 2ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardWorkspacesModule.test.tsx (93 tests) 4745ms
+
+ Test Files  26 passed (26)
+      Tests  313 passed (313)
+   Start at  15:13:50
+   Duration  8.45s (transform 1.93s, setup 4.76s, collect 12.59s, tests 7.90s, environment 15.50s, prepare 2.31s)

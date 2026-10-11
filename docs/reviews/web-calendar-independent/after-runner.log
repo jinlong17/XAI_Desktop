@@ -1,0 +1,10 @@
+baseline {"commit":"a452d40","browser":"Chrome/152.0.7977.83"}
+create-correct-oracle {"dialogRetained":true,"draftRetained":true,"errorVisible":true,"bytesUnchanged":true}
+delete-correct-oracle {"dialogRetained":true,"errorVisible":true,"bytesUnchanged":true}
+delete-retry {"pass":true}
+real-latest-download {"filename":"calendar-unsaved-draft.json","pass":true}
+latest-create-retry {"pass":true}
+edit-retry {"pass":true}
+old-edit-baseline-and-live-entity-rejected {"pass":true}
+old-account-callback-export-rejected {"pass":true}
+PASS {"scope":"REL05 Calendar composer only","checks":8}

@@ -1,0 +1,48 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stderr | docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx > tasks:create confirms only committed writes, retries quota and survives subscriber remount
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx > tasks:update confirms only committed writes, retries quota and survives subscriber remount
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx > tasks:delete confirms only committed writes, retries quota and survives subscriber remount
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx > calendar:create confirms only committed writes, retries quota and survives subscriber remount
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx > calendar:update confirms only committed writes, retries quota and survives subscriber remount
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx > calendar:delete confirms only committed writes, retries quota and survives subscriber remount
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx > tasks:create actual confirmation sends model success only after committed retry
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx > tasks:update actual confirmation sends model success only after committed retry
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx > tasks:delete actual confirmation sends model success only after committed retry
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx > calendar:create actual confirmation sends model success only after committed retry
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx > calendar:update actual confirmation sends model success only after committed retry
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx > calendar:delete actual confirmation sends model success only after committed retry
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+ ✓ docs/reviews/web-ai-tool-receipt-fix/subscriber-contract.test.tsx (22 tests) 584ms
+ ✓ docs/reviews/web-ai-tool-receipt-fix/no-subscriber.test.tsx (1 test) 1921ms
+   ✓ does not tell the model that a tool succeeded when no business subscriber replies  1920ms
+
+ Test Files  2 passed (2)
+      Tests  23 passed (23)
+   Start at  14:25:55
+   Duration  6.05s (transform 1.50s, setup 713ms, collect 3.66s, tests 2.50s, environment 2.23s, prepare 396ms)
+

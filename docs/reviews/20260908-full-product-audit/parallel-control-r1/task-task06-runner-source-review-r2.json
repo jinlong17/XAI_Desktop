@@ -1,0 +1,51 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent complete source reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "a58a119d5efe4eb508701ea050349a44b16aec7f",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 2,
+    "review_cap": 3,
+    "prior_source_author_used": 2,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "TASK-06/RUNNER-SOURCE-REVIEW2",
+  "source_inputs": [
+    "f8821c1bb99a51f07a3e6d077bc3391affde7a99",
+    "3145fd8442895bae14fab7e5d16cb0edd5b6ad1b"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-task06-runner-source-review-r2/review.md",
+    "docs/reviews/audit-parallel-task06-runner-source-review-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "Independentlyverify full447 immutableinputs/exact12ADD/fullindexselfexcluding11filepatch1735850bytes648436d64cb21e552c8b057e8ecb76fa34cf1e5586e78a7769b8e18944982f4d/fixedparent1496abe and all12outputhashes. Complete original111caseIDs/commands/expectedfailures/4440historypaths/64visualtuples retained; addedwebbuild112/5072activepaths/59declaredcontrols aredeclarations not qualified proof",
+    "Full fresh actual source review R1-R9 and alltenoriginalcontractoracles/111 original obligations, actualsourceguard streamingarchive/readonlydeps/namealiases/env/cache/build/fullfirstpre-mount observation/storagewrongkey/allattempts/sourcefault/currentApppublicprovider/managedgeneration/auxbridges/accountlatequeued/actualmoduleCRUD/bus/disabledinteraction/diskexport/retry/realnativefocus/genuinezoom/geometry exact businessmeasurement. PublicLegacyconfig=null is disclosed synthetic, notsubstitutefor requiredmanagedgeneration or productionAppProviders. No unavailable-as-empty/mockscalar/pointerfake/methodrelaxation",
+    "Full bounded cancellation/join/process/resource acquisition/finalize stdoutstderr/idleCDP/page/parser/latechild/errorwrites/outercapture/refusal/artifact/admission/permanent typed history/sourcequalification/bootstrap causal actual positive-negativepaths. Author declares Q07protocolfixture/Q34simulatedkill/Q36suppliedpassive/Q43-Q52measurementreplay actualacquisition mandatoryINCOMPLETE: assess precise remaining scope, neverapprove replay as fullcausalqualification orresidualwaiver",
+    "All original canonicalClockr2G1/E1-E25/E24subrows/judgingcopies/retention3exhausted/nativefamilycounts/RELunknown and independentvendor/freshacceptance preserved, no newlyminted mixedsuitebudget or sourcequalification fromsyntax. Returncomplete APPROVEDsourcecondition onlyifallrequirementsmet orREVISE exactbounded finalauthor3 candidate paths/costs/protectedimpactproof; sourceauthor2/review1 retained, no repair/no runtime/no businessacceptance"
+  ]
+}

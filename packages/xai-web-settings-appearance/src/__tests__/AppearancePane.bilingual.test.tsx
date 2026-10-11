@@ -35,12 +35,12 @@ describe("AppearancePane bilingual", () => {
     expect(enNames).toContain("Mist");
   });
 
-  it("AC-I18N-4: SettingsFooter is rendered with correct lang prop (chassis handles bilingual prompt)", () => {
+  it("AC-I18N-4: the pane-local Reset shows 恢复默认 in ZH (CP-APPEARANCE-01: no SettingsFooter)", () => {
     const { container } = render(<AppearancePane lang="zh" />);
-    // Chassis SettingsFooter renders "恢复默认" for lang="zh"
-    const resetBtn = container.querySelector("[data-testid='settings-footer-reset']");
+    const resetBtn = container.querySelector("[data-testid='appearance-reset-defaults']");
     expect(resetBtn).not.toBeNull();
-    // The button text changes to Chinese when lang="zh"
-    expect(resetBtn?.textContent).toMatch(/恢复默认/);
+    expect(resetBtn?.textContent).toBe("恢复默认");
+    expect(screen.getByRole("button", { name: "恢复默认" })).toBe(resetBtn);
+    expect(container.querySelector("[data-testid='settings-footer-reset'], .pane-footer, .pane-save")).toBeNull();
   });
 });

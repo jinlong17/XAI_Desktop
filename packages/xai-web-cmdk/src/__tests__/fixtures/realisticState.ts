@@ -197,6 +197,7 @@ export const REALISTIC_MODULE_STATES: Readonly<Record<WebModuleId, unknown>> = O
   calendar: {},
   statistics: {},
   timetrack: {},
+  metrics: {},
   settings: [],
   ai: {},
   search: {},

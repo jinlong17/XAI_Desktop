@@ -1,0 +1,391 @@
+requested_fixed=5cd63ff
+resolved_fixed_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_fixed_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+requested_before=f359be6
+resolved_before_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_before_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+suffix=features-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-final/verify-static.mjs 5cd63ff f359be6 features-final-v1
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=cde91389f0a0baca69d266f5b6a6c5ff8098ac1f
+runner_sha256=ddbf44bfa648a9b99e8cae86a041eaf4330eec119a3fa0bc3d2c72fd887bea5c
+node=v24.16.0 platform=darwin-arm64 git=git version 2.54.0 (Apple Git-157)
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+fixed_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 extracted=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+before_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 extracted=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+repo_pin=not applicable (no product code is executed; text scan and git object comparison only)
+archives fixed_files=6503 (symlinks 22) before_files=6259 (symlinks 22) scanned_text_files fixed=2116 before=2112 binary_skipped fixed=23 before=23
+log=E19 (contract §10 item 8) protected-path diff and E6 product delta
+## Contract §10 item 8 protected paths
+protected packages/plugin-web-storage: f359be6=782c79de33a1da6851b5a235950408eb7ae89f99 5cd63ff=782c79de33a1da6851b5a235950408eb7ae89f99 diff_name_only=empty diff_quiet_exit=0
+protected packages/plugin-web-settings-shell: f359be6=8fe33026603bdbf50676b25ce99ba78a444ead34 5cd63ff=8fe33026603bdbf50676b25ce99ba78a444ead34 diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-shell: f359be6=0f0fed40fe94a9de5c79eb273d1103757a807a9c 5cd63ff=0f0fed40fe94a9de5c79eb273d1103757a807a9c diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-pet: f359be6=6594df5e7009a47018b217f171c7895c11105b5a 5cd63ff=6594df5e7009a47018b217f171c7895c11105b5a diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-cmdk: f359be6=a8c733f2d0fdf269bb4f0131bca7a8de342469a2 5cd63ff=a8c733f2d0fdf269bb4f0131bca7a8de342469a2 diff_name_only=empty diff_quiet_exit=0
+protected packages/plugin-web-tokens: f359be6=3ea903458975b90129f563ddbf4b31224e9b4b52 5cd63ff=3ea903458975b90129f563ddbf4b31224e9b4b52 diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-settings-appearance: f359be6=ce183d17e8606067c3bc97d7e3b6645ee656fe9e 5cd63ff=ce183d17e8606067c3bc97d7e3b6645ee656fe9e diff_name_only=empty diff_quiet_exit=0
+protected packages/plugin-web-settings-rest: f359be6=21f0bbb61dae92948ebddfc82946a3ff6b36e2a6 5cd63ff=21f0bbb61dae92948ebddfc82946a3ff6b36e2a6 diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-dashboard-grid: f359be6=8e96464cae57ba35a7f1a4c39c9b0a8f9df64509 5cd63ff=8e96464cae57ba35a7f1a4c39c9b0a8f9df64509 diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-dashboard-widgets: f359be6=4d65ad167b0d3712166e96569b1d9f44ed66a500 5cd63ff=4d65ad167b0d3712166e96569b1d9f44ed66a500 diff_name_only=empty diff_quiet_exit=0
+protected apps: f359be6=9d9e85e4e60146716e23521da0967b11998a1603 5cd63ff=9d9e85e4e60146716e23521da0967b11998a1603 diff_name_only=empty diff_quiet_exit=0
+protected package.json: f359be6=548cfbbe3a66e90058ea8fe8d2e3fb94a61efbec 5cd63ff=548cfbbe3a66e90058ea8fe8d2e3fb94a61efbec diff_name_only=empty diff_quiet_exit=0
+protected pnpm-lock.yaml: f359be6=b8685855ef4d58601b45835b27853b3f01186ca2 5cd63ff=b8685855ef4d58601b45835b27853b3f01186ca2 diff_name_only=empty diff_quiet_exit=0
+## Contract §11 protected files inside the Features package
+features-protected packages/xai-web-settings-features-panel/src/index.ts: f359be6=4341e4c10b5ac9cc6c450ea48a820f34b1f5a98e 5cd63ff=4341e4c10b5ac9cc6c450ea48a820f34b1f5a98e unchanged
+features-protected packages/xai-web-settings-features-panel/src/featureIds.ts: f359be6=3c151c126791548b25ecd93aa271d17c70786680 5cd63ff=3c151c126791548b25ecd93aa271d17c70786680 unchanged
+features-protected packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts: f359be6=fda6021e6a298fa0dd5c3e790293ba2a5addfbd0 5cd63ff=fda6021e6a298fa0dd5c3e790293ba2a5addfbd0 unchanged
+features-protected packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts: f359be6=9c116df2720a910e45a395eea1a13477bbb04799 5cd63ff=9c116df2720a910e45a395eea1a13477bbb04799 unchanged
+features-protected packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx: f359be6=427528698e4318587a55510277eb1752f86d465c 5cd63ff=427528698e4318587a55510277eb1752f86d465c unchanged
+features-protected packages/xai-web-settings-features-panel/src/DisabledFeatureFallback.tsx: f359be6=39d6d8a09a9a78c88a62120afbfb8ba26c39377e 5cd63ff=39d6d8a09a9a78c88a62120afbfb8ba26c39377e unchanged
+features-protected packages/xai-web-settings-features-panel/src/internal/FeatureThumb.tsx: f359be6=c9efcf9c99cbf99a5cede3826af68717aebdd98a 5cd63ff=c9efcf9c99cbf99a5cede3826af68717aebdd98a unchanged
+features-protected packages/xai-web-settings-features-panel/package.json: f359be6=d79994b498bb0d3e66d863cf2372033fceb46cf3 5cd63ff=d79994b498bb0d3e66d863cf2372033fceb46cf3 unchanged
+features-protected packages/xai-web-settings-features-panel/tsconfig.json: f359be6=aa1ccf00aa50b6a13901689a2f68668106be276d 5cd63ff=aa1ccf00aa50b6a13901689a2f68668106be276d unchanged
+features-protected packages/xai-web-settings-features-panel/vitest.config.ts: f359be6=b21e51d4a1915e266aa04275c8e9f75c7286f616 5cd63ff=b21e51d4a1915e266aa04275c8e9f75c7286f616 unchanged
+features-protected packages/xai-web-settings-features-panel/vitest.setup.ts: f359be6=b3f62482ffc16b9c411b0efcc9a731d8d3a63d2f 5cd63ff=b3f62482ffc16b9c411b0efcc9a731d8d3a63d2f unchanged
+features-protected packages/xai-web-settings-features-panel/eslint.config.js: f359be6=5a0143cbba975d3682055f6d13e27be3f3dd7ffa 5cd63ff=5a0143cbba975d3682055f6d13e27be3f3dd7ffa unchanged
+features-protected packages/xai-web-settings-features-panel/manifest.json: f359be6=d03a22e4f3a52f78422d70407766b9d7250742da 5cd63ff=d03a22e4f3a52f78422d70407766b9d7250742da unchanged
+features-protected packages/xai-web-settings-features-panel/docs/design.md: f359be6=4f07bf156d3c735add56918e873c0ae74e81b0e3 5cd63ff=4f07bf156d3c735add56918e873c0ae74e81b0e3 unchanged
+features-protected packages/xai-web-settings-features-panel/docs/dev_log.md: f359be6=6715c85b5768721e75571119bc13513c3c2542da 5cd63ff=6715c85b5768721e75571119bc13513c3c2542da unchanged
+features-protected packages/xai-web-settings-features-panel/docs/verify-report.md: f359be6=1e5713eb4af21f1cfffa9487aac677958724030c 5cd63ff=1e5713eb4af21f1cfffa9487aac677958724030c unchanged
+## Full unrestricted diff f359be6..5cd63ff (--name-status --no-renames): 255 entries, 244 under docs/, 11 outside docs/
+  outside-docs A packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx
+  outside-docs A packages/xai-web-settings-features-panel/src/__tests__/featuresLockFixture.ts
+  outside-docs A packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts
+  outside-docs A packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts
+  outside-docs M packages/xai-web-settings-features-panel/docs/api.md
+  outside-docs M packages/xai-web-settings-features-panel/docs/test.md
+  outside-docs M packages/xai-web-settings-features-panel/src/FeaturesPane.tsx
+  outside-docs M packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx
+  outside-docs M packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx
+  outside-docs M packages/xai-web-settings-features-panel/src/styles.css
+  outside-docs M packages/xai-web-settings-features-panel/src/types.ts
+  docs A docs/reviews/web-collaborate-recovery-astra-final/additional-f1post1-f359be6.log
+  docs A docs/reviews/web-collaborate-recovery-astra-final/contracts-f1post1-f359be6.log
+  docs A docs/reviews/web-collaborate-recovery-astra-final/host-f1post1-f359be6.log
+  docs A docs/reviews/web-d2-pref-binding-inventory/bindings-f359be6.json
+  docs A docs/reviews/web-d2-pref-binding-inventory/refresh-f359be6.md
+  docs A docs/reviews/web-d2-smart-lists-host-native/native-f359be6-back-f1post1.log
+  docs A docs/reviews/web-d2-smart-lists-host-native/native-f359be6-back-programmatic-f1post1.log
+  docs A docs/reviews/web-d2-smart-lists-host-native/native-f359be6-cleanup-f1post1.log
+  docs A docs/reviews/web-d2-smart-lists-host-native/native-f359be6-journey-f1post1.log
+  docs A docs/reviews/web-d2-smart-lists-host-native/native-f359be6-same-turn-route-signout-f1post1.log
+  docs A docs/reviews/web-d2-smart-lists-host-native/native-f359be6-same-turn-routes-f1post1.log
+  docs A docs/reviews/web-dashboard-header-departure-independent/advanced-f1post1-f359be6.log
+  docs A docs/reviews/web-dashboard-header-departure-independent/departure-f1post1-f359be6.log
+  docs A docs/reviews/web-dashboard-header-departure-independent/followon-f1post1-f359be6.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-add-widget-blur.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-blur-control.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-device-owner.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-export-denied.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-mixed-note-fail.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-mixed-offset-fail.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-offset-conflict.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-offset-uncertainty.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-rail.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-route.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-signout.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-slow-nonnav.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-slow-rail.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-slow-widget.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-topbar-settings.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-unload.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-unsubmitted.log
+  docs A docs/reviews/web-dashboard-header-departure-native/native-f359be6-f1post1-widget.log
+  docs A docs/reviews/web-date-time-recovery-independent/advanced-f1post1-f359be6.log
+  docs A docs/reviews/web-date-time-recovery-independent/host-f1post1-f359be6.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-clean.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-controls.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-crossdoc-conflict.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-export-all.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-export-sparse.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-focus.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-owner.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-pending.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-rail.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-route.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-signout.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-source.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-uncertainty-conflict.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-uncertainty-read-retry.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-uncertainty.log
+  docs A docs/reviews/web-date-time-recovery-native/native-f359be6-f1post1-unload.log
+  docs A docs/reviews/web-features-recovery-contract/contract.md
+  docs A docs/reviews/web-features-recovery-f1/before-f359be6.md
+  docs A docs/reviews/web-features-recovery-f1/f1-f359be6-features-before1.log
+  docs A docs/reviews/web-features-recovery-f1/f1-f359be6-selfcheck-before1.log
+  docs A docs/reviews/web-features-recovery-f1/f1-features-host.tsx
+  docs A docs/reviews/web-features-recovery-f1/verify-f1-features.mjs
+  docs A docs/reviews/web-features-recovery-independent/before-f359be6.md
+  docs A docs/reviews/web-features-recovery-independent/host-before1-f359be6.log
+  docs A docs/reviews/web-features-recovery-independent/host.test.tsx
+  docs A docs/reviews/web-features-recovery-independent/verify-fixed.mjs
+  docs A docs/reviews/web-features-recovery-native/before-f359be6.md
+  docs A docs/reviews/web-features-recovery-native/native-app.tsx
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h10-1440-en.png
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h10-375-en.png
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h10-375-zh.png
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h10.log
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h5-after-reload.png
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h5-after-reset.png
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h5-at-reset-control.png
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h5-before-reset.png
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h5.log
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h6-after-drag.png
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h6-after-reset.png
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h6-at-reset-control.png
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h6-before-reset.png
+  docs A docs/reviews/web-features-recovery-native/native-f359be6-before1-h6.log
+  docs A docs/reviews/web-features-recovery-native/native-prelude.js
+  docs A docs/reviews/web-features-recovery-native/verify-native-before.mjs
+  docs A docs/reviews/web-features-recovery-sol/README.md
+  docs A docs/reviews/web-features-recovery-sol/bytes-before1-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/bytes-before2-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/bytes.test.tsx
+  docs A docs/reviews/web-features-recovery-sol/continuity-export-before1-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/continuity-export-before2-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/continuity-export.test.tsx
+  docs A docs/reviews/web-features-recovery-sol/downstream-before1-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/downstream-before2-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/downstream.test.tsx
+  docs A docs/reviews/web-features-recovery-sol/fields-before1-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/fields-before2-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/fields.test.tsx
+  docs A docs/reviews/web-features-recovery-sol/fixture.tsx
+  docs A docs/reviews/web-features-recovery-sol/original-before2-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/queues-before1-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/queues-before2-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/queues.test.tsx
+  docs A docs/reviews/web-features-recovery-sol/readers-features-before2-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/readers-web-before2-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/reset-before1-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/reset-before2-f359be6.log
+  docs A docs/reviews/web-features-recovery-sol/reset.test.tsx
+  docs A docs/reviews/web-features-recovery-sol/verify-fixed.mjs
+  docs A docs/reviews/web-more-recovery-evidence/b1-f1post1-locked-device-reset-more-draft.json
+  docs A docs/reviews/web-more-recovery-evidence/b1-f1post1-mixed-set-reset-more-draft.json
+  docs A docs/reviews/web-more-recovery-evidence/b1-f1post1-sparse-reset-more-draft.json
+  docs A docs/reviews/web-more-recovery-evidence/gap-f359be6d838393e0f9e93efd80b88b5b09f6144e-f1post1-b1-native-export.log
+  docs A docs/reviews/web-more-recovery-evidence/gap-f359be6d838393e0f9e93efd80b88b5b09f6144e-f1post1-b2-host-ordering.log
+  docs A docs/reviews/web-more-recovery-final/settings-lint-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-more-recovery-final/settings-typecheck-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-more-recovery-final/storage-check-types-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-more-recovery-final/web-check-types-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-more-recovery-final/web-lint-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-more-recovery-final/web-test-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-more-recovery-independent/host-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-more-recovery-native/native-f359be6-f1post1-host.log
+  docs A docs/reviews/web-more-recovery-sol/boundaries-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-more-recovery-sol/fields-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-more-recovery-sol/original-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-more-recovery-sol/owner-export-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-more-recovery-sol/queues-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-more-recovery-sol/reset-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-next-caller-selection/selection-f359be6.md
+  docs A docs/reviews/web-notifications-recovery-astra/boundaries-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-notifications-recovery-astra/datetime-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-notifications-recovery-astra/host-f1post1-f359be6.log
+  docs A docs/reviews/web-notifications-recovery-astra/host-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-notifications-recovery-astra/package-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-notifications-recovery-independent/host-f1post1-f359be6.log
+  docs A docs/reviews/web-notifications-recovery-independent/host-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-clean.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-controls.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-crossdoc-conflict.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-export-all.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-export-sparse.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-focus.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-hidden-export.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-latest-pending-retry.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-owner.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-pending.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-predecessor-failure.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-route.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-signout.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-source.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-toggle-states-off.png
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-toggle-states-on-again.png
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-toggle-states-on.png
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-toggle-states.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-uncertainty-read-retry.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-uncertainty.log
+  docs A docs/reviews/web-notifications-recovery-native/native-f359be6-f1post1-unload.log
+  docs A docs/reviews/web-notifications-recovery-sol/boundaries-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-notifications-recovery-sol/core-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-notifications-recovery-sol/extended-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-notifications-recovery-sol/operations-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-notifications-recovery-sol/original-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-notifications-recovery-sol/recovery-sticky-final-v1-f359be6.log
+  docs A docs/reviews/web-pomodoro-departure-astra/completion-f1post1-f359be6.log
+  docs A docs/reviews/web-pomodoro-departure-astra/draft-f1post1-f359be6.log
+  docs A docs/reviews/web-pomodoro-departure-astra/dv2-f1post1-f359be6.log
+  docs A docs/reviews/web-pomodoro-departure-astra/export-f1post1-f359be6.log
+  docs A docs/reviews/web-pomodoro-departure-independent/advanced-f1post1-f359be6.log
+  docs A docs/reviews/web-pomodoro-departure-independent/departure-f1post1-f359be6.log
+  docs A docs/reviews/web-pomodoro-departure-independent/package-f1post1-f359be6.log
+  docs A docs/reviews/web-smart-lists-recovery-astra/app-f1post1-f359be6.log
+  docs A docs/reviews/web-smart-lists-recovery-astra/export-f1post1-f359be6.log
+  docs A docs/reviews/web-smart-lists-recovery-astra/host-entry-f1post1-f359be6.log
+  docs A docs/reviews/web-smart-lists-recovery-astra/host-f1post1-f359be6.log
+  docs A docs/reviews/web-smart-lists-recovery-astra/host-wrapper-f1post1-f359be6.log
+  docs A docs/reviews/web-smart-lists-recovery-astra/original-parent-f1post1-f359be6.log
+  docs A docs/reviews/web-smart-lists-recovery-astra/original39-f1post1-f359be6.log
+  docs A docs/reviews/web-smart-lists-recovery-astra/package-f1post1-f359be6.log
+  docs A docs/reviews/web-sticky-recovery-acceptance/acceptance-f359be6.md
+  docs A docs/reviews/web-sticky-recovery-acceptance/blocked-f359be6.md
+  docs A docs/reviews/web-sticky-recovery-f1/affected-callers-f359be6.md
+  docs A docs/reviews/web-sticky-recovery-f1/f1-f359be6-collaborate-post1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-f359be6-date-time-post1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-f359be6-header-post1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-f359be6-more-post1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-f359be6-notifications-post1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-f359be6-pomodoro-post1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-f359be6-race-post1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-f359be6-selfcheck-post1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-f359be6-smart-lists-post1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-f359be6-sticky-post1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-race-host.tsx
+  docs A docs/reviews/web-sticky-recovery-f1/pkg-f359be6-dashboard-grid-test.log
+  docs A docs/reviews/web-sticky-recovery-f1/pkg-f359be6-pomodoro-test.log
+  docs A docs/reviews/web-sticky-recovery-f1/pkg-f359be6-settings-rest-test.log
+  docs A docs/reviews/web-sticky-recovery-f1/pkg-f359be6-web-check-types.log
+  docs A docs/reviews/web-sticky-recovery-f1/pkg-f359be6-web-lint.log
+  docs A docs/reviews/web-sticky-recovery-f1/pkg-f359be6-web-test.log
+  docs A docs/reviews/web-sticky-recovery-f1/post-f359be6.md
+  docs A docs/reviews/web-sticky-recovery-f1/verify-f1-race.mjs
+  docs A docs/reviews/web-sticky-recovery-final/review-final-regressions-f359be6.md
+  docs A docs/reviews/web-sticky-recovery-final/verify-widgets.mjs
+  docs A docs/reviews/web-sticky-recovery-final/widgets-before1-2023526.log
+  docs A docs/reviews/web-sticky-recovery-final/widgets-f359be6.md
+  docs A docs/reviews/web-sticky-recovery-final/widgets-fixed1-f359be6.log
+  docs A docs/reviews/web-sticky-recovery-independent/host-post1-f359be6.log
+  docs A docs/reviews/web-sticky-recovery-independent/post-f359be6.md
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-post1-controls.log
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-post1-export-x1-sparse-one-field-sticky-draft.json
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-post1-export-x2-all-five-sticky-draft.json
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-post1-export-x3-departure-dialog-sticky-draft.json
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-post1-export-x4-fresh-locked-after-a-to-locked-sticky-draft.json
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-post1-export-x5-fresh-b-after-a-to-b-sticky-draft.json
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-post1-export-x6-held-real-lock-sticky-draft.json
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-post1-export-x7-recovered-after-click-failure-sticky-draft.json
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-post1-export.log
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-post1-host.log
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-1024-all5.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-1440-all5.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-375-all5.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-375-before-2023526-clean.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-375-clean.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-375-dialog.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-375-reload.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-414-all5.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-768-all5.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-zh-1024-all5.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-zh-1440-all5.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-zh-375-all5.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-zh-375-before-2023526-clean.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-zh-375-clean.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-zh-375-dialog.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-zh-375-reload.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-zh-414-all5.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-zh-768-all5.png
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual-zh.log
+  docs A docs/reviews/web-sticky-recovery-native/native-f359be6-v1-visual.log
+  docs A docs/reviews/web-sticky-recovery-native/native-visual.tsx
+  docs A docs/reviews/web-sticky-recovery-native/post-f359be6.md
+  docs A docs/reviews/web-sticky-recovery-native/review-visual-f359be6.md
+  docs A docs/reviews/web-sticky-recovery-native/verify-visual.mjs
+  docs A docs/reviews/web-sticky-recovery-sol/bytes-post1-f359be6.log
+  docs A docs/reviews/web-sticky-recovery-sol/continuity-export-post1-f359be6.log
+  docs A docs/reviews/web-sticky-recovery-sol/fields-post1-f359be6.log
+  docs A docs/reviews/web-sticky-recovery-sol/original-post1-f359be6.log
+  docs A docs/reviews/web-sticky-recovery-sol/post-f359be6.md
+  docs A docs/reviews/web-sticky-recovery-sol/queues-post1-f359be6.log
+  docs M docs/reviews/20260908-full-product-audit/ALL-TODO-CURRENT.md
+  docs M docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md
+  docs M docs/reviews/20260908-full-product-audit/EXECUTION.json
+  docs M docs/reviews/20260908-full-product-audit/EXECUTION.md
+## Product-scope diff (-- apps packages package.json pnpm-lock.yaml): 11 entries, +1590/-72 lines
+  M packages/xai-web-settings-features-panel/docs/api.md -> package docs/api.md or docs/test.md
+  M packages/xai-web-settings-features-panel/docs/test.md -> package docs/api.md or docs/test.md
+  M packages/xai-web-settings-features-panel/src/FeaturesPane.tsx -> pane
+  M packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx -> FeaturesPane.test.tsx
+  A packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx -> new Features-local test file under src/__tests__/
+  A packages/xai-web-settings-features-panel/src/__tests__/featuresLockFixture.ts -> new Features-local test file under src/__tests__/
+  M packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx -> render-prop forwarding
+  A packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts -> new Features-local helper under src/internal/ (at most two)
+  A packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts -> new Features-local helper under src/internal/ (at most two)
+  M packages/xai-web-settings-features-panel/src/styles.css -> scoped stylesheet
+  M packages/xai-web-settings-features-panel/src/types.ts -> FeaturesPaneProps guard field
+## Contract §11 files: SHA-256 at both revisions
+  M packages/xai-web-settings-features-panel/docs/api.md 5cd63ff_sha256=46f6d7ff532ed8b6f8e6bd63bbb0dd753674ab5bf44a848cc0a498c1851e079f f359be6_sha256=68f04e87a52ea548eb743002b0dad9f3213d54b603de46c1e0d70f5bd0a5bf67 numstat=24/7
+  M packages/xai-web-settings-features-panel/docs/test.md 5cd63ff_sha256=1c13c59dd21bb71e13aada054191450998b6473955ba34c5efd2a3e3a68f0740 f359be6_sha256=88416af0b4b073329060d0c1fc344179c4bbb2d8af389e71e406b3ed64167c73 numstat=31/2
+  M packages/xai-web-settings-features-panel/src/FeaturesPane.tsx 5cd63ff_sha256=54a3f10c90fdc415a9c1bb89801fe4cdc1870022235752229e9180a2a683d701 f359be6_sha256=987c38250554f05eee185073f92fdfafc504b5e3f9c183658fc5aeb583ce50ea numstat=157/59
+  M packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx 5cd63ff_sha256=993f0d069b9dc23de53d910d5dda4967eca2e436596ec3fbc2b33fad16ed1d64 f359be6_sha256=2d42bdc3ef69ab9bcdc2d1770a34aba45463e44550f0c6ece4a9ecd31f18a4c6 numstat=7/2
+  A packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx 5cd63ff_sha256=5365f404d612cf25b4c1fb32487e41c052140274f359a53de1cdadc2e0bf8ee6 f359be6_sha256=absent numstat=688/0
+  A packages/xai-web-settings-features-panel/src/__tests__/featuresLockFixture.ts 5cd63ff_sha256=b190596f0ebc7272c8caf7362d7f9146788c296dd612e881973ddc465a04510e f359be6_sha256=absent numstat=118/0
+  M packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx 5cd63ff_sha256=572bdd478954059f02dde83c8ec7383f992ca0f6f33f8b5e2c96ba85e7f935a7 f359be6_sha256=14053daaffeee27f151221a197756ae043a2de3a8823d15342722eea5855e993 numstat=3/2
+  A packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts 5cd63ff_sha256=0e73fadd1cb941ca8f26e86a38c493fe9da94a278c335798a92accbff5f74e6f f359be6_sha256=absent numstat=391/0
+  A packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts 5cd63ff_sha256=d4409bd70b7df1227cbeabaf6c00bb0f2abb14c1f81f488905c2e76354b822bc f359be6_sha256=absent numstat=80/0
+  M packages/xai-web-settings-features-panel/src/styles.css 5cd63ff_sha256=65fdf6f08b299c242bf79397a5e731fa0b605cc2f5a7476e2778a4caa350b5c3 f359be6_sha256=db4a5f24bfbb922571a5528b4d863be79bda2c8586eb4f2427f281803b13027e numstat=84/0
+  M packages/xai-web-settings-features-panel/src/types.ts 5cd63ff_sha256=f97c4e6212d99723d9baeb1133866f05860db7b97ce274ba2be0b27128cd8406 f359be6_sha256=bd6b35990e4f9de9719303ff528630b17a1c6ed02bbb06dfd96c5878cf727c53 numstat=7/0
+fixed_features_package_tree=3f25c84b5b582719d74fda8872db4e6e1db388f1 before_features_package_tree=074659c050fadd11ed3ff99274e441b48771b490
+## Checks
+PASS [assert] E19: packages/plugin-web-storage exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- packages/plugin-web-storage is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/plugin-web-settings-shell exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- packages/plugin-web-settings-shell is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-shell exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- packages/xai-web-shell is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-pet exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- packages/xai-web-pet is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-cmdk exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- packages/xai-web-cmdk is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/plugin-web-tokens exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- packages/plugin-web-tokens is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-settings-appearance exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- packages/xai-web-settings-appearance is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/plugin-web-settings-rest exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- packages/plugin-web-settings-rest is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-dashboard-grid exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- packages/xai-web-dashboard-grid is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-dashboard-widgets exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- packages/xai-web-dashboard-widgets is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: apps exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- apps is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: package.json exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- package.json is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: pnpm-lock.yaml exists in both trees
+PASS [assert] E19: git diff f359be6 5cd63ff -- pnpm-lock.yaml is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: Features-package protected file src/index.ts unchanged
+PASS [assert] E19: Features-package protected file src/featureIds.ts unchanged
+PASS [assert] E19: Features-package protected file src/useFeaturePrefs.ts unchanged
+PASS [assert] E19: Features-package protected file src/filterModulesByFeaturePrefs.ts unchanged
+PASS [assert] E19: Features-package protected file src/withDisabledFallback.tsx unchanged
+PASS [assert] E19: Features-package protected file src/DisabledFeatureFallback.tsx unchanged
+PASS [assert] E19: Features-package protected file src/internal/FeatureThumb.tsx unchanged
+PASS [assert] E19: Features-package protected file package.json unchanged
+PASS [assert] E19: Features-package protected file tsconfig.json unchanged
+PASS [assert] E19: Features-package protected file vitest.config.ts unchanged
+PASS [assert] E19: Features-package protected file vitest.setup.ts unchanged
+PASS [assert] E19: Features-package protected file eslint.config.js unchanged
+PASS [assert] E19: Features-package protected file manifest.json unchanged
+PASS [assert] E19: Features-package protected file docs/design.md unchanged
+PASS [assert] E19: Features-package protected file docs/dev_log.md unchanged
+PASS [assert] E19: Features-package protected file docs/verify-report.md unchanged
+PASS [assert] E19/E6: product-scope diff (-- apps packages package.json pnpm-lock.yaml) is exactly the 11 contract §11 files with the expected statuses :: A packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx, A packages/xai-web-settings-features-panel/src/__tests__/featuresLockFixture.ts, A packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts, A packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts, M packages/xai-web-settings-features-panel/docs/api.md, M packages/xai-web-settings-features-panel/docs/test.md, M packages/xai-web-settings-features-panel/src/FeaturesPane.tsx, M packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx, M packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx, M packages/xai-web-settings-features-panel/src/styles.css, M packages/xai-web-settings-features-panel/src/types.ts
+PASS [assert] E19: full unrestricted diff outside docs/ is exactly the 11 contract §11 files :: A packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx, A packages/xai-web-settings-features-panel/src/__tests__/featuresLockFixture.ts, A packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts, A packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts, M packages/xai-web-settings-features-panel/docs/api.md, M packages/xai-web-settings-features-panel/docs/test.md, M packages/xai-web-settings-features-panel/src/FeaturesPane.tsx, M packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx, M packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx, M packages/xai-web-settings-features-panel/src/styles.css, M packages/xai-web-settings-features-panel/src/types.ts
+PASS [assert] E19: packages/xai-web-settings-features-panel/docs/api.md matches a contract §11 category
+PASS [assert] E19: packages/xai-web-settings-features-panel/docs/test.md matches a contract §11 category
+PASS [assert] E19: packages/xai-web-settings-features-panel/src/FeaturesPane.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-settings-features-panel/src/__tests__/featuresLockFixture.ts matches a contract §11 category
+PASS [assert] E19: packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts matches a contract §11 category
+PASS [assert] E19: packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts matches a contract §11 category
+PASS [assert] E19: packages/xai-web-settings-features-panel/src/styles.css matches a contract §11 category
+PASS [assert] E19: packages/xai-web-settings-features-panel/src/types.ts matches a contract §11 category
+PASS [assert] E19: at most two new Features-local helpers under src/internal/ (found 2)
+assertions=75/75 harness=24/24
+exit=0

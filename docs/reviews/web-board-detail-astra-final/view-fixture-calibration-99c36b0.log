@@ -1,0 +1,154 @@
+revision=99c36b0
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-QNw9Ce
+
+ ❯ docs/reviews/web-board-detail-astra-final/detail-contract.test.tsx (8 tests | 3 failed) 287ms
+   ✓ independent checklist oracle: two rejected physical writes; latest append only; all other canonical data unchanged; no duplicate on repeat retry 14ms
+   ✓ independent attachment oracle: two rejected physical writes; latest append only; all other canonical data unchanged; no duplicate on repeat retry 4ms
+   ✓ independent activity oracle: two rejected physical writes; latest append only; all other canonical data unchanged; no duplicate on repeat retry 3ms
+   ✓ proposal collision preserves external data and draft; discard does not persist 2ms
+   ✓ discard clears only failed append, retains other typed input, never appends via close 127ms
+   × real table view callback persists intended patch without losing unrelated board data 45ms
+     → expected [ { id: 'b-default', …(5) }, …(2) ] to deeply equal [ { id: 'b-default', …(5) }, …(2) ]
+   × real calendar view callback persists intended patch without losing unrelated board data 70ms
+     → expected [ { id: 'b-default', …(5) }, …(2) ] to deeply equal [ { id: 'b-default', …(5) }, …(2) ]
+   × real timeline view callback persists intended patch without losing unrelated board data 22ms
+     → expected [ { id: 'b-default', …(5) }, …(2) ] to deeply equal [ { id: 'b-default', …(5) }, …(2) ]
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 5 passed (8)
+   Start at  18:36:05
+   Duration  1.95s (transform 525ms, setup 254ms, collect 624ms, tests 287ms, environment 366ms, prepare 68ms)
+
+
+stderr | docs/reviews/web-board-detail-astra-final/detail-contract.test.tsx > discard clears only failed append, retains other typed input, never appends via close
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-detail-astra-final/detail-contract.test.tsx > real table view callback persists intended patch without losing unrelated board data
+ FAIL  docs/reviews/web-board-detail-astra-final/detail-contract.test.tsx > real calendar view callback persists intended patch without losing unrelated board data
+ FAIL  docs/reviews/web-board-detail-astra-final/detail-contract.test.tsx > real timeline view callback persists intended patch without losing unrelated board data
+AssertionError: expected [ { id: 'b-default', …(5) }, …(2) ] to deeply equal [ { id: 'b-default', …(5) }, …(2) ]
+
+- Expected
++ Received
+
+@@ -4,10 +4,25 @@
+      "id": "b-default",
+      "lists": [
+        {
+          "cards": [
+            {
++             "due": "5/30",
++             "id": "bc3",
++             "labels": [
++               "l3",
++             ],
++             "members": [
++               "u3",
++             ],
++             "priority": "high",
++             "title": {
++               "en": "Audit competitor pricing",
++               "zh": "竞品定价调研",
++             },
++           },
++           {
+              "attach": 1,
+              "checklist": {
+                "done": 2,
+                "total": 5,
+              },
+@@ -16,21 +31,21 @@
+              "dueDate": "2026-09-11",
+              "id": "bc1",
+              "labels": [
+                "l1",
+                "l3",
++               "urgent",
+              ],
+              "location": {
+                "label": "San Francisco",
+                "lat": 37.7749,
+                "lng": -122.4194,
+              },
+              "members": [
+                "u1",
+                "u2",
+              ],
+-             "priority": "high",
+              "startDate": "2026-09-10",
+              "title": {
+                "en": "Onboarding flow concepts",
+                "zh": "新人引导流程概念",
+              },
+@@ -45,26 +60,12 @@
+                "l1",
+              ],
+              "title": {
+                "en": "Pet animation rig",
+                "zh": "桌宠动画 rig",
+-             },
+              },
+-           {
+-             "due": "5/30",
+-             "id": "bc3",
+-             "labels": [
+-               "l3",
+-             ],
+-             "members": [
+-               "u3",
+-             ],
+-             "title": {
+-               "en": "Audit competitor pricing",
+-               "zh": "竞品定价调研",
+            },
+-           },
+          ],
+          "id": "b-backlog",
+          "key": "backlog",
+        },
+        {
+@@ -79,10 +80,11 @@
+              "dueEn": "Today",
+              "id": "bc4",
+              "labels": [
+                "l2",
+                "l5",
++               "urgent",
+              ],
+              "location": {
+                "label": "New York",
+                "lat": 40.7128,
+                "lng": -74.006,
+@@ -238,10 +240,11 @@
+            {
+              "checklist": {
+                "done": 7,
+                "total": 7,
+              },
++             "completedAt": "2026-09-10T01:36:07.666Z",
+              "id": "bc13",
+              "labels": [
+                "l1",
+                "l2",
+              ],
+@@ -257,10 +260,11 @@
+            {
+              "checklist": {
+                "done": 3,
+                "total": 3,
+              },
++             "completedAt": "2026-09-10T01:36:07.666Z",
+              "id": "bc14",
+              "labels": [
+                "l1",
+              ],
+              "title": {
+
+ ❯ docs/reviews/web-board-detail-astra-final/detail-contract.test.tsx:72:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯

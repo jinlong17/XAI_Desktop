@@ -10,11 +10,18 @@
  */
 
 import { useState } from "react";
-import type { BoardListData, BoardCardData } from "@repo/plugin-web-board-core";
+import type {
+  BoardListData,
+  BoardCardData,
+  BoardLabel,
+  BoardMemberOption,
+} from "@repo/plugin-web-board-core";
 import {
-  BOARD_MEMBER_OPTIONS,
-  PM_LABELS,
+  BOARD_PRIORITIES,
+  DEFAULT_BOARD_LABELS,
+  DEFAULT_BOARD_MEMBERS,
   getBoardCardDateMeta,
+  getPriorityMeta,
 } from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/i18n.js";
 import {
@@ -29,30 +36,90 @@ export interface TableViewProps {
   updateCard: (listId: string, cardId: string, patch: Partial<BoardCardData>) => void;
   /** Called when the user clicks the title cell. Row #9 will wire this to a card detail modal. */
   onOpenCard?: (card: BoardCardData, listId: string) => void;
+  /** Board label catalog; must match the Kanban view's catalog so chips agree. */
+  labelCatalog?: readonly BoardLabel[];
+  /** Board member directory; must match the Kanban view's catalog. */
+  memberCatalog?: readonly BoardMemberOption[];
 }
 
-type EditingField = "labels" | "members" | "due";
+type EditingField = "labels" | "members" | "priority" | "due";
 type EditingState = { cardId: string; field: EditingField } | null;
+
+type SortField = "title" | "priority" | "due";
+type SortState = { field: SortField; dir: "asc" | "desc" } | null;
+
+/** First click per column: priority shows urgent first; title/due ascending. */
+const DEFAULT_SORT_DIR: Record<SortField, "asc" | "desc"> = {
+  title: "asc",
+  priority: "desc",
+  due: "asc",
+};
 
 const COL_HEADERS = {
   card:      { en: "Card",      zh: "卡片"   },
   list:      { en: "List",      zh: "列"     },
   labels:    { en: "Labels",    zh: "标签"   },
   members:   { en: "Members",   zh: "成员"   },
+  priority:  { en: "Priority",  zh: "优先级" },
   due:       { en: "Due",       zh: "截止日" },
   checklist: { en: "Checklist", zh: "核对表" },
 };
 
-export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProps) {
+export function TableView({
+  lists,
+  lang,
+  updateCard,
+  onOpenCard,
+  labelCatalog = DEFAULT_BOARD_LABELS,
+  memberCatalog = DEFAULT_BOARD_MEMBERS,
+}: TableViewProps) {
   const [editing, setEditing] = useState<EditingState>(null);
+  const [sort, setSort] = useState<SortState>(null);
 
   const closeEditor = () => setEditing(null);
+
+  const today = new Date();
 
   const rows = lists.flatMap((list) =>
     list.cards.map((card) => ({ card, list })),
   );
 
-  const today = new Date();
+  if (sort) {
+    const { field, dir } = sort;
+    const sign = dir === "asc" ? 1 : -1;
+    // Cards missing the sorted value go last regardless of direction.
+    const sortValue = (card: BoardCardData): string | number | null => {
+      if (field === "title") return card.title[lang].toLowerCase();
+      if (field === "priority") {
+        return card.priority ? getPriorityMeta(card.priority).rank : null;
+      }
+      return getBoardCardDateMeta(card, { now: today }).dueDate ?? null;
+    };
+    rows.sort((a, b) => {
+      const va = sortValue(a.card);
+      const vb = sortValue(b.card);
+      if (va === null && vb === null) return 0;
+      if (va === null) return 1;
+      if (vb === null) return -1;
+      if (va < vb) return -sign;
+      if (va > vb) return sign;
+      return 0;
+    });
+  }
+
+  const cycleSort = (field: SortField) => {
+    setSort((prev) => {
+      if (prev?.field !== field) return { field, dir: DEFAULT_SORT_DIR[field] };
+      if (prev.dir === DEFAULT_SORT_DIR[field]) {
+        return { field, dir: prev.dir === "asc" ? "desc" : "asc" };
+      }
+      return null; // third click resets to natural board order
+    });
+  };
+
+  const sortIndicator = (field: SortField): string =>
+    sort?.field === field ? (sort.dir === "asc" ? " ▲" : " ▼") : "";
+
   const isEdit = (cardId: string, field: EditingField) =>
     editing?.cardId === cardId && editing?.field === field;
 
@@ -61,11 +128,42 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
       <table className="board-table">
         <thead>
           <tr>
-            <th>{lang === "zh" ? COL_HEADERS.card.zh : COL_HEADERS.card.en}</th>
+            <th>
+              <button
+                type="button"
+                className="th-sort-btn"
+                onClick={() => cycleSort("title")}
+                data-testid="th-sort-title"
+              >
+                {lang === "zh" ? COL_HEADERS.card.zh : COL_HEADERS.card.en}
+                {sortIndicator("title")}
+              </button>
+            </th>
             <th>{lang === "zh" ? COL_HEADERS.list.zh : COL_HEADERS.list.en}</th>
             <th>{lang === "zh" ? COL_HEADERS.labels.zh : COL_HEADERS.labels.en}</th>
             <th>{lang === "zh" ? COL_HEADERS.members.zh : COL_HEADERS.members.en}</th>
-            <th>{lang === "zh" ? COL_HEADERS.due.zh : COL_HEADERS.due.en}</th>
+            <th>
+              <button
+                type="button"
+                className="th-sort-btn"
+                onClick={() => cycleSort("priority")}
+                data-testid="th-sort-priority"
+              >
+                {lang === "zh" ? COL_HEADERS.priority.zh : COL_HEADERS.priority.en}
+                {sortIndicator("priority")}
+              </button>
+            </th>
+            <th>
+              <button
+                type="button"
+                className="th-sort-btn"
+                onClick={() => cycleSort("due")}
+                data-testid="th-sort-due"
+              >
+                {lang === "zh" ? COL_HEADERS.due.zh : COL_HEADERS.due.en}
+                {sortIndicator("due")}
+              </button>
+            </th>
             <th>{lang === "zh" ? COL_HEADERS.checklist.zh : COL_HEADERS.checklist.en}</th>
           </tr>
         </thead>
@@ -75,11 +173,11 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
               ? list.key
               : (list.customName?.[lang] ?? "");
             const labelObjs = (card.labels ?? [])
-              .map((id) => PM_LABELS.find((l) => l.id === id))
-              .filter(Boolean) as typeof PM_LABELS[number][];
+              .map((id) => labelCatalog.find((l) => l.id === id))
+              .filter(Boolean) as BoardLabel[];
             const memberObjs = (card.members ?? [])
-              .map((uid) => BOARD_MEMBER_OPTIONS.find((m) => m.id === uid))
-              .filter(Boolean) as typeof BOARD_MEMBER_OPTIONS[number][];
+              .map((uid) => memberCatalog.find((m) => m.id === uid))
+              .filter(Boolean) as BoardMemberOption[];
             const cl = card.checklist;
             const pct = cl ? Math.round((100 * cl.done) / Math.max(1, cl.total)) : null;
             const dateMeta = getBoardCardDateMeta(card, { now: today });
@@ -164,7 +262,7 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
                           </button>
                         </header>
                         <div className="popover-list">
-                          {PM_LABELS.map((l) => {
+                          {labelCatalog.map((l) => {
                             const on = (card.labels ?? []).includes(l.id);
                             return (
                               <button
@@ -244,7 +342,7 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
                           </button>
                         </header>
                         <div className="popover-list">
-                          {BOARD_MEMBER_OPTIONS.map((u) => {
+                          {memberCatalog.map((u) => {
                             const on = (card.members ?? []).includes(u.id);
                             return (
                               <button
@@ -272,6 +370,101 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
                               </button>
                             );
                           })}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </td>
+
+                {/* Priority cell */}
+                <td
+                  className="td-editable"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditing({ cardId: card.id, field: "priority" });
+                  }}
+                  data-testid="td-priority"
+                >
+                  {card.priority ? (
+                    <span
+                      className="bc-priority"
+                      data-testid="td-priority-value"
+                      data-priority={card.priority}
+                      style={{ color: getPriorityMeta(card.priority).color }}
+                    >
+                      <span
+                        className="bc-priority-dot"
+                        style={{ background: getPriorityMeta(card.priority).color }}
+                      />
+                      {getPriorityMeta(card.priority).name[lang]}
+                    </span>
+                  ) : (
+                    <span className="td-empty-hint">
+                      + {lang === "zh" ? "优先级" : "Priority"}
+                    </span>
+                  )}
+                  {isEdit(card.id, "priority") && (
+                    <>
+                      <div
+                        className="popover-scrim"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          closeEditor();
+                        }}
+                      />
+                      <div className="popover td-popover" data-testid="priority-popover">
+                        <header className="popover-head">
+                          <span>{lang === "zh" ? "优先级" : "Priority"}</span>
+                          <button
+                            type="button"
+                            className="icon-btn"
+                            onClick={closeEditor}
+                            aria-label="close"
+                          >
+                            ×
+                          </button>
+                        </header>
+                        <div className="popover-list">
+                          {BOARD_PRIORITIES.map((p) => {
+                            const on = card.priority === p.id;
+                            return (
+                              <button
+                                key={p.id}
+                                type="button"
+                                className="popover-item label-row"
+                                data-testid={`priority-set-${p.id}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  updateCard(list.id, card.id, {
+                                    priority: on ? undefined : p.id,
+                                  });
+                                  closeEditor();
+                                }}
+                              >
+                                <span
+                                  className="bc-priority-dot"
+                                  style={{ background: p.color }}
+                                />
+                                <span>{p.name[lang]}</span>
+                                <span className="grow" />
+                                {on && <span aria-hidden="true">✓</span>}
+                              </button>
+                            );
+                          })}
+                          {card.priority && (
+                            <button
+                              type="button"
+                              className="popover-item label-row"
+                              data-testid="priority-clear"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                updateCard(list.id, card.id, { priority: undefined });
+                                closeEditor();
+                              }}
+                            >
+                              <span>{lang === "zh" ? "清除" : "Clear"}</span>
+                            </button>
+                          )}
                         </div>
                       </div>
                     </>

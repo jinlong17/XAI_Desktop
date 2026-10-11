@@ -1,0 +1,46 @@
+revision=fb3ae2f
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-b1-9YpInW
+
+ ✓ docs/reviews/web-board-workspace-astra-review/b1-decoder.test.tsx (13 tests) 17ms
+
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+   Start at  15:26:30
+   Duration  898ms (transform 70ms, setup 0ms, collect 102ms, tests 17ms, environment 338ms, prepare 87ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/b1-decoder.test.tsx > rejects malformed envelope revision -1 without rewriting
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-board-workspace-astra-review/b1-decoder.test.tsx > rejects malformed envelope revision 0.5 without rewriting
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-board-workspace-astra-review/b1-decoder.test.tsx > rejects malformed envelope revision 9007199254740992 without rewriting
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-board-workspace-astra-review/b1-decoder.test.tsx > rejects malformed envelope revision null without rewriting
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-board-workspace-astra-review/b1-decoder.test.tsx > rejects malformed envelope revision 1 without rewriting
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-board-workspace-astra-review/b1-decoder.test.tsx > preserves unsupported, invalid JSON, and JSON null bytes against legacy writes/removals
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-board-workspace-astra-review/b1-decoder.test.tsx > projects initial mount, remount and domain-valued same-tab publications without leaking receipt metadata
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-board-workspace-astra-review/b1-decoder.test.tsx > projects initial mount, remount and domain-valued same-tab publications without leaking receipt metadata
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.

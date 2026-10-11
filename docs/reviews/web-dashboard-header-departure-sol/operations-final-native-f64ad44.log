@@ -1,0 +1,33 @@
+revision=f64ad44 fixed_commit=f64ad44e9e13f56db243471c206cea7a63271b2a
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-90QMRU
+
+ ❯ docs/reviews/web-dashboard-header-departure-sol/operations.test.tsx (4 tests | 1 failed) 148ms
+   ✓ pending Retry cannot attribute predecessor success to a newer queued failure 90ms
+   ✓ note failure with position success and the reverse each keep only the failed sibling guarded 36ms
+   × unchanged uncertainty retry verifies once; changed external bytes retain recovery 15ms
+     → expected true to be false // Object.is equality
+   ✓ discard during held position persistence prevents its late callback from restoring recovery 7ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  00:52:45
+   Duration  898ms (transform 164ms, setup 212ms, collect 57ms, tests 148ms, environment 221ms, prepare 55ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-sol/operations.test.tsx > unchanged uncertainty retry verifies once; changed external bytes retain recovery
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-dashboard-header-departure-sol/operations.test.tsx:103:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

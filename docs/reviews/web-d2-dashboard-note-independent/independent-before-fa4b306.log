@@ -1,0 +1,56 @@
+revision=fa4b306
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-bqvJUQ
+
+ ❯ docs/reviews/web-d2-dashboard-note-independent/contracts.test.tsx (2 tests | 2 failed) 121ms
+   × actual Dashboard note waits behind account lifecycle lock and saves the displayed draft afterward 108ms
+     → pending account operation must not write early: expected 'Newest note' to be 'Original' // Object.is equality
+     → pending save retains editable latest draft: expected undefined to be 'Newest note' // Object.is equality
+   × mounting an absent account note does not persist a default without an edit 13ms
+     → expected '' to be null
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  20:05:57
+   Duration  1.07s (transform 155ms, setup 0ms, collect 301ms, tests 121ms, environment 327ms, prepare 73ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-dashboard-note-independent/contracts.test.tsx > actual Dashboard note waits behind account lifecycle lock and saves the displayed draft afterward
+AssertionError: pending account operation must not write early: expected 'Newest note' to be 'Original' // Object.is equality
+
+Expected: "Original"
+Received: "Newest note"
+
+ ❯ docs/reviews/web-d2-dashboard-note-independent/contracts.test.tsx:29:91
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-d2-dashboard-note-independent/contracts.test.tsx > actual Dashboard note waits behind account lifecycle lock and saves the displayed draft afterward
+AssertionError: pending save retains editable latest draft: expected undefined to be 'Newest note' // Object.is equality
+
+- Expected: 
+"Newest note"
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-d2-dashboard-note-independent/contracts.test.tsx:30:121
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  docs/reviews/web-d2-dashboard-note-independent/contracts.test.tsx > mounting an absent account note does not persist a default without an edit
+AssertionError: expected '' to be null
+
+- Expected: 
+null
+
++ Received: 
+""
+
+ ❯ docs/reviews/web-d2-dashboard-note-independent/contracts.test.tsx:38:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯

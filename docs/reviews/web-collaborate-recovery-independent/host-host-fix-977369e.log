@@ -1,0 +1,11 @@
+revision=977369e fixed_commit=977369e433fc2e2a783011432c8da9494eb268c1
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-dMYVPn
+
+ ✓ docs/reviews/web-collaborate-recovery-independent/host.test.tsx (7 tests) 352ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  23:01:16
+   Duration  2.45s (transform 729ms, setup 0ms, collect 1.17s, tests 352ms, environment 394ms, prepare 175ms)

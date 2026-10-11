@@ -1,0 +1,14 @@
+import './packages/plugin-web-tokens/src/tokens.css';
+import './packages/plugin-web-tokens/src/layout.css';
+import './packages/plugin-web-ai-chat/src/styles.css';
+import React from './packages/plugin-web-ai-chat/node_modules/react/index.js';
+import { createRoot } from './packages/plugin-web-ai-chat/node_modules/react-dom/client.js';
+import { AiChatModule } from './packages/plugin-web-ai-chat/src/AiChatModule.tsx';
+import { accountScope } from './packages/plugin-web-storage/src/index.ts';
+accountScope.activate(accountScope.lock('ai-save-native-A'), 'native');
+const key=accountScope.physicalKey('xai_ai_convos');
+const set=Storage.prototype.setItem;
+let denied=true;
+Storage.prototype.setItem=function(k,v){ if(denied&&k===key)throw new DOMException('synthetic quota','QuotaExceededError');set.call(this,k,v); };
+createRoot(document.getElementById('app')!).render(<AiChatModule lang="en"/>);
+(window as any).probe={deny:(v:boolean)=>{denied=v},raw:()=>localStorage.getItem(key),external:()=>{const rows=JSON.parse(localStorage.getItem(key)!);rows[0].summary='Other tab original';const raw=JSON.stringify(rows);localStorage.setItem(key,raw);return raw},switchB:()=>{accountScope.activate(accountScope.lock('ai-save-native-B'),'native');return localStorage.getItem(accountScope.physicalKey('xai_ai_convos'))},bRaw:()=>localStorage.getItem(accountScope.physicalKey('xai_ai_convos'))};

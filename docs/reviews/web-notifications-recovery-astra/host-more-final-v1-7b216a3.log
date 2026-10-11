@@ -1,0 +1,11 @@
+revision=7b216a3 fixed_commit=7b216a3d5a4947d0f66da042fb275302737fb762
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-astra-uJTJEL
+
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx (15 tests) 1825ms
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  01:22:16
+   Duration  6.00s (transform 2.48s, setup 0ms, collect 3.66s, tests 1.82s, environment 229ms, prepare 76ms)

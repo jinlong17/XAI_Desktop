@@ -302,9 +302,10 @@
                 <span class="badge b-gray" id="usageWebOpsBadge">checking</span>
               </div>
               <div class="usage-run-actions">
-                <button class="reader-btn" data-ops-start="web:start-mock" data-ops-open-after="true" type="button">启动 mock 并打开</button>
+                <button class="reader-btn" data-ops-start="web:start-mock" data-ops-open-after="true" type="button">启动 mock 并打开 App</button>
                 <button class="reader-btn" data-ops-start="web:start-dev" type="button">启动普通 dev</button>
-                <button class="reader-btn" data-ops-open="web" type="button">打开 Web</button>
+                <button class="reader-btn" data-ops-open="web" data-ops-route="/" type="button">打开首页</button>
+                <button class="reader-btn" data-ops-open="web" data-ops-route="/app/dashboard" type="button">打开 App</button>
                 <button class="reader-btn" data-ops-refresh="web" type="button">刷新状态</button>
                 <button class="reader-btn" data-ops-stop="web" type="button" disabled>停止</button>
               </div>
@@ -333,15 +334,16 @@ pnpm --filter @repo/web dev</code></pre>
               <span class="pill">入口</span>
             </div>
             <div class="usage-link-grid">
-              <div><b>Web 网页版本</b><span>主应用本地入口</span><code>http://localhost:3000</code><button class="prompt-copy" data-copy-target="url-web" type="button">复制</button><button class="reader-btn" data-ops-open="web" type="button">打开</button><span id="url-web" hidden>http://localhost:3000</span></div>
-              <div><b>开发看板 / 文档库</b><span>默认端口，若被占用会自动顺延</span><code>http://127.0.0.1:4177</code><button class="prompt-copy" data-copy-target="url-dashboard" type="button">复制</button><button class="reader-btn" data-open-current-dashboard type="button">打开当前看板</button><span id="url-dashboard" hidden>http://127.0.0.1:4177</span></div>
+              <div><b>Web 首页</b><span>主应用本地首页</span><code>http://localhost:3000/</code><button class="prompt-copy" data-copy-target="url-web-home" type="button">复制</button><button class="reader-btn" data-ops-open="web" data-ops-route="/" type="button">打开</button><span id="url-web-home" hidden>http://localhost:3000/</span></div>
+              <div><b>Web App</b><span>Web 版应用入口</span><code>http://localhost:3000/app/dashboard</code><button class="prompt-copy" data-copy-target="url-web-app" type="button">复制</button><button class="reader-btn" data-ops-open="web" data-ops-route="/app/dashboard" type="button">打开</button><span id="url-web-app" hidden>http://localhost:3000/app/dashboard</span></div>
+              <div><b>开发看板 / 文档库</b><span>一键脚本会自动打开实际端口</span><code>open-dashboard.command</code><button class="prompt-copy" data-copy-target="cmd-dashboard-open-short" type="button">复制</button><button class="reader-btn" data-open-current-dashboard type="button">打开当前看板</button><span id="cmd-dashboard-open-short" hidden>open-dashboard.command</span></div>
             </div>
             <div class="command-panel">
-              <div class="command-head"><b>启动看板服务</b><button class="prompt-copy" data-copy-target="cmd-dashboard-serve" type="button">复制</button></div>
-              <pre><code id="cmd-dashboard-serve">cd "$(git rev-parse --show-toplevel)"
-pnpm dashboard:serve</code></pre>
+              <div class="command-head"><b>启动看板服务</b><button class="prompt-copy" data-copy-target="cmd-dashboard-open" type="button">复制</button></div>
+              <pre><code id="cmd-dashboard-open">cd "$(git rev-parse --show-toplevel)"
+./open-dashboard.command</code></pre>
             </div>
-            <div class="usage-note"><code>dashboard:serve</code> 会先刷新生成态，再绑定到 <code>127.0.0.1</code>。默认端口是 4177；如果 4177 被占用，脚本会自动顺延。</div>
+            <div class="usage-note"><code>open-dashboard.command</code> 会先刷新生成态，再启动 <code>127.0.0.1</code> 本地看板服务、自动拉起 Web mock 服务并打开浏览器。默认端口是 4177；如果 4177 被占用，底层 server 会自动顺延并打开实际端口。</div>
           </article>
 
           <article class="usage-card" data-tone="green">

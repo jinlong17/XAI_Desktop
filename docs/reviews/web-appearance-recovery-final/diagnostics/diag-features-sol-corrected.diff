@@ -1,0 +1,61 @@
+--- a/docs/reviews/web-features-recovery-sol/verify-fixed.mjs
++++ b/docs/reviews/web-appearance-recovery-final/diag-features-sol-corrected.mjs
+@@ -1,4 +1,14 @@
+ /**
++ * DIAGNOSTIC COPY (CP-APPEARANCE-01 batch 51, finding F-FD1; not gate evidence) of
++ * ../web-features-recovery-sol/verify-fixed.mjs (SHA-256 b5ac75fa…, frozen, not modified). Only changes:
++ *   1. the frozen oracle files are read from ../web-features-recovery-sol/ (their own directory, read only);
++ *   2. after staging them in the archive, docs/reviews/web-features-recovery-sol/downstream.test.tsx is replaced by
++ *      ./diagnostics/features-downstream.corrected.test.tsx (two token edits: the out-of-domain background seed
++ *      "sage" becomes the in-domain "mist"; ./diagnostics/features-downstream.corrected.diff), hash-checked;
++ *   3. only mode `downstream` is accepted, and logs go to ./diagnostics/features-sol-downstream-corrected-<suffix>-<rev>.log
++ *      with this copy's own hash in the header.
++ * Everything else (archive, lockfile gate, private node_modules, @repo pin and guard, Vitest semantics) is unchanged.
++ *
+  * Sol immutable-archive runner: Settings Features recovery oracles (CP-FEATURES-01, control-plane batch 22;
+  * contract docs/reviews/web-features-recovery-contract/contract.md sections 12 and 14 items E1, E2, E7).
+  *
+@@ -42,8 +52,11 @@
+ import { fileURLToPath } from "node:url";
+ 
+ const root = fileURLToPath(new URL("../../../", import.meta.url));
+-const evidence = fileURLToPath(new URL("./", import.meta.url));
++const evidence = fileURLToPath(new URL("../web-features-recovery-sol/", import.meta.url)); // diagnostic change 1
+ const runnerFile = fileURLToPath(import.meta.url);
++const diagnostics = fileURLToPath(new URL("./diagnostics/", import.meta.url)); // diagnostic changes 2 and 3
++const CORRECTED = join(diagnostics, "features-downstream.corrected.test.tsx");
++const CORRECTED_SHA256 = "7bb5ad3cda8fec7957e999c2aa62956212b52934be20b942df72e286e90959e1";
+ const owned = "docs/reviews/web-features-recovery-sol";
+ const dependencyRoot = realpathSync(resolve(process.env.XAI_DEPS_ROOT ?? root));
+ const [revision, modeArgument, suffix, ...extra] = process.argv.slice(2);
+@@ -117,7 +130,8 @@
+ };
+ const selected = modeArgument === "all" ? Object.keys(MODES) : [modeArgument];
+ for (const mode of selected) if (!Object.hasOwn(MODES, mode)) throw Error(`Unsupported mode ${mode}; use one of ${Object.keys(MODES).join(", ")} or all`);
+-const logPath = mode => join(evidence, `${mode}-${suffix}-${revision}.log`);
++if (JSON.stringify(selected) !== JSON.stringify(["downstream"])) throw Error("Diagnostic copy: only mode downstream is supported"); // diagnostic change 3
++const logPath = mode => join(diagnostics, `features-sol-${mode}-corrected-${suffix}-${revision}.log`);
+ for (const mode of selected) if (existsSync(logPath(mode))) throw Error(`Evidence exists; use a new suffix: ${logPath(mode)}`);
+ 
+ const sha256 = data => createHash("sha256").update(data).digest("hex");
+@@ -247,6 +261,10 @@
+     copyFileSync(join(evidence, name), join(oracleTarget, name));
+     assert.equal(sha256(readFileSync(join(oracleTarget, name))), oracleHashes[name], `Copied oracle ${name} differs from the evidence file`);
+   }
++  // Diagnostic change 2: the corrected downstream oracle replaces the frozen one at the same staged path.
++  assert.equal(sha256(readFileSync(CORRECTED)), CORRECTED_SHA256, "Corrected oracle differs from its recorded hash");
++  copyFileSync(CORRECTED, join(oracleTarget, "downstream.test.tsx"));
++  assert.equal(sha256(readFileSync(join(oracleTarget, "downstream.test.tsx"))), CORRECTED_SHA256, "Staged corrected oracle differs from its recorded hash");
+   const oracleModules = join(oracleTarget, "node_modules");
+   const oracleLinks = [
+     ["react", join(featuresModules, "react")],
+@@ -381,7 +399,8 @@
+       `mode=${mode}`,
+       `suffix=${suffix}`,
+       `include=${spec.include.join(",")}`,
+-      `command=XAI_DEPS_ROOT=${dependencyRoot} node ${owned}/verify-fixed.mjs ${revision} ${modeArgument} ${suffix}`,
++      `command=XAI_DEPS_ROOT=${dependencyRoot} node docs/reviews/web-appearance-recovery-final/diag-features-sol-corrected.mjs ${revision} ${modeArgument} ${suffix}`,
++      `diagnostic_runner_sha256=${sha256(readFileSync(runnerFile))} corrected_oracle_staged_as=${owned}/downstream.test.tsx corrected_oracle_sha256=${CORRECTED_SHA256} (oracle_sha256 below lists the frozen files read; downstream.test.tsx there is the frozen hash, replaced in the run)`,
+       `runner_checkout_head=${runnerHead}`,
+       `vitest_bin=${vitestBin}`,
+       `vitest_args=${vitestArgs.join(" ")}`,

@@ -1,0 +1,20 @@
+--- a/docs/reviews/web-features-recovery-sol/downstream.test.tsx
++++ b/docs/reviews/web-appearance-recovery-final/diagnostics/features-downstream.corrected.test.tsx
+@@ -161,7 +161,7 @@
+ }
+ function seedAppearanceRailAndPet(): void {
+   seedKey("xai_accent_hue", "210");
+-  seedKey("xai_bg_tone", "sage");
++  seedKey("xai_bg_tone", "mist");
+   seedKey("xai_rail_pos", "right");
+   seedKey("xai_rail_order", JSON.stringify(CUSTOM_ORDER));
+   seedKey("xai_pet_id", "pip");
+@@ -183,7 +183,7 @@
+ }
+ const SEEDED_DISPLAY: Display = {
+   accentHue: "210",
+-  bgTone: "sage",
++  bgTone: "mist",
+   railPosAttr: "right",
+   railDataPos: "right",
+   railOrder: CUSTOM_ORDER.map(labelOfModule),

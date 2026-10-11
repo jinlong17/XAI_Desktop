@@ -1,0 +1,10 @@
+{"name":"baseline","commit":"dea0af6","chromePid":76403}
+{"name":"card-correct-oracle","retained":true,"error":true,"originalBytes":true,"rejectedWrites":1}
+{"name":"card-actual-download-stable-id-latest-retry","pass":true}
+{"name":"list-correct-oracle","retained":true,"error":true,"originalBytes":true,"rejectedWrites":1}
+{"name":"list-actual-download-stable-id-latest-retry","pass":true}
+{"name":"first-submit-external-removal-rejected","pass":true}
+{"name":"list-first-submit-external-removal-rejected","pass":true}
+{"name":"newer-raw-retains-draft","pass":true}
+{"name":"old-account-retry-export-denied","pass":true}
+{"name":"PASS","scope":"card and list composer only"}

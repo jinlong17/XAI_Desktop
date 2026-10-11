@@ -32,6 +32,23 @@ describe("BC-1: isAiConvoRecord backward-compat — accepts old + new record sha
     expect(isAiConvoRecord(extended)).toBe(true);
   });
 
+  it("accepts persisted message-history records without rejecting old optional fields", () => {
+    const persisted = {
+      id: "c-history",
+      title: "History",
+      time: "Just now",
+      summary: "Saved answer",
+      updatedAt: "2026-06-01T00:00:00.000Z",
+      activeAt: "2026-06-01T00:00:01.000Z",
+      messages: [
+        { role: "user", text: "Saved question", attachments: null },
+        { role: "assistant", text: "Saved answer", attachments: null },
+      ],
+      lastToolUse: { id: "toolu_abc", name: "create_task" },
+    };
+    expect(isAiConvoRecord(persisted)).toBe(true);
+  });
+
   it("rejects records missing required fields (backward-compat baseline)", () => {
     expect(isAiConvoRecord(null)).toBe(false);
     expect(isAiConvoRecord({ id: "c-123", title: "ok" })).toBe(false); // missing time

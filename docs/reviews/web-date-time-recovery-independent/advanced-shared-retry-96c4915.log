@@ -1,0 +1,16 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-PyKoiS
+
+ ✓ docs/reviews/web-date-time-recovery-independent/advanced-host.test.tsx (12 tests) 4479ms
+   ✓ actual sidebar producer holds and current discard leaves without writes  920ms
+   ✓ actual rail producer holds and current discard leaves without writes  354ms
+   ✓ first route beats same-turn route and signout; Stay retains work  876ms
+   ✓ path-relative navigation preserves the actual relative destination  385ms
+   ✓ partial Retry cannot release intent; all latest verified clean releases once  402ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  01:32:12
+   Duration  21.44s (transform 9.37s, setup 0ms, collect 15.68s, tests 4.48s, environment 713ms, prepare 82ms)

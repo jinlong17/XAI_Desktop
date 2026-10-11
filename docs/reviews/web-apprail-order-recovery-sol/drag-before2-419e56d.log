@@ -1,0 +1,339 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=drag
+suffix=before2
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-apprail-order-recovery-sol/verify-fixed.mjs 419e56d drag before2
+runner_checkout_head=1094d96776b26c020632823eb84fdb7e8768b489
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-shell/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=07c4f87674e5a14d7cbeffc4cd8ae18d0c9d725cfe052ce45b55fb631720c236 bytes.test.tsx=d4827472827f284178944dd621198a39d7b7ffc34be19781714e61f91103d6cd domain.test.tsx=f7b55802a73251b6eb1b0f0cb0d3d39d798fdb9ff7c472ee4b57a5abca4cea0a merge.test.tsx=05f6e01081156e2d32076606f2b4f314f33246d6b96b0ab7ffa644a9de8d377a drag.test.tsx=4be85f28b053eeed2606e8118641c7ffd93b1a078ce298c3343facfc3fd23063 field.test.tsx=21e7b77f7135bb1debe446f48bafdc9f3f4a3a5b1796084094bbac140f995846 continuity-export.test.tsx=b92790b3f989e66b5e3b549995c58abcaee88d5acb700e7f2c31af577f5dd5fc host.test.tsx=b89a4f6e2ebc12cf4a4952b17deb6ea7c793818198ad16562610f63ec47a4b03 verify-fixed.mjs=e944cb226e3fa342727c913547ff5084e0ad38fad5293ed306cb512bf9f5a4e8
+archive_file_sha256 packages/xai-web-shell/src/AppRail.tsx=6312caa162a7d194774bf95282c203ddc633ccc54068edcd2854dfbfd4633f67 packages/xai-web-shell/src/internal/dnd.ts=a538b51f119f9cedbed3421f8cd21549f1730d0ede9059257402bee9a63deaf9 packages/xai-web-shell/src/registry.tsx=b621abbecfda785a5d7da628465925dacdb3249638b181cc3ca074687b734c1e packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0 packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a packages/xai-web-shell/src/index.ts=c404a9713dee4d821ba3ec6b5c7591f984da3c92b5fb1a62d88fbab5cec368ed packages/xai-web-shell/src/__tests__/AppRail.test.tsx=cbe4179146b7f9565cb038027f004520b46917db3da6c0e9f653cf319b309e8f packages/xai-web-shell/src/__tests__/Topbar.test.tsx=b3a068eab6bbb95e62cb2ec73f8a715921a48549f090bf7237e8d8c0dabfcb12 apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] drag.test.tsx: include=docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-jlDD7x/apprail-sol-drag-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-jlDD7x/.report-drag-0.json vitest_exit=1 cases=18 passed=8 failed=10 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=18 numPassedTests=8 numFailedTests=10
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] drag.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-jlDD7x
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ × docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H3 §6.2/§6.3 a one-step drag: the preview shows P with zero attempts during dragstart/dragenter/dragover; the drop makes exactly one write with the A2 merge 239ms
+   → H3 §6.2: zero storage attempts during dragstart, dragenter and dragover: expected [ Array(1) ] to deeply equal []
+stdout | docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H3 §6.2/§6.3 a two-step drag (two different targets): zero attempts across both dragovers, exactly one write of the final preview at the drop
+SOL-OBS two-step attempts {"beforeDrop":["[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","[\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"statistics\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"],"atDropAndDragend":[],"bytes":"[\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"statistics\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"}
+
+ × docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H3 §6.2/§6.3 a two-step drag (two different targets): zero attempts across both dragovers, exactly one write of the final preview at the drop 192ms
+   → H3: zero storage attempts across two order-changing dragovers: expected [ …(2) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H3 A3 a standalone AppRail (its own controller) also writes once at the drop and never during dragover 40ms
+   → H3: zero attempts during dragover in a standalone AppRail: expected [ Array(1) ] to deeply equal []
+stdout | docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H4 §6.4 dragEnd without a drop (Escape or a cancelled drag) reverts the preview with zero attempts
+SOL-OBS cancelled drag {"preview":["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"attempts":["[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"],"bytes":"[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]","rail":["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H4 §6.4 dragEnd without a drop (Escape or a cancelled drag) reverts the preview with zero attempts 129ms
+   → H4: a cancelled drag makes zero storage attempts: expected [ Array(1) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H4 §6.4 a two-step drag released outside the rail on the main content (a drop there) reverts with zero attempts 114ms
+   → H4: a release outside .rail-items makes zero storage attempts: expected [ …(2) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H4 §6.4 a drop accepted by a text input outside the rail reverts with zero attempts 112ms
+   → H4/host row r: a drop on a text input makes zero rail writes: expected [ Array(1) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H3 §6.3 a drop on a gap of .rail-items commits exactly one write with the A2 merge 107ms
+   → H3: zero attempts before the drop: expected [ Array(1) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H3 §6.3 a drop on the dragged button itself commits exactly one write (the drop target's identity never matters) 114ms
+   → H3: zero attempts before the drop: expected [ Array(1) ] to deeply equal []
+ ✓ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > PC §6.3 an unchanged order (dragover only on the dragged button, then a drop) makes zero attempts 142ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > PC §6.3 a dragover on a gap only, then a drop on the gap, makes zero attempts 134ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > §6.5 one gesture admits at most one intent: two drop events in one gesture make at most one write 116ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > §6.5 two successive gestures make exactly one write each; the second merges over the first's committed order 131ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > PC §6.5 an external drop (no rail dragstart in this document) on a rail button is ignored with zero attempts 95ms
+ × docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > §6.7 R changes mid-drag (Boards turned off in another document): the drop makes zero attempts and the rail shows D(S, R) 124ms
+   → §6.7: zero attempts when P is no longer a permutation of D(S, R): expected [ Array(1) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > §6.7 the committed order changing mid-drag (another document): the drop still commits, merging over S at drop time 99ms
+   → H3: zero attempts during dragover: expected [ Array(1) ] to deeply equal []
+ ✓ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > PC §6.1 the dragged button carries the `dragging` class during the gesture and loses it at dragend 108ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > PC §6.6 a click on a rail button during a drag does not navigate; after the gesture ends, clicks navigate as before 257ms
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 8 passed (18)
+   Start at  02:44:41
+   Duration  5.43s (transform 1.83s, setup 67ms, collect 2.68s, tests 2.26s, environment 207ms, prepare 41ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-jlDD7x/.report-drag-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > §6.7 R changes mid-drag (Boards turned off in another document): the drop makes zero attempts and the rail shows D(S, R)
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > §6.7 R changes mid-drag (Boards turned off in another document): the drop makes zero attempts and the rail shows D(S, R)
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H3 §6.2/§6.3 a one-step drag: the preview shows P with zero attempts during dragstart/dragenter/dragover; the drop makes exactly one write with the A2 merge
+AssertionError: H3 §6.2: zero storage attempts during dragstart, dragenter and dragover: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]",
++ ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx:76:103
+     74|   await flush();
+     75|   expect(railIds(), "§6.2: the rail displays the preview P").toEqual(g…
+     76|   expect(railWrites(from), "H3 §6.2: zero storage attempts during drag…
+       |                                                                                                       ^
+     77|   drop(gesture, Y1);
+     78|   dragEnd(gesture, X);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H3 §6.2/§6.3 a two-step drag (two different targets): zero attempts across both dragovers, exactly one write of the final preview at the drop
+AssertionError: H3: zero storage attempts across two order-changing dragovers: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]",
++   "[\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"statistics\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]",
++ ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx:104:87
+    102|   observe("two-step attempts", { beforeDrop, atDropAndDragend: railWri…
+    103|   expect(preview, "§6.2: the rail displays the second preview").toEqua…
+    104|   expect(beforeDrop, "H3: zero storage attempts across two order-chang…
+       |                                                                                       ^
+    105|   expect(railWrites(from), "§6.3/§6.5: one gesture, exactly one write"…
+    106| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H3 A3 a standalone AppRail (its own controller) also writes once at the drop and never during dragover
+AssertionError: H3: zero attempts during dragover in a standalone AppRail: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]",
++ ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx:115:89
+    113|   dragOver(gesture, X, Y1);
+    114|   await flush();
+    115|   expect(railWrites(from), "H3: zero attempts during dragover in a sta…
+       |                                                                                         ^
+    116|   drop(gesture, Y1);
+    117|   dragEnd(gesture, X);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H4 §6.4 dragEnd without a drop (Escape or a cancelled drag) reverts the preview with zero attempts
+AssertionError: H4: a cancelled drag makes zero storage attempts: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]",
++ ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx:131:80
+    129|   const preview = await drag(X, [Y1], null);
+    130|   observe("cancelled drag", { preview, attempts: railWrites(from), byt…
+    131|   expect(railWrites(from), "H4: a cancelled drag makes zero storage at…
+       |                                                                                ^
+    132|   expect(raw(), "H4: the bytes keep the committed order").toBe(encode(…
+    133|   expect(railIds(), "§6.4: the preview reverts to the committed order"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H4 §6.4 a two-step drag released outside the rail on the main content (a drop there) reverts with zero attempts
+AssertionError: H4: a release outside .rail-items makes zero storage attempts: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]",
++   "[\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"statistics\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]",
++ ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx:142:93
+    140|   const from = mark();
+    141|   await drag(X, [Y1, Y2], "outside");
+    142|   expect(railWrites(from), "H4: a release outside .rail-items makes ze…
+       |                                                                                             ^
+    143|   expect(raw(), "H4: the bytes keep the committed order").toBe(encode(…
+    144|   expect(railIds(), "§6.4: the preview reverts").toEqual([...REVERSED]…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H4 §6.4 a drop accepted by a text input outside the rail reverts with zero attempts
+AssertionError: H4/host row r: a drop on a text input makes zero rail writes: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]",
++ ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx:162:94
+    160|     dragEnd(gesture, X);
+    161|     await flush();
+    162|     expect(railWrites(from), "H4/host row r: a drop on a text input ma…
+       |                                                                                              ^
+    163|     expect(railIds(), "the preview reverts").toEqual([...REVERSED]);
+    164|   } finally { input.remove(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H3 §6.3 a drop on a gap of .rail-items commits exactly one write with the A2 merge
+AssertionError: H3: zero attempts before the drop: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]",
++ ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx:178:65
+    176|   dragOverGap(gesture);
+    177|   await flush();
+    178|   expect(railWrites(from), "H3: zero attempts before the drop").toEqua…
+       |                                                                 ^
+    179|   drop(gesture, "gap");
+    180|   dragEnd(gesture, X);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > H3 §6.3 a drop on the dragged button itself commits exactly one write (the drop target's identity never matters)
+AssertionError: H3: zero attempts before the drop: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]",
++ ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx:191:65
+    189|   dragOver(gesture, X, Y1);
+    190|   await flush();
+    191|   expect(railWrites(from), "H3: zero attempts before the drop").toEqua…
+       |                                                                 ^
+    192|   drop(gesture, X);
+    193|   dragEnd(gesture, X);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > §6.7 R changes mid-drag (Boards turned off in another document): the drop makes zero attempts and the rail shows D(S, R)
+AssertionError: §6.7: zero attempts when P is no longer a permutation of D(S, R): expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]",
++ ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx:269:96
+    267|   dragEnd(gesture, X);
+    268|   await flush();
+    269|   expect(railWrites(from), "§6.7: zero attempts when P is no longer a …
+       |                                                                                                ^
+    270|   expect(raw(), "the bytes are unchanged").toBe(encode(REVERSED));
+    271|   expect(railIds(), "the rail shows D(S, R) for the current S and R").…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx > §6.7 the committed order changing mid-drag (another document): the drop still commits, merging over S at drop time
+AssertionError: H3: zero attempts during dragover: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "[\"countdown\",\"meditation\",\"habits\",\"statistics\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]",
++ ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx:281:65
+    279|   dragOver(gesture, X, Y1);
+    280|   await flush();
+    281|   expect(railWrites(from), "H3: zero attempts during dragover").toEqua…
+       |                                                                 ^
+    282|   await external("xai_rail_order", encode(other));
+    283|   drop(gesture, Y1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-jlDD7x","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-jlDD7x/.apprail-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-jlDD7x/packages/xai-web-shell/src/__tests__/setup.ts"],"include":["docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/registry.tsx packages/xai-web-shell/src/internal/dnd.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=625 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=10 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=18 passed=8 failed=10 skipped=0 precondition_failures=0
+harness PASS [drag.test.tsx] JSON report parsed
+harness PASS [drag.test.tsx] reported files equal the requested include
+harness PASS [drag.test.tsx] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-shell/src/__tests__/setup.ts], root = archive)
+harness PASS [drag.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [drag.test.tsx] required product modules loaded from the archive (27)
+harness PASS [drag.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 FAILED | H3 §6.2/§6.3 a one-step drag: the preview shows P with zero attempts during dragstart/dragenter/dragover; the drop makes exactly one write with the A2 merge
+    first: AssertionError: H3 §6.2: zero storage attempts during dragstart, dragenter and dragover: expected [ Array(1) ] to deeply equal []
+case 003 FAILED | H3 §6.2/§6.3 a two-step drag (two different targets): zero attempts across both dragovers, exactly one write of the final preview at the drop
+    first: AssertionError: H3: zero storage attempts across two order-changing dragovers: expected [ …(2) ] to deeply equal []
+case 004 FAILED | H3 A3 a standalone AppRail (its own controller) also writes once at the drop and never during dragover
+    first: AssertionError: H3: zero attempts during dragover in a standalone AppRail: expected [ Array(1) ] to deeply equal []
+case 005 FAILED | H4 §6.4 dragEnd without a drop (Escape or a cancelled drag) reverts the preview with zero attempts
+    first: AssertionError: H4: a cancelled drag makes zero storage attempts: expected [ Array(1) ] to deeply equal []
+case 006 FAILED | H4 §6.4 a two-step drag released outside the rail on the main content (a drop there) reverts with zero attempts
+    first: AssertionError: H4: a release outside .rail-items makes zero storage attempts: expected [ …(2) ] to deeply equal []
+case 007 FAILED | H4 §6.4 a drop accepted by a text input outside the rail reverts with zero attempts
+    first: AssertionError: H4/host row r: a drop on a text input makes zero rail writes: expected [ Array(1) ] to deeply equal []
+case 008 FAILED | H3 §6.3 a drop on a gap of .rail-items commits exactly one write with the A2 merge
+    first: AssertionError: H3: zero attempts before the drop: expected [ Array(1) ] to deeply equal []
+case 009 FAILED | H3 §6.3 a drop on the dragged button itself commits exactly one write (the drop target's identity never matters)
+    first: AssertionError: H3: zero attempts before the drop: expected [ Array(1) ] to deeply equal []
+case 010 PASSED | PC §6.3 an unchanged order (dragover only on the dragged button, then a drop) makes zero attempts
+case 011 PASSED | PC §6.3 a dragover on a gap only, then a drop on the gap, makes zero attempts
+case 012 PASSED | §6.5 one gesture admits at most one intent: two drop events in one gesture make at most one write
+case 013 PASSED | §6.5 two successive gestures make exactly one write each; the second merges over the first's committed order
+case 014 PASSED | PC §6.5 an external drop (no rail dragstart in this document) on a rail button is ignored with zero attempts
+case 015 FAILED | §6.7 R changes mid-drag (Boards turned off in another document): the drop makes zero attempts and the rail shows D(S, R)
+    first: AssertionError: §6.7: zero attempts when P is no longer a permutation of D(S, R): expected [ Array(1) ] to deeply equal []
+case 016 FAILED | §6.7 the committed order changing mid-drag (another document): the drop still commits, merging over S at drop time
+    first: AssertionError: H3: zero attempts during dragover: expected [ Array(1) ] to deeply equal []
+case 017 PASSED | PC §6.1 the dragged button carries the `dragging` class during the gesture and loses it at dragend
+case 018 PASSED | PC §6.6 a click on a rail button during a drag does not navigate; after the gesture ends, clicks navigate as before

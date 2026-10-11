@@ -177,7 +177,7 @@ async function startUsageOps(actionId, openAfter){
     await usageOpsFetch(`/api/ops/start?action=${encodeURIComponent(actionId)}`, { method:"POST" });
     const target = openAfter ? await waitForUsageOpsRunning() : await refreshUsageOpsStatus();
     if(openAfter && target?.state === "running"){
-      await openUsageOpsTarget(target.id);
+      await openUsageOpsTarget(target.id, "/app/dashboard");
     }
   }catch(error){
     renderUsageOpsLogs([{ at:new Date().toISOString(), line:`[error] ${error.message}` }]);

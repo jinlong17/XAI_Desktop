@@ -1,0 +1,21 @@
+{
+  "requestedRef": "5ed9329",
+  "revision": "5ed93291714f94f42678b9223ee98440f796209f",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "held-account-lock",
+      "pass": false,
+      "error": "Error: Latest selection was lost instead of retained for recovery"
+    },
+    {
+      "name": "quota-retains-latest-draft",
+      "pass": false,
+      "error": "Error: Latest selection was lost instead of retained for recovery"
+    }
+  ],
+  "checkpoint": {},
+  "scope": "Actual Collaborate select, native account WebLocks and physical preference string in isolated synthetic profile; no other settings or full writer activation claim"
+}

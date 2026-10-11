@@ -9,18 +9,17 @@
  * API contract: packages/xai-web-pomodoro/docs/api.md §2.1
  */
 
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { getPrefAutosave, usePref, usePrefAutosave } from "@repo/plugin-web-storage";
-import { emitWebEvent } from "@repo/xai-web-event-bus";
-import type { PomodoroSession, PomodoroMode } from "./types.js";
+import { usePref, usePrefAutosaveAsync } from "@repo/plugin-web-storage";
+import type { PomodoroSession, PomodoroMode, PomodoroDepartureGuardRegistration } from "./types.js";
 import { isPomodoroSession } from "./internal/validate.js";
-import { appendSession } from "./internal/sessionsReducer.js";
 import { nextMode } from "./internal/nextMode.js";
 import { formatDuration } from "./internal/formatDuration.js";
 import { notifySessionEnd } from "./internal/notifications.js";
 import { useTimerTick } from "./internal/useTimerTick.js";
+import { usePreferenceDepartureRecovery } from "./internal/usePreferenceDepartureRecovery.js";
 import { TimerRing } from "./TimerRing.js";
 import { PomodoroOverview } from "./PomodoroOverview.js";
 import { FocusRecordList } from "./FocusRecordList.js";
@@ -37,6 +36,8 @@ import {
 export interface PomodoroModuleProps {
   /** Active language. Drives useI18n bundle. */
   lang: Lang;
+  /** Optional Web-host bridge for route/sign-out protection of preference drafts. */
+  registerDepartureGuard?: PomodoroDepartureGuardRegistration;
 }
 
 const DISPLAY_STYLE_IDS = [
@@ -77,6 +78,9 @@ const POMODORO_PRESETS = [
   { id: "break-15", mode: "long-break", minutes: 15, label: { en: "15 min break", zh: "15 分钟长休" } },
 ] as const;
 type PomodoroPresetId = (typeof POMODORO_PRESETS)[number]["id"] | "custom";
+
+const FOCUS_ROUNDS_PER_CYCLE = 4;
+const FOCUS_CONTROLS_IDLE_MS = 2400;
 
 const DISPLAY_STYLE_LABELS: Record<PomodoroDisplayStyle, { en: string; zh: string }> = {
   digital: { en: "Digital", zh: "数字倒计时" },
@@ -131,6 +135,25 @@ function defaultPresetForMode(mode: PomodoroMode) {
   return POMODORO_PRESETS.find((preset) => preset.id === "focus-25")!;
 }
 
+function currentRoundFor(mode: PomodoroMode, completedFocusCount: number): number {
+  if (mode === "focus") {
+    return (completedFocusCount % FOCUS_ROUNDS_PER_CYCLE) + 1;
+  }
+  const completedInCycle = Math.max(1, completedFocusCount);
+  return ((completedInCycle - 1) % FOCUS_ROUNDS_PER_CYCLE) + 1;
+}
+
+function isKeyboardControlTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  return (
+    target.isContentEditable ||
+    target.tagName === "BUTTON" ||
+    target.tagName === "INPUT" ||
+    target.tagName === "SELECT" ||
+    target.tagName === "TEXTAREA"
+  );
+}
+
 function playPromptSound(soundId: PomodoroSoundId, muted: boolean) {
   if (muted || soundId === "none" || typeof window === "undefined") return;
   type AudioContextConstructor = new () => AudioContext;
@@ -165,11 +188,11 @@ function playPromptSound(soundId: PomodoroSoundId, muted: boolean) {
   }
 }
 
-export function PomodoroModule({ lang }: PomodoroModuleProps) {
+export function PomodoroModule({ lang, registerDepartureGuard }: PomodoroModuleProps) {
   const { t } = useI18n(lang);
 
   // ---- Persistence: usePref with boundary validation ----------------------
-  const [rawSessions, setRawSessions] = usePref("xai_pomodoro_sessions");
+  const [rawSessions] = usePref("xai_pomodoro_sessions");
   const sessions: PomodoroSession[] = useMemo(() => {
     if (!Array.isArray(rawSessions)) return [];
     return (rawSessions as unknown[]).filter((x): x is PomodoroSession => {
@@ -182,54 +205,72 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   }, [rawSessions]);
 
   // ---- User display preferences -------------------------------------------
-  const [activePresetId, setActivePresetId] = useState<PomodoroPresetId>(() => {
-    const saved = getPrefAutosave<PomodoroPresetId>("pomodoro_preset", {
-      defaultValue: "focus-25",
-    });
-    return isPresetId(saved) ? saved : "focus-25";
-  });
-  const [customMinutes, setCustomMinutes] = useState(() => {
-    const saved = getPrefAutosave<number>("pomodoro_custom_minutes", {
-      defaultValue: 45,
-    });
-    return clampCustomMinutes(saved ?? 45);
-  });
-  const [displayStyle, setDisplayStyle] = useState<PomodoroDisplayStyle>(() => {
-    const saved = getPrefAutosave<PomodoroDisplayStyle>("pomodoro_display_style", {
-      defaultValue: "apple",
-    });
-    return isDisplayStyle(saved) ? saved : "apple";
-  });
-  const [themeId, setThemeId] = useState<PomodoroThemeId>(() => {
-    const saved = getPrefAutosave<PomodoroThemeId>("pomodoro_theme", {
-      defaultValue: "coral",
-    });
-    return isThemeId(saved) ? saved : "coral";
-  });
-  const [soundId, setSoundId] = useState<PomodoroSoundId>(() => {
-    const saved = getPrefAutosave<PomodoroSoundId>("pomodoro_sound", {
-      defaultValue: "soft-chime",
-    });
-    return isSoundId(saved) ? saved : "soft-chime";
-  });
-  const [muted, setMuted] = useState(() => {
-    const saved = getPrefAutosave<boolean>("pomodoro_muted", {
-      defaultValue: false,
-    });
-    return typeof saved === "boolean" ? saved : false;
-  });
+  const presetSave = usePrefAutosaveAsync<PomodoroPresetId>("pomodoro_preset", { codec: "json", defaultValue: "focus-25", validate: isPresetId });
+  const minutesSave = usePrefAutosaveAsync<number>("pomodoro_custom_minutes", { codec: "json", defaultValue: 45, validate: (value): value is number => typeof value === "number" && Number.isFinite(value) });
+  const styleSave = usePrefAutosaveAsync<PomodoroDisplayStyle>("pomodoro_display_style", { codec: "json", defaultValue: "apple", validate: isDisplayStyle });
+  const themeSave = usePrefAutosaveAsync<PomodoroThemeId>("pomodoro_theme", { codec: "json", defaultValue: "coral", validate: isThemeId });
+  const soundSave = usePrefAutosaveAsync<PomodoroSoundId>("pomodoro_sound", { codec: "json", defaultValue: "soft-chime", validate: isSoundId });
+  const mutedSave = usePrefAutosaveAsync<boolean>("pomodoro_muted", { codec: "json", defaultValue: false, validate: (value): value is boolean => typeof value === "boolean" });
+  const activePresetId = presetSave.value;
+  const customMinutes = clampCustomMinutes(minutesSave.value);
+  const displayStyle = styleSave.value;
+  const themeId = themeSave.value;
+  const soundId = soundSave.value;
+  const muted = mutedSave.value;
   const [completionNotice, setCompletionNotice] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [focusControlsVisible, setFocusControlsVisible] = useState(false);
 
-  usePrefAutosave("pomodoro_preset", activePresetId);
-  usePrefAutosave("pomodoro_custom_minutes", customMinutes);
-  usePrefAutosave("pomodoro_display_style", displayStyle);
-  usePrefAutosave("pomodoro_theme", themeId);
-  usePrefAutosave("pomodoro_sound", soundId);
-  usePrefAutosave("pomodoro_muted", muted);
+  const preferenceSaves = [presetSave, minutesSave, styleSave, themeSave, soundSave, mutedSave];
+  const preferenceSourceProblem = preferenceSaves.some(result => result.meta.source === "invalid" || result.meta.source === "unavailable");
+  const sourcePreferenceSaves = preferenceSaves.filter(result => result.meta.source === "invalid" || result.meta.source === "unavailable");
+  const conflictingPreferenceFields = [
+    presetSave.meta.status === "conflict" ? "preset" : null,
+    minutesSave.meta.status === "conflict" ? "customMinutes" : null,
+    styleSave.meta.status === "conflict" ? "displayStyle" : null,
+    themeSave.meta.status === "conflict" ? "theme" : null,
+    soundSave.meta.status === "conflict" ? "sound" : null,
+    mutedSave.meta.status === "conflict" ? "muted" : null,
+  ].filter((field): field is "preset" | "customMinutes" | "displayStyle" | "theme" | "sound" | "muted" => field !== null);
+  const mutedRef = useRef(muted);
+  mutedRef.current = muted;
+  const preferenceRecovery = usePreferenceDepartureRecovery({
+    lang,
+    registerDepartureGuard,
+    snapshot: { preset: activePresetId, customMinutes, displayStyle, theme: themeId, sound: soundId, muted },
+    validateSnapshot: (values) => isPresetId(values.preset)
+      && typeof values.customMinutes === "number"
+      && Number.isFinite(values.customMinutes)
+      && values.customMinutes >= 1
+      && values.customMinutes <= 180
+      && isDisplayStyle(values.displayStyle)
+      && isThemeId(values.theme)
+      && isSoundId(values.sound)
+      && typeof values.muted === "boolean",
+  });
+  const { edit: editPreference } = preferenceRecovery;
+
+  const editPreset = useCallback((value: PomodoroPresetId) => editPreference(
+    "preset", value, presetSave.edit, presetSave.retry, presetSave.meta.reload,
+  ), [editPreference, presetSave.edit, presetSave.meta.reload, presetSave.retry]);
+  const editMinutes = useCallback((value: number) => editPreference(
+    "customMinutes", value, minutesSave.edit, minutesSave.retry, minutesSave.meta.reload,
+  ), [editPreference, minutesSave.edit, minutesSave.meta.reload, minutesSave.retry]);
+  const editStyle = useCallback((value: PomodoroDisplayStyle) => editPreference(
+    "displayStyle", value, styleSave.edit, styleSave.retry, styleSave.meta.reload,
+  ), [editPreference, styleSave.edit, styleSave.meta.reload, styleSave.retry]);
+  const editTheme = useCallback((value: PomodoroThemeId) => editPreference(
+    "theme", value, themeSave.edit, themeSave.retry, themeSave.meta.reload,
+  ), [editPreference, themeSave.edit, themeSave.meta.reload, themeSave.retry]);
+  const editSound = useCallback((value: PomodoroSoundId) => editPreference(
+    "sound", value, soundSave.edit, soundSave.retry, soundSave.meta.reload,
+  ), [editPreference, soundSave.edit, soundSave.meta.reload, soundSave.retry]);
+  const editMuted = useCallback((value: boolean) => editPreference(
+    "muted", value, mutedSave.edit, mutedSave.retry, mutedSave.meta.reload,
+  ), [editPreference, mutedSave.edit, mutedSave.meta.reload, mutedSave.retry]);
 
   // ---- Emit dedup guard (StrictMode double-mount safe) --------------------
-  const emittedSessionIdsRef = useRef<Set<string>>(new Set());
+
 
   // Ref to the accent dot for direct DOM transform in rAF loop
   const accentDotRef = useRef<SVGCircleElement | null>(null);
@@ -244,12 +285,9 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   const completedFocusCountRef = useRef(completedFocusCount);
   completedFocusCountRef.current = completedFocusCount;
 
-  // Stable ref for setRawSessions (stable from usePref)
-  const setRawSessionsRef = useRef(setRawSessions);
-  setRawSessionsRef.current = setRawSessions;
-
   // Ref to hold timerTick.reset so onTickToZero can call it
   const resetRef = useRef<((nextMode: PomodoroMode, durationMs?: number) => void) | null>(null);
+  const focusControlsTimerRef = useRef<number | null>(null);
 
   // ---- Tick-to-zero handler (injected into useTimerTick) ------------------
   // Stable callback — does not change between renders
@@ -266,62 +304,20 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   // Implement the callback (stable, uses refs only)
   onTickToZeroRef.current = (
     mode: PomodoroMode,
-    durationMs: number,
+    _durationMs: number,
     elapsedMs: number,
-    sessionId: string,
-    sessionStartedAt: string,
   ) => {
-    const finishedAt = new Date().toISOString();
-    const record: PomodoroSession = {
-      id: sessionId,
-      mode,
-      startedAt: sessionStartedAt,
-      finishedAt,
-      durationMs,
-      // For tick-to-zero (completed=true), elapsedMs === durationMs (AC-SCHEMA-6)
-      elapsedMs,
-      completed: true,
-    };
-
-    // Persist
-    try {
-      setRawSessionsRef.current((prev) => {
-        const prevArr = Array.isArray(prev)
-          ? (prev as unknown[]).filter(isPomodoroSession)
-          : [];
-        return appendSession(prevArr, record);
-      });
-    } catch (e) {
-      if (process.env.NODE_ENV !== "production") {
-        console.warn("[plugin-web-pomodoro] localStorage quota error:", e);
-      }
-    }
-
-    // Emit (once per sessionId — StrictMode guard)
-    if (!emittedSessionIdsRef.current.has(sessionId)) {
-      emittedSessionIdsRef.current.add(sessionId);
-      /**
-       * Note: durationMs in payload === actual elapsed (=== configured durationMs for
-       * tick-to-zero sessions). Statistics consumers should treat this as "actual time spent."
-       */
-      emitWebEvent("web:pomodoro:session-finished", {
-        mode,
-        durationMs: elapsedMs,
-        finishedAt,
-      });
-    }
-
     playPromptSound(soundId, muted);
     notifySessionEnd(mode, elapsedMs);
+    setIsFullscreen(false);
+    setFocusControlsVisible(false);
 
     // Advance mode
     const focusCountAfter =
-      mode === "focus"
-        ? completedFocusCountRef.current + 1
-        : completedFocusCountRef.current;
+      completedFocusCountRef.current;
     const nextModeValue = nextMode(mode, focusCountAfter);
     const nextPreset = defaultPresetForMode(nextModeValue);
-    setActivePresetId(nextPreset.id);
+    void editPreset(nextPreset.id);
     setCompletionNotice(
       lang === "zh"
         ? `${modeLabelFor(mode)}完成，已切换到${modeLabelFor(nextModeValue)}。`
@@ -349,17 +345,25 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
     dotRef: accentDotRef,
     dotProgressMode: displayStyle === "ring" ? "remaining" : "elapsed",
     onTickToZero,
+    onCommitted: (record) => {
+      if (!record.completed) {
+        setIsFullscreen(false);
+        setCompletionNotice(lang === "zh" ? "本次计时已停止并保存。" : "Timer stopped and saved.");
+      }
+    },
   });
 
   useEffect(() => {
-    if (!isFullscreen || typeof window === "undefined") return undefined;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsFullscreen(false);
+    if (!isFullscreen) {
+      setFocusControlsVisible(false);
+      return undefined;
+    }
+    return () => {
+      if (focusControlsTimerRef.current) {
+        window.clearTimeout(focusControlsTimerRef.current);
+        focusControlsTimerRef.current = null;
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isFullscreen]);
 
   // Keep resetRef in sync
@@ -385,66 +389,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
 
   // ---- Stop button handler ------------------------------------------------
   function handleStop() {
-    if (timerState.kind === "idle") return;
-
-    let elapsedMs: number;
-    const mode = timerState.mode;
-    const durationMs = timerState.durationMs;
-    const sessionId = timerState.sessionId;
-    const sessionStartedAt = timerState.sessionStartedAt;
-
-    if (timerState.kind === "running") {
-      const now = Date.now();
-      const remaining = Math.max(
-        0,
-        timerState.remainingAtStartMs - (now - timerState.startedAt),
-      );
-      const elapsedThisRun = timerState.remainingAtStartMs - remaining;
-      elapsedMs = timerState.elapsedBeforePauseMs + elapsedThisRun;
-    } else {
-      // paused
-      elapsedMs = timerState.elapsedSoFarMs;
-    }
-
-    end();
-
-    const finishedAt = new Date().toISOString();
-    const record: PomodoroSession = {
-      id: sessionId,
-      mode,
-      startedAt: sessionStartedAt,
-      finishedAt,
-      durationMs,
-      elapsedMs,
-      completed: false,
-    };
-
-    // Persist
-    try {
-      setRawSessions((prev) => {
-        const prevArr = Array.isArray(prev)
-          ? (prev as unknown[]).filter(isPomodoroSession)
-          : [];
-        return appendSession(prevArr, record);
-      });
-    } catch (e) {
-      if (process.env.NODE_ENV !== "production") {
-        console.warn("[plugin-web-pomodoro] localStorage quota error:", e);
-      }
-    }
-
-    // Emit (End-early always emits)
-    if (!emittedSessionIdsRef.current.has(sessionId)) {
-      emittedSessionIdsRef.current.add(sessionId);
-      emitWebEvent("web:pomodoro:session-finished", {
-        mode,
-        durationMs: elapsedMs,
-        finishedAt,
-      });
-    }
-
-    setCompletionNotice(lang === "zh" ? "本次计时已停止并保存。" : "Timer stopped and saved.");
-    reset(mode, durationMs);
+    if (timerState.kind !== "idle") end();
   }
 
   function handleReset() {
@@ -457,7 +402,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   }
 
   function handlePresetClick(presetId: PomodoroPresetId) {
-    setActivePresetId(presetId);
+    void editPreset(presetId);
     setCompletionNotice(null);
     const preset = presetForId(presetId);
     const mode = preset?.mode ?? "focus";
@@ -469,13 +414,75 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
 
   function handleCustomMinutesChange(value: number) {
     const nextMinutesValue = clampCustomMinutes(value);
-    setCustomMinutes(nextMinutesValue);
-    setActivePresetId("custom");
+    void editMinutes(nextMinutesValue);
+    void editPreset("custom");
     setCompletionNotice(null);
     if (timerState.kind === "idle") {
       reset("focus", minutesToMs(nextMinutesValue));
     }
   }
+
+  function enterFocusFullscreen() {
+    setFocusControlsVisible(false);
+    setIsFullscreen(true);
+  }
+
+  function exitFocusFullscreen() {
+    setIsFullscreen(false);
+    setFocusControlsVisible(false);
+  }
+
+  const revealFocusControls = useCallback(() => {
+    if (!isFullscreen) return;
+    setFocusControlsVisible(true);
+    if (focusControlsTimerRef.current) {
+      window.clearTimeout(focusControlsTimerRef.current);
+    }
+    focusControlsTimerRef.current = window.setTimeout(() => {
+      setFocusControlsVisible(false);
+      focusControlsTimerRef.current = null;
+    }, FOCUS_CONTROLS_IDLE_MS);
+  }, [isFullscreen]);
+
+  useEffect(() => {
+    if (!isFullscreen || typeof window === "undefined") return undefined;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsFullscreen(false);
+        setFocusControlsVisible(false);
+        return;
+      }
+
+      if (
+        (event.key === " " || event.key === "Spacebar" || event.code === "Space") &&
+        !event.repeat &&
+        !isKeyboardControlTarget(event.target)
+      ) {
+        event.preventDefault();
+        revealFocusControls();
+        if (isIdle) {
+          setCompletionNotice(null);
+          start(selectedDurationMs);
+        } else if (isRunning) {
+          pause();
+        } else if (isPaused) {
+          resume();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [
+    isFullscreen,
+    isIdle,
+    isPaused,
+    isRunning,
+    pause,
+    resume,
+    revealFocusControls,
+    selectedDurationMs,
+    start,
+  ]);
 
   const progress = useMemo(() => {
     const durationMs = timerState.durationMs;
@@ -506,6 +513,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   const displayStyleLabel = label(lang, DISPLAY_STYLE_LABELS[displayStyle]);
   const soundLabel =
     SOUND_CHOICES.find((sound) => sound.id === soundId)?.label ?? SOUND_CHOICES[0]!.label;
+  const currentRound = currentRoundFor(currentMode, completedFocusCount);
 
   return (
     <div
@@ -515,6 +523,31 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
       data-running={isRunning ? "true" : "false"}
       style={moduleStyle}
     >
+      {preferenceRecovery.hasDrafts && <section role="alert" className="pomo-notice pomo-recovery">
+        <p>{lang === "zh" ? "部分偏好未保存。当前选择仍在此页面生效，重新打开前请重试或导出。" : "Some preferences were not saved. Current choices still apply on this page; retry or export before reopening."}</p>
+        <button type="button" onClick={preferenceRecovery.retryDrafts}>{lang === "zh" ? "重试偏好保存" : "Retry preferences"}</button>
+        {conflictingPreferenceFields.length > 0
+          ? <button type="button" onClick={() => preferenceRecovery.discardFields(conflictingPreferenceFields)}>{lang === "zh" ? "丢弃冲突偏好" : "Discard conflicting preferences"}</button>
+          : <button type="button" onClick={preferenceRecovery.discardDrafts}>{lang === "zh" ? "丢弃当前偏好草稿" : "Discard current preference drafts"}</button>}
+        <button type="button" onClick={() => preferenceRecovery.exportDraft()}>{lang === "zh" ? "导出当前偏好" : "Export current preferences"}</button>
+        {preferenceRecovery.exportFailed && <p>{lang === "zh" ? "偏好导出失败，请重试。" : "Preference export failed. Please retry."}</p>}
+      </section>}
+      {preferenceSourceProblem && <section role="alert" className="pomo-notice pomo-source-recovery">
+        <p>{lang === "zh" ? "部分偏好来源无法读取。修复来源后可重新读取，不会覆盖其他草稿。" : "Some preference sources could not be read. Repair the source, then reload it without replacing other drafts."}</p>
+        <button type="button" onClick={() => { sourcePreferenceSaves.forEach(result => result.meta.reload()); }}>{lang === "zh" ? "重新读取偏好" : "Reload preferences"}</button>
+      </section>}
+      {timerTick.conflict && <p role="status" className="pomo-notice">{lang === "zh" ? "计时已在其他标签页更改，现已刷新。请检查当前状态后重新操作。" : "The timer changed in another tab and has been refreshed. Review its current state before choosing an action."}</p>}
+      {timerTick.error && <section role="alert" className="pomo-notice pomo-recovery">
+        <p>{timerTick.error}</p>
+        <button type="button" onClick={() => { void timerTick.retry(); }}>{lang === "zh" ? "重试保存" : "Retry save"}</button>
+        <button type="button" onClick={() => {
+          try {
+            const blob = new Blob([timerTick.exportRecovery()], { type: "application/json" });
+            const url = URL.createObjectURL(blob); const anchor = document.createElement("a");
+            anchor.href = url; anchor.download = "pomodoro-recovery.json"; anchor.click(); URL.revokeObjectURL(url);
+          } catch { /* Scope changed: do not export another account. */ }
+        }}>{lang === "zh" ? "导出恢复数据" : "Export recovery data"}</button>
+      </section>}
       {/* Module header */}
       <header className="module-head pomo-head">
         <div className="pomo-title-block">
@@ -540,7 +573,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                 ? "静音"
                 : "Mute"
           }
-          onClick={() => setMuted((m) => !m)}
+          onClick={() => { const next = !mutedRef.current; mutedRef.current = next; void editMuted(next); }}
           data-testid="mute-btn"
         >
           {muted ? <IconSoundOff /> : <IconSound />}
@@ -558,7 +591,13 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                 : "Enter fullscreen"
           }
           aria-pressed={isFullscreen}
-          onClick={() => setIsFullscreen((value) => !value)}
+          onClick={() => {
+            if (isFullscreen) {
+              exitFocusFullscreen();
+            } else {
+              enterFocusFullscreen();
+            }
+          }}
           data-testid="fullscreen-btn"
         >
           {isFullscreen ? <IconMinimize /> : <IconMaximize />}
@@ -591,7 +630,12 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
               </span>
             </div>
 
-            <div className="pomo-timer-frame">
+            <div
+              className="pomo-timer-frame"
+              onDoubleClick={enterFocusFullscreen}
+              data-testid="pomo-timer-frame"
+              title={lang === "zh" ? "双击进入全屏专注" : "Double-click for fullscreen focus"}
+            >
               <TimerRing
                 ref={accentDotRef}
                 progress={progress}
@@ -623,6 +667,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                   type="button"
                   className="btn primary"
                   aria-label={t.pomo.start}
+                  disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
                   data-testid="start-btn"
                   onClick={() => {
                     setCompletionNotice(null);
@@ -638,7 +683,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     type="button"
                     className="btn ghost"
                     aria-label={t.pomo.pause}
-                    data-testid="pause-btn"
+                    disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="pause-btn"
                     onClick={pause}
                   >
                     {t.pomo.pause}
@@ -647,7 +693,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     type="button"
                     className="btn ghost"
                     aria-label={lang === "zh" ? "停止" : "Stop"}
-                    data-testid="end-btn"
+                    disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="end-btn"
                     onClick={handleStop}
                   >
                     {lang === "zh" ? "停止" : "Stop"}
@@ -660,7 +707,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     type="button"
                     className="btn primary"
                     aria-label={t.pomo.continue}
-                    data-testid="continue-btn"
+                    disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="continue-btn"
                     onClick={resume}
                   >
                     {t.pomo.continue}
@@ -669,7 +717,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     type="button"
                     className="btn ghost"
                     aria-label={lang === "zh" ? "停止" : "Stop"}
-                    data-testid="end-btn-paused"
+                    disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="end-btn-paused"
                     onClick={handleStop}
                   >
                     {lang === "zh" ? "停止" : "Stop"}
@@ -680,7 +729,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                 type="button"
                 className="btn ghost"
                 aria-label={lang === "zh" ? "重置" : "Reset"}
-                data-testid="reset-btn"
+                disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="reset-btn"
                 onClick={handleReset}
               >
                 {lang === "zh" ? "重置" : "Reset"}
@@ -744,7 +794,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     className={`pomo-style-btn${displayStyle === id ? " active" : ""}`}
                     aria-pressed={displayStyle === id}
                     data-testid={`style-${id}`}
-                    onClick={() => setDisplayStyle(id)}
+                    onClick={() => { void editStyle(id); }}
                   >
                     {label(lang, DISPLAY_STYLE_LABELS[id])}
                   </button>
@@ -764,7 +814,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     aria-label={label(lang, theme.label)}
                     aria-pressed={themeId === theme.id}
                     data-testid={`theme-${theme.id}`}
-                    onClick={() => setThemeId(theme.id)}
+                    onClick={() => { void editTheme(theme.id); }}
                   />
                 ))}
               </div>
@@ -778,7 +828,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                   value={soundId}
                   aria-label={lang === "zh" ? "选择提示音" : "Select alert sound"}
                   data-testid="sound-select"
-                  onChange={(event) => setSoundId(event.target.value as PomodoroSoundId)}
+                  onChange={(event) => { const next = event.target.value; if (isSoundId(next)) void editSound(next); }}
                 >
                   {SOUND_CHOICES.map((sound) => (
                     <option key={sound.id} value={sound.id}>
@@ -833,6 +883,128 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
           </section>
         </aside>
       </div>
+
+      {isFullscreen && (
+        <section
+          className="pomo-focus-overlay"
+          data-testid="pomo-focus-overlay"
+          data-controls-visible={focusControlsVisible ? "true" : "false"}
+          data-paused={isPaused ? "true" : "false"}
+          aria-label={lang === "zh" ? "番茄钟全屏专注模式" : "Pomodoro fullscreen focus mode"}
+          onPointerMove={revealFocusControls}
+          onPointerLeave={() => setFocusControlsVisible(false)}
+          onFocusCapture={revealFocusControls}
+        >
+          <div className="pomo-focus-aura" aria-hidden="true" />
+          <button
+            type="button"
+            className="pomo-focus-exit"
+            aria-label={lang === "zh" ? "退出全屏" : "Exit fullscreen"}
+            data-testid="focus-exit-btn"
+            onClick={exitFocusFullscreen}
+          >
+            <IconMinimize size={18} />
+          </button>
+
+          <div className="pomo-focus-hero">
+            <div className="pomo-focus-heading">
+              <span className="pomo-focus-eyebrow">{t.pomo.title}</span>
+              <h2>{modeLabelFor(currentMode)}</h2>
+              <p>{stateLabel}</p>
+            </div>
+
+            <div className="pomo-focus-ring">
+              <TimerRing
+                ref={accentDotRef}
+                progress={progress}
+                running={isRunning}
+                variant={displayStyle === "digital" ? "apple" : displayStyle}
+              />
+              <div className="pomo-focus-time">
+                <span className="pomo-focus-phase">
+                  {lang === "zh" ? "当前阶段" : "Current phase"}
+                </span>
+                <span className="pomo-focus-num">{formatDuration(displayedRemainingMs)}</span>
+                <span className="pomo-focus-mode">{modeLabelFor(currentMode)}</span>
+              </div>
+            </div>
+
+            <dl className="pomo-focus-stats">
+              <div>
+                <dt>{lang === "zh" ? "当前轮次" : "Round"}</dt>
+                <dd>{currentRound}</dd>
+              </div>
+              <div>
+                <dt>{lang === "zh" ? "总轮次" : "Total rounds"}</dt>
+                <dd>{FOCUS_ROUNDS_PER_CYCLE}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div className="pomo-focus-controls" data-testid="pomo-focus-controls">
+            {isIdle && (
+              <button
+                type="button"
+                className="btn primary"
+                aria-label={t.pomo.start}
+                disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="focus-start-btn"
+                onClick={() => {
+                  setCompletionNotice(null);
+                  start(selectedDurationMs);
+                }}
+              >
+                {t.pomo.start}
+              </button>
+            )}
+            {isRunning && (
+              <button
+                type="button"
+                className="btn ghost"
+                aria-label={t.pomo.pause}
+                disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="focus-pause-btn"
+                onClick={pause}
+              >
+                {t.pomo.pause}
+              </button>
+            )}
+            {isPaused && (
+              <button
+                type="button"
+                className="btn primary"
+                aria-label={t.pomo.continue}
+                disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="focus-continue-btn"
+                onClick={resume}
+              >
+                {t.pomo.continue}
+              </button>
+            )}
+            {!isIdle && (
+              <button
+                type="button"
+                className="btn ghost"
+                aria-label={lang === "zh" ? "停止" : "Stop"}
+                disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="focus-stop-btn"
+                onClick={handleStop}
+              >
+                {lang === "zh" ? "停止" : "Stop"}
+              </button>
+            )}
+            <button
+              type="button"
+              className="btn ghost"
+              aria-label={lang === "zh" ? "退出全屏" : "Exit fullscreen"}
+              data-testid="focus-exit-action-btn"
+              onClick={exitFocusFullscreen}
+            >
+              {lang === "zh" ? "退出全屏" : "Exit"}
+            </button>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

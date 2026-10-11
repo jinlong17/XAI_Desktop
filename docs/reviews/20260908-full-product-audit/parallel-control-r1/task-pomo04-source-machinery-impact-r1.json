@@ -1,0 +1,100 @@
+{
+  "id": "POMO-04/SOURCE-MACHINERY-IMPACT1",
+  "workflow": "A",
+  "module": "web",
+  "role": "fresh full POMO source-machinery technical impact author1; no repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "9e2e6cf722171936dc8c085d588f0c047d968e92",
+    "d75a0d6de0521abde0128339049bd860bc0ec7a2"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-pomo04-source-machinery-impact-r1/impact.md",
+    "docs/reviews/audit-parallel-pomo04-source-machinery-impact-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Complete2954review2/2932source2/2914review1/2900original/full15P04rows11conditionalpaths/L1-L8/106logs. Full root-adopted docbasis no productgrant. Source-feasible full publichost managedstartup/SDK/account/generation/queued End-vsReset decisions/one-shot idrevisionownerCancel/disposal vs issued command survives routeunmount/postawaitUI fences/WAL+EndissuedAt/recordedidnoop/expirypriority/durablecompletion/exportactualdisk/error/forcedloss/realclose/native/fullvisual/focus/consumer+G1 case-emitter matrix. No inventedcancellationpolicy/sharedowner rewrite. Bind exact finite newsource or protectedexception proposal, permanentactual purposebudget histories and oldmixedunitsunknown, no reset/newactorfiction. Shared methods still I1hold, retention3/3 unknownexternal holds propagate onlydependencies. Full validbefore beforeimplementation remainsrequired.",
+    "Complete original312 ordered fields/39 literal reversible module labels/939 references/formal13,3,3,293 and299unclosed preserved. Observe actual schemas: EXECUTION top-levelitems and TODO sections[].tasks; original web（project-system）30 and web（跨模块验证索引）9. P0runtime parity with exactly4 acceptedTT08 owningdocs separately; no wholeapps/packages equality assertion.",
+    "Complete canonical Clockr2§14 E1-E25/E24/Rules and copies retained verbatim; complete full original acceptance, all historical actual purpose/command/process/mode/duplicate/refusal/probe/unknowncap3 budgets no actor/worktree/pathreset. No product/runner/test/runtime grant. Allinputs validated and bothbuffers constructed beforeANYwrites; one semanticstatic allowance and failed/unrun truth permanent; fresh independent actors/reviewerneverrepair.",
+    "Retain exact source qualification and independent review/rootadoption/fullvalidbefore/implementation/fixed+integrated+native+visual+affected/fullG1/actualcrossvendor/freshfullacceptance/root evidence-only reconciliation/inventory chain; local blocked dependencies cannot weaken standards. No children/push/globalwrites/protectedchanges."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/sharedCSS/storage/schema/account/host/config/lockfile",
+    "all original contracts/runners/failures/evidence",
+    "globalcontrols/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "technical_impact_iteration": 1,
+    "technical_impact_cap": 3,
+    "static_pass": 1
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported producttradeoff or weakeningstandards",
+    "runtime orprotectedwrite need"
+  ],
+  "no_children": true,
+  "original_item": {
+    "id": "POMO-04",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "明确Stop、Reset及中途离开的保存规则",
+    "acceptance": "每个按钮的保存/放弃含义清楚；Reset不静默丢失用户以为已保存的记录",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "POMO-04",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:POMO-04"
+    ],
+    "source_section": "POMO",
+    "acceptance_evidence": {
+      "business_acceptance": "每个按钮的保存/放弃含义清楚；Reset不静默丢失用户以为已保存的记录",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "POMO-04/prepare",
+      "POMO-04/contract-review",
+      "POMO-04/before",
+      "POMO-04/implement",
+      "POMO-04/verify",
+      "POMO-04/accept",
+      "POMO-04/reconcile",
+      "POMO-04/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  }
+}

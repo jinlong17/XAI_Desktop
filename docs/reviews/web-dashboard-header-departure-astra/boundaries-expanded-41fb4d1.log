@@ -1,0 +1,96 @@
+revision=41fb4d1 fixed_commit=41fb4d14f8a0064861b9165f023c51f8e649d5bd
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-astra-ugNeYh
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx (5 tests | 4 failed) 138ms
+   × a moved offset rejected by caller raw preflight remains guarded and exportable 44ms
+     → real rejected moved intent must not disappear from host protection: expected false to be true // Object.is equality
+   × unavailable source plus an unmoved pointer press does not fabricate an unload draft 36ms
+     → no movement or submitted value exists: expected true to be false // Object.is equality
+   × a retained inline export action cannot adopt a new scope before its account projection renders 21ms
+     → old A projection must never be disclosed by a newly captured B decision: expected 'Original A' not to be 'Original A' // Object.is equality
+     → the previous rendered action has no current B projection/decision authority yet: expected "click" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st click call:
+
+    Array []
+
+
+Number of calls: 1
+
+   ✓ after the owner projection renders, fresh current device export contains B rather than A 10ms
+   × successful Same predecessor cannot clear a new failed Same submission after intervening edits 27ms
+     → the sequence must establish a real distinct successor attempt: expected 1 to be 2 // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  00:36:13
+   Duration  1.13s (transform 163ms, setup 253ms, collect 55ms, tests 138ms, environment 378ms, prepare 78ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx > a moved offset rejected by caller raw preflight remains guarded and exportable
+AssertionError: real rejected moved intent must not disappear from host protection: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx:16:103
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx > unavailable source plus an unmoved pointer press does not fabricate an unload draft
+AssertionError: no movement or submitted value exists: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx:34:61
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx > a retained inline export action cannot adopt a new scope before its account projection renders
+AssertionError: old A projection must never be disclosed by a newly captured B decision: expected 'Original A' not to be 'Original A' // Object.is equality
+ ❯ docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx:42:162
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx > a retained inline export action cannot adopt a new scope before its account projection renders
+AssertionError: the previous rendered action has no current B projection/decision authority yet: expected "click" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st click call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx:43:113
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx > successful Same predecessor cannot clear a new failed Same submission after intervening edits
+AssertionError: the sequence must establish a real distinct successor attempt: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx:76:85
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯

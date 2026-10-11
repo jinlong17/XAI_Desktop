@@ -1,0 +1,9 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ✓ docs/reviews/web-ai-canonical-subscribers-sol-fix/durable-subscriber-replay.test.tsx (10 tests) 439ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  16:26:29
+   Duration  7.80s (transform 1.59s, setup 475ms, collect 2.76s, tests 439ms, environment 3.11s, prepare 397ms)

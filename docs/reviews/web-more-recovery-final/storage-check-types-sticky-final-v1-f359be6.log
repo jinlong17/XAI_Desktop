@@ -1,0 +1,7 @@
+revision=f359be6
+fixed_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+command=pnpm --filter @repo/plugin-web-storage check-types
+exit=0
+
+> @repo/plugin-web-storage@0.0.0 check-types /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-more-final-AqP4im/packages/plugin-web-storage
+> tsc --noEmit

@@ -1,0 +1,287 @@
+revision=2962b49 fixed_commit=2962b49bd63fa351a2c17b406456ea1b987eca8f
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-ZCYdDP
+
+ ❯ docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx (5 tests | 5 failed) 113ms
+   × current memory export survives complete storage denial and preserves both sources 73ms
+     → No Header recovery Blob was created
+   × synchronous owner change during URL setup cancels click and old discard 10ms
+     → Cannot read properties of null (reading 'exportDraft')
+   × locked device-only export uses empty note and current finite offset 7ms
+     → No Header recovery Blob was created
+   × A draft stays unload-only in B and never enters fresh B export 11ms
+     → No Header recovery Blob was created
+   × click failure cleans resources and retains recovery state 11ms
+     → Unable to find an element with the text: Export failed. Please retry.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<header[39m
+      [33mclass[39m=[32m"dash-head"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-head__intro"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"dash-greeting"[39m
+        [36m>[39m
+          [0mGood morning[0m
+          [0m, [0m
+          [0mHello[0m
+          [0m.[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-date"[39m
+        [36m>[39m
+          [0mThursday, September 10[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-note-lane"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-note is-editing has-note"[39m
+          [33mstyle[39m=[32m"--dash-note-x: 0px;"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"dash-note__editor"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Add a focus note, reminder, or short message"[39m
+              [33mclass[39m=[32m"dash-note__input"[39m
+              [33mmaxlength[39m=[32m"120"[39m
+              [33mvalue[39m=[32m"Keep after click failure"[39m
+            [36m/>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Save dashboard note"[39m
+              [33mclass[39m=[32m"dash-note__icon-btn"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"13"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"13"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M5 12l5 5 9-11"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"Add a new dashboard widget"[39m
+        [33mclass[39m=[32m"btn ghost dash-add"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mfill[39m=[32m"none"[39m
+          [33mheight[39m=[32m"14"[39m
+          [33mstroke[39m=[32m"currentColor"[39m
+          [33mstroke-linecap[39m=[32m"round"[39m
+          [33mstroke-linejoin[39m=[32m"round"[39m
+          [33mstroke-width[39m=[32m"2"[39m
+          [33mviewBox[39m=[32m"0 0 24 24"[39m
+          [33mwidth[39m=[32m"14"[39m
+        [36m>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"12"[39m
+            [33mx2[39m=[32m"12"[39m
+            [33my1[39m=[32m"5"[39m
+            [33my2[39m=[32m"19"[39m
+          [36m/>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"5"[39m
+            [33mx2[39m=[32m"19"[39m
+            [33my1[39m=[32m"12"[39m
+            [33my2[39m=[32m"12"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span>[39m
+          [0mAdd widget[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</header>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  00:13:25
+   Duration  848ms (transform 167ms, setup 0ms, collect 274ms, tests 113ms, environment 201ms, prepare 42ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx > current memory export survives complete storage denial and preserves both sources
+Error: No Header recovery Blob was created
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-ZCYdDP/docs/reviews/web-dashboard-header-departure-sol/fixture.tsx:93:24
+     91|     revoke,
+     92|     read: async () => JSON.parse(await new Promise<string>((resolve, r…
+     93|       if (!blob) throw new Error("No Header recovery Blob was created"…
+       |                        ^
+     94|       const reader = new FileReader();
+     95|       reader.onload = () => resolve(reader.result as string);
+ ❯ Object.read ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-ZCYdDP/docs/reviews/web-dashboard-header-departure-sol/fixture.tsx:92:40
+ ❯ docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx:19:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx > synchronous owner change during URL setup cancels click and old discard
+TypeError: Cannot read properties of null (reading 'exportDraft')
+ ❯ docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx:32:31
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react/dist/act-compat.js:47:24
+ ❯ process.env.NODE_ENV.exports.act ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:814:22
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react/dist/act-compat.js:46:25
+ ❯ docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx:32:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx > locked device-only export uses empty note and current finite offset
+Error: No Header recovery Blob was created
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-ZCYdDP/docs/reviews/web-dashboard-header-departure-sol/fixture.tsx:93:24
+     91|     revoke,
+     92|     read: async () => JSON.parse(await new Promise<string>((resolve, r…
+     93|       if (!blob) throw new Error("No Header recovery Blob was created"…
+       |                        ^
+     94|       const reader = new FileReader();
+     95|       reader.onload = () => resolve(reader.result as string);
+ ❯ Object.read ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-ZCYdDP/docs/reviews/web-dashboard-header-departure-sol/fixture.tsx:92:40
+ ❯ docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx:45:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx > A draft stays unload-only in B and never enters fresh B export
+Error: No Header recovery Blob was created
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-ZCYdDP/docs/reviews/web-dashboard-header-departure-sol/fixture.tsx:93:24
+     91|     revoke,
+     92|     read: async () => JSON.parse(await new Promise<string>((resolve, r…
+     93|       if (!blob) throw new Error("No Header recovery Blob was created"…
+       |                        ^
+     94|       const reader = new FileReader();
+     95|       reader.onload = () => resolve(reader.result as string);
+ ❯ Object.read ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-ZCYdDP/docs/reviews/web-dashboard-header-departure-sol/fixture.tsx:92:40
+ ❯ docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx:59:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx > click failure cleans resources and retains recovery state
+TestingLibraryElementError: Unable to find an element with the text: Export failed. Please retry.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<header[39m
+      [33mclass[39m=[32m"dash-head"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-head__intro"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"dash-greeting"[39m
+        [36m>[39m
+          [0mGood morning[0m
+          [0m, [0m
+          [0mHello[0m
+          [0m.[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-date"[39m
+        [36m>[39m
+          [0mThursday, September 10[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-note-lane"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-note is-editing has-note"[39m
+          [33mstyle[39m=[32m"--dash-note-x: 0px;"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"dash-note__editor"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Add a focus note, reminder, or short message"[39m
+              [33mclass[39m=[32m"dash-note__input"[39m
+              [33mmaxlength[39m=[32m"120"[39m
+              [33mvalue[39m=[32m"Keep after click failure"[39m
+            [36m/>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Save dashboard note"[39m
+              [33mclass[39m=[32m"dash-note__icon-btn"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"13"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"13"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M5 12l5 5 9-11"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"Add a new dashboard widget"[39m
+        [33mclass[39m=[32m"btn ghost dash-add"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mfill[39m=[32m"none"[39m
+          [33mheight[39m=[32m"14"[39m
+          [33mstroke[39m=[32m"currentColor"[39m
+          [33mstroke-linecap[39m=[32m"round"[39m
+          [33mstroke-linejoin[39m=[32m"round"[39m
+          [33mstroke-width[39m=[32m"2"[39m
+          [33mviewBox[39m=[32m"0 0 24 24"[39m
+          [33mwidth[39m=[32m"14"[39m
+        [36m>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"12"[39m
+            [33mx2[39m=[32m"12"[39m
+            [33my1[39m=[32m"5"[39m
+            [33my2[39m=[32m"19"[39m
+          [36m/>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"5"[39m
+            [33mx2[39m=[32m"19"[39m
+            [33my1[39m=[32m"12"[39m
+            [33my2[39m=[32m"12"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span>[39m
+          [0mAdd widget[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</header>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx:68:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯

@@ -2,7 +2,7 @@
  * Shell module registrations — the concrete WebModuleSlotRegistration[] array.
  *
  * Satisfies @repo/xai-web-shell WebModuleSlotRegistration for each module id
- * in the rail. All 12 modules now ship as real registrations from their
+ * in the rail. All rail modules now ship as real registrations from their
  * owning packages (rows #6..#21); no placeholder entries remain.
  *
  * Design constraints:
@@ -24,11 +24,13 @@ import { tasksWebModuleRegistration } from "@repo/plugin-web-tasks";
 // xai-web-habits row #15
 import { habitsSlotRegistration } from "@repo/plugin-web-habits";
 // xai-web-pomodoro row #14
-import { pomodoroWebModuleRegistration } from "@repo/plugin-web-pomodoro";
+import { pomodoroRegistration } from "./pomodoroRegistration.js";
 // xai-web-time-tracker · Claude Design Time Tracker merge
 import { timeTrackerWebModuleRegistration } from "@repo/plugin-web-time-tracker";
 // xai-web-bookkeeping · Cloud Design bookkeeping module merge
 import { bookkeepingWebModuleRegistration } from "@repo/plugin-web-bookkeeping";
+// xai-web-metric-tracker · weight + BMI metric tracker
+import { metricTrackerWebModuleRegistration } from "@repo/plugin-web-metric-tracker";
 // xai-web-ai-chat row #18
 import { aiChatWebModuleRegistration } from "@repo/plugin-web-ai-chat";
 // xai-web-meditation row #16
@@ -36,7 +38,7 @@ import { meditationSlotRegistration } from "@repo/plugin-web-meditation";
 // xai-web-calendar row #12
 import { calendarSlotRegistration } from "@repo/plugin-web-calendar";
 // xai-web-dashboard-grid row #10
-import { dashboardGridSlotRegistration } from "@repo/plugin-web-dashboard-grid";
+import { dashboardRegistration } from "./dashboardRegistration.js";
 // xai-web-board-workspaces row #9 (workspace + multi-board layer wrapping row #7 board-core)
 import { boardWorkspacesWebModuleRegistration } from "@repo/plugin-web-board-workspaces";
 // xai-web-statistics row #20
@@ -68,12 +70,13 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   aiChatWebModuleRegistration,  // xai-web-ai-chat row #18 (railOrder 1) — not toggleable
   withDisabledFallback(tasksWebModuleRegistration, "tasks"),
   withDisabledFallback(boardWorkspacesWebModuleRegistration, "board"),  // row #9 replaces row #7 wrapper
-  withDisabledFallback(dashboardGridSlotRegistration, "dashboard"),  // row #10
+  withDisabledFallback(dashboardRegistration, "dashboard"),  // row #10
   withDisabledFallback(calendarSlotRegistration, "calendar"),  // row #12
   withDisabledFallback(matrixSlotRegistration, "matrix"),
-  withDisabledFallback(pomodoroWebModuleRegistration, "pomodoro"),
+  withDisabledFallback(pomodoroRegistration, "pomodoro"),
   timeTrackerWebModuleRegistration,  // not toggleable in Settings V1; mirrors Claude Design rail item
   bookkeepingWebModuleRegistration,  // not toggleable in Settings V1; Cloud Design bookkeeping module
+  metricTrackerWebModuleRegistration,  // not toggleable in Settings V1; metric tracker V1
   withDisabledFallback(habitsSlotRegistration, "habits"),  // row #15
   withDisabledFallback(meditationSlotRegistration, "meditation"),  // row #16
   countdownWebModuleRegistration,  // not toggleable

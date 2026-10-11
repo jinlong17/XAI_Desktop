@@ -1,0 +1,69 @@
+{
+  "requestedRef": "37252bc",
+  "revision": "37252bcafe8efbd24cb8514d3e564c61fcabf3dc",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 39536,
+  "reopenedPid": 39620,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "checks": [
+      {
+        "name": "initial create commits",
+        "pass": true
+      },
+      {
+        "name": "initial delete commits",
+        "pass": true
+      },
+      {
+        "name": "empty dataset retains both durable receipts",
+        "pass": true
+      }
+    ],
+    "checkpoint": {
+      "raw": "{\"format\":\"xai-command-state\",\"version\":1,\"revision\":2,\"data\":{},\"receipts\":{\"[\\\"native:browser-reopen\\\",\\\"original-create\\\"]\":{\"operationVersion\":1,\"signature\":\"{\\\"id\\\":\\\"original-target\\\",\\\"title\\\":\\\"Review value\\\",\\\"type\\\":\\\"create\\\"}\",\"result\":{\"ok\":true,\"targetId\":\"original-target\"},\"committedAt\":\"2026-09-09T23:02:30.763Z\"},\"[\\\"native:browser-reopen\\\",\\\"original-delete\\\"]\":{\"operationVersion\":1,\"signature\":\"{\\\"id\\\":\\\"original-target\\\",\\\"title\\\":null,\\\"type\\\":\\\"delete\\\"}\",\"result\":{\"ok\":true,\"targetId\":\"original-target\"},\"committedAt\":\"2026-09-09T23:02:30.768Z\"}}}",
+      "markerRaw": "{\"generation\":\"fixed-generation\",\"migrationId\":\"native-initial\",\"previous\":null}",
+      "target": "original-target"
+    }
+  },
+  "after": {
+    "pass": true,
+    "checks": [
+      {
+        "name": "external pre-close checkpoint available",
+        "pass": true
+      },
+      {
+        "name": "same persisted account generation survives whole process exit",
+        "pass": true
+      },
+      {
+        "name": "exact data and receipt bytes survive whole process exit",
+        "pass": true
+      },
+      {
+        "name": "new process retains cold default activation-off",
+        "pass": true
+      },
+      {
+        "name": "create replay after browser reopen does not recreate deleted target",
+        "pass": true
+      },
+      {
+        "name": "delete replay after browser reopen succeeds for missing target",
+        "pass": true
+      },
+      {
+        "name": "new action continues normally and preserves old receipts",
+        "pass": true
+      },
+      {
+        "name": "continued action is also durably replayable",
+        "pass": true
+      }
+    ]
+  }
+}

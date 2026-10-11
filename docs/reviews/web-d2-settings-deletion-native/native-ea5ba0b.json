@@ -1,0 +1,21 @@
+{
+  "requestedRef": "ea5ba0b",
+  "revision": "ea5ba0b0dfe689f49e7a4f87cb3cbd586b4d0b87",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "held-account-lock",
+      "pass": false,
+      "error": "Error: Cleanup bypassed an actually held native account lock"
+    },
+    {
+      "name": "concurrent-cross-account-recovery",
+      "pass": false,
+      "error": "Error: Concurrent recovery repeated auth participant: 2"
+    }
+  ],
+  "checkpoint": {},
+  "scope": "Actual Settings recovery, native WebLocks and IndexedDB secrets in isolated profile; synthetic auth cleanup callback, no real provider/server deletion, no full UI or old-client claim"
+}

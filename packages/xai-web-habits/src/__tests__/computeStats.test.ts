@@ -11,21 +11,21 @@ const ci = (keys: string[]): Record<DateKey, true> =>
 describe("computeMonthlyCount", () => {
   it("AC-STAT-1: counts only current-month dates", () => {
     const checkIns = ci(["2026-05-01", "2026-04-30", "2026-05-15"]);
-    expect(computeMonthlyCount(checkIns, new Date("2026-05-23T00:00:00Z"))).toBe(2);
+    expect(computeMonthlyCount(checkIns, new Date("2026-05-23T00:00:00"))).toBe(2);
   });
 
   it("AC-STAT-2: returns 0 for empty map", () => {
-    expect(computeMonthlyCount({}, new Date("2026-05-23T00:00:00Z"))).toBe(0);
+    expect(computeMonthlyCount({}, new Date("2026-05-23T00:00:00"))).toBe(0);
   });
 });
 
 describe("computeMonthlyRate", () => {
-  it("AC-STAT-3: uses today.getUTCDate() as denominator", () => {
+  it("AC-STAT-3: uses today.getDate() as denominator", () => {
     // 5 checks in first 10 days, today = day 10
     const keys: string[] = [];
     for (let d = 1; d <= 5; d++) keys.push(`2026-05-0${d}`);
     const checkIns = ci(keys);
-    const rate = computeMonthlyRate(checkIns, new Date("2026-05-10T00:00:00Z"));
+    const rate = computeMonthlyRate(checkIns, new Date("2026-05-10T00:00:00"));
     expect(rate).toBe(50);
   });
 
@@ -33,7 +33,7 @@ describe("computeMonthlyRate", () => {
     const keys: string[] = [];
     for (let d = 1; d <= 23; d++) keys.push(`2026-05-${d < 10 ? "0" + d : d}`);
     const checkIns = ci(keys);
-    const rate = computeMonthlyRate(checkIns, new Date("2026-05-23T00:00:00Z"));
+    const rate = computeMonthlyRate(checkIns, new Date("2026-05-23T00:00:00"));
     expect(rate).toBe(100);
   });
 });
@@ -41,21 +41,21 @@ describe("computeMonthlyRate", () => {
 describe("compute365", () => {
   it("AC-STAT-5: non-leap year has denominator 365", () => {
     const checkIns = ci(["2026-01-01", "2026-02-14", "2026-12-25"]);
-    const result = compute365(checkIns, new Date("2026-05-23T00:00:00Z"));
+    const result = compute365(checkIns, new Date("2026-05-23T00:00:00"));
     expect(result.denominator).toBe(365);
     expect(result.numerator).toBe(3);
   });
 
   it("AC-STAT-6: leap year has denominator 366", () => {
     const checkIns = ci(["2024-01-01", "2024-02-29"]);
-    const result = compute365(checkIns, new Date("2024-05-23T00:00:00Z"));
+    const result = compute365(checkIns, new Date("2024-05-23T00:00:00"));
     expect(result.denominator).toBe(366);
     expect(result.numerator).toBe(2);
   });
 
   it("excludes prior-year dates from numerator", () => {
     const checkIns = ci(["2025-12-31", "2026-01-01", "2026-05-23"]);
-    const result = compute365(checkIns, new Date("2026-05-23T00:00:00Z"));
+    const result = compute365(checkIns, new Date("2026-05-23T00:00:00"));
     expect(result.numerator).toBe(2); // only 2026 dates
   });
 });

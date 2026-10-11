@@ -1,0 +1,59 @@
+{
+  "id": "CAL-01+CAL-02+CAL-04+CAL-05/SOURCE-DISCOVERY-REVIEW1",
+  "source": "2c609da1d6d0ac47c5b08b1b3604f649d1bfb6a1",
+  "parent": "96e01a4ea73410ae4d75692c64f902ca242f8609",
+  "fixed_input": "965a66a7991b426007dea316e6045f30ecade1ec",
+  "integration": "bcea5fd02b41021bfb444d81d7528829ab70c26c",
+  "archive_ref": "codex/archive/parallel-cal4-source-review1-20261010",
+  "all_inputs_checked": 101,
+  "outputs": {
+    "docs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-review-r1/inputs.sha256": "895b437dacfe7f85a4a9d641c1063ae13241f015a24689a6cff3bb41dcd9a4a5",
+    "docs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-review-r1/review.md": "b5459d36379f7aa5d174933a688ddc43ea1833c45d520226ae129179a3c71cd0"
+  },
+  "disposition": "WHOLE_REVISE6_SOURCE1_FORENSIC_ONLY_PROCESS_BLOCKED",
+  "findings_count": 6,
+  "findings": [
+    "settled REL01 localcivil authority and F2weekstart scope/acceptedREL05 boundary",
+    "actual WebMini Dashboardowner missing/native package substitution",
+    "complete Board projection/source-return and archivedlistscards correction",
+    "CAL04 owningfixture/banner decisions vsaudit explicitdemo/finiteoverflow/responsiveness",
+    "CAL05 preference vsdelivery actualsource scope/REL05 preservation",
+    "finiteexactwriterandfixture inventory+sharedlocks"
+  ],
+  "static": {
+    "invocations": 1,
+    "result": "PASS",
+    "wrapper_PID": 65689,
+    "wrapper_exit": 0,
+    "checker_PID": 65691,
+    "checker_exit": 0,
+    "internal_seconds": 2.202371,
+    "wrapper_seconds": 2.535686,
+    "stdout_stderr_EOF": true,
+    "owned_drain_confirmed": true,
+    "stderr_empty": true,
+    "Git_children": 102,
+    "Git_all_exit": 0,
+    "Git_all_EOF": true,
+    "Git_individual_receipts": "reported retained actualPID/argv/exit/EOF/drain terminal output",
+    "before_anywrite": true,
+    "session_chunk": "UNKNOWN",
+    "full_task_wall": "UNKNOWN initialtaskstartnotcaptured"
+  },
+  "initial_readonly_acquisition_truncated_JSON": "beforechecker no write; missing childmetadataUNKNOWN not0",
+  "source1_independent_process_classification": {
+    "input_only_capture": 1,
+    "postwrite_checker": 1,
+    "qualifying_prewrite": "UNRUN_INCOMPLETE",
+    "postwrite": "UNQUALIFIED_AFTER_WRITE completedhashassertions no retroqualification",
+    "source_adoption": "BLOCKED",
+    "output_materialization_without_validprewrite": 1,
+    "displayed1_1seconds": "inputcapturetoolwallONLY",
+    "parent_task_drain": "UNKNOWN"
+  },
+  "metadata_note": "source report says939workflowtasks: actual939 evidence refs; preserved wording not adopted or repaired; original312 ownership unchanged",
+  "source_author": "1/3 spent",
+  "source_review": "1/3 spent",
+  "new_execution_grants": [],
+  "root_business_checker": 0
+}

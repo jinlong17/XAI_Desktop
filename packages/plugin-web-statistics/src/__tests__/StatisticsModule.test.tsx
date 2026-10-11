@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { setPref } from "@repo/plugin-web-storage";
@@ -17,6 +18,30 @@ afterEach(() => {
 });
 
 describe("StatisticsModule", () => {
+  it('shows only current total for undated tasks and creates a timeline only from recorded dates', () => {
+    act(() => { setPref('xai_task_cols', [{ tasks: [{ done: true }] }] as never); });
+    const view = render(<StatisticsModule lang="en" />);
+    expect(screen.getByTestId('tasks-no-history')).toHaveTextContent('current completed total only');
+    act(() => { setPref('xai_task_cols', [{ tasks: [{ done: true }, { done: true, completedAt: NOW_ISO }] }] as never); });
+    expect(screen.queryByTestId('tasks-no-history')).toBeNull();
+    expect(screen.getByText('1 dated task completions in the selected range')).toBeInTheDocument();
+    expect(screen.getByText('1 completed tasks have no valid completion date and are excluded from the timeline.')).toBeInTheDocument();
+    view.unmount();
+  });
+  it('shows measured partial time and explains legacy exclusions without rewriting storage', () => {
+    const rows = [
+      { mode: 'focus', durationMs: 1_500_000, elapsedMs: 60_000, finishedAt: NOW_ISO },
+      { mode: 'focus', durationMs: 1_500_000, finishedAt: NOW_ISO },
+    ];
+    act(() => { setPref('xai_pomodoro_sessions', rows as never); });
+    const before = JSON.stringify({ ...localStorage });
+    const { rerender } = render(<StatisticsModule lang="en" />);
+    expect(screen.getByLabelText('KPI focus')).toHaveTextContent('h 1m');
+    expect(screen.getByTestId('stats-unmeasured-focus')).toHaveTextContent('1 focus records');
+    rerender(<StatisticsModule lang="zh" />);
+    expect(screen.getByTestId('stats-unmeasured-focus')).toHaveTextContent('1 条专注记录');
+    expect(JSON.stringify({ ...localStorage })).toBe(before);
+  });
   it("S1: renders with no seeded data — empty-state safe", () => {
     const { container } = render(<StatisticsModule lang="en" />);
     expect(container.querySelector(".module-stats")).not.toBeNull();
@@ -135,10 +160,10 @@ describe("StatisticsModule", () => {
     act(() => {
       setPref("xai_task_cols", { overdue: { tasks: [{ done: true }] } } as never);
     });
-    const stateBefore = localStorage.getItem("xai_task_cols");
+    const stateBefore = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     render(<StatisticsModule lang="en" />);
     // Storage value must be byte-identical (not mutated by Statistics)
-    expect(localStorage.getItem("xai_task_cols")).toBe(stateBefore);
+    expect(localStorage.getItem(accountScope.physicalKey("xai_task_cols"))).toBe(stateBefore);
     void originalStorage;
   });
 

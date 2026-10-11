@@ -1,0 +1,27 @@
+import {prefMutationLockName} from './packages/plugin-web-storage/src/internal/prefMutation';
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {createBrowserRouter,RouterProvider} from 'react-router';
+import {accountScope,generationMarkerKey} from './packages/plugin-web-storage/src/index';
+import {WebShellProvider,Shell} from './packages/xai-web-shell/src/index';
+import {webShellModuleRegistrations} from './apps/web/src/routes/modules/shellRegistrations';
+import {requestSettingsDeparture} from './apps/web/src/routes/modules/settingsDeparture';
+import './packages/plugin-web-tokens/src/tokens.css';
+import './packages/plugin-web-tokens/src/layout.css';
+import './packages/plugin-web-pomodoro/src/styles.css';
+const owner='pomo-departure-native';localStorage.setItem(generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));accountScope.activate(accountScope.lock(owner),'g1');
+const defaults={preset:'focus-25',custom_minutes:45,display_style:'apple',theme:'coral',sound:'soft-chime',muted:false};
+for(const [suffix,value] of Object.entries(defaults))localStorage.setItem('xai_pref_pomodoro_'+suffix,JSON.stringify(value));
+const nativeSet=Storage.prototype.setItem,nativeGet=Storage.prototype.getItem;
+const registration=webShellModuleRegistrations.find(r=>r.moduleId==='pomodoro')!;const Module=registration.children.find(r=>r.path==='')!.render;
+history.replaceState(null,'','/app/pomodoro');const router=createBrowserRouter([{path:'/app',element:<Shell lang="en" setLang={()=>{}} theme="light" setTheme={()=>{}} density="comfortable" setDensity={()=>{}}/>,children:[{path:'pomodoro',element:<Module/>},{path:'dashboard',element:<div>Dashboard destination</div>}]}]);
+(window as any).verify={deny(){Storage.prototype.setItem=function(k,v){if(k==='xai_pref_pomodoro_theme')throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}},router,signoutResult:'unresolved',signout(){void requestSettingsDeparture('sign-out').then(x=>{(window as any).verify.signoutResult=x})}};
+(window as any).verify.readTheme=()=>nativeGet.call(localStorage,'xai_pref_pomodoro_theme');
+(window as any).verify.denyAll=()=>{Storage.prototype.getItem=function(){throw new DOMException('denied','SecurityError')};Storage.prototype.setItem=function(){throw new DOMException('denied','SecurityError')}};
+(window as any).verify.switchOwner=()=>{const id='pomo-departure-B';nativeSet.call(localStorage,generationMarkerKey(id),JSON.stringify({generation:'g1',migrationId:'fixture-B',previous:null}));accountScope.activate(accountScope.lock(id),'g1')};
+(window as any).verify.holdTheme=async()=>{let enter!:()=>void;const ready=new Promise<void>(r=>enter=r);void navigator.locks.request(prefMutationLockName('xai_pref_pomodoro_theme'),()=>{enter();return new Promise<void>(r=>{(window as any).verify.releaseTheme=r})});await ready};
+createRoot(document.getElementById('app')!).render(<WebShellProvider modules={webShellModuleRegistrations} lang="en" railPos="left" petOn={false} setPetOn={()=>{}}><RouterProvider router={router}/></WebShellProvider>);
+
+(window as any).verify.externalTheme=()=>{const key='xai_pref_pomodoro_theme',oldValue=nativeGet.call(localStorage,key),newValue='"violet"';nativeSet.call(localStorage,key,newValue);window.dispatchEvent(new StorageEvent('storage',{key,oldValue,newValue,storageArea:localStorage}))};
+(window as any).verify.denySound=()=>{Storage.prototype.setItem=function(k,v){if(k==='xai_pref_pomodoro_sound')throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}};
+(window as any).verify.restoreWrites=()=>{Storage.prototype.setItem=nativeSet};

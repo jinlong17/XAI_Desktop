@@ -1,0 +1,66 @@
+{
+  "id": "SHARED/SOURCE-BYTE-COLLECTION2-FAILURE-PRESERVATION",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent mechanical preservation executor; no correction or businessverification",
+  "model": "gpt-6-luna",
+  "fixed_input": "546bbed6593c6b4938929b668550449461f02c75",
+  "dispatch_parent": "afba9ebd3eabd1adebc5fc0f30ab86ff73ce0e9e existingownedworktree knownexact3dirtyfiles",
+  "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-source-bytes2-20261010/XAI_Desktop",
+  "source_parent": "afba9ebd3eabd1adebc5fc0f30ab86ff73ce0e9e",
+  "known_uncommitted_files": [
+    {
+      "path": "docs/reviews/audit-parallel-shared-source-byte-collection-r2/collection.md",
+      "bytes": 14947,
+      "sha256": "248ec11134e9f3397630c8b4b513854e4583f85608e53bb41bb22b0a1b106d88"
+    },
+    {
+      "path": "docs/reviews/audit-parallel-shared-source-byte-collection-r2/source-bytes.json",
+      "bytes": 15319210,
+      "sha256": "69fb91aebacf4720028fbdf8a06e70d64294ca6c0cf7b8124bf6d38ce6eeee4b"
+    },
+    {
+      "path": "docs/reviews/audit-parallel-shared-source-byte-collection-r2/inputs.sha256",
+      "bytes": 1581127,
+      "sha256": "660427500adcddded8f4ec852af38dd0ab7f9e3951be8c82d34b0105764faa21"
+    }
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-shared-source-byte-collection-r2/collection.md",
+    "docs/reviews/audit-parallel-shared-source-byte-collection-r2/source-bytes.json",
+    "docs/reviews/audit-parallel-shared-source-byte-collection-r2/inputs.sha256",
+    "docs/reviews/audit-parallel-shared-source-byte-collection-r2/failure-receipt.json"
+  ],
+  "protected": [
+    "ALLotherpaths",
+    "all3originaldraftbytes/canonicalmethods/source/runners/product/tests",
+    "controller/ledgers/otherwts",
+    "allcollection/reviewerfamilycaps",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "mechanical_preservation": 1,
+    "static_checker": 0,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0
+  },
+  "no_children": true,
+  "stop": [
+    "unexpecteddirty/hash/parentdrift",
+    "needtocollect/repair/rerunchecker",
+    "protectedwrite"
+  ],
+  "acceptance": [
+    "ONLY preserve EXACT3alreadywritten unverifieddraftbytes unchanged byspecifiedbytecounts+SHA256; do notrepair report/index/bundle pendingfinalexit, parsefixsource/collectanypayload/reexecuteanything/validate617bundle/fullcorpus/checker/labelAPPROVED. AddONLYfailure-receipt.json truthfulwholeactualcounter+commandreceipt, allinputcorpus/bundle/outputconcludingsemanticUNRUN. Knownfailedstatic1 chunk3b6b64exit1schemaadapterentrycount0/pidunavailable;94024writeTypeErrornewlineexit1nofiles then94186fullpayloadrerunexit0/actualsourcecollectionfamily3/3EXHAUSTED no4,12roots617files14488785bytes14edges0missingareSELFREPORTEDUNVERIFIED. Actualcommands synchronousno sessions. Originalsourcecollector1routine1/static0,review1partialstatic1PASS noterased.",
+    "This is genuine mechanical preservation/handoff of stopped evidence, NOTnewcollection/author4/repair/qualification/test or budgetreset. Freshsamecalleractor no priorauthors; reviewer isnotfixing. Explicituncommitteddrafts cannotbeacceptedcontracts. Rootfilehashmetadata only identifiespreservedbytes notbusinessintegrity. ExactstageALL4paths/onehookdisabledcommit atoriginalafba parent/clean, no push. BodyWhyWhatScopeRiskDocsTests realnewlines usingtempfile safequote; no commitamend hiddenreflog. Rootoriginalarchivepush andreceiveFAILpreservationONLYlater/freshreview2existingreviewcap ifviable independent no sourcewriter4.",
+    "Readallfixedcard/sourcefailurecontext/knownfilehashes thenconstructmetadatareceiptbufferBEFOREonlynewJSONwrite; immutablethreefiles neverrewritten. Runtime/qualification/checker0 andallotherbudgets0; one mechanicalcommit count separate no newstaticbusinessPASS. Whole312formal13,3,3,293/939unchanged. RecordactualsourceSHA/parent/exact4ADD/all3preservedhashes/newfailure-receipthash/clean/caps/actualmetadataandcommitcommands. No humanquestions."
+  ]
+}

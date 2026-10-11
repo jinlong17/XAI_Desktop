@@ -1,0 +1,114 @@
+revision=f532ad5
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-CelEfX
+
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useGridDrag.test.tsx (11 tests) 42ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx (26 tests) 78ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx (23 tests) 256ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx (12 tests) 184ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx (16 tests) 487ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx (10 tests) 270ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.picker.test.tsx (6 tests) 111ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.remove.test.tsx (4 tests) 118ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardSlotHost.composition.test.tsx (8 tests) 228ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx (4 tests) 222ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashHeader.async.test.tsx (4 tests) 289ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx (7 tests) 105ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx (13 tests) 297ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.removeWidget.test.tsx (6 tests) 21ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx (9 tests) 25ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/sanitizeOrder.test.ts (14 tests) 4ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.addWidget.test.tsx (5 tests) 63ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetAppearance.test.tsx (5 tests) 15ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/greeting.test.ts (7 tests) 15ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/EmptyState.test.tsx (5 tests) 63ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/useWidgetLayout.test.tsx (4 tests) 14ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.render.test.tsx (5 tests) 63ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/index-barrel.test.ts (5 tests) 2ms
+ ✓ packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.lang.test.tsx (3 tests) 49ms
+
+ Test Files  24 passed (24)
+      Tests  212 passed (212)
+   Start at  20:30:20
+   Duration  4.78s (transform 1.90s, setup 5.83s, collect 3.70s, tests 3.02s, environment 11.68s, prepare 1.93s)
+
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed layout must not silently publish new dimensions
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed appearance must not silently publish new color
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed widget removal keeps widget or provides visible unsaved recovery
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > failed add keeps picker and must not emit widget-added success
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Independent Dashboard grid failure business oracles > order failure control retains original persisted and rendered order
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > latest layout proposal retries once while committed view stays unchanged
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_layout.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > appearance latest change and reset are recoverable; old owner export is blocked
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_widget_appearance.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > Dashboard recovery proposals > actual add retry emits once only after saving and closes picker; removal retry commits
+[plugin-web-storage] quota exceeded for xai_dash_order.
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx > failed order reconciliation remains pending and can retry rather than marking it saved
+[plugin-web-storage] quota exceeded for xai_dash_order.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx > Dashboard header persistence recovery > retains latest position on quota and refuses newer device raw on retry
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_header_note_x.
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_header_note_x.
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx > DashboardModule with widgets (P2 grid) > duplicate ids in widgets[] → first wins, no crash, dev-warn handled silently in test env
+[@repo/plugin-web-dashboard-grid] Duplicate widget id "alpha" — keeping first occurrence, dropping later one(s).
+
+stderr | packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx > DashboardSlotHost > deep-links from calendar widget change the app route
+An update to DashboardGrid inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DashboardGrid inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DashboardModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DashboardModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act

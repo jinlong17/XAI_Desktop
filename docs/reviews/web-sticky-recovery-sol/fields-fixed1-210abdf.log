@@ -1,0 +1,69 @@
+requested_revision=210abdf
+resolved_commit=210abdf77562660372c47086db02bd21e870deb5
+mode=fields
+suffix=fixed1
+include=docs/reviews/web-sticky-recovery-sol/fields.test.tsx
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=8cc5993a08b4ccee7ff557601d2fe9085cd7f6e041940d5eeba64b3b62e390ca bytes.test.tsx=3774dfa9703578ae22fed8d862441481226b0bf28c704cab0cc20672dfdf5da9 fields.test.tsx=2bf42fb6ddbe83bf54c574926fc8a7272bb6cdf073c746efea93012bbbd401bb queues.test.tsx=258aec9e5247f7c75c8a5b997683c7b5aa58c8a8b98117dc86df9ffa975c4983 continuity-export.test.tsx=78f140f50306b91ff22eb116bc587ce30b2cac57390dcefc948e1f3e44ce828d verify-fixed.mjs=3fba4b3b181d13431db9fe632fd68b70a4e51c6357168ec29aa89dd7977864c3
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-i5ry1h
+
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'color' > H1 color: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes 140ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'color' > H2 color: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 61ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'font' > H1 font: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes 77ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'font' > H2 font: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 53ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'pin_default' > H1 pin_default: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes 78ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'pin_default' > H2 pin_default: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 54ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'restore_size' > H1 restore_size: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes 78ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'restore_size' > H2 restore_size: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 53ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'grid_spacing' > H1 grid_spacing: a failed write keeps the latest choice with failed feedback, Retry, Discard, guard and warning; Retry saves exact bytes 73ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > 'grid_spacing' > H2 grid_spacing: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 51ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 color="purple": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 57ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 color="Sun": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 48ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 color=" sun": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 63ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 color="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 47ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 font="huge": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 50ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 font="tiny": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 50ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 font="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 51ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 grid_spacing="huge": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 48ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 grid_spacing="tiny": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 50ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 grid_spacing="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 52ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 pin_default="TRUE": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 56ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 pin_default="1": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 52ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 pin_default="": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 49ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 restore_size="yes": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 52ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 restore_size="0": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 57ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2/H3 restore_size=" false": out-of-domain bytes display the default with a Reload-only alert; mount and Reload never normalize them 47ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font injected option value: the prior value stays with an independent input error; zero writes; sibling work untouched 87ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font empty option value: the prior value stays with an independent input error; zero writes; sibling work untouched 87ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H4 font unmatched option value: the prior value stays with an independent input error; zero writes; sibling work untouched 88ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H3 §5.2 a valid choice over invalid color bytes is a failed draft that never overwrites them; Discard is zero-write and returns to Reload-only 132ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2 §5.2 a valid toggle over an unavailable pin source is a failed draft; bytes untouched; Discard returns to Reload-only 75ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 Reload refuses at invocation time to erase the same field's actual draft 56ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 all five unresolved at once; a targeted Retry never touches siblings; Discard all is zero-write and visits only drafts 183ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 a color conflict coexists with an unrelated font quota failure; each settles independently and Retry never overwrites the conflict 136ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 a failed string field and a successful boolean settle independently 65ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7 a failed boolean field and a successful string settle independently 66ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 a targeted Discard is zero-write, rereads only its field and leaves sibling work exportable 79ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H8 §5.7 Saved appears only after a genuine latest success with no pending work or input error 106ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H2 §5.7 a sibling source error suppresses Saved even after a successful edit 45ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.7/§5.8 a sibling source-only Reload repair clears its alert without claiming Saved or acknowledging failed work 67ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5.8 Discard all visits only actual drafts: source-only and input-error siblings are untouched 87ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H6 §5.5 a missing Web Lock capability keeps the latest color with failed feedback and no write; Retry after restoration saves 68ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H6 §5.5 a rejected Web Lock capability keeps the latest color with failed feedback and no write; Retry after restoration saves 67ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H7 a failed choice registers a blocking Sticky Note guard and a beforeunload warning; source-only and input-error-only states never warn 78ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > H8 an uncertain write exposes Retry, Discard, Export and Discard all instead of a silent success 76ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5 ZH wording: source alert, failed feedback, per-field and pane actions, input error, Saved, pending and guard label 162ms
+ ✓ docs/reviews/web-sticky-recovery-sol/fields.test.tsx > §5 ZH export failure status 54ms
+
+ Test Files  1 passed (1)
+      Tests  47 passed (47)
+   Start at  17:03:45
+   Duration  4.62s (transform 277ms, setup 244ms, collect 278ms, tests 3.42s, environment 383ms, prepare 72ms)
+
+
+---- stderr ----

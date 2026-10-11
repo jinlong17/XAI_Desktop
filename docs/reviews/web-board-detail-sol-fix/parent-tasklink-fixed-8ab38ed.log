@@ -1,0 +1,130 @@
+revision=8ab38ed
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-board-detail-package-BmWgbG/packages/plugin-web-board-workspaces
+
+ ✓ src/__tests__/PlannerPanel.test.tsx (15 tests) 192ms
+ ✓ src/__tests__/CardDetailDialog.test.tsx (16 tests) 193ms
+ ✓ src/__tests__/FilterPopover.test.tsx (12 tests) 186ms
+ ✓ src/__tests__/BoardDeleteConfirmDialog.test.tsx (11 tests) 292ms
+ ✓ src/__tests__/BoardCreator.test.tsx (10 tests) 373ms
+ ✓ src/__tests__/BoardComposerRecovery.test.tsx (4 tests) 1513ms
+   ✓ Card/list composer confirmed persistence > card quota keeps latest draft and stable id through repeated attempts  719ms
+   ✓ Card/list composer confirmed persistence > newer raw and subsequent account switch preserve the draft without retry/export mutation  397ms
+ ✓ src/__tests__/BoardCreateRecovery.test.tsx (5 tests) 1621ms
+   ✓ Board creator ordered persistence > canonical quota retains latest editor and never selects nonexistent board  686ms
+   ✓ Board creator ordered persistence > old owner cannot retry or export its failed creation into B  396ms
+ ✓ src/__tests__/BoardSwitcher.test.tsx (16 tests) 410ms
+ ✓ src/__tests__/BoardDetailSaveRecovery.test.tsx (16 tests) 2125ms
+   ✓ Board detail append recovery > keeps a failed draft visible when its target disappears and blocks close before that  814ms
+   ✓ Board detail append recovery > retries the latest inline draft once and clears the editor only after commit  320ms
+   ✓ Board detail append recovery > revalidates the latest attachment fields and keeps an invalid retry editable  376ms
+ ✓ src/__tests__/InboxPanel.test.tsx (12 tests) 92ms
+ ✓ src/__tests__/StatusOverviewBanner.test.tsx (10 tests) 99ms
+ ✓ src/__tests__/WorkspaceSaveRecovery.test.tsx (6 tests) 24ms
+ ✓ src/__tests__/ShareModal.test.tsx (10 tests) 137ms
+ ✓ src/__tests__/ringMath.test.ts (16 tests) 6ms
+ ✓ src/__tests__/taskLinkCommand.test.ts (12 tests) 154ms
+ ✓ src/__tests__/BoardRecoveryInitialization.test.tsx (2 tests) 31ms
+ ✓ src/__tests__/shareUrl.test.ts (6 tests) 48ms
+ ✓ src/__tests__/shareContract.test.ts (3 tests) 26ms
+ ✓ src/__tests__/filterState.test.ts (8 tests) 11ms
+ ✓ src/__tests__/registration.test.tsx (6 tests) 9ms
+ ✓ src/__tests__/panelOps.test.ts (19 tests) 17ms
+ ✓ src/__tests__/types.test.ts (3 tests) 9ms
+ ✓ src/__tests__/guards.test.ts (12 tests) 3ms
+ ✓ src/__tests__/responsiveStyles.test.ts (4 tests) 8ms
+ ✓ src/__tests__/index-barrel.test.ts (4 tests) 26ms
+ ✓ src/__tests__/savedFilters.test.ts (5 tests) 16ms
+ ✓ src/__tests__/BoardWorkspacesModule.test.tsx (93 tests) 9744ms
+   ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM1: first render with empty localStorage seeds boards + renders header + bottom switcher  484ms
+   ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM5: submitting creator adds + activates a board, closes both modals  350ms
+   ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-EXT-6: changing filters persists the active board filter without mutating boards  331ms
+   ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-SAVED-FILTER-2: board switch restores each board's own saved filter  378ms
+   ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-DETAIL-1: clicking a board card opens the card detail modal  329ms
+   ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-DETAIL-3: labels, members, checklist, attachments, and dates persist as detail fields  965ms
+   ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-INTEGRATIONS-1: provider link attachments persist integration metadata  325ms
+   ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-COMMENTS-1: card detail adds comment entries with author metadata  429ms
+   ✓ BoardWorkspacesModule (BWM1..BWM18) > BWM-DATE-1: detail modal preserves startDate > dueDate without auto-swap or clamp  426ms
+
+ Test Files  27 passed (27)
+      Tests  336 passed (336)
+   Start at  19:21:49
+   Duration  14.65s (transform 3.33s, setup 12.58s, collect 16.34s, tests 17.37s, environment 25.25s, prepare 4.70s)
+
+
+stderr | src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > canonical quota retains latest editor and never selects nonexistent board
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > keeps a failed draft visible when its target disappears and blocks close before that
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardComposerRecovery.test.tsx > Card/list composer confirmed persistence > card quota keeps latest draft and stable id through repeated attempts
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > active selection quota is partial success; retry only opens one existing board
+[plugin-web-storage] quota exceeded for xai_active_board.
+
+stderr | src/__tests__/BoardComposerRecovery.test.tsx > Card/list composer confirmed persistence > list quota keeps latest draft and stable id through repeated attempts
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > newer raw wins over a failed create retry
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > retries the latest inline draft once and clears the editor only after commit
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardComposerRecovery.test.tsx > Card/list composer confirmed persistence > newer raw and subsequent account switch preserve the draft without retry/export mutation
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > old owner cannot retry or export its failed creation into B
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > revalidates the latest attachment fields and keeps an invalid retry editable
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > downloads the latest checklist recovery with original target context
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > downloads the latest attachment recovery with original target context
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > downloads the latest activity recovery with original target context
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18b: json-null board storage is preserved through mount, automatic automation, and manual automation
+[plugin-web-storage] decode failed for xai_boards_v2: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-board-detail-package-BmWgbG/packages/plugin-web-storage/src/internal/storage.ts:149:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-board-detail-package-BmWgbG/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-board-detail-package-BmWgbG/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-board-detail-package-BmWgbG/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at BoardWorkspacesModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-board-detail-package-BmWgbG/packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:341:37)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18b: syntax-invalid board storage is preserved through mount, automatic automation, and manual automation
+[plugin-web-storage] decode failed for xai_boards_v2: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-board-detail-package-BmWgbG/packages/plugin-web-storage/src/internal/storage.ts:149:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-board-detail-package-BmWgbG/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-board-detail-package-BmWgbG/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-board-detail-package-BmWgbG/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at BoardWorkspacesModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-board-detail-package-BmWgbG/packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:341:37)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | src/__tests__/taskLinkCommand.test.ts > intent write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > acknowledgement write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/shareUrl.test.ts > generateShareUrl > SU-6 crypto.subtle === undefined fallback returns boardId.slice(0,8)
+[shareUrl] SubtleCrypto unavailable; using boardId slice fallback

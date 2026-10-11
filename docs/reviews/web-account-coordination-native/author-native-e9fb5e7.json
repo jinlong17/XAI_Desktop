@@ -1,0 +1,40 @@
+{
+  "requestedRef": "HEAD",
+  "revision": "e9fb5e7dcc56679a0b2525da926fb4b53ec1ef91",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 91349,
+  "reopenedPid": 91383,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "native shared adapter",
+        "pass": true
+      },
+      {
+        "name": "public account autosave",
+        "pass": true
+      },
+      {
+        "name": "public account migration",
+        "pass": true
+      }
+    ],
+    "checkpoint": {},
+    "nativeRequestArity": 2,
+    "scope": "Native Chrome public adapter and account APIs; no mocked navigator, no activation or product UI acceptance"
+  },
+  "after": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "committed autosave retained after restart",
+        "pass": true
+      }
+    ],
+    "scope": "Persisted autosave only"
+  }
+}

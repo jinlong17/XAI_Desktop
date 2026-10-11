@@ -1,0 +1,27 @@
+{
+  "id": "GOV-06/AUTHORITY-SOURCE-DISCOVERY1",
+  "state": "startup_path_fault_resolved_same_task_continuation_registered",
+  "discovery_iteration": 1,
+  "discovery_cap": 3,
+  "concluding_checker_invocations": 0,
+  "process_creation_rejections": 6,
+  "failed_workdir": "/Users/lijinlong/.codex/worktrees/audit-parallel-gov06-authority-source-discovery1-20261010/XAI_Desktop",
+  "actual_own_workdir": "/Users/lijinlong/.codex/worktrees/audit-parallel-gov06-authority-discovery1-20261010/XAI_Desktop",
+  "reason": "argumentworkdir extra source segment; nonexistentpath confirmed; rootcorrectcwd /usr/bin/git ce83b3exit0 unchanged56fe",
+  "rejected_commands": [
+    "rg fullpattern twice",
+    "rg shortpattern",
+    "grep shortpattern",
+    "git grep fullpattern",
+    "cat CLAUDE.md"
+  ],
+  "numeric_exit": null,
+  "pid": null,
+  "session": null,
+  "chunks": null,
+  "receipt_limits": "processnotcreated no numericexit/PID/session/chunk; successfulreads exit0 observed discardedIDs unknown",
+  "writes": 0,
+  "commit": null,
+  "historical_manifest": "sourcehashese041 vs currentCP differentSHAartifact notcorruption/currentbaseline; bind actualparent separately",
+  "continuation": "same source1 actor fixed6f parent56fe cap/static1 unchanged; correctcwd only no filename/worktree/callerbudget reset"
+}

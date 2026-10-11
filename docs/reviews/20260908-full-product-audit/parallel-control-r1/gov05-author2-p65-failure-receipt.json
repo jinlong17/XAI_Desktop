@@ -1,0 +1,23 @@
+{
+  "id": "GOV-05/NINE-PRODUCT-DOSSIER-AUDIT2",
+  "parent": "9753051783b949bce9ec1d0b771bed058d20d431",
+  "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-gov05-dossier-audit2-20261010/XAI_Desktop",
+  "iteration": 2,
+  "cap": 3,
+  "static_invocations": 1,
+  "result": "FAILED",
+  "chunk": "0099",
+  "numeric_exit": 1,
+  "pid": null,
+  "session": null,
+  "PID_session_status": "UNKNOWN",
+  "EOF_drain": "complete output drained reported",
+  "failure": "mistaken manifest expectation for missing docs/reviews/web-d2-pref-binding-inventory/inputs-f9eb4b1.sha256",
+  "before_report_buffer_construction": true,
+  "outputs_absent": true,
+  "worktree_clean": true,
+  "no_commit": true,
+  "no_retry": true,
+  "original_author1_prewrite_failure_preserved": true,
+  "root_role": "readonly metadata and scheduling"
+}

@@ -1,0 +1,217 @@
+revision=c201a1d
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-canonical-migration-weiyvF
+
+ ❯ docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts (3 tests | 2 failed) 11ms
+   × queued account cleanup retains data and pending receipt until the exclusive operation actually completes 8ms
+     → expected null to be '["retain until cleanup"]' // Object.is equality
+     → expected 'complete' to be 'pending' // Object.is equality
+     → expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "accountId": "A",
+        "epoch": -1,
+        "generation": "g1",
+        "kind": "account",
+      },
+    ]
+
+
+Number of calls: 1
+
+     → expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "generation": "auth-A",
+        "owner": "A",
+      },
+    ]
+
+
+Number of calls: 1
+
+     → expected [] to deeply equal [ 'exclusive' ]
+   × unavailable account lock refuses cleanup without advancing its receipt or clearing secrets 1ms
+     → expected false to be true // Object.is equality
+     → expected null to be '["retain until cleanup"]' // Object.is equality
+     → expected 'complete' to be 'pending' // Object.is equality
+     → expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "accountId": "A",
+        "epoch": -1,
+        "generation": "g1",
+        "kind": "account",
+      },
+    ]
+
+
+Number of calls: 1
+
+   ✓ partial local cleanup can retry after marker removal while preserving the active B account 2ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  17:55:20
+   Duration  862ms (transform 119ms, setup 0ms, collect 152ms, tests 11ms, environment 367ms, prepare 64ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts > queued account cleanup retains data and pending receipt until the exclusive operation actually completes
+AssertionError: expected null to be '["retain until cleanup"]' // Object.is equality
+
+- Expected: 
+"[\"retain until cleanup\"]"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts:19:41
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts > queued account cleanup retains data and pending receipt until the exclusive operation actually completes
+AssertionError: expected 'complete' to be 'pending' // Object.is equality
+
+Expected: "pending"
+Received: "complete"
+
+ ❯ docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts:20:54
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts > queued account cleanup retains data and pending receipt until the exclusive operation actually completes
+AssertionError: expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "accountId": "A",
+        "epoch": -1,
+        "generation": "g1",
+        "kind": "account",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts:21:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts > queued account cleanup retains data and pending receipt until the exclusive operation actually completes
+AssertionError: expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "generation": "auth-A",
+        "owner": "A",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts:21:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts > queued account cleanup retains data and pending receipt until the exclusive operation actually completes
+AssertionError: expected [] to deeply equal [ 'exclusive' ]
+
+- Expected
++ Received
+
+- [
+-   "exclusive",
+- ]
++ []
+
+ ❯ docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts:23:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts > unavailable account lock refuses cleanup without advancing its receipt or clearing secrets
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts:29:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts > unavailable account lock refuses cleanup without advancing its receipt or clearing secrets
+AssertionError: expected null to be '["retain until cleanup"]' // Object.is equality
+
+- Expected: 
+"[\"retain until cleanup\"]"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts:29:74
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts > unavailable account lock refuses cleanup without advancing its receipt or clearing secrets
+AssertionError: expected 'complete' to be 'pending' // Object.is equality
+
+Expected: "pending"
+Received: "complete"
+
+ ❯ docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts:29:159
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts > unavailable account lock refuses cleanup without advancing its receipt or clearing secrets
+AssertionError: expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "accountId": "A",
+        "epoch": -1,
+        "generation": "g1",
+        "kind": "account",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts:29:194
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯

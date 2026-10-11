@@ -1,0 +1,50 @@
+{
+  "id": "GOV-01+GOV-02/PARSER-PURPOSE-PROVENANCE-CENSUS1",
+  "workflow": "C",
+  "primary_workflow": "B",
+  "module": "web",
+  "role": "fresh bounded historical purpose and admission provenance source-only census, no parser execution",
+  "model": "gpt-6-luna",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "2434373d391b6cfafec0a3883623650a57a0a366",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "allowed_files": [
+    "docs/reviews/audit-parallel-gov01-gov02-parser-purpose-provenance-census-r1/census.md",
+    "docs/reviews/audit-parallel-gov01-gov02-parser-purpose-provenance-census-r1/inputs.sha256"
+  ],
+  "protected": [
+    "ALL nonallowed paths/oldcontracts/runner/scripts/fixtures/failures/evidence",
+    "globalcontrol/ledgers/otherwts/acceptedbudgets/standards/decisions",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "census_iteration": 1,
+    "census_cap": 3,
+    "static_pass": 1,
+    "parser_execution": 0,
+    "generator_execution": 0,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0
+  },
+  "no_children": true,
+  "stop": [
+    "input/hash/dirty/protected scope drift",
+    "need actual parser/generator/oldbusinesschecker/qualification run",
+    "actual concluding static failure STOP no retry/write/materialization/commit"
+  ],
+  "acceptance": [
+    "Read complete exactadopted sourcecontract2 d116/f525, wholeindependentreview2 5045, originaldiscovery3b/full41/source1/fullreview1/currentactualparent state/taskcards/control/oldgoal/relevant immutable initialaudit and relatedproject-system execution receipts. Trace named GOV01/02 parser-purpose families separately source-author/review/documentchecksum/sourcequalification/wholebefore/semantic parser/generator/consumer UI/vendor/formal/probe histories. Actual command/PID/session/chunk/exit/iteration/receiptSHA/count provenance and gaps; reported0 versus evidenced0 versus UNKNOWN explicit. Historical generation/freshness/export metadata neither proves business parsercorrectness nor counts automatically as samepurpose qualification. Do not rename oldsamepurpose or missingcount0. No parser/generator invocation, packageimports or test to gather before. Bound exactfinite relevant acquisition set not entire unrelatedrootcorpus.",
+    "Determine whether exacthistorical available receipts suffice for a lawful next sourcequalification/before budget and minimum bounded prerequisites; if history incomplete clearly no runtimeadmission grant, list missing rawreceipts/one minimum future independentimpact question preparation without asking user. Current19/3/167 are original audit expectations, not assertcurrentmeasured totals until qualified futurewholecensus. Successful docsourcehashes cannot certify parser discovery/status winner/errorconservation or observed count. Preserve wholecontract D/I/R/A/C, all121 devlogs/35 roadmaps finitefixture/consumer/registry/threeAI associations sourcepaths, UNKNOWN external histories, root adoptedDOCUMENTONLY versus qualification/before/code/caller states. Futurecandidate task card budget proposal only no launch.",
+    "GOV06 authority proposals/registry sharing and GOV05 ninePRD source-only work readonly at their fixedinputs, no uncommittedotherworktree reads. Newcensus distinct lowriskhistoricalaccounting not an exhausted checker continuation or relabeledsameunit; shared/Outer/Clock/BRD/CD/DASH/AI caps/failures/ownerpending intact. No reenacting failingassertions/no originalbusinessvalidator or script imports. Missing log conclusions truthful BLOCKED not guessed; no providercredentials/network. Original312939/formal13/3/3/293299unclosed unchanged. Independentfresh wholecensusreview/rootadmission assessment required before any actual parserfixture/qualification/before grant.",
+    "ALL completeactuallyused inputs eachimmutableSHA inclactualregistrationcard/control and BOTH ENTIRE finalbuffers in memory validated before ANY file write includinginterimdraft/manifest. One meaningful own-document static1, actualfailureSTOPnoretry or materialization/commit. SafecompactJSON/newline/Python3.9API no write_textnewlinekeyword, actualmanifestgrammars no guessedcount/headline/minsize/P0auditdocs parity. Raw numericexit/PID/session/chunk/fullEOFdrain UNKNOWNnot0. Exact2ADD single hooksdisabled realnewlineWhyWhatScopeRiskDocsTests commit clean noamendpush; no children no tests/qualification/probes/vendor."
+  ]
+}

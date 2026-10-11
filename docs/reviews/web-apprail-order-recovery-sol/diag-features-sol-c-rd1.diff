@@ -1,0 +1,47 @@
+--- a/docs/reviews/web-appearance-recovery-final/diag-features-sol-corrected.mjs
++++ b/docs/reviews/web-apprail-order-recovery-sol/diag-features-sol-c-rd1.mjs
+@@ -1,4 +1,13 @@
+ /**
++ * C-RD1 STAGING-RUNNER COPY (CP-APPRAIL-01 batch 56, contract web-apprail-order-recovery-contract r1 A11) of
++ * ../web-appearance-recovery-final/diag-features-sol-corrected.mjs (SHA-256 cfe596be…, the C-FD1 staging runner, not
++ * modified). It changes only the staged file and the log path:
++ *   a. the staged oracle is ./features-downstream.c-rd1.test.tsx (C-FD1 plus exactly one added line,
++ *      `fireEvent.drop(buttons[2]!, { dataTransfer: transfer });`, before case 014's `fireEvent.dragEnd`), hash-checked,
++ *      staged at the same archive path as before (docs/reviews/web-features-recovery-sol/downstream.test.tsx);
++ *   b. logs go to ./features-sol-downstream-c-rd1-<suffix>-<rev>.log; the header's `command=` line names this file.
++ * The diff against the C-FD1 staging runner is ./diag-features-sol-c-rd1.diff.
++ *
+  * DIAGNOSTIC COPY (CP-APPEARANCE-01 batch 51, finding F-FD1; not gate evidence) of
+  * ../web-features-recovery-sol/verify-fixed.mjs (SHA-256 b5ac75fa…, frozen, not modified). Only changes:
+  *   1. the frozen oracle files are read from ../web-features-recovery-sol/ (their own directory, read only);
+@@ -54,9 +63,9 @@
+ const root = fileURLToPath(new URL("../../../", import.meta.url));
+ const evidence = fileURLToPath(new URL("../web-features-recovery-sol/", import.meta.url)); // diagnostic change 1
+ const runnerFile = fileURLToPath(import.meta.url);
+-const diagnostics = fileURLToPath(new URL("./diagnostics/", import.meta.url)); // diagnostic changes 2 and 3
+-const CORRECTED = join(diagnostics, "features-downstream.corrected.test.tsx");
+-const CORRECTED_SHA256 = "7bb5ad3cda8fec7957e999c2aa62956212b52934be20b942df72e286e90959e1";
++const diagnostics = fileURLToPath(new URL("./", import.meta.url)); // diagnostic changes 2 and 3; C-RD1 changes a and b
++const CORRECTED = join(diagnostics, "features-downstream.c-rd1.test.tsx");
++const CORRECTED_SHA256 = "6c57164ef5040444dad96fbf5933e90b095d465c64bdd6e8e5f3dcb6be2d1c7a";
+ const owned = "docs/reviews/web-features-recovery-sol";
+ const dependencyRoot = realpathSync(resolve(process.env.XAI_DEPS_ROOT ?? root));
+ const [revision, modeArgument, suffix, ...extra] = process.argv.slice(2);
+@@ -131,7 +140,7 @@
+ const selected = modeArgument === "all" ? Object.keys(MODES) : [modeArgument];
+ for (const mode of selected) if (!Object.hasOwn(MODES, mode)) throw Error(`Unsupported mode ${mode}; use one of ${Object.keys(MODES).join(", ")} or all`);
+ if (JSON.stringify(selected) !== JSON.stringify(["downstream"])) throw Error("Diagnostic copy: only mode downstream is supported"); // diagnostic change 3
+-const logPath = mode => join(diagnostics, `features-sol-${mode}-corrected-${suffix}-${revision}.log`);
++const logPath = mode => join(diagnostics, `features-sol-${mode}-c-rd1-${suffix}-${revision}.log`);
+ for (const mode of selected) if (existsSync(logPath(mode))) throw Error(`Evidence exists; use a new suffix: ${logPath(mode)}`);
+ 
+ const sha256 = data => createHash("sha256").update(data).digest("hex");
+@@ -399,7 +408,7 @@
+       `mode=${mode}`,
+       `suffix=${suffix}`,
+       `include=${spec.include.join(",")}`,
+-      `command=XAI_DEPS_ROOT=${dependencyRoot} node docs/reviews/web-appearance-recovery-final/diag-features-sol-corrected.mjs ${revision} ${modeArgument} ${suffix}`,
++      `command=XAI_DEPS_ROOT=${dependencyRoot} node docs/reviews/web-apprail-order-recovery-sol/diag-features-sol-c-rd1.mjs ${revision} ${modeArgument} ${suffix}`,
+       `diagnostic_runner_sha256=${sha256(readFileSync(runnerFile))} corrected_oracle_staged_as=${owned}/downstream.test.tsx corrected_oracle_sha256=${CORRECTED_SHA256} (oracle_sha256 below lists the frozen files read; downstream.test.tsx there is the frozen hash, replaced in the run)`,
+       `runner_checkout_head=${runnerHead}`,
+       `vitest_bin=${vitestBin}`,

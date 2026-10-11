@@ -1,0 +1,10 @@
+import React from 'react';import{createRoot}from'react-dom/client';
+import{accountScope}from'./packages/plugin-web-storage/src/index';
+import{emitWebEvent}from'./packages/xai-web-event-bus/src/index';
+import{useTaskCreateRequestSubscriber}from'./packages/xai-web-tasks/src/internal/aiCreateSubscriber';
+import{useCalendarCreateRequestSubscriber}from'./packages/xai-web-calendar/src/internal/aiCreateSubscriber';
+import './packages/plugin-web-tokens/src/tokens.css';
+accountScope.activate(accountScope.lock('synthetic-A'),'A');const keys={tasks:accountScope.physicalKey('xai_task_cols'),calendar:accountScope.physicalKey('xai_calendar_events')};localStorage.setItem(keys.tasks,JSON.stringify(['overdue','next7','later','nodate'].map(id=>({id,key:id,count:0,tasks:[]}))));localStorage.setItem(keys.calendar,'{}');
+const original=Storage.prototype.setItem;let denied='';const writes={tasks:0,calendar:0};Storage.prototype.setItem=function(k,v){for(const kind of ['tasks','calendar']as const)if(k===keys[kind])writes[kind]++;if(k===denied)throw new DOMException('Synthetic quota','QuotaExceededError');original.call(this,k,v);};
+(window as any).verify={keys,writes,deny(kind:string){denied=keys[kind as keyof typeof keys]},restore(){denied=''},emit(kind:string,id:string,title:string){if(kind==='tasks')emitWebEvent('web:tasks:create-requested',{requestId:id,title,bucket:'nodate',requestedAt:'2026-09-09T10:00:00Z'});else emitWebEvent('web:calendar:create-requested',{requestId:id,title,date:'2026-09-10',startTime:'09:00',durationMin:30,requestedAt:'2026-09-09T10:00:00Z'});}};
+function Subscribers(){useTaskCreateRequestSubscriber();useCalendarCreateRequestSubscriber();return <div id="ready">Synthetic subscriber fixture</div>;}createRoot(document.getElementById('app')!).render(<Subscribers/>);

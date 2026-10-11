@@ -1,0 +1,161 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-NDIJYf
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx (19 tests | 2 failed) 90ms
+   ✓ set uncertain token refuses externally restored original baseline without another write/remove/notice 7ms
+   ✓ reset uncertain token refuses externally restored original baseline without another write/remove/notice 1ms
+   ✓ set unchanged token verifies once with zero further mutations and one reconciliation notice 28ms
+   ✓ reset unchanged token verifies once with zero further mutations and one reconciliation notice 0ms
+   ✓ unknown token cannot degrade into a normal set when expected baseline matches 0ms
+   ✓ public hook retains an issued uncertainty token across a transient read-denied Retry 21ms
+   ✓ set consumed token cannot mutate a restored original baseline 1ms
+   ✓ reset consumed token cannot mutate a restored original baseline 0ms
+   ✓ set observed-invalid external source revokes token through intended and original restoration 0ms
+   ✓ reset observed-invalid external source revokes token through intended and original restoration 1ms
+   ✓ set temporary read denial preserves token verification without a second mutation 0ms
+   ✓ set temporary lock denial preserves token verification without a second mutation 0ms
+   ✓ reset temporary read denial preserves token verification without a second mutation 0ms
+   ✓ reset temporary lock denial preserves token verification without a second mutation 0ms
+   ✓ public hook repeated Retry cannot lose an invalidated grant and overwrite the external original 6ms
+   ✓ an absolute token cannot invoke a functional updater while authenticating its grant 0ms
+   ✓ public functional uncertainty Retry remains a new updater attempt on current data 9ms
+   × set explicitly supplied empty token is invalid authority, not an ordinary mutation 12ms
+     → expected { ok: true, value: false, …(3) } to match object { ok: false, reason: 'conflict' }
+(4 matching properties omitted from actual)
+     → expected 'false' to be 'true' // Object.is equality
+     → expected "setItem" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st setItem call:
+
+    Array [
+      "xai_pref_dt_timezone",
+      "false",
+    ]
+
+
+Number of calls: 1
+
+   × reset explicitly supplied empty token is invalid authority, not an ordinary mutation 1ms
+     → expected { ok: true, value: true, …(3) } to match object { ok: false, reason: 'conflict' }
+(4 matching properties omitted from actual)
+     → expected null to be 'true' // Object.is equality
+     → expected "removeItem" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st removeItem call:
+
+    Array [
+      "xai_pref_dt_timezone",
+    ]
+
+
+Number of calls: 1
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 17 passed (19)
+   Start at  01:32:21
+   Duration  5.31s (transform 1.52s, setup 2.71s, collect 184ms, tests 90ms, environment 1.59s, prepare 239ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > set explicitly supplied empty token is invalid authority, not an ordinary mutation
+AssertionError: expected { ok: true, value: false, …(3) } to match object { ok: false, reason: 'conflict' }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "conflict",
++   "ok": true,
+  }
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:86:121
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > set explicitly supplied empty token is invalid authority, not an ordinary mutation
+AssertionError: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:87:49
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > set explicitly supplied empty token is invalid authority, not an ordinary mutation
+AssertionError: expected "setItem" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st setItem call:
+
+    Array [
+      "xai_pref_dt_timezone",
+      "false",
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:87:86
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > reset explicitly supplied empty token is invalid authority, not an ordinary mutation
+AssertionError: expected { ok: true, value: true, …(3) } to match object { ok: false, reason: 'conflict' }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "conflict",
++   "ok": true,
+  }
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:86:121
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > reset explicitly supplied empty token is invalid authority, not an ordinary mutation
+AssertionError: expected null to be 'true' // Object.is equality
+
+- Expected: 
+"true"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:87:49
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > reset explicitly supplied empty token is invalid authority, not an ordinary mutation
+AssertionError: expected "removeItem" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st removeItem call:
+
+    Array [
+      "xai_pref_dt_timezone",
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:87:125
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯

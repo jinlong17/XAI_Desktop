@@ -1,0 +1,96 @@
+revision=3e7f17a
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-t4tMKh
+
+ ❯ docs/reviews/web-board-workspace-astra-review/independent.test.tsx (9 tests | 4 failed) 468ms
+   ✓ recolor: rejected bytes retained, retry durable, remount matches stored result 180ms
+   ✓ delete: rejected bytes retained, retry durable, remount matches stored result 76ms
+   ✓ delete: external board membership arriving after quota failure wins over retry 41ms
+   ✓ create: absent workspace storage remains a supported fresh-start write 37ms
+   ✓ create: malformed workspace bytes are preserved: {broken 43ms
+   × create: malformed workspace bytes are preserved: [{"id":"recover-me","name":{"en":"Original"},"color":123}] 24ms
+     → expected '[{"id":"ws-personal","name":{"en":"Pe…' to be '[{"id":"recover-me","name":{"en":"Ori…' // Object.is equality
+   × delete: structurally malformed board membership must not be treated as an empty workspace 21ms
+     → expected '[{"id":"ws-personal","name":{"en":"Pe…' to be '[{"id":"ws-personal","name":{"en":"Pe…' // Object.is equality
+   × create: quota retry must not replace a pre-existing structurally invalid baseline 24ms
+     → expected '[{"id":"ws-personal","name":{"en":"Pe…' to be '[{"id":"recover-me","name":{"en":"Ori…' // Object.is equality
+   × delete: quota retry must not replace a pre-existing structurally invalid baseline 22ms
+     → expected '[{"id":"ws-personal","name":{"en":"Pe…' to be '[{"id":"ws-personal","name":{"en":"Pe…' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 5 passed (9)
+   Start at  14:47:27
+   Duration  2.06s (transform 480ms, setup 208ms, collect 584ms, tests 468ms, environment 477ms, prepare 81ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/independent.test.tsx > recolor: rejected bytes retained, retry durable, remount matches stored result
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-astra-review/independent.test.tsx > delete: rejected bytes retained, retry durable, remount matches stored result
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-astra-review/independent.test.tsx > delete: external board membership arriving after quota failure wins over retry
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-astra-review/independent.test.tsx > create: malformed workspace bytes are preserved: {broken
+[plugin-web-storage] decode failed for xai_board_workspaces: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-t4tMKh/packages/plugin-web-storage/src/internal/storage.ts:136:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-t4tMKh/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-t4tMKh/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-t4tMKh/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at BoardWorkspacesModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-t4tMKh/packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:204:45)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-board-workspace-astra-review/independent.test.tsx > create: quota retry must not replace a pre-existing structurally invalid baseline
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-astra-review/independent.test.tsx > delete: quota retry must not replace a pre-existing structurally invalid baseline
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/independent.test.tsx > create: malformed workspace bytes are preserved: [{"id":"recover-me","name":{"en":"Original"},"color":123}]
+AssertionError: expected '[{"id":"ws-personal","name":{"en":"Pe…' to be '[{"id":"recover-me","name":{"en":"Ori…' // Object.is equality
+
+Expected: "[{"id":"recover-me","name":{"en":"Original"},"color":123}]"
+Received: "[{"id":"ws-personal","name":{"en":"Personal","zh":"个人"},"color":"oklch(60% 0.10 165)"},{"id":"ws-team","name":{"en":"Team Workspace","zh":"团队空间"},"color":"oklch(60% 0.14 295)"},{"id":"ws-218c4cd2-21c5-449b-a5fb-e989c18bbe35","name":{"en":"New","zh":"New"},"color":"oklch(62% 0.14 25)"}]"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/independent.test.tsx:35:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/independent.test.tsx > delete: structurally malformed board membership must not be treated as an empty workspace
+AssertionError: expected '[{"id":"ws-personal","name":{"en":"Pe…' to be '[{"id":"ws-personal","name":{"en":"Pe…' // Object.is equality
+
+Expected: "[{"id":"ws-personal","name":{"en":"Personal","zh":"个人"},"color":"oklch(60% 0.10 165)"},{"id":"ws-team","name":{"en":"Team Workspace","zh":"团队空间"},"color":"oklch(60% 0.14 295)"},{"id":"empty","name":{"en":"Empty","zh":"空"},"color":"red"}]"
+Received: "[{"id":"ws-personal","name":{"en":"Personal","zh":"个人"},"color":"oklch(60% 0.10 165)"},{"id":"ws-team","name":{"en":"Team Workspace","zh":"团队空间"},"color":"oklch(60% 0.14 295)"}]"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/independent.test.tsx:39:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/independent.test.tsx > create: quota retry must not replace a pre-existing structurally invalid baseline
+AssertionError: expected '[{"id":"ws-personal","name":{"en":"Pe…' to be '[{"id":"recover-me","name":{"en":"Ori…' // Object.is equality
+
+Expected: "[{"id":"recover-me","name":{"en":"Original"},"color":123}]"
+Received: "[{"id":"ws-personal","name":{"en":"Personal","zh":"个人"},"color":"oklch(60% 0.10 165)"},{"id":"ws-team","name":{"en":"Team Workspace","zh":"团队空间"},"color":"oklch(60% 0.14 295)"},{"id":"ws-e006825f-2b95-4f5c-aaaf-0a23a21c7285","name":{"en":"Retry","zh":"Retry"},"color":"oklch(62% 0.14 25)"}]"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/independent.test.tsx:49:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/independent.test.tsx > delete: quota retry must not replace a pre-existing structurally invalid baseline
+AssertionError: expected '[{"id":"ws-personal","name":{"en":"Pe…' to be '[{"id":"ws-personal","name":{"en":"Pe…' // Object.is equality
+
+Expected: "[{"id":"ws-personal","name":{"en":"Personal","zh":"个人"},"color":"oklch(60% 0.10 165)"},{"id":"ws-team","name":{"en":"Team Workspace","zh":"团队空间"},"color":"oklch(60% 0.14 295)"},{"id":"empty","name":{"en":"Empty","zh":"空"},"color":"red"}]"
+Received: "[{"id":"ws-personal","name":{"en":"Personal","zh":"个人"},"color":"oklch(60% 0.10 165)"},{"id":"ws-team","name":{"en":"Team Workspace","zh":"团队空间"},"color":"oklch(60% 0.14 295)"}]"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/independent.test.tsx:49:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯

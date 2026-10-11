@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { accountScope, registerAccountMigrationValidator, type AccountScope } from "@repo/plugin-web-storage";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_TIME_TRACKER_CATEGORIES } from "./defaults.js";
-import { entryDuration, entryStart, isRunningEntry, startOfDay, startOfWeek } from "./time.js";
+import { entryDuration, entriesInWindow, isRunningEntry, startOfDay, startOfWeek } from "./time.js";
 import type {
   LocalizedText,
   TimeTrackerCategory,
@@ -96,26 +97,26 @@ function safeParse(raw: string | null): unknown {
   }
 }
 
-function readJson(key: string): unknown {
+function readJson(key: string, scope = accountScope.capture()): unknown {
   if (typeof window === "undefined") return null;
-  return safeParse(window.localStorage.getItem(key));
+  return safeParse(window.localStorage.getItem(accountScope.physicalKey(key, scope)));
 }
 
-function writeJson<T>(key: string, value: T): void {
+function writeJson<T>(key: string, value: T, scope = accountScope.capture()): void {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(key, JSON.stringify(value));
+  window.localStorage.setItem(accountScope.physicalKey(key, scope), JSON.stringify(value));
   window.dispatchEvent(new CustomEvent(TIME_TRACKER_STORAGE_EVENT, { detail: { key } }));
 }
 
-export function readTimeTrackerCategories(): TimeTrackerCategory[] {
-  const raw = readJson(TIME_TRACKER_CATEGORIES_KEY);
+export function readTimeTrackerCategories(scope = accountScope.capture()): TimeTrackerCategory[] {
+  const raw = readJson(TIME_TRACKER_CATEGORIES_KEY, scope);
   if (!Array.isArray(raw)) return [...DEFAULT_TIME_TRACKER_CATEGORIES];
   const categories = raw.filter(isCategory).filter((category) => category.deleted !== true).map(normalizeCategory);
   return categories.length > 0 ? categories : [...DEFAULT_TIME_TRACKER_CATEGORIES];
 }
 
-export function readTimeTrackerEntries(): TimeTrackerEntry[] {
-  const raw = readJson(TIME_TRACKER_ENTRIES_KEY);
+export function readTimeTrackerEntries(scope = accountScope.capture()): TimeTrackerEntry[] {
+  const raw = readJson(TIME_TRACKER_ENTRIES_KEY, scope);
   if (!Array.isArray(raw)) return [];
   return raw.filter(isEntry).filter((entry) => entry.deleted !== true);
 }
@@ -125,12 +126,12 @@ export function readTimeTrackerMode(): TimeTrackerMode {
   return window.localStorage.getItem(TIME_TRACKER_MODE_KEY) === "multi" ? "multi" : "single";
 }
 
-export function writeTimeTrackerCategories(categories: readonly TimeTrackerCategory[]): void {
-  writeJson(TIME_TRACKER_CATEGORIES_KEY, categories);
+export function writeTimeTrackerCategories(categories: readonly TimeTrackerCategory[], scope = accountScope.capture()): void {
+  writeJson(TIME_TRACKER_CATEGORIES_KEY, categories, scope);
 }
 
-export function writeTimeTrackerEntries(entries: readonly TimeTrackerEntry[]): void {
-  writeJson(TIME_TRACKER_ENTRIES_KEY, entries);
+export function writeTimeTrackerEntries(entries: readonly TimeTrackerEntry[], scope = accountScope.capture()): void {
+  writeJson(TIME_TRACKER_ENTRIES_KEY, entries, scope);
 }
 
 export function writeTimeTrackerMode(mode: TimeTrackerMode): void {
@@ -159,23 +160,27 @@ export function createTimeTrackerEntry(
   };
 }
 
+/** Terminal commands are replay-safe. Close every open segment, including legacy
+ * malformed rows; retain the original source separately before repository repair. */
 export function finishTimeTrackerEntry(entry: TimeTrackerEntry, atMs: number): TimeTrackerEntry {
-  const segments = entry.segments.map((segment, index) => {
-    if (index !== entry.segments.length - 1 || segment.end !== null) return segment;
-    return { ...segment, end: atMs };
-  });
-  return { ...entry, segments, done: true, updatedAt: atMs };
+  if (entry.deleted || !Number.isFinite(atMs)) return entry;
+  const open = entry.segments.filter(segment => segment.end === null);
+  if (open.some(segment => atMs < segment.start)) return entry;
+  if (entry.done && open.length === 0) return entry;
+  return { ...entry, segments: entry.segments.map(segment => segment.end === null ? { ...segment, end: atMs } : segment), done: true, updatedAt: atMs };
 }
 
 export function pauseTimeTrackerEntry(entry: TimeTrackerEntry, atMs: number): TimeTrackerEntry {
-  const segments = entry.segments.map((segment, index) => {
-    if (index !== entry.segments.length - 1 || segment.end !== null) return segment;
-    return { ...segment, end: atMs };
-  });
-  return { ...entry, segments, updatedAt: atMs };
+  if (entry.deleted || entry.done || !Number.isFinite(atMs)) return entry;
+  const open = entry.segments.filter(segment => segment.end === null);
+  if (open.length === 0 || open.some(segment => atMs < segment.start)) return entry;
+  return { ...entry, segments: entry.segments.map(segment => segment.end === null ? { ...segment, end: atMs } : segment), updatedAt: atMs };
 }
 
 export function resumeTimeTrackerEntry(entry: TimeTrackerEntry, atMs: number): TimeTrackerEntry {
+  if (entry.deleted || entry.done || !Number.isFinite(atMs) || entry.segments.some(segment => segment.end === null)) return entry;
+  const last = entry.segments.at(-1);
+  if (!last || last.end === null || atMs < last.end) return entry;
   return { ...entry, segments: [...entry.segments, { start: atMs, end: null }], updatedAt: atMs };
 }
 
@@ -188,8 +193,8 @@ export function getTimeTrackerSnapshot(nowMs = Date.now()): TimeTrackerSnapshot 
   const entries = readTimeTrackerEntries();
   const todayStart = startOfDay(nowMs);
   const weekStart = startOfWeek(nowMs);
-  const todayEntries = entries.filter((entry) => entryStart(entry) >= todayStart);
-  const weekEntries = entries.filter((entry) => entryStart(entry) >= weekStart);
+  const todayEntries = entriesInWindow(entries, todayStart, nowMs, nowMs);
+  const weekEntries = entriesInWindow(entries, weekStart, nowMs, nowMs);
   const activeEntries = entries.filter(isRunningEntry);
   const byCategory = new Map<string, number>();
   for (const entry of todayEntries) {
@@ -207,12 +212,21 @@ export function getTimeTrackerSnapshot(nowMs = Date.now()): TimeTrackerSnapshot 
   };
 }
 
-export function useTimeTrackerStorage<T>(read: () => T, write: (value: T) => void): readonly [T, (next: T | ((prev: T) => T)) => void] {
-  const [value, setValue] = useState<T>(read);
+export function useTimeTrackerStorage<T>(read: (scope?: AccountScope) => T, write: (value: T, scope?: AccountScope) => void): readonly [T, (next: T | ((prev: T) => T)) => void] {
+  const scope = useRef(accountScope.capture()).current;
+  const [value, setValue] = useState<T>(() => read(scope));
+  const valueRef = useRef(value);
+
+  useEffect(() => {
+    valueRef.current = value;
+  }, [value]);
 
   useEffect(() => {
     function refresh(): void {
-      setValue(read());
+      if (!accountScope.isReady(scope)) return;
+      const nextValue = read(scope);
+      valueRef.current = nextValue;
+      setValue(nextValue);
     }
     window.addEventListener("storage", refresh);
     window.addEventListener(TIME_TRACKER_STORAGE_EVENT, refresh);
@@ -220,17 +234,17 @@ export function useTimeTrackerStorage<T>(read: () => T, write: (value: T) => voi
       window.removeEventListener("storage", refresh);
       window.removeEventListener(TIME_TRACKER_STORAGE_EVENT, refresh);
     };
-  }, [read]);
+  }, [read, scope]);
 
   const setStored = useCallback(
     (next: T | ((prev: T) => T)) => {
-      setValue((prev) => {
-        const nextValue = typeof next === "function" ? (next as (prev: T) => T)(prev) : next;
-        write(nextValue);
-        return nextValue;
-      });
+      if (!accountScope.isReady(scope)) return;
+      const nextValue = typeof next === "function" ? (next as (prev: T) => T)(valueRef.current) : next;
+      valueRef.current = nextValue;
+      write(nextValue, scope);
+      setValue(nextValue);
     },
-    [write],
+    [write, scope],
   );
 
   return [value, setStored] as const;
@@ -240,8 +254,77 @@ export function useTimeTrackerCategories(): readonly [TimeTrackerCategory[], (ne
   return useTimeTrackerStorage(readTimeTrackerCategories, writeTimeTrackerCategories);
 }
 
-export function useTimeTrackerEntries(): readonly [TimeTrackerEntry[], (next: TimeTrackerEntry[] | ((prev: TimeTrackerEntry[]) => TimeTrackerEntry[])) => void] {
-  return useTimeTrackerStorage(readTimeTrackerEntries, writeTimeTrackerEntries);
+export function sessionInvariantError(entry: TimeTrackerEntry): string | null {
+  if (entry.segments.some(segment => !Number.isFinite(segment.start) || (segment.end !== null && (!Number.isFinite(segment.end) || segment.end < segment.start)))) return "Invalid interval ordering";
+  let previousEnd = -Infinity;
+  for (const [index, segment] of entry.segments.entries()) {
+    if (segment.start < previousEnd) return "Overlapping intervals";
+    if (segment.end === null && (entry.done || index !== entry.segments.length - 1)) return "Invalid open interval";
+    previousEnd = segment.end ?? Infinity;
+  }
+  return null;
+}
+
+type EntryUpdate = TimeTrackerEntry[] | ((prev: TimeTrackerEntry[]) => TimeTrackerEntry[]);
+
+/** All interactive entry mutations use this account-scoped lock. Expected source
+ * is captured when the command is submitted, never after waiting for the lock. */
+export async function commitTimeTrackerEntries(
+  next: EntryUpdate,
+  expected: readonly TimeTrackerEntry[],
+  scope: AccountScope,
+): Promise<TimeTrackerEntry[]> {
+  accountScope.assertCurrent(scope);
+  if (typeof navigator === "undefined" || !navigator.locks?.request) throw new Error("Safe timer writes require Web Locks. Use a supported browser; existing data was preserved.");
+  const physical = accountScope.physicalKey(TIME_TRACKER_ENTRIES_KEY, scope);
+  return navigator.locks.request(`xai-tt:${physical}`, () => {
+    accountScope.assertCurrent(scope);
+    const raw = localStorage.getItem(physical);
+    const parsed = raw === null ? [] : safeParse(raw);
+    if (!Array.isArray(parsed) || !parsed.every(isEntry) || parsed.some(entry => sessionInvariantError(entry))) {
+      throw new Error("Stored sessions need recovery. Original data was preserved; export it before repairing intervals.");
+    }
+    const current = parsed.filter(entry => entry.deleted !== true);
+    if (JSON.stringify(current) !== JSON.stringify(expected)) throw new Error("Sessions changed in another tab. Review the latest data before trying again.");
+    const updated = typeof next === "function" ? next(current) : next;
+    if (updated.some(entry => !isEntry(entry) || sessionInvariantError(entry))) throw new Error("The proposed session has invalid intervals. Original data was preserved.");
+    const active = updated.filter(isRunningEntry);
+    if (readTimeTrackerMode() === "single" && active.length > 1 && active.some(entry => !current.some(old => old.id === entry.id && isRunningEntry(old)))) {
+      throw new Error("Single-task mode already has a running session. End it before starting or resuming another.");
+    }
+    if (JSON.stringify(updated) !== JSON.stringify(current)) writeTimeTrackerEntries([...parsed.filter(entry => entry.deleted === true), ...updated], scope);
+    return updated;
+  });
+}
+
+export function useTimeTrackerEntries() {
+  const scope = useRef(accountScope.capture()).current;
+  const [entries, setEntries] = useState(() => readTimeTrackerEntries(scope));
+  const value = useRef(entries);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    const refresh = () => {
+      if (!accountScope.isReady(scope)) return;
+      try { value.current = readTimeTrackerEntries(scope); setEntries(value.current); }
+      catch { setError("Session storage could not be read. Existing data was preserved."); }
+    };
+    window.addEventListener("storage", refresh);
+    window.addEventListener(TIME_TRACKER_STORAGE_EVENT, refresh);
+    return () => { window.removeEventListener("storage", refresh); window.removeEventListener(TIME_TRACKER_STORAGE_EVENT, refresh); };
+  }, [scope]);
+  const commit = useCallback(async (next: EntryUpdate): Promise<boolean> => {
+    const expected = value.current;
+    try {
+      await commitTimeTrackerEntries(next, expected, scope);
+      accountScope.assertCurrent(scope);
+      value.current = readTimeTrackerEntries(scope); setEntries(value.current); setError(null); return true;
+    } catch (cause) { setError(cause instanceof Error ? cause.message : "Session could not be saved."); return false; }
+  }, [scope]);
+  const exportSource = () => {
+    accountScope.assertCurrent(scope);
+    return localStorage.getItem(accountScope.physicalKey(TIME_TRACKER_ENTRIES_KEY, scope)) ?? "[]";
+  };
+  return [entries, commit, { error, exportSource }] as const;
 }
 
 export function useTimeTrackerMode(): readonly [TimeTrackerMode, (next: TimeTrackerMode | ((prev: TimeTrackerMode) => TimeTrackerMode)) => void] {
@@ -253,3 +336,6 @@ export function useTimeTrackerMode(): readonly [TimeTrackerMode, (next: TimeTrac
 export function useCategoryMap(categories: readonly TimeTrackerCategory[]): ReadonlyMap<string, TimeTrackerCategory> {
   return useMemo(() => new Map(categories.map((category) => [category.id, category])), [categories]);
 }
+
+registerAccountMigrationValidator(TIME_TRACKER_CATEGORIES_KEY, value => Array.isArray(value) && value.every(isCategory));
+registerAccountMigrationValidator(TIME_TRACKER_ENTRIES_KEY, value => Array.isArray(value) && value.every(isEntry));

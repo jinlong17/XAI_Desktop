@@ -1,0 +1,164 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=retry-all
+suffix=appearance-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs 419e56d retry-all appearance-final-v1
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=acd26ad860c90e1a688232db2f8da4b2d016b7a537d53afb3fea528f584666e3 bytes.test.tsx=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 fields.test.tsx=3ff72da5b1a037b0bbd93fbb910cb0772c6306d495871d8a5fb14c3305acc794 reset.test.tsx=3f9f3f86570c1c8f9350532fb0a5fbc03c2a4f92ac74e9fa959956811a2e6595 queues.test.tsx=1d6c85c28224a2fc1dace8ee754873fd3d2b716264f9b812c753a816b6ac2d66 continuity-export.test.tsx=776da524f7479e03d067c2426345df1fb30e518581c7bbfd33a0f1d0838e79ce host.test.tsx=49528aa335cb9f2db87faf152656b6c55011bf5856b69998c9c31dabbffc3eab retry-all.test.tsx=d851c75a5ca80470e928b52425521d8b549d3e91738796ac9f84708d793c513c verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=0818f7ee1cb9b525e6fac603ba4958b175dd401e0fd754d05ed3ac7d88e27c8f packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=40a72a058ba1e4b64f40afe8a31d590935d800e786d065248a8030f3137eeae3 packages/xai-web-settings-appearance/src/index.ts=9113e85cab3eee31e1f54e5220b87e8d8eac69a48f73b2697a8662dac1d5caef packages/xai-web-settings-appearance/src/styles.css=cd95e4a921e334d7ac47fc7e808ffa3e79b664c45fbf754049be33f649f250ce packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0 packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] retry-all.test.tsx: include=docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-llZtL9/appearance-sol-retry-all-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-llZtL9/.report-retry-all-0.json vitest_exit=0 cases=48 passed=48 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=48 numPassedTests=48 numFailedTests=0
+exit=0
+harness_checks=PASS (6/6)
+==== run[0] retry-all.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-llZtL9
+
+stdout | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > PC-BEFORE §12 with no fault the harness drives the current bottom button: at 5cd63ff 'Save & apply' writes the four root keys with today's exact bytes; after the caller it is replaced by Retry all 190ms
+stdout | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H17 en > H17 A2.2 en: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes
+SOL-OBS H17 en clean-state activation {"label":"Retry all","ariaDisabled":"true","disabledAttr":false,"writes":[],"bytes":{"lang":null,"theme":null,"density":null,"accentHue":null,"bgTone":null,"railPos":null,"fontScale":null},"flashImmediately":false,"flashAfter1900ms":false}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H17 en > H17 A2.2 en: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes 2007ms
+stdout | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H17 zh > H17 A2.2 zh: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes
+SOL-OBS H17 zh clean-state activation {"label":"全部重试","ariaDisabled":"true","disabledAttr":false,"writes":[],"bytes":{"lang":"\"zh\"","theme":null,"density":null,"accentHue":null,"bgTone":null,"railPos":null,"fontScale":null},"flashImmediately":false,"flashAfter1900ms":false}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H17 zh > H17 A2.2 zh: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes 2013ms
+stdout | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H15 en > H15 en: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes
+SOL-OBS H15 en activation after denied writes {"label":"Retry all","writesByKey":{"lang":[],"theme":["\"dark\""],"density":[],"accentHue":["230"],"bgTone":[],"railPos":[],"fontScale":[]},"themeDisplayed":{"pane":"dark","topbar":"dark","doc":"dark"},"flashImmediately":false,"flashAfter1900ms":false,"fontFaultFired":0}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H15 en > H15 en: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes 2126ms
+stdout | docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H15 zh > H15 zh: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes
+SOL-OBS H15 zh activation after denied writes {"label":"全部重试","writesByKey":{"lang":[],"theme":["\"dark\""],"density":[],"accentHue":["230"],"bgTone":[],"railPos":[],"fontScale":[]},"themeDisplayed":{"pane":"dark","topbar":"dark","doc":"dark"},"flashImmediately":false,"flashAfter1900ms":false,"fontFaultFired":0}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H15 zh > H15 zh: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes 2125ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > A2.2 disabled clean > H16 H17 A2.2 clean: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus 173ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > A2.2 disabled pending-only > H16 H17 A2.2 pending-only: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus 201ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > A2.2 disabled source-only > H16 H17 A2.2 source-only: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus 146ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 §5.9 the clean-state status line is empty and the disabled button never references it 75ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 A2.4 one failed field enables Retry all, described by the count line (EN) 113ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 one failed field in Chinese: 1 项外观更改未保存。 and the label 全部重试 110ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.2 A2.4 all seven failed fields enable Retry all with the count 7; one activation attempts each once in display order 358ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 set drafts from the pane and the Topbar: exactly one write each in display order, none elsewhere; then disabled with no description 162ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H13 H16 A2.3 a background choice with both writes failing is two members; with only the tone failing it is one 210ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a slider stream's latest value queued behind a failed predecessor: one attempt per activation while denied; then the predecessor once and the latest as its own attempt 130ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H9 H16 A2.3 §6 failed Reset items: one removal each, never a write; 'Defaults restored.' after the reset-only pass 131ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a valid edit over malformed bytes is refused again and kept; a conflict is kept and never overwritten 151ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 an uncertain write reconciles with exactly one total write 125ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a failed predecessor with a queued latest: the predecessor once, then the latest's own attempt 168ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H8 H16 A2.3 exclusions: pending, source-only and draft-free fields get zero attempts 227ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a same-turn double activation attempts each member once 167ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H8 H16 A2.3 A2.5 an activation while members are pending (click, Enter, Space) adds zero attempts; focus stays on the disabled button 170ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.6 a per-field Retry during a pass and a Retry all during a per-field Retry add zero attempts 386ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a pane edit supersedes a held member; the old completion never makes the newer choice look saved 219ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 host row q: a Topbar choice supersedes a held theme member; after release the final bytes equal the Topbar choice 219ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a background choice supersedes a held accent member 181ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.6 Reset during a pass supersedes members on its six fields; a language member continues 219ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.3 a late completion after Discard during an open pass changes nothing 186ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 A2.6 Discard all during an open pass detaches every member; late completions change nothing; focus goes to Reset 271ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §7.4 A2.6 sign-out during an open pass: Cancel lets the pass settle; OK detaches the members with zero writes by the step 326ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §7.6 unmount during an open pass detaches the members; the late completion writes nothing 151ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 REL-09 a forced App remount during an open pass detaches the members; the remounted pane shows the committed bytes 216ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 1 wins while a pass is open, even when a member already failed again; the button is enabled and described (EN) 198ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 1 in Chinese: 正在重试未保存的外观更改… 150ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.4 rule 2: a failed Export while a draft exists shows the export-failure line; the next pane action clears it 159ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 a keyboard Retry all that fully succeeds keeps focus on the now-disabled button, never on <body> or Reset 123ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 a partial result keeps focus on the enabled button; Space starts exactly one pass 154ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.5 host row s: a member held behind the real lock with a write fault armed fails on release; the button becomes enabled, focus stays and the count line becomes its description 143ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 host row o: a failed Topbar theme, a failed pane accent and a failed Reset item; one Retry all writes or removes each failed key once; the Topbar status hides during the pass and stays absent; unload removed 249ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 host row p: a partial Retry all keeps one key unresolved: the count line, the Topbar status returns, unload warns, Export contains only the unresolved entry, focus stays 201ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §8 an export during an open pass includes the pending members as their latest unresolved intents 162ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §5.9 two passes: the second retries only the field that failed after the first began 194ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 §5.9 a member fails again, then its per-field Retry succeeds 166ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H8 H16 §5.9 §6 Retry all during a Reset batch with one failed item and others pending retries only the failed item 190ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > H16 A2.1 no 'Save & apply'/'保存生效' control and no 'Saved'/'已保存' flash in the failure and success states 199ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > R5 fu2-retry-all-theme: in-flight set + Reset + set failure, recovered by Retry all: the failed set, one re-write of the superseded value, then one removal; final verified absence and 'Defaults restored.' 229ms
+ ✓ docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx > R5 fu2-retry-all-railPos: in-flight set + Reset + set failure, recovered by Retry all: the failed set, one re-write of the superseded value, then one removal; final verified absence and 'Defaults restored.' 219ms
+
+ Test Files  1 passed (1)
+      Tests  48 passed (48)
+   Start at  13:26:13
+   Duration  19.50s (transform 1.81s, setup 35ms, collect 2.67s, tests 16.39s, environment 185ms, prepare 40ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-llZtL9/.report-retry-all-0.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-llZtL9","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-llZtL9/.appearance-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-llZtL9/packages/xai-web-settings-appearance/vitest.setup.ts"],"include":["docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=625 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=11 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=48 passed=48 failed=0 skipped=0 precondition_failures=0
+harness PASS [retry-all.test.tsx] JSON report parsed
+harness PASS [retry-all.test.tsx] reported files equal the requested include
+harness PASS [retry-all.test.tsx] config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-appearance/vitest.setup.ts], root = archive)
+harness PASS [retry-all.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [retry-all.test.tsx] required product modules loaded from the archive (22)
+harness PASS [retry-all.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 PASSED | PC-BEFORE §12 with no fault the harness drives the current bottom button: at 5cd63ff 'Save & apply' writes the four root keys with today's exact bytes; after the caller it is replaced by Retry all
+case 003 PASSED | H17 en H17 A2.2 en: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes
+case 004 PASSED | H17 zh H17 A2.2 zh: in the clean state the bottom primary action is a disabled 'nothing to retry' Retry all; one activation makes zero attempts, changes no bytes and never flashes
+case 005 PASSED | H15 en H15 en: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes
+case 006 PASSED | H15 zh H15 zh: after denied writes on each surface the bottom action re-attempts exactly the failed accent (pane) and theme (Topbar) once each, rewrites nothing else, honours locks and never flashes
+case 007 PASSED | A2.2 disabled clean H16 H17 A2.2 clean: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus
+case 008 PASSED | A2.2 disabled pending-only H16 H17 A2.2 pending-only: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus
+case 009 PASSED | A2.2 disabled source-only H16 H17 A2.2 source-only: Retry all is rendered with aria-disabled="true", no disabled attribute, a Tab stop, no aria-describedby; click, Enter and Space make zero operations and keep focus
+case 010 PASSED | H16 A2.2 §5.9 the clean-state status line is empty and the disabled button never references it
+case 011 PASSED | H16 A2.2 A2.4 one failed field enables Retry all, described by the count line (EN)
+case 012 PASSED | H16 A2.4 one failed field in Chinese: 1 项外观更改未保存。 and the label 全部重试
+case 013 PASSED | H16 A2.2 A2.4 all seven failed fields enable Retry all with the count 7; one activation attempts each once in display order
+case 014 PASSED | H16 A2.3 set drafts from the pane and the Topbar: exactly one write each in display order, none elsewhere; then disabled with no description
+case 015 PASSED | H13 H16 A2.3 a background choice with both writes failing is two members; with only the tone failing it is one
+case 016 PASSED | H16 A2.3 a slider stream's latest value queued behind a failed predecessor: one attempt per activation while denied; then the predecessor once and the latest as its own attempt
+case 017 PASSED | H9 H16 A2.3 §6 failed Reset items: one removal each, never a write; 'Defaults restored.' after the reset-only pass
+case 018 PASSED | H16 A2.3 a valid edit over malformed bytes is refused again and kept; a conflict is kept and never overwritten
+case 019 PASSED | H16 A2.3 an uncertain write reconciles with exactly one total write
+case 020 PASSED | H16 A2.3 a failed predecessor with a queued latest: the predecessor once, then the latest's own attempt
+case 021 PASSED | H8 H16 A2.3 exclusions: pending, source-only and draft-free fields get zero attempts
+case 022 PASSED | H16 A2.3 a same-turn double activation attempts each member once
+case 023 PASSED | H8 H16 A2.3 A2.5 an activation while members are pending (click, Enter, Space) adds zero attempts; focus stays on the disabled button
+case 024 PASSED | H16 A2.6 a per-field Retry during a pass and a Retry all during a per-field Retry add zero attempts
+case 025 PASSED | H16 A2.3 a pane edit supersedes a held member; the old completion never makes the newer choice look saved
+case 026 PASSED | H16 A2.3 host row q: a Topbar choice supersedes a held theme member; after release the final bytes equal the Topbar choice
+case 027 PASSED | H16 A2.3 a background choice supersedes a held accent member
+case 028 PASSED | H16 A2.6 Reset during a pass supersedes members on its six fields; a language member continues
+case 029 PASSED | H16 A2.3 a late completion after Discard during an open pass changes nothing
+case 030 PASSED | H16 A2.5 A2.6 Discard all during an open pass detaches every member; late completions change nothing; focus goes to Reset
+case 031 PASSED | H16 §7.4 A2.6 sign-out during an open pass: Cancel lets the pass settle; OK detaches the members with zero writes by the step
+case 032 PASSED | H16 §7.6 unmount during an open pass detaches the members; the late completion writes nothing
+case 033 PASSED | H16 REL-09 a forced App remount during an open pass detaches the members; the remounted pane shows the committed bytes
+case 034 PASSED | H16 A2.4 rule 1 wins while a pass is open, even when a member already failed again; the button is enabled and described (EN)
+case 035 PASSED | H16 A2.4 rule 1 in Chinese: 正在重试未保存的外观更改…
+case 036 PASSED | H16 A2.4 rule 2: a failed Export while a draft exists shows the export-failure line; the next pane action clears it
+case 037 PASSED | H16 A2.5 a keyboard Retry all that fully succeeds keeps focus on the now-disabled button, never on <body> or Reset
+case 038 PASSED | H16 A2.5 a partial result keeps focus on the enabled button; Space starts exactly one pass
+case 039 PASSED | H16 A2.5 host row s: a member held behind the real lock with a write fault armed fails on release; the button becomes enabled, focus stays and the count line becomes its description
+case 040 PASSED | H16 host row o: a failed Topbar theme, a failed pane accent and a failed Reset item; one Retry all writes or removes each failed key once; the Topbar status hides during the pass and stays absent; unload removed
+case 041 PASSED | H16 host row p: a partial Retry all keeps one key unresolved: the count line, the Topbar status returns, unload warns, Export contains only the unresolved entry, focus stays
+case 042 PASSED | H16 §8 an export during an open pass includes the pending members as their latest unresolved intents
+case 043 PASSED | H16 §5.9 two passes: the second retries only the field that failed after the first began
+case 044 PASSED | H16 §5.9 a member fails again, then its per-field Retry succeeds
+case 045 PASSED | H8 H16 §5.9 §6 Retry all during a Reset batch with one failed item and others pending retries only the failed item
+case 046 PASSED | H16 A2.1 no 'Save & apply'/'保存生效' control and no 'Saved'/'已保存' flash in the failure and success states
+case 047 PASSED | R5 fu2-retry-all-theme: in-flight set + Reset + set failure, recovered by Retry all: the failed set, one re-write of the superseded value, then one removal; final verified absence and 'Defaults restored.'
+case 048 PASSED | R5 fu2-retry-all-railPos: in-flight set + Reset + set failure, recovered by Retry all: the failed set, one re-write of the superseded value, then one removal; final verified absence and 'Defaults restored.'

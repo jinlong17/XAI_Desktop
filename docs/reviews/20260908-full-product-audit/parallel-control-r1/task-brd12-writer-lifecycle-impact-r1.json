@@ -1,0 +1,51 @@
+{
+  "id": "BRD-12/WRITER-LIFECYCLE-IMPACT1",
+  "workflow": "A",
+  "module": "web",
+  "role": "fresh independent Board writer/lifecycle technical impact author; never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "d39d8a9a32bf9e66310535c8622355daefb6b280",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "cdb8820b434aa7f2adb9cc5ad5f14118eb24230c",
+    "5fa4cccb106d10e16562e0a8d6f3b103495607b1"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-brd12-writer-lifecycle-impact-r1/impact.md",
+    "docs/reviews/audit-parallel-brd12-writer-lifecycle-impact-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Bind full20349reviewcorpus/exact2ADD/fulloriginalBRD12 actionnoinventedItem1/explainable reversibleDone/allB01-B12/R01-R12/24conditionalpaths/canonicalr2G1/histories. Fullproposal conditionalAPPROVED doconly; no capsule/schema/key/product writegrant. Fresh sourcegrounded technicaladmission T1-T4, no QLQUowner question unless genuineexplicitauthorityconflict.",
+    "Exhaustive actualraw Board writers andall paths modifying xai_boards_v2 projection/capsule/token fields: Workspacesdetail/creator/composer/reset/delete/move, core/views ordinarysave, taskLinkCommand before+afterawait, rawset/remove/scopedstorage, accountmigration/globaldelete/importreset/export/settings. Source inventory with perwriter role/owner/key/generation/lock/order/pauseafterawait/revalidation/adoption/provenunreachable/quiescence. Propose finite allwriter participant/fencing solution including global lifecycle/datasetlock ordering andmarkerchecks; localhooklock notglobalproof. Exact minimal protectedextensions sourcejustified independentlyreviewable withinmodule, no allnecessaryfiles or permissionsfromdocument alone.",
+    "Exact proposedversiontag/collision/wholearray-envelope losslessvalidation/immutableX+separateterminalU/currentfieldwriter/incarnation/ordinarymutations/historycapacity/refusal/importexport/deletedtarget/ABA priorownership historicalvs liveaccountcapability. Preserve unknownmetadata/realarrayprecedence/no fabricated rows/manualtrue/T0/newrows/text/order/wholeinverseconflict/currentderivedcounts/X-U-normalY. ActualmigrationisBoardArrayvsenvelope compatibility, logical/rawexports mustretaincapsule, imports cannotreactivateretiredU/tokens or foreignaccountcapability. No schemasadopted here.",
+    "ActualpublicBoardroute/AccountStorageGate/route/log-out/reload/globalreset/import/delete departure reachability; guard beforeunmount/firstintent/pendinguncertainty/exportverifiedack/destructivediscard vs retainedsuccessfulhistory; forcedlosslimits truthful. Determine finitepublicAPI solution or exactprotectedextension/missingexternalcondition, no new productchoice/standardswaiver. All oldappend/native/package/account/sharedpermanentcounts/refusals/calibrationunknown cap3 retained; genuineN-L/N-U/N-P sourcepurposes vsoldmixedunits explicit. Fresh impactreview thenexactcontractamendment/review/rootscopeadoption/sourcequalifiedfullbefore/implementation/fixed/native/vendor/freshacceptance/reconcile/inventory required."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/sharedCSS/storage/schema/account/host/config/lockfile",
+    "all original contracts/runners/failures/evidence",
+    "globalcontrols/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "technical_impact_iteration": 1,
+    "technical_impact_cap": 3
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported producttradeoff or weakeningstandards",
+    "runtime orprotectedwrite need"
+  ],
+  "no_children": true
+}

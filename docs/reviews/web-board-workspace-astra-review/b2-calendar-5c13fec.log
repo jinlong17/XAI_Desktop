@@ -1,0 +1,16 @@
+revision=5c13fec
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-b2-uKVij0
+
+ ✓ packages/xai-web-calendar/src/__tests__/canonicalMigrationCompatibility.test.ts (3 tests) 2ms
+ ✓ packages/xai-web-calendar/src/__tests__/useUserCalEvents.test.tsx (9 tests) 27ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  15:30:53
+   Duration  646ms (transform 115ms, setup 344ms, collect 45ms, tests 29ms, environment 443ms, prepare 102ms)
+
+
+stderr | packages/xai-web-calendar/src/__tests__/useUserCalEvents.test.tsx > useUserCalEvents — persistence round-trip > reads an envelope baseline and refuses an old sync write without changing its raw receipt bytes
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.

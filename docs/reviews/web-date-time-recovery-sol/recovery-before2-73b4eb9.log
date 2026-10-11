@@ -1,0 +1,72 @@
+revision=73b4eb9 fixed_commit=73b4eb9184c06764a3befd101961a3856988022f
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-Mrnq8D
+
+ ❯ docs/reviews/web-date-time-recovery-sol/recovery.test.tsx (5 tests | 5 failed) 179ms
+   × sparse memory export works under complete storage denial and retains guard 40ms
+     → No Date Time Blob
+   × all-current discard performs zero writes and stale completion cannot resurrect recovery 60ms
+     → expected undefined to be true // Object.is equality
+   × old capability refuses after A to B while fresh locked permission keeps device draft 20ms
+     → Cannot read properties of null (reading 'isCurrent')
+   × synchronous owner change during URL setup cancels stale click and cleans URL 19ms
+     → Cannot read properties of null (reading 'exportDraft')
+   × one-write uncertain commit keeps recovery until unchanged Retry verifies it 39ms
+     → expected undefined to be true // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  01:11:50
+   Duration  1.20s (transform 238ms, setup 198ms, collect 201ms, tests 179ms, environment 227ms, prepare 106ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-sol/recovery.test.tsx > sparse memory export works under complete storage denial and retains guard
+Error: No Date Time Blob
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-Mrnq8D/docs/reviews/web-date-time-recovery-sol/fixture.tsx:40:427
+
+ ❯ Object.read ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-Mrnq8D/docs/reviews/web-date-time-recovery-sol/fixture.tsx:40:367
+ ❯ docs/reviews/web-date-time-recovery-sol/recovery.test.tsx:9:402
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-sol/recovery.test.tsx > all-current discard performs zero writes and stale completion cannot resurrect recovery
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ docs/reviews/web-date-time-recovery-sol/recovery.test.tsx:13:254
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-sol/recovery.test.tsx > old capability refuses after A to B while fresh locked permission keeps device draft
+TypeError: Cannot read properties of null (reading 'isCurrent')
+ ❯ docs/reviews/web-date-time-recovery-sol/recovery.test.tsx:17:186
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-sol/recovery.test.tsx > synchronous owner change during URL setup cancels stale click and cleans URL
+TypeError: Cannot read properties of null (reading 'exportDraft')
+ ❯ docs/reviews/web-date-time-recovery-sol/recovery.test.tsx:21:324
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-sol/recovery.test.tsx > one-write uncertain commit keeps recovery until unchanged Retry verifies it
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ docs/reviews/web-date-time-recovery-sol/recovery.test.tsx:25:614
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯

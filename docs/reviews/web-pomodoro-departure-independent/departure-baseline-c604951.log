@@ -1,0 +1,73 @@
+revision=c604951 fixed_commit=c604951acda9adb48c51e00dba6255757b1f2afc
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-fM3mV5
+
+ ❯ docs/reviews/web-pomodoro-departure-independent/departure.test.tsx (9 tests | 8 failed) 661ms
+   × preset actual failed preference draft warns on browser unload 101ms
+     → expected false to be true // Object.is equality
+   × custom_minutes actual failed preference draft warns on browser unload 43ms
+     → expected false to be true // Object.is equality
+   × display_style actual failed preference draft warns on browser unload 43ms
+     → expected false to be true // Object.is equality
+   × theme actual failed preference draft warns on browser unload 54ms
+     → expected false to be true // Object.is equality
+   × sound actual failed preference draft warns on browser unload 26ms
+     → expected false to be true // Object.is equality
+   × muted actual failed preference draft warns on browser unload 51ms
+     → expected false to be true // Object.is equality
+   × actual registered Pomodoro route retains failed draft and asks before navigation 229ms
+     → expected '/app/dashboard' to be '/app/pomodoro' // Object.is equality
+   × App signout preflight remains pending behind actual Pomodoro draft decision 82ms
+     → expected true to be 'unresolved' // Object.is equality
+   ✓ clean Pomodoro neither warns nor blocks normal navigation or signout 30ms
+
+ Test Files  1 failed (1)
+      Tests  8 failed | 1 passed (9)
+   Start at  23:23:38
+   Duration  5.66s (transform 2.60s, setup 0ms, collect 3.98s, tests 661ms, environment 559ms, prepare 125ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-independent/departure.test.tsx > preset actual failed preference draft warns on browser unload
+ FAIL  docs/reviews/web-pomodoro-departure-independent/departure.test.tsx > custom_minutes actual failed preference draft warns on browser unload
+ FAIL  docs/reviews/web-pomodoro-departure-independent/departure.test.tsx > display_style actual failed preference draft warns on browser unload
+ FAIL  docs/reviews/web-pomodoro-departure-independent/departure.test.tsx > theme actual failed preference draft warns on browser unload
+ FAIL  docs/reviews/web-pomodoro-departure-independent/departure.test.tsx > sound actual failed preference draft warns on browser unload
+ FAIL  docs/reviews/web-pomodoro-departure-independent/departure.test.tsx > muted actual failed preference draft warns on browser unload
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-pomodoro-departure-independent/departure.test.tsx:15:424
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-independent/departure.test.tsx > actual registered Pomodoro route retains failed draft and asks before navigation
+AssertionError: expected '/app/dashboard' to be '/app/pomodoro' // Object.is equality
+
+Expected: "/app/pomodoro"
+Received: "/app/dashboard"
+
+ ❯ docs/reviews/web-pomodoro-departure-independent/departure.test.tsx:16:303
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-independent/departure.test.tsx > App signout preflight remains pending behind actual Pomodoro draft decision
+AssertionError: expected true to be 'unresolved' // Object.is equality
+
+- Expected: 
+"unresolved"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-pomodoro-departure-independent/departure.test.tsx:17:342
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯

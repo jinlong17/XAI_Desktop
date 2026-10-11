@@ -1,0 +1,54 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent whole shared technical impact reviewer; never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 1,
+    "review_cap": 3,
+    "prior_source_author_used": 1,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "SHARED/NATIVE-HOST-FOCUS-IMPACT-REVIEW1",
+  "source_inputs": [
+    "516495625056a6123f22ff67df61c9c34dff2484",
+    "cd7be1409e6198e5032dceb85bad8cca2182c3ae",
+    "21519e7f55db4fa609e194e5d2a9bd622445107c"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-shared-native-host-focus-impact-review-r1/review.md",
+    "docs/reviews/audit-parallel-shared-native-host-focus-impact-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Complete2808 inputidentities, TASK477+MET2663 fullreviewcorpora normalized2781/full12and14outputs/selfexcludingpatches/directparentcc012/fulloriginalTASK111+112/4440/5072/64visual/59control andMET89/2437/2497/originalcontracts/canonicalClockr2fullG1 preserved. Both sourceauthor2/source-review2cap3 remain, failedMETstatic/unknownM8/Clock3/3/RELunknownretained. Root hash receipt is no sourcequalification.",
+    "Independently judge each P-HOST/P-ACT/P-LEDGER/P-FOCUS/P-OUTER row exactmethod/fixture amendment within authorized technicalrevision and protected boundaries, source-feasible nonweakening not blanketapproval. ActualmanagedAppProviders/main startupSDKlocalHTTP allauxiliary/schema/device/authgeneration separate/P0productparity; production canonical activation trulyclosed and queuedwriter unprovable there. Qualification-only public testseam never clears production acceptance, gate must remainexplicitdependenthold. Cannot infer fixture controls satisfy productbefore or waive it.",
+    "Transition-wide passivecommit/mutation/paint ledger completeness/source identity/oldvalueintermediate inputproperties/detachedsubtrees/non-nullnewloader/readinesscausaljoin/expectedloaders/nofinalepochfilter; positive-negativeactualcapturingpairs no replayonly/quiettimezeroeffects. Qualify instrumentation passiveeffectcorrespondence; falseclaim internal speculativeReactrender mustrefuse. Exactoriginalexpectedfailure mappings and genuine mobile dialogs.",
+    "OriginalAppearance wholefile/block/function/probes freeze preserved andmethodnative-focus-context-v1 honestlyversioned successor onlyif equallystrong entirecontext/environment/predicates/captures/census/forwardreverse/action/deferred/descriptorinjectivity/nativeDPR+real200/scrolledclip/targetcalibrationtransfer conditions. Originalunitparity necessarynot alone enough; authenticAppearance selftest vs targetregion revalidation/retina pixel mapping/rounding/coordinatebands/outside ownership. No fakehue/stableflags/DPRoverride/omittedoutside/skippedstop/toleratedfailures/weakenedtiming. Qualification coverage/emitter dispositions finitealloriginalartifacts, no syntheticPNG/placeholder/droppedpaths. Any newmandatoryparameter makes normative missing-source gate explicitbeforeauthor3.",
+    "Enclosingrootreservedowner startbeforeimport/bootstrap/admissionfailure/latepipejournals terminalquiescence/noafterfinal mutation/descendantcleanup/outer90s boundedmissingjoins/realstdoutstderr Vite launch andalltransitivecopiedclosure sourceanddestination/build/lock/dependency/version cache hashes/resolved conditions realbrowser. ExactTASK12/MET16finite r3 files enoughforcompleteacquisitionimplementation/externaladmission refusals honestly. Root reservation implementedlater in independentrunner source, not rootrepair. Fullcausalcontrols andoriginallane/perstop/deferredartifacts forsuccess+refusal preserve counts/caps; no reset or implicit runtime grant.",
+    "APPROVED onlyexplicit technicalbasis rows with allblockingdependencies/exactproposed filepaths and no productiongrant, or precise boundedREVISEimpact2; reviewer neverrepair. Freshroot exacthashadoption+amendedsource3cards thenfreshsource-review3+qualificationindependentreview/rootadoption/fullbefore/implementation/fixed/integrated/fullG1/native/actualvendor/freshacceptance/reconcile/inventory mandatory. No ownerquestion or draftadoption, no fourthauthor/review or exhaustedunit invocation."
+  ]
+}

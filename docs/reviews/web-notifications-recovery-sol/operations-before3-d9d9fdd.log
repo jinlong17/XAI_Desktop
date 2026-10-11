@@ -1,0 +1,38 @@
+revision=d9d9fdd fixed_commit=d9d9fdde211e19fc258f97e7184a8ee77338d80c
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-sol-O5G2Tz
+
+ ❯ docs/reviews/web-notifications-recovery-sol/operations.test.tsx (2 tests | 2 failed) 89ms
+   × a failed predecessor can be retried without acknowledging its queued latest sound choice 68ms
+     → expected 'subtle' to be 'bell' // Object.is equality
+   × device draft survives A to B to locked while the old capability refuses and the fresh one exports 20ms
+     → expected null not to be null
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  05:31:09
+   Duration  914ms (transform 221ms, setup 180ms, collect 187ms, tests 89ms, environment 200ms, prepare 96ms)
+
+
+stderr | docs/reviews/web-notifications-recovery-sol/operations.test.tsx > a failed predecessor can be retried without acknowledging its queued latest sound choice
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/operations.test.tsx > a failed predecessor can be retried without acknowledging its queued latest sound choice
+AssertionError: expected 'subtle' to be 'bell' // Object.is equality
+
+Expected: "bell"
+Received: "subtle"
+
+ ❯ docs/reviews/web-notifications-recovery-sol/operations.test.tsx:15:105
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/operations.test.tsx > device draft survives A to B to locked while the old capability refuses and the fresh one exports
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-notifications-recovery-sol/operations.test.tsx:26:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯

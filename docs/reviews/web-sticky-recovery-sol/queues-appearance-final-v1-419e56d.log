@@ -1,0 +1,49 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+mode=queues
+suffix=appearance-final-v1
+include=docs/reviews/web-sticky-recovery-sol/queues.test.tsx
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=8cc5993a08b4ccee7ff557601d2fe9085cd7f6e041940d5eeba64b3b62e390ca bytes.test.tsx=3774dfa9703578ae22fed8d862441481226b0bf28c704cab0cc20672dfdf5da9 fields.test.tsx=2bf42fb6ddbe83bf54c574926fc8a7272bb6cdf073c746efea93012bbbd401bb queues.test.tsx=258aec9e5247f7c75c8a5b997683c7b5aa58c8a8b98117dc86df9ffa975c4983 continuity-export.test.tsx=78f140f50306b91ff22eb116bc587ce30b2cac57390dcefc948e1f3e44ce828d verify-fixed.mjs=3fba4b3b181d13431db9fe632fd68b70a4e51c6357168ec29aa89dd7977864c3
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-HRnfAI
+
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q1 palette: the predecessor succeeds while the latest fails; Retry settles only the latest 138ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q2 palette: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest 142ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q3 palette: a Retry while the field is pending is inert 88ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q4 palette: an equal-value successor after intervening input stays its own operation 100ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q5 palette: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write 121ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q6 palette: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes 128ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q7 palette: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default 128ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q8 palette: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation 106ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q9 palette: new work after a discard survives; the discarded held operation never writes 86ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q1 switch: the predecessor succeeds while the latest fails; Retry settles only the latest 85ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q2 switch: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest 136ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q3 switch: a Retry while the field is pending is inert 87ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q4 switch: an equal-value successor after intervening input stays its own operation 98ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q5 switch: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write 122ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q6 switch: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes 128ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q7 switch: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default 129ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q8 switch: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation 109ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q9 switch: new work after a discard survives; the discarded held operation never writes 88ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'color' > H6 color: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled 48ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'font' > H6 font: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled 48ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'pin_default' > H6 pin_default: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled 52ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'restore_size' > H6 restore_size: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled 54ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'grid_spacing' > H6 grid_spacing: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled 48ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 coalesced palette choices A→B→C during a held lock settle only the latest 59ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H5 'pin_default': two same-turn activations invert the latest intent and return to the original through two operations 43ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H5 'restore_size': two same-turn activations invert the latest intent and return to the original through two operations 42ms
+ ✓ docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H5/H6 two Pin by Default activations during a held lock return to the original through two operations 74ms
+
+ Test Files  1 passed (1)
+      Tests  27 passed (27)
+   Start at  13:37:20
+   Duration  3.23s (transform 224ms, setup 171ms, collect 191ms, tests 2.49s, environment 188ms, prepare 43ms)
+
+
+---- stderr ----

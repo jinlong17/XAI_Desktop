@@ -1,0 +1,15 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-PyKoiS
+
+ ✓ docs/reviews/web-date-time-recovery-independent/host.test.tsx (8 tests) 3251ms
+   ✓ actual five-control pane preserves failed intent for 'xai_pref_dt_start_week'  1162ms
+   ✓ actual five-control pane preserves failed intent for 'xai_pref_dt_lunar'  378ms
+   ✓ actual five-control pane preserves failed intent for 'xai_pref_dt_week_numbers'  305ms
+   ✓ actual signout delegate waits for a Date Time decision  450ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  01:31:38
+   Duration  31.84s (transform 15.08s, setup 0ms, collect 25.90s, tests 3.25s, environment 1.45s, prepare 494ms)

@@ -1,0 +1,48 @@
+{
+  "id": "DASH-06/SOURCE-AVAILABILITY-IMPACT",
+  "workflow": "A",
+  "module": "web",
+  "role": "fresh independent source-grounded technical impact only, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "41295a0f57728d93bb764f3679f5e2f3dafb86d4",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "c269ae212135f3b7729f843825ece70c7a00a724"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-dash06-source-availability-impact-r1/impact.md",
+    "docs/reviews/audit-parallel-dash06-source-availability-impact-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Read full original DASH06 obligation/current16D06rows andindependentreview D06-08. Trace actual publicread API/getPref/readRawPref/usePref/source decoding/registry/account epoch/rawsource paths and owner-produced history/source-error semantics. Prove difference absent validempty denied malformed partial, no fabricated completecount0 when unavailable. Staticimpact only no new failure replay",
+    "Identify bounded technical alternatives under existing owner rules/protected boundaries; exact proposed minimal files/ownership/module/resource locks/source callers/tests/account/stores/regression hazards and consumers. Do not grant allnecessaryfiles, silently widen nine displaypaths orsharedCSS orstorage writepolicy; any potential protected boundary stays explicit unapproved prerequisite. No productbehavior decision orstandard waiver",
+    "Full original before/fixed/native/account/recovery/partialsource/count/day/readonly/fullcanonicalClockr2G1/judgingcopies/methodqualification/vendor/freshacceptance/reconcile/inventory remain. Sourceerror impact does not fix displaycontractoradopt source method. AlreadyknownMGB/Clockbudget/source histories preserved, localdependencyonly",
+    "Actual permanent purpose/source correspondence for proposed new availability signal and inheritedread/storage/account/owner/host units, cap3/refusals/probes unknown not0; all312scopefieldswith39reversiblenormalizations/933+6evidence939/states13/3/3/293 unchanged. Full explicit sourcehash identities, precise viable future card/independentreview chain or exactblockedproof"
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/sharedCSS/storage/schema/account/host/config/lockfile",
+    "all original contracts/runners/failures/evidence",
+    "globalcontrols/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "technical_impact_iteration": 1,
+    "technical_impact_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported producttradeoff or weakeningstandards",
+    "runtime orprotectedwrite need"
+  ],
+  "no_children": true
+}

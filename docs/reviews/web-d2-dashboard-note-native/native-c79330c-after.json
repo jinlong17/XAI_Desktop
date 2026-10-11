@@ -1,0 +1,57 @@
+{
+  "requestedRef": "c79330c",
+  "revision": "c79330cd287d53e6b37eae6597497beb1dad1f7d",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 55311,
+  "reopenedPid": 55411,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "held-account-lock",
+        "pass": true
+      },
+      {
+        "name": "absent-no-mount-write",
+        "pass": true
+      },
+      {
+        "name": "quota-latest-retry",
+        "pass": true
+      }
+    ],
+    "checkpoint": {
+      "held-account-lock": {
+        "raw": "Submitted note"
+      },
+      "absent-no-mount-write": {
+        "raw": null
+      },
+      "quota-latest-retry": {
+        "raw": "Latest recovery note"
+      }
+    },
+    "scope": "Actual DashHeader, native account WebLocks and synthetic physical account notes; device offset protocol unchanged; CSS omitted, not visual acceptance"
+  },
+  "after": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "held-account-lock",
+        "pass": true
+      },
+      {
+        "name": "absent-no-mount-write",
+        "pass": true
+      },
+      {
+        "name": "quota-latest-retry",
+        "pass": true
+      }
+    ],
+    "scope": "Actual DashHeader, native account WebLocks and synthetic physical account notes; device offset protocol unchanged; CSS omitted, not visual acceptance"
+  }
+}

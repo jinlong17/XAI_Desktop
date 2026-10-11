@@ -1,0 +1,401 @@
+requested_revision=2023526
+resolved_commit=20235269749dad514833d76c27b958f694d0e4e9
+mode=queues
+suffix=before1
+include=docs/reviews/web-sticky-recovery-sol/queues.test.tsx
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=8cc5993a08b4ccee7ff557601d2fe9085cd7f6e041940d5eeba64b3b62e390ca bytes.test.tsx=3774dfa9703578ae22fed8d862441481226b0bf28c704cab0cc20672dfdf5da9 fields.test.tsx=2bf42fb6ddbe83bf54c574926fc8a7272bb6cdf073c746efea93012bbbd401bb queues.test.tsx=258aec9e5247f7c75c8a5b997683c7b5aa58c8a8b98117dc86df9ffa975c4983 continuity-export.test.tsx=78f140f50306b91ff22eb116bc587ce30b2cac57390dcefc948e1f3e44ce828d verify-fixed.mjs=3fba4b3b181d13431db9fe632fd68b70a4e51c6357168ec29aa89dd7977864c3
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-YcTFrI
+
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q1 palette: the predecessor succeeds while the latest fails; Retry settles only the latest 97ms
+   → H6: both choices wait behind the held per-key lock: expected 'coral' to be 'sky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q2 palette: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest 63ms
+   → H1: the latest choice stays displayed: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q3 palette: a Retry while the field is pending is inert 39ms
+   → H1: the failed choice stays displayed: expected 'sky' to be 'coral' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q4 palette: an equal-value successor after intervening input stays its own operation 72ms
+   → H1: the returning choice stays displayed: expected 'mint' to be 'coral' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q5 palette: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write 75ms
+   → H8: an uncertain write keeps Retry Default Color: expected null not to be null
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q6 palette: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes 36ms
+   → H6: the held per-key lock serializes the write: expected 'coral' to be 'sky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q7 palette: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default 35ms
+   → H6: the held per-key lock serializes the write: expected 'coral' to be 'sky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q8 palette: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation 46ms
+   → H8: an uncertain write keeps Retry Default Color: expected null not to be null
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q9 palette: new work after a discard survives; the discarded held operation never writes 37ms
+   → H6: the held per-key lock serializes the write: expected 'coral' to be 'sky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q1 switch: the predecessor succeeds while the latest fails; Retry settles only the latest 38ms
+   → H6: both choices wait behind the held per-key lock: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q2 switch: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest 59ms
+   → H8: Retry Pin by Default: expected null not to be null
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q3 switch: a Retry while the field is pending is inert 36ms
+   → H1: the failed choice stays displayed: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q4 switch: an equal-value successor after intervening input stays its own operation 72ms
+   → H1: the returning choice stays displayed: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q5 switch: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write 43ms
+   → H8: an uncertain write keeps Retry Pin by Default: expected null not to be null
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q6 switch: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes 37ms
+   → H6: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q7 switch: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default 37ms
+   → H6: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q8 switch: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation 46ms
+   → H8: an uncertain write keeps Retry Pin by Default: expected null not to be null
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q9 switch: new work after a discard survives; the discarded held operation never writes 36ms
+   → H6: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'color' > H6 color: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled 36ms
+   → H6: the held per-key lock keeps the physical bytes unchanged: expected 'mint' to be 'sky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'font' > H6 font: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled 35ms
+   → H6: the held per-key lock keeps the physical bytes unchanged: expected 'xl' to be 'small' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'pin_default' > H6 pin_default: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled 41ms
+   → H6: the held per-key lock keeps the physical bytes unchanged: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'restore_size' > H6 restore_size: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled 38ms
+   → H6: the held per-key lock keeps the physical bytes unchanged: expected 'false' to be 'true' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'grid_spacing' > H6 grid_spacing: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled 34ms
+   → H6: the held per-key lock keeps the physical bytes unchanged: expected 'xl' to be 'large' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 coalesced palette choices A→B→C during a held lock settle only the latest 37ms
+   → H6: the held per-key lock serializes the writes: expected 'navy' to be 'sky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H5 'pin_default': two same-turn activations invert the latest intent and return to the original through two operations 39ms
+   → H5: the second activation inverts the latest intent, not the rendered closure: expected true to be false // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H5 'restore_size': two same-turn activations invert the latest intent and return to the original through two operations 38ms
+   → H5: the second activation inverts the latest intent, not the rendered closure: expected false to be true // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H5/H6 two Pin by Default activations during a held lock return to the original through two operations 35ms
+   → H6: the held per-key lock keeps the first write pending: expected 'true' to be 'false' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  27 failed (27)
+   Start at  15:43:52
+   Duration  2.37s (transform 255ms, setup 214ms, collect 237ms, tests 1.24s, environment 320ms, prepare 60ms)
+
+
+---- stderr ----
+stderr | docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q1 palette: the predecessor succeeds while the latest fails; Retry settles only the latest
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q2 palette: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q3 palette: a Retry while the field is pending is inert
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q4 palette: an equal-value successor after intervening input stays its own operation
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q1 switch: the predecessor succeeds while the latest fails; Retry settles only the latest
+[plugin-web-storage] quota exceeded for xai_pref_sticky_pin_default.
+
+stderr | docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q2 switch: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+[plugin-web-storage] quota exceeded for xai_pref_sticky_pin_default.
+[plugin-web-storage] quota exceeded for xai_pref_sticky_pin_default.
+
+stderr | docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q3 switch: a Retry while the field is pending is inert
+[plugin-web-storage] quota exceeded for xai_pref_sticky_pin_default.
+
+stderr | docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q4 switch: an equal-value successor after intervening input stays its own operation
+[plugin-web-storage] quota exceeded for xai_pref_sticky_pin_default.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 27 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q1 palette: the predecessor succeeds while the latest fails; Retry settles only the latest
+AssertionError: H6: both choices wait behind the held per-key lock: expected 'coral' to be 'sky' // Object.is equality
+
+Expected: "sky"
+Received: "coral"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:55:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q2 palette: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+AssertionError: H1: the latest choice stays displayed: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:90:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q3 palette: a Retry while the field is pending is inert
+AssertionError: H1: the failed choice stays displayed: expected 'sky' to be 'coral' // Object.is equality
+
+Expected: "coral"
+Received: "sky"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:127:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q4 palette: an equal-value successor after intervening input stays its own operation
+AssertionError: H1: the returning choice stays displayed: expected 'mint' to be 'coral' // Object.is equality
+
+Expected: "coral"
+Received: "mint"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:160:70
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q5 palette: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+AssertionError: H8: an uncertain write keeps Retry Default Color: expected null not to be null
+ ❯ need ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-YcTFrI/docs/reviews/web-sticky-recovery-sol/fixture.tsx:31:38
+     29| /** Business presence assertion: fails as a product failure (not a pre…
+     30| export function need<T>(value: T | null | undefined, message: string):…
+     31|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     32|   return value as T;
+     33| }
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:185:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q6 palette: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes
+AssertionError: H6: the held per-key lock serializes the write: expected 'coral' to be 'sky' // Object.is equality
+
+Expected: "sky"
+Received: "coral"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:219:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q7 palette: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default
+AssertionError: H6: the held per-key lock serializes the write: expected 'coral' to be 'sky' // Object.is equality
+
+Expected: "sky"
+Received: "coral"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:254:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q8 palette: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation
+AssertionError: H8: an uncertain write keeps Retry Default Color: expected null not to be null
+ ❯ need ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-YcTFrI/docs/reviews/web-sticky-recovery-sol/fixture.tsx:31:38
+     29| /** Business presence assertion: fails as a product failure (not a pre…
+     30| export function need<T>(value: T | null | undefined, message: string):…
+     31|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     32|   return value as T;
+     33| }
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:289:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'palette' > Q9 palette: new work after a discard survives; the discarded held operation never writes
+AssertionError: H6: the held per-key lock serializes the write: expected 'coral' to be 'sky' // Object.is equality
+
+Expected: "sky"
+Received: "coral"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:318:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q1 switch: the predecessor succeeds while the latest fails; Retry settles only the latest
+AssertionError: H6: both choices wait behind the held per-key lock: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:55:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q2 switch: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+AssertionError: H8: Retry Pin by Default: expected null not to be null
+ ❯ need ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-YcTFrI/docs/reviews/web-sticky-recovery-sol/fixture.tsx:31:38
+     29| /** Business presence assertion: fails as a product failure (not a pre…
+     30| export function need<T>(value: T | null | undefined, message: string):…
+     31|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     32|   return value as T;
+     33| }
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:92:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q3 switch: a Retry while the field is pending is inert
+AssertionError: H1: the failed choice stays displayed: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:127:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q4 switch: an equal-value successor after intervening input stays its own operation
+AssertionError: H1: the returning choice stays displayed: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:160:70
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q5 switch: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+AssertionError: H8: an uncertain write keeps Retry Pin by Default: expected null not to be null
+ ❯ need ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-YcTFrI/docs/reviews/web-sticky-recovery-sol/fixture.tsx:31:38
+     29| /** Business presence assertion: fails as a product failure (not a pre…
+     30| export function need<T>(value: T | null | undefined, message: string):…
+     31|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     32|   return value as T;
+     33| }
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:185:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q6 switch: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes
+AssertionError: H6: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:219:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q7 switch: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default
+AssertionError: H6: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:254:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q8 switch: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation
+AssertionError: H8: an uncertain write keeps Retry Pin by Default: expected null not to be null
+ ❯ need ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-YcTFrI/docs/reviews/web-sticky-recovery-sol/fixture.tsx:31:38
+     29| /** Business presence assertion: fails as a product failure (not a pre…
+     30| export function need<T>(value: T | null | undefined, message: string):…
+     31|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     32|   return value as T;
+     33| }
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:289:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > 'switch' > Q9 switch: new work after a discard survives; the discarded held operation never writes
+AssertionError: H6: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:318:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'color' > H6 color: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled
+AssertionError: H6: the held per-key lock keeps the physical bytes unchanged: expected 'mint' to be 'sky' // Object.is equality
+
+Expected: "sky"
+Received: "mint"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:350:90
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'font' > H6 font: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled
+AssertionError: H6: the held per-key lock keeps the physical bytes unchanged: expected 'xl' to be 'small' // Object.is equality
+
+Expected: "small"
+Received: "xl"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:350:90
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'pin_default' > H6 pin_default: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled
+AssertionError: H6: the held per-key lock keeps the physical bytes unchanged: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:350:90
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'restore_size' > H6 restore_size: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled
+AssertionError: H6: the held per-key lock keeps the physical bytes unchanged: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:350:90
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 'grid_spacing' > H6 grid_spacing: a held per-key lock serializes the write while the latest choice shows immediately and controls stay enabled
+AssertionError: H6: the held per-key lock keeps the physical bytes unchanged: expected 'xl' to be 'large' // Object.is equality
+
+Expected: "large"
+Received: "xl"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:350:90
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H6 coalesced palette choices A→B→C during a held lock settle only the latest
+AssertionError: H6: the held per-key lock serializes the writes: expected 'navy' to be 'sky' // Object.is equality
+
+Expected: "sky"
+Received: "navy"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:377:75
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H5 'pin_default': two same-turn activations invert the latest intent and return to the original through two operations
+AssertionError: H5: the second activation inverts the latest intent, not the rendered closure: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:395:109
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H5 'restore_size': two same-turn activations invert the latest intent and return to the original through two operations
+AssertionError: H5: the second activation inverts the latest intent, not the rendered closure: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:395:109
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/27]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/queues.test.tsx > H5/H6 two Pin by Default activations during a held lock return to the original through two operations
+AssertionError: H6: the held per-key lock keeps the first write pending: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/queues.test.tsx:411:81
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/27]⎯

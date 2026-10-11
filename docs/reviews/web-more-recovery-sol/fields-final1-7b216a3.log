@@ -1,0 +1,12 @@
+revision=7b216a3 fixed_commit=7b216a3d5a4947d0f66da042fb275302737fb762
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-more-sol-GuN6fN
+
+ ✓ docs/reviews/web-more-recovery-sol/fields.test.tsx (22 tests) 3705ms
+   ✓ all15 valid domains persist exact codec bytes  1414ms
+
+ Test Files  1 passed (1)
+      Tests  22 passed (22)
+   Start at  06:21:07
+   Duration  7.00s (transform 671ms, setup 689ms, collect 429ms, tests 3.71s, environment 594ms, prepare 115ms)

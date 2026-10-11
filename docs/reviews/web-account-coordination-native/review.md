@@ -1,0 +1,22 @@
+# Native account coordination adapter — independent failure evidence
+
+Parent, Web, fixed `e9ff409`, 2026-09-09. Actual installed Chrome, immutable source archive with pinned workspace imports, native navigator.locks, isolated profile and synthetic accounts. No production state or provider traffic.
+
+All three initial checks fail: direct shared adapter invocation throws `Illegal invocation`; public `setPrefAutosaveAccount` refuses despite native locks being available; actual `migrateAccount` throws the same native invocation error. `native-e9ff409.json` retains results. No reopen phase runs after failed initial checks.
+
+`browserAccountLock` extracts `navigator.locks.request` then calls it without its LockManager receiver. In this Chrome the actual native method has `.length === 2`, also disproving the implementation's assumption that arity below three indicates a test adapter. A receiver-only repair that retains that branch would request the default exclusive mode instead of the required shared mode. The direct native test queries the held lock mode inside the callback, so merely making the invocation stop throwing cannot satisfy it.
+
+Required narrow repair: call the method with its native receiver and explicit `{mode}`. Correct older test adapters at the test boundary; do not infer runtime API support from function arity. Retain truthful typed refusal and all account/dataset ordering. This is a prerequisite for the D2 foundation and affects canonical callers already connected in that commit, not only future unconverted callers. Astra independently reviews remaining foundation semantics.
+
+```sh
+node docs/reviews/web-account-coordination-native/verify-native.mjs e9ff409
+```
+
+The suite's subsequent restart phase, if initial checks pass on a repair, only verifies persisted autosave bytes. It does not establish all-client coordination, every UI writer, universal old-client admission, multi-store atomicity or D2 completion.
+
+
+## Integrated fixed verification at e9fb5e7
+
+Parent independently reran the unchanged native initial assertions on fixed `e9fb5e7`, including Tasks repair `0c4b6b4` and the native adapter repair: 3 initial cases PASS, then 1 persisted-state/UI cases PASS after observed Chrome SIGTERM exit, PID 91589 → 91605. See `native-e9fb5e7.json`. Prior failing logs and author evidence remain separate. The original scope limitations still apply; this does not accept the remaining D2 foundation failures or every product caller.
+
+At the subsequent foundation repair `c201a1d`, the parent independently reran the same native adapter/public-autosave/migration assertions (3 PASS) and restart retention (1 PASS), Chrome PID 92847 → 92868. `native-c201a1d.json` preserves the fixed-source result. Separately, Astra's original foundation assertions pass 14/14 in parent-produced `../web-board-workspace-astra-review/d2-foundation-independent-parent-c201a1d.log`, and the original migration source assertions pass 7/7 in `../web-canonical-migration-write-race/independent-c201a1d.log`. These remain separate scopes; final foundation review and caller conversion are pending.

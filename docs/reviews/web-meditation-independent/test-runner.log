@@ -1,0 +1,58 @@
+stderr | src/__tests__/MeditationModule.saveRecovery.test.tsx > Meditation save recovery > retains a failed new scene and retries the latest draft exactly once
+[plugin-web-storage] quota exceeded for xai_meditation_prefs.
+
+stderr | src/__tests__/MeditationModule.persist.test.tsx > MeditationModule persistence > AC-PERSIST-4: corrupted JSON falls back to defaults without throwing
+[plugin-web-storage] decode failed for xai_meditation_prefs: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-eaeoCw/source/packages/plugin-web-storage/src/internal/storage.ts:136:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-eaeoCw/source/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-eaeoCw/source/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-eaeoCw/source/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at useMeditationPrefs (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-eaeoCw/source/packages/xai-web-meditation/src/internal/useMeditationPrefs.ts:23:25)
+    at MeditationModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-eaeoCw/source/packages/xai-web-meditation/src/MeditationModule.tsx:122:43)
+
+stderr | src/__tests__/MeditationModule.saveRecovery.test.tsx > Meditation save recovery > does not reset the editor or publish deletion until storage succeeds
+[plugin-web-storage] quota exceeded for xai_meditation_prefs.
+
+stderr | src/__tests__/MeditationModule.saveRecovery.test.tsx > Meditation save recovery > protects a newer stored value from an old retry
+[plugin-web-storage] quota exceeded for xai_meditation_prefs.
+
+stderr | src/__tests__/MeditationModule.saveRecovery.test.tsx > Meditation save recovery > exports the latest scene editor plus failed proposal using a download
+[plugin-web-storage] quota exceeded for xai_meditation_prefs.
+
+stderr | src/__tests__/MeditationModule.saveRecovery.test.tsx > Meditation save recovery > rejects old account retry and export after switching identity
+[plugin-web-storage] quota exceeded for xai_meditation_prefs.
+
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-eaeoCw/source/packages/xai-web-meditation
+
+ ✓ src/__tests__/durableSession.test.ts (13 tests) 24ms
+ ✓ src/__tests__/ClockDisplay.test.tsx (14 tests) 58ms
+ ✓ src/__tests__/MeditationPlayer.test.tsx (18 tests) 444ms
+ ✓ src/__tests__/MeditationModule.pick.test.tsx (6 tests) 870ms
+ ✓ src/__tests__/ambientLifecycle.test.tsx (4 tests) 28ms
+ ✓ src/__tests__/MeditationModule.render.test.tsx (14 tests) 1180ms
+ ✓ src/__tests__/validate.test.ts (12 tests) 4ms
+ ✓ src/__tests__/index-barrel.test.ts (5 tests) 6ms
+ ✓ src/__tests__/formatRemaining.test.ts (7 tests) 12ms
+ ✓ src/__tests__/MeditationModule.persist.test.tsx (10 tests) 2238ms
+   ✓ MeditationModule persistence > saves, selects, edits, and deletes a custom scene  895ms
+ ✓ src/__tests__/MeditationModule.saveRecovery.test.tsx (5 tests) 2294ms
+   ✓ Meditation save recovery > retains a failed new scene and retries the latest draft exactly once  666ms
+   ✓ Meditation save recovery > does not reset the editor or publish deletion until storage succeeds  350ms
+   ✓ Meditation save recovery > rejects old account retry and export after switching identity  821ms
+ ✓ src/__tests__/getScene.test.ts (2 tests) 2ms
+ ✓ src/__tests__/styles.css.tokens.test.ts (5 tests) 4ms
+ ✓ src/__tests__/registry-presence.test.ts (7 tests) 3ms
+ ✓ src/__tests__/registration.test.tsx (7 tests) 3ms
+ ✓ src/__tests__/computeAnalogAngles.test.ts (5 tests) 2ms
+
+ Test Files  16 passed (16)
+      Tests  134 passed (134)
+   Start at  13:37:07
+   Duration  4.14s (transform 591ms, setup 3.81s, collect 1.39s, tests 7.17s, environment 9.02s, prepare 1.52s)
+
+

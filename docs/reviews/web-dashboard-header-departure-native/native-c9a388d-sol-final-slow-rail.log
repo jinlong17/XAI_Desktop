@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"c9a388d","browser":"Chrome/152.0.7977.83"}
+{"name":"slow-pointer-observation","path":"/app/dashboard","dialog":true,"note":"Original note","input":"Slow pointer unsaved note"}
+{"name":"supplemental","pass":true,"mode":"slow-rail","runtimeErrors":0}

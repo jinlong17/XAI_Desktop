@@ -1,0 +1,12 @@
+revision=2962b49 fixed_commit=2962b49bd63fa351a2c17b406456ea1b987eca8f
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-Mwbeh5
+
+ ✓ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx (24 tests) 2191ms
+   ✓ display_style: physical fault retains current choice and actual Retry persists only the unresolved intent  332ms
+
+ Test Files  1 passed (1)
+      Tests  24 passed (24)
+   Start at  23:58:49
+   Duration  4.69s (transform 802ms, setup 0ms, collect 1.60s, tests 2.19s, environment 343ms, prepare 123ms)

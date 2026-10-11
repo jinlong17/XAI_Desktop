@@ -132,3 +132,18 @@ Planned thin wrappers only:
 - auth row overreaching into later encrypted-cache/runtime rows
 - route-guard logic drifting between host pages and package code
 - revoked-device cleanup semantics becoming inconsistent with future device-management UI
+
+## REL-02 durable database schema (2026-09-09)
+
+`storage.ts` owns shared connection initialization per IndexedDB factory and database name. The default `xai-web-auth` database has minimum schema version 2 and both `session` and `device` stores. Upgrade creates only missing stores and retains existing records, including v1 databases initialized by either adapter. Existing higher versions are opened without downgrade. Custom database/store options remain supported; missing custom stores are added through a version upgrade.
+
+Connections close and invalidate their cache on `versionchange`/`close`. Open failures do not retain a rejected cache entry. A blocked upgrade rejects promptly instead of keeping auth initialization pending; a delayed rejected request aborts its upgrade or closes a late successful connection. The user must close the older blocking tab before retrying. This patch does not introduce a login UI retry control or change account/session security policy.
+
+REL-02 follow-up: serialize the full store operation per database, rather than only the open promise. Otherwise adding a store can synchronously close a cached connection while an earlier caller is awaiting it. Keep the queue failure-tolerant and scoped to the database; retain v1 data and existing custom-store behavior.
+
+REL-03: the auth package reports identity transitions through an injected synchronous callback, keeping local business-storage ownership in plugin-web-storage. Monotonic refresh revisions prevent stale getSession results from resurrecting an older account. Identity derives from session.user.id, never metadata/email/device ID. Auth events update tokens for the same user without resetting the local generation.
+
+
+## REL-06 legacy database reset result contract
+
+REL-06 corrects the historical best-effort reset contract. No current account flow calls this broad helper; retain captured-owner row erasers for shared auth/AI data. Aggregate all failures without replacing them with success. Do not close another owner's database or add shared-store deletion to the account workflow. Late native completion cannot change the already reported failure; retry after releasing blockers establishes a new result.

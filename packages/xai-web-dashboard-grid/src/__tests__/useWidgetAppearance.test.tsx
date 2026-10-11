@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 import { describe, expect, it } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 
@@ -24,7 +25,7 @@ describe("useWidgetAppearance", () => {
       result.current.setWidgetAppearance("weather", { tone: "rose", alpha: 0.91 });
     });
     expect(
-      JSON.parse(localStorage.getItem("xai_pref_dashboard_widget_appearance") ?? "{}"),
+      JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_pref_dashboard_widget_appearance")) ?? "{}"),
     ).toEqual({
       weather: { tone: "rose", alpha: 0.72 },
     });
@@ -36,7 +37,7 @@ describe("useWidgetAppearance", () => {
     act(() => {
       result.current.setWidgetAppearance("ghost", { tone: "mint", alpha: 0.44 });
     });
-    expect(localStorage.getItem("xai_pref_dashboard_widget_appearance")).toBeNull();
+    expect(localStorage.getItem(accountScope.physicalKey("xai_pref_dashboard_widget_appearance"))).toBeNull();
   });
 
   it("removes the saved item when a widget appearance is reset", () => {
@@ -47,7 +48,7 @@ describe("useWidgetAppearance", () => {
     act(() => {
       result.current.resetWidgetAppearance("weather");
     });
-    expect(JSON.parse(localStorage.getItem("xai_pref_dashboard_widget_appearance") ?? "{}")).toEqual(
+    expect(JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_pref_dashboard_widget_appearance")) ?? "{}")).toEqual(
       {},
     );
     expect(result.current.getAppearance("weather")).toEqual(DEFAULT_WIDGET_APPEARANCE);

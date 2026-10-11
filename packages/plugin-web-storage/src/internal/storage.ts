@@ -17,57 +17,81 @@ import {
   type WebPrefValue,
 } from "./registry.js";
 import { encode, decode } from "./codec.js";
+import { AccountScopeError, accountScope, hasCommittedGenerationMarker, type AccountScope } from "./accountScope.js";
+import { accountLifecycleLockName, browserAccountLock, type AccountCoordinationLock } from "./accountCoordination.js";
+import { ownershipForKey } from "./accountOwnership.js";
+import { isCanonicalCommandActivationEnabled, isCanonicalCommandKey, readCanonicalCommandState } from "./canonicalCommandState.js";
+export { _clearAllListeners, publishSameTab, subscribeSameTab } from "./sameTabBus.js";
+import { publishSameTab } from "./sameTabBus.js";
+import { mutatePref, validatePrefCodecValue, validateRegisteredPrefValue } from "./prefMutation.js";
 
-// ---------------------------------------------------------------------------
-// Same-tab pub/sub bus
-// ---------------------------------------------------------------------------
+/** Decode one physical preference value into the domain projection readers expect. */
+export function decodeStoredPrefValue<K extends WebPrefKey>(key: K, raw: string): WebPrefValue<K> | null {
+  const decoded = decode(PREF_REGISTRY[key].codec, raw);
+  if (decoded === null) return null;
+  if (!isCanonicalCommandKey(key)) return decoded as WebPrefValue<K>;
+  const state = readCanonicalCommandState(decoded);
+  if (state.status === "legacy" || state.status === "envelope") {
+    return state.data as WebPrefValue<K>;
+  }
+  return null;
+}
 
-type Listener<T = unknown> = (value: T) => void;
+function canonicalWriteBlocked<K extends WebPrefKey>(key: K, raw: string | null): boolean {
+  if (!isCanonicalCommandKey(key)) return false;
+  if (isCanonicalCommandActivationEnabled()) return true;
+  if (raw === null) return false;
+  const decoded = decode(PREF_REGISTRY[key].codec, raw);
+  if (decoded === null) return true;
+  const state = readCanonicalCommandState(decoded);
+  return state.status === "envelope" || state.status === "corrupt" || state.status === "unsupported";
+}
 
-// Map from storage key to Set of listeners
-const _listeners = new Map<string, Set<Listener>>();
+export function readRawPref(key: string, scope = accountScope.capture()): string | null {
+  if (typeof window === "undefined") return null;
+  try { return localStorage.getItem(accountScope.physicalKey(key, scope)); } catch { return null; }
+}
 
-/**
- * Subscribe to same-tab writes for a single key.
- * Returns an unsubscribe function.
- */
-export function subscribeSameTab(
+export type AccountWriteFailureReason = "lock-unavailable" | "account-changed" | "recovery-required" | "deleted" | "storage" | "invalid";
+export type AccountWriteResult = Readonly<{ ok: true }> | Readonly<{ ok: false; reason: AccountWriteFailureReason }>;
+export interface AccountWriteOptions { scope?: AccountScope; lock?: AccountCoordinationLock }
+
+function assertCurrentAccountGeneration(scope: AccountScope): void {
+  accountScope.assertCurrent(scope);
+  if ((scope.kind !== "account" && scope.kind !== "demo") || !scope.accountId || !scope.generation) throw new Error("account-changed");
+  const demo = scope.kind === "demo";
+  const prefix = `xai:${demo ? "demo" : "account"}:v1:${encodeURIComponent(scope.accountId)}:`;
+  if (localStorage.getItem(`${prefix}deleted`) !== null) throw new Error("deleted");
+  const raw = localStorage.getItem(`${prefix}committed-generation`);
+  if (raw === null) throw new Error("recovery-required");
+  if (!hasCommittedGenerationMarker(raw, scope.generation)) throw new Error("recovery-required");
+}
+
+function accountWriteFailure(error: unknown): AccountWriteResult {
+  if (error instanceof AccountScopeError) return { ok: false, reason: "account-changed" };
+  const reason = error instanceof Error ? error.message : "storage";
+  if (reason === "account-changed" || reason === "recovery-required" || reason === "deleted") return { ok: false, reason };
+  return { ok: false, reason: reason.includes("lock") ? "lock-unavailable" : "storage" };
+}
+
+async function coordinateAccountWrite(
   key: string,
-  listener: Listener,
-): () => void {
-  let set = _listeners.get(key);
-  if (!set) {
-    set = new Set();
-    _listeners.set(key, set);
-  }
-  set.add(listener);
-  return () => {
-    const s = _listeners.get(key);
-    if (s) {
-      s.delete(listener);
-      if (s.size === 0) _listeners.delete(key);
-    }
-  };
-}
-
-/**
- * Publish to same-tab subscribers for a key.
- * Called by setPref after writing to localStorage.
- */
-export function publishSameTab(key: string, value: unknown): void {
-  const set = _listeners.get(key);
-  if (!set) return;
-  for (const listener of set) {
-    listener(value);
+  scope: AccountScope,
+  lock: AccountCoordinationLock | undefined,
+  write: () => boolean,
+): Promise<AccountWriteResult> {
+  try {
+    if (ownershipForKey(key) === "device") return write() ? { ok: true } : { ok: false, reason: "storage" };
+    if (!scope.accountId || scope.kind === "locked") return { ok: false, reason: "account-changed" };
+    return await (lock ?? browserAccountLock)(accountLifecycleLockName(scope.accountId, scope.kind === "demo"), "shared", async () => {
+      assertCurrentAccountGeneration(scope);
+      return write() ? { ok: true } : { ok: false, reason: "storage" };
+    });
+  } catch (error) {
+    return accountWriteFailure(error);
   }
 }
 
-/**
- * @internal — exposed for test cleanup; not part of the public surface.
- */
-export function _clearAllListeners(): void {
-  _listeners.clear();
-}
 
 // ---------------------------------------------------------------------------
 // One-shot warn for localStorage unavailability (e.g. Safari Private Mode)
@@ -105,25 +129,25 @@ function guardStorage(action: () => void): boolean {
 // getPref
 // ---------------------------------------------------------------------------
 
-export function getPref<K extends WebPrefKey>(key: K): WebPrefValue<K> {
+export function getPref<K extends WebPrefKey>(key: K, scope = accountScope.capture()): WebPrefValue<K> {
   const entry = PREF_REGISTRY[key];
   if (typeof window === "undefined") {
     return entry.default as WebPrefValue<K>;
   }
   let raw: string | null = null;
   try {
-    raw = localStorage.getItem(key);
+    raw = localStorage.getItem(accountScope.physicalKey(key, scope));
   } catch {
     return entry.default as WebPrefValue<K>;
   }
   if (raw === null) {
     return entry.default as WebPrefValue<K>;
   }
-  const decoded = decode(entry.codec, raw);
+  const decoded = decodeStoredPrefValue(key, raw);
   if (decoded === null) {
     console.warn(
       `[plugin-web-storage] decode failed for ${key}:`,
-      new Error(`Cannot decode "${raw}" with codec "${entry.codec}"`),
+      new Error(`Cannot decode stored value with codec "${entry.codec}"`),
     );
     return entry.default as WebPrefValue<K>;
   }
@@ -137,6 +161,7 @@ export function getPref<K extends WebPrefKey>(key: K): WebPrefValue<K> {
 export function setPref<K extends WebPrefKey>(
   key: K,
   value: WebPrefValue<K>,
+  scope = accountScope.capture(),
 ): boolean {
   if (typeof window === "undefined") {
     console.warn(
@@ -155,7 +180,7 @@ export function setPref<K extends WebPrefKey>(
   // Compare-before-write: avoid spurious storage events (AC-IMP-11)
   let existing: string | null = null;
   try {
-    existing = localStorage.getItem(key);
+    existing = localStorage.getItem(accountScope.physicalKey(key, scope));
   } catch {
     // localStorage unavailable
     if (!_storageUnavailableWarned) {
@@ -166,6 +191,10 @@ export function setPref<K extends WebPrefKey>(
     }
     return false;
   }
+  if (canonicalWriteBlocked(key, existing)) {
+    console.warn(`[plugin-web-storage] refusing legacy write over protected canonical ${key}.`);
+    return false;
+  }
   if (existing === encoded) {
     // Value unchanged — skip write. Same-tab subscribers do NOT get notified
     // (value didn't actually change).
@@ -173,7 +202,7 @@ export function setPref<K extends WebPrefKey>(
   }
 
   try {
-    localStorage.setItem(key, encoded);
+    localStorage.setItem(accountScope.physicalKey(key, scope), encoded);
   } catch (err) {
     if (
       err instanceof DOMException &&
@@ -193,24 +222,55 @@ export function setPref<K extends WebPrefKey>(
   }
 
   // Publish to same-tab subscribers
-  publishSameTab(key, value);
+  publishSameTab(key, value, scope);
   return true;
+}
+
+/** Coordinated account-pref write. Existing synchronous callers retain their boolean contract. */
+export async function setPrefAccount<K extends WebPrefKey>(key: K, value: WebPrefValue<K>, options?: AccountWriteOptions): Promise<AccountWriteResult> {
+  const scope = options?.scope ?? accountScope.capture();
+  const entry = PREF_REGISTRY[key];
+  const result = await mutatePref({ key, codec: entry.codec, defaultValue: entry.default as WebPrefValue<K>, validate: (candidate): candidate is WebPrefValue<K> => validateRegisteredPrefValue(key, candidate), next: value, scope, accountLock: options?.lock, keyLock: options?.lock });
+  return result.ok ? { ok: true } : { ok: false, reason: result.reason === "canonical" || result.reason === "conflict" || result.reason === "unavailable" || result.reason === "readback-uncertain" ? "storage" : result.reason };
 }
 
 // ---------------------------------------------------------------------------
 // removePref
 // ---------------------------------------------------------------------------
 
-export function removePref<K extends WebPrefKey>(key: K): void {
-  if (typeof window === "undefined") return;
+/** Returns whether physical removal completed; callers must not infer success from a missing read fallback. */
+export function removePref<K extends WebPrefKey>(key: K, scope = accountScope.capture()): boolean {
+  if (typeof window === "undefined") return false;
+  if (isCanonicalCommandKey(key)) {
+    let existing: string | null;
+    try {
+      existing = localStorage.getItem(accountScope.physicalKey(key, scope));
+    } catch {
+      console.warn(`[plugin-web-storage] refusing canonical removal because ${key} could not be read.`);
+      return false;
+    }
+    if (canonicalWriteBlocked(key, existing)) {
+      console.warn(`[plugin-web-storage] refusing legacy removal of protected canonical ${key}.`);
+      return false;
+    }
+  }
   try {
-    localStorage.removeItem(key);
+    localStorage.removeItem(accountScope.physicalKey(key, scope));
   } catch {
-    return;
+    return false;
   }
   const entry = PREF_REGISTRY[key];
   // Notify same-tab subscribers that the value is back to default
-  publishSameTab(key, entry.default);
+  publishSameTab(key, entry.default, scope);
+  return true;
+}
+
+/** Coordinated account-pref removal with an explicit committed/refused result. */
+export async function removePrefAccount<K extends WebPrefKey>(key: K, options?: AccountWriteOptions): Promise<AccountWriteResult> {
+  const scope = options?.scope ?? accountScope.capture();
+  const entry = PREF_REGISTRY[key];
+  const result = await mutatePref({ key, codec: entry.codec, defaultValue: entry.default as WebPrefValue<K>, validate: (candidate): candidate is WebPrefValue<K> => validateRegisteredPrefValue(key, candidate), reset: true, scope, accountLock: options?.lock, keyLock: options?.lock });
+  return result.ok ? { ok: true } : { ok: false, reason: result.reason === "canonical" || result.reason === "conflict" || result.reason === "unavailable" || result.reason === "readback-uncertain" ? "storage" : result.reason };
 }
 
 // Suppress unused variable warning for guardStorage
@@ -254,6 +314,7 @@ function validateSuffix(fnName: string, suffix: string): boolean {
 }
 
 export interface GetPrefAutosaveOptions<T> {
+  scope?: AccountScope;
   /** Codec used to deserialize. Must match the codec passed to `usePrefAutosave`. Default: "json". */
   codec?: PrefCodec;
   /** Value returned when the key is absent, decode fails, or running under SSR. */
@@ -276,6 +337,7 @@ export function getPrefAutosave<T>(
   suffix: string,
   options?: GetPrefAutosaveOptions<T>,
 ): T | undefined {
+  const scope = options?.scope ?? accountScope.capture();
   const defaultValue = options?.defaultValue;
   const codec: PrefCodec = options?.codec ?? "json";
 
@@ -289,7 +351,7 @@ export function getPrefAutosave<T>(
   const key = `xai_pref_${suffix}`;
   let raw: string | null = null;
   try {
-    raw = localStorage.getItem(key);
+    raw = localStorage.getItem(accountScope.physicalKey(key, scope));
   } catch {
     if (!_storageUnavailableWarned) {
       _storageUnavailableWarned = true;
@@ -307,7 +369,7 @@ export function getPrefAutosave<T>(
   if (decoded === null) {
     console.warn(
       `[plugin-web-storage] decode failed for ${key}:`,
-      new Error(`Cannot decode "${raw}" with codec "${codec}"`),
+      new Error(`Cannot decode stored value with codec "${codec}"`),
     );
     return defaultValue;
   }
@@ -315,8 +377,11 @@ export function getPrefAutosave<T>(
 }
 
 export interface SetPrefAutosaveOptions {
+  scope?: AccountScope;
   /** Codec used to serialize. Default: "json". Must match the reader's codec. */
   codec?: PrefCodec;
+  /** Optional runtime domain validator for explicit coordinated async writers. */
+  validate?: (value: unknown) => boolean;
 }
 
 /**
@@ -334,6 +399,7 @@ export function setPrefAutosave<T>(
   value: T,
   options?: SetPrefAutosaveOptions,
 ): boolean {
+  const scope = options?.scope ?? accountScope.capture();
   const codec: PrefCodec = options?.codec ?? "json";
 
   if (!validateSuffix("setPrefAutosave", suffix)) {
@@ -355,7 +421,7 @@ export function setPrefAutosave<T>(
 
   let existing: string | null = null;
   try {
-    existing = localStorage.getItem(key);
+    existing = localStorage.getItem(accountScope.physicalKey(key, scope));
   } catch {
     if (!_storageUnavailableWarned) {
       _storageUnavailableWarned = true;
@@ -370,7 +436,7 @@ export function setPrefAutosave<T>(
   }
 
   try {
-    localStorage.setItem(key, encoded);
+    localStorage.setItem(accountScope.physicalKey(key, scope), encoded);
   } catch (err) {
     if (
       err instanceof DOMException &&
@@ -389,8 +455,25 @@ export function setPrefAutosave<T>(
     return false;
   }
 
-  publishSameTab(key, value);
+  publishSameTab(key, value, scope);
   return true;
+}
+
+/** Coordinated account autosave write. The legacy boolean API remains unchanged. */
+export async function setPrefAutosaveAccount<T>(suffix: string, value: T, options?: SetPrefAutosaveOptions & AccountWriteOptions): Promise<AccountWriteResult> {
+  const scope = options?.scope ?? accountScope.capture();
+  const key = `xai_pref_${suffix}`;
+  if (!validateSuffix("setPrefAutosave", suffix)) return { ok: false, reason: "invalid" };
+  const codec = options?.codec ?? "json";
+  const valid = (candidate: unknown): candidate is T => {
+    try {
+      return (options?.validate?.(candidate) ?? true)
+        && validatePrefCodecValue(codec, candidate)
+        && validateRegisteredPrefValue(key, candidate);
+    } catch { return false; }
+  };
+  const result = await mutatePref({ key, codec, defaultValue: value, validate: valid, next: value, scope, accountLock: options?.lock, keyLock: options?.lock });
+  return result.ok ? { ok: true } : { ok: false, reason: result.reason === "canonical" || result.reason === "conflict" || result.reason === "unavailable" || result.reason === "readback-uncertain" ? "storage" : result.reason };
 }
 
 /**
@@ -399,15 +482,34 @@ export function setPrefAutosave<T>(
  * Notifies same-tab subscribers that the value is gone (publishes `undefined`).
  * SSR no-op. Returns nothing — there is no failure mode worth surfacing.
  */
-export function removePrefAutosave(suffix: string): void {
+export function removePrefAutosave(suffix: string, scope = accountScope.capture()): void {
   if (!validateSuffix("removePrefAutosave", suffix)) return;
   if (typeof window === "undefined") return;
 
   const key = `xai_pref_${suffix}`;
   try {
-    localStorage.removeItem(key);
+    localStorage.removeItem(accountScope.physicalKey(key, scope));
   } catch {
     return;
   }
-  publishSameTab(key, undefined);
+  publishSameTab(key, undefined, scope);
+}
+
+/** Coordinated account autosave removal. */
+export async function removePrefAutosaveAccount(suffix: string, options?: SetPrefAutosaveOptions & AccountWriteOptions): Promise<AccountWriteResult> {
+  const scope = options?.scope ?? accountScope.capture();
+  const key = `xai_pref_${suffix}`;
+  if (!validateSuffix("removePrefAutosave", suffix)) return { ok: false, reason: "invalid" };
+  const codec = options?.codec ?? "json";
+  const registered = PREF_REGISTRY[key as WebPrefKey] as typeof PREF_REGISTRY[WebPrefKey] | undefined;
+  const defaultValue = registered?.default;
+  const valid = (value: unknown): value is unknown => {
+    try {
+      return (options?.validate?.(value) ?? true)
+        && validatePrefCodecValue(codec, value)
+        && validateRegisteredPrefValue(key, value);
+    } catch { return false; }
+  };
+  const result = await mutatePref<unknown>({ key, codec, defaultValue, validate: valid, reset: true, allowAbsentDefault: !registered, scope, accountLock: options?.lock, keyLock: options?.lock });
+  return result.ok ? { ok: true } : { ok: false, reason: result.reason === "canonical" || result.reason === "conflict" || result.reason === "unavailable" || result.reason === "readback-uncertain" ? "storage" : result.reason };
 }

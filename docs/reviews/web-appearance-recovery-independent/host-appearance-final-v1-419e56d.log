@@ -1,0 +1,370 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=host
+suffix=appearance-final-v1
+include=docs/reviews/web-appearance-recovery-independent/host.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-independent/verify-fixed.mjs 419e56d host appearance-final-v1
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps/web/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-UAmwWv/appearance-host-host.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-UAmwWv/.report-host.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 host-fixture.tsx=ba137f5856f7c0bf145af88def08af442ba92fcb0bcc611ea834569ac60ad52f host.test.tsx=27589cb660b55105c289f916edd6bfe14283897245115ef58c7a587346cb38cf verify-fixed.mjs=6aac35631594d11aa916a75710beebbf93e083c21d7b02f84df83e2baed8e4b0
+archive_file_sha256 (11/19 equal the contract r3 source table) packages/xai-web-settings-appearance/src/AppearancePane.tsx=0818f7ee1cb9b525e6fac603ba4958b175dd401e0fd754d05ed3ac7d88e27c8f(contract:differs) packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c(contract:match) packages/xai-web-settings-appearance/src/types.ts=40a72a058ba1e4b64f40afe8a31d590935d800e786d065248a8030f3137eeae3(contract:differs) packages/xai-web-settings-appearance/src/index.ts=9113e85cab3eee31e1f54e5220b87e8d8eac69a48f73b2697a8662dac1d5caef(contract:differs) packages/xai-web-settings-appearance/src/styles.css=cd95e4a921e334d7ac47fc7e808ffa3e79b664c45fbf754049be33f649f250ce(contract:differs) apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a(contract:differs) packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0(contract:differs) packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f(contract:differs) packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a(contract:differs) apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075(contract:match) packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce(contract:match) packages/plugin-web-settings-shell/src/types.ts=513f90fd05ef66f6f8fb1aaa230e9a6844407ae44cf3d7a1d8508c4eabfb4522(contract:match) packages/plugin-web-settings-shell/src/styles.css=e5369cc7ed3a20650465e001537c7714a3715834d678ea17ff3960fbd3992166(contract:match) packages/xai-web-pet/src/DesktopPet.tsx=35edb0e686bf6682192ba1bbe7842d159e161a6593b7ccd13a432d59fe58ad6f(contract:match) packages/xai-web-pet/src/pet.css=6326d822b654a22bcad361e57d02413d4569eadf8058f89d90fc3dd43249dcfe(contract:match) packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491(contract:match) packages/plugin-web-tokens/src/tokens.css=7c6eddebd1d826f939862ef75ba8159e966f0c76b0b9d34a0911f6b47265615d(contract:match) packages/plugin-web-countdown/src/internal/CountdownEditDialog.tsx=6bcf6295989381101f99a53c1624db8f491c845c1d6debc6e550d7e04a1afdae(contract:match) packages/plugin-web-ai-chat/src/ErrorBanner.tsx=7cf751dd321f3cdd490984d62ce49c563a3d1aaecf0b229d8fa203e39bb1fbc2(contract:match)
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+forbidden_source_roots /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/packages /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/apps /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/docs
+vitest_exit=0
+harness_checks=PASS (6/6)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-UAmwWv
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once, faulted attempts never delegate, no nested Storage call and no accountScope helper call
+OBSERVED FX1 F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerStep":[1,1,1,0,0,0,1,1],"threwPerStep":[false,false,false,true,true,true,false,false],"logged":["set:appearance-host-selfcheck=1","get:appearance-host-selfcheck","remove:appearance-host-selfcheck","set:appearance-host-selfcheck=2!threw","remove:appearance-host-selfcheck!threw","get:appearance-host-selfcheck!threw","get:appearance-host-selfcheck"],"faultsFired":[1,1,1],"bytesAfterFaultedSet":null,"bytesAfterFaultedRemove":"3","sessionStorageLogged":false}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once, faulted attempts never delegate, no nested Storage call and no accountScope helper call 3ms
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX2 the Web Lock fixture: asynchronous grants, a test hold keeps a product request waiting until release, shared cohorts, ifAvailable 41ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX3 composition: the production App from the archive with only the auth-session hook substituted; account A g1; Shell, Settings, the Appearance pane and DesktopPet; no network; the location stub delegates reads and the history counters see a router navigation
+OBSERVED FX3 composition {"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":8},"hookCalls":10,"network":0,"historyCounters":{"push":0,"replace":0},"productionRouterAtImport":"/"}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX3 composition: the production App from the archive with only the auth-session hook substituted; account A g1; Shell, Settings, the Appearance pane and DesktopPet; no network; the location stub delegates reads and the history counters see a router navigation 152ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > PC clean state: zero-write mount, no indicator outside the pane, no unload warning; successful pane and Topbar edits persist exact bytes; the sidebar is not held; sign-out without drafts asks nothing and completes
+OBSERVED PC sign-out without drafts {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":14},"redirects":["/"]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-route lang: a failed pane lang edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"zh","applied":"zh","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > PC clean state: zero-write mount, no indicator outside the pane, no unload warning; successful pane and Topbar edits persist exact bytes; the sidebar is not held; sign-out without drafts asks nothing and completes 239ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-route lang: a failed pane lang edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route lang after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-signout lang: a failed pane lang edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"zh","applied":"zh","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-route lang: a failed pane lang edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 229ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-signout lang: a failed pane lang edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout lang {"confirms":["部分外观更改尚未保存。仍要退出并放弃这些更改吗？"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":22},"redirects":[]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-route theme: a failed pane theme edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-signout lang: a failed pane lang edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 157ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-route theme: a failed pane theme edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route theme after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-signout theme: a failed pane theme edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-route theme: a failed pane theme edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 168ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-signout theme: a failed pane theme edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout theme {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":30},"redirects":[]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-route density: a failed pane density edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"compact","applied":"compact","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-signout theme: a failed pane theme edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 120ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-route density: a failed pane density edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route density after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-signout density: a failed pane density edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"compact","applied":"compact","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-route density: a failed pane density edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 213ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-signout density: a failed pane density edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout density {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":38},"redirects":[]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route accentHue after the failed accentHue choice {"choice":295,"bytes":null,"uiLang":"en","paneShows":295,"applied":295,"paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-signout density: a failed pane density edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 155ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route accentHue after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout accentHue after the failed accentHue choice {"choice":295,"bytes":null,"uiLang":"en","paneShows":295,"applied":295,"paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 176ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout accentHue {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":46},"redirects":[]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route bgTone after the failed bgTone choice {"choice":"peach","bytes":null,"uiLang":"en","paneShows":"peach","applied":"peach","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 131ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route bgTone after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout bgTone after the failed bgTone choice {"choice":"peach","bytes":null,"uiLang":"en","paneShows":"peach","applied":"peach","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 164ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout bgTone {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":54},"redirects":[]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route railPos after the failed railPos choice {"choice":"right","bytes":null,"uiLang":"en","paneShows":"right","applied":"right","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 119ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route railPos after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout railPos after the failed railPos choice {"choice":"right","bytes":null,"uiLang":"en","paneShows":"right","applied":"right","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 170ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout railPos {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":62},"redirects":[]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-route fontScale: a failed pane fontScale edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route fontScale after the failed fontScale choice {"choice":1.1,"bytes":null,"uiLang":"en","paneShows":1.1,"applied":1.1,"paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 130ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-route fontScale: a failed pane fontScale edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route fontScale after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-signout fontScale: a failed pane fontScale edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout fontScale after the failed fontScale choice {"choice":1.1,"bytes":null,"uiLang":"en","paneShows":1.1,"applied":1.1,"paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-route fontScale: a failed pane fontScale edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 161ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-signout fontScale: a failed pane fontScale edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout fontScale {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":70},"redirects":[]}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-signout fontScale: a failed pane fontScale edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 118ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-rail lang: a failed Topbar lang choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+OBSERVED T-rail lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"pane not mounted","applied":"zh","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-rail lang: a failed Topbar lang choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+OBSERVED T-rail lang after the AppRail {"path":"/app/calendar","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-rail lang: a failed Topbar lang choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message 241ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-signout lang: a failed Topbar lang choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+OBSERVED T-signout lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"pane not mounted","applied":"zh","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-signout lang: a failed Topbar lang choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+OBSERVED T-signout lang {"confirms":["部分外观更改尚未保存。仍要退出并放弃这些更改吗？"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":78},"redirects":[]}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-signout lang: a failed Topbar lang choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11) 146ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-rail theme: a failed Topbar theme choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+OBSERVED T-rail theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"dark","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-rail theme: a failed Topbar theme choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+OBSERVED T-rail theme after the AppRail {"path":"/app/calendar","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-rail theme: a failed Topbar theme choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message 225ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-signout theme: a failed Topbar theme choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+OBSERVED T-signout theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"dark","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-signout theme: a failed Topbar theme choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+OBSERVED T-signout theme {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":86},"redirects":[]}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-signout theme: a failed Topbar theme choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11) 180ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-rail density: a failed Topbar density choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+OBSERVED T-rail density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"compact","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-rail density: a failed Topbar density choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+OBSERVED T-rail density after the AppRail {"path":"/app/calendar","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-signout density: a failed Topbar density choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+OBSERVED T-signout density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"compact","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-rail density: a failed Topbar density choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message 210ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-signout density: a failed Topbar density choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+OBSERVED T-signout density {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":94},"redirects":[]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > R-route: Reset to defaults accepted with the Sidebar position removal denied, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the reset draft is intact
+OBSERVED R-route after the failed reset {"confirm":"Reset theme, density, font scale, accent color, background palette and sidebar position to their defaults? Language is kept.","writes":["remove:xai_pref_theme","remove:xai_accent_hue","remove:xai_rail_pos!threw"],"bytes":{"lang":null,"theme":null,"density":null,"accentHue":null,"bgTone":null,"railPos":"right","fontScale":null},"paneShowsRail":"left","notReset":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-signout density: a failed Topbar density choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11) 139ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > R-route: Reset to defaults accepted with the Sidebar position removal denied, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the reset draft is intact
+OBSERVED R-route after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > R-route: Reset to defaults accepted with the Sidebar position removal denied, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the reset draft is intact 170ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination
+OBSERVED H11-a after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination
+OBSERVED H11-a indicator by route {"settingsAbout":{"path":"/app/settings/about","indicator":true},"railTasks":{"path":"/app/tasks","indicator":true},"programmaticCalendar":{"path":"/app/calendar","indicator":true}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-b beforeunload after a failed pane theme edit: warns on the pane and after leaving it, with zero storage attempts in the handler
+OBSERVED H11-b after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination 236ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-b beforeunload after a failed pane theme edit: warns on the pane and after leaving it, with zero storage attempts in the handler
+OBSERVED H11-b beforeunload {"onPane":{"warned":true,"attempts":0},"offPane":{"path":"/app/tasks","warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-c beforeunload after a failed Topbar density choice on /app/tasks: warns there and on the AppRail destination, with zero storage attempts in the handler
+OBSERVED H11-c after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"compact","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-b beforeunload after a failed pane theme edit: warns on the pane and after leaving it, with zero storage attempts in the handler 155ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-c beforeunload after a failed Topbar density choice on /app/tasks: warns there and on the AppRail destination, with zero storage attempts in the handler
+OBSERVED H11-c beforeunload {"onTasks":{"warned":true,"attempts":0},"onCalendar":{"path":"/app/calendar","warned":true,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-d sign-out from another Settings pane (About, with the Appearance pane unmounted) after a failed pane font-scale edit: one confirm; Cancel resolves false
+OBSERVED H11-d after the failed fontScale choice {"choice":1.1,"bytes":null,"uiLang":"en","paneShows":1.1,"applied":1.1,"paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-c beforeunload after a failed Topbar density choice on /app/tasks: warns there and on the AppRail destination, with zero storage attempts in the handler 134ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-d sign-out from another Settings pane (About, with the Appearance pane unmounted) after a failed pane font-scale edit: one confirm; Cancel resolves false
+OBSERVED H11-d sign-out from About {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":114},"redirects":[]}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-d sign-out from another Settings pane (About, with the Appearance pane unmounted) after a failed pane font-scale edit: one confirm; Cancel resolves false 124ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing
+OBSERVED H16-a before Retry all {"bytes":{"lang":null,"theme":null,"density":null,"accentHue":null,"bgTone":null,"railPos":null,"fontScale":null},"topbarStatus":true,"unload":{"warned":true,"attempts":0},"bottom":[{"text":"Export Appearance draft","ariaDisabled":null,"disabled":false,"testid":"appearance-export-draft","className":"btn ghost"},{"text":"Discard all changes","ariaDisabled":null,"disabled":false,"testid":"appearance-discard-all","className":"btn ghost"},{"text":"Reset to defaults","ariaDisabled":null,"disabled":false,"testid":"appearance-reset-defaults","className":"btn ghost appearance-reset"}]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing
+OBSERVED H16-a while the pass is open {"topbarStatus":false,"line":"Retrying unsaved appearance changes…","disabled":true,"describedByStatus":true,"unload":true,"writes":["set:xai_pref_theme=\"dark\""]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing
+OBSERVED H16-a after the pass {"topbarStatus":false,"unload":false,"state":{"ariaDisabled":"true","disabledAttr":false,"describedBy":null,"describedByStatus":false,"type":"button","testid":"appearance-retry-all","tabIndex":0},"focus":true,"line":"Appearance settings saved.","bytes":{"theme":"\"dark\"","accent":"295"}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-b partial: with the accent still denied one trusted Retry all attempts each failed key once; the count line, the Topbar status returns, unload warns, focus stays on the enabled button; sign-out asks once and Cancel resolves false
+OBSERVED H16-b after the partial pass {"line":"1 appearance change is not saved.","topbarStatus":true,"unload":true,"enabled":true,"focus":true,"describedByStatus":true}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing 207ms
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-b partial: with the accent still denied one trusted Retry all attempts each failed key once; the count line, the Topbar status returns, unload warns, focus stays on the enabled button; sign-out asks once and Cancel resolves false 184ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-c open pass: sign-out while a member is held behind its real lock asks once; Cancel resolves false and the pass settles; afterwards no Topbar status, no unload warning and 'Appearance settings saved.'
+OBSERVED H16-c sign-out during the open pass {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":128}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-c open pass: sign-out while a member is held behind its real lock asks once; Cancel resolves false and the pass settles; afterwards no Topbar status, no unload warning and 'Appearance settings saved.'
+OBSERVED H16-c after the pass settled {"writes":["set:xai_accent_hue=295","set:xai_pref_theme=\"dark\""],"topbarStatus":false,"unload":false,"line":"Appearance settings saved.","disabled":true}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H17 clean state: Retry all is rendered and disabled (aria-disabled="true", no disabled attribute, no description), a Tab stop, and a click, Enter and Space make zero storage attempts and keep focus
+OBSERVED H17 the pane's bottom buttons in the clean state [{"text":"Bottom (Dock)","ariaDisabled":null,"disabled":false,"testid":null,"className":"rail-pos-card rp-bottom"},{"text":"Retry all","ariaDisabled":"true","disabled":false,"testid":"appearance-retry-all","className":"btn primary appearance-retry-all"},{"text":"Reset to defaults","ariaDisabled":null,"disabled":false,"testid":"appearance-reset-defaults","className":"btn ghost appearance-reset"}]
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H17 clean state: Retry all is rendered and disabled (aria-disabled="true", no disabled attribute, no description), a Tab stop, and a click, Enter and Space make zero storage attempts and keep focus
+OBSERVED H17 tabs from the font-scale slider to Retry all {"tabs":1,"reached":true}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-c open pass: sign-out while a member is held behind its real lock asks once; Cancel resolves false and the pass settles; afterwards no Topbar status, no unload warning and 'Appearance settings saved.' 209ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H17 clean state: Retry all is rendered and disabled (aria-disabled="true", no disabled attribute, no description), a Tab stop, and a click, Enter and Space make zero storage attempts and keep focus
+OBSERVED H17 disabled activations {"writesEveryKey":[],"appearanceAttempts":[],"operations":0,"focus":{"enter":true,"space":true,"click":true},"stillDisabled":true,"line":""}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > H17 clean state: Retry all is rendered and disabled (aria-disabled="true", no disabled attribute, no description), a Tab stop, and a click, Enter and Space make zero storage attempts and keep focus 145ms
+
+ Test Files  1 passed (1)
+      Tests  33 passed (33)
+   Start at  13:27:07
+   Duration  8.40s (transform 1.78s, setup 0ms, collect 2.65s, tests 5.35s, environment 186ms, prepare 43ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-UAmwWv/.report-host.json
+
+---- stderr ----
+
+---- runner summary ----
+json_report=success=true numTotalTests=33 numPassedTests=33 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals cases=33 passed=33 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 runtime_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles [], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required production modules loaded from the archive (34)
+harness PASS no test-file suite error
+case 001 PASSED | FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once, faulted attempts never delegate, no nested Storage call and no accountScope helper call
+case 002 PASSED | FX2 the Web Lock fixture: asynchronous grants, a test hold keeps a product request waiting until release, shared cohorts, ifAvailable
+case 003 PASSED | FX3 composition: the production App from the archive with only the auth-session hook substituted; account A g1; Shell, Settings, the Appearance pane and DesktopPet; no network; the location stub delegates reads and the history counters see a router navigation
+case 004 PASSED | PC clean state: zero-write mount, no indicator outside the pane, no unload warning; successful pane and Topbar edits persist exact bytes; the sidebar is not held; sign-out without drafts asks nothing and completes
+case 005 PASSED | pane field lang F-route lang: a failed pane lang edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+case 006 PASSED | pane field lang F-signout lang: a failed pane lang edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+case 007 PASSED | pane field theme F-route theme: a failed pane theme edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+case 008 PASSED | pane field theme F-signout theme: a failed pane theme edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+case 009 PASSED | pane field density F-route density: a failed pane density edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+case 010 PASSED | pane field density F-signout density: a failed pane density edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+case 011 PASSED | pane field accentHue F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+case 012 PASSED | pane field accentHue F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+case 013 PASSED | pane field bgTone F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+case 014 PASSED | pane field bgTone F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+case 015 PASSED | pane field railPos F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+case 016 PASSED | pane field railPos F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+case 017 PASSED | pane field fontScale F-route fontScale: a failed pane fontScale edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+case 018 PASSED | pane field fontScale F-signout fontScale: a failed pane fontScale edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+case 019 PASSED | Topbar field lang T-rail lang: a failed Topbar lang choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+case 020 PASSED | Topbar field lang T-signout lang: a failed Topbar lang choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+case 021 PASSED | Topbar field theme T-rail theme: a failed Topbar theme choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+case 022 PASSED | Topbar field theme T-signout theme: a failed Topbar theme choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+case 023 PASSED | Topbar field density T-rail density: a failed Topbar density choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+case 024 PASSED | Topbar field density T-signout density: a failed Topbar density choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+case 025 PASSED | R-route: Reset to defaults accepted with the Sidebar position removal denied, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the reset draft is intact
+case 026 PASSED | H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination
+case 027 PASSED | H11-b beforeunload after a failed pane theme edit: warns on the pane and after leaving it, with zero storage attempts in the handler
+case 028 PASSED | H11-c beforeunload after a failed Topbar density choice on /app/tasks: warns there and on the AppRail destination, with zero storage attempts in the handler
+case 029 PASSED | H11-d sign-out from another Settings pane (About, with the Appearance pane unmounted) after a failed pane font-scale edit: one confirm; Cancel resolves false
+case 030 PASSED | H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing
+case 031 PASSED | H16-b partial: with the accent still denied one trusted Retry all attempts each failed key once; the count line, the Topbar status returns, unload warns, focus stays on the enabled button; sign-out asks once and Cancel resolves false
+case 032 PASSED | H16-c open pass: sign-out while a member is held behind its real lock asks once; Cancel resolves false and the pass settles; afterwards no Topbar status, no unload warning and 'Appearance settings saved.'
+case 033 PASSED | H17 clean state: Retry all is rendered and disabled (aria-disabled="true", no disabled attribute, no description), a Tab stop, and a click, Enter and Space make zero storage attempts and keep focus
+observed_lines=62
+observed FX1 F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerStep":[1,1,1,0,0,0,1,1],"threwPerStep":[false,false,false,true,true,true,false,false],"logged":["set:appearance-host-selfcheck=1","get:appearance-host-selfcheck","remove:appearance-host-selfcheck","set:appearance-host-selfcheck=2!threw","remove:appearance-host-selfcheck!threw","get:appearance-host-selfcheck!threw","get:appearance-host-selfcheck"],"faultsFired":[1,1,1],"bytesAfterFaultedSet":null,"bytesAfterFaultedRemove":"3","sessionStorageLogged":false}
+observed FX3 composition {"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":8},"hookCalls":10,"network":0,"historyCounters":{"push":0,"replace":0},"productionRouterAtImport":"/"}
+observed PC sign-out without drafts {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":14},"redirects":["/"]}
+observed F-route lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"zh","applied":"zh","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-route lang after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"zh","applied":"zh","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout lang {"confirms":["部分外观更改尚未保存。仍要退出并放弃这些更改吗？"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":22},"redirects":[]}
+observed F-route theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-route theme after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout theme {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":30},"redirects":[]}
+observed F-route density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"compact","applied":"compact","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-route density after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"compact","applied":"compact","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout density {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":38},"redirects":[]}
+observed F-route accentHue after the failed accentHue choice {"choice":295,"bytes":null,"uiLang":"en","paneShows":295,"applied":295,"paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-route accentHue after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout accentHue after the failed accentHue choice {"choice":295,"bytes":null,"uiLang":"en","paneShows":295,"applied":295,"paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout accentHue {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":46},"redirects":[]}
+observed F-route bgTone after the failed bgTone choice {"choice":"peach","bytes":null,"uiLang":"en","paneShows":"peach","applied":"peach","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-route bgTone after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout bgTone after the failed bgTone choice {"choice":"peach","bytes":null,"uiLang":"en","paneShows":"peach","applied":"peach","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout bgTone {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":54},"redirects":[]}
+observed F-route railPos after the failed railPos choice {"choice":"right","bytes":null,"uiLang":"en","paneShows":"right","applied":"right","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-route railPos after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout railPos after the failed railPos choice {"choice":"right","bytes":null,"uiLang":"en","paneShows":"right","applied":"right","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout railPos {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":62},"redirects":[]}
+observed F-route fontScale after the failed fontScale choice {"choice":1.1,"bytes":null,"uiLang":"en","paneShows":1.1,"applied":1.1,"paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-route fontScale after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout fontScale after the failed fontScale choice {"choice":1.1,"bytes":null,"uiLang":"en","paneShows":1.1,"applied":1.1,"paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed F-signout fontScale {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":70},"redirects":[]}
+observed T-rail lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"pane not mounted","applied":"zh","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed T-rail lang after the AppRail {"path":"/app/calendar","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed T-signout lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"pane not mounted","applied":"zh","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed T-signout lang {"confirms":["部分外观更改尚未保存。仍要退出并放弃这些更改吗？"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":78},"redirects":[]}
+observed T-rail theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"dark","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed T-rail theme after the AppRail {"path":"/app/calendar","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed T-signout theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"dark","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed T-signout theme {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":86},"redirects":[]}
+observed T-rail density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"compact","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed T-rail density after the AppRail {"path":"/app/calendar","dialog":false,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed T-signout density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"compact","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed T-signout density {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":94},"redirects":[]}
+observed R-route after the failed reset {"confirm":"Reset theme, density, font scale, accent color, background palette and sidebar position to their defaults? Language is kept.","writes":["remove:xai_pref_theme","remove:xai_accent_hue","remove:xai_rail_pos!threw"],"bytes":{"lang":null,"theme":null,"density":null,"accentHue":null,"bgTone":null,"railPos":"right","fontScale":null},"paneShowsRail":"left","notReset":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed R-route after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":true}
+observed H11-a after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed H11-a indicator by route {"settingsAbout":{"path":"/app/settings/about","indicator":true},"railTasks":{"path":"/app/tasks","indicator":true},"programmaticCalendar":{"path":"/app/calendar","indicator":true}}
+observed H11-b after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed H11-b beforeunload {"onPane":{"warned":true,"attempts":0},"offPane":{"path":"/app/tasks","warned":true,"attempts":0}}
+observed H11-c after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"compact","paneMessage":"pane not mounted","topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed H11-c beforeunload {"onTasks":{"warned":true,"attempts":0},"onCalendar":{"path":"/app/calendar","warned":true,"attempts":0}}
+observed H11-d after the failed fontScale choice {"choice":1.1,"bytes":null,"uiLang":"en","paneShows":1.1,"applied":1.1,"paneMessage":true,"topbarStatus":true,"unload":{"warned":true,"attempts":0}}
+observed H11-d sign-out from About {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":114},"redirects":[]}
+observed H16-a before Retry all {"bytes":{"lang":null,"theme":null,"density":null,"accentHue":null,"bgTone":null,"railPos":null,"fontScale":null},"topbarStatus":true,"unload":{"warned":true,"attempts":0},"bottom":[{"text":"Export Appearance draft","ariaDisabled":null,"disabled":false,"testid":"appearance-export-draft","className":"btn ghost"},{"text":"Discard all changes","ariaDisabled":null,"disabled":false,"testid":"appearance-discard-all","className":"btn ghost"},{"text":"Reset to defaults","ariaDisabled":null,"disabled":false,"testid":"appearance-reset-defaults","className":"btn ghost appearance-reset"}]}
+observed H16-a while the pass is open {"topbarStatus":false,"line":"Retrying unsaved appearance changes…","disabled":true,"describedByStatus":true,"unload":true,"writes":["set:xai_pref_theme=\"dark\""]}
+observed H16-a after the pass {"topbarStatus":false,"unload":false,"state":{"ariaDisabled":"true","disabledAttr":false,"describedBy":null,"describedByStatus":false,"type":"button","testid":"appearance-retry-all","tabIndex":0},"focus":true,"line":"Appearance settings saved.","bytes":{"theme":"\"dark\"","accent":"295"}}
+observed H16-b after the partial pass {"line":"1 appearance change is not saved.","topbarStatus":true,"unload":true,"enabled":true,"focus":true,"describedByStatus":true}
+observed H16-c sign-out during the open pass {"confirms":["Some appearance changes are not saved. Sign out and discard them?"],"outcome":{"identityInvalidated":false,"redirected":false,"backendSignOuts":0},"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":128}}
+observed H16-c after the pass settled {"writes":["set:xai_accent_hue=295","set:xai_pref_theme=\"dark\""],"topbarStatus":false,"unload":false,"line":"Appearance settings saved.","disabled":true}
+observed H17 the pane's bottom buttons in the clean state [{"text":"Bottom (Dock)","ariaDisabled":null,"disabled":false,"testid":null,"className":"rail-pos-card rp-bottom"},{"text":"Retry all","ariaDisabled":"true","disabled":false,"testid":"appearance-retry-all","className":"btn primary appearance-retry-all"},{"text":"Reset to defaults","ariaDisabled":null,"disabled":false,"testid":"appearance-reset-defaults","className":"btn ghost appearance-reset"}]
+observed H17 tabs from the font-scale slider to Retry all {"tabs":1,"reached":true}
+observed H17 disabled activations {"writesEveryKey":[],"appearanceAttempts":[],"operations":0,"focus":{"enter":true,"space":true,"click":true},"stillDisabled":true,"line":""}
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-UAmwWv","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-UAmwWv/.appearance-host-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":[],"include":["docs/reviews/web-appearance-recovery-independent/host.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/index.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/settingsPaneComposition.ts apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/routes/modules/settingsDeparture.ts apps/web/src/providers/AccountStorageGate.tsx apps/web/src/providers/AppProviders.tsx apps/web/src/observability/runtime.ts apps/web/src/service-worker/register.ts packages/plugin-web-storage/src/AccountDataGate.tsx packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/accountCoordination.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/storage.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/sameTabBus.ts packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/AvatarMenu.tsx packages/xai-web-shell/src/SignOutConfirmDialog.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/plugin-web-tokens/src/index.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=627 by package: apps/web=30 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23

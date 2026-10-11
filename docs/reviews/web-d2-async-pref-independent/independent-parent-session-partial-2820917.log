@@ -1,0 +1,11 @@
+revision=2820917
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-GaSMS5
+
+ ✓ docs/reviews/web-d2-async-pref-independent/contracts.test.tsx (2 tests) 14ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  19:35:05
+   Duration  1.10s (transform 148ms, setup 0ms, collect 312ms, tests 14ms, environment 421ms, prepare 67ms)

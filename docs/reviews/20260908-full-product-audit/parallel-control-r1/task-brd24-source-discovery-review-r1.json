@@ -1,0 +1,325 @@
+{
+  "id": "BRD-24/SOURCE-DISCOVERY-REVIEW1",
+  "workflow": "D",
+  "primary_workflow": "B",
+  "module": "web",
+  "role": "fresh independent WHOLE BRD24 source and original process review1/3 no repairs",
+  "model": "gpt-6-astra",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "a3098012c1193c544e0291456247cc5b0f888c78",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "no_children": true,
+  "budgets": {
+    "static_pass": 1,
+    "total_wall_minutes": 30,
+    "static_seconds": 120,
+    "owned_process_drain_seconds": 30,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "network": 0,
+    "children": 0,
+    "review_iteration": 1,
+    "review_cap": 3
+  },
+  "original_items": [
+    {
+      "id": "CAL-01",
+      "priority": "P1",
+      "kind": "修复",
+      "action": "统一当地日期、默认日期和长驻页面Today更新",
+      "acceptance": "主日历、mini日历及记录日期一致；跨午夜后Today指向当天",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "CAL-01",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "CAL",
+      "acceptance_evidence": {
+        "business_acceptance": "主日历、mini日历及记录日期一致；跨午夜后Today指向当天",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "CAL-01/prepare",
+        "CAL-01/contract-review",
+        "CAL-01/before",
+        "CAL-01/implement",
+        "CAL-01/verify",
+        "CAL-01/accept",
+        "CAL-01/reconcile",
+        "CAL-01/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "CAL-02",
+      "priority": "P2",
+      "kind": "修复",
+      "action": "统一用户事件和Board feed在月格、日详情及各视图的投影",
+      "acceptance": "月格可见的卡片在详情中也可见，且可回到来源",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "CAL-02",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "CAL",
+      "acceptance_evidence": {
+        "business_acceptance": "月格可见的卡片在详情中也可见，且可回到来源",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "CAL-02/prepare",
+        "CAL-02/contract-review",
+        "CAL-02/before",
+        "CAL-02/implement",
+        "CAL-02/verify",
+        "CAL-02/accept",
+        "CAL-02/reconcile",
+        "CAL-02/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "CAL-04",
+      "priority": "P2",
+      "kind": "优化",
+      "action": "明确空日历与演示模式，修复底部周行裁切和事件溢出",
+      "acceptance": "桌面全部周可达；已有+N可见可打开；移动优先议程/周视图",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "CAL-04",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "CAL",
+      "acceptance_evidence": {
+        "business_acceptance": "桌面全部周可达；已有+N可见可打开；移动优先议程/周视图",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "CAL-04/prepare",
+        "CAL-04/contract-review",
+        "CAL-04/before",
+        "CAL-04/implement",
+        "CAL-04/verify",
+        "CAL-04/accept",
+        "CAL-04/reconcile",
+        "CAL-04/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "CAL-05",
+      "priority": "P1",
+      "kind": "文档",
+      "action": "提醒字段与真实通知能力分开显示",
+      "acceptance": "保存事件不等于已安排系统提醒；实现调度前明确限制",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "CAL-05",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "CAL",
+      "acceptance_evidence": {
+        "business_acceptance": "保存事件不等于已安排系统提醒；实现调度前明确限制",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "CAL-05/prepare",
+        "CAL-05/contract-review",
+        "CAL-05/before",
+        "CAL-05/implement",
+        "CAL-05/verify",
+        "CAL-05/accept",
+        "CAL-05/reconcile",
+        "CAL-05/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    }
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-brd24-source-discovery-review-r1/review.md",
+    "docs/reviews/audit-parallel-brd24-source-discovery-review-r1/inputs.sha256"
+  ],
+  "protected": [
+    "ALLnonallowed files/source/contracts/runner/evidence/failurelogs",
+    "globalcontrol/ledgers/otherworktrees/canonicaldocs/skills/generator/registry",
+    "module/ownerdecisions/caps/measurementstandards",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "logical_locks": {
+    "write": [
+      "newBRD24whole_source_review_only"
+    ],
+    "read": [
+      "Calendar actual date/projection/UI/reminder owners"
+    ],
+    "future_writer": "finiteCalendaronly allsharedseamslocked; CAL03recurrencepolicy remains separateheld"
+  },
+  "stop": [
+    "actualinput/dirty/hash/protecteddrift",
+    "need new undecidedproductrule or unauthorizedexec",
+    "actual concluding staticFAIL immediatelyfreeze no retry/materialization/commit"
+  ],
+  "read_paths": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "docs/workflow/project/workflow.md",
+    "docs/workflow/project/multi-machine-development.md",
+    "docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/authority-overlay.md",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/scope-map.json",
+    "docs/reviews/20260908-full-product-audit/02-tasks-time-boards.md",
+    "docs/reviews/20260908-full-product-audit/05-visual-ux-audit.md",
+    "docs/reviews/audit-parallel-brd24-source-discovery-r1/discovery.md",
+    "docs/reviews/audit-parallel-brd24-source-discovery-r1/inputs.sha256"
+  ],
+  "source_roots": [
+    "actual Web Board map view, view state, map provider/tile adapter and fallback owners"
+  ],
+  "acceptance": [
+    "WHOLE originalBRD24 language/tilefailure/offline/retry/actionaccessiblelocationfallback/cameraretention/cancelloading withactualBoardhost/storage/CSP/tests/finitefilesfixtures andoriginalownerhistory. Do notassignnewproductpolicy orconflateBRD12/28/exhaustedfamilies. Factual,binding,boundedoriginalprocess,requirements/sourceonlyadoption,implementation/qualification/before/nativebusinessadmission separately. Originalsource hasactual2concludingbufferchecks vsstaticcap1: initialallinput+BOTHbufferprewrite14407report then secondfinalbuffercheck/correction14401afterwrite nofullinputhashrerun. Originalzeroassertionclaimnotadopted; countoverrun1 andunknownPIDEOF/timing. Reviewerneverrepair nor waive cap. Forensiconly delivery notsourceadoption; latercorrectorauthor2/3 remains onlyiflegalprocessrequired no independentreviewrelabeloriginal."
+  ],
+  "source_commit": "84e60b92bac4d85461fb89ff6b4c224edf35ab8f",
+  "source_process_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/brd24-source-p98-unadopted-reception.json",
+  "previous_whole_review": null,
+  "immutable_read_references": [
+    {
+      "path": "AGENTS.md",
+      "commit": "a3098012c1193c544e0291456247cc5b0f888c78",
+      "sha256": "519c72bcbdd1018af9a369614b9db04a674bf91870d99dcca03665dabe162100"
+    },
+    {
+      "path": "CLAUDE.md",
+      "commit": "a3098012c1193c544e0291456247cc5b0f888c78",
+      "sha256": "6597e484cb5bde938fadb3c728f2e76c6228364584306a453655eeebd1e61ffb"
+    },
+    {
+      "path": "docs/workflow/project/workflow.md",
+      "commit": "a3098012c1193c544e0291456247cc5b0f888c78",
+      "sha256": "99bb429d2a9facd7cebfbcb52e97c7ccea648d19953e05e10f824189f6b9f050"
+    },
+    {
+      "path": "docs/workflow/project/multi-machine-development.md",
+      "commit": "a3098012c1193c544e0291456247cc5b0f888c78",
+      "sha256": "92572a6ea33865753d3a461d96830d38e1dbcded58e684114eab450c81ab4b59"
+    },
+    {
+      "path": "docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md",
+      "commit": "a3098012c1193c544e0291456247cc5b0f888c78",
+      "sha256": "3f490f44ff99dcc48deef541c5c969be44e9d58995154d7b90428d19c7c13558"
+    },
+    {
+      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/authority-overlay.md",
+      "commit": "a3098012c1193c544e0291456247cc5b0f888c78",
+      "sha256": "184ebab89778a4ebfd837d72bd299f882d8b121893c1b897e8ba8482c3f49583"
+    },
+    {
+      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/scope-map.json",
+      "commit": "a3098012c1193c544e0291456247cc5b0f888c78",
+      "sha256": "29be78e04b59fbaf1a818a6ab2ad7542ddc161512367b451fd472789f7a52b7a"
+    },
+    {
+      "path": "docs/reviews/20260908-full-product-audit/02-tasks-time-boards.md",
+      "commit": "a3098012c1193c544e0291456247cc5b0f888c78",
+      "sha256": "7eb1df2b7173949a3171e7cbafa467839b2ae2c515c86a6850980a0b9e36c1da"
+    },
+    {
+      "path": "docs/reviews/20260908-full-product-audit/05-visual-ux-audit.md",
+      "commit": "a3098012c1193c544e0291456247cc5b0f888c78",
+      "sha256": "06fd804b06fa0425fe472f333e5a4f0b3e11e3cae75b9274f34eee2894488129"
+    },
+    {
+      "path": "docs/reviews/audit-parallel-brd24-source-discovery-r1/discovery.md",
+      "commit": "a3098012c1193c544e0291456247cc5b0f888c78",
+      "sha256": "06c42d24834a4cdef42606a8883f730c432f96e3686a57dcc70ff8c87fd670b5"
+    },
+    {
+      "path": "docs/reviews/audit-parallel-brd24-source-discovery-r1/inputs.sha256",
+      "commit": "a3098012c1193c544e0291456247cc5b0f888c78",
+      "sha256": "00c7349a66a9c92e62719763b0e9fa3221dc2c6b762e7e30ad1058c8e6ead720"
+    }
+  ],
+  "controller_receipts_read_at_dispatch_parent": [
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/brd24-source-p98-unadopted-reception.json",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/brd24-source-p98-original-tool-records.json"
+  ]
+}

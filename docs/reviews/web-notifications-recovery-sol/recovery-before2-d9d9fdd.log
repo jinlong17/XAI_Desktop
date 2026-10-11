@@ -1,0 +1,63 @@
+revision=d9d9fdd fixed_commit=d9d9fdde211e19fc258f97e7184a8ee77338d80c
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-sol-viEzNm
+
+ ❯ docs/reviews/web-notifications-recovery-sol/recovery.test.tsx (3 tests | 3 failed) 370ms
+   × quiet=false keeps failed hidden time drafts exportable and independently recoverable when re-enabled 143ms
+     → expected undefined to be true // Object.is equality
+   × all eight held drafts export exact device-only memory including hidden times 161ms
+     → expected undefined to be true // Object.is equality
+   × uncertain readback and a temporarily denied Retry retain one-write authority until verification 65ms
+     → expected undefined to be true // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  05:28:35
+   Duration  1.84s (transform 393ms, setup 271ms, collect 379ms, tests 370ms, environment 306ms, prepare 107ms)
+
+
+stderr | docs/reviews/web-notifications-recovery-sol/recovery.test.tsx > quiet=false keeps failed hidden time drafts exportable and independently recoverable when re-enabled
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/recovery.test.tsx > quiet=false keeps failed hidden time drafts exportable and independently recoverable when re-enabled
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected: 
+true
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-notifications-recovery-sol/recovery.test.tsx:17:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/recovery.test.tsx > all eight held drafts export exact device-only memory including hidden times
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected: 
+true
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-notifications-recovery-sol/recovery.test.tsx:34:113
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/recovery.test.tsx > uncertain readback and a temporarily denied Retry retain one-write authority until verification
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected: 
+true
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-notifications-recovery-sol/recovery.test.tsx:44:172
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯

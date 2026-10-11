@@ -1,0 +1,309 @@
+$ node <scratchpad>/static-audit.mjs .
+# cwd: /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4249842bc08beeb0
+# HEAD: 419e56de9f23e4467fea806fbd4a990e1f429941
+# started: 2026-10-05T18:13:10Z
+# What: every rule in the 29 Web stylesheets (every CSS file imported from packages/*/src and apps/web/src, plus leaflet.css) that declares an outline-family property or whose selector uses :focus, :focus-visible or :focus-within. Parsed with postcss 8.5.15 from the worktree; one JSON line per rule (file, line, at-rule context, selectors with specificity, outline declarations, other declarations of focus rules). Per-file rule counts and the total go to stderr, below.
+# Script source (session scratchpad, not committed), sha256 1ab6fa7b9e99a15abbcf4917ef91c98aa63663d9785f6cedf4114627d1bb22bc:
+#| // Static same-class audit (F-APP-2, batch 49): list every rule in every
+#| // stylesheet the Web app can load that declares an outline-family property,
+#| // or whose selector uses a focus pseudo-class. Read only; prints JSON lines.
+#| //
+#| // usage: node static-audit.mjs <repoRoot>
+#| import { readFileSync } from "node:fs";
+#| import { createRequire } from "node:module";
+#| import { resolve } from "node:path";
+#| 
+#| const root = resolve(process.argv[2] ?? ".");
+#| const require = createRequire(resolve(root, "node_modules/.pnpm/postcss@8.5.15/node_modules/postcss/package.json"));
+#| const postcss = require("postcss");
+#| 
+#| // Every CSS file imported from packages/*/src or apps/web/src (git grep of
+#| // `import "...css"`), plus leaflet.css (imported by plugin-web-board-views).
+#| const FILES = [
+#|   "apps/web/src/styles/global.css",
+#|   "packages/plugin-organizer/src/resize-handles.css",
+#|   "packages/plugin-web-ai-chat/src/styles.css",
+#|   "packages/plugin-web-board-core/src/styles.css",
+#|   "packages/plugin-web-board-views/node_modules/leaflet/dist/leaflet.css",
+#|   "packages/plugin-web-board-views/src/styles.css",
+#|   "packages/plugin-web-board-workspaces/src/styles.css",
+#|   "packages/plugin-web-bookkeeping/src/styles.css",
+#|   "packages/plugin-web-countdown/src/styles.css",
+#|   "packages/plugin-web-metric-tracker/src/styles.css",
+#|   "packages/plugin-web-pomodoro/src/styles.css",
+#|   "packages/plugin-web-settings-rest/src/styles.css",
+#|   "packages/plugin-web-settings-shell/src/styles.css",
+#|   "packages/plugin-web-statistics/src/styles.css",
+#|   "packages/plugin-web-storage/src/AccountDataGate.css",
+#|   "packages/plugin-web-time-tracker/src/styles.css",
+#|   "packages/plugin-web-tokens/src/layout.css",
+#|   "packages/plugin-web-tokens/src/tokens.css",
+#|   "packages/xai-web-calendar/src/styles.css",
+#|   "packages/xai-web-cmdk/src/styles.css",
+#|   "packages/xai-web-dashboard-grid/src/styles.css",
+#|   "packages/xai-web-dashboard-widgets/src/styles.css",
+#|   "packages/xai-web-habits/src/styles.css",
+#|   "packages/xai-web-matrix/src/matrix.css",
+#|   "packages/xai-web-meditation/src/styles.css",
+#|   "packages/xai-web-pet/src/pet.css",
+#|   "packages/xai-web-settings-appearance/src/styles.css",
+#|   "packages/xai-web-settings-features-panel/src/styles.css",
+#|   "packages/xai-web-tasks/src/styles.css",
+#| ];
+#| 
+#| // Selectors Level 4 specificity for the selector forms used in these files.
+#| function splitTopLevel(text, sep) {
+#|   const parts = [];
+#|   let depth = 0, quote = null, start = 0;
+#|   for (let i = 0; i < text.length; i += 1) {
+#|     const ch = text[i];
+#|     if (quote) { if (ch === quote) quote = null; continue; }
+#|     if (ch === '"' || ch === "'") { quote = ch; continue; }
+#|     if (ch === "(" || ch === "[") depth += 1;
+#|     else if (ch === ")" || ch === "]") depth -= 1;
+#|     else if (ch === sep && depth === 0) { parts.push(text.slice(start, i)); start = i + 1; }
+#|   }
+#|   parts.push(text.slice(start));
+#|   return parts.map((p) => p.trim()).filter(Boolean);
+#| }
+#| function maxSpec(list) {
+#|   return splitTopLevel(list, ",").map(specificity).reduce((a, b) => (cmp(a, b) >= 0 ? a : b), [0, 0, 0]);
+#| }
+#| function cmp(a, b) { return a[0] - b[0] || a[1] - b[1] || a[2] - b[2]; }
+#| function specificity(selector) {
+#|   let a = 0, b = 0, c = 0;
+#|   let s = selector;
+#|   // functional pseudo-classes first
+#|   const fn = /:(is|not|has|where|nth-child|nth-last-child)\(/i;
+#|   for (let m = fn.exec(s); m; m = fn.exec(s)) {
+#|     const open = m.index + m[0].length - 1;
+#|     let depth = 0, end = open;
+#|     for (; end < s.length; end += 1) {
+#|       if (s[end] === "(") depth += 1;
+#|       else if (s[end] === ")") { depth -= 1; if (depth === 0) break; }
+#|     }
+#|     const inner = s.slice(open + 1, end);
+#|     const name = m[1].toLowerCase();
+#|     if (name === "where") { /* zero */ }
+#|     else if (name === "nth-child" || name === "nth-last-child") {
+#|       b += 1;
+#|       const of = /\bof\b([\s\S]*)$/i.exec(inner);
+#|       if (of) { const sp = maxSpec(of[1]); a += sp[0]; b += sp[1]; c += sp[2]; }
+#|     } else { const sp = maxSpec(inner); a += sp[0]; b += sp[1]; c += sp[2]; }
+#|     s = s.slice(0, m.index) + " " + s.slice(end + 1);
+#|   }
+#|   const take = (re) => { const n = (s.match(re) ?? []).length; s = s.replace(re, " "); return n; };
+#|   b += take(/\[[^\]]*\]/g);
+#|   a += take(/#[\w-]+/g);
+#|   c += take(/::[\w-]+(\([^)]*\))?/g);
+#|   c += take(/:(before|after|first-line|first-letter)\b/gi);
+#|   b += take(/\.[\w-]+/g);
+#|   b += take(/:[\w-]+(\([^)]*\))?/g);
+#|   c += take(/(^|[\s>+~])[a-z][\w-]*/gi);
+#|   return [a, b, c];
+#| }
+#| 
+#| const OUTLINE = /^outline(-|$)/i;
+#| const FOCUS = /:focus(-visible|-within)?\b/i;
+#| let total = 0;
+#| for (const rel of FILES) {
+#|   const css = readFileSync(resolve(root, rel), "utf8");
+#|   const ast = postcss.parse(css, { from: rel });
+#|   let rules = 0;
+#|   ast.walkRules((rule) => {
+#|     rules += 1;
+#|     // skip keyframe selectors
+#|     if (rule.parent?.type === "atrule" && /keyframes$/i.test(rule.parent.name)) return;
+#|     const decls = [];
+#|     rule.each((n) => { if (n.type === "decl") decls.push({ prop: n.prop, value: n.value, important: n.important, line: n.source.start.line }); });
+#|     const outlineDecls = decls.filter((d) => OUTLINE.test(d.prop));
+#|     const focusSel = FOCUS.test(rule.selector);
+#|     if (outlineDecls.length === 0 && !focusSel) return;
+#|     const atRules = [];
+#|     for (let p = rule.parent; p && p.type !== "root"; p = p.parent) if (p.type === "atrule") atRules.unshift(`@${p.name} ${p.params}`);
+#|     const selectors = splitTopLevel(rule.selector, ",").map((sel) => ({ selector: sel.replace(/\s+/g, " "), specificity: specificity(sel) }));
+#|     total += 1;
+#|     console.log(JSON.stringify({
+#|       file: rel,
+#|       line: rule.source.start.line,
+#|       endLine: rule.source.end.line,
+#|       atRules,
+#|       selectors,
+#|       outline: outlineDecls.map((d) => `${d.prop}: ${d.value}${d.important ? " !important" : ""}`),
+#|       otherFocusDecls: focusSel ? decls.filter((d) => !OUTLINE.test(d.prop)).map((d) => `${d.prop}: ${d.value}${d.important ? " !important" : ""}`) : [],
+#|     }));
+#|   });
+#|   console.error(`${rel}: ${rules} rules`);
+#| }
+#| console.error(`flagged rules: ${total}`);
+
+{"file":"apps/web/src/styles/global.css","line":69,"endLine":73,"atRules":[],"selectors":[{"selector":".auth-form input:focus","specificity":[0,2,1]}],"outline":["outline: 2px solid color-mix(in oklch, var(--accent) 24%, transparent)","outline-offset: 1px"],"otherFocusDecls":["border-color: var(--accent)"]}
+{"file":"apps/web/src/styles/global.css","line":101,"endLine":105,"atRules":[],"selectors":[{"selector":".auth-actions button:hover","specificity":[0,2,1]},{"selector":".auth-actions button:focus-visible","specificity":[0,2,1]}],"outline":["outline: none"],"otherFocusDecls":["background: var(--bg-hover)"]}
+apps/web/src/styles/global.css: 14 rules
+packages/plugin-organizer/src/resize-handles.css: 10 rules
+{"file":"packages/plugin-web-ai-chat/src/styles.css","line":59,"endLine":63,"atRules":[],"selectors":[{"selector":".ai-search input","specificity":[0,1,1]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-ai-chat/src/styles.css","line":122,"endLine":125,"atRules":[],"selectors":[{"selector":".ai-convo-row:hover .ai-convo-delete","specificity":[0,3,0]},{"selector":".ai-convo-delete:focus-visible","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["opacity: 1"]}
+{"file":"packages/plugin-web-ai-chat/src/styles.css","line":700,"endLine":704,"atRules":[],"selectors":[{"selector":".ai-composer:focus-within","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["border-color: var(--accent)","box-shadow: 0 12px 50px color-mix(in oklch, var(--accent) 22%, transparent),\n              0 0 0 4px color-mix(in oklch, var(--accent) 14%, transparent)"]}
+{"file":"packages/plugin-web-ai-chat/src/styles.css","line":723,"endLine":731,"atRules":[],"selectors":[{"selector":".ai-input","specificity":[0,1,0]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+packages/plugin-web-ai-chat/src/styles.css: 214 rules
+{"file":"packages/plugin-web-board-core/src/styles.css","line":75,"endLine":79,"atRules":[],"selectors":[{"selector":".board-list.drop-target","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent)","outline-offset: -2px"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-board-core/src/styles.css","line":311,"endLine":321,"atRules":[],"selectors":[{"selector":".card-composer textarea","specificity":[0,1,1]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+packages/plugin-web-board-core/src/styles.css: 71 rules
+{"file":"packages/plugin-web-board-views/node_modules/leaflet/dist/leaflet.css","line":260,"endLine":263,"atRules":[],"selectors":[{"selector":".leaflet-container","specificity":[0,1,0]}],"outline":["outline-offset: 1px"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-board-views/node_modules/leaflet/dist/leaflet.css","line":305,"endLine":308,"atRules":[],"selectors":[{"selector":".leaflet-bar a:hover","specificity":[0,2,1]},{"selector":".leaflet-bar a:focus","specificity":[0,2,1]}],"outline":[],"otherFocusDecls":["background-color: #f4f4f4"]}
+{"file":"packages/plugin-web-board-views/node_modules/leaflet/dist/leaflet.css","line":427,"endLine":430,"atRules":[],"selectors":[{"selector":".leaflet-control-attribution a:hover","specificity":[0,2,1]},{"selector":".leaflet-control-attribution a:focus","specificity":[0,2,1]}],"outline":[],"otherFocusDecls":["text-decoration: underline"]}
+{"file":"packages/plugin-web-board-views/node_modules/leaflet/dist/leaflet.css","line":540,"endLine":543,"atRules":[],"selectors":[{"selector":".leaflet-container a.leaflet-popup-close-button:hover","specificity":[0,3,1]},{"selector":".leaflet-container a.leaflet-popup-close-button:focus","specificity":[0,3,1]}],"outline":[],"otherFocusDecls":["color: #585858"]}
+packages/plugin-web-board-views/node_modules/leaflet/dist/leaflet.css: 124 rules
+{"file":"packages/plugin-web-board-views/src/styles.css","line":509,"endLine":512,"atRules":[],"selectors":[{"selector":".board-cal-cell.drag-over","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent, oklch(60% 0.14 165))"],"otherFocusDecls":[]}
+packages/plugin-web-board-views/src/styles.css: 104 rules
+{"file":"packages/plugin-web-board-workspaces/src/styles.css","line":75,"endLine":86,"atRules":[],"selectors":[{"selector":".ix-composer input","specificity":[0,1,1]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-board-workspaces/src/styles.css","line":411,"endLine":418,"atRules":[],"selectors":[{"selector":".bs-search input","specificity":[0,1,1]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-board-workspaces/src/styles.css","line":618,"endLine":630,"atRules":[],"selectors":[{"selector":".bc-field input","specificity":[0,1,1]},{"selector":".bc-field select","specificity":[0,1,1]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-board-workspaces/src/styles.css","line":788,"endLine":799,"atRules":[],"selectors":[{"selector":".cd-title-input","specificity":[0,1,0]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-board-workspaces/src/styles.css","line":902,"endLine":914,"atRules":[],"selectors":[{"selector":".cd-description","specificity":[0,1,0]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-board-workspaces/src/styles.css","line":1201,"endLine":1217,"atRules":[],"selectors":[{"selector":".cd-date-grid input","specificity":[0,1,1]},{"selector":".cd-inline-form input","specificity":[0,1,1]},{"selector":".cd-attachment-form select","specificity":[0,1,1]},{"selector":".cd-attachment-form input","specificity":[0,1,1]},{"selector":".cd-check-row input[type=\"text\"]","specificity":[0,2,1]},{"selector":".cd-check-row input:not([type])","specificity":[0,2,1]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-board-workspaces/src/styles.css","line":1713,"endLine":1716,"atRules":[],"selectors":[{"selector":".bdc-btn--cancel:focus-visible","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--text-link, oklch(58% 0.17 245))","outline-offset: 2px"],"otherFocusDecls":[]}
+packages/plugin-web-board-workspaces/src/styles.css: 274 rules
+{"file":"packages/plugin-web-bookkeeping/src/styles.css","line":579,"endLine":585,"atRules":[],"selectors":[{"selector":".bk-search input","specificity":[0,1,1]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-bookkeeping/src/styles.css","line":1190,"endLine":1199,"atRules":[],"selectors":[{"selector":".bk-input","specificity":[0,1,0]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-bookkeeping/src/styles.css","line":1208,"endLine":1211,"atRules":[],"selectors":[{"selector":".bk-input:focus","specificity":[0,2,0]},{"selector":".bk-ai-input:focus","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["border-color: var(--accent)"]}
+packages/plugin-web-bookkeeping/src/styles.css: 357 rules
+{"file":"packages/plugin-web-countdown/src/styles.css","line":294,"endLine":306,"atRules":[],"selectors":[{"selector":".cd-card:focus-visible","specificity":[0,2,0]},{"selector":".cd-btn:focus-visible","specificity":[0,2,0]},{"selector":".cd-view-tabs button:focus-visible","specificity":[0,2,1]},{"selector":".cd-card__actions button:focus-visible","specificity":[0,2,1]},{"selector":".cd-history-view button:focus-visible","specificity":[0,2,1]},{"selector":".cd-add-card:focus-visible","specificity":[0,2,0]},{"selector":".cd-mini-action:focus-visible","specificity":[0,2,0]},{"selector":".cd-dialog input:focus","specificity":[0,2,1]},{"selector":".cd-dialog select:focus","specificity":[0,2,1]},{"selector":".cd-dialog textarea:focus","specificity":[0,2,1]}],"outline":["outline: 0.15rem solid color-mix(in oklch, var(--cd-accent, var(--accent)) 55%, transparent)","outline-offset: 0.15rem"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-countdown/src/styles.css","line":659,"endLine":671,"atRules":["@media (hover: hover) and (pointer: fine)"],"selectors":[{"selector":".cd-card:hover .cd-card__actions","specificity":[0,3,0]},{"selector":".cd-card:focus-within .cd-card__actions","specificity":[0,3,0]},{"selector":".cd-card.is-dragging .cd-card__actions","specificity":[0,3,0]},{"selector":".cd-card:hover .cd-mini-action","specificity":[0,3,0]},{"selector":".cd-card:focus-within .cd-mini-action","specificity":[0,3,0]},{"selector":".cd-card.is-dragging .cd-mini-action","specificity":[0,3,0]},{"selector":".cd-card:hover .cd-drag-indicator","specificity":[0,3,0]},{"selector":".cd-card:focus-within .cd-drag-indicator","specificity":[0,3,0]},{"selector":".cd-card.is-dragging .cd-drag-indicator","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["opacity: 1","pointer-events: auto","transform: translateY(0)"]}
+packages/plugin-web-countdown/src/styles.css: 171 rules
+{"file":"packages/plugin-web-metric-tracker/src/styles.css","line":760,"endLine":762,"atRules":[],"selectors":[{"selector":".mt-chart-hit","specificity":[0,1,0]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-metric-tracker/src/styles.css","line":779,"endLine":782,"atRules":[],"selectors":[{"selector":".mt-chart-hit:focus-visible .mt-chart-target","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["stroke: var(--accent)","stroke-width: 1.2"]}
+packages/plugin-web-metric-tracker/src/styles.css: 140 rules
+{"file":"packages/plugin-web-pomodoro/src/styles.css","line":169,"endLine":176,"atRules":[],"selectors":[{"selector":".module-pomo[data-fullscreen=\"true\"] .pomo-stage:hover .pomo-stage-top","specificity":[0,5,0]},{"selector":".module-pomo[data-fullscreen=\"true\"] .pomo-stage:hover .pomo-actions","specificity":[0,5,0]},{"selector":".module-pomo[data-fullscreen=\"true\"] .pomo-stage:focus-within .pomo-stage-top","specificity":[0,5,0]},{"selector":".module-pomo[data-fullscreen=\"true\"] .pomo-stage:focus-within .pomo-actions","specificity":[0,5,0]}],"outline":[],"otherFocusDecls":["opacity: 1","pointer-events: auto","transform: translateY(0)"]}
+{"file":"packages/plugin-web-pomodoro/src/styles.css","line":438,"endLine":446,"atRules":[],"selectors":[{"selector":".pomo-focus-overlay[data-controls-visible=\"true\"] .pomo-focus-exit","specificity":[0,3,0]},{"selector":".pomo-focus-overlay[data-controls-visible=\"true\"] .pomo-focus-controls","specificity":[0,3,0]},{"selector":".pomo-focus-overlay[data-controls-visible=\"true\"] .pomo-focus-stats","specificity":[0,3,0]},{"selector":".pomo-focus-overlay:focus-within .pomo-focus-exit","specificity":[0,3,0]},{"selector":".pomo-focus-overlay:focus-within .pomo-focus-controls","specificity":[0,3,0]},{"selector":".pomo-focus-overlay:focus-within .pomo-focus-stats","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["opacity: 1","pointer-events: auto"]}
+{"file":"packages/plugin-web-pomodoro/src/styles.css","line":448,"endLine":451,"atRules":[],"selectors":[{"selector":".pomo-focus-overlay[data-controls-visible=\"true\"] .pomo-focus-exit","specificity":[0,3,0]},{"selector":".pomo-focus-overlay:focus-within .pomo-focus-exit","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["transform: translateY(0)"]}
+{"file":"packages/plugin-web-pomodoro/src/styles.css","line":453,"endLine":456,"atRules":[],"selectors":[{"selector":".pomo-focus-overlay[data-controls-visible=\"true\"] .pomo-focus-controls","specificity":[0,3,0]},{"selector":".pomo-focus-overlay:focus-within .pomo-focus-controls","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["transform: translate(-50%, 0)"]}
+{"file":"packages/plugin-web-pomodoro/src/styles.css","line":458,"endLine":461,"atRules":[],"selectors":[{"selector":".pomo-focus-overlay[data-controls-visible=\"true\"] .pomo-focus-stats","specificity":[0,3,0]},{"selector":".pomo-focus-overlay:focus-within .pomo-focus-stats","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["transform: translateY(0)"]}
+{"file":"packages/plugin-web-pomodoro/src/styles.css","line":797,"endLine":806,"atRules":[],"selectors":[{"selector":".pomo-custom-minutes input","specificity":[0,1,1]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-pomodoro/src/styles.css","line":853,"endLine":864,"atRules":[],"selectors":[{"selector":".pomo-select","specificity":[0,1,0]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-pomodoro/src/styles.css","line":866,"endLine":869,"atRules":[],"selectors":[{"selector":".pomo-select:focus","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["border-color: var(--accent)","box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 16%, transparent)"]}
+packages/plugin-web-pomodoro/src/styles.css: 175 rules
+{"file":"packages/plugin-web-settings-rest/src/styles.css","line":244,"endLine":248,"atRules":[],"selectors":[{"selector":".settings-departure-dialog:focus-visible","specificity":[0,2,0]},{"selector":".settings-departure-dialog button:focus-visible","specificity":[0,2,1]}],"outline":["outline: 2px solid var(--accent, oklch(60% 0.18 190))","outline-offset: 2px"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-settings-rest/src/styles.css","line":1182,"endLine":1185,"atRules":[],"selectors":[{"selector":".dam-input:focus","specificity":[0,2,0]}],"outline":["outline: 2px solid oklch(55% 0.18 20)","outline-offset: 1px"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-settings-rest/src/styles.css","line":1276,"endLine":1276,"atRules":[],"selectors":[{"selector":".account-deletion-recovery button:focus-visible","specificity":[0,2,1]}],"outline":["outline: 2px solid currentColor","outline-offset: 3px"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-settings-rest/src/styles.css","line":1283,"endLine":1283,"atRules":[],"selectors":[{"selector":".device-recovery-export summary:focus-visible","specificity":[0,2,1]}],"outline":["outline: 2px solid currentColor","outline-offset: 3px"],"otherFocusDecls":[]}
+packages/plugin-web-settings-rest/src/styles.css: 222 rules
+packages/plugin-web-settings-shell/src/styles.css: 64 rules
+packages/plugin-web-statistics/src/styles.css: 81 rules
+{"file":"packages/plugin-web-storage/src/AccountDataGate.css","line":15,"endLine":15,"atRules":[],"selectors":[{"selector":".account-data-gate :focus-visible","specificity":[0,2,0]}],"outline":["outline: 3px solid var(--accent, #34765c)","outline-offset: 3px"],"otherFocusDecls":[]}
+packages/plugin-web-storage/src/AccountDataGate.css: 18 rules
+{"file":"packages/plugin-web-time-tracker/src/styles.css","line":204,"endLine":211,"atRules":[],"selectors":[{"selector":".tt-tip:hover::after","specificity":[0,2,1]},{"selector":".tt-tip:hover::before","specificity":[0,2,1]},{"selector":".tt-tip:focus-visible::after","specificity":[0,2,1]},{"selector":".tt-tip:focus-visible::before","specificity":[0,2,1]}],"outline":[],"otherFocusDecls":["opacity: 1","transform: translateY(0)","visibility: visible"]}
+{"file":"packages/plugin-web-time-tracker/src/styles.css","line":449,"endLine":453,"atRules":[],"selectors":[{"selector":".tt-time-card.is-dragging","specificity":[0,2,0]}],"outline":["outline: 2px solid color-mix(in oklch, var(--accent) 24%, transparent)"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-time-tracker/src/styles.css","line":970,"endLine":975,"atRules":[],"selectors":[{"selector":".tt-focus-overlay.controls-visible .tt-focus-controls","specificity":[0,3,0]},{"selector":".tt-focus-controls:focus-within","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["opacity: 1","pointer-events: auto","transform: translateY(0)"]}
+{"file":"packages/plugin-web-time-tracker/src/styles.css","line":996,"endLine":1001,"atRules":[],"selectors":[{"selector":".tt-focus-action:hover","specificity":[0,2,0]},{"selector":".tt-focus-action:focus-visible","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["border-color: color-mix(in oklch, var(--tt-accent) 44%, transparent)","background: linear-gradient(180deg, color-mix(in oklch, var(--text-on-accent) 46%, transparent), color-mix(in oklch, var(--tt-accent) 18%, var(--bg-panel)))"]}
+{"file":"packages/plugin-web-time-tracker/src/styles.css","line":1652,"endLine":1654,"atRules":[],"selectors":[{"selector":".tt-mini-bars .is-selected > span","specificity":[0,2,1]}],"outline":["outline: 2px solid color-mix(in oklch, var(--accent) 48%, transparent)"],"otherFocusDecls":[]}
+packages/plugin-web-time-tracker/src/styles.css: 393 rules
+{"file":"packages/plugin-web-tokens/src/layout.css","line":306,"endLine":310,"atRules":[],"selectors":[{"selector":".search-box input","specificity":[0,1,1]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":453,"endLine":457,"atRules":[],"selectors":[{"selector":".topbar-pref-option:hover","specificity":[0,2,0]},{"selector":".topbar-pref-option:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["background: color-mix(in oklch, var(--accent) 13%, var(--bg-panel))"]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":512,"endLine":517,"atRules":[],"selectors":[{"selector":".topbar-pref-settings:hover","specificity":[0,2,0]},{"selector":".topbar-pref-settings:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["background: color-mix(in oklch, var(--accent) 10%, var(--bg-panel))","border-color: color-mix(in oklch, var(--accent) 30%, var(--border-1))"]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":1353,"endLine":1360,"atRules":[],"selectors":[{"selector":".slider-row input[type=\"range\"]","specificity":[0,2,1]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":1427,"endLine":1435,"atRules":[],"selectors":[{"selector":".accent-sw","specificity":[0,1,0]}],"outline":["outline: 1px solid var(--border-1)"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":1437,"endLine":1440,"atRules":[],"selectors":[{"selector":".accent-sw.active","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--text-1)","outline-offset: 2px"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":1452,"endLine":1465,"atRules":[],"selectors":[{"selector":".hue-slider","specificity":[0,1,0]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":2323,"endLine":2328,"atRules":[],"selectors":[{"selector":".xai-sign-out-dialog__btn:hover","specificity":[0,2,0]},{"selector":".xai-sign-out-dialog__btn:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["border-color: var(--border-strong)","background: var(--bg-hover)"]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":2334,"endLine":2338,"atRules":[],"selectors":[{"selector":".xai-sign-out-dialog__btn--confirm:hover","specificity":[0,2,0]},{"selector":".xai-sign-out-dialog__btn--confirm:focus-visible","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["border-color: color-mix(in oklch, var(--red) 86%, var(--bg-overlay))","background: color-mix(in oklch, var(--red) 86%, var(--bg-overlay))"]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":2474,"endLine":2485,"atRules":[],"selectors":[{"selector":".ix-composer input","specificity":[0,1,1]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":2586,"endLine":2590,"atRules":[],"selectors":[{"selector":".board-list.drop-target","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent)","outline-offset: -2px"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":2720,"endLine":2729,"atRules":[],"selectors":[{"selector":".card-composer textarea","specificity":[0,1,1]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":2756,"endLine":2764,"atRules":[],"selectors":[{"selector":".list-name-input","specificity":[0,1,0]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":2933,"endLine":2937,"atRules":[],"selectors":[{"selector":".bs-search input","specificity":[0,1,1]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":3065,"endLine":3076,"atRules":[],"selectors":[{"selector":".bc-field input","specificity":[0,1,1]},{"selector":".bc-field select","specificity":[0,1,1]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":3311,"endLine":3319,"atRules":[],"selectors":[{"selector":".td-date-input","specificity":[0,1,0]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":3336,"endLine":3341,"atRules":[],"selectors":[{"selector":".board-cal-cell.drag-over","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent)","outline-offset: -2px"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":4582,"endLine":4586,"atRules":[],"selectors":[{"selector":".ai-search input","specificity":[0,1,1]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":5079,"endLine":5083,"atRules":[],"selectors":[{"selector":".ai-composer:focus-within","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["border-color: var(--accent)","box-shadow: 0 12px 50px color-mix(in oklch, var(--accent) 22%, transparent),\n              0 0 0 4px color-mix(in oklch, var(--accent) 14%, transparent)"]}
+{"file":"packages/plugin-web-tokens/src/layout.css","line":5102,"endLine":5110,"atRules":[],"selectors":[{"selector":".ai-input","specificity":[0,1,0]}],"outline":["outline: 0"],"otherFocusDecls":[]}
+packages/plugin-web-tokens/src/layout.css: 1282 rules
+{"file":"packages/plugin-web-tokens/src/tokens.css","line":246,"endLine":253,"atRules":[],"selectors":[{"selector":"button:focus-visible","specificity":[0,1,1]},{"selector":"input:focus-visible","specificity":[0,1,1]},{"selector":"textarea:focus-visible","specificity":[0,1,1]},{"selector":"select:focus-visible","specificity":[0,1,1]},{"selector":"[role=\"button\"]:focus-visible","specificity":[0,2,0]}],"outline":["outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent)","outline-offset: 2px"],"otherFocusDecls":[]}
+packages/plugin-web-tokens/src/tokens.css: 74 rules
+{"file":"packages/xai-web-calendar/src/styles.css","line":262,"endLine":265,"atRules":[],"selectors":[{"selector":".cal-day[data-focused=\"true\"]","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent)","outline-offset: -2px"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-calendar/src/styles.css","line":410,"endLine":425,"atRules":[],"selectors":[{"selector":".cal-year-day","specificity":[0,1,0]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-calendar/src/styles.css","line":426,"endLine":429,"atRules":[],"selectors":[{"selector":".cal-year-day:hover","specificity":[0,2,0]},{"selector":".cal-year-day:focus-visible","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["background: var(--bg-hover)"]}
+{"file":"packages/xai-web-calendar/src/styles.css","line":1075,"endLine":1079,"atRules":[],"selectors":[{"selector":"[data-theme=\"dark\"] .cal-day:hover","specificity":[0,3,0]},{"selector":"[data-theme=\"dark\"] .cal-year-day:hover","specificity":[0,3,0]},{"selector":"[data-theme=\"dark\"] .cal-year-day:focus-visible","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["background: oklch(29% 0.014 210)"]}
+packages/xai-web-calendar/src/styles.css: 275 rules
+{"file":"packages/xai-web-cmdk/src/styles.css","line":56,"endLine":67,"atRules":[],"selectors":[{"selector":".cmdk-input","specificity":[0,1,0]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-cmdk/src/styles.css","line":101,"endLine":105,"atRules":[],"selectors":[{"selector":".cmdk-row.active","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent)","outline-offset: -2px"],"otherFocusDecls":[]}
+packages/xai-web-cmdk/src/styles.css: 15 rules
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":164,"endLine":173,"atRules":[],"selectors":[{"selector":".module-dashboard .dash-note:hover","specificity":[0,3,0]},{"selector":".module-dashboard .dash-note:focus-within","specificity":[0,3,0]},{"selector":".module-dashboard .dash-note.is-editing","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["border-color: oklch(80% 0.018 215 / 0.46)","background: oklch(100% 0 0 / 0.46)","box-shadow: 0 12px 28px oklch(30% 0.018 220 / 0.06),\n    inset 0 1px 0 oklch(100% 0 0 / 0.64)","backdrop-filter: blur(14px) saturate(140%)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":175,"endLine":179,"atRules":[],"selectors":[{"selector":".module-dashboard .dash-note.has-note:hover","specificity":[0,4,0]},{"selector":".module-dashboard .dash-note.has-note:focus-within","specificity":[0,4,0]}],"outline":[],"otherFocusDecls":["background: oklch(100% 0 0 / 0.62)","border-color: oklch(72% 0.034 170 / 0.5)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":215,"endLine":219,"atRules":[],"selectors":[{"selector":".module-dashboard .dash-note__display:hover","specificity":[0,3,0]},{"selector":".module-dashboard .dash-note__display:focus-visible","specificity":[0,3,0]}],"outline":["outline: none"],"otherFocusDecls":["color: var(--text-1)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":226,"endLine":229,"atRules":[],"selectors":[{"selector":".module-dashboard .dash-note:hover .dash-note__display svg","specificity":[0,4,1]},{"selector":".module-dashboard .dash-note:focus-within .dash-note__display svg","specificity":[0,4,1]}],"outline":[],"otherFocusDecls":["opacity: 0.72"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":256,"endLine":267,"atRules":[],"selectors":[{"selector":".module-dashboard .dash-note__input","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":294,"endLine":302,"atRules":[],"selectors":[{"selector":".module-dashboard .dash-note__icon-btn:hover","specificity":[0,3,0]},{"selector":".module-dashboard .dash-note__icon-btn:focus-visible","specificity":[0,3,0]},{"selector":".module-dashboard .dash-note__clear:hover","specificity":[0,3,0]},{"selector":".module-dashboard .dash-note__clear:focus-visible","specificity":[0,3,0]}],"outline":["outline: none"],"otherFocusDecls":["background: var(--dash-control-bg-hover)","border-color: var(--accent, oklch(64% 0.13 180))","color: var(--text-1)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":313,"endLine":317,"atRules":[],"selectors":[{"selector":".module-dashboard .dash-note:hover .dash-note__clear","specificity":[0,4,0]},{"selector":".module-dashboard .dash-note:focus-within .dash-note__clear","specificity":[0,4,0]}],"outline":[],"otherFocusDecls":["opacity: 1","transform: scale(1)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":325,"endLine":336,"atRules":[],"selectors":[{"selector":"[data-theme=\"dark\"] .module-dashboard .dash-note:hover","specificity":[0,4,0]},{"selector":"[data-theme=\"dark\"] .module-dashboard .dash-note:focus-within","specificity":[0,4,0]},{"selector":"[data-theme=\"dark\"] .module-dashboard .dash-note.has-note:hover","specificity":[0,5,0]},{"selector":"[data-theme=\"dark\"] .module-dashboard .dash-note.has-note:focus-within","specificity":[0,5,0]},{"selector":"[data-theme=\"dark\"] .module-dashboard .dash-note.is-editing","specificity":[0,4,0]}],"outline":[],"otherFocusDecls":["border-color: oklch(52% 0.018 220 / 0.42)","background: oklch(32% 0.014 220 / 0.68)","box-shadow: 0 12px 30px oklch(0% 0 0 / 0.16),\n    inset 0 1px 0 oklch(100% 0 0 / 0.08)","backdrop-filter: blur(14px) saturate(140%)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":368,"endLine":375,"atRules":[],"selectors":[{"selector":".module-dashboard .widget-shell:hover > .widget","specificity":[0,4,0]},{"selector":".module-dashboard .widget-shell:hover > .widget-content","specificity":[0,4,0]},{"selector":".module-dashboard .widget-shell:focus-within > .widget","specificity":[0,4,0]},{"selector":".module-dashboard .widget-shell:focus-within > .widget-content","specificity":[0,4,0]}],"outline":[],"otherFocusDecls":["background: var(--dash-card-bg-hover)","border-color: var(--dash-card-border-hover)","box-shadow: var(--dash-card-shadow-hover)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":516,"endLine":521,"atRules":[],"selectors":[{"selector":".widget-shell:hover .widget-shell__appearance","specificity":[0,3,0]},{"selector":".widget-shell:focus-within .widget-shell__appearance","specificity":[0,3,0]},{"selector":".widget-shell__appearance[aria-expanded=\"true\"]","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["opacity: 0.78","transform: translate(0, 0) scale(1)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":523,"endLine":532,"atRules":[],"selectors":[{"selector":".widget-shell__appearance:hover","specificity":[0,2,0]},{"selector":".widget-shell__appearance:focus-visible","specificity":[0,2,0]},{"selector":".widget-shell__appearance[aria-expanded=\"true\"]","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["opacity: 1","color: var(--text-1, currentColor)","background: linear-gradient(145deg, rgb(255 255 255 / 0.88), rgb(255 255 255 / 0.42)),\n    rgb(var(--dash-widget-glass-rgb) / 0.4)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":601,"endLine":610,"atRules":[],"selectors":[{"selector":".widget-shell__swatch:hover","specificity":[0,2,0]},{"selector":".widget-shell__swatch:focus-visible","specificity":[0,2,0]},{"selector":".widget-shell__swatch[aria-pressed=\"true\"]","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["border-color: rgb(var(--widget-swatch-rgb) / 0.96)","box-shadow: 0 0 0 3px rgb(var(--widget-swatch-rgb) / 0.28),\n    0 5px 14px rgb(36 48 58 / 0.1),\n    inset 0 1px 0 rgb(255 255 255 / 0.72)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":642,"endLine":647,"atRules":[],"selectors":[{"selector":".widget-shell__opacity-step:hover","specificity":[0,2,0]},{"selector":".widget-shell__opacity-step:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["background: rgb(255 255 255 / 0.62)","color: var(--text-1, currentColor)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":662,"endLine":667,"atRules":[],"selectors":[{"selector":".widget-shell__appearance-reset:hover","specificity":[0,2,0]},{"selector":".widget-shell__appearance-reset:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["background: rgb(255 255 255 / 0.62)","color: var(--text-1, currentColor)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":699,"endLine":704,"atRules":[],"selectors":[{"selector":".widget-shell:hover .widget-shell__remove","specificity":[0,3,0]},{"selector":".widget-shell:focus-within .widget-shell__remove","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["opacity: 0.72","pointer-events: auto","transform: translate(0, 0) scale(1)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":707,"endLine":713,"atRules":[],"selectors":[{"selector":".widget-shell__remove:hover","specificity":[0,2,0]},{"selector":".widget-shell__remove:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["opacity: 1","background: var(--dash-control-bg-hover)","transform: scale(1.04)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":737,"endLine":740,"atRules":[],"selectors":[{"selector":".widget-shell:hover .widget-shell__resize","specificity":[0,3,0]},{"selector":".widget-shell:focus-within .widget-shell__resize","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["opacity: 0.72"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":742,"endLine":749,"atRules":[],"selectors":[{"selector":".widget-shell__resize:hover","specificity":[0,2,0]},{"selector":".widget-shell__resize:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["opacity: 1","color: var(--text-1, currentColor)","background: var(--dash-control-bg-hover)","transform: scale(1.04)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":761,"endLine":767,"atRules":[],"selectors":[{"selector":"[data-theme=\"dark\"] .widget-shell__appearance:hover","specificity":[0,3,0]},{"selector":"[data-theme=\"dark\"] .widget-shell__appearance:focus-visible","specificity":[0,3,0]},{"selector":"[data-theme=\"dark\"] .widget-shell__appearance[aria-expanded=\"true\"]","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["background: linear-gradient(145deg, rgb(255 255 255 / 0.15), rgb(255 255 255 / 0.05)),\n    rgb(var(--dash-widget-glass-rgb) / 0.18)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":789,"endLine":794,"atRules":[],"selectors":[{"selector":"[data-theme=\"dark\"] .widget-shell__appearance-reset:hover","specificity":[0,3,0]},{"selector":"[data-theme=\"dark\"] .widget-shell__appearance-reset:focus-visible","specificity":[0,3,0]},{"selector":"[data-theme=\"dark\"] .widget-shell__opacity-step:hover","specificity":[0,3,0]},{"selector":"[data-theme=\"dark\"] .widget-shell__opacity-step:focus-visible","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["background: rgb(255 255 255 / 0.14)"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":882,"endLine":887,"atRules":[],"selectors":[{"selector":".awp-card:hover","specificity":[0,2,0]},{"selector":".awp-card:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["background: var(--hover-bg, var(--bg-hover))","border-color: var(--accent, oklch(60% 0.15 250))"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":977,"endLine":986,"atRules":[],"selectors":[{"selector":".module-dashboard .dash-note:hover","specificity":[0,3,0]},{"selector":".module-dashboard .dash-note:focus-within","specificity":[0,3,0]},{"selector":".module-dashboard .dash-note.is-editing","specificity":[0,3,0]},{"selector":".module-dashboard .dash-note.has-note:hover","specificity":[0,4,0]},{"selector":".module-dashboard .dash-note.has-note:focus-within","specificity":[0,4,0]}],"outline":[],"otherFocusDecls":["background: color-mix(in oklch, var(--bg-panel) 92%, transparent)","border-color: var(--dash-card-border-hover)","box-shadow: var(--shadow-1)","backdrop-filter: none"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":1138,"endLine":1146,"atRules":["@media (min-width: 781px) and (max-width: 1024px)"],"selectors":[{"selector":".module-dashboard .widget-shell:hover .widget-shell__remove","specificity":[0,4,0]},{"selector":".module-dashboard .widget-shell:focus-within .widget-shell__remove","specificity":[0,4,0]},{"selector":".module-dashboard .widget-shell:has(.widget-shell__appearance[aria-expanded=\"true\"]) .widget-shell__remove","specificity":[0,5,0]},{"selector":".module-dashboard .widget-shell:hover .widget-shell__resize","specificity":[0,4,0]},{"selector":".module-dashboard .widget-shell:focus-within .widget-shell__resize","specificity":[0,4,0]},{"selector":".module-dashboard .widget-shell:has(.widget-shell__appearance[aria-expanded=\"true\"]) .widget-shell__resize","specificity":[0,5,0]}],"outline":[],"otherFocusDecls":["opacity: 0.82","pointer-events: auto"]}
+{"file":"packages/xai-web-dashboard-grid/src/styles.css","line":1223,"endLine":1231,"atRules":["@media (max-width: 780px)"],"selectors":[{"selector":".module-dashboard .widget-shell:hover .widget-shell__remove","specificity":[0,4,0]},{"selector":".module-dashboard .widget-shell:focus-within .widget-shell__remove","specificity":[0,4,0]},{"selector":".module-dashboard .widget-shell:has(.widget-shell__appearance[aria-expanded=\"true\"]) .widget-shell__remove","specificity":[0,5,0]},{"selector":".module-dashboard .widget-shell:hover .widget-shell__resize","specificity":[0,4,0]},{"selector":".module-dashboard .widget-shell:focus-within .widget-shell__resize","specificity":[0,4,0]},{"selector":".module-dashboard .widget-shell:has(.widget-shell__appearance[aria-expanded=\"true\"]) .widget-shell__resize","specificity":[0,5,0]}],"outline":[],"otherFocusDecls":["opacity: 0.82","pointer-events: auto"]}
+packages/xai-web-dashboard-grid/src/styles.css: 155 rules
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":368,"endLine":373,"atRules":[],"selectors":[{"selector":".widget-open-btn:hover","specificity":[0,2,0]},{"selector":".widget-open-btn:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["color: var(--text-1)","background: var(--bg-panel)"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":459,"endLine":464,"atRules":[],"selectors":[{"selector":".ww-alert:hover","specificity":[0,2,0]},{"selector":".ww-alert:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["color: var(--text-1)","border-color: var(--red, oklch(60% 0.18 25))"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":534,"endLine":540,"atRules":[],"selectors":[{"selector":".ww-empty:hover","specificity":[0,2,0]},{"selector":".ww-empty:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["color: var(--text-1)","border-color: var(--accent)","background: var(--accent-soft, var(--bg-panel-2))"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":556,"endLine":559,"atRules":[],"selectors":[{"selector":"[data-theme=\"dark\"] .ww-empty:hover","specificity":[0,3,0]},{"selector":"[data-theme=\"dark\"] .ww-empty:focus-visible","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["background: color-mix(in oklch, var(--accent-soft, var(--bg-panel-2)) 34%, var(--bg-panel-2))"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":653,"endLine":661,"atRules":[],"selectors":[{"selector":".weather-editor-input","specificity":[0,1,0]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":662,"endLine":664,"atRules":[],"selectors":[{"selector":".weather-editor-input:focus","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["border-color: var(--accent, oklch(60% 0.15 250))"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":675,"endLine":680,"atRules":[],"selectors":[{"selector":".weather-editor-search-btn:hover","specificity":[0,2,0]},{"selector":".weather-editor-search-btn:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["border-color: var(--accent)","background: var(--accent-soft, var(--bg-panel-2))"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":734,"endLine":740,"atRules":[],"selectors":[{"selector":".weather-editor-result:hover","specificity":[0,2,0]},{"selector":".weather-editor-result:focus-visible","specificity":[0,2,0]},{"selector":".weather-editor-result[aria-selected=\"true\"]","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["border-color: var(--accent)","background: var(--bg-panel, #fff)"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":880,"endLine":885,"atRules":[],"selectors":[{"selector":".sticky[role=\"button\"]:hover","specificity":[0,3,0]},{"selector":".sticky[role=\"button\"]:focus-visible","specificity":[0,3,0]}],"outline":["outline: 2px solid rgba(255, 255, 255, 0.62)","outline-offset: 2px"],"otherFocusDecls":["box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12)"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":886,"endLine":890,"atRules":[],"selectors":[{"selector":".sticky.is-resizing","specificity":[0,2,0]}],"outline":["outline: 2px solid rgba(255, 255, 255, 0.72)","outline-offset: 2px"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":891,"endLine":898,"atRules":[],"selectors":[{"selector":".sticky.is-dragging","specificity":[0,2,0]}],"outline":["outline: 2px solid rgba(255, 255, 255, 0.78)","outline-offset: 2px"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":952,"endLine":955,"atRules":[],"selectors":[{"selector":"[data-theme=\"dark\"] .sticky-empty-action:hover","specificity":[0,3,0]},{"selector":"[data-theme=\"dark\"] .sticky-empty-action:focus-visible","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["background: color-mix(in oklch, var(--accent-soft, var(--bg-panel-2)) 34%, var(--bg-panel-2))"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":956,"endLine":962,"atRules":[],"selectors":[{"selector":".sticky-empty-action:hover","specificity":[0,2,0]},{"selector":".sticky-empty-action:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["color: var(--text-1)","border-color: var(--accent)","background: var(--accent-soft, var(--bg-panel-2))"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":1081,"endLine":1087,"atRules":[],"selectors":[{"selector":".upc-empty--action:hover","specificity":[0,2,0]},{"selector":".upc-empty--action:focus-visible","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["color: var(--text-1)","border-color: var(--accent)","background: var(--accent-soft, var(--bg-panel-2))"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":1329,"endLine":1333,"atRules":[],"selectors":[{"selector":".mail-row:focus-visible","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent)","outline-offset: -2px"],"otherFocusDecls":["background: var(--bg-panel-2)"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":1433,"endLine":1437,"atRules":[],"selectors":[{"selector":".upc-row:focus-visible","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent)","outline-offset: -2px"],"otherFocusDecls":["background: var(--bg-panel-2)"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":1554,"endLine":1557,"atRules":[],"selectors":[{"selector":".sticky-composer-textarea:focus","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent, oklch(65% 0.18 250))","outline-offset: 1px"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":1581,"endLine":1584,"atRules":[],"selectors":[{"selector":".sticky-composer-chip:focus-visible","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent, oklch(65% 0.18 250))","outline-offset: 2px"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":1654,"endLine":1660,"atRules":[],"selectors":[{"selector":".sticky-composer-source-card:hover","specificity":[0,2,0]},{"selector":".sticky-composer-source-card:focus-visible","specificity":[0,2,0]},{"selector":".sticky-composer-source-card[aria-pressed=\"true\"]","specificity":[0,2,0]}],"outline":["outline: none"],"otherFocusDecls":["border-color: var(--accent)","background: var(--bg-panel, #fff)"]}
+{"file":"packages/xai-web-dashboard-widgets/src/styles.css","line":1779,"endLine":1787,"atRules":[],"selectors":[{"selector":".sticky-resize:hover","specificity":[0,2,0]},{"selector":".sticky-resize:focus-visible","specificity":[0,2,0]},{"selector":".sticky.is-resizing .sticky-resize","specificity":[0,3,0]}],"outline":["outline: none"],"otherFocusDecls":["background: rgba(255, 255, 255, 0.62)","color: rgba(42, 42, 42, 0.9)","opacity: 1","transform: scale(1.04)"]}
+packages/xai-web-dashboard-widgets/src/styles.css: 279 rules
+{"file":"packages/xai-web-habits/src/styles.css","line":531,"endLine":534,"atRules":[],"selectors":[{"selector":".cal-cell.today","specificity":[0,2,0]}],"outline":["outline: 1.5px solid var(--habit-color, var(--accent))","outline-offset: -1.5px"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-habits/src/styles.css","line":595,"endLine":598,"atRules":[],"selectors":[{"selector":".log-textarea:focus","specificity":[0,2,0]}],"outline":["outline: 2px solid color-mix(in oklch, var(--accent) 32%, transparent)"],"otherFocusDecls":["border-color: var(--accent)"]}
+{"file":"packages/xai-web-habits/src/styles.css","line":921,"endLine":925,"atRules":[],"selectors":[{"selector":".hb-form-row input:focus","specificity":[0,2,1]},{"selector":".hb-form-row select:focus","specificity":[0,2,1]}],"outline":["outline: 2px solid color-mix(in oklch, var(--accent) 28%, transparent)"],"otherFocusDecls":["border-color: var(--accent)"]}
+{"file":"packages/xai-web-habits/src/styles.css","line":967,"endLine":970,"atRules":[],"selectors":[{"selector":".hb-color-choice[aria-pressed=\"true\"]","specificity":[0,2,0]}],"outline":["outline: 3px solid color-mix(in oklch, var(--hb-choice-color) 26%, transparent)","outline-offset: 2px"],"otherFocusDecls":[]}
+packages/xai-web-habits/src/styles.css: 193 rules
+{"file":"packages/xai-web-matrix/src/matrix.css","line":118,"endLine":123,"atRules":[],"selectors":[{"selector":".q-body[data-dragover=\"true\"]","specificity":[0,2,0]}],"outline":["outline: 2px dashed var(--qc)","outline-offset: -2px"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-matrix/src/matrix.css","line":197,"endLine":200,"atRules":[],"selectors":[{"selector":".m-row:focus","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent)","outline-offset: 1px"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-matrix/src/matrix.css","line":318,"endLine":326,"atRules":[],"selectors":[{"selector":".matrix-composer__input","specificity":[0,1,0]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-matrix/src/matrix.css","line":328,"endLine":330,"atRules":[],"selectors":[{"selector":".matrix-composer__input:focus","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["border-color: var(--accent)"]}
+packages/xai-web-matrix/src/matrix.css: 50 rules
+{"file":"packages/xai-web-meditation/src/styles.css","line":113,"endLine":118,"atRules":[],"selectors":[{"selector":".module-meditation button:focus-visible","specificity":[0,2,1]},{"selector":".module-meditation input:focus-visible","specificity":[0,2,1]},{"selector":".module-meditation select:focus-visible","specificity":[0,2,1]}],"outline":["outline: 2px solid var(--accent)","outline-offset: 2px"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-meditation/src/styles.css","line":290,"endLine":293,"atRules":[],"selectors":[{"selector":".scene-shell.active","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent)","outline-offset: 2px"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-meditation/src/styles.css","line":909,"endLine":916,"atRules":[],"selectors":[{"selector":".med-focus-clock .frameless","specificity":[0,2,0]}],"outline":["outline: 0 !important"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-meditation/src/styles.css","line":1143,"endLine":1149,"atRules":[],"selectors":[{"selector":".med-player.controls-visible .med-exit","specificity":[0,3,0]},{"selector":".med-player.controls-open .med-exit","specificity":[0,3,0]},{"selector":".med-exit:focus-visible","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["opacity: 1","pointer-events: auto","transform: translateY(0) scale(1)"]}
+packages/xai-web-meditation/src/styles.css: 176 rules
+{"file":"packages/xai-web-pet/src/pet.css","line":215,"endLine":220,"atRules":[],"selectors":[{"selector":".pet-wrap:hover .pet-bubble","specificity":[0,3,0]},{"selector":".pet-wrap:focus-within .pet-bubble","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["opacity: 1","transform: translateY(0) scale(1)","pointer-events: auto"]}
+packages/xai-web-pet/src/pet.css: 65 rules
+{"file":"packages/xai-web-settings-appearance/src/styles.css","line":97,"endLine":110,"atRules":[],"selectors":[{"selector":".accent-sw","specificity":[0,1,0]}],"outline":["outline: 1px solid var(--border-1)"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-settings-appearance/src/styles.css","line":116,"endLine":119,"atRules":[],"selectors":[{"selector":".accent-sw.active","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--text-1)","outline-offset: 2px"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-settings-appearance/src/styles.css","line":137,"endLine":152,"atRules":[],"selectors":[{"selector":".hue-slider","specificity":[0,1,0]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-settings-appearance/src/styles.css","line":516,"endLine":519,"atRules":[],"selectors":[{"selector":".appearance-pane .slider-row input[type=\"range\"]:focus-visible","specificity":[0,4,1]}],"outline":["outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent)","outline-offset: 2px"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-settings-appearance/src/styles.css","line":528,"endLine":532,"atRules":[],"selectors":[{"selector":".appearance-pane .accent-sw.active:focus-visible","specificity":[0,4,0]}],"outline":["outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent)","outline-offset: 4px"],"otherFocusDecls":["box-shadow: 0 0 0 2px var(--text-1)"]}
+packages/xai-web-settings-appearance/src/styles.css: 91 rules
+packages/xai-web-settings-features-panel/src/styles.css: 29 rules
+{"file":"packages/xai-web-tasks/src/styles.css","line":282,"endLine":285,"atRules":[],"selectors":[{"selector":".manageable-row:hover .row-actions","specificity":[0,3,0]},{"selector":".manageable-row:focus-within .row-actions","specificity":[0,3,0]}],"outline":[],"otherFocusDecls":["display: inline-flex"]}
+{"file":"packages/xai-web-tasks/src/styles.css","line":690,"endLine":699,"atRules":[],"selectors":[{"selector":".task-composer__input","specificity":[0,1,0]}],"outline":["outline: none"],"otherFocusDecls":[]}
+{"file":"packages/xai-web-tasks/src/styles.css","line":700,"endLine":702,"atRules":[],"selectors":[{"selector":".task-composer__input:focus","specificity":[0,2,0]}],"outline":[],"otherFocusDecls":["border-color: var(--accent)"]}
+{"file":"packages/xai-web-tasks/src/styles.css","line":1226,"endLine":1229,"atRules":["@media (max-width: 1024px)"],"selectors":[{"selector":".task-select:focus-visible","specificity":[0,2,0]}],"outline":["outline: 2px solid var(--accent)","outline-offset: -6px"],"otherFocusDecls":[]}
+packages/xai-web-tasks/src/styles.css: 196 rules
+flagged rules: 138
+
+# exit: 0

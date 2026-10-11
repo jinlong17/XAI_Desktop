@@ -1,0 +1,16 @@
+{"name":"baseline","commit":"f359be6","browser":"Chrome/154.0.8037.97"}
+{"name":"control-0","index":0,"label":"Choose window type when launching","raw":"window","value":"tray","checked":null,"pressed":null}
+{"name":"programmatic-first-intent-focus","path":"/app/settings/more","signoutResult":false,"warning":true,"focus":"Choose window type when launching"}
+{"name":"app-rail-stay","path":"/app/settings/more","focus":"Tasks"}
+{"name":"relative-discard","path":"/app/settings/date_time","state":{"token":"more-n2-relative"},"raw":["window","false","false","true","false","true","true","none","on_time","none","none","none","inbox","top","top"],"writes":0}
+{"name":"control-0","index":0,"label":"Choose window type when launching","raw":"window","value":"tray","checked":null,"pressed":null}
+{"name":"history-back-forward","path":"/app/settings/more","warning":false,"raw":["window","false","false","true","false","true","true","none","on_time","none","none","none","inbox","top","top"]}
+{"name":"control-0","index":0,"label":"Choose window type when launching","raw":"window","value":"tray","checked":null,"pressed":null}
+{"name":"control-11","index":11,"label":"Default Tag","raw":"none","value":"work","checked":null,"pressed":null}
+{"name":"partial-latest-release","path":"/app/settings/notifications","raw":["tray","false","false","true","false","true","true","none","on_time","none","none","work","inbox","top","top"],"dialog":false,"warning":false}
+{"name":"control-0","index":0,"label":"Choose window type when launching","raw":"tray","value":"window","checked":null,"pressed":null}
+{"name":"control-11","index":11,"label":"Default Tag","raw":"work","value":"none","checked":null,"pressed":null}
+{"name":"epoch-cancellation","signoutResult":false,"ui":{"windowType":"window","defaultTag":"none"},"rawA":["window","false","false","true","false","true","true","none","on_time","none","none","work","inbox","top","top"],"warning":false}
+{"name":"control-0","index":0,"label":"Choose window type when launching","raw":"window","value":"tray","checked":null,"pressed":null}
+{"name":"unmount-cleanup","rootChildren":0,"signoutResult":false,"warning":false}
+{"name":"native","pass":true,"mode":"host","runtimeErrors":0}

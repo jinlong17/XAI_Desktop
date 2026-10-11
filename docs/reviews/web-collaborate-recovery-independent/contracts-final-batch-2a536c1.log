@@ -1,0 +1,12 @@
+revision=2a536c1 fixed_commit=2a536c16ff839dd1281d7a2b484478532ac5f9a0
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-Y0tk9e
+
+ ✓ docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx (31 tests) 2706ms
+   ✓ absent mount and rerender preserve all absent physical sources without a draft  798ms
+
+ Test Files  1 passed (1)
+      Tests  31 passed (31)
+   Start at  23:08:48
+   Duration  4.90s (transform 503ms, setup 0ms, collect 752ms, tests 2.71s, environment 688ms, prepare 255ms)

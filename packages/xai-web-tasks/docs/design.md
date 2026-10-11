@@ -1,3 +1,14 @@
+## REL-01 local due-date contract (2026-09-09)
+
+This section supersedes historical yearless/bucket-only date rules below (including D-QT and old dateForCol offsets).
+
+- `TaskCard.dueDate` / `NewTaskDraft.dueDate` are optional strict `YYYY-MM-DD` local calendar identities. Legacy `date`, `dateZh`, and `dateLabel` are display data only: never infer a year, shift their day, or delete a historical task because no real due date exists. Invalid string dates remain visible for manual repair; predicates do not count them.
+- Today includes dated tasks due today **and overdue**; Tomorrow is exactly the next local day; Next 7 Days is `(today, today + 7 calendar days]`. These predicates inspect dates across all stored columns, including completed groups, and never mutate input.
+- The rendered/persisted time columns regroup known dates as Today / Overdue (`<= today`), Next 7 Days, and Later. Legacy unknown dates retain their original column; moving a list or tag does not fabricate a date. Shared `useLocalDayClock` refreshes midnight and browser resume. Date identity survives reload and DST.
+- Composer explicitly accepts a date; detail edits accept a date or clear it. Date edits regroup immediately. Clearing a date moves to No Date. An explicit cross-time-column move schedules Today / Overdue = today, Next 7 Days = tomorrow, Later = eight days from today; No Date clears dueDate and stale date labels. Same-column moves are no-ops. Source, subtitle, notes, tags, list, and completion survive moves.
+- `TaskCardPatch.dueDate`: omitted preserves date; null clears; valid string replaces; invalid string rejects the patch. Legacy `withDate` callers remain supported through the same date presets. Board-linked inputs retain validated dueDate and source.
+- Uses only public `@repo/plugin-web-tokens` date helpers. Device-local persistence only; does not enable cloud sync or guarantee background JavaScript execution when a tab is closed.
+
 # Design — `@repo/plugin-web-tasks`
 
 > Decision snapshot for the Tasks module port.
@@ -356,3 +367,11 @@ Each phase ends with `feature-build` STOP per Workflow V2.
 - Any reducer mutation change (`moveCard`/`toggleComplete`/`addCard` untouched).
 - Any `plugin-web-storage` registry, `plugin-web-tokens`, `packages/core`, host-shell, other-plugin, SHIPPED-archive, ADR, or `dev`-branch edit.
 - Header "Filters"/"More" buttons (T-06/T-07 — separate).
+
+## REL-05 — rejected writes retain editable drafts
+
+The shared `usePref` setter reports committed success. Tasks publishes list/tag metadata only after its scoped autosave succeeds, and closes the composer or metadata dialog only after a committed save. Detail editing retains the current form across failure and language changes. Failed deletion keeps the detail panel open. A visible failure panel beside each editor offers an explicit JSON export of its latest form values; retry uses the current form, not an older queued snapshot.
+
+Every write and draft export uses the module/editor's captured account scope. The host still unmounts account-specific UI on identity changes; retained callbacks independently reject old-account retry/export. Drafts are deliberately in memory while the editor stays open; the explicit download is the recovery artifact if the user needs to close the page. This does not claim that unsaved drafts survive an unannounced page/process exit.
+
+Non-editor actions retain their failed proposed state with retry/export. List/tag deletion first commits dependent task references, then removes metadata: a canonical task write failure cannot leave dangling metadata references. A later metadata failure keeps the old metadata and reports a retryable failed removal; these two keys are not an atomic transaction.

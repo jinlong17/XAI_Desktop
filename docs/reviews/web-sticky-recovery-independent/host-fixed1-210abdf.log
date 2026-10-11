@@ -1,0 +1,52 @@
+requested_revision=210abdf
+resolved_commit=210abdf77562660372c47086db02bd21e870deb5
+mode=host
+suffix=fixed1
+include=docs/reviews/web-sticky-recovery-independent/host.test.tsx
+runner_checkout_head=8db7d306dcd84c2090113019e1390635e05604ed
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 host.test.tsx=7a4d3ff0cb8c4b6087307c9c7369340a7acea4c00589e6375fa236fbb7f9e8f3 verify-fixed.mjs=5a8ea1ddf40f47e5650e82656a174ef786403d418b1dd9f5a0553e0213da7260
+node=v24.16.0
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-host-Z8y8W2
+
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > FIXTURE storage injector fires before delegation and the Web Lock fixture is exclusive 48ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > FIXTURE jsdom browser history reaches the production router factory as a blockable POP 74ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > PC1 clean Sticky: zero Sticky writes at mount, no unload warning, sign-out and sidebar departure proceed 131ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > PC2 unfaulted edits of all five fields write exact unscoped bytes and departure then proceeds 208ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > PC3 clean Sticky: programmatic module navigation, browser Back and the AppRail leave or return freely 117ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'color': a denied physical write keeps the latest choice displayed [H1 host] 61ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'font': a denied physical write keeps the latest choice displayed [H1 host] 59ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'pin_default': a denied physical write keeps the latest choice displayed [H1 host] 62ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'restore_size': a denied physical write keeps the latest choice displayed [H1 host] 65ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'grid_spacing': a denied physical write keeps the latest choice displayed [H1 host] 60ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'color': a Settings sidebar departure is held after a denied write [H7 route] 105ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'font': a Settings sidebar departure is held after a denied write [H7 route] 103ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'pin_default': a Settings sidebar departure is held after a denied write [H7 route] 110ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'restore_size': a Settings sidebar departure is held after a denied write [H7 route] 107ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'grid_spacing': a Settings sidebar departure is held after a denied write [H7 route] 116ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'color': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out] 98ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'font': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out] 96ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'pin_default': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out] 100ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'restore_size': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out] 101ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'grid_spacing': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out] 96ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-rail color: an AppRail module button departure is held [H7 AppRail] 101ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-programmatic color: programmatic module navigation is held [H7 programmatic] 99ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-back-pop color: a browser Back traversal (POP through the blocker) is held [H7 Back] 123ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-forward-pop color: a browser Forward traversal (POP through the blocker) is held [H7 Forward] 146ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-back-delta color: programmatic history Back router.navigate(-1) is held [H7 Back] 122ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-forward-delta color: programmatic history Forward router.navigate(1) is held [H7 Forward] 137ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-relative color: path-relative navigation with state is held [H7 relative] 96ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-beforeunload color: a cancelable beforeunload warns synchronously with zero storage attempts [H7 beforeunload] 56ms
+
+ Test Files  1 passed (1)
+      Tests  28 passed (28)
+   Start at  17:04:35
+   Duration  6.24s (transform 1.90s, setup 0ms, collect 2.79s, tests 2.80s, environment 364ms, prepare 67ms)
+
+
+---- stderr ----

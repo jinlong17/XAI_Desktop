@@ -1,0 +1,18 @@
+revision=HEAD
+test-fixture=review-owned only; package run unmodified
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-FgAFR2
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts > queued recovery keeps the entry receipt authority; same-identity raw replacement=false
+entry-snapshot {"replace":false,"outcome":{"status":"fulfilled","value":{"version":2,"kind":"account","accountId":"snapshot-A","generation":"g1","authGeneration":"auth-A","phase":"complete","updatedAt":"2026-09-10T01:28:46.542Z"}},"receipt":"{\"version\":2,\"kind\":\"account\",\"accountId\":\"snapshot-A\",\"generation\":\"g1\",\"authGeneration\":\"auth-A\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:28:46.542Z\"}","record":null,"secret":1,"auth":1}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts > queued recovery keeps the entry receipt authority; same-identity raw replacement=true
+entry-snapshot {"replace":true,"outcome":{"status":"rejected","reason":{}},"receipt":"{\"version\":2,\"kind\":\"account\",\"accountId\":\"snapshot-A\",\"generation\":\"g1\",\"authGeneration\":\"auth-A\",\"phase\":\"pending\",\"updatedAt\":\"2026-09-10T00:00:00.000Z\"}","record":"retained account bytes","secret":0,"auth":0}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts (2 tests) 4ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  18:28:45
+   Duration  1.14s (transform 227ms, setup 0ms, collect 222ms, tests 4ms, environment 512ms, prepare 167ms)

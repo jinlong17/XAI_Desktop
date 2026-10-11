@@ -1,0 +1,3 @@
+{"name":"baseline","head":"d7d1733739ec85c8a6f7b95f7b3429c92ddbcbcc","requestedRef":"ab8c35a^","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":390}
+{"name":"native-revoke-failure","receipt":{"version":1,"accountId":"A","kind":"account","generation":"business-A","phase":"complete","updatedAt":"2026-09-09T20:28:09.599Z"},"active":{"generation":"auth-A-99d59fed-3bf4-4ca9-8383-29dd6f43c436","owner":"A"},"serverDeletes":1}
+{"name":"before-defect","pass":true,"problem":"auth revoke aborted but receipt complete; reload has no retry"}

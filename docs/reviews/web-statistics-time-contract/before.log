@@ -1,0 +1,97 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ❯ docs/reviews/web-statistics-time-contract/reproduction.test.ts (4 tests | 4 failed) 7ms
+   × STAT-01 actual focus duration > one active minute plus pauses is one minute, not configured 25 or wall-clock 60 5ms
+     → expected 25 to be 1 // Object.is equality
+   × STAT-01 actual focus duration > an immediate End with zero elapsed adds no focus time 0ms
+     → expected 25 to be +0 // Object.is equality
+   × STAT-01 actual focus duration > heatmap uses the same measured elapsed time 1ms
+     → expected 25 to be 1 // Object.is equality
+   × STAT-02 undated task completions > retains current total without inventing a completion in the last date bucket 0ms
+     → expected false to be true // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-statistics-time-contract/reproduction.test.ts > STAT-01 actual focus duration > one active minute plus pauses is one minute, not configured 25 or wall-clock 60
+AssertionError: expected 25 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 25
+
+ ❯ docs/reviews/web-statistics-time-contract/reproduction.test.ts:16:42
+     14|   it('one active minute plus pauses is one minute, not configured 25 o…
+     15|     const value = aggregateRange('week', [session(60_000)], EMPTY_HABI…
+     16|     expect(value.kpis.focusMinutesTotal).toBe(1);
+       |                                          ^
+     17|     expect(value.focusBuckets.reduce((a, b) => a + b, 0)).toBe(1);
+     18|     expect(value.hourDistribution.reduce((a, b) => a + b, 0)).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  docs/reviews/web-statistics-time-contract/reproduction.test.ts > STAT-01 actual focus duration > an immediate End with zero elapsed adds no focus time
+AssertionError: expected 25 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 25
+
+ ❯ docs/reviews/web-statistics-time-contract/reproduction.test.ts:21:107
+     19|   });
+     20|   it('an immediate End with zero elapsed adds no focus time', () => {
+     21|     expect(aggregateRange('week', [session(0)], EMPTY_HABITS_STATE, 1,…
+       |                                                                                                           ^
+     22|   });
+     23|   it('heatmap uses the same measured elapsed time', () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  docs/reviews/web-statistics-time-contract/reproduction.test.ts > STAT-01 actual focus duration > heatmap uses the same measured elapsed time
+AssertionError: expected 25 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 25
+
+ ❯ docs/reviews/web-statistics-time-contract/reproduction.test.ts:24:97
+     22|   });
+     23|   it('heatmap uses the same measured elapsed time', () => {
+     24|     expect(heatmapCells([session(60_000)], 1, now).find(c => c.date ==…
+       |                                                                                                 ^
+     25|   });
+     26| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  docs/reviews/web-statistics-time-contract/reproduction.test.ts > STAT-02 undated task completions > retains current total without inventing a completion in the last date bucket
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-statistics-time-contract/reproduction.test.ts:33:51
+     31|     const value = aggregateRange('week', [], EMPTY_HABITS_STATE, 1, no…
+     32|     expect(value.kpis.tasksTotal).toBe(1);
+     33|     expect(value.taskBuckets.every(n => n === 0)).toBe(true);
+       |                                                   ^
+     34|   });
+     35| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  13:02:32
+   Duration  499ms (transform 198ms, setup 0ms, collect 262ms, tests 7ms, environment 0ms, prepare 79ms)
+

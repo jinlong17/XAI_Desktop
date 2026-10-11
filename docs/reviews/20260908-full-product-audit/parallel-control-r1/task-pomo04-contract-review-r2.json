@@ -1,0 +1,53 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full original-obligation reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "3275e45a20314d39e1f6e1b0606ecfee9868f54b",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 2,
+    "review_cap": 3,
+    "prior_source_author_used": 2,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "POMO-04/CONTRACT-REVIEW2",
+  "source_inputs": [
+    "9e2e6cf722171936dc8c085d588f0c047d968e92",
+    "0f2f5c1a155f8fda127758f7986010dd57335f21",
+    "59dae0b524e19e6d0c273174488b84d68fb323f3"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-pomo04-contract-review-r2/review.md",
+    "docs/reviews/audit-parallel-pomo04-contract-review-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full2932 immutable identities inclall2914priorreview/all2900originalsource, exact2ADD/parent53a961/original312orderedfields/39reversiblelabels/939evidence/formal13,3,3,293. Original15P04/11conditionalpaths/106logs/fullcanonicalAppendixA/B retained byteidentity; acceptedpref slice neverwholecaller.",
+    "Apply established durable4868d0a/POMO03partialrecords/2962b49preference departure rules first; verify no genuineowner question. StopEnd early incomplete elapsedrecord excludingpausedtime; Reset unexpireddiscardscurrentonly, pending/expiredsettlement precedesdiscard, originalhistory untouched; normalaway runningdeadline/pausedelapsed/privateowner keep existingrules. New consequenceconfirmation identity/revision/epoch revalidation and postawaitdisposal/lateowner behavior mustbefinite technicalproposal notnewsettlementalgorithm.",
+    "Complete15 P04 businessoracles/11finiteconditionalpaths andprotectedactivehistorykeys/schema/sessionprotocol/accountmigration/Gates/host/coordinator/readonlydisplay. C1memoryEndvsC2durablependingvsC3historysavedcleanuperror truthful; allnormal/fullscreen ENZH actions/resetCancelzeroeffects+focus/pendingwording/nofalseempty/exporterrors/actualdisk/preclickscope/forceclose limits and alloriginalguardbehaviors. Missingpublicsource availability technicaldependency no implicitsharedscopegrant.",
+    "Full106 originalartifact census process/mode grouping/formal-probeunknown/permanentcap3 no reset/newpurpose justification; sourcebound exactacceptedruntime equivalence reuse, no duplicate rerun. FullcanonicalClockr2G1 E1-E25/E24/copies/before/qualification/independentimplementation/fixed/native/actualvendor/freshfullacceptance/rootreconcile/inventory and usablemethod/prerequisite gates preserved. ConditionalAPPROVED proposal or exactboundedREVISE finalauthor3, no runtime/repair/adoption/callerformalclosure.",
+    "Independently recheck full original proposal, notonlyR1. SixpriorR1 requirements andnewL1-L8 exactlifetime: undispatched Resetdecision one-shot/id/revision/epoch/Cancel/route/accountdisposal beforedispatch, issuedaccount command persists sameaccountacrossrouteunmount existingcontroller ownership. Accountinvalid queuedrefusal vs staleresultUI fences; no newunderlockcancellation policy/sharedpaths. WAL/EndissuedAt/pending revisionexception/recorded-ID no-op/expiry precedence exactacceptedsemantics and oldAbytesdeniedintent attribution vs naturalreconciliation timeequivalentcontrol. Draft nowmaynotoverpromise oldUIcallbackstops issuedbusiness. APPROVEDfullconditionaldocproposalorboundedREVISE finalauthor3; noownerquestionunlessactualcontradictoryexplicitauthority, no author/review4/no nativecap reset."
+  ]
+}

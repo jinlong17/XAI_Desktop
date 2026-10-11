@@ -44,9 +44,10 @@ Hard rules (do not violate):
 - Future iPhone / iPad / Apple Watch / Android / browser-extension surfaces live in
   `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md` as planning-only `future_surfaces`;
   never classify them as active module targets without operator confirmation.
-- `desktop-next` / `desktop-plugin-next` / `release/desktop/<version>` are defined
-  but **not yet created**; creating them (and anything touching `dev`) needs explicit
-  operator confirmation.
+- `desktop-plugin-next` already exists. `desktop-next` /
+  `release/desktop/<version>` are defined but **not yet created**; creating them,
+  advancing to `dev`, or starting a release branch needs explicit operator
+  confirmation.
 - Same-Web-line deploy/CSP changes (`apps/web/wrangler.toml`, `apps/web/public/_headers`)
   follow the ADR-0008 extension protocol + feature-plan/review — NOT the D3 gate.
 

@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * CP1..CP8 — CallbackPage tests (test.md §5.3 P3)
  *
@@ -43,20 +44,20 @@ beforeEach(() => {
 describe("CallbackPage", () => {
   it("CP1: valid state path — flips pref to true", async () => {
     const pending = await startOAuth("notion");
-    mockSearchParams = new URLSearchParams({ state: pending.state });
+    mockSearchParams = new URLSearchParams({ state: pending.state, code: "fixture-code" });
 
     render(<CallbackPage />);
     // Wait for the useEffect to fire
     await act(async () => {});
 
-    const raw = localStorage.getItem("xai_pref_integrations_connected_notion");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_pref_integrations_connected_notion"));
     expect(raw).toBe("true");
   });
 
   it("CP2: valid state path — emits web:settings:integration-connected exactly once", async () => {
     const emitSpy = vi.spyOn(eventBus, "emitWebEvent");
     const pending = await startOAuth("gcal");
-    mockSearchParams = new URLSearchParams({ state: pending.state });
+    mockSearchParams = new URLSearchParams({ state: pending.state, code: "fixture-code" });
 
     render(<CallbackPage />);
     await act(async () => {});
@@ -70,7 +71,7 @@ describe("CallbackPage", () => {
 
   it("CP3: valid state path — clears sessionStorage entry", async () => {
     const pending = await startOAuth("linear");
-    mockSearchParams = new URLSearchParams({ state: pending.state });
+    mockSearchParams = new URLSearchParams({ state: pending.state, code: "fixture-code" });
     expect(sessionStorage.getItem("xai_oauth_pending_linear")).not.toBeNull();
 
     render(<CallbackPage />);
@@ -81,7 +82,7 @@ describe("CallbackPage", () => {
 
   it("CP4: valid state path — displays success banner (oauth.cb.success)", async () => {
     const pending = await startOAuth("notion");
-    mockSearchParams = new URLSearchParams({ state: pending.state });
+    mockSearchParams = new URLSearchParams({ state: pending.state, code: "fixture-code" });
 
     render(<CallbackPage />);
     await act(async () => {});
@@ -92,7 +93,7 @@ describe("CallbackPage", () => {
   it("CP5: valid state path — navigates back after 2000ms (fake timers)", async () => {
     vi.useFakeTimers();
     const pending = await startOAuth("notion");
-    mockSearchParams = new URLSearchParams({ state: pending.state });
+    mockSearchParams = new URLSearchParams({ state: pending.state, code: "fixture-code" });
 
     render(<CallbackPage />);
     await act(async () => {});
@@ -117,7 +118,7 @@ describe("CallbackPage", () => {
     render(<CallbackPage />);
     await act(async () => {});
 
-    expect(localStorage.getItem("xai_pref_integrations_connected_notion")).toBeNull();
+    expect(localStorage.getItem(accountScope.physicalKey("xai_pref_integrations_connected_notion"))).toBeNull();
     const calls = emitSpy.mock.calls.filter(
       (c) => c[0] === "web:settings:integration-connected",
     );
@@ -142,4 +143,14 @@ describe("CallbackPage", () => {
     expect(t("oauth.cb.invalid")).toBe("授权状态无效 — 请重新尝试");
     expect(t("oauth.cb.cancelled")).toBe("授权已取消");
   });
+});
+
+
+it("rejects an otherwise valid owner-bound callback when the authorization code is missing", async () => {
+  const pending = await startOAuth("notion");
+  mockSearchParams = new URLSearchParams({ state: pending.state });
+  render(<CallbackPage />);
+  await act(async () => {});
+  expect(screen.getByRole("alert")).toHaveTextContent("Invalid authorization state");
+  expect(localStorage.getItem(accountScope.physicalKey("xai_pref_integrations_connected_notion"))).toBeNull();
 });

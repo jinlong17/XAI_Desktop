@@ -14,6 +14,7 @@ function makeCard(
   overrides: Partial<{
     labels: string[];
     members: string[];
+    priority: "urgent" | "high" | "medium" | "low";
     due: string;
     dueDate: string;
     dueLate: boolean;
@@ -62,6 +63,7 @@ describe("applyFilter", () => {
     const filter: FilterState = {
       labels: new Set(["urgent"]),
       members: new Set(),
+      priorities: new Set(),
       dueRange: "all",
     };
     const result = applyFilter(makeLists(cards), filter, TODAY);
@@ -77,6 +79,7 @@ describe("applyFilter", () => {
     const filter: FilterState = {
       labels: new Set(["urgent", "low"]),
       members: new Set(),
+      priorities: new Set(),
       dueRange: "all",
     };
     const result = applyFilter(makeLists(cards), filter, TODAY);
@@ -94,6 +97,7 @@ describe("applyFilter", () => {
     const filter: FilterState = {
       labels: new Set(),
       members: new Set(["alice"]),
+      priorities: new Set(),
       dueRange: "all",
     };
     const result = applyFilter(makeLists(cards), filter, TODAY);
@@ -110,6 +114,7 @@ describe("applyFilter", () => {
     const filter: FilterState = {
       labels: new Set(["urgent"]),
       members: new Set(["alice"]),
+      priorities: new Set(),
       dueRange: "all",
     };
     const result = applyFilter(makeLists(cards), filter, TODAY);
@@ -126,6 +131,7 @@ describe("applyFilter", () => {
     const filter: FilterState = {
       labels: new Set(),
       members: new Set(),
+      priorities: new Set(),
       dueRange: "overdue",
     };
     const result = applyFilter(makeLists(cards), filter, TODAY);
@@ -143,6 +149,7 @@ describe("applyFilter", () => {
     const filter: FilterState = {
       labels: new Set(),
       members: new Set(),
+      priorities: new Set(),
       dueRange: "today",
     };
     const result = applyFilter(makeLists(cards), filter, TODAY);
@@ -164,6 +171,7 @@ describe("applyFilter", () => {
     const filter: FilterState = {
       labels: new Set(),
       members: new Set(),
+      priorities: new Set(),
       dueRange: "week",
     };
     const result = applyFilter(makeLists(cards), filter, TODAY);
@@ -185,6 +193,7 @@ describe("applyFilter", () => {
     const filter: FilterState = {
       labels: new Set(["urgent"]),
       members: new Set(),
+      priorities: new Set(),
       dueRange: "all",
     };
     const result = applyFilter(makeLists(cards), filter, TODAY);
@@ -197,6 +206,7 @@ describe("applyFilter", () => {
     const filter: FilterState = {
       labels: new Set(["urgent"]),
       members: new Set(),
+      priorities: new Set(),
       dueRange: "all",
     };
     const lists = makeLists(cards);
@@ -211,6 +221,7 @@ describe("applyFilter", () => {
     const filter: FilterState = {
       labels: new Set(["urgent"]),
       members: new Set(),
+      priorities: new Set(),
       dueRange: "all",
     };
     const lists = makeLists(cards);
@@ -218,5 +229,45 @@ describe("applyFilter", () => {
     applyFilter(lists, filter, TODAY);
     // Source cards array unchanged
     expect(lists[0]!.cards.length).toBe(originalLength);
+  });
+});
+
+describe("applyFilter — priority facet (W2)", () => {
+  test("FIL-P1 selected priority passes only matching cards; no-priority cards fail", () => {
+    const cards = [
+      makeCard("c1", { priority: "high" }),
+      makeCard("c2", { priority: "low" }),
+      makeCard("c3"),
+    ];
+    const filter: FilterState = {
+      labels: new Set(),
+      members: new Set(),
+      priorities: new Set(["high"]),
+      dueRange: "all",
+    };
+    const result = applyFilter(makeLists(cards), filter, TODAY);
+    expect(result.flatMap((l) => l.cards).map((c) => c.id)).toEqual(["c1"]);
+  });
+
+  test("FIL-P2 multiple priorities OR within the facet", () => {
+    const cards = [
+      makeCard("c1", { priority: "high" }),
+      makeCard("c2", { priority: "low" }),
+      makeCard("c3", { priority: "urgent" }),
+    ];
+    const filter: FilterState = {
+      labels: new Set(),
+      members: new Set(),
+      priorities: new Set(["high", "urgent"]),
+      dueRange: "all",
+    };
+    const result = applyFilter(makeLists(cards), filter, TODAY);
+    expect(result.flatMap((l) => l.cards).map((c) => c.id)).toEqual(["c1", "c3"]);
+  });
+
+  test("FIL-P3 empty priorities Set is identity for the facet", () => {
+    const cards = [makeCard("c1", { priority: "high" }), makeCard("c2")];
+    const result = applyFilter(makeLists(cards), EMPTY_FILTER, TODAY);
+    expect(result.flatMap((l) => l.cards)).toHaveLength(2);
   });
 });

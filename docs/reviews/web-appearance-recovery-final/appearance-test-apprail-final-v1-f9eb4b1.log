@@ -1,0 +1,390 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+mode=appearance-test
+suffix=apprail-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc node docs/reviews/web-appearance-recovery-final/verify-packages.mjs f9eb4b1 appearance-test apprail-final-v1
+output_dir=docs/reviews/web-appearance-recovery-final
+runner_checkout_head=9aeec39ecc3d9da70837e97b9660837fe887b765
+runner_sha256=8f9fb90f38717515c9ba9606b4f99c643d61c0523a07adbbe071982adb864e80
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/plugin-web-settings-appearance (packages/xai-web-settings-appearance) kind=vitest script=test: "vitest run"
+archive_file_sha256 packages/xai-web-settings-appearance/package.json=41cdc7c0ba6af12b4a0c267a68a70f0e82e78f4053f25c7ba835e3a6e1523e39 packages/xai-web-settings-appearance/tsconfig.json=8264895f6ff844446cf042a6ea81db1464d3187dd69095537b215e6634a6c9c7 packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/eslint.config.js=e5fd80cab496575b6978b55d18244da722c48ad0e917a1a1149337612ae14bb3
+package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 web_tree=61ddf71751eaa9f1a456897ecb7fbe23e708be4b
+node_modules_links third_party=449 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-settings-shell->packages/plugin-web-settings-shell @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus @repo/xai-web-shell->packages/xai-web-shell
+tsconfig_extends_checked=46 unresolved=none own=@repo/plugin-web-settings-appearance:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-2YGm0y/packages/xai-web-settings-appearance/final-appearance-test.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-2YGm0y/.final-guard/report-appearance-test.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+tool_exit=0
+harness_checks=PASS (18/18)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-2YGm0y/packages/xai-web-settings-appearance
+
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-1: renders 7 SettingRow elements 73ms
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-2: 3 theme cards + 6 hue swatches + 6 bg-tone cards + 4 rail-pos cards visible 19ms
+ ✓ src/__tests__/AppearancePane.focus-ring.test.tsx > F-APP-1 Font scale slider focus ring > styles.css has one top-level rule for the focused Font scale slider that declares only the ring 2ms
+ ✓ src/__tests__/AppearancePane.focus-ring.test.tsx > F-APP-1 Font scale slider focus ring > the ring equals the global input:focus-visible ring in tokens.css 0ms
+ ✓ src/__tests__/AppearancePane.focus-ring.test.tsx > F-APP-1 Font scale slider focus ring > its selector outranks every layout.css rule that sets the outline of the range input in .slider-row 1ms
+ ✓ src/__tests__/AppearancePane.focus-ring.test.tsx > F-APP-1 Font scale slider focus ring > without :focus-visible the selector reaches exactly the Font scale slider 119ms
+ ✓ src/__tests__/AppearancePane.selected-focus.test.tsx > F-APP-2 selected accent swatch focus ring > styles.css has one top-level rule for the focused selected swatch: the global ring further out, the selection ring as a box-shadow 2ms
+ ✓ src/__tests__/AppearancePane.selected-focus.test.tsx > F-APP-2 selected accent swatch focus ring > its outline is the global button:focus-visible ring, and its box-shadow repeats the selection ring inside it 4ms
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-3: theme card matching current data-theme has .active class 23ms
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-4: hue swatch with |accentHue - p.hue| < 3 has .active class 8ms
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-5: bg-tone card matching current xai_bg_tone has .active class 24ms
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-6: rail-pos card matching current xai_rail_pos has .active class 6ms
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-7: hue slider value reflects accentHue; slider-val shows rounded degrees 6ms
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-8: font slider value reflects fontScale; slider-val shows rounded % 46ms
+ ✓ src/__tests__/AppearancePane.selected-focus.test.tsx > F-APP-2 selected accent swatch focus ring > its selector outranks every rule that sets a swatch's outline or box-shadow; none of those uses !important or sets a box-shadow 126ms
+ ✓ src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-1: clicking Dark theme card sets data-theme='dark' 261ms
+ ✓ src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Retry all (replaces Save & apply) > AC-SAVE-1: with no settled unsuccessful draft Retry all is rendered disabled (aria-disabled only), no 'Save & apply' or 'Saved', and one activation makes zero storage attempts 234ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA1 clean: rendered with aria-disabled="true" (never disabled), no description, a Tab stop between the font slider and Reset; activation is inert 262ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A3 the controller and its views > AC1 a fresh mount displays and applies the stored values with zero writes (ruling 3) 267ms
+ ✓ src/__tests__/AppearancePane.selected-focus.test.tsx > F-APP-2 selected accent swatch focus ring > without :focus-visible the selector reaches exactly the selected swatch, whichever is selected 155ms
+ ✓ src/__tests__/AppearancePane.selected-focus.test.tsx > batch 49 same-class audit: pane controls and the Topbar status > clean pane: the only outline rules at or above the global ring are the two known roots, each outranked by its pane fix 37ms
+ ✓ src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-2: clicking Compact density sets data-density='compact' 61ms
+ ✓ src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-3: dragging hue slider to 220 writes localStorage 43ms
+ ✓ src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-4: clicking Ocean swatch writes xai_accent_hue=230 51ms
+ ✓ src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Retry all (replaces Save & apply) > AC-SAVE-2: with a failed draft Retry all is enabled and one activation re-attempts exactly the failed field once; no Saved claim without a genuine latest success 142ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA2 pending only (write held behind the real per-key lock): disabled, not described, inert 132ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A3 the controller and its views > AC2 a pane edit is visible to every view of the same controller in the same frame, and vice versa 133ms
+ ✓ src/__tests__/AppearancePane.selected-focus.test.tsx > batch 49 same-class audit: pane controls and the Topbar status > after a failed write (recovery Retry/Discard, Retry all enabled, Export, Discard all, Topbar status) nothing else masks the ring 124ms
+ ✓ src/__tests__/AppearancePane.selected-focus.test.tsx > batch 49 same-class audit: pane controls and the Topbar status > with an unreadable stored value (Reload only) nothing else masks the ring 38ms
+ ✓ src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-1: confirm=true → six verified absences, DOM defaults, and xai_pref_lang bytes unchanged 107ms
+ ✓ src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-2: Reset → six reset intents, zero preference-changed emissions, language untouched 87ms
+ ✓ src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-5: clicking Lavender bg-tone card writes bgTone + accentHue=295 94ms
+ ✓ src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-6: clicking Right rail-position card writes xai_rail_pos='right' 46ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA3 source only (malformed bytes): disabled and inert; nothing is rewritten 105ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA4 one failed field: enabled (no aria-disabled), described by the count line 83ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A3 the controller and its views > AC3 the pane emits no web:settings:preference-changed and dispatches no StorageEvent 117ms
+ ✓ src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-7: setting font slider to 0.85 applies font-size 34ms
+ ✓ src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-8: choosing 简体中文 persists "zh" and marks it selected; no DOM apply 110ms
+ ✓ src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-3: confirm=false → zero storage attempts and no state change 98ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_lang="\"fr\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 122ms
+ ✓ src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-4: Reset re-paints DOM — data-theme='light', data-density='comfortable' 85ms
+ ✓ src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-5: calling Reset twice yields the same end state (idempotent) 91ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA5 ZH: label 全部重试 in every state and the ZH count line for one and two fields 172ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches 3ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches 1ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches 2ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches 0ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches 1ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches 0ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-7: appearanceDefaults does NOT contain a lang key 1ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-8: appearanceDefaults is frozen 0ms
+ ✓ src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs() 1ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_lang="en" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 135ms
+ ✓ src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-6: confirm called EXACTLY ONCE with the truthful text (no double-prompt) 77ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_lang="" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 106ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA6 an open pass with E empty: disabled, described by the in-flight line, inert; it settles to disabled with no description 145ms
+ ✓ src/__tests__/constants.test.ts > BG_TONES > AC-CONST-1: length=6 and correct id order 1ms
+ ✓ src/__tests__/constants.test.ts > BG_TONES > AC-CONST-4: hues match source lines 498-503 0ms
+ ✓ src/__tests__/constants.test.ts > BG_TONES > AC-CONST-6: every entry has non-empty en and zh name 0ms
+ ✓ src/__tests__/constants.test.ts > BG_TONES > AC-CONST-7: array is frozen and first element is frozen 0ms
+ ✓ src/__tests__/constants.test.ts > HUE_PRESETS > AC-CONST-2: length=6 and correct id order 0ms
+ ✓ src/__tests__/constants.test.ts > HUE_PRESETS > AC-CONST-3: hues match source (verbatim) 0ms
+ ✓ src/__tests__/constants.test.ts > HUE_PRESETS > AC-CONST-6: every entry has non-empty en and zh name 0ms
+ ✓ src/__tests__/constants.test.ts > RAIL_POSITIONS > AC-CONST-5: length=4 and correct id order 0ms
+ ✓ src/__tests__/constants.test.ts > RAIL_POSITIONS > AC-CONST-6: every entry has non-empty en and zh label 0ms
+ ✓ src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-1: lang='zh' shows Chinese strings in segmented controls 142ms
+ ✓ src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-2: lang='zh' renders Appearance i18n keys (accent / bg / sidebar) 17ms
+ ✓ src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-3: BG_TONES render zh names with lang='zh'; switch to en re-renders to en names 21ms
+ ✓ src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-4: the pane-local Reset shows 恢复默认 in ZH (CP-APPEARANCE-01: no SettingsFooter) 28ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_lang="null" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 121ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_lang="1" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 101ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_lang="\"EN\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 85ms
+ ✓ src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-1: id === 'appearance' 1ms
+ ✓ src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-2: i18nKey === 'settings.appearance' 0ms
+ ✓ src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-3: icon === 'sun' (valid WebShellIconName matching chassis placeholder) 0ms
+ ✓ src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-4: render({ lang: 'en' }) returns a React element for <AppearancePane lang='en' /> 0ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA7 an open pass plus a newly failed field: enabled again; the second activation retries only that field 223ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_theme="\"neon\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 81ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA8 set drafts: exactly one write per member in display order and none elsewhere 156ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_theme="dark" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 78ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_theme="\"Dark\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 74ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA9 a background choice with both writes failing is two members; with only the tone failing it is one 134ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA10 failed Reset items: one removal each, never a write; a reset-only pass ends with 'Defaults restored.' 74ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_theme="123" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 72ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_density="\"cozy\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 74ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA11 a valid edit over malformed bytes is refused again and kept; a conflict is kept and never overwritten 113ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA12 an uncertain write reconciles with exactly one total write 75ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_density="{}" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 74ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_density="compact" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 73ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA13 a failed predecessor with a queued latest: the predecessor once, then the latest's own attempt 112ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="0" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 74ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="-1" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 74ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA14 exclusions: pending, source-only and draft-free fields get zero attempts 153ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="null" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 73ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="\"big\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 74ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="2" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 74ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA15 no duplicates: a same-turn double activation, an activation while pending and a per-field Retry during a pass add zero attempts 147ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="0.5" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 85ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="\"1\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 74ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA16 a Retry all during a pending per-field Retry skips that field 136ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_accent_hue="abc" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 87ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_accent_hue="Infinity" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 74ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 attribution and late completions > RA17 a pane edit supersedes a held member; the old completion never makes the newer choice look saved 150ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 attribution and late completions > RA18 Discard during an open pass detaches the member: its late completion never writes and no success is claimed 124ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_accent_hue="-5" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 71ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_accent_hue="361" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 73ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_accent_hue="12.5" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 75ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_rail_pos="diagonal" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 73ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 attribution and late completions > RA19 Discard all during an open pass closes it, focus goes to Reset, late completions write nothing 188ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.3 attribution and late completions > RA20 unmount during an open pass detaches the members: the late completion writes nothing 88ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_rail_pos="Left" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 73ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_rail_pos="" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 74ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus > RA21 rule 1 wins while a pass is open even when a member already failed again; then rule 3 127ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_rail_pos=" left" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 72ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_bg_tone="sage" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 74ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus > RA22 ZH lines: in flight 正在重试未保存的外观更改…, then 外观设置已保存。 90ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_bg_tone="neon" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 73ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_bg_tone="Mist" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 76ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus > RA23 rule 2: a failed Export while a draft exists shows the export line; the next pane action clears it; never shown once clean 176ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_bg_tone="" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 74ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC5 a throwing read is source-only too; Reload of repaired bytes clears the alert without a saved claim 73ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus > RA24 focus stays on Retry all when a full-success pass disables it (never <body>, never Reset) 73ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus > RA25 a partial result keeps focus on the enabled button, described by the count line 112ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC6 the range bounds submit exact strict-domain bytes; each slider change is one edit and the final bytes equal the last value 72ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus > RA26 a member held behind the lock fails on release: the disabled button becomes enabled, focus stays, the count line describes it 94ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx > RA27 no Retry all activation writes any key outside the seven Appearance keys 102ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A5 protection > AC7 the Topbar status renders nothing while clean or only pending; a settled failure renders a named button that calls onReview exactly once 116ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A5 protection > AC8 the Topbar status in Chinese is named 外观更改未保存，前往设置查看。 with the visible text 未保存 71ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A5 protection > AC9 beforeunload warns while a draft exists (pending or failed) with zero storage attempts, and is removed afterwards 105ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A5 protection > AC10 the sign-out step: no drafts → true without a prompt or storage attempt; Cancel → false and everything kept; OK → drafts discarded with zero writes 75ms
+ ✓ src/__tests__/AppearanceController.test.tsx > A5 protection > AC11 the sign-out prompt follows the displayed language (ZH) 55ms
+ ✓ src/__tests__/AppearanceController.test.tsx > recovery actions and export > AC12 Discard rereads only its field with zero writes, returns display and document to the committed value and focuses the field's selected control 110ms
+ ✓ src/__tests__/AppearanceController.test.tsx > recovery actions and export > AC13 Reload refuses to erase the same field's actual draft; a successful Retry returns focus from the unmounting block to the field's control 111ms
+ ✓ src/__tests__/AppearanceController.test.tsx > recovery actions and export > AC14 Export is memory-only (zero storage attempts under total denial) and uses the set/reset envelope; one URL created and revoked; the anchor removed 145ms
+ ✓ src/__tests__/AppearanceController.test.tsx > recovery actions and export > AC15 Reset never reads, writes or removes xai_pref_lang and keeps every other key byte-identical 54ms
+ ✓ src/__tests__/AppearanceController.test.tsx > recovery actions and export > AC16 a missing Web Lock capability refuses every write (never unfenced) with failed feedback 93ms
+ ✓ src/__tests__/AppearanceController.test.tsx > recovery actions and export > AC17 a success while no pane is mounted makes no success claim when a pane mounts later 53ms
+
+ Test Files  11 passed (11)
+      Tests  137 passed (137)
+   Start at  07:53:50
+   Duration  5.47s (transform 606ms, setup 820ms, collect 3.23s, tests 10.56s, environment 3.77s, prepare 655ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-2YGm0y/.final-guard/report-appearance-test.json
+
+---- stderr ----
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-7: appearanceDefaults does NOT contain a lang key
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-8: appearanceDefaults is frozen
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs()
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+
+---- runner summary ----
+harness PASS archive package.json script "test" is "vitest run" (found "vitest run")
+harness PASS JSON report parsed
+harness PASS reported test files equal the expected set (11 files, from the archive by the package include)
+harness PASS required test file ran: src/__tests__/AppearanceController.test.tsx
+harness PASS required test file ran: src/__tests__/AppearanceRetryAll.test.tsx
+harness PASS required test file ran: src/__tests__/AppearancePane.focus-ring.test.tsx
+harness PASS required test file ran: src/__tests__/AppearancePane.selected-focus.test.tsx
+harness PASS required test file ran: src/__tests__/AppearancePane.save-reset.test.tsx
+harness PASS required test file ran: src/__tests__/AppearancePane.live-binding.test.tsx
+harness PASS required test file ran: src/__tests__/AppearancePane.rendering.test.tsx
+harness PASS required test file ran: src/__tests__/AppearancePane.bilingual.test.tsx
+harness PASS required test file ran: src/__tests__/appearanceDefaults.test.ts
+harness PASS required test file ran: src/__tests__/constants.test.ts
+harness PASS required test file ran: src/__tests__/appearancePane.registry.test.ts
+harness PASS package config in effect (environment jsdom, globals true, setupFiles [vitest.setup.ts], include ["src/__tests__/**/*.{test,spec}.{ts,tsx}"], root = archive package)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (11 present of 11 listed)
+harness PASS no test-file suite error
+required_tests_absent_from_archive=none
+json_report=success=true numTotalTestSuites=32 numTotalTests=137 numPassedTests=137 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals files=11 tests=137 passed=137 failed=0 other=0 suite_errors=0 unhandled_error_lines=0
+file src/__tests__/AppearanceController.test.tsx status=passed tests=49 passed=49 failed=0
+file src/__tests__/appearanceDefaults.test.ts status=passed tests=9 passed=9 failed=0
+file src/__tests__/AppearancePane.bilingual.test.tsx status=passed tests=4 passed=4 failed=0
+file src/__tests__/AppearancePane.focus-ring.test.tsx status=passed tests=4 passed=4 failed=0
+file src/__tests__/AppearancePane.live-binding.test.tsx status=passed tests=8 passed=8 failed=0
+file src/__tests__/appearancePane.registry.test.ts status=passed tests=4 passed=4 failed=0
+file src/__tests__/AppearancePane.rendering.test.tsx status=passed tests=8 passed=8 failed=0
+file src/__tests__/AppearancePane.save-reset.test.tsx status=passed tests=8 passed=8 failed=0
+file src/__tests__/AppearancePane.selected-focus.test.tsx status=passed tests=7 passed=7 failed=0
+file src/__tests__/AppearanceRetryAll.test.tsx status=passed tests=27 passed=27 failed=0
+file src/__tests__/constants.test.ts status=passed tests=9 passed=9 failed=0
+case 001 PASSED | src/__tests__/AppearanceController.test.tsx > A3 the controller and its views AC1 a fresh mount displays and applies the stored values with zero writes (ruling 3)
+case 002 PASSED | src/__tests__/AppearanceController.test.tsx > A3 the controller and its views AC2 a pane edit is visible to every view of the same controller in the same frame, and vice versa
+case 003 PASSED | src/__tests__/AppearanceController.test.tsx > A3 the controller and its views AC3 the pane emits no web:settings:preference-changed and dispatches no StorageEvent
+case 004 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_lang="\"fr\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 005 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_lang="en" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 006 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_lang="" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 007 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_lang="null" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 008 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_lang="1" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 009 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_lang="\"EN\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 010 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_theme="\"neon\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 011 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_theme="dark" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 012 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_theme="\"Dark\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 013 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_theme="123" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 014 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_density="\"cozy\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 015 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_density="{}" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 016 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_density="compact" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 017 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_font_scale="0" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 018 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_font_scale="-1" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 019 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_font_scale="null" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 020 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_font_scale="\"big\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 021 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_font_scale="2" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 022 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_font_scale="0.5" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 023 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_pref_font_scale="\"1\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 024 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_accent_hue="abc" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 025 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_accent_hue="Infinity" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 026 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_accent_hue="-5" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 027 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_accent_hue="361" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 028 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_accent_hue="12.5" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 029 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_rail_pos="diagonal" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 030 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_rail_pos="Left" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 031 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_rail_pos="" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 032 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_rail_pos=" left" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 033 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_bg_tone="sage" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 034 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_bg_tone="neon" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 035 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_bg_tone="Mist" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 036 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC4 xai_bg_tone="" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 037 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC5 a throwing read is source-only too; Reload of repaired bytes clears the alert without a saved claim
+case 038 PASSED | src/__tests__/AppearanceController.test.tsx > A6 strict domains AC6 the range bounds submit exact strict-domain bytes; each slider change is one edit and the final bytes equal the last value
+case 039 PASSED | src/__tests__/AppearanceController.test.tsx > A5 protection AC7 the Topbar status renders nothing while clean or only pending; a settled failure renders a named button that calls onReview exactly once
+case 040 PASSED | src/__tests__/AppearanceController.test.tsx > A5 protection AC8 the Topbar status in Chinese is named 外观更改未保存，前往设置查看。 with the visible text 未保存
+case 041 PASSED | src/__tests__/AppearanceController.test.tsx > A5 protection AC9 beforeunload warns while a draft exists (pending or failed) with zero storage attempts, and is removed afterwards
+case 042 PASSED | src/__tests__/AppearanceController.test.tsx > A5 protection AC10 the sign-out step: no drafts → true without a prompt or storage attempt; Cancel → false and everything kept; OK → drafts discarded with zero writes
+case 043 PASSED | src/__tests__/AppearanceController.test.tsx > A5 protection AC11 the sign-out prompt follows the displayed language (ZH)
+case 044 PASSED | src/__tests__/AppearanceController.test.tsx > recovery actions and export AC12 Discard rereads only its field with zero writes, returns display and document to the committed value and focuses the field's selected control
+case 045 PASSED | src/__tests__/AppearanceController.test.tsx > recovery actions and export AC13 Reload refuses to erase the same field's actual draft; a successful Retry returns focus from the unmounting block to the field's control
+case 046 PASSED | src/__tests__/AppearanceController.test.tsx > recovery actions and export AC14 Export is memory-only (zero storage attempts under total denial) and uses the set/reset envelope; one URL created and revoked; the anchor removed
+case 047 PASSED | src/__tests__/AppearanceController.test.tsx > recovery actions and export AC15 Reset never reads, writes or removes xai_pref_lang and keeps every other key byte-identical
+case 048 PASSED | src/__tests__/AppearanceController.test.tsx > recovery actions and export AC16 a missing Web Lock capability refuses every write (never unfenced) with failed feedback
+case 049 PASSED | src/__tests__/AppearanceController.test.tsx > recovery actions and export AC17 a success while no pane is mounted makes no success claim when a pane mounts later
+case 050 PASSED | src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual AC-I18N-1: lang='zh' shows Chinese strings in segmented controls
+case 051 PASSED | src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual AC-I18N-2: lang='zh' renders Appearance i18n keys (accent / bg / sidebar)
+case 052 PASSED | src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual AC-I18N-3: BG_TONES render zh names with lang='zh'; switch to en re-renders to en names
+case 053 PASSED | src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual AC-I18N-4: the pane-local Reset shows 恢复默认 in ZH (CP-APPEARANCE-01: no SettingsFooter)
+case 054 PASSED | src/__tests__/AppearancePane.focus-ring.test.tsx > F-APP-1 Font scale slider focus ring styles.css has one top-level rule for the focused Font scale slider that declares only the ring
+case 055 PASSED | src/__tests__/AppearancePane.focus-ring.test.tsx > F-APP-1 Font scale slider focus ring the ring equals the global input:focus-visible ring in tokens.css
+case 056 PASSED | src/__tests__/AppearancePane.focus-ring.test.tsx > F-APP-1 Font scale slider focus ring its selector outranks every layout.css rule that sets the outline of the range input in .slider-row
+case 057 PASSED | src/__tests__/AppearancePane.focus-ring.test.tsx > F-APP-1 Font scale slider focus ring without :focus-visible the selector reaches exactly the Font scale slider
+case 058 PASSED | src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding AC-LIVE-1: clicking Dark theme card sets data-theme='dark'
+case 059 PASSED | src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding AC-LIVE-2: clicking Compact density sets data-density='compact'
+case 060 PASSED | src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding AC-LIVE-3: dragging hue slider to 220 writes localStorage
+case 061 PASSED | src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding AC-LIVE-4: clicking Ocean swatch writes xai_accent_hue=230
+case 062 PASSED | src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding AC-LIVE-5: clicking Lavender bg-tone card writes bgTone + accentHue=295
+case 063 PASSED | src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding AC-LIVE-6: clicking Right rail-position card writes xai_rail_pos='right'
+case 064 PASSED | src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding AC-LIVE-7: setting font slider to 0.85 applies font-size
+case 065 PASSED | src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding AC-LIVE-8: choosing 简体中文 persists "zh" and marks it selected; no DOM apply
+case 066 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-1: renders 7 SettingRow elements
+case 067 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-2: 3 theme cards + 6 hue swatches + 6 bg-tone cards + 4 rail-pos cards visible
+case 068 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-3: theme card matching current data-theme has .active class
+case 069 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-4: hue swatch with |accentHue - p.hue| < 3 has .active class
+case 070 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-5: bg-tone card matching current xai_bg_tone has .active class
+case 071 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-6: rail-pos card matching current xai_rail_pos has .active class
+case 072 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-7: hue slider value reflects accentHue; slider-val shows rounded degrees
+case 073 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-8: font slider value reflects fontScale; slider-val shows rounded %
+case 074 PASSED | src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Retry all (replaces Save & apply) AC-SAVE-1: with no settled unsuccessful draft Retry all is rendered disabled (aria-disabled only), no 'Save & apply' or 'Saved', and one activation makes zero storage attempts
+case 075 PASSED | src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Retry all (replaces Save & apply) AC-SAVE-2: with a failed draft Retry all is enabled and one activation re-attempts exactly the failed field once; no Saved claim without a genuine latest success
+case 076 PASSED | src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset AC-RESET-1: confirm=true → six verified absences, DOM defaults, and xai_pref_lang bytes unchanged
+case 077 PASSED | src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset AC-RESET-2: Reset → six reset intents, zero preference-changed emissions, language untouched
+case 078 PASSED | src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset AC-RESET-3: confirm=false → zero storage attempts and no state change
+case 079 PASSED | src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset AC-RESET-4: Reset re-paints DOM — data-theme='light', data-density='comfortable'
+case 080 PASSED | src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset AC-RESET-5: calling Reset twice yields the same end state (idempotent)
+case 081 PASSED | src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset AC-RESET-6: confirm called EXACTLY ONCE with the truthful text (no double-prompt)
+case 082 PASSED | src/__tests__/AppearancePane.selected-focus.test.tsx > F-APP-2 selected accent swatch focus ring styles.css has one top-level rule for the focused selected swatch: the global ring further out, the selection ring as a box-shadow
+case 083 PASSED | src/__tests__/AppearancePane.selected-focus.test.tsx > F-APP-2 selected accent swatch focus ring its outline is the global button:focus-visible ring, and its box-shadow repeats the selection ring inside it
+case 084 PASSED | src/__tests__/AppearancePane.selected-focus.test.tsx > F-APP-2 selected accent swatch focus ring its selector outranks every rule that sets a swatch's outline or box-shadow; none of those uses !important or sets a box-shadow
+case 085 PASSED | src/__tests__/AppearancePane.selected-focus.test.tsx > F-APP-2 selected accent swatch focus ring without :focus-visible the selector reaches exactly the selected swatch, whichever is selected
+case 086 PASSED | src/__tests__/AppearancePane.selected-focus.test.tsx > batch 49 same-class audit: pane controls and the Topbar status clean pane: the only outline rules at or above the global ring are the two known roots, each outranked by its pane fix
+case 087 PASSED | src/__tests__/AppearancePane.selected-focus.test.tsx > batch 49 same-class audit: pane controls and the Topbar status after a failed write (recovery Retry/Discard, Retry all enabled, Export, Discard all, Topbar status) nothing else masks the ring
+case 088 PASSED | src/__tests__/AppearancePane.selected-focus.test.tsx > batch 49 same-class audit: pane controls and the Topbar status with an unreadable stored value (Reload only) nothing else masks the ring
+case 089 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state RA1 clean: rendered with aria-disabled="true" (never disabled), no description, a Tab stop between the font slider and Reset; activation is inert
+case 090 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state RA2 pending only (write held behind the real per-key lock): disabled, not described, inert
+case 091 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state RA3 source only (malformed bytes): disabled and inert; nothing is rewritten
+case 092 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state RA4 one failed field: enabled (no aria-disabled), described by the count line
+case 093 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state RA5 ZH: label 全部重试 in every state and the ZH count line for one and two fields
+case 094 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state RA6 an open pass with E empty: disabled, described by the in-flight line, inert; it settles to disabled with no description
+case 095 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state RA7 an open pass plus a newly failed field: enabled again; the second activation retries only that field
+case 096 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts RA8 set drafts: exactly one write per member in display order and none elsewhere
+case 097 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts RA9 a background choice with both writes failing is two members; with only the tone failing it is one
+case 098 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts RA10 failed Reset items: one removal each, never a write; a reset-only pass ends with 'Defaults restored.'
+case 099 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts RA11 a valid edit over malformed bytes is refused again and kept; a conflict is kept and never overwritten
+case 100 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts RA12 an uncertain write reconciles with exactly one total write
+case 101 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts RA13 a failed predecessor with a queued latest: the predecessor once, then the latest's own attempt
+case 102 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts RA14 exclusions: pending, source-only and draft-free fields get zero attempts
+case 103 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts RA15 no duplicates: a same-turn double activation, an activation while pending and a per-field Retry during a pass add zero attempts
+case 104 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts RA16 a Retry all during a pending per-field Retry skips that field
+case 105 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 attribution and late completions RA17 a pane edit supersedes a held member; the old completion never makes the newer choice look saved
+case 106 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 attribution and late completions RA18 Discard during an open pass detaches the member: its late completion never writes and no success is claimed
+case 107 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 attribution and late completions RA19 Discard all during an open pass closes it, focus goes to Reset, late completions write nothing
+case 108 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.3 attribution and late completions RA20 unmount during an open pass detaches the members: the late completion writes nothing
+case 109 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus RA21 rule 1 wins while a pass is open even when a member already failed again; then rule 3
+case 110 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus RA22 ZH lines: in flight 正在重试未保存的外观更改…, then 外观设置已保存。
+case 111 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus RA23 rule 2: a failed Export while a draft exists shows the export line; the next pane action clears it; never shown once clean
+case 112 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus RA24 focus stays on Retry all when a full-success pass disables it (never <body>, never Reset)
+case 113 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus RA25 a partial result keeps focus on the enabled button, described by the count line
+case 114 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus RA26 a member held behind the lock fails on release: the disabled button becomes enabled, focus stays, the count line describes it
+case 115 PASSED | src/__tests__/AppearanceRetryAll.test.tsx > RA27 no Retry all activation writes any key outside the seven Appearance keys
+case 116 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches
+case 117 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches
+case 118 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches
+case 119 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches
+case 120 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches
+case 121 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches
+case 122 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-7: appearanceDefaults does NOT contain a lang key
+case 123 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-8: appearanceDefaults is frozen
+case 124 PASSED | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs()
+case 125 PASSED | src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry AC-REG-1: id === 'appearance'
+case 126 PASSED | src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry AC-REG-2: i18nKey === 'settings.appearance'
+case 127 PASSED | src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry AC-REG-3: icon === 'sun' (valid WebShellIconName matching chassis placeholder)
+case 128 PASSED | src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry AC-REG-4: render({ lang: 'en' }) returns a React element for <AppearancePane lang='en' />
+case 129 PASSED | src/__tests__/constants.test.ts > BG_TONES AC-CONST-1: length=6 and correct id order
+case 130 PASSED | src/__tests__/constants.test.ts > BG_TONES AC-CONST-4: hues match source lines 498-503
+case 131 PASSED | src/__tests__/constants.test.ts > BG_TONES AC-CONST-6: every entry has non-empty en and zh name
+case 132 PASSED | src/__tests__/constants.test.ts > BG_TONES AC-CONST-7: array is frozen and first element is frozen
+case 133 PASSED | src/__tests__/constants.test.ts > HUE_PRESETS AC-CONST-2: length=6 and correct id order
+case 134 PASSED | src/__tests__/constants.test.ts > HUE_PRESETS AC-CONST-3: hues match source (verbatim)
+case 135 PASSED | src/__tests__/constants.test.ts > HUE_PRESETS AC-CONST-6: every entry has non-empty en and zh name
+case 136 PASSED | src/__tests__/constants.test.ts > RAIL_POSITIONS AC-CONST-5: length=4 and correct id order
+case 137 PASSED | src/__tests__/constants.test.ts > RAIL_POSITIONS AC-CONST-6: every entry has non-empty en and zh label
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-2YGm0y/packages/xai-web-settings-appearance","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-2YGm0y/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["./vitest.setup.ts"],"include":["src/__tests__/**/*.{test,spec}.{ts,tsx}"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearanceController.tsx packages/xai-web-settings-appearance/src/internal/AppearanceActions.tsx packages/xai-web-settings-appearance/src/internal/AppearanceStatus.tsx packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts packages/xai-web-settings-appearance/src/constants.ts packages/xai-web-settings-appearance/src/appearanceDefaults.ts packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts
+pin_required_provenance_missing=none
+pin_modules=83 by package: packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-settings-appearance=21 packages/xai-web-shell=14

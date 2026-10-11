@@ -1,0 +1,803 @@
+{
+  "scope": "Web active localStorage literals; IDB/sessionStorage and open-ended keys documented in diagnosis",
+  "entries": [
+    {
+      "key": "xai:web:observability-consent",
+      "owner": "web-observability",
+      "scope": "device-local",
+      "source": "apps/web/src/observability/consent.ts",
+      "registered": false
+    },
+    {
+      "key": "xai_accent_hue",
+      "owner": "xai-web-settings-appearance",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:146",
+      "registered": true
+    },
+    {
+      "key": "xai_active_board",
+      "owner": "xai-web-board-core",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:221",
+      "registered": true
+    },
+    {
+      "key": "xai_ai_base_url",
+      "owner": "xai-web-ai-chat-real-llm-adapter",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:333",
+      "registered": true
+    },
+    {
+      "key": "xai_ai_convos",
+      "owner": "xai-web-ai-chat",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:295",
+      "registered": true
+    },
+    {
+      "key": "xai_ai_insights",
+      "owner": "xai-web-ai-chat",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:304",
+      "registered": true
+    },
+    {
+      "key": "xai_ai_model_default",
+      "owner": "xai-web-ai-chat-real-llm-adapter",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:342",
+      "registered": true
+    },
+    {
+      "key": "xai_ai_provider",
+      "owner": "xai-web-ai-chat-real-llm-adapter",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:324",
+      "registered": true
+    },
+    {
+      "key": "xai_ai_streaming",
+      "owner": "xai-web-ai-chat-real-llm-adapter",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:351",
+      "registered": true
+    },
+    {
+      "key": "xai_ai_voice",
+      "owner": "xai-web-ai-chat",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:313",
+      "registered": true
+    },
+    {
+      "key": "xai_bg_tone",
+      "owner": "xai-web-settings-appearance",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:164",
+      "registered": true
+    },
+    {
+      "key": "xai_bk_calendar_mode",
+      "owner": "plugin-web-bookkeeping",
+      "scope": "device-local",
+      "source": "packages/plugin-web-bookkeeping/src/internal/defaults.ts:18",
+      "registered": false
+    },
+    {
+      "key": "xai_bk_dash_order",
+      "owner": "plugin-web-bookkeeping",
+      "scope": "device-local",
+      "source": "packages/plugin-web-bookkeeping/src/internal/defaults.ts:15",
+      "registered": false
+    },
+    {
+      "key": "xai_bk_dash_split",
+      "owner": "plugin-web-bookkeeping",
+      "scope": "device-local",
+      "source": "packages/plugin-web-bookkeeping/src/internal/defaults.ts:16",
+      "registered": false
+    },
+    {
+      "key": "xai_bk_state_v2",
+      "owner": "plugin-web-bookkeeping",
+      "scope": "account-local",
+      "source": "packages/plugin-web-bookkeeping/src/internal/defaults.ts:14",
+      "registered": false
+    },
+    {
+      "key": "xai_bk_view",
+      "owner": "plugin-web-bookkeeping",
+      "scope": "device-local",
+      "source": "packages/plugin-web-bookkeeping/src/internal/defaults.ts:17",
+      "registered": false
+    },
+    {
+      "key": "xai_board_filter_by_id",
+      "owner": "xai-web-board-saved-filters",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:443",
+      "registered": true
+    },
+    {
+      "key": "xai_board_inbox",
+      "owner": "xai-web-board-core",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:250",
+      "registered": true
+    },
+    {
+      "key": "xai_board_panels",
+      "owner": "xai-web-board-core",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:241",
+      "registered": true
+    },
+    {
+      "key": "xai_board_view_by_id",
+      "owner": "xai-web-board-views row #8",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:431",
+      "registered": true
+    },
+    {
+      "key": "xai_board_workspaces",
+      "owner": "plugin-web-board-workspaces",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:232",
+      "registered": true
+    },
+    {
+      "key": "xai_boards_v2",
+      "owner": "xai-web-board-core",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:212",
+      "registered": true
+    },
+    {
+      "key": "xai_calendar_events",
+      "owner": "xai-web-calendar",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:985",
+      "registered": true
+    },
+    {
+      "key": "xai_calendar_view",
+      "owner": "xai-web-calendar",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:903",
+      "registered": true
+    },
+    {
+      "key": "xai_clock_style",
+      "owner": "xai-web-dashboard-widgets",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:268",
+      "registered": true
+    },
+    {
+      "key": "xai_clock_tz",
+      "owner": "xai-web-dashboard-widgets",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:277",
+      "registered": true
+    },
+    {
+      "key": "xai_countdowns",
+      "owner": "xai-web-countdown",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:375",
+      "registered": true
+    },
+    {
+      "key": "xai_dash_order",
+      "owner": "xai-web-dashboard-grid",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:259",
+      "registered": true
+    },
+    {
+      "key": "xai_dashboard_stickies",
+      "owner": "xai-web-dashboard-widgets",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:1001",
+      "registered": true
+    },
+    {
+      "key": "xai_dashboard_weather",
+      "owner": "xai-web-dashboard-widgets",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:1014",
+      "registered": true
+    },
+    {
+      "key": "xai_habits_state",
+      "owner": "xai-web-habits",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:400",
+      "registered": true
+    },
+    {
+      "key": "xai_matrix_state",
+      "owner": "xai-web-matrix",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:387",
+      "registered": true
+    },
+    {
+      "key": "xai_meditation_prefs",
+      "owner": "xai-web-meditation",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:455",
+      "registered": true
+    },
+    {
+      "key": "xai_metric_tracker_state_v1",
+      "owner": "plugin-web-metric-tracker",
+      "scope": "account-local",
+      "source": "packages/plugin-web-metric-tracker/src/internal/seed.ts:3",
+      "registered": false
+    },
+    {
+      "key": "xai_pet_id",
+      "owner": "xai-web-pet",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:193",
+      "registered": true
+    },
+    {
+      "key": "xai_pet_pos",
+      "owner": "xai-web-pet",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:184",
+      "registered": true
+    },
+    {
+      "key": "xai_pomodoro_sessions",
+      "owner": "xai-web-pomodoro",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:365",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_collab_default_share",
+      "owner": "xai-web-settings-rest",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:835",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_collab_mention_notify",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:844",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_collab_show_avatars",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:826",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_dashboard_header_note",
+      "owner": "xai-web-dashboard-grid",
+      "scope": "account-local",
+      "source": "packages/xai-web-dashboard-grid/src/DashHeader.tsx",
+      "registered": false
+    },
+    {
+      "key": "xai_pref_dashboard_header_note_x",
+      "owner": "xai-web-dashboard-grid",
+      "scope": "device-local",
+      "source": "packages/xai-web-dashboard-grid/src/DashHeader.tsx",
+      "registered": false
+    },
+    {
+      "key": "xai_pref_density",
+      "owner": "web-shell",
+      "scope": "device-local",
+      "source": "apps/web/src/App.tsx",
+      "registered": false
+    },
+    {
+      "key": "xai_pref_dt_holidays",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:673",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_dt_lunar",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:655",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_dt_start_week",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:646",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_dt_timezone",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:682",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_dt_week_numbers",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:664",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_features_board",
+      "owner": "xai-web-settings-features-panel",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:497",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_features_calendar",
+      "owner": "xai-web-settings-features-panel",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:515",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_features_dashboard",
+      "owner": "xai-web-settings-features-panel",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:506",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_features_habits",
+      "owner": "xai-web-settings-features-panel",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:542",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_features_matrix",
+      "owner": "xai-web-settings-features-panel",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:524",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_features_meditation",
+      "owner": "xai-web-settings-features-panel",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:551",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_features_pomodoro",
+      "owner": "xai-web-settings-features-panel",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:533",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_features_tasks",
+      "owner": "xai-web-settings-features-panel",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:488",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_font_scale",
+      "owner": "web-shell",
+      "scope": "device-local",
+      "source": "apps/web/src/App.tsx",
+      "registered": false
+    },
+    {
+      "key": "xai_pref_integrations_connected_gcal",
+      "owner": "xai-web-settings-rest",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:925",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_integrations_connected_linear",
+      "owner": "xai-web-settings-rest",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:934",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_integrations_connected_notion",
+      "owner": "xai-web-settings-rest",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:916",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_lang",
+      "owner": "web-shell",
+      "scope": "device-local",
+      "source": "apps/web/src/App.tsx",
+      "registered": false
+    },
+    {
+      "key": "xai_pref_more_add_to",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:808",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_date_recognition",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:718",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_default_date",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:754",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_default_list",
+      "owner": "xai-web-settings-rest",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:799",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_default_pri",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:781",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_default_rem_all",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:772",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_default_rem_due",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:763",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_default_tag",
+      "owner": "xai-web-settings-rest",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:790",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_launch_at_login",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:700",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_minimize_on_launch",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:709",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_overdue_at",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:817",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_remove_date_text",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:727",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_remove_tags",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:736",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_url_parse",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:745",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_more_win_type",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:691",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_notif_done_sound",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:583",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_notif_enabled",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:574",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_notif_push_habit",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:610",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_notif_push_pomo",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:601",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_notif_push_task",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:592",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_notif_quiet",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:619",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_notif_quiet_end",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:637",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_notif_quiet_start",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:628",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_pomodoro_custom_minutes",
+      "owner": "plugin-web-pomodoro",
+      "scope": "device-local",
+      "source": "packages/plugin-web-pomodoro/src/PomodoroModule.tsx",
+      "registered": false
+    },
+    {
+      "key": "xai_pref_pomodoro_display_style",
+      "owner": "plugin-web-pomodoro",
+      "scope": "device-local",
+      "source": "packages/plugin-web-pomodoro/src/PomodoroModule.tsx",
+      "registered": false
+    },
+    {
+      "key": "xai_pref_pomodoro_muted",
+      "owner": "plugin-web-pomodoro",
+      "scope": "device-local",
+      "source": "packages/plugin-web-pomodoro/src/PomodoroModule.tsx",
+      "registered": false
+    },
+    {
+      "key": "xai_pref_pomodoro_preset",
+      "owner": "plugin-web-pomodoro",
+      "scope": "device-local",
+      "source": "packages/plugin-web-pomodoro/src/PomodoroModule.tsx",
+      "registered": false
+    },
+    {
+      "key": "xai_pref_pomodoro_sound",
+      "owner": "plugin-web-pomodoro",
+      "scope": "device-local",
+      "source": "packages/plugin-web-pomodoro/src/PomodoroModule.tsx",
+      "registered": false
+    },
+    {
+      "key": "xai_pref_pomodoro_theme",
+      "owner": "plugin-web-pomodoro",
+      "scope": "device-local",
+      "source": "packages/plugin-web-pomodoro/src/PomodoroModule.tsx",
+      "registered": false
+    },
+    {
+      "key": "xai_pref_premium_started_at",
+      "owner": "xai-web-settings-rest",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:964",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_premium_tier",
+      "owner": "xai-web-settings-rest",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:953",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_smart_lists",
+      "owner": "xai-web-settings-rest",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:565",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_sticky_color",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:853",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_sticky_font",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:862",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_sticky_grid_spacing",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:889",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_sticky_pin_default",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:871",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_sticky_restore_size",
+      "owner": "xai-web-settings-rest",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:880",
+      "registered": true
+    },
+    {
+      "key": "xai_pref_theme",
+      "owner": "web-shell",
+      "scope": "device-local",
+      "source": "apps/web/src/App.tsx",
+      "registered": false
+    },
+    {
+      "key": "xai_pref_week_start",
+      "owner": "xai-web-calendar",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:418",
+      "registered": true
+    },
+    {
+      "key": "xai_rail_order",
+      "owner": "xai-web-shell",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:174",
+      "registered": true
+    },
+    {
+      "key": "xai_rail_pos",
+      "owner": "xai-web-settings-appearance",
+      "scope": "device-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:155",
+      "registered": true
+    },
+    {
+      "key": "xai_task_cols",
+      "owner": "xai-web-tasks",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:203",
+      "registered": true
+    },
+    {
+      "key": "xai_tt_categories_v2",
+      "owner": "plugin-web-time-tracker",
+      "scope": "account-local",
+      "source": "packages/plugin-web-time-tracker/src/internal/storage.ts:13",
+      "registered": false
+    },
+    {
+      "key": "xai_tt_category_collapsed_v1",
+      "owner": "plugin-web-time-tracker",
+      "scope": "account-local",
+      "source": "packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:126",
+      "registered": false
+    },
+    {
+      "key": "xai_tt_day_records_collapsed_v1",
+      "owner": "plugin-web-time-tracker",
+      "scope": "device-local",
+      "source": "packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:127",
+      "registered": false
+    },
+    {
+      "key": "xai_tt_entries_v2",
+      "owner": "plugin-web-time-tracker",
+      "scope": "account-local",
+      "source": "packages/plugin-web-time-tracker/src/internal/storage.ts:14",
+      "registered": false
+    },
+    {
+      "key": "xai_tt_insights_v1",
+      "owner": "plugin-web-time-tracker",
+      "scope": "account-local",
+      "source": "packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:124",
+      "registered": false
+    },
+    {
+      "key": "xai_tt_mode",
+      "owner": "plugin-web-time-tracker",
+      "scope": "device-local",
+      "source": "packages/plugin-web-time-tracker/src/internal/storage.ts:15",
+      "registered": false
+    },
+    {
+      "key": "xai_tt_sidebar_insights_hidden_v1",
+      "owner": "plugin-web-time-tracker",
+      "scope": "device-local",
+      "source": "packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:125",
+      "registered": false
+    },
+    {
+      "key": "xai_tt_time_status_cards_v1",
+      "owner": "plugin-web-time-tracker",
+      "scope": "device-local",
+      "source": "packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:129",
+      "registered": false
+    },
+    {
+      "key": "xai_tt_time_status_custom_cards_v1",
+      "owner": "plugin-web-time-tracker",
+      "scope": "account-local",
+      "source": "packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:130",
+      "registered": false
+    },
+    {
+      "key": "xai_tt_time_status_hidden_v1",
+      "owner": "plugin-web-time-tracker",
+      "scope": "device-local",
+      "source": "packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:128",
+      "registered": false
+    },
+    {
+      "key": "xai_zones",
+      "owner": "xai-web-dashboard-widgets",
+      "scope": "account-local",
+      "source": "packages/plugin-web-storage/src/internal/registry.ts:286",
+      "registered": true
+    }
+  ]
+}

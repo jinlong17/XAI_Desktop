@@ -1,0 +1,37 @@
+$ pnpm --filter @repo/plugin-web-calendar test
+
+Representative storage guard output:
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+Failed files reported during execution:
+❯ src/__tests__/CalendarModule.dst-recurrence.test.tsx (2 tests | 2 failed) 758ms
+❯ src/__tests__/CalendarModule.recurrence.test.tsx (6 tests | 6 failed) 1109ms
+❯ src/__tests__/YearView.test.tsx (5 tests | 2 failed) 2129ms
+❯ src/__tests__/CalendarModule.eventcrud.test.tsx (10 tests | 6 failed) 3049ms
+❯ src/__tests__/CalendarModule.saveRecovery.test.tsx (4 tests | 4 failed) 5070ms
+
+Failed assertions:
+ FAIL  src/__tests__/CalendarModule.dst-recurrence.test.tsx > CalendarModule DST x recurrence integration (P4) > AC-DST-RECUR-1: daily 09:30 recurrence is stable across Mar 7/8/9 around spring-forward
+ FAIL  src/__tests__/CalendarModule.dst-recurrence.test.tsx > CalendarModule DST x recurrence integration (P4) > AC-DST-RECUR-2: weekly recurrence anchored on fall-back day appears on Nov 8 + Nov 15
+ FAIL  src/__tests__/CalendarModule.eventcrud.test.tsx > CalendarModule event CRUD integration (P4) > AC-EDIT-4: clicking a user block in Week view opens edit composer
+ FAIL  src/__tests__/CalendarModule.eventcrud.test.tsx > CalendarModule event CRUD integration (P4) > AC-DELETE-2: deleting a month user event removes it from the date cell
+ FAIL  src/__tests__/CalendarModule.eventcrud.test.tsx > CalendarModule event CRUD integration (P4) > AC-EDIT-5: clicking a user block in Day view opens edit composer
+ FAIL  src/__tests__/CalendarModule.eventcrud.test.tsx > CalendarModule event CRUD integration (P4) > AC-OVERLAP-1: two overlapping user events render side-by-side in Week view
+ FAIL  src/__tests__/CalendarModule.eventcrud.test.tsx > CalendarModule event CRUD integration (P4) > AC-OVERLAP-2: three overlapping user events render 3-way columns
+ FAIL  src/__tests__/CalendarModule.eventcrud.test.tsx > CalendarModule event CRUD integration (P4) > AC-OVERLAP-3: fixture and user events in same slot both render and keep source tags
+ FAIL  src/__tests__/CalendarModule.recurrence.test.tsx > CalendarModule recurrence integration (P4) > AC-RECUR-1: daily recurring event over Week view renders 7 blocks
+ FAIL  src/__tests__/CalendarModule.recurrence.test.tsx > CalendarModule recurrence integration (P4) > AC-RECUR-2: weekly recurring event over Week view renders exactly one block
+ FAIL  src/__tests__/CalendarModule.recurrence.test.tsx > CalendarModule recurrence integration (P4) > AC-RECUR-3: daily recurring event over Month view renders all month-window instances
+ FAIL  src/__tests__/CalendarModule.recurrence.test.tsx > CalendarModule recurrence integration (P4) > AC-RECUR-5: daily recurring event over Day view renders exactly one block
+ FAIL  src/__tests__/CalendarModule.recurrence.test.tsx > CalendarModule recurrence integration (P4) > AC-RECUR-6: editing a recurring event updates all rendered instances
+ FAIL  src/__tests__/CalendarModule.recurrence.test.tsx > CalendarModule recurrence integration (P4) > AC-RECUR-7: deleting a recurring event removes all rendered instances
+ FAIL  src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps a failed new event and its latest draft available for retry
+ FAIL  src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps the editor and record when deletion fails
+ FAIL  src/__tests__/CalendarModule.saveRecovery.test.tsx > exports the latest unsaved form and refuses old-account retry and export
+ FAIL  src/__tests__/CalendarModule.saveRecovery.test.tsx > does not overwrite newer raw events when retrying a failed draft
+ FAIL  src/__tests__/YearView.test.tsx > YearView > caps year-view dots at six and renders overflow as +N
+ FAIL  src/__tests__/YearView.test.tsx > YearView > shows user event colors/tags and opens edit from the event dot
+
+Final summary:
+Test Files  5 failed | 45 passed (50)
+Tests  20 failed | 352 passed (372)

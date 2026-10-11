@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * openAiToolFormat.test.ts — OAI-FMT-1..3 + OAI-CHOICE-1..4 + OAI-TOOLS-1
  *
@@ -156,8 +157,8 @@ describe("OAI-CHOICE-4: toOpenAiToolChoice maps {type:'tool',name} → {type:'fu
 
 describe("OAI-TOOLS-1: openai buildBody sends tools in OpenAI function format + backward compat", () => {
   beforeEach(() => {
-    localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
-    localStorage.setItem("xai_ai_base_url", JSON.stringify("https://api.groq.com/openai/v1"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_provider"), JSON.stringify("openai-compatible"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_base_url"), JSON.stringify("https://api.groq.com/openai/v1"));
   });
 
   it("serializes tools in OpenAI function format when provided", () => {
@@ -233,8 +234,8 @@ describe("OAI-TOOLS-1: openai buildBody sends tools in OpenAI function format + 
 
   it("Anthropic branch still passes tools verbatim (Anthropic byte-stable, OAI-REG)", () => {
     // Reset to Anthropic
-    localStorage.removeItem("xai_ai_provider");
-    localStorage.removeItem("xai_ai_base_url");
+    localStorage.removeItem(accountScope.physicalKey("xai_ai_provider"));
+    localStorage.removeItem(accountScope.physicalKey("xai_ai_base_url"));
 
     const config = resolveProvider("sk-ant-test");
     expect(config.provider).toBe("anthropic");

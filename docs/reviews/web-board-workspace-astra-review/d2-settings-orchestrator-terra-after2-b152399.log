@@ -1,0 +1,15 @@
+revision=b152399
+test-fixture=review-owned only; package run unmodified
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-CAtRHT
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx > a server response cannot authorize cleanup after its original deletion operationId was replaced
+replaced-server-intent {"state":"failure","receipt":null,"remaining":"A content"}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx (16 tests) 33ms
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  18:22:28
+   Duration  988ms (transform 198ms, setup 0ms, collect 378ms, tests 33ms, environment 317ms, prepare 64ms)

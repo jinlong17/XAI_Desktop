@@ -1,0 +1,4 @@
+{"name":"baseline","commit":"f64ad44","browser":"Chrome/152.0.7977.83"}
+{"name":"device-owner-recovery","offset":"0","text":"Note or position was not saved. Drafts stay on this page only; retry or export before leaving.Retry note saveReload dashboard noteExport note draft","header":"Add a focus note, reminder, or short message"}
+{"name":"device-owner-export","version":1,"kind":"dashboard-note-draft","note":"","noteOffset":70}
+{"name":"supplemental","pass":true,"mode":"device-owner","runtimeErrors":0}

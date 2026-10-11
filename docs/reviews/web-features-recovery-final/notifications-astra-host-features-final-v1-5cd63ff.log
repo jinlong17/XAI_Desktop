@@ -1,0 +1,98 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+mode=notifications-astra-host
+suffix=features-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-final/verify-callers.mjs 5cd63ff all features-final-v1
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=cde91389f0a0baca69d266f5b6a6c5ff8098ac1f
+runner_sha256=7e1aa8b244ed9f63568fa78de79052f980df21a0bad2245a3bbccb2f6ca3454c
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+reproduces=docs/reviews/web-notifications-recovery-astra/verify-fixed.mjs mode host
+include=docs/reviews/web-notifications-recovery-astra/host.test.tsx
+setup_files=none
+copied docs/reviews/web-notifications-recovery-astra/fixture.tsx run=92238e1e555db5af781a2f81ca4bfd6951d2f2658de487ac7871d9aac7a91618 archive_committed=92238e1e555db5af781a2f81ca4bfd6951d2f2658de487ac7871d9aac7a91618 (same)
+copied docs/reviews/web-notifications-recovery-astra/boundaries.test.tsx run=a6a0df8b78386ce2d2b55bba88b4a543a57e7760174107e0538dd84beaedb3f1 archive_committed=a6a0df8b78386ce2d2b55bba88b4a543a57e7760174107e0538dd84beaedb3f1 (same)
+copied docs/reviews/web-notifications-recovery-astra/host.test.tsx run=dd85e10304b5bdfcd5cffeb325eb60c1b2e0250bad7502d2f66980506da8090e archive_committed=dd85e10304b5bdfcd5cffeb325eb60c1b2e0250bad7502d2f66980506da8090e (same)
+archive docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts run=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 checkout=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 (same)
+product_file_sha256 packages/plugin-web-settings-rest/src/panes/notificationsPane.tsx=04930bd98b4ba05346f1472cc70f849238db14ce6cb5b4d1165132719ffbc87f apps/web/src/routes/modules/composedSettingsRegistration.tsx=bd2ba2dd92da486ce9d3890fe74af6d3878b3394ed410014313412fdceee377d apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 apps/web/src/routes/modules/settingsDeparture.ts=80c3a5787df8eb02102c4a508f2fe67c1fbd6a6b8ba7f16b3a65c3f542c8548b apps/web/src/routes/modules/shellRegistrations.tsx=c003c499ca3330ff6e3b7e738df4e3366d0daca141d65327dacc3d3665e1b8fe
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-settings-rest/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-JFGrf9/final-notifications-astra-host.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-JFGrf9/.final-guard/report-notifications-astra-host.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 (react/@testing-library/react from packages/plugin-web-settings-rest; react-router as aliased by the older runner)
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_checked=46 unresolved=none
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/docs
+accepted_count=15
+vitest_exit=0
+harness_checks=PASS (10/10)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-JFGrf9
+
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > actual sidebar producer holds hidden time and discard leaves without writes 188ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > actual rail producer holds hidden time and discard leaves without writes 116ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > first route beats same-turn route and signout; Stay preserves hidden work and new intent remains guarded 153ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > first signout beats same-turn route; Escape declines without losing hidden recovery 102ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > numeric history -1 holds URL and location key then replays exact destination 104ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > numeric history 1 holds URL and location key then replays exact destination 107ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > relative Settings navigation preserves destination and options after explicit discard 102ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > partial hidden Retry cannot release intent; every latest verified clean releases exactly once 114ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > held hidden save protects navigation and auto releases only after physical verification 89ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > epoch cancels old route while fresh locked hidden work protects new decisions 153ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > epoch cancels old signout while fresh locked hidden work protects new decisions 158ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > unmount cancels pending signout and removes hidden-work unload warning 97ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > host export remains pending and memory-only; Stay returns all hidden work 125ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > older successful time cannot release held route when latest queued choice fails 118ms
+ ✓ docs/reviews/web-notifications-recovery-astra/host.test.tsx > source-only hidden invalid time stays nonblocking and normal route still works 59ms
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  08:46:32
+   Duration  4.73s (transform 1.71s, setup 0ms, collect 2.52s, tests 1.78s, environment 198ms, prepare 56ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-JFGrf9/.final-guard/report-notifications-astra-host.json
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-astra/fixture.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-astra/boundaries.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-astra/host.test.tsx
+harness PASS single react, react-router and @testing-library/react instance across the archive and the oracle links (react=1 react-router=1 @testing-library/react=1)
+harness PASS JSON report parsed
+harness PASS reported test files equal the requested include
+harness PASS older runner's config in effect (environment jsdom, globals true, setupFiles [], include, root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product and helper modules loaded from the archive (6 of 6)
+harness PASS no test-file suite error
+json_report=success=true numTotalTestSuites=1 numTotalTests=15 numPassedTests=15 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals cases=15 passed=15 failed=0 other=0 suite_errors=0 unhandled_error_lines=0 console_blocks=0 act_warning_lines=0
+accepted_count=15 count_matches_accepted=true
+file docs/reviews/web-notifications-recovery-astra/host.test.tsx status=passed tests=15 passed=15 failed=0
+case 001 PASSED | actual sidebar producer holds hidden time and discard leaves without writes
+case 002 PASSED | actual rail producer holds hidden time and discard leaves without writes
+case 003 PASSED | first route beats same-turn route and signout; Stay preserves hidden work and new intent remains guarded
+case 004 PASSED | first signout beats same-turn route; Escape declines without losing hidden recovery
+case 005 PASSED | numeric history -1 holds URL and location key then replays exact destination
+case 006 PASSED | numeric history 1 holds URL and location key then replays exact destination
+case 007 PASSED | relative Settings navigation preserves destination and options after explicit discard
+case 008 PASSED | partial hidden Retry cannot release intent; every latest verified clean releases exactly once
+case 009 PASSED | held hidden save protects navigation and auto releases only after physical verification
+case 010 PASSED | epoch cancels old route while fresh locked hidden work protects new decisions
+case 011 PASSED | epoch cancels old signout while fresh locked hidden work protects new decisions
+case 012 PASSED | unmount cancels pending signout and removes hidden-work unload warning
+case 013 PASSED | host export remains pending and memory-only; Stay returns all hidden work
+case 014 PASSED | older successful time cannot release held route when latest queued choice fails
+case 015 PASSED | source-only hidden invalid time stays nonblocking and normal route still works
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-JFGrf9","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-JFGrf9/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":[],"include":["docs/reviews/web-notifications-recovery-astra/host.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/plugin-web-settings-rest/src/panes/notificationsPane.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/routes/modules/settingsDeparture.ts apps/web/src/routes/modules/shellRegistrations.tsx docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts
+pin_required_provenance_missing=none
+pin_modules=561 by package: apps/web=7 docs/reviews/web-board-workspace-astra-review=1 docs/reviews/web-notifications-recovery-astra=1 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=21 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-settings-appearance=6 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23

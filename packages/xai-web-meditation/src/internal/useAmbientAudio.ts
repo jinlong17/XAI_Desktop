@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { accountScope } from "@repo/plugin-web-storage";
 import type { AmbientSoundId } from "../types.js";
 
 interface AmbientGraph {
@@ -6,16 +7,20 @@ interface AmbientGraph {
   output: GainNode;
   stop: () => void;
   setVolume: (volume: number) => void;
+  setDeadline: (deadline: number | null) => void;
 }
 
 interface AmbientState {
   available: boolean;
+  error: string | null;
   playing: boolean;
   sound: AmbientSoundId;
 }
 
 type AudioContextCtor = new () => AudioContext;
 
+let playbackRevision = 0;
+let cancelResume: (() => void) | null = null;
 let activeGraph: AmbientGraph | null = null;
 let activeContext: AudioContext | null = null;
 
@@ -186,6 +191,12 @@ function buildGraph(ctx: AudioContext, sound: AmbientSoundId, volume: number): A
   const stopFns: Array<() => void> = [];
   const sources: Array<AudioBufferSourceNode | OscillatorNode> = [];
 
+  const stopGraph = () => {
+    for (const stop of stopFns) stop();
+    for (const source of sources) { try { source.stop(); } catch { /* Already stopped. */ } }
+    output.disconnect();
+  };
+  try {
   if (sound === "water") {
     sources.push(connectFilteredNoise(ctx, output, { highpass: 180, lowpass: 2400, bandpass: 620, gain: 0.34 }));
     sources.push(connectFilteredNoise(ctx, output, { highpass: 80, lowpass: 900, gain: 0.18 }));
@@ -209,44 +220,68 @@ function buildGraph(ctx: AudioContext, sound: AmbientSoundId, volume: number): A
     sources.push(connectFilteredNoise(ctx, output, { highpass: 120, lowpass: 9200, gain: 0.28 }));
   }
 
+  } catch (error) { stopGraph(); throw error; }
+
+  let deadline: number | null = null;
+  const scheduleSilence = () => {
+    if (deadline !== null) output.gain.setValueAtTime(0, ctx.currentTime + Math.max(0, deadline - Date.now()) / 1000);
+  };
   return {
     sound,
     output,
+    setDeadline: next => {
+      deadline = next;
+      output.gain.cancelScheduledValues(ctx.currentTime);
+      output.gain.setValueAtTime(clampVolume(volume) * 0.75, ctx.currentTime);
+      scheduleSilence();
+    },
     setVolume: (nextVolume: number) => {
+      volume = nextVolume;
       output.gain.setTargetAtTime(clampVolume(nextVolume) * 0.75, ctx.currentTime, 0.04);
+      scheduleSilence();
     },
-    stop: () => {
-      for (const stop of stopFns) stop();
-      for (const source of sources) {
-        try {
-          source.stop();
-        } catch {
-          // Source was already stopped.
-        }
-      }
-      output.disconnect();
-    },
+    stop: stopGraph,
   };
 }
 
-async function startAmbient(sound: AmbientSoundId, volume: number): Promise<boolean> {
+async function startAmbient(sound: AmbientSoundId, volume: number, getDeadline: () => number | null): Promise<boolean> {
   stopAmbient();
+  const revision = playbackRevision;
   if (sound === "none") return true;
-  const ctx = getAudioContext();
-  if (!ctx) return false;
-  const graph = buildGraph(ctx, sound, volume);
-  if (!graph) return false;
-  activeGraph = graph;
-  if (ctx.state === "suspended") {
-    await ctx.resume();
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return false;
+    if (ctx.state === "suspended") {
+      const resumed = await new Promise<boolean>(resolve => {
+        let finished = false;
+        const finish = (ok: boolean) => {
+          if (finished) return; finished = true; clearTimeout(timeout);
+          if (cancelResume === cancel) cancelResume = null;
+          resolve(ok);
+        };
+        const cancel = () => finish(false);
+        const timeout = setTimeout(cancel, 4000);
+        cancelResume = cancel;
+        try { void ctx.resume().then(() => finish(true), cancel); } catch { cancel(); }
+      });
+      if (!resumed) return false;
+    }
+    if (revision !== playbackRevision || ctx.state !== "running") return false;
+    activeGraph = buildGraph(ctx, sound, volume);
+    activeGraph?.setDeadline(getDeadline());
+    return activeGraph !== null;
+  } catch {
+    if (revision === playbackRevision) stopAmbient();
+    return false;
   }
-  return true;
 }
 
 function stopAmbient(): void {
-  if (!activeGraph) return;
-  activeGraph.stop();
+  playbackRevision++;
+  cancelResume?.();
+  const graph = activeGraph;
   activeGraph = null;
+  try { graph?.stop(); } catch { /* Graph is already detached. */ }
 }
 
 function setAmbientVolume(volume: number): void {
@@ -258,22 +293,31 @@ export function useAmbientAudio(): {
   play: (sound: AmbientSoundId, volume: number) => Promise<boolean>;
   pause: () => void;
   setVolume: (volume: number) => void;
+  setDeadline: (deadline: number | null) => void;
 } {
   const [state, setState] = useState<AmbientState>({
     available: canUseAudio(),
+    error: null,
     playing: false,
     sound: "none",
   });
 
+  const request = useRef(0);
+  const deadline = useRef<number | null>(null);
   const pause = useCallback((): void => {
+    request.current++;
     stopAmbient();
     setState((current) => ({ ...current, playing: false }));
   }, []);
 
   const play = useCallback(async (sound: AmbientSoundId, volume: number): Promise<boolean> => {
-    const ok = await startAmbient(sound, volume);
+    const current = ++request.current;
+    const scope = accountScope.capture();
+    const ok = await startAmbient(sound, volume, () => deadline.current);
+    if (current !== request.current || accountScope.capture() !== scope) return false;
     setState({
       available: canUseAudio(),
+      error: ok ? null : "Audio could not start. Check browser sound permission and retry playback.",
       playing: ok && sound !== "none",
       sound,
     });
@@ -284,7 +328,16 @@ export function useAmbientAudio(): {
     setAmbientVolume(volume);
   }, []);
 
-  useEffect(() => () => stopAmbient(), []);
+  const setDeadline = useCallback((next: number | null): void => {
+    deadline.current = next;
+    activeGraph?.setDeadline(next);
+  }, []);
 
-  return { state, play, pause, setVolume };
+  useEffect(() => {
+    const currentRequest = request;
+    const unsubscribe = accountScope.subscribe(pause);
+    return () => { unsubscribe(); currentRequest.current++; stopAmbient(); };
+  }, [pause]);
+
+  return { state, play, pause, setVolume, setDeadline };
 }

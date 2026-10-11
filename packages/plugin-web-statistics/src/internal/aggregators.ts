@@ -1,3 +1,4 @@
+import { parseLocalDateKey } from "@repo/plugin-web-tokens";
 /**
  * @internal — pure aggregator functions.
  *
@@ -12,17 +13,9 @@
  * api.md §5.2..§5.8.
  *
  * @remarks
- * Tasks metric: `kpis.tasksTotal` is the REAL count of `done === true` cards
- * in `xai_task_cols` (current board, range-invariant — no completion timestamp
- * on `TaskCard`). `kpis.tasksTrend` is always `"—"` (honest: no prior-window
- * baseline for a timestamp-less count). The pomodoro-as-tasks proxy has been
- * retired. Statistics NEVER writes `xai_task_cols`.
- *
- * `taskBuckets` is an honest current-state total fill: the real `done` count
- * is placed in the last bucket, all others are zero. This is NOT a time series
- * — the array length equals `labels.length` so the BarChart leaf is unchanged.
- * The Tasks BarChart panel header carries a user-visible "current board" marker
- * (REC-1 / B1 Path 1) that frames this honestly.
+ * tasksTotal is the current completed total. taskBuckets uses only recorded
+ * completedAt instants. Legacy undated rows remain in the total and are
+ * disclosed separately; no date or task trend is invented. Reads never write.
  */
 
 import type { Lang } from "@repo/plugin-web-tokens";
@@ -35,7 +28,7 @@ import type {
   StatisticsKpis,
 } from "../types.js";
 import { RING_PALETTE } from "./colors.js";
-import { countDoneTasks } from "./countDoneTasks.js";
+import { readTaskCompletions } from "./countDoneTasks.js";
 import { type HabitsStateRecord } from "./isHabitsStateRecord.js";
 import { type PomodoroSessionRecord } from "./isPomodoroSession.js";
 import {
@@ -45,13 +38,14 @@ import {
   type WeekStart,
 } from "./rangeWindow.js";
 import { trendPercent } from "./trendPercent.js";
+import { measuredDurationMs } from './measuredDuration.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
 function minutesOf(s: PomodoroSessionRecord): number {
-  return Math.max(0, Math.round(s.durationMs / 60_000));
+  return (measuredDurationMs(s) ?? 0) / 60_000;
 }
 
 function isInRange(s: PomodoroSessionRecord, start: Date, end: Date): boolean {
@@ -61,9 +55,9 @@ function isInRange(s: PomodoroSessionRecord, start: Date, end: Date): boolean {
 }
 
 function dateKey(d: Date): string {
-  const y = d.getUTCFullYear();
-  const m = `${d.getUTCMonth() + 1}`.padStart(2, "0");
-  const day = `${d.getUTCDate()}`.padStart(2, "0");
+  const y = d.getFullYear();
+  const m = `${d.getMonth() + 1}`.padStart(2, "0");
+  const day = `${d.getDate()}`.padStart(2, "0");
   return `${y}-${m}-${day}`;
 }
 
@@ -128,13 +122,20 @@ export function aggregateRange(
   // Real tasks done count (current board, range-invariant).
   // The proxy (counting focus sessions as tasks) has been retired.
   // Statistics NEVER writes xai_task_cols — read-only aggregator.
-  const currentTasksTotal = countDoneTasks(rawTaskCols);
+  const completions = readTaskCompletions(rawTaskCols);
+  const currentTasksTotal = completions.length;
 
-  // Honest taskBuckets fill: place the real total in the last bucket,
-  // zeros elsewhere. NOT a time series. JSDoc above explains why.
+  // Only actual completion instants belong in the timeline. Legacy/future
+  // dates remain in the current total without inventing a historical event.
   const taskBuckets = new Array<number>(w.labels.length).fill(0);
-  if (w.labels.length > 0 && currentTasksTotal > 0) {
-    taskBuckets[w.labels.length - 1] = currentTasksTotal;
+  let undatedCompletedTasks = 0;
+  for (const completion of completions) {
+    if (completion.completedAt === null || completion.completedAt > now.getTime()) {
+      undatedCompletedTasks++;
+      continue;
+    }
+    const index = bucketIndexFor(completion.completedAt, w.bucketBoundaries, w.end);
+    if (index >= 0) taskBuckets[index] = (taskBuckets[index] ?? 0) + 1;
   }
 
   // KPIs derived from current vs prior window totals
@@ -157,7 +158,7 @@ export function aggregateRange(
     const checkIns = habits.checkIns[h.id] ?? {};
     let hit = false;
     for (const dk of Object.keys(checkIns)) {
-      const t = Date.parse(`${dk}T00:00:00Z`);
+      const t = (parseLocalDateKey(dk)?.getTime() ?? Number.NaN);
       if (Number.isFinite(t) && t >= w.start.getTime() && t <= w.end.getTime()) {
         hit = true;
         break;
@@ -172,8 +173,7 @@ export function aggregateRange(
     focusMinutesTotal: currentFocusMinutes,
     habitsKeptStr,
     dailyAvgMinutes,
-    // tasksTrend is always "—": no honest prior-window for a timestamp-less
-    // current-board count. The proxy's fabricated +N% trend has been retired.
+    // The current-board total is not a historical delta; leave its trend unset.
     tasksTrend: "—",
     focusTrend: trendPercent(currentFocusMinutes, priorFocusMinutes),
     habitsKeptTrend:
@@ -187,7 +187,7 @@ export function aggregateRange(
     const t = Date.parse(s.finishedAt);
     if (!Number.isFinite(t)) continue;
     if (t < w.start.getTime() || t > w.end.getTime()) continue;
-    const hr = new Date(t).getUTCHours();
+    const hr = new Date(t).getHours();
     hourDistribution[hr] = (hourDistribution[hr] ?? 0) + minutesOf(s);
   }
   const maxHour = hourDistribution.reduce((a, b) => Math.max(a, b), 0);
@@ -199,7 +199,7 @@ export function aggregateRange(
     const checkIns = habits.checkIns[h.id] ?? {};
     let inRange = 0;
     for (const dk of Object.keys(checkIns)) {
-      const t = Date.parse(`${dk}T00:00:00Z`);
+      const t = (parseLocalDateKey(dk)?.getTime() ?? Number.NaN);
       if (Number.isFinite(t) && t >= w.start.getTime() && t <= w.end.getTime()) {
         inRange++;
       }
@@ -232,7 +232,7 @@ export function aggregateRange(
     const checkIns = habits.checkIns[h.id] ?? {};
     let kept = 0;
     for (const dk of Object.keys(checkIns)) {
-      const t = Date.parse(`${dk}T00:00:00Z`);
+      const t = (parseLocalDateKey(dk)?.getTime() ?? Number.NaN);
       if (Number.isFinite(t) && t >= w.start.getTime() && t <= w.end.getTime()) {
         kept++;
       }
@@ -254,6 +254,9 @@ export function aggregateRange(
 
   return {
     range,
+    undatedCompletedTasks,
+    taskSeriesAvailable: completions.length > undatedCompletedTasks,
+    unmeasuredFocusSessions: focusSessions.filter(s => isInRange(s, w.start, w.end) && measuredDurationMs(s) === null).length,
     labels: w.labels,
     focusBuckets,
     taskBuckets,
@@ -265,6 +268,10 @@ export function aggregateRange(
   };
 }
 
+function civilDayOrdinal(date: Date): number {
+  return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86_400_000;
+}
+
 function countQualifyingDays(
   range: RangeId,
   start: Date,
@@ -274,26 +281,26 @@ function countQualifyingDays(
   if (range === "week") return 7;
   if (range === "month") {
     // Days from month-start to today (capped at month-end).
-    const days = Math.floor((end.getTime() - start.getTime()) / 86_400_000) + 1;
+    const days = civilDayOrdinal(end) - civilDayOrdinal(start) + 1;
     return Math.max(1, Math.min(days, 31));
   }
   // range === "all"
   let earliest: number | null = null;
   for (const habitId of Object.keys(habits.checkIns)) {
     for (const dk of Object.keys(habits.checkIns[habitId] ?? {})) {
-      const t = Date.parse(`${dk}T00:00:00Z`);
+      const t = (parseLocalDateKey(dk)?.getTime() ?? Number.NaN);
       if (Number.isFinite(t)) {
         if (earliest === null || t < earliest) earliest = t;
       }
     }
   }
   if (earliest === null) return 1;
-  const days = Math.floor((end.getTime() - earliest) / 86_400_000) + 1;
+  const days = civilDayOrdinal(end) - civilDayOrdinal(new Date(earliest)) + 1;
   return Math.max(1, Math.min(days, 365));
 }
 
 /**
- * Compute current streak by counting consecutive UTC day keys backward
+ * Compute current streak by counting consecutive local civil day keys backward
  * from `now` while a check-in is present. Stops at the first gap.
  */
 export function computeStreak(

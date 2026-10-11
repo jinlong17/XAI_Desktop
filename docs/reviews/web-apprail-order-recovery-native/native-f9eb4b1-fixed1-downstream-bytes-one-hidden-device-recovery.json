@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "kind": "device-recovery",
+  "manifest": {
+    "format": "xai-local-data",
+    "version": 1,
+    "scope": "device-recovery",
+    "createdAt": "2026-10-09T13:20:00.378Z",
+    "restoreSupported": false,
+    "counts": {
+      "account": 0,
+      "device": 9,
+      "legacy": 0,
+      "archives": 0
+    },
+    "categories": [
+      {
+        "section": "device",
+        "feature": "settings-features-panel",
+        "keys": [
+          "xai_pref_features_board",
+          "xai_pref_features_calendar",
+          "xai_pref_features_dashboard",
+          "xai_pref_features_habits",
+          "xai_pref_features_matrix",
+          "xai_pref_features_meditation",
+          "xai_pref_features_pomodoro",
+          "xai_pref_features_tasks"
+        ]
+      },
+      {
+        "section": "device",
+        "feature": "shell",
+        "keys": [
+          "xai_rail_order"
+        ]
+      }
+    ],
+    "included": [
+      "declared-device-preferences"
+    ],
+    "excluded": [
+      "account-namespaces",
+      "auth-session-and-oauth-state",
+      "byok-and-device-cryptographic-material",
+      "unclassified-or-sensitive-keys",
+      "cloud-data",
+      "unassigned-originals",
+      "unassigned-archives"
+    ],
+    "omitted": []
+  },
+  "device": {
+    "records": {
+      "xai_pref_features_board": "false",
+      "xai_pref_features_calendar": "true",
+      "xai_pref_features_dashboard": "true",
+      "xai_pref_features_habits": "true",
+      "xai_pref_features_matrix": "true",
+      "xai_pref_features_meditation": "true",
+      "xai_pref_features_pomodoro": "true",
+      "xai_pref_features_tasks": "true",
+      "xai_rail_order": "[\"tasks\",\"dashboard\",\"board\",\"calendar\",\"matrix\",\"pomodoro\",\"timetrack\",\"bookkeeping\",\"metrics\",\"habits\",\"meditation\",\"countdown\",\"ai\",\"statistics\"]"
+    }
+  },
+  "legacy": {
+    "records": {}
+  },
+  "archives": {
+    "records": {}
+  }
+}

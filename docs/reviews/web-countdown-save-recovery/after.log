@@ -1,0 +1,9 @@
+{"name":"baseline","commit":"179e6d5","browser":"Chrome/152.0.7977.83"}
+{"name":"create-correct-oracle","dialogRetained":true,"draftRetained":true,"errorVisible":true,"bytesUnchanged":true}
+{"name":"delete-correct-oracle","dialogRetained":true,"errorVisible":true,"bytesUnchanged":true}
+{"name":"delete-retry","pass":true}
+{"name":"actual-download-latest-retry","pass":true}
+{"name":"actual-pin-retry","pass":true}
+{"name":"baseline-rejected","pass":true}
+{"name":"cross-account-retry-export-rejected","pass":true}
+{"name":"PASS","scope":"Countdown save recovery","checks":7}

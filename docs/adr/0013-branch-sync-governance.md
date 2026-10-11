@@ -31,8 +31,11 @@ informally and now needs a stable authority anchor for:
 3. A **Web→Desktop sync gate** + **account cloud-sync per-feature contract**,
    both built on top of `data-repository-v0`'s `syncScope` model (not a
    redefinition of it).
+4. A **multi-machine GitHub completeness gate** so no recoverable project work
+   is left only in one computer's worktree, stash, reflog, hidden ref, or
+   ignored source path.
 
-Five sub-decisions:
+Six sub-decisions:
 
 | Sub-decision | Summary |
 |---|---|
@@ -41,6 +44,7 @@ Five sub-decisions:
 | **D3** — Web→Desktop sync GATE (implemented by the `xai-web-to-desktop-sync` skill) | W0–W4 classification + parity-receipt output contract |
 | **D4** — Account cloud-sync model (build on `syncScope`) | Web ⇄ account cloud ⇄ App; per-feature `account-sync` completeness checklist |
 | **D5** — Two independent focus branches (`web`=Web, `dev`=App) | Divergence is the normal state, not drift; shared changes move on-demand; `main` reconciles |
+| **D6** — Multi-machine source of truth | One active machine/worktree per writable short branch; commit/push handoff + local-asset policy |
 
 ---
 
@@ -71,12 +75,13 @@ focus over time*. They did **not** govern:
   (147 web-only, 184 dev-only; common ancestor `898f5ba`, 2026-05-26): both lines
   have moved on their own focus. They reconcile only at `main`, or by deliberate
   need-based sharing of a specific change (see D5).
-- **Two machines, two independent branch lines.** Development runs on **two
-  physical computers** that work **independently**: this machine drives `web`
-  (Web-focused); the other machine drives `dev` (App-focused).
-  Each authors its own commits, branch docs, and ADRs on its own line; the two
-  reconcile only when work flows `web → … → dev` (forward, per D2/D5) or at a
-  `main` merge. This is already borne out: a `git fetch` on 2026-05-30 shows
+- **Multiple computers, independent task branches.** Development may run on
+  multiple physical computers at the same time. Hardware does not permanently
+  own `web` or `dev`; each active task owns one published short branch on one
+  machine/worktree, while long-lived branches remain shared remote integration
+  lines. Product lines reconcile only when work flows through D2/D3/D5 or at an
+  operator-scheduled `main` merge. Historical evidence remains: a `git fetch`
+  on 2026-05-30 showed
   `origin/dev` has **committed** `ADR-0011` (P1 React+Tauri+Local-first) and
   `ADR-0012` (Phase-3 local-first storage), which `web` had **not** synced — so
   the independently-authored numbers **0011 and 0012 are already taken on `dev`**
@@ -399,6 +404,27 @@ Anti-patterns (do **not** do these):
 - Do **not** treat a large `web`↔`dev` divergence number as a problem to resolve;
   read it as "both lines are active in their own focus".
 
+### D6 — Multi-machine GitHub completeness gate
+
+GitHub remote refs are the exchange source of truth for recoverable project
+work. A fresh clone plus securely restored secrets must be sufficient to resume
+development. Full operating rules live in
+`docs/workflow/project/multi-machine-development.md`.
+
+- One writable short branch has one active machine/worktree owner. Parallel
+  machines use sibling branches and reconcile explicitly.
+- Before a computer switch or session handoff, form a recoverable commit and
+  push it. A stash, reflog entry, hidden ref, untracked source file, or chat
+  transcript is not a handoff.
+- Secrets and signing material never enter Git; tracked templates record names
+  only and values move through a secure external channel.
+- `pnpm git:sync-check -- --fetch` is the normal handoff gate; `--deep` is
+  required before machine migration, worktree deletion, or history cleanup.
+- Archive refs are recovery-only and must never be bulk-merged into `web`,
+  `dev`, `main`, or another long-lived line.
+- This gate proves availability, not verification or release readiness. It does
+  not change D3/D5 or authorize force-alignment of independent product lines.
+
 ---
 
 ## S5 — 后果 / Consequences
@@ -413,6 +439,9 @@ Anti-patterns (do **not** do these):
   line's independent focus.
 - **The future sync skill has a spec.** D3 is a ready-made contract for
   `xai-web-to-desktop-sync`; the parity receipt is its output format.
+- **Cross-machine recovery is mechanical.** D6 makes dirty trees, unpushed
+  branches, local-only stash/refs, secret templates, and ignored source assets
+  explicit handoff checks instead of machine-specific memory.
 - **Account-sync features become checkable.** D4's 9-item rule turns "is this
   sync feature done?" into a mechanical check, on top of (not duplicating)
   `data-repository-v0`.
@@ -458,6 +487,8 @@ Anti-patterns (do **not** do these):
 - `developer.md` §3 (Repository Layout), `CLAUDE.md` "Current Priority" block,
   `docs/workflow/project/usage-guide.md` — updated in the same working-tree
   change as this ADR.
+- `docs/workflow/project/multi-machine-development.md` — D6 operating contract
+  and executable handoff checklist.
 - `docs/prototypes/admin-dashboard/index.html` — line-6 prototype.
 
 ---
@@ -465,8 +496,9 @@ Anti-patterns (do **not** do these):
 ## S7 — Open Questions (operator-tracked)
 
 1. **Cross-machine ADR / doc numbering — RESOLVED 2026-05-30: repo-wide reserved
-   numbers (no per-branch reuse).** Root cause is structural: the **two machines
-   author independently** (§S2), so both compute the same "next number" and
+   numbers (no per-branch reuse).** Root cause is structural: **multiple machines
+   can author independently** (§S2), so two sessions may compute the same
+   "next number" and
    collide. **Verified** (`git fetch`, 2026-05-30): `origin/dev` has already
    **committed** `0011-p1-react-tauri-local-first-hybrid.md` and
    `0012-phase3-local-first-storage.md`; `origin/web` has neither. So `0011` and
@@ -537,10 +569,10 @@ Anti-patterns (do **not** do these):
   **#4** (branch creation), **#5** (runtime-profile authority),
   **#6** (sync dev's ADR files), **#7** (reconcile D1 vs dev's ADR-0011) are all
   **deferred follow-ups, NOT Acceptance blockers**.
-- **Two-machine note:** because `web` and `dev` are authored on independent
-  machines (§S2), this ADR lives on the `web` line; its decisions reach `dev`
-  through the D2 lanes like any other Web work. Relay items for the `dev`
-  machine: the repo-wide numbering rule (§S7 #1) and the ADR-file sync (§S7 #6).
+- **Multi-machine note:** machines do not permanently own product lines. This
+  ADR lives on the `web` line; its decisions reach other long-lived lines
+  through D2/D3/D5. Every machine must fetch the shared refs and follow D6
+  before it writes or hands off work.
 - **Does not change** any ADR-0010 active-focus decision; it is additive
   governance. Creating the D2 branches (`desktop-next` / `desktop-plugin-next` /
   `release/*`) happens **only after the operator confirms the full governance

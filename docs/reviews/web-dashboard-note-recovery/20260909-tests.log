@@ -1,0 +1,57 @@
+
+> @repo/plugin-web-dashboard-grid@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-grid
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-grid
+
+ ✓ src/__tests__/useWidgetLayout.test.tsx (4 tests) 14ms
+ ✓ src/__tests__/useWidgetAppearance.test.tsx (5 tests) 16ms
+stderr | src/__tests__/DashHeader.recovery.test.tsx > Dashboard header persistence recovery > keeps latest draft on quota, retries it, and warns before unload only while dirty
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_header_note.
+
+stderr | src/__tests__/DashHeader.recovery.test.tsx > Dashboard header persistence recovery > retains failed clear with its original persistence
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_header_note.
+
+ ✓ src/__tests__/AddWidgetPicker.test.tsx (23 tests) 404ms
+stderr | src/__tests__/DashHeader.recovery.test.tsx > Dashboard header persistence recovery > retains latest position on quota and refuses newer device raw on retry
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_header_note_x.
+[plugin-web-storage] quota exceeded for xai_pref_dashboard_header_note_x.
+
+ ✓ src/__tests__/DashHeader.recovery.test.tsx (4 tests) 448ms
+   ✓ Dashboard header persistence recovery > keeps latest draft on quota, retries it, and warns before unload only while dirty  312ms
+ ✓ src/__tests__/DashHeader.test.tsx (16 tests) 489ms
+ ✓ src/__tests__/WidgetShell.test.tsx (26 tests) 248ms
+stderr | src/__tests__/DashboardModule.persist.test.tsx > DashboardModule with widgets (P2 grid) > duplicate ids in widgets[] → first wins, no crash, dev-warn handled silently in test env
+[@repo/plugin-web-dashboard-grid] Duplicate widget id "alpha" — keeping first occurrence, dropping later one(s).
+
+ ✓ src/__tests__/DashboardModule.persist.test.tsx (7 tests) 259ms
+ ✓ src/__tests__/DashboardSlotHost.composition.test.tsx (8 tests) 420ms
+ ✓ src/__tests__/registration.test.tsx (13 tests) 533ms
+ ✓ src/__tests__/DashboardModule.render.test.tsx (5 tests) 186ms
+ ✓ src/__tests__/DashboardModule.remove.test.tsx (4 tests) 280ms
+ ✓ src/__tests__/DashboardModule.events.test.tsx (10 tests) 409ms
+ ✓ src/__tests__/DashboardModule.picker.test.tsx (6 tests) 167ms
+ ✓ src/__tests__/DashboardModule.lang.test.tsx (3 tests) 55ms
+ ✓ src/__tests__/useGridDrag.test.tsx (11 tests) 43ms
+ ✓ src/__tests__/EmptyState.test.tsx (5 tests) 141ms
+ ✓ src/__tests__/useDashOrder.removeWidget.test.tsx (6 tests) 74ms
+ ✓ src/__tests__/useDashOrder.test.tsx (9 tests) 62ms
+ ✓ src/__tests__/greeting.test.ts (7 tests) 76ms
+ ✓ src/__tests__/useDashOrder.addWidget.test.tsx (5 tests) 16ms
+ ✓ src/__tests__/sanitizeOrder.test.ts (14 tests) 3ms
+ ✓ src/__tests__/index-barrel.test.ts (5 tests) 2ms
+
+ Test Files  22 passed (22)
+      Tests  196 passed (196)
+   Start at  14:02:03
+   Duration  5.49s (transform 1.52s, setup 5.36s, collect 4.25s, tests 4.35s, environment 13.70s, prepare 2.11s)
+
+
+> @repo/plugin-web-dashboard-grid@0.0.0 check-types /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-grid
+> tsc --noEmit
+
+
+> @repo/plugin-web-dashboard-grid@0.0.0 lint /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-grid
+> eslint --max-warnings 0 .
+

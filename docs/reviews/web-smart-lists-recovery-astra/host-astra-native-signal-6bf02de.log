@@ -1,0 +1,184 @@
+revision=6bf02de fixed_commit=6bf02dee63d25a9fa16050aa252e5ae61428830a
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-h4KfhZ
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx (10 tests | 7 failed) 957ms
+   × programmatic second destination cannot replace first blocked intent 186ms
+     → expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+   ✓ Back keeps original pane, Stay retains map; later discard permits Back once 108ms
+   × dialog traps Tab within controls and Escape returns prior focus 144ms
+     → expected <button type="button"></button> to be <button type="button"></button> // Object.is equality
+     → expected false to be true // Object.is equality
+   × sign-out first rejects concurrent route departure instead of allowing both 146ms
+     → expected '/app/settings/notifications' to be '/app/settings/smart_lists' // Object.is equality
+   × route first rejects competing sign-out and permits only original route 83ms
+     → expected true to be false // Object.is equality
+   ✓ same sign-out request is single-flight; Stay resolves all false 88ms
+   × owner change cancels queued sign-out without requiring user action 44ms
+     → expected undefined to be false // Object.is equality
+     → expected <div …(5)><p></p>
+…(3)</div> to be null
+   × old sign-out intent cannot discard B newly edited draft 90ms
+     → expected true to be false // Object.is equality
+     → expected 'show' to be 'hide' // Object.is equality
+   ✓ unmount cancels sign-out Promise and unregisters delegate 26ms
+   × pending current map can export in dialog; successful latest save releases original requested navigation 42ms
+     → expected '/app/settings/smart_lists' to be '/app/settings/notifications' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 3 passed (10)
+   Start at  22:02:18
+   Duration  5.93s (transform 2.16s, setup 0ms, collect 3.76s, tests 957ms, environment 692ms, prepare 146ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > programmatic second destination cannot replace first blocked intent
+AssertionError: expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/settings/date_time"
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:17:348
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > dialog traps Tab within controls and Escape returns prior focus
+AssertionError: expected <button type="button"></button> to be <button type="button"></button> // Object.is equality
+
+- Expected
++ Received
+
+  <button
+    type="button"
+  >
+-   Stay
++   Discard local changes and leave
+  </button>
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:19:514
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > dialog traps Tab within controls and Escape returns prior focus
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:19:563
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > sign-out first rejects concurrent route departure instead of allowing both
+AssertionError: expected '/app/settings/notifications' to be '/app/settings/smart_lists' // Object.is equality
+
+Expected: "/app/settings/smart_lists"
+Received: "/app/settings/notifications"
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:20:387
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > route first rejects competing sign-out and permits only original route
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:21:333
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > owner change cancels queued sign-out without requiring user action
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected: 
+false
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:23:285
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > owner change cancels queued sign-out without requiring user action
+AssertionError: expected <div …(5)><p></p>
+…(3)</div> to be null
+
+- Expected: 
+null
+
++ Received: 
+<div
+  aria-label="Unsaved Smart Lists draft"
+  aria-modal="true"
+  class="settings-departure-dialog"
+  role="dialog"
+  tabindex="-1"
+>
+  <p>
+    Smart Lists has unsaved changes.
+  </p>
+  <button
+    type="button"
+  >
+    Stay
+  </button>
+  <button
+    type="button"
+  >
+    Export current draft
+  </button>
+  <button
+    type="button"
+  >
+    Discard local changes and leave
+  </button>
+</div>
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:23:332
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > old sign-out intent cannot discard B newly edited draft
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:24:574
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > old sign-out intent cannot discard B newly edited draft
+AssertionError: expected 'show' to be 'hide' // Object.is equality
+
+Expected: "hide"
+Received: "show"
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:24:613
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > pending current map can export in dialog; successful latest save releases original requested navigation
+AssertionError: expected '/app/settings/smart_lists' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/settings/smart_lists"
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:26:781
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯

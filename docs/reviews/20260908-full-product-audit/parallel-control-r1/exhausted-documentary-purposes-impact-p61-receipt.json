@@ -1,0 +1,40 @@
+{
+  "source": "eb69c0bef221f15500824ab72d1db1ee4f86df8e",
+  "integration": "2d01d827d7ede5aaddb853b3d4caad2a5a23adf4",
+  "parent": "77a61a767cfd67ff5773abd343be2e59cc45829a",
+  "fixed_input": "19a072dedea5414ca75e00773930a2c2ae7d62cd",
+  "archive_ref": "codex/archive/parallel-exhausted-purposes-impact-r1-20261010",
+  "all_input_hashes_checked": 423,
+  "outputs": {
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-r1/inputs.sha256": "087b138090841f6d1a413096cf3de5d45dc9f4e31902a7f5dd2b4901ec31427d",
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-r1/impact.md": "620e2fe4e3e4f1f415b569b3362d27f09ba773aa03fde05103d08fc68402e246"
+  },
+  "impact_iteration": 1,
+  "impact_cap": 3,
+  "static": {
+    "invocations": 1,
+    "result": "PASS",
+    "pid": 49037,
+    "session": 33149,
+    "start_chunk": "6f4ff7",
+    "final_chunk": "44952f",
+    "exit": 0,
+    "elapsed_seconds": 7.336,
+    "bytes": 266663410,
+    "owned_git_children": 426,
+    "all_children_exit": 0,
+    "all_owned_EOF_drained_waited": true
+  },
+  "finalization": {
+    "stage_format_chunk": "47c125",
+    "stage_format_exit": 0,
+    "commit_chunk": "deb656",
+    "commit_exit": 0,
+    "final_chunk": "4bd278",
+    "final_exit": 0,
+    "clean": true,
+    "amend": 0
+  },
+  "disposition": "fresh entire independent proposal review1 required before indispensable consolidated ownerdecision; no originalcaps/exhaustedunits/grants changed",
+  "root_role": "metadataonly no business/sourcequalification"
+}

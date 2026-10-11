@@ -1,0 +1,84 @@
+revision=3a764a1
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-ordinary-review-hSg9cR
+
+ ❯ docs/reviews/web-canonical-ordinary-writer-review/ordinary-writer.test.ts (4 tests | 3 failed) 9ms
+   × disabled envelope activation must also prevent an ordinary writer from publishing the first envelope 6ms
+     → expected true to be false // Object.is equality
+     → expected '{"format":"xai-command-state","versio…' to be '{"items":[]}' // Object.is equality
+   × successful in-place mutation must actually persist the changed domain 1ms
+     → expected { items: [] } to deeply equal { items: [ 'new' ] }
+   × no-op cannot return success after captured owner is invalidated inside mutation 1ms
+     → expected { ok: true, data: { items: [] }, …(2) } to deeply equal { Object (ok, reason) }
+   ✓ enabled immutable write positive control commits once 0ms
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed (4)
+   Start at  16:05:20
+   Duration  715ms (transform 47ms, setup 0ms, collect 47ms, tests 9ms, environment 311ms, prepare 81ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-canonical-ordinary-writer-review/ordinary-writer.test.ts > disabled envelope activation must also prevent an ordinary writer from publishing the first envelope
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-canonical-ordinary-writer-review/ordinary-writer.test.ts:19:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  docs/reviews/web-canonical-ordinary-writer-review/ordinary-writer.test.ts > disabled envelope activation must also prevent an ordinary writer from publishing the first envelope
+AssertionError: expected '{"format":"xai-command-state","versio…' to be '{"items":[]}' // Object.is equality
+
+Expected: "{"items":[]}"
+Received: "{"format":"xai-command-state","version":1,"revision":1,"data":{"items":["new"]},"receipts":{}}"
+
+ ❯ docs/reviews/web-canonical-ordinary-writer-review/ordinary-writer.test.ts:19:71
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  docs/reviews/web-canonical-ordinary-writer-review/ordinary-writer.test.ts > successful in-place mutation must actually persist the changed domain
+AssertionError: expected { items: [] } to deeply equal { items: [ 'new' ] }
+
+- Expected
++ Received
+
+  {
+-   "items": [
+-     "new",
+-   ],
++   "items": [],
+  }
+
+ ❯ docs/reviews/web-canonical-ordinary-writer-review/ordinary-writer.test.ts:27:56
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  docs/reviews/web-canonical-ordinary-writer-review/ordinary-writer.test.ts > no-op cannot return success after captured owner is invalidated inside mutation
+AssertionError: expected { ok: true, data: { items: [] }, …(2) } to deeply equal { Object (ok, reason) }
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "account-changed",
++   "changed": false,
++   "data": {
++     "items": [],
++   },
++   "ok": true,
++   "revision": 0,
+  }
+
+ ❯ docs/reviews/web-canonical-ordinary-writer-review/ordinary-writer.test.ts:32:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯

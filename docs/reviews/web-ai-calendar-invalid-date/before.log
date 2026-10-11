@@ -1,0 +1,37 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ❯ docs/reviews/web-ai-calendar-invalid-date/date-contract.test.tsx (2 tests | 2 failed) 16ms
+   × create rejects a nonexistent civil date without writing a success receipt 14ms
+     → expected true to be false // Object.is equality
+   × update rejects a nonexistent civil date without writing a success receipt 2ms
+     → expected true to be false // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-ai-calendar-invalid-date/date-contract.test.tsx > create rejects a nonexistent civil date without writing a success receipt
+ FAIL  docs/reviews/web-ai-calendar-invalid-date/date-contract.test.tsx > update rejects a nonexistent civil date without writing a success receipt
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-ai-calendar-invalid-date/date-contract.test.tsx:20:26
+     18|  else emitWebEvent('web:calendar:update-requested',{...common,id:'even…
+     19|  expect(receipts).toHaveLength(1);
+     20|  expect(receipts[0]?.ok).toBe(false);
+       |                          ^
+     21|  expect(localStorage.getItem(key)).toBe(before);
+     22|  } finally {off();}
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  14:34:02
+   Duration  1.34s (transform 137ms, setup 123ms, collect 206ms, tests 16ms, environment 725ms, prepare 70ms)
+

@@ -1,0 +1,5 @@
+{"name":"baseline","head":"ab8c35afc14a84b49e846f5efcfe367dadd4310f","requestedRef":"ab8c35a","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":390}
+{"name":"native-revoke-failure","receipt":{"version":2,"accountId":"A","kind":"account","generation":"business-A","phase":"local-data-cleared","updatedAt":"2026-09-09T20:28:40.590Z","authGeneration":"auth-A-6d0f8105-d41c-4653-8eff-b97465be9628"},"active":{"generation":"auth-A-6d0f8105-d41c-4653-8eff-b97465be9628","owner":"A"},"serverDeletes":1}
+{"name":"reload-B-retry","pass":true,"businessAndSdkSessionBytePreserved":true,"capturedA":"auth-A-6d0f8105-d41c-4653-8eff-b97465be9628","B":{"generation":"fa99ce25-d073-43c7-a9a1-43b468635ac0","owner":"B"},"serverDeletes":1}
+{"name":"final-receipt-quota-reload","pass":true,"serverDeletes":2,"phaseBeforeReload":"local-data-cleared"}
+{"name":"v1-v2-boundaries","pass":true,"legacyNoInventedAuth":true,"v2MissingParticipantRemainsPending":true}

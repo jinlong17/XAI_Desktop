@@ -1,3 +1,4 @@
+import { testStorage } from "./accountTestHarness.js";
 /**
  * Imperative helper tests — AC-IMP-1..11
  * Tests: getPref / setPref / removePref round-trips, error handling, idempotency.
@@ -84,7 +85,7 @@ describe("AC-IMP-7: corrupt JSON in storage returns default + warns", () => {
     const warnSpy = vi
       .spyOn(console, "warn")
       .mockImplementation(() => undefined);
-    localStorage.setItem("xai_zones", "{not json");
+    testStorage.setItem("xai_zones", "{not json");
     const result = getPref("xai_zones");
     expect(result).toEqual([]);
     expect(warnSpy).toHaveBeenCalledOnce();
@@ -94,12 +95,12 @@ describe("AC-IMP-7: corrupt JSON in storage returns default + warns", () => {
 
 describe("AC-IMP-8: type-mismatched value returns default", () => {
   it("'abc' stored for number codec xai_accent_hue returns 165", () => {
-    localStorage.setItem("xai_accent_hue", "abc");
+    testStorage.setItem("xai_accent_hue", "abc");
     expect(getPref("xai_accent_hue")).toBe(165);
   });
 
   it("'notbool' stored for boolean codec xai_ai_insights returns true (default)", () => {
-    localStorage.setItem("xai_ai_insights", "notbool");
+    testStorage.setItem("xai_ai_insights", "notbool");
     expect(getPref("xai_ai_insights")).toBe(true);
   });
 });
@@ -114,7 +115,7 @@ describe("AC-IMP-9: setPref returns true on success", () => {
 describe("AC-IMP-10: setPref returns false on QuotaExceededError", () => {
   it("mocked QuotaExceededError causes setPref to return false and log", () => {
     // First set to ensure existing !== new value (to trigger the write path)
-    localStorage.setItem("xai_accent_hue", "100");
+    testStorage.setItem("xai_accent_hue", "100");
 
     const warnSpy = vi
       .spyOn(console, "warn")

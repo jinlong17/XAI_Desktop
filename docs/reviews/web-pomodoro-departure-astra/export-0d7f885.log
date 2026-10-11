@@ -1,0 +1,36 @@
+revision=0d7f885 fixed_commit=0d7f8851b8d44865fdd4d364fa364e9691f8f146
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-qaT1ie
+
+ ❯ docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx (7 tests | 1 failed) 3972ms
+   ✓ all six latest choices export from memory under full storage denial, retaining the complete schema and draft guard  332ms
+   ✓ export url failure preserves current choices, original save failure and guard; cleans temporary resources  1178ms
+   ✓ export append failure preserves current choices, original save failure and guard; cleans temporary resources  1151ms
+   ✓ export click failure preserves current choices, original save failure and guard; cleans temporary resources  1160ms
+   ✓ old export capability refuses after owner change while a fresh device-only capability exports the same six-value snapshot 32ms
+   × owner change during actual URL setup revokes the export before click and leaves surviving device work guarded 67ms
+     → expected [ 'pomodoro-preferences.json' ] to have a length of +0 but got 1
+   ✓ partial success exports complete current values without turning saved siblings into discard targets 50ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  23:50:10
+   Duration  5.80s (transform 633ms, setup 0ms, collect 1.00s, tests 3.97s, environment 303ms, prepare 207ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx > owner change during actual URL setup revokes the export before click and leaves surviving device work guarded
+AssertionError: expected [ 'pomodoro-preferences.json' ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx:59:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

@@ -1,3 +1,4 @@
+import { useLocalDayClock } from "@repo/plugin-web-tokens";
 /**
  * HabitList — left pane of the Habits module.
  *
@@ -46,7 +47,7 @@ export function HabitList({
   onAddHabit,
 }: HabitListProps) {
   const { s } = useI18n(lang);
-  const now = new Date();
+  const { now } = useLocalDayClock();
   const weekDatesArr = computeWeekDates(now, weekStart);
   const todayKey = utcDateKey(now);
 
@@ -57,7 +58,7 @@ export function HabitList({
 
   // Map each week date to its short label
   const displayedLabels = weekDatesArr.map((d) => {
-    const dow = d.getUTCDay(); // 0=Sun
+    const dow = d.getDay(); // 0=Sun
     return weekdayLabels[dow] ?? "";
   });
 
@@ -136,7 +137,7 @@ export function HabitList({
             return (
               <div key={i} className={"weekday" + (isToday ? " today" : "")}>
                 <div className="wd-name">{label}</div>
-                <div className="wd-num">{weekDatesArr[i]!.getUTCDate()}</div>
+                <div className="wd-num">{weekDatesArr[i]!.getDate()}</div>
               </div>
             );
           })}

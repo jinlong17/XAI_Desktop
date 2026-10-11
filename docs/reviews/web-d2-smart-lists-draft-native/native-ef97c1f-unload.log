@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"ef97c1f","browser":"Chrome/152.0.7977.83"}
+{"name":"browser-unload-guard","pass":true,"scope":"Cancelable beforeunload event in real Chrome; not proof every OS termination fires it or a dialog is shown"}

@@ -1,0 +1,11 @@
+revision=f359be6 fixed_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-2yWR4M
+
+ ✓ docs/reviews/web-more-recovery-independent/host.test.tsx (11 tests) 735ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  23:28:59
+   Duration  4.51s (transform 2.02s, setup 0ms, collect 3.10s, tests 735ms, environment 383ms, prepare 68ms)

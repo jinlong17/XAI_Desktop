@@ -1,0 +1,13 @@
+revision=73b4eb9 fixed_commit=73b4eb9184c06764a3befd101961a3856988022f
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-wPjlpg
+
+ ✓ docs/reviews/web-dashboard-header-departure-independent/followon.test.tsx (2 tests) 643ms
+   ✓ successful latest pending save releases the first actual held route once with committed bytes  317ms
+   ✓ predecessor commit cannot release a held route with newer unsubmitted text  324ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  00:56:45
+   Duration  11.71s (transform 5.42s, setup 0ms, collect 8.76s, tests 643ms, environment 846ms, prepare 264ms)

@@ -1,0 +1,4 @@
+{"name":"baseline","commit":"d9d9fdd","browser":"Chrome/153.0.8010.36"}
+{"name":"failed-choice-observation","state":{"week":"monday","toggles":["false","true","true","true"]},"raw":["monday","true","true","true","true"]}
+{"name":"unload-observation","warning":true}
+{"name":"native","pass":true,"mode":"unload","runtimeErrors":0}

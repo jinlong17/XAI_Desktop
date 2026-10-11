@@ -1,0 +1,53 @@
+revision=e9ff409
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-c-DyAXbt
+
+ ❯ docs/reviews/web-board-workspace-astra-review/c-primitive-contract.test.ts (29 tests | 1 failed) 5028ms
+   ✓ activation is disabled by default: no mutator or storage write 2ms
+   ✓ first physically absent dataset commits data and receipt together with exactly one same-key write 2ms
+   ✓ valid legacy upgrades once, preserving the existing data alongside receipt 0ms
+   ✓ rejects null source without seeding or rewriting 0ms
+   ✓ rejects envelope-null source without seeding or rewriting 0ms
+   ✓ rejects array source without seeding or rewriting 0ms
+   ✓ rejects invalid-json source without seeding or rewriting 0ms
+   ✓ rejects unsupported source without seeding or rewriting 0ms
+   ✓ rejects bad-receipt source without seeding or rewriting 0ms
+   ✓ quota before the only write preserves exact legacy bytes and leaves request retryable 0ms
+   ✓ receipt replay precedes mutation/target lookup and survives fresh same-account scope 0ms
+   ✓ lost response after commit replays the exact saved result with no second mutation or write 0ms
+   ✓ same request with different signature conflicts without calling mutator 0ms
+   ✓ full receipt capacity rejects a new identity but permits existing replay without eviction 4ms
+   ✓ receipt identity __proto__ remains an own JSON property and replays safely 0ms
+   ✓ receipt identity constructor remains an own JSON property and replays safely 0ms
+   ✓ receipt identity toString remains an own JSON property and replays safely 0ms
+   ✓ validates mutator output null before committing any receipt 0ms
+   ✓ validates mutator output %j before committing any receipt 0ms
+   ✓ validates mutator output {"item":{"title":17}} before committing any receipt 0ms
+   ✓ rejects an invalid successful target identifier before committing 0ms
+   ✓ lock acquisition rejection never executes unlocked 0ms
+   ✓ missing browser Web Locks rejects without an unlocked fallback 0ms
+   ✓ revision exhaustion rejects a new command without corrupting the record 0ms
+   ✓ rechecks generation-changed at lock acquisition before mutation 0ms
+   ✓ rechecks generation-removed at lock acquisition before mutation 0ms
+   ✓ rechecks tombstone at lock acquisition before mutation 0ms
+   ✓ rechecks owner-changed at lock acquisition before mutation 0ms
+   × two same-identity commands serialized by the supplied lock commit only once 5015ms
+     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 28 passed (29)
+   Start at  17:43:01
+   Duration  5.86s (transform 120ms, setup 0ms, collect 154ms, tests 5.03s, environment 358ms, prepare 87ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/c-primitive-contract.test.ts > two same-identity commands serialized by the supplied lock commit only once
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ docs/reviews/web-board-workspace-astra-review/c-primitive-contract.test.ts:122:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

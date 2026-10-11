@@ -1,0 +1,78 @@
+independent exit=1 /button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-map"[39m
+              [33mdata-view[39m=[32m"map"[39m
+              [33mtitle[39m=[32m"Map"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-globe"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mMap[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"board-count"[39m
+        [36m>[39m
+          [0m14[0m
+          [0m [0m
+          [0mcards[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"board-members"[39m
+          [33mdata-testid[39m=[32m"board-members"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"overview-toggle"[39m
+          [33mdisabled[3...
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 6 passed (9)
+   Start at  15:03:52
+   Duration  2.43s (transform 626ms, setup 153ms, collect 889ms, tests 471ms, environment 378ms, prepare 91ms)
+
+
+author-contract-rerun exit=0
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-wDqopW
+
+ ✓ docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx (10 tests) 510ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  15:03:55
+   Duration  1.71s (transform 448ms, setup 137ms, collect 552ms, tests 510ms, environment 218ms, prepare 82ms)
+
+
+package-rerun exit=0 ceSaveRecovery.test.tsx (6 tests) 25ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts (6 tests) 16ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/StatusOverviewBanner.test.tsx (10 tests) 55ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardRecoveryInitialization.test.tsx (2 tests) 36ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/ringMath.test.ts (16 tests) 4ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/responsiveStyles.test.ts (3 tests) 2ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/panelOps.test.ts (19 tests) 5ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/shareUrl.test.ts (6 tests) 17ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/shareContract.test.ts (3 tests) 14ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/guards.test.ts (12 tests) 5ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/index-barrel.test.ts (4 tests) 4ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/registration.test.tsx (6 tests) 3ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/types.test.ts (3 tests) 2ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/savedFilters.test.ts (5 tests) 3ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/filterState.test.ts (8 tests) 4ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardWorkspacesModule.test.tsx (89 tests) 3447ms
+
+ Test Files  26 passed (26)
+      Tests  309 passed (309)
+   Start at  15:03:57
+   Duration  5.36s (transform 1.46s, setup 3.09s, collect 5.91s, tests 6.16s, environment 10.78s, prepare 1.91s)

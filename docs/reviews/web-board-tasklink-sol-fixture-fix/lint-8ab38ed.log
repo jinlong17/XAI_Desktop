@@ -1,0 +1,4 @@
+
+> @repo/plugin-web-board-workspaces@0.0.0 lint /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-workspaces
+> eslint --max-warnings 0 .
+

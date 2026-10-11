@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"41fb4d1","browser":"Chrome/152.0.7977.83"}
+{"name":"export-denied-payload","version":1,"kind":"dashboard-note-draft","note":"Latest denied memory note","noteOffset":75}
+{"name":"supplemental","pass":true,"mode":"export-denied","runtimeErrors":0}

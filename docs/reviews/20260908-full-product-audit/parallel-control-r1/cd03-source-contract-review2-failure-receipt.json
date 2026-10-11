@@ -1,0 +1,47 @@
+{
+  "id": "CD-03/SOURCE-CONTRACT-REVIEW2",
+  "result": "FAILED_STATIC_NO_REVIEW_ARTIFACT",
+  "review_iteration": 2,
+  "review_cap": 3,
+  "static_invocations": 1,
+  "parent": "984f543fc63fa8f95725d5894ff88dfbf68c8c50",
+  "fixed_input": "316ff9696a6a4d4ff2ae95e805c7e8a0fd3dad8e",
+  "source": "1d26bc1ed1d4af6f1c311fe34f9640c0f68e2e36",
+  "process": {
+    "pid": 53986,
+    "session": 99017,
+    "chunks": [
+      "f27497",
+      "121199"
+    ],
+    "exit": 1,
+    "fully_drained": true,
+    "catfile_pid": 53999,
+    "catfile_exit": 0,
+    "catfile_tail_bytes": 0,
+    "stderr_bytes": 0,
+    "cleanup": "stdinclosed/stdoutstderrEOF/threadjoined; finalmechanicald10364exit0PIDsabsent"
+  },
+  "failed_guard": "stdin104 ('inherited actual unique count', 'audit-parallel-dash06-source-availability-impact-r1', 633); required advertised649 as uniqueidentities",
+  "classification": "reviewer-added checker raw vs unique alias count assumption NOT sourcecorruption",
+  "completed_integrity": {
+    "bound_identities": 6261,
+    "inherited": 5940,
+    "unique_git_objects": 4620,
+    "identity_bytes": 249536665
+  },
+  "unrun": [
+    "subsequent semantic/canonical/ledger checks",
+    "finalbothbuffers",
+    "allwrites",
+    "stage",
+    "commit"
+  ],
+  "in_memory_findings": "UNVALIDATED_NOT_ARTIFACT_NOT_ACCEPTED_REVISE",
+  "prechecker_readserialization_error": "tooloutputtransfer JSONparse failure duringread-onlybinding, not concludingcheckerretry",
+  "output_hashes": null,
+  "source_commit": null,
+  "worktree_clean": true,
+  "review3_requires_fresh_registration": true,
+  "runtime": 0
+}

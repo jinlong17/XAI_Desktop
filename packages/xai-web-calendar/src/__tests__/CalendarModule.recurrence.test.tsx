@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
-import { render, fireEvent, screen } from "@testing-library/react";
-import { setPref } from "@repo/plugin-web-storage";
+import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import { accountScope, setPref } from "@repo/plugin-web-storage";
 import { CalendarModule } from "../CalendarModule.js";
 import type { UserCalEvent } from "../internal/eventStore/types.js";
 
@@ -32,10 +32,14 @@ function userEvent(
   };
 }
 
+function seedCalendarEvents(events: Record<string, UserCalEvent>) {
+  localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), JSON.stringify(events));
+}
+
 describe("CalendarModule recurrence integration (P4)", () => {
   it("AC-RECUR-1: daily recurring event over Week view renders 7 blocks", () => {
     setPref("xai_calendar_view", "week");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       r1: userEvent("r1", "Recurring Daily Week", "2026-05-17T09:00", "2026-05-17T10:00", { kind: "daily" }),
     });
     render(<CalendarModule lang="en" />);
@@ -44,7 +48,7 @@ describe("CalendarModule recurrence integration (P4)", () => {
 
   it("AC-RECUR-2: weekly recurring event over Week view renders exactly one block", () => {
     setPref("xai_calendar_view", "week");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       r2: userEvent("r2", "Recurring Weekly Week", "2026-05-22T09:00", "2026-05-22T10:00", { kind: "weekly" }),
     });
     render(<CalendarModule lang="en" />);
@@ -53,7 +57,7 @@ describe("CalendarModule recurrence integration (P4)", () => {
 
   it("AC-RECUR-3: daily recurring event over Month view renders all month-window instances", () => {
     setPref("xai_calendar_view", "month");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       r3: userEvent("r3", "Recurring Daily Month", "2026-05-22T09:00", "2026-05-22T10:00", { kind: "daily" }),
     });
     render(<CalendarModule lang="en" />);
@@ -62,16 +66,16 @@ describe("CalendarModule recurrence integration (P4)", () => {
 
   it("AC-RECUR-5: daily recurring event over Day view renders exactly one block", () => {
     setPref("xai_calendar_view", "day");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       r4: userEvent("r4", "Recurring Daily Day", "2026-05-22T09:00", "2026-05-22T10:00", { kind: "daily" }),
     });
     render(<CalendarModule lang="en" />);
     expect(screen.getAllByTitle("Recurring Daily Day")).toHaveLength(1);
   });
 
-  it("AC-RECUR-6: editing a recurring event updates all rendered instances", () => {
+  it("AC-RECUR-6: editing a recurring event updates all rendered instances", async () => {
     setPref("xai_calendar_view", "week");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       r5: userEvent("r5", "Recurring Edit Target", "2026-05-17T09:00", "2026-05-17T10:00", { kind: "daily" }),
     });
     render(<CalendarModule lang="en" />);
@@ -81,13 +85,15 @@ describe("CalendarModule recurrence integration (P4)", () => {
     fireEvent.change(input, { target: { value: "Recurring Edited" } });
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
-    expect(screen.queryAllByTitle("Recurring Edit Target")).toHaveLength(0);
-    expect(screen.getAllByTitle("Recurring Edited")).toHaveLength(7);
+    await waitFor(() => {
+      expect(screen.queryAllByTitle("Recurring Edit Target")).toHaveLength(0);
+      expect(screen.getAllByTitle("Recurring Edited")).toHaveLength(7);
+    });
   });
 
-  it("AC-RECUR-7: deleting a recurring event removes all rendered instances", () => {
+  it("AC-RECUR-7: deleting a recurring event removes all rendered instances", async () => {
     setPref("xai_calendar_view", "week");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       r6: userEvent("r6", "Recurring Delete Target", "2026-05-17T09:00", "2026-05-17T10:00", { kind: "daily" }),
     });
     render(<CalendarModule lang="en" />);
@@ -95,6 +101,8 @@ describe("CalendarModule recurrence integration (P4)", () => {
     fireEvent.click(screen.getAllByTitle("Recurring Delete Target")[0]!);
     fireEvent.click(screen.getByRole("button", { name: "Delete: Recurring Delete Target" }));
 
-    expect(screen.queryAllByTitle("Recurring Delete Target")).toHaveLength(0);
+    await waitFor(() => {
+      expect(screen.queryAllByTitle("Recurring Delete Target")).toHaveLength(0);
+    });
   });
 });

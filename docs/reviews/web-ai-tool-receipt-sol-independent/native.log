@@ -1,0 +1,43 @@
+{
+  "requestedRef": "daff8ef",
+  "revision": "daff8ef2c69f5543f161f309c345b0e138808b35",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "checks": [
+    "tasks:create: native quota/retry/remount/conflict/owner business contract",
+    "tasks:update: native quota/retry/remount/conflict/owner business contract plus blank/missing id rejection",
+    "tasks:delete: native quota/retry/remount/conflict/owner business contract plus blank/missing id rejection",
+    "calendar:create: native quota/retry/remount/conflict/owner business contract",
+    "calendar:update: native quota/retry/remount/conflict/owner business contract plus blank/missing id rejection",
+    "calendar:delete: native quota/retry/remount/conflict/owner business contract plus blank/missing id rejection",
+    "tasks:create: canonical get/write SecurityError cannot report model success",
+    "tasks:update: canonical get/write SecurityError cannot report model success",
+    "tasks:delete: canonical get/write SecurityError cannot report model success",
+    "calendar:create: canonical get/write SecurityError cannot report model success",
+    "calendar:update: canonical get/write SecurityError cannot report model success",
+    "calendar:delete: canonical get/write SecurityError cannot report model success",
+    "tasks:create: actual AI UI reports success only after persisted retry",
+    "tasks:update: actual AI UI reports success only after persisted retry",
+    "tasks:delete: actual AI UI reports success only after persisted retry",
+    "calendar:create: actual AI UI reports success only after persisted retry",
+    "calendar:update: actual AI UI reports success only after persisted retry",
+    "calendar:delete: actual AI UI reports success only after persisted retry",
+    "tasks:update: actual AI UI withholds model success for blank and missing ids",
+    "tasks:delete: actual AI UI withholds model success for blank and missing ids",
+    "calendar:update: actual AI UI withholds model success for blank and missing ids",
+    "calendar:delete: actual AI UI withholds model success for blank and missing ids",
+    "all six tools without subscribers: visible failure, retained confirmation, no model success",
+    "wrong requestId/channel/owner receipts ignored while matching receipt advances once",
+    "same-turn double Confirm produces one business write and one model continuation",
+    "component unmount while waiting rejects later matching success",
+    "A-to-B transition while waiting rejects later old-A success and preserves B",
+    "late wrong attempt ignored; matching retry attempt alone advances model",
+    "unfaulted normal control persists final-event deletion before model success"
+  ],
+  "observations": [
+    "JSON.stringify signature treats semantically identical object properties in a different insertion order as request-conflict; current tool registry emits stable order, but the shared helper is not canonical"
+  ],
+  "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+  "syntheticOnly": true
+}

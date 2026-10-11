@@ -1,0 +1,11 @@
+revision=f9eb4b1 fixed_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-HHg6kg
+
+ ✓ docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx (4 tests) 147ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  08:05:01
+   Duration  839ms (transform 153ms, setup 0ms, collect 263ms, tests 147ms, environment 215ms, prepare 57ms)

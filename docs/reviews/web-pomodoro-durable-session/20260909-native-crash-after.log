@@ -1,0 +1,1 @@
+{"diagnosis":true,"pass":true,"checks":[{"name":"history failure leaves durable pending","pass":true},{"name":"recover-history","pass":true},{"name":"clear failure leaves durable pending","pass":true},{"name":"recover-clear","pass":true},{"name":"cleanup replay preserves first recordedAt","pass":true}]}

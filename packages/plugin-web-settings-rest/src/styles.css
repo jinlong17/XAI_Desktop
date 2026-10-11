@@ -100,6 +100,18 @@
   background: oklch(55% 0.18 20 / 0.08);
 }
 
+@media (max-width: 640px) {
+  .acct-upgrade,
+  .acct-danger {
+    min-height: 44px;
+  }
+
+  .acct-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
 /* ---- Premium pane ---------------------------------------------------- */
 .premium-pane {
   padding: 16px;
@@ -170,6 +182,7 @@
   font-size: 0.88rem;
 }
 .sl-select {
+  min-height: 44px;
   font-size: 0.82rem;
   padding: 3px 6px;
   border: 1px solid var(--border, oklch(85% 0 0));
@@ -178,11 +191,97 @@
   color: var(--text-1, oklch(20% 0 0));
   cursor: pointer;
 }
+.sl-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.smart-lists-save-status,
+.smart-lists-recovery {
+  margin: 12px 4px 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.smart-lists-recovery {
+  padding: 12px;
+  border: 1px solid var(--border, oklch(85% 0 0));
+  border-radius: 8px;
+  background: var(--panel, #fff);
+}
+.smart-lists-recovery p {
+  margin: 0;
+}
+.smart-lists-recovery p + p {
+  margin-top: 6px;
+}
+.smart-lists-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.smart-lists-recovery-actions button {
+  flex: 1 1 12rem;
+  min-height: 44px;
+  max-inline-size: 100%;
+}
+.settings-departure-dialog {
+  position: fixed;
+  inset: auto 1rem 1rem;
+  z-index: 20;
+  max-inline-size: min(100% - 2rem, 34rem);
+  padding: 1rem;
+  border: 1px solid var(--border, oklch(85% 0 0));
+  border-radius: 0.75rem;
+  background: var(--panel, #fff);
+  box-shadow: 0 12px 32px oklch(20% 0 0 / 0.2);
+}
+.settings-departure-dialog button {
+  min-height: 44px;
+  min-inline-size: 44px;
+  padding-inline: 0.65rem;
+  margin: 0.25rem;
+}
+.settings-departure-dialog:focus-visible,
+.settings-departure-dialog button:focus-visible {
+  outline: 2px solid var(--accent, oklch(60% 0.18 190));
+  outline-offset: 2px;
+}
 
 /* ---- Notifications pane ---------------------------------------------- */
 .notif-pane {
   padding: 16px;
 }
+/* Keep the visible Notifications switch track centered inside the global
+   44px touch target. This scope deliberately mirrors Date & Time without
+   changing either that pane or the shared Toggle. */
+.module-settings .notif-pane .toggle {
+  inline-size: 44px;
+  block-size: 44px;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  background: transparent;
+}
+.module-settings .notif-pane .toggle.on { background: transparent; }
+.module-settings .notif-pane .toggle::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-start: 4px;
+  inline-size: 36px;
+  block-size: 20px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.module-settings .notif-pane .toggle.on::before { background: var(--accent); }
+.module-settings .notif-pane .toggle-knob {
+  inset-block-start: 14px;
+  inset-inline-start: 6px;
+  inline-size: 16px;
+  block-size: 16px;
+  z-index: 1;
+}
+.module-settings .notif-pane .toggle.on .toggle-knob { transform: translateX(16px); }
 .time-range {
   display: flex;
   align-items: center;
@@ -190,6 +289,8 @@
   font-size: 0.85rem;
 }
 .time-range input[type="time"] {
+  min-inline-size: 7rem;
+  min-block-size: 44px;
   padding: 3px 6px;
   border: 1px solid var(--border, oklch(85% 0 0));
   border-radius: 6px;
@@ -198,6 +299,28 @@
 }
 .muted {
   color: var(--text-3, oklch(60% 0 0));
+}
+.notif-recovery-field {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin: 0.4rem 0;
+  color: var(--text-2, oklch(50% 0 0));
+  font-size: 0.82rem;
+}
+.notif-recovery-field > span { grid-column: 1 / -1; min-inline-size: 0; overflow-wrap: anywhere; }
+.notif-recovery-field button,
+.notif-recovery-actions button { min-inline-size: 44px; min-block-size: 44px; padding-inline: 0.5rem; }
+.notif-recovery-field button { inline-size: 100%; }
+.notif-recovery-field button:only-of-type { grid-column: 1 / -1; }
+.notif-recovery-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.notif-recovery-actions p { flex-basis: 100%; margin: 0; }
+.notif-recovery-saved { margin: 10px 0 0; color: var(--text-2, oklch(50% 0 0)); font-size: 0.82rem; }
+@media (min-width: 768px) {
+  .notif-recovery-field { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .notif-recovery-field > span { grid-column: auto; }
+  .notif-recovery-field button { inline-size: auto; }
+  .notif-recovery-field button:only-of-type { grid-column: auto; }
 }
 
 /* ---- Date & Time pane ------------------------------------------------ */
@@ -477,6 +600,162 @@
 .collab-pane {
   padding: 16px;
 }
+.collab-save-status,
+.collab-recovery {
+  margin: 12px 4px 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.collab-recovery {
+  padding: 12px;
+  border: 1px solid var(--border, oklch(85% 0 0));
+  border-radius: 8px;
+  background: var(--panel, #fff);
+}
+.collab-recovery p { margin: 0; }
+.collab-recovery-fields {
+  display: grid;
+  gap: 0.5rem;
+}
+.collab-recovery-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.4rem;
+  min-block-size: 44px;
+}
+.collab-recovery-field p {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.collab-recovery-field strong,
+.collab-recovery-field span {
+  display: block;
+}
+.collab-recovery-field span {
+  font-size: 0.78rem;
+  color: var(--text-2, oklch(50% 0 0));
+}
+.collab-recovery-field button {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding-inline: 0.45rem;
+  white-space: nowrap;
+}
+.collab-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.collab-recovery-actions button {
+  flex: 1 1 8rem;
+  min-height: 44px;
+  max-inline-size: 100%;
+}
+@media (min-width: 768px) {
+  .collab-recovery-fields { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+}
+
+/* ---- Date & Time recovery ------------------------------------------- */
+.dt-recovery-field {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.4rem 0;
+  color: var(--text-2, oklch(50% 0 0));
+  font-size: 0.82rem;
+}
+.dt-recovery-field > span { grid-column: 1 / -1; min-inline-size: 0; overflow-wrap: anywhere; }
+.dt-recovery-field button,
+.dt-recovery-actions button {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding-inline: 0.5rem;
+}
+.dt-recovery-field button { inline-size: 100%; }
+.dt-recovery-field button:only-of-type { grid-column: 1 / -1; }
+
+/* The global touch rule enlarges the button box. Keep Date & Time's visible
+   switch track centered inside that 44px target, rather than stretching its
+   20px track and leaving the knob at its old corner offset. */
+.module-settings .dt-pane .toggle {
+  inline-size: 44px;
+  block-size: 44px;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  background: transparent;
+}
+.module-settings .dt-pane .toggle.on { background: transparent; }
+.module-settings .dt-pane .toggle::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-start: 4px;
+  inline-size: 36px;
+  block-size: 20px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.module-settings .dt-pane .toggle.on::before { background: var(--accent); }
+.module-settings .dt-pane .toggle-knob {
+  inset-block-start: 14px;
+  inset-inline-start: 6px;
+  inline-size: 16px;
+  block-size: 16px;
+  z-index: 1;
+}
+.module-settings .dt-pane .toggle.on .toggle-knob { transform: translateX(16px); }
+.dt-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.dt-recovery-actions p { flex-basis: 100%; margin: 0; }
+.dt-recovery-saved { margin: 10px 0 0; color: var(--text-2, oklch(50% 0 0)); font-size: 0.82rem; }
+@media (min-width: 768px) {
+  .dt-recovery-field { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .dt-recovery-field > span { grid-column: auto; }
+  .dt-recovery-field button { inline-size: auto; }
+  .dt-recovery-field button:only-of-type { grid-column: auto; }
+}
+
+/* ---- More recovery --------------------------------------------------- */
+.more-pane .check-inline {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.more-pane .reset-link {
+  display: block;
+  min-block-size: 44px;
+  margin-inline-start: auto;
+  border: 0;
+  background: transparent;
+}
+.more-recovery-field {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin: 0.4rem 0;
+  color: var(--text-2, oklch(50% 0 0));
+  font-size: 0.82rem;
+}
+.more-recovery-field > span { grid-column: 1 / -1; overflow-wrap: anywhere; }
+.more-recovery-field button,
+.more-recovery-actions button { min-inline-size: 44px; min-block-size: 44px; }
+.more-recovery-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.more-recovery-actions p { flex-basis: 100%; margin: 0; }
+.more-recovery-saved { margin: 10px 0 0; color: var(--text-2, oklch(50% 0 0)); font-size: 0.82rem; }
+@media (min-width: 768px) {
+  .more-recovery-field { grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; }
+  .more-recovery-field > span { grid-column: auto; }
+}
 
 /* ---- Sticky Note pane ------------------------------------------------ */
 .sticky-pane {
@@ -551,6 +830,48 @@
   color: var(--text-2, oklch(50% 0 0));
   display: flex;
   align-items: center;
+}
+
+/* ---- Sticky Note recovery -------------------------------------------- */
+.sticky-recovery-field {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.4rem 0;
+  color: var(--text-2, oklch(50% 0 0));
+  font-size: 0.82rem;
+}
+.sticky-recovery-text {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0.2rem;
+  min-inline-size: 0;
+}
+.sticky-recovery-text > span { min-inline-size: 0; overflow-wrap: anywhere; }
+.sticky-recovery-field button,
+.sticky-recovery-actions button {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  padding-inline: 0.5rem;
+  overflow-wrap: anywhere;
+}
+.sticky-recovery-field button { inline-size: 100%; }
+.sticky-recovery-field button:only-of-type { grid-column: 1 / -1; }
+.sticky-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.sticky-recovery-actions p { flex-basis: 100%; margin: 0; }
+.sticky-recovery-saved { margin: 10px 0 0; color: var(--text-2, oklch(50% 0 0)); font-size: 0.82rem; }
+@media (min-width: 768px) {
+  .sticky-recovery-field { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .sticky-recovery-text { grid-column: auto; }
+  .sticky-recovery-field button { inline-size: auto; }
+  .sticky-recovery-field button:only-of-type { grid-column: auto; }
 }
 
 /* ---- Hotkeys pane ---------------------------------------------------- */
@@ -938,3 +1259,25 @@ dialog.delete-account-modal::backdrop {
     height: 44px;
   }
 }
+
+/* Available on the sign-in page too; content never reveals an account identity. */
+.account-deletion-recovery {
+  box-sizing: border-box;
+  max-width: 48rem;
+  margin: 0.75rem auto;
+  padding: 1rem;
+  border: 1px solid var(--border, oklch(82% 0 0));
+  border-radius: 0.75rem;
+  background: var(--panel, oklch(97% 0 0));
+  color: var(--text-1, oklch(25% 0 0));
+}
+.account-deletion-recovery p { margin: 0 0 0.75rem; }
+.account-deletion-recovery button { min-height: 44px; }
+.account-deletion-recovery button:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* Device recovery stays secondary to the current account's export. */
+.device-recovery-export { margin-block: 1.25rem; max-width: 100%; overflow-wrap: anywhere; }
+.device-recovery-export summary { cursor: pointer; min-height: 44px; padding-block: .7rem; }
+.device-recovery-export label { display: flex; align-items: flex-start; gap: .65rem; min-height: 44px; padding-block: .6rem; }
+.device-recovery-export input { flex: 0 0 auto; margin-top: .2rem; }
+.device-recovery-export summary:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }

@@ -1,0 +1,57 @@
+
+> @repo/plugin-web-tasks@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-tasks
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-tasks
+
+ ✓ src/__tests__/TasksSidebar.test.tsx (6 tests) 176ms
+ ✓ src/__tests__/TaskComposer.test.tsx (11 tests) 245ms
+ ✓ src/__tests__/registration.test.tsx (5 tests) 251ms
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > retains and exports the latest composer draft, then retries exactly once
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+ ✓ src/__tests__/dueDate.test.tsx (3 tests) 788ms
+   ✓ REL-01 dueDate lifecycle > actual composer → detail edit → reload → local midnight refresh  772ms
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > retains failed detail edits and commits their latest values on retry
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+ ✓ src/__tests__/aiMutateSubscriber.test.tsx (8 tests) 51ms
+ ✓ src/__tests__/filterCardsByList.test.ts (24 tests) 10ms
+ ✓ src/__tests__/completionContract.test.tsx (3 tests) 273ms
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not publish failed list metadata and retains its editor for retry
+[plugin-web-storage] quota exceeded for xai_pref_task_lists.
+
+ ✓ src/__tests__/persistence.test.tsx (10 tests) 1637ms
+ ✓ src/__tests__/TasksModule.test.tsx (15 tests) 1970ms
+ ✓ src/__tests__/aiCreateSubscriber.test.tsx (7 tests) 84ms
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not publish failed tag metadata and retains its editor for retry
+[plugin-web-storage] quota exceeded for xai_pref_task_tags.
+
+ ✓ src/__tests__/tasksReducer.test.ts (29 tests) 19ms
+ ✓ src/__tests__/taskLink.test.ts (7 tests) 5ms
+ ✓ src/__tests__/validate.test.ts (9 tests) 6ms
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not close failed detail deletion or delete list metadata before task references commit
+[plugin-web-storage] quota exceeded for xai_task_cols.
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+ ✓ src/__tests__/index-barrel.test.ts (11 tests) 7ms
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > revokes failed composer retry and export after switching to B
+[plugin-web-storage] quota exceeded for xai_task_cols.
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+ ✓ src/__tests__/seed.test.ts (4 tests) 4ms
+ ✓ src/__tests__/saveRecovery.test.tsx (6 tests) 2829ms
+   ✓ Tasks recoverable writes > retains and exports the latest composer draft, then retries exactly once  839ms
+   ✓ Tasks recoverable writes > does not publish failed list metadata and retains its editor for retry  488ms
+   ✓ Tasks recoverable writes > does not publish failed tag metadata and retains its editor for retry  590ms
+   ✓ Tasks recoverable writes > does not close failed detail deletion or delete list metadata before task references commit  415ms
+   ✓ Tasks recoverable writes > revokes failed composer retry and export after switching to B  302ms
+ ✓ src/__tests__/dateForCol.test.ts (5 tests) 4ms
+ ✓ src/__tests__/ids.test.ts (2 tests) 3ms
+
+ Test Files  18 passed (18)
+      Tests  165 passed (165)
+   Start at  13:18:51
+   Duration  4.55s (transform 866ms, setup 4.39s, collect 2.12s, tests 8.36s, environment 9.48s, prepare 1.47s)
+

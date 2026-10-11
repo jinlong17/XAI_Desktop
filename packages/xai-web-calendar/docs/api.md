@@ -1,5 +1,11 @@
 # API Contract — @repo/plugin-web-calendar
 
+## Save failure recovery (2026-09-09)
+
+`useUserCalEvents` mutations throw when persistence fails, the captured account is no longer ready, or raw events differ from the mutation snapshot. The composer catches these failures, keeps the current form open, and offers retry and a manual JSON draft export. Edit/delete also reject changes to the original event while the editor was open. A successful return means the local write succeeded; it does not imply cloud synchronization.
+
+Draft exports contain the current form's local date/time fields and operation; they are recovery documents, not the account export format and not an import API. Export is restricted to the captured account. Cancel/backdrop/Escape explicitly discard the form as before. Drafts are not persisted across page closure. Synchronous baseline checking is not a cross-tab atomic transaction. View/week-start preferences and AI event subscribers have separate write contracts.
+
 > Public surface, types, and side-effect contracts.
 > Companion to `design.md` (12 sections) and `test.md` (AC traceability).
 
@@ -913,3 +919,14 @@ Focus management: native `<dialog>` handles focus trap. On close, focus returns 
 
 - Package bumps to `0.2.0` (minor — additive types + components).
 - `manifest.json` status STAYS `Production` (this extension does not regress; if reviewer prefers, status may be flipped to `In-Dev` during the build window and back to `Production` at ship — TBD by feature-review).
+
+
+## REL-01 amendment — 2026-09-09 local civil time
+
+This section supersedes historical UTC-day / fixed-24-hour / 2026-Pacific-only assumptions above. User time zone currently follows the browser/device; `xai_pref_dt_timezone` is a display boolean, not a stored IANA choice. Civil `YYYY-MM-DD` keys are date identities and existing keys are not shifted. Absolute ISO/epoch values keep their instant. Natural-day boundaries use the next local midnight (23/24/25 hours and fractional DST days), not 86,400,000 milliseconds.
+
+Shared owner: `@repo/plugin-web-tokens` public `localDateKey`, `parseLocalDateKey`, `addLocalDays`, `startOfLocalDay`, `nextLocalDayStart`, `useLocalDayClock`. The hook refreshes on midnight, focus, pageshow, visible and a 60-second system-clock/time-zone calibration. It cleans timers/listeners on unmount and makes no closed-page execution promise. User-selected historical dates are preserved when today advances.
+
+Regression evidence is tracked in `docs/reviews/web-local-time-contract/dev_log.md`; focused localDate suites run under UTC, America/Los_Angeles, Asia/Shanghai and Australia/Lord_Howe. Full feature suites retain unrelated behavior coverage. Independent verification remains a separate workflow step.
+
+Calendar date-grid UTC Date carriers remain valid for calendar arithmetic; real “today” comes from local time. Hour rows follow actual elapsed intervals and fractional final rows; no synthetic blank DST row. Ambiguous floating HH:MM events select the earlier occurrence during fall-back; these wall-clock events do not claim offset/fold metadata. The now-line uses actual elapsed time since local midnight.

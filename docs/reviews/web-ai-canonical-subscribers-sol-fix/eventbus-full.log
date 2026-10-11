@@ -1,0 +1,15 @@
+
+> @repo/xai-web-event-bus@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-event-bus
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-event-bus
+
+ ✓ src/emitter.test.ts (12 tests) 15ms
+ ✓ src/toolWriteReceipt.test.ts (4 tests) 5ms
+ ✓ src/listener.test.tsx (6 tests) 90ms
+
+ Test Files  3 passed (3)
+      Tests  22 passed (22)
+   Start at  16:26:30
+   Duration  4.30s (transform 349ms, setup 0ms, collect 814ms, tests 110ms, environment 6.11s, prepare 816ms)

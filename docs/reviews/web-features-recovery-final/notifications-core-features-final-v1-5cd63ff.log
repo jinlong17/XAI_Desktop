@@ -1,0 +1,96 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+mode=notifications-core
+suffix=features-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-final/verify-callers.mjs 5cd63ff all features-final-v1
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=cde91389f0a0baca69d266f5b6a6c5ff8098ac1f
+runner_sha256=7e1aa8b244ed9f63568fa78de79052f980df21a0bad2245a3bbccb2f6ca3454c
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+reproduces=docs/reviews/web-notifications-recovery-sol/verify-fixed.mjs mode core
+include=docs/reviews/web-notifications-recovery-sol/core.test.tsx
+setup_files=packages/plugin-web-settings-rest/vitest.setup.ts
+copied docs/reviews/web-notifications-recovery-sol/fixture.tsx run=5e8eb80442d1571a8296e88a8c58c66971dbaec28096ad2cc29a839103fa2961 archive_committed=5e8eb80442d1571a8296e88a8c58c66971dbaec28096ad2cc29a839103fa2961 (same)
+copied docs/reviews/web-notifications-recovery-sol/core.test.tsx run=596a269c3a5c8d84dba7007e251da8339af40552f302c7caef393673cb9482de archive_committed=596a269c3a5c8d84dba7007e251da8339af40552f302c7caef393673cb9482de (same)
+copied docs/reviews/web-notifications-recovery-sol/recovery.test.tsx run=d32f97976863a3e45be09429e2f1b89649f97cc8e95493169cec49c5134b91cf archive_committed=d32f97976863a3e45be09429e2f1b89649f97cc8e95493169cec49c5134b91cf (same)
+copied docs/reviews/web-notifications-recovery-sol/operations.test.tsx run=416e441e8661ea522ad82bb831751f9bc1427a6e855392dfc276cf0207c6cc8c archive_committed=416e441e8661ea522ad82bb831751f9bc1427a6e855392dfc276cf0207c6cc8c (same)
+copied docs/reviews/web-notifications-recovery-sol/boundaries.test.tsx run=a61c15d28bd0f5e312076ffa8218566a39e45c72600d84b734e1a789f3c7bae4 archive_committed=a61c15d28bd0f5e312076ffa8218566a39e45c72600d84b734e1a789f3c7bae4 (same)
+copied docs/reviews/web-notifications-recovery-sol/extended.test.tsx run=f78c558b22bf9fc5903cb27b5254d612c2aa81ab49eb89c61bf3585a93f71ec9 archive_committed=f78c558b22bf9fc5903cb27b5254d612c2aa81ab49eb89c61bf3585a93f71ec9 (same)
+archive docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts run=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 checkout=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 (same)
+product_file_sha256 packages/plugin-web-settings-rest/src/panes/notificationsPane.tsx=04930bd98b4ba05346f1472cc70f849238db14ce6cb5b4d1165132719ffbc87f packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-settings-rest/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-b2D9cF/final-notifications-core.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-b2D9cF/.final-guard/report-notifications-core.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 (react/@testing-library/react from packages/plugin-web-settings-rest; react-router linked for completeness, not aliased by the older runner)
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_checked=46 unresolved=none
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/docs
+accepted_count=11
+vitest_exit=0
+harness_checks=PASS (13/13)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-b2D9cF
+
+ ✓ docs/reviews/web-notifications-recovery-sol/core.test.tsx > healthy native controls persist all sound values and strict boundary, overnight and equal times 237ms
+ ✓ docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Enable notifications' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 100ms
+ ✓ docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Sound' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 91ms
+ ✓ docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Task due' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 93ms
+ ✓ docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Pomodoro complete' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 97ms
+ ✓ docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Habit reminder' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 100ms
+ ✓ docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Enable quiet hours' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 87ms
+ ✓ docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Quiet hours start' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 113ms
+ ✓ docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Quiet hours end' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 112ms
+ ✓ docs/reviews/web-notifications-recovery-sol/core.test.tsx > strict invalid native values never persist or become exportable drafts 36ms
+ ✓ docs/reviews/web-notifications-recovery-sol/core.test.tsx > hidden invalid and unavailable time sources stay labelled Reload-only and repair with zero writes 71ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  08:46:04
+   Duration  1.95s (transform 243ms, setup 183ms, collect 226ms, tests 1.14s, environment 191ms, prepare 43ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-b2D9cF/.final-guard/report-notifications-core.json
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-sol/fixture.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-sol/core.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-sol/recovery.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-sol/operations.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-sol/boundaries.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-sol/extended.test.tsx
+harness PASS single react, react-router and @testing-library/react instance across the archive and the oracle links (react=1 react-router=1 @testing-library/react=1)
+harness PASS JSON report parsed
+harness PASS reported test files equal the requested include
+harness PASS older runner's config in effect (environment jsdom, globals true, setupFiles [packages/plugin-web-settings-rest/vitest.setup.ts], include, root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product and helper modules loaded from the archive (3 of 3)
+harness PASS no test-file suite error
+json_report=success=true numTotalTestSuites=9 numTotalTests=11 numPassedTests=11 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals cases=11 passed=11 failed=0 other=0 suite_errors=0 unhandled_error_lines=0 console_blocks=0 act_warning_lines=0
+accepted_count=11 count_matches_accepted=true
+file docs/reviews/web-notifications-recovery-sol/core.test.tsx status=passed tests=11 passed=11 failed=0
+case 001 PASSED | healthy native controls persist all sound values and strict boundary, overnight and equal times
+case 002 PASSED | 'Enable notifications' latest-choice failure retains the latest public value, old physical bytes and field Retry, then recovers only that field
+case 003 PASSED | 'Sound' latest-choice failure retains the latest public value, old physical bytes and field Retry, then recovers only that field
+case 004 PASSED | 'Task due' latest-choice failure retains the latest public value, old physical bytes and field Retry, then recovers only that field
+case 005 PASSED | 'Pomodoro complete' latest-choice failure retains the latest public value, old physical bytes and field Retry, then recovers only that field
+case 006 PASSED | 'Habit reminder' latest-choice failure retains the latest public value, old physical bytes and field Retry, then recovers only that field
+case 007 PASSED | 'Enable quiet hours' latest-choice failure retains the latest public value, old physical bytes and field Retry, then recovers only that field
+case 008 PASSED | 'Quiet hours start' latest-choice failure retains the latest public value, old physical bytes and field Retry, then recovers only that field
+case 009 PASSED | 'Quiet hours end' latest-choice failure retains the latest public value, old physical bytes and field Retry, then recovers only that field
+case 010 PASSED | strict invalid native values never persist or become exportable drafts
+case 011 PASSED | hidden invalid and unavailable time sources stay labelled Reload-only and repair with zero writes
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-b2D9cF","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-b2D9cF/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-b2D9cF/packages/plugin-web-settings-rest/vitest.setup.ts"],"include":["docs/reviews/web-notifications-recovery-sol/core.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/plugin-web-settings-rest/src/panes/notificationsPane.tsx packages/plugin-web-storage/src/internal/prefMutation.ts docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts
+pin_required_provenance_missing=none
+pin_modules=63 by package: docs/reviews/web-board-workspace-astra-review=1 docs/reviews/web-notifications-recovery-sol=2 packages/plugin-web-settings-rest=3 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-shell=9

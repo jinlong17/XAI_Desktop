@@ -1,0 +1,20 @@
+baseline {"commit":"407259d"}
+original-correct-oracle {"editorRetained":false,"errorVisible":false,"bytesUnchanged":true,"activeAttempts":2}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert(result.editorRetained&&result.errorVisible&&result.bytesUnchanged&&result.activeAttempts===0)
+
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-board-create-recovery/verify-native.mjs:34:544 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.16.0

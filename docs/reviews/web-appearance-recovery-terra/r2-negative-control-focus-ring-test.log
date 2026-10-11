@@ -1,0 +1,47 @@
+$ pnpm --filter @repo/plugin-web-settings-appearance exec vitest run src/__tests__/AppearancePane.focus-ring.test.tsx
+# cwd: /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a44fa37ea5fea831c
+# HEAD: 9b76076a5c6f22e81a09f4ddbdf3115d0e637fa7
+# started: 2026-10-05T15:08:21Z
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a44fa37ea5fea831c/packages/xai-web-settings-appearance
+
+ ❯ src/__tests__/AppearancePane.focus-ring.test.tsx (4 tests | 1 failed) 51ms
+   × F-APP-1 Font scale slider focus ring > styles.css has one top-level rule for the focused Font scale slider that declares only the ring 6ms
+     → expected [] to have a length of 1 but got +0
+   ✓ F-APP-1 Font scale slider focus ring > the ring equals the global input:focus-visible ring in tokens.css 1ms
+   ✓ F-APP-1 Font scale slider focus ring > its selector outranks every layout.css rule that sets the outline of the range input in .slider-row 1ms
+   ✓ F-APP-1 Font scale slider focus ring > without :focus-visible the selector reaches exactly the Font scale slider 42ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/AppearancePane.focus-ring.test.tsx > F-APP-1 Font scale slider focus ring > styles.css has one top-level rule for the focused Font scale slider that declares only the ring
+AssertionError: expected [] to have a length of 1 but got +0
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+ ❯ src/__tests__/AppearancePane.focus-ring.test.tsx:120:19
+    118|   it("styles.css has one top-level rule for the focused Font scale sli…
+    119|     const rules = paneRules.filter((rule) => rule.selectors.includes(F…
+    120|     expect(rules).toHaveLength(1);
+       |                   ^
+    121|     expect(rules[0]?.selectors).toEqual([FOCUS_SELECTOR]);
+    122|     expect(rules[0]?.atRules).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  08:08:22
+   Duration  1.22s (transform 283ms, setup 72ms, collect 438ms, tests 51ms, environment 344ms, prepare 73ms)
+
+undefined
+/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a44fa37ea5fea831c/packages/xai-web-settings-appearance:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/__tests__/AppearancePane.focus-ring.test.tsx
+
+# exit: 1

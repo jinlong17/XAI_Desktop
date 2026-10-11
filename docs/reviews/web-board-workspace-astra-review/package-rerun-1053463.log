@@ -1,0 +1,78 @@
+revision=1053463
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-vEemxh
+
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardSwitcher.test.tsx (16 tests) 126ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/StatusOverviewBanner.test.tsx (10 tests) 43ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/PlannerPanel.test.tsx (15 tests) 89ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardCreator.test.tsx (10 tests) 99ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/FilterPopover.test.tsx (12 tests) 189ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/ShareModal.test.tsx (10 tests) 105ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/InboxPanel.test.tsx (12 tests) 139ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/CardDetailDialog.test.tsx (16 tests) 100ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardComposerRecovery.test.tsx (4 tests) 656ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardCreateRecovery.test.tsx (5 tests) 774ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardDeleteConfirmDialog.test.tsx (11 tests) 54ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts (6 tests) 13ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/shareUrl.test.ts (6 tests) 5ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/WorkspaceSaveRecovery.test.tsx (6 tests) 19ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardRecoveryInitialization.test.tsx (2 tests) 12ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/index-barrel.test.ts (4 tests) 4ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/panelOps.test.ts (19 tests) 4ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/shareContract.test.ts (3 tests) 4ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/ringMath.test.ts (16 tests) 8ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/savedFilters.test.ts (5 tests) 3ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/filterState.test.ts (8 tests) 2ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/guards.test.ts (12 tests) 3ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/registration.test.tsx (6 tests) 3ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/types.test.ts (3 tests) 2ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/responsiveStyles.test.ts (3 tests) 5ms
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/BoardWorkspacesModule.test.tsx (85 tests) 3247ms
+
+ Test Files  26 passed (26)
+      Tests  305 passed (305)
+   Start at  14:53:34
+   Duration  5.26s (transform 1.29s, setup 3.28s, collect 6.65s, tests 5.71s, environment 9.92s, prepare 1.60s)
+
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > canonical quota retains latest editor and never selects nonexistent board
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardComposerRecovery.test.tsx > Card/list composer confirmed persistence > card quota keeps latest draft and stable id through repeated attempts
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > active selection quota is partial success; retry only opens one existing board
+[plugin-web-storage] quota exceeded for xai_active_board.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardComposerRecovery.test.tsx > Card/list composer confirmed persistence > list quota keeps latest draft and stable id through repeated attempts
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > newer raw wins over a failed create retry
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardComposerRecovery.test.tsx > Card/list composer confirmed persistence > newer raw and subsequent account switch preserve the draft without retry/export mutation
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > old owner cannot retry or export its failed creation into B
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts > intent write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts > task write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts > acknowledgement write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts > pending link follows stable card through move and card/list archive restoration
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/shareUrl.test.ts > generateShareUrl > SU-6 crypto.subtle === undefined fallback returns boardId.slice(0,8)
+[shareUrl] SubtleCrypto unavailable; using boardId slice fallback
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/BoardWorkspacesModule.test.tsx > TASK02 failed Task write retains pending Board intent across remount and actual Retry completes once
+[plugin-web-storage] quota exceeded for xai_task_cols.

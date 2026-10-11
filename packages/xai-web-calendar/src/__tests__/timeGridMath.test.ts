@@ -108,9 +108,9 @@ describe("buildHourLabels", () => {
     expect(labels.every((l) => !l.isDst)).toBe(true);
   });
 
-  it("spring-forward day has 24 entries (23 real + 1 DST marker)", () => {
+  it("spring-forward day has 23 real hour entries", () => {
     const labels = buildHourLabels("2026-03-08");
-    expect(labels).toHaveLength(24);
+    expect(labels).toHaveLength(23);
     expect(labels.some((l) => l.isDst)).toBe(true);
     expect(labels.some((l) => l.label === "02")).toBe(false); // 02:00 skipped
   });

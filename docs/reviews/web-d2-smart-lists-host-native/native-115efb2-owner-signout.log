@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"115efb2","browser":"Chrome/152.0.7977.83"}
+{"name":"owner-replaces-signout","pass":true,"scope":"Actual scope replacement cancels original host decision before B edit; controlled accounts, no provider request"}
+{"name":"actual-host-departure","pass":true,"scope":"Actual composedSettingsRegistration with data router and WebShellProvider, real sidebar; initial departure blocked. Full Stay/Export/Discard flows require their separate final contract checks"}

@@ -1,0 +1,576 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-xn5sI1
+
+ ❯ docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx (2 tests | 1 failed) 196ms
+   ✓ Retry after a newer queued choice observes only that choice's own success=true 105ms
+   × Retry after a newer queued choice observes only that choice's own success=false 90ms
+     → expected false to be true // Object.is equality
+     → expected false to be true // Object.is equality
+     → Unable to find an accessible element with the role "button" and name "Export Date & Time draft"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Date & Time":
+  [36m<h3[39m
+    [33mclass[39m=[32m"pane-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Start week on":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Start week on"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Monday":
+  [36m<option[39m
+    [33mvalue[39m=[32m"monday"[39m
+  [36m/>[39m
+
+  Name "Sunday":
+  [36m<option[39m
+    [33mvalue[39m=[32m"sunday"[39m
+  [36m/>[39m
+
+  Name "Saturday":
+  [36m<option[39m
+    [33mvalue[39m=[32m"saturday"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Show Lunar Calendar":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Show Lunar Calendar"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Show Week Numbers (W)":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Show Week Numbers (W)"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Show Holidays":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Show Holidays"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Time Zone":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Time Zone"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"dt-pane"[39m
+    [36m>[39m
+      [36m<h3[39m
+        [33mclass[39m=[32m"pane-title"[39m
+      [36m>[39m
+        [0mDate & Time[0m
+      [36m</h3>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mStart week on[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Start week on"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"monday"[39m
+              [36m>[39m
+                [0mMonday[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"sunday"[39m
+              [36m>[39m
+                [0mSunday[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"saturday"[39m
+              [36m>[39m
+                [0mSaturday[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+        [33mstyle[39m=[32m"margin-top: 14px;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mShow Lunar Calendar[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Show Lunar Calendar"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mShow Week Numbers (W)[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Show Week Numbers (W)"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mShow Holidays[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Show Holidays"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+        [33mstyle[39m=[32m"margin-top: 14px;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mTime Zone[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-desc"[39m
+            [36m>[39m
+              [0mIf enabled, you can select the time zone when setting time for tasks.[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Time Zone"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  01:34:23
+   Duration  1.53s (transform 305ms, setup 285ms, collect 260ms, tests 196ms, environment 452ms, prepare 127ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx > Retry after a newer queued choice observes only that choice's own success=false
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx:14:81
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx > Retry after a newer queued choice observes only that choice's own success=false
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx:14:120
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx > Retry after a newer queued choice observes only that choice's own success=false
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Export Date & Time draft"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Date & Time":
+  [36m<h3[39m
+    [33mclass[39m=[32m"pane-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Start week on":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Start week on"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Monday":
+  [36m<option[39m
+    [33mvalue[39m=[32m"monday"[39m
+  [36m/>[39m
+
+  Name "Sunday":
+  [36m<option[39m
+    [33mvalue[39m=[32m"sunday"[39m
+  [36m/>[39m
+
+  Name "Saturday":
+  [36m<option[39m
+    [33mvalue[39m=[32m"saturday"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Show Lunar Calendar":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Show Lunar Calendar"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Show Week Numbers (W)":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Show Week Numbers (W)"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Show Holidays":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Show Holidays"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Time Zone":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Time Zone"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"dt-pane"[39m
+    [36m>[39m
+      [36m<h3[39m
+        [33mclass[39m=[32m"pane-title"[39m
+      [36m>[39m
+        [0mDate & Time[0m
+      [36m</h3>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mStart week on[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Start week on"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"monday"[39m
+              [36m>[39m
+                [0mMonday[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"sunday"[39m
+              [36m>[39m
+                [0mSunday[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"saturday"[39m
+              [36m>[39m
+                [0mSaturday[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+        [33mstyle[39m=[32m"margin-top: 14px;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mShow Lunar Calendar[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Show Lunar Calendar"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mShow Week Numbers (W)[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Show Week Numbers (W)"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mShow Holidays[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Show Holidays"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+        [33mstyle[39m=[32m"margin-top: 14px;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mTime Zone[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-desc"[39m
+            [36m>[39m
+              [0mIf enabled, you can select the time zone when setting time for tasks.[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Time Zone"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx:15:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯

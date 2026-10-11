@@ -1,0 +1,26 @@
+
+> @repo/plugin-web-board-workspaces@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-workspaces
+> vitest run "src/__tests__/taskLinkCommand.test.ts"
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-workspaces
+
+stderr | src/__tests__/taskLinkCommand.test.ts > intent write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > task write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > acknowledgement write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > pending link follows stable card through move and card/list archive restoration
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+ ✓ src/__tests__/taskLinkCommand.test.ts (6 tests) 12ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  13:27:35
+   Duration  1.53s (transform 410ms, setup 224ms, collect 437ms, tests 12ms, environment 555ms, prepare 63ms)
+

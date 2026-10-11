@@ -1,0 +1,100 @@
+{
+  "id": "MED-03/PREPARE-CORRECT2",
+  "workflow": "C",
+  "module": "web",
+  "role": "fresh original full-obligation preparer; no implementation or product decisions",
+  "model": "gpt-6-astra",
+  "fixed_input": "711cfd8d7a587468d4ff133eb6d5911ad4dd79ef",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "original_item": {
+    "id": "MED-03",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "定义冥想历史记录、离开修正和重新播放规则",
+    "acceptance": "是否计入离开时长、是否续播和实际记录字段有可测试合同",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "MED-03",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:MED-03"
+    ],
+    "source_section": "MED",
+    "acceptance_evidence": {
+      "business_acceptance": "是否计入离开时长、是否续播和实际记录字段有可测试合同",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "MED-03/prepare",
+      "MED-03/contract-review",
+      "MED-03/before",
+      "MED-03/implement",
+      "MED-03/verify",
+      "MED-03/accept",
+      "MED-03/reconcile",
+      "MED-03/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  },
+  "allowed_files": [
+    "docs/reviews/audit-parallel-med03-preparation-r2/contract.md",
+    "docs/reviews/audit-parallel-med03-preparation-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "Preserve complete original MED-03 action: 定义冥想历史记录、离开修正和重新播放规则; acceptance: 是否计入离开时长、是否续播和实际记录字段有可测试合同. All original312fields/order/39reversiblemodulelabels/original933+TT08six=939 evidence/formal13,3,3,293 remain. No omission/duplicate caller attribution or replacing full original goal with a smaller slice.",
+    "First pin existing owning package design/API/test/devlog actualsource/current accepted contract/decisions and historical before/fixed/failure/refusal/acceptance. Define meditation history, away-time correction, replay/resume and actual record fields using existing explicit rules first. No invented product decision from implementation accident/prototype/similar module. Where explicitrules suffice propose exact testable continuation. Only source-proven unresolved minimum owner question recorded for independentreview first; do not ask user fromdraft or override prior decision.",
+    "Full source owner/writer/reader/producer/consumer actualhost route/fullscreen/reload/processclose/account scope andgeneration/queued latework/history/importexport/delete compatibility/sourceerror/readonly default handling. Exact finite conditionalpaths+semanticresources/protectedsharedscope, all before/qualification/nativevisual/trustedkeyboard/account/regression/actualvendor/freshacceptance/rootreconcile/inventory gates. Complete canonicalClockr2G1 E1-E25/E24+jcopies andcurrentmethoddependency mapping; staticprep mayproceed while method blocked, no weakened acceptance.",
+    "Actual permanent running-unit history census sourcepurpose/commands/modes/launch IDs/refusals/calibration vs assertions/logduplicates/formal-probe unknown. Reuse valid exacthistoricalproof with applicability; do not rerun. Cap3 no actor/path/wt reset/empty evidence0; genuine new purposes source-bound separatelyregisterable, inherited mixedunitsunknown hold onlythoseunits. One static1, runtime/tests/build/lint/browser/native/qualification/probes/vendor0/no childrenpush. Complete proposedcontract+hashmanifest, fresh independentreview mandatory beforeadoption.",
+    "Full688review/all649original corpus andcompleteoriginal16rows/11conditionalpaths/10logs/fullcanonicalG1 retained. Correct exactly R1alreadyvisibleExportfailed session.error andprefs bothnotfabricatedmissingUI; R2actuallegacy schema-less/coercibleversions predicate sourcegroundednotpermission; R3exactexportshape version/kind/snapshot/sceneDraft/fixedDurationDraft snapshot=rejectedproposal no separatecommittedbackup. Preserve qualifiedbefore/fixed/account/genericreset/forcedloss prerequisites andnoownerquestion; no new duplicateUI or code repair. Bothauthor1/reviewer1staticFAILED permanent, no replacementPASS; currentauthor2static1independentinputscope no budgetreset. Knownbaseline exactlyfourTT08docs delta vsruntimeunchanged; original39labels are30web（project-system）+9web（跨模块验证索引） projectedweb withoriginal_module exact. Newr2ADD keepsr1/source/reviewfailures protected unchanged."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/lockfile/config",
+    "original contracts/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/other worktrees",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "preparation_iteration": 2,
+    "preparation_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "hash/dirty/scope drift",
+    "unsupported product decision or weakened acceptance",
+    "protected boundary or runtime need"
+  ],
+  "no_children": true,
+  "source_inputs": [
+    "23bd8545b317e2d5565ad069aaabd0e65061737b",
+    "a87f90c40490e3ac02d392fe9f89aa038e439ec5"
+  ]
+}

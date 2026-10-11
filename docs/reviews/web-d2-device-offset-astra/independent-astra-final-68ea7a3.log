@@ -1,0 +1,11 @@
+revision=68ea7a3 fixed_commit=68ea7a35b8d0755c18f9d65c1c1bfcea43ae41c8
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-KVHcPi
+
+ ✓ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx (13 tests) 192ms
+
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+   Start at  20:50:03
+   Duration  1.31s (transform 179ms, setup 280ms, collect 58ms, tests 192ms, environment 501ms, prepare 83ms)

@@ -1,0 +1,21 @@
+revision=aca0193
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-b2-eaWEfz
+
+stdout | docs/reviews/web-board-workspace-astra-review/b2-compatibility.test.tsx > Board link refuses json-null task source before publishing intent
+json-null {"result":{"ok":false,"phase":"intent","message":"Task data needs recovery; original bytes were preserved."},"taskBytesPreserved":true,"boardBytesPreserved":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/b2-compatibility.test.tsx > Board link refuses envelope-null task source before publishing intent
+envelope-null {"result":{"ok":false,"phase":"intent","message":"Task data needs recovery; original bytes were preserved."},"taskBytesPreserved":true,"boardBytesPreserved":true}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/b2-compatibility.test.tsx (19 tests) 19ms
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  15:33:47
+   Duration  1.33s (transform 334ms, setup 0ms, collect 584ms, tests 19ms, environment 446ms, prepare 84ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/b2-compatibility.test.tsx > calendar nonempty envelope projects valid data and reaches protected writer refusal instead of false baseline mismatch
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.

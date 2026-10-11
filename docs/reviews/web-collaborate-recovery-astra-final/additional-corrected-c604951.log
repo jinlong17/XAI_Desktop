@@ -1,0 +1,34 @@
+revision=c604951 fixed_commit=c604951acda9adb48c51e00dba6255757b1f2afc
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-hAxkmN
+
+ ❯ docs/reviews/web-collaborate-recovery-astra-final/additional.test.tsx (3 tests | 2 failed) 289ms
+   × does not show aggregate Saved while the avatars source remains invalid after a sibling save 103ms
+     → expected 'Saved' not to match /^Saved$/i
+   × does not show aggregate Saved while the avatars source remains unavailable after a sibling save 33ms
+     → expected 'Saved' not to match /^Saved$/i
+   ✓ clears failed export feedback on a new valid edit while preserving current draft and exact retry value 152ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  23:33:16
+   Duration  1.95s (transform 366ms, setup 0ms, collect 686ms, tests 289ms, environment 605ms, prepare 127ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-collaborate-recovery-astra-final/additional.test.tsx > does not show aggregate Saved while the avatars source remains invalid after a sibling save
+ FAIL  docs/reviews/web-collaborate-recovery-astra-final/additional.test.tsx > does not show aggregate Saved while the avatars source remains unavailable after a sibling save
+AssertionError: expected 'Saved' not to match /^Saved$/i
+
+- Expected: 
+/^Saved$/i
+
++ Received: 
+"Saved"
+
+ ❯ docs/reviews/web-collaborate-recovery-astra-final/additional.test.tsx:26:63
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯

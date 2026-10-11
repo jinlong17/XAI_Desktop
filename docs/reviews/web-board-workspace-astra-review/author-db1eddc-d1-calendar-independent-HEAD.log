@@ -1,0 +1,33 @@
+revision=HEAD
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d1-4YSDzk
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-civil-date instead of admitting a merely string-shaped event
+invalid-civil-date {"accepted":false,"physicalWritten":false}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-duration instead of admitting a merely string-shaped event
+invalid-duration {"accepted":false,"physicalWritten":false}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-recurrence instead of admitting a merely string-shaped event
+invalid-recurrence {"accepted":false,"physicalWritten":false}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > real CalendarModule queued save must preserve an externally edited target and keep recovery open
+queued-save {"bytesPreserved":true,"editorOpen":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > real CalendarModule queued delete must preserve an externally edited target and keep recovery open
+queued-delete {"bytesPreserved":true,"editorOpen":true}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx (11 tests) 727ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  16:24:54
+   Duration  1.97s (transform 335ms, setup 223ms, collect 342ms, tests 727ms, environment 358ms, prepare 53ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > queued create merges a legitimate external addition and creates exactly one draft
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > quota failure retains latest edited form and retry commits the latest draft once
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.

@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"2962b49","browser":"Chrome/152.0.7977.83"}
+{"name":"pointer-entry-observation","editor":false,"events":[{"name":"pointerdown","target":"dash-note__text","pointerId":1},{"name":"gotpointercapture","target":"dash-note has-note","pointerId":1},{"name":"pointerup","target":"dash-note has-note","pointerId":1},{"name":"lostpointercapture","target":"dash-note has-note","pointerId":1},{"name":"click","target":"dash-note has-note","pointerId":1}],"note":"Original note","offset":"0"}
+{"name":"departure","pass":false,"error":"AssertionError [ERR_ASSERTION]: Actual no-movement pointer click did not open Header editor"}

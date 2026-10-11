@@ -1,0 +1,403 @@
+{
+  "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY-REVIEW1",
+  "workflow": "D",
+  "primary_workflow": "B",
+  "module": "web",
+  "model": "gpt-6-astra",
+  "role": "fresh independent whole Habits5source discoveryreview1 no repair",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "f3c324179ff138c60c50e5f98c8334a48d113fa0",
+  "source_commit": "7c6b867b046f82f7fa667edf187bc1cdda120ccd",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "allowed_files": [
+    "docs/reviews/audit-parallel-hab01-hab05-source-discovery-review-r1/review.md",
+    "docs/reviews/audit-parallel-hab01-hab05-source-discovery-review-r1/inputs.sha256"
+  ],
+  "protected": [
+    "ALLnonallowed files/source/contracts/runner/evidence/failurelogs",
+    "globalcontrol/ledgers/otherworktrees/canonicaldocs/skills/generator/registry",
+    "module/ownerdecisions/caps/measurementstandards",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 1,
+    "review_cap": 3,
+    "static_pass": 1,
+    "total_wall_minutes": 30,
+    "static_seconds": 120,
+    "owned_process_drain_seconds": 30,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "network": 0,
+    "children": 0
+  },
+  "no_children": true,
+  "stop": [
+    "actualinput/dirty/hash/protecteddrift",
+    "need new undecidedproductrule or unauthorizedexec",
+    "actual concluding staticFAIL immediatelyfreeze no retry/materialization/commit"
+  ],
+  "original_items": [
+    {
+      "id": "HAB-01",
+      "priority": "P1",
+      "kind": "修复",
+      "action": "打卡、连续天、月完成率统一当地日期和应完成周期",
+      "acceptance": "频率/startDate生效；未来打卡不抬高结果；完成率不超过100%",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "HAB-01",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "HAB",
+      "acceptance_evidence": {
+        "business_acceptance": "频率/startDate生效；未来打卡不抬高结果；完成率不超过100%",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "HAB-01/prepare",
+        "HAB-01/contract-review",
+        "HAB-01/before",
+        "HAB-01/implement",
+        "HAB-01/verify",
+        "HAB-01/accept",
+        "HAB-01/reconcile",
+        "HAB-01/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "HAB-02",
+      "priority": "P2",
+      "kind": "修复",
+      "action": "午夜/可见性恢复后更新今日状态并保留合法空习惯库",
+      "acceptance": "长开页面今天自动变化；清空后重开不注入样例",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "HAB-02",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "HAB",
+      "acceptance_evidence": {
+        "business_acceptance": "长开页面今天自动变化；清空后重开不注入样例",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "HAB-02/prepare",
+        "HAB-02/contract-review",
+        "HAB-02/before",
+        "HAB-02/implement",
+        "HAB-02/verify",
+        "HAB-02/accept",
+        "HAB-02/reconcile",
+        "HAB-02/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "HAB-03",
+      "priority": "P2",
+      "kind": "修复",
+      "action": "日记按变化保存durable draft并处理切习惯/外部更新冲突",
+      "acceptance": "直接关闭不丢输入；其他tab更新不静默覆盖草稿",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "HAB-03",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "HAB",
+      "acceptance_evidence": {
+        "business_acceptance": "直接关闭不丢输入；其他tab更新不静默覆盖草稿",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "HAB-03/prepare",
+        "HAB-03/contract-review",
+        "HAB-03/before",
+        "HAB-03/implement",
+        "HAB-03/verify",
+        "HAB-03/accept",
+        "HAB-03/reconcile",
+        "HAB-03/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "HAB-04",
+      "priority": "P2",
+      "kind": "优化",
+      "action": "突出今天打卡、应完成日和休息日，整理周标题与徽章",
+      "acceptance": "圆点不挤压文字；命中区44px；未来/历史补记含义清楚",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "HAB-04",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "HAB",
+      "acceptance_evidence": {
+        "business_acceptance": "圆点不挤压文字；命中区44px；未来/历史补记含义清楚",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "HAB-04/prepare",
+        "HAB-04/contract-review",
+        "HAB-04/before",
+        "HAB-04/implement",
+        "HAB-04/verify",
+        "HAB-04/accept",
+        "HAB-04/reconcile",
+        "HAB-04/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "HAB-05",
+      "priority": "P1",
+      "kind": "文档",
+      "action": "校准可保存但不执行的提醒入口",
+      "acceptance": "显示实际支持/权限/已安排状态；关页提醒建设关联JOB组",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "HAB-05",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "HAB",
+      "acceptance_evidence": {
+        "business_acceptance": "显示实际支持/权限/已安排状态；关页提醒建设关联JOB组",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "HAB-05/prepare",
+        "HAB-05/contract-review",
+        "HAB-05/before",
+        "HAB-05/implement",
+        "HAB-05/verify",
+        "HAB-05/accept",
+        "HAB-05/reconcile",
+        "HAB-05/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    }
+  ],
+  "read_paths": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "docs/workflow/project/workflow.md",
+    "docs/workflow/project/multi-machine-development.md",
+    "docs/reviews/20260908-full-product-audit/02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "docs/reviews/audit-parallel-hab01-hab05-source-discovery-r1/discovery.md",
+    "docs/reviews/audit-parallel-hab01-hab05-source-discovery-r1/inputs.sha256"
+  ],
+  "source_process_holds": {
+    "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY1",
+    "source": "7c6b867b046f82f7fa667edf187bc1cdda120ccd",
+    "parent": "80cc49185310947d94c4f8f6339479551b71b7e4",
+    "integration": "f3c324179ff138c60c50e5f98c8334a48d113fa0",
+    "archive_ref": "codex/archive/parallel-hab01-hab05-source1-20261010",
+    "all_input_hashes_checked": 61,
+    "outputs": {
+      "docs/reviews/audit-parallel-hab01-hab05-source-discovery-r1/discovery.md": "1137e2a4785ce7ab9771897751b314c424a1c2e28b3e8e11c53e1451da3ae1ce",
+      "docs/reviews/audit-parallel-hab01-hab05-source-discovery-r1/inputs.sha256": "7711e4d3a24e07fb4f99bcd830ea758f8d1c4dd942a89b94a8d1e9196da9f1cd"
+    },
+    "disposition": "sourceonly reportedstaticPASS pendingwholeD1 withbinding/provenanceholds",
+    "clean": true,
+    "exact2ADD": true,
+    "static": {
+      "reported_invocations": 1,
+      "reported_stdout": "PREWRITE_STATIC_PASS inputs=61 items=5 outputs=2",
+      "pid": "UNKNOWN",
+      "numeric_exit": "UNKNOWN",
+      "session": "UNKNOWN",
+      "chunk": "UNKNOWN",
+      "EOF_drain": "UNKNOWN",
+      "elapsed": "UNKNOWN",
+      "total_wall": "UNKNOWN"
+    },
+    "bare_binding_interpretation": {
+      "paths": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "docs/workflow/project/workflow.md",
+        "docs/workflow/project/multi-machine-development.md",
+        "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-hab01-hab05-source-discovery-r1.json",
+        "docs/reviews/20260908-full-product-audit/parallel-control-r1/execution-state.json",
+        "docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md",
+        "docs/reviews/20260908-full-product-audit/ALL-TODO-CURRENT.md",
+        "docs/reviews/20260908-full-product-audit/02-tasks-time-boards.md",
+        "docs/reviews/20260908-full-product-audit/05-visual-ux-audit.md",
+        "docs/reviews/xai-web-habits/20260523-roadmap-seed.md",
+        "docs/reviews/xai-web-habits/20260523-discovery-review.md",
+        "docs/reviews/web-date-time-recovery-contract/contract.md",
+        "docs/reviews/web-date-time-recovery-contract/remaining-writers.md",
+        "packages/xai-web-habits/package.json",
+        "packages/xai-web-habits/docs/design.md",
+        "packages/xai-web-habits/docs/api.md",
+        "packages/xai-web-habits/docs/test.md",
+        "packages/xai-web-habits/docs/dev_log.md",
+        "packages/xai-web-habits/src/HabitsModule.tsx",
+        "packages/xai-web-habits/src/HabitList.tsx",
+        "packages/xai-web-habits/src/HabitRow.tsx",
+        "packages/xai-web-habits/src/HabitDetail.tsx",
+        "packages/xai-web-habits/src/DiaryCard.tsx",
+        "packages/xai-web-habits/src/MonthCalendar.tsx",
+        "packages/xai-web-habits/src/styles.css",
+        "packages/xai-web-habits/src/types.ts",
+        "packages/xai-web-habits/src/registration.tsx",
+        "packages/xai-web-habits/src/internal/AddHabitDialog.tsx",
+        "packages/xai-web-habits/src/internal/computeStats.ts",
+        "packages/xai-web-habits/src/internal/computeStreak.ts",
+        "packages/xai-web-habits/src/internal/dateKeys.ts",
+        "packages/xai-web-habits/src/internal/habitMeta.tsx",
+        "packages/xai-web-habits/src/internal/toggle.ts",
+        "packages/xai-web-habits/src/internal/usePersistedHabits.ts",
+        "packages/xai-web-habits/src/internal/seed.ts",
+        "packages/xai-web-habits/src/__tests__/computeStreak.test.ts",
+        "packages/xai-web-habits/src/__tests__/computeStats.test.ts",
+        "packages/xai-web-habits/src/__tests__/dateKeys.test.ts",
+        "packages/xai-web-habits/src/__tests__/DiaryCard.test.tsx",
+        "packages/xai-web-habits/src/__tests__/saveRecovery.test.tsx",
+        "packages/xai-web-habits/src/__tests__/HabitsModule.persist.test.tsx",
+        "packages/xai-web-habits/src/__tests__/HabitsModule.render.test.tsx",
+        "packages/xai-web-habits/src/__tests__/HabitsModule.add.test.tsx",
+        "packages/xai-web-habits/src/__tests__/MonthCalendar.test.tsx",
+        "packages/plugin-web-tokens/src/localDate.ts",
+        "packages/plugin-web-tokens/src/useLocalDayClock.ts",
+        "packages/plugin-web-tokens/src/__tests__/localDate.test.tsx",
+        "packages/plugin-web-tokens/docs/design.md",
+        "packages/plugin-web-tokens/docs/api.md",
+        "packages/plugin-web-tokens/docs/test.md",
+        "packages/plugin-web-storage/src/internal/usePref.ts",
+        "packages/plugin-web-storage/src/internal/accountScope.ts",
+        "packages/plugin-web-storage/src/internal/accountOwnership.ts",
+        "packages/plugin-web-storage/docs/usePref-write-results.md",
+        "packages/plugin-web-settings-rest/src/panes/notificationsPane.tsx",
+        "apps/web/src/host/capabilities.ts",
+        "apps/web/src/service-worker/register.ts",
+        "packages/plugin-console/src/components/ConsoleLayout.tsx",
+        "apps/web/src/routes/modules/shellRegistrations.tsx"
+      ],
+      "parent": "80cc49185310947d94c4f8f6339479551b71b7e4",
+      "disposition": "rootmetadata hashproof atactualsourceparent; per-read SHA grammar/provenance independentlyreviewed beforeadoption no artifactrewrite"
+    },
+    "preparation_errors": [
+      "zsh unmatchedquote",
+      "literalP0... rev-parse unknownrevision",
+      "rg absentpackages/plugin-sdk"
+    ],
+    "inconsistent_reported_no_child_claim": "generic nochild statement cannot cover actualexecutedGitrev-parse/rg failures; rawPID/numericexit UNKNOWN no0",
+    "original_message_sha256": "8b38ae40f9840169571205928e2771544dabf7065a2c9e53fd85c67e9a7f1e98",
+    "source_message_format": "literal backslashn fieldseparators preservedoriginalremote; rootintegrationsamefilebytes correctsONLYcommitbodymetadata",
+    "integration_message": "realnewlineWhyWhatScopeRiskDocsTests via tempbodyfile",
+    "business_adoption": false
+  },
+  "acceptance": [
+    "Source-only new discovery not valid-before/qualification or acceptedcontract. Read originalgoal/humanparalleloverlay/AGENTS/CLAUDE/workflow/multimachine/card and exactoriginalitems at actualdispatchparent. Existing312map/taskownership unchanged, do not duplicateitems or shrinkscope. Formal13/3/3/293=312/299unclosed939refs intact.",
+    "All complete actually used inputbytes bound individually at exact immutableSHA, including actualparentcard/state and ownsourceMD. Finite relevant source inventory obtained from actualGit tree/paths before acquisition; no imagined filename/headline/minsize/cardinality guard, no P0audit/control/docs equality. Code source proves only implementation presence, not product requirement/runtime or independentverification.",
+    "Reported/evidenced0/UNKNOWN distinct. No historicalvalidbatch rerun, oldbusinesschecker/scriptimport or actualprovider/browser/runtimeexecution to fillgaps. Discover gaps honest and propose finite newscope+dependency gates only, nogrant. Do not reinterpret missing evidence as a productdecision.",
+    "ALLrequiredinputchecks and BOTH entirefinalbuffers in memory BEFORE ANYfilesystemwrite includinginterimdraft/index. One own-document static1 actualhashes/manifestgrammar/originalitemcoverage/outputbuffers; meaningful semanticfindings explained in prose not brittle guessedstring assertions. Actualcheckfailure STOP no retry/postfailurewrite/materialization/commit. Python3.9safeUTF8 realnewline API no write_textnewline keyword.",
+    "Raw actualPID/session/chunk/numericexit/stdoutstderr/EOF/ownedGitchilddrain preserved, UNKNOWNnot0. Exact2ADD hooksdisabled singlecommit realnewlineWhy/What/Scope/Risk/Docs/Tests clean noamend/no push; newfreshfullreview and rootscopedadmission required beforecanonicalimplementation.",
+    "Wholefiveoriginalactionsacceptance preserved: HAB01 localdate/streak/monthcompletion/frequency/startDate/futureexclusion<=100%; HAB02 midnight+visibilitytoday/legalemptylibrary no reseed; HAB03 durablejournal draft/changehabit/externaltab conflicts/nolostclose; HAB04 today/due/restday/weeklyheadings/badges44px/futurehistory semantics; HAB05 savedreminder versus permissions/actuallyscheduledstate/closedpageJOBdependency. Distinctcurrentstaticcodefact/acceptedrequirement/historicaldoc/futurecandidate no runtimePASS frompresence. Source-onlydiscovery notbefore/qualification or acceptedcontract.",
+    "Use finiteactualGit inventory of packages/xai-web-habits and actuallyimported host/date/storage/notification/featuregates plus owning brief/devlog/canonicalPRD evidence references whenrealpaths exist; resolveactualpaths before read no guessedcard/filename/headline/count/minsize guards. Read relevant sharedfullaccepted persistence/REL or sourcecontract/documentaryproposals opaqueexactSHA; missing actualhistory UNKNOWN no implicitbusinessbudget0/reset. Coredata/shareddate/helpers only READ, no changes/sourcequalification/probes/generator/parser/moduleimports.",
+    "Peritem whole matrix: actualsource spans/requirementorigin/currentbehavior/gaps/finitefutureallowedpaths+dependencylocks/acceptancefixture requirements+budgetsunknowns/stopconditions. Can propose engineeringchoices within existingacceptedproductdecisions; trueundecidedproductbehavior minimumquestion basis only notworkerquestion. No downstreamcaller/widget/statistics aggregate falselyqualified; HABdependencies TT/date/calendar/DASH/STAT/REL/accountsync reminderJOB explicit onlyifactuallysourceobserved.",
+    "Current productP0f9eb... preserved exceptfouracceptedTT08owningdocs; do not assertentireapps/packages equality. Eachactualused completeMD actualSHA/card/control prebound manifestgrammar validated; allinputs+BOTHcompletebuffers BEFOREANYwrite. One ownmeaningfulstatic<=120sec inputhash/manifest/fiveitems/buffers check failureSTOP no retry/materialization/commit. No fragileprose/count/minsize/P0auditdocsparity guards. Wall<=30min/drain<=30sec runtime/tests/build/lint/browser/native/server/qualification/probes/vendor/network/children0. RawPID/numericexit/session/chunk/EOFdrain UNKNOWNnot0. Exactly2ADD onehooksdisabledcommit realnewlineWhyWhatScopeRiskDocsTests clean/noamendpush. Source-onlyfuturewholeindependentreview1/3 beforeadoption; oldcaller budgets untouched no otherhistory inferred0.",
+    "WHOLEoriginalfiveactionsacceptance/sourcefull18173bytes/61declaredinputs notonlycandidatefindings. Independentlyreview dates/frequency/startDate/future/streak<=100/monthrollover/acceptedlocalclock vs emptyreseeding/draftblurpre-navigation versusdirectclose/differenthabit/cross-tab conflict/44pxdesktopmobileUXfuturehistory/remindersavedversuspermission/actuallyscheduled/JOB. Requirementorigin realaudit/approvedowningdocs notsourceimplementation, oldvalidlocalclockcaller evidence notrerunorrenamednewhistory. Fullcurrentfactualbefore versus futureproposal and unknownexternal/coreRELsourcequal/budgetholds. Barepaths61manifest lacksrowSHA; rootmetadataresolved60Gitatparent80cc andexternalgoal, independentlyverifyactualP0vsparent/readfieldseams/currentmetadata sourcepaths completeness, anynecessarycorrectedhashboundsourcebinding remainsunadopted notretrofixbyreviewer. ReportedstaticPASS rawPID/numericexit/session/chunk/EOF/wallUNKNOWN cannotclaim0. Originalcommitbodyliteralbackslashn preservedremote; integratedbodymetadataonlyrealnewlines sameexacttwofilebytes, no newbusinessverification. Generic actornochildclaim contradictsexecutedGitrevparse/rg failure facts, no fabricatedrawexits. WholeVERDICTAPPROVED/REVISE/BLOCKED + preciseprocess/bindingadmission; no qualification/before/implementationgrant. Singleownmeaningfulstatic allinputs+BOTHbuffersbeforeANYwrite<=120sec strictfailureSTOP, no oldauthorchecker/import/probes; wholefullMD eachactualusedSHA/rawreceiptretention. Exact2ADD onehooksdisabledcommit via realnewlinebodyfile clean/noamendpush."
+  ]
+}

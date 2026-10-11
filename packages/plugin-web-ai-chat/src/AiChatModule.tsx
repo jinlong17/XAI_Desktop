@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * AiChatModule — root route component for the AI Chat module.
  *
@@ -36,7 +37,7 @@ import React, {
   useState,
 } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
-import { usePref } from "@repo/plugin-web-storage";
+import { useChatPreference } from "./internal/useChatPreference.js";
 import { emitWebEvent, useWebEventListener } from "@repo/xai-web-event-bus";
 import { AiAurora } from "./AiAurora.js";
 import { BreathingOrb } from "./BreathingOrb.js";
@@ -46,7 +47,9 @@ import { AiThread } from "./AiThread.js";
 import { ErrorBanner } from "./ErrorBanner.js";
 import { ConfirmationCard } from "./ConfirmationCard.js";
 import { IconList, IconPlus, IconSparkle } from "./internal/icons.js";
+import { requestToolWrite } from "./internal/requestToolWrite.js";
 import { streamCompleteChat } from "./internal/claudeStreamAdapter.js";
+import { useConversationRecovery } from "./internal/useConversationRecovery.js";
 import { isAiConvoRecord } from "./internal/isAiConvoRecord.js";
 import { makeConvoFromUserText } from "./internal/makeConvoFromUserText.js";
 import type { LlmError } from "./internal/llmErrors.js";
@@ -65,11 +68,46 @@ export interface AiChatModuleProps {
   lang: Lang;
 }
 
+const SUMMARY_MAX_LEN = 140;
+const SIDEBAR_DOCKED_QUERY = "(min-width: 768px)";
+
+function compactText(text: string, maxLen = SUMMARY_MAX_LEN) {
+  const oneLine = text.replace(/\s+/g, " ").trim();
+  return oneLine.length > maxLen ? `${oneLine.slice(0, maxLen - 1)}...` : oneLine;
+}
+
+function displayTime(lang: Lang) {
+  return lang === "zh" ? "刚刚" : "Just now";
+}
+
+function normalizeMessage(message: AiMessage): AiMessage {
+  return {
+    role: message.role,
+    text: message.text,
+    attachments: Array.isArray(message.attachments)
+      ? message.attachments.filter((a): a is string => typeof a === "string")
+      : null,
+  };
+}
+
+function normalizeMessages(messages: readonly AiMessage[]) {
+  return messages.map(normalizeMessage);
+}
+
+function getInitialSidebarOpen() {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return true;
+  }
+  return window.matchMedia(SIDEBAR_DOCKED_QUERY).matches;
+}
+
 export function AiChatModule({ lang }: AiChatModuleProps) {
   const zh = lang === "zh";
 
   // ---- Persistence: usePref + boundary predicate filter ------------------
-  const [rawConvos, setRawConvos] = usePref("xai_ai_convos");
+  const { raw: rawConvos, save: saveConvos, retry: retryConvos, discard: discardConvos, snapshot: conversationSnapshot, error: saveError, pending: pendingSave } = useConversationRecovery();
+  const [navigationNotice, setNavigationNotice] = useState(false);
+  const [exportFailed, setExportFailed] = useState(false);
   const convos: AiConvoRecord[] = useMemo(() => {
     if (!Array.isArray(rawConvos)) return [];
     const out: AiConvoRecord[] = [];
@@ -87,8 +125,10 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     return out;
   }, [rawConvos]);
 
-  const [showInsights, setShowInsights] = usePref("xai_ai_insights");
-  const [voiceOn, setVoiceOn] = usePref("xai_ai_voice");
+  const insights = useChatPreference("xai_ai_insights");
+  const voice = useChatPreference("xai_ai_voice");
+  const showInsights = insights.value;
+  const voiceOn = voice.value;
 
   // ---- Local (non-persisted) state ----------------------------------------
   const [messages, setMessages] = useState<AiMessage[]>([]);
@@ -96,9 +136,12 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   const [attachments, setAttachments] = useState<AiAttachment[]>([]);
   const [thinking, setThinking] = useState(false);
   const [activeConvo, setActiveConvo] = useState<string | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [model, setModel] = useState<AiModelId>("haiku");
+  const [sidebarOpen, setSidebarOpen] = useState(getInitialSidebarOpen);
+  const [model] = useState<AiModelId>("haiku");
   /** Non-null when there is an active LlmError to display. */
+  const [toolWriteError, setToolWriteError] = useState<string | null>(null);
+  const [toolWriteWaiting, setToolWriteWaiting] = useState(false);
+  const toolWriteBusy = useRef(false);
   const [bannerError, setBannerError] = useState<LlmError | null>(null);
 
   /**
@@ -118,6 +161,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   // ---- Refs ---------------------------------------------------------------
   const endRef = useRef<HTMLDivElement | null>(null);
   const mountedRef = useRef(true);
+  const ownerRef = useRef(accountScope.capture());
+  const ownerCurrent = () => accountScope.isReady(ownerRef.current);
   /** AbortController for the currently-active stream. Created per processQueue call. */
   const abortCtrlRef = useRef<AbortController | null>(null);
   /**
@@ -133,14 +178,85 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
    */
   const pendingSendQueueRef = useRef<Array<{ text: string; lang: Lang }>>([]);
   const processingRef = useRef(false);
+  const hydratedActiveRef = useRef(false);
+  const suppressNextPersistRef = useRef(false);
   useEffect(() => {
-    mountedRef.current = true;
+    mountedRef.current = ownerCurrent();
+    const unsubscribe = accountScope.subscribe(() => {
+      mountedRef.current = false;
+      abortCtrlRef.current?.abort();
+      pendingSendQueueRef.current = [];
+      setMessages([]);
+      setInput("");
+      setAttachments([]);
+      setActiveConvo(null);
+      setPendingConfirmation(null);
+      setBannerError(null);
+      setToolWriteError(null);
+      setToolWriteWaiting(false);
+      setThinking(false);
+    });
     return () => {
+      unsubscribe();
       mountedRef.current = false;
       // Abort any in-flight stream when component unmounts.
       abortCtrlRef.current?.abort();
     };
   }, []);
+
+  const persistConvoMessages = useCallback(
+    (id: string, nextMessages: readonly AiMessage[]) => {
+      if (!ownerCurrent()) return;
+      saveConvos((prev) => {
+        const safe: AiConvoRecord[] = Array.isArray(prev)
+          ? (prev as unknown[]).filter(isAiConvoRecord)
+          : [];
+        const index = safe.findIndex((c) => c.id === id);
+        if (index < 0) throw new Error("Conversation seed is not available; preserve the draft.");
+
+        const storedMessages = normalizeMessages(nextMessages);
+        const last = storedMessages[storedMessages.length - 1];
+        const now = new Date().toISOString();
+        const updated: AiConvoRecord = {
+          ...safe[index]!,
+          time: displayTime(lang),
+          summary: last ? compactText(last.text) : safe[index]!.summary,
+          updatedAt: now,
+          messages: storedMessages,
+        };
+
+        return [updated, ...safe.filter((c) => c.id !== id)];
+      });
+    },
+    [lang, saveConvos],
+  );
+
+  useEffect(() => {
+    if (hydratedActiveRef.current) return;
+    hydratedActiveRef.current = true;
+    if (convos.length === 0) return;
+
+    const restored =
+      [...convos].sort((a, b) => {
+        const aTime = Date.parse(a.activeAt ?? a.updatedAt ?? "");
+        const bTime = Date.parse(b.activeAt ?? b.updatedAt ?? "");
+        return (Number.isFinite(bTime) ? bTime : 0) - (Number.isFinite(aTime) ? aTime : 0);
+      })[0] ?? null;
+    if (!restored || !restored.messages || restored.messages.length === 0) return;
+
+    suppressNextPersistRef.current = true;
+    setActiveConvo(restored.id);
+    setMessages(normalizeMessages(restored.messages));
+  }, [convos]);
+
+  useEffect(() => {
+    if (!activeConvo) return;
+    if (suppressNextPersistRef.current) {
+      suppressNextPersistRef.current = false;
+      return;
+    }
+    persistConvoMessages(activeConvo, messages);
+  }, [activeConvo, messages, persistConvoMessages]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -194,7 +310,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
    * shows the orb continuously across queued resends).
    */
   const processQueue = useCallback(async () => {
-    if (processingRef.current) return;
+    if (!ownerCurrent() || processingRef.current) return;
     if (pendingSendQueueRef.current.length === 0) return;
     processingRef.current = true;
     try {
@@ -207,7 +323,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
         abortCtrlRef.current = ctrl;
 
         // Read model preference (non-React context: direct localStorage read per Rec2).
-        const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+        const modelPref = (getPref("xai_ai_model_default") as AiModelId) || model;
 
         // Placeholder ID for streaming bubble mutation. The placeholder is NOT
         // appended until the first chunk arrives (so user bubbles always precede
@@ -228,7 +344,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
             // P3: send tool definitions on the Anthropic provider.
             tools: AI_TOOLS,
           })) {
-            if (!mountedRef.current) return;
+            if (!mountedRef.current || !ownerCurrent()) return;
             accumulated = chunk.accumulated;
 
             if (!placeholderInserted) {
@@ -261,7 +377,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           streamError = err as LlmError;
         }
 
-        if (!mountedRef.current) return;
+        if (!mountedRef.current || !ownerCurrent()) return;
 
         if (streamError != null) {
           // Remove any partial placeholder bubble and set error banner.
@@ -302,7 +418,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
 
         pendingSendQueueRef.current.shift();
       }
-      if (mountedRef.current) setThinking(false);
+      if (mountedRef.current && ownerCurrent()) setThinking(false);
     } finally {
       processingRef.current = false;
       abortCtrlRef.current = null;
@@ -312,6 +428,10 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   // ---- Send flow ----------------------------------------------------------
   const send = useCallback(
     (textOverride?: string) => {
+      if (!ownerCurrent()) return;
+      if (pendingSave.current && pendingSave.current.operation !== "messages") { setNavigationNotice(true); return; }
+      setNavigationNotice(false);
+      if (pendingConfirmation || toolWriteBusy.current) return;
       const text = (textOverride ?? input).trim();
       if (!text) return;
       const userMsg: AiMessage = {
@@ -326,11 +446,11 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
       if (!activeConvo) {
         const seed = makeConvoFromUserText(text, lang);
         setActiveConvo(seed.id);
-        setRawConvos((prev) => {
+        saveConvos((prev) => {
           const safe: AiConvoRecord[] = Array.isArray(prev)
             ? (prev as unknown[]).filter(isAiConvoRecord)
             : [];
-          return [seed, ...safe];
+          return [{ ...seed, messages: [userMsg] }, ...safe];
         });
       }
 
@@ -339,20 +459,67 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
       pendingSendQueueRef.current.push({ text, lang });
       void processQueue();
     },
-    [input, attachments, activeConvo, lang, setRawConvos, processQueue],
+    [input, attachments, activeConvo, lang, saveConvos, processQueue, pendingSave, pendingConfirmation],
   );
 
-  const handleNewChat = useCallback(() => {
+  const resetChat = useCallback(() => {
+    abortCtrlRef.current?.abort();
+    pendingSendQueueRef.current = [];
+    processingRef.current = false;
     setActiveConvo(null);
     setMessages([]);
     setInput("");
     setAttachments([]);
+    setThinking(false);
+    setPendingConfirmation(null);
+    setBannerError(null);
   }, []);
 
+  const canLeave = useCallback(() => {
+    if (!ownerCurrent()) return false;
+    if (pendingSave.current || thinking || input || attachments.length) {
+      setNavigationNotice(true);
+      return false;
+    }
+    return true;
+  }, [pendingSave, thinking, input, attachments]);
+
+  const handleNewChat = useCallback(() => {
+    if (canLeave()) resetChat();
+  }, [canLeave, resetChat]);
+
   const handleSelectConvo = useCallback((id: string) => {
-    setActiveConvo(id);
-    setMessages([]);
-  }, []);
+    if (!canLeave()) return;
+    const selected = convos.find(c => c.id === id);
+    if (!selected) return;
+    saveConvos(prev => prev.map(c => c.id === id ? { ...c, activeAt: new Date().toISOString() } : c), "select", () => {
+      resetChat();
+      suppressNextPersistRef.current = true;
+      setActiveConvo(id);
+      setMessages(normalizeMessages(selected.messages ?? []));
+      setNavigationNotice(false);
+    });
+  }, [canLeave, convos, saveConvos, resetChat]);
+
+  const handleDeleteConvo = useCallback((id: string) => {
+    if (!canLeave()) return;
+    saveConvos(prev => prev.filter(c => c.id !== id), "delete", () => {
+      if (activeConvo === id) resetChat();
+      setNavigationNotice(false);
+    });
+  }, [canLeave, saveConvos, activeConvo, resetChat]);
+
+  const exportDraft = () => {
+    try {
+      const snapshot = conversationSnapshot();
+      const blob = new Blob([JSON.stringify({ version: 1, ...snapshot, activeConvo, messages: normalizeMessages(messages), input, attachments, preferences: { insights: insights.pending.current, voice: voice.pending.current } }, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url; anchor.download = "ai-chat-unsaved.json"; anchor.click();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+      setExportFailed(false);
+    } catch { setExportFailed(true); }
+  };
 
   const handleAttachFiles = useCallback((files: File[]) => {
     if (files.length === 0) return;
@@ -370,13 +537,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     setAttachments((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
-  const handleInsightsToggle = useCallback(() => {
-    setShowInsights((v) => !v);
-  }, [setShowInsights]);
-
-  const handleVoiceToggle = useCallback(() => {
-    setVoiceOn((v) => !v);
-  }, [setVoiceOn]);
+  const handleInsightsToggle = insights.toggle;
+  const handleVoiceToggle = voice.toggle;
 
   const handleStarter = useCallback(
     (prompt: string) => {
@@ -401,22 +563,23 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
    * The tool_result is conversational feedback to LLM only — NOT a write path.
    */
   const handleCancel = useCallback(() => {
-    if (!pendingConfirmation) return;
+    if (!pendingConfirmation || !ownerCurrent() || toolWriteBusy.current) return;
 
     const snapshot = pendingConfirmation;
     setPendingConfirmation(null);
+    setToolWriteError(null);
     pendingSendQueueRef.current.shift();
 
     // Send tool_result(is_error:true) to LLM for a bounded final acknowledgement.
     // This is LLM conversation only — does NOT trigger any store write.
     const queuedItem = { text: snapshot.preambleText || "(cancelled)", lang };
     void (async () => {
-      if (!mountedRef.current) return;
+      if (!mountedRef.current || !ownerCurrent()) return;
       setThinking(true);
 
       const ctrl = new AbortController();
       abortCtrlRef.current = ctrl;
-      const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+      const modelPref = (getPref("xai_ai_model_default") as AiModelId) || model;
 
       // Build Anthropic message history: user turn → assistant tool_use turn → user tool_result turn.
       const priorMessages = [
@@ -445,7 +608,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           signal: ctrl.signal,
           priorMessages,
         })) {
-          if (!mountedRef.current) return;
+          if (!mountedRef.current || !ownerCurrent()) return;
           if (!inserted) {
             inserted = true;
             setMessages((m) => [
@@ -469,7 +632,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
         }
       }
 
-      if (mountedRef.current) setThinking(false);
+      if (mountedRef.current && ownerCurrent()) setThinking(false);
       abortCtrlRef.current = null;
     })();
   }, [pendingConfirmation, lang, model]);
@@ -483,81 +646,28 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
    * turn again contains a tool_use, it is displayed as text but NOT executed
    * (no second round-trip — bounded invariant enforced).
    */
-  const handleConfirm = useCallback(() => {
-    if (!pendingConfirmation) return;
+  const handleConfirm = useCallback(async () => {
+    if (!pendingConfirmation || !ownerCurrent() || toolWriteBusy.current) return;
 
     const snapshot = pendingConfirmation;
 
-    // Find the tool and compute the write event spec.
     const tool = findTool(snapshot.toolUse.name);
-    if (tool) {
-      const writeEvent = tool.toWriteEvent(
-        snapshot.toolUse.input,
-        snapshot.toolUse.id,
-      );
-
-      // CRITICAL: emit the write event EXACTLY ONCE, ONLY here (no-silent-write invariant).
-      // The owning-module subscriber (mounted in App.tsx) consumes this event
-      // and executes via its own pure reducer + setPref.
-      // ED-8: 4 new delete/update channels follow the SAME single-emit-site pattern.
-      if (writeEvent.channel === "web:tasks:create-requested") {
-        const p = writeEvent.payload as {
-          requestId: string;
-          title: string;
-          bucket: "overdue" | "next7" | "later" | "nodate";
-          tag?: "study" | "work" | "personal" | "todo" | "other";
-          requestedAt: string;
-        };
-        emitWebEvent("web:tasks:create-requested", p);
-      } else if (writeEvent.channel === "web:calendar:create-requested") {
-        const p = writeEvent.payload as {
-          requestId: string;
-          title: string;
-          date: string;
-          startTime: string;
-          durationMin: number;
-          requestedAt: string;
-        };
-        emitWebEvent("web:calendar:create-requested", p);
-      } else if (writeEvent.channel === "web:tasks:delete-requested") {
-        // P2 (xai-web-ai-tool-edit-delete): delete task branch
-        const p = writeEvent.payload as {
-          requestId: string;
-          id: string;
-          requestedAt: string;
-        };
-        emitWebEvent("web:tasks:delete-requested", p);
-      } else if (writeEvent.channel === "web:calendar:delete-requested") {
-        // P2 (xai-web-ai-tool-edit-delete): delete calendar event branch
-        const p = writeEvent.payload as {
-          requestId: string;
-          id: string;
-          requestedAt: string;
-        };
-        emitWebEvent("web:calendar:delete-requested", p);
-      } else if (writeEvent.channel === "web:tasks:update-requested") {
-        // P3 (xai-web-ai-tool-edit-delete): update task branch
-        const p = writeEvent.payload as {
-          requestId: string;
-          id: string;
-          patch: { title?: string; bucket?: "overdue" | "next7" | "later" | "nodate"; tag?: "study" | "work" | "personal" | "todo" | "other" };
-          requestedAt: string;
-        };
-        emitWebEvent("web:tasks:update-requested", p);
-      } else if (writeEvent.channel === "web:calendar:update-requested") {
-        // P3 (xai-web-ai-tool-edit-delete): update calendar event branch
-        const p = writeEvent.payload as {
-          requestId: string;
-          id: string;
-          patch: { title?: string; date?: string; startTime?: string; durationMin?: number };
-          requestedAt: string;
-        };
-        emitWebEvent("web:calendar:update-requested", p);
-      }
-    }
+    if (!tool) { setToolWriteError("invalid-tool"); return; }
+    toolWriteBusy.current = true;
+    setToolWriteWaiting(true);
+    setToolWriteError(null);
+    let result: { ok: boolean; reason?: string };
+    try {
+      result = await requestToolWrite(tool.toWriteEvent(snapshot.toolUse.input, snapshot.toolUse.id), snapshot.toolUse.id, ownerRef.current);
+    } catch { result = { ok: false, reason: "request-failed" }; }
+    toolWriteBusy.current = false;
+    if (!mountedRef.current || !ownerCurrent()) return;
+    setToolWriteWaiting(false);
+    if (!result.ok) { setToolWriteError(result.reason ?? "storage"); return; }
 
     // Clear the confirmation card and advance the queue.
     setPendingConfirmation(null);
+    setToolWriteError(null);
     pendingSendQueueRef.current.shift();
 
     // Bounded single round-trip: send tool_result(success) back to LLM and
@@ -566,12 +676,12 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     // text only (no second execution, no second round-trip).
     const queuedItem = { text: snapshot.preambleText || snapshot.toolUse.name, lang };
     void (async () => {
-      if (!mountedRef.current) return;
+      if (!mountedRef.current || !ownerCurrent()) return;
       setThinking(true);
 
       const ctrl = new AbortController();
       abortCtrlRef.current = ctrl;
-      const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+      const modelPref = (getPref("xai_ai_model_default") as AiModelId) || model;
 
       // Build Anthropic message history: user turn → assistant tool_use turn → user tool_result turn.
       const priorMessages = [
@@ -600,7 +710,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           signal: ctrl.signal,
           priorMessages,
         })) {
-          if (!mountedRef.current) return;
+          if (!mountedRef.current || !ownerCurrent()) return;
           if (!inserted) {
             inserted = true;
             setMessages((m) => [
@@ -624,7 +734,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
         }
       }
 
-      if (mountedRef.current) setThinking(false);
+      if (mountedRef.current && ownerCurrent()) setThinking(false);
       abortCtrlRef.current = null;
     })();
   }, [pendingConfirmation, lang, model]);
@@ -641,6 +751,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
         open={sidebarOpen}
         lang={lang}
         onSelectConvo={handleSelectConvo}
+        onDeleteConvo={handleDeleteConvo}
         onNewChat={handleNewChat}
         onCollapse={() => setSidebarOpen(false)}
       />
@@ -724,6 +835,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           />
         )}
 
+        {toolWriteError && <div className="ai-save-recovery" role="alert">{zh ? "工具操作未保存或未收到确认。请重试确认；不会报告成功。" : "Tool not saved or not confirmed. Retry Confirm; success has not been reported."} <span>{toolWriteError}</span></div>}
+        {toolWriteWaiting && <p role="status">{zh ? "正在等待保存确认…" : "Waiting for save confirmation…"}</p>}
         {/* P3: ConfirmationCard — shown when model returns a tool_use block.
             CRITICAL: rendering this card does NOT execute any write.
             Write event emitted ONLY on explicit Confirm click (P4). */}
@@ -732,23 +845,31 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           if (!tool) return null;
           const spec = tool.toConfirmation(pendingConfirmation.toolUse.input);
           return (
+            <fieldset disabled={toolWriteWaiting} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
             <ConfirmationCard
               spec={spec}
               lang={lang}
               onConfirm={handleConfirm}
               onCancel={handleCancel}
             />
+            </fieldset>
           );
         })()}
 
+        {(saveError || navigationNotice || exportFailed || insights.error || voice.error) && (
+          <div className="ai-save-recovery" role="alert">
+            <p>{exportFailed ? (zh ? "导出失败，账户可能已切换。" : "Export failed. The account may have changed.") : saveError === "conflict" ? (zh ? "未保存：已有更新的数据，不能覆盖。请导出草稿。" : "Not saved: newer stored data cannot be overwritten. Export the draft.") : (zh ? "内容尚未保存。请保持页面打开，重试或导出草稿后再离开。" : "Unsaved content. Keep this page open; retry or export the draft before leaving.")}</p>
+            <button type="button" onClick={() => { const conversationsOk = retryConvos(); const insightsOk = insights.retry(); const voiceOk = voice.retry(); if (conversationsOk && insightsOk && voiceOk) setNavigationNotice(false); }}>{zh ? "重试保存" : "Retry save"}</button>
+            <button type="button" onClick={exportDraft}>{zh ? "导出草稿" : "Export draft"}</button>
+            <button type="button" disabled={thinking} onClick={() => { if (discardConvos()) { insights.discard(); voice.discard(); resetChat(); setNavigationNotice(false); setExportFailed(false); } }}>{zh ? "放弃未保存内容" : "Discard unsaved content"}</button>
+          </div>
+        )}
         <AiComposer
           input={input}
           onInputChange={setInput}
           attachments={attachments}
           onAttachFiles={handleAttachFiles}
           onRemoveAttachment={handleRemoveAttachment}
-          model={model}
-          onModelChange={setModel}
           voiceOn={voiceOn}
           onVoiceToggle={handleVoiceToggle}
           onSend={() => send()}

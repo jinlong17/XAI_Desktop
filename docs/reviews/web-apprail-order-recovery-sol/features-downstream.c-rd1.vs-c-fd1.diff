@@ -1,0 +1,10 @@
+--- a/docs/reviews/web-appearance-recovery-final/diagnostics/features-downstream.corrected.test.tsx
++++ b/docs/reviews/web-apprail-order-recovery-sol/features-downstream.c-rd1.test.tsx
+@@ -508,6 +508,7 @@
+   const transfer = { effectAllowed: "", dropEffect: "", setData() {}, getData() { return ""; } };
+   fireEvent.dragStart(buttons[0]!, { dataTransfer: transfer });
+   fireEvent.dragOver(buttons[2]!, { dataTransfer: transfer });
++  fireEvent.drop(buttons[2]!, { dataTransfer: transfer });
+   fireEvent.dragEnd(buttons[0]!, { dataTransfer: transfer });
+   await flush();
+   const persisted = nativeGet.call(localStorage, "xai_rail_order");

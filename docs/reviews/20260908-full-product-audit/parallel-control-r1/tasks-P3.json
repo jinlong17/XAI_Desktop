@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "wave": "P3",
+  "fixed_input": "b9ef48342385c1ed2e28f14f4788596dcb095272",
+  "registration_sha": "commit containing this exact card",
+  "tasks": [
+    {
+      "fixed_card_input": "b9ef48342385c1ed2e28f14f4788596dcb095272",
+      "dispatch_parent": "commit containing this card, resolved full SHA before launch",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "no_children": true,
+      "state": "registered_not_launched",
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "forbidden": [
+        "any non-allowed path",
+        "product/CSS/source behavior or canonical/runners/failed logs",
+        "global control/ledgers",
+        "other-session worktrees",
+        "push/merge/rebase/deploy/release/promotion/D3",
+        "runtime/browser/native/package/probe execution"
+      ],
+      "stop": [
+        "hash/scope conflict",
+        "unsupported owner decision",
+        "incomplete required inputs",
+        "budget exhausted",
+        "unknown dirty ownership"
+      ],
+      "id": "PARALLEL/MAP-REVIEW2",
+      "workflow": "D",
+      "role": "fresh independent Astra reviewer; never repair",
+      "model": "gpt-6-astra",
+      "depends_on": [
+        "PARALLEL/LOCK-CORRECT"
+      ],
+      "source_inputs": [
+        "11b8d721f9d423fcabb19857e96c927375b9323a",
+        "4ba9c44a60fe97eeee8d5489c320eaedf2e342cc",
+        "7bb8df1631b94295bb7c3f928fcd9924b1337873"
+      ],
+      "allowed_files": [
+        "docs/reviews/20260908-full-product-audit/parallel-control-review-r2/review.md",
+        "docs/reviews/20260908-full-product-audit/parallel-control-review-r2/inputs.sha256"
+      ],
+      "scope": "Independent static source review D-R1-01 exact5 r2 outputs. Full312/933 preserved, strict all2420 IDs+36gates+typed resources complete and acyclic. No repair, no current pointer adoption.",
+      "acceptance": [
+        "Verify all84 input hashes and output/patch identity, reverse transform every node/field, full312 scope/evidence/formalcounts",
+        "299 undefined completion refs become recurring exclusive resource requirements; Clock ADOPT-M/B1/LEDGER and every global root side effect covered",
+        "Single root writer, finite FIFO leases, finally success/error release, crash fencing/uncertain partial-state quarantine, two-ready receipts fairness without permanent gate",
+        "No business/module/evidence/budget reduction; actual policy vs static model proof clearly separate",
+        "APPROVED or REVISE against all original D-R1-01 acceptance with exact line evidence; nextcap retained"
+      ],
+      "budgets": {
+        "review_iteration": 2,
+        "family_cap": 3,
+        "static_pass": 1,
+        "runtime": 0
+      }
+    },
+    {
+      "fixed_card_input": "b9ef48342385c1ed2e28f14f4788596dcb095272",
+      "dispatch_parent": "commit containing this card, resolved full SHA before launch",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "no_children": true,
+      "state": "registered_not_launched",
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "forbidden": [
+        "any non-allowed path",
+        "product/CSS/source behavior or canonical/runners/failed logs",
+        "global control/ledgers",
+        "other-session worktrees",
+        "push/merge/rebase/deploy/release/promotion/D3",
+        "runtime/browser/native/package/probe execution"
+      ],
+      "stop": [
+        "hash/scope conflict",
+        "unsupported owner decision",
+        "incomplete required inputs",
+        "budget exhausted",
+        "unknown dirty ownership"
+      ],
+      "id": "TT-08/before",
+      "workflow": "C",
+      "role": "fresh independent Sol static before collector; no implementation",
+      "model": "gpt-6.1-sol",
+      "depends_on": [
+        "TT-08/contract-review"
+      ],
+      "source_inputs": [
+        "287547e2b0e0724a48a89e50377ccc7e840db93b",
+        "c6ab3c967074595ab59b7e0bf7dc86d66b229e97"
+      ],
+      "allowed_files": [
+        "docs/reviews/audit-parallel-tt08-before-r1/before.md",
+        "docs/reviews/audit-parallel-tt08-before-r1/inputs.sha256"
+      ],
+      "scope": "Freeze complete static before for approved TT08 D1-D7 exact5 future docs. PRD absent source proof, current mode consumers/acceptedTT02/page correspondence, stale documentation status and historical boundaries. No edits to future5 docs or status, no historical runtime rerun.",
+      "acceptance": [
+        "Verify full approved contract/review input indexes and each concrete source identity; canonical PRD absence at P0/currentfixedparent",
+        "All5 doc before hashes/contents, complete D1-D7 requirement-to-source/page/acceptance evidence matrix",
+        "Preserve TT01/TT02/TT03/REL01 outcomes, old budgets, historical READY_TO_SHIP statements vs future dociteration status publication separation",
+        "Exact5-doc implement allowlist/TT08+GOV04+GOV05 semantic locks, source/product/canonical protection and new independent verify/fullacceptance still required",
+        "Document actual cross-vendor gate applicability and pending state, no vendor PASS from Codex roles; minimum owner questions only if genuinely missing existingrule",
+        "Fixed before receipt suitable for independent next docauthor, no wholeitem or release acceptance"
+      ],
+      "budgets": {
+        "static_pass": 1,
+        "runtime": 0,
+        "future_doc_verification_family_cap": 3,
+        "historical_budgets": "unchanged"
+      }
+    }
+  ],
+  "max_workers": 3,
+  "after": "Fresh exact corrected Clock source review + separate unstable-metadata impact once source delivered; TT08 new docauthor after complete staticbefore; map pointer only after APPROVED."
+}

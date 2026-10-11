@@ -2,8 +2,8 @@
 
 ## §1 Goals
 
-- Every adapter is a pure function unit-tested in isolation (11 adapter files
-  × ≥4 cases each = ≥44 cases).
+- Every adapter is a pure function unit-tested in isolation (12 adapter files
+  × ≥4 cases each = ≥48 cases).
 - Every public component has an interaction test (open / close / nav / Enter).
 - XSS attack surface eliminated via 12-case `escapeHtml` test + 4-case
   `PaletteResultRow` rendered-DOM assertion.
@@ -20,7 +20,7 @@
 | Layer | Count (approx) | Files |
 |---|---|---|
 | Unit — pure helpers | ~30 | escapeHtml, highlightMatch, keyboardCombo, registry, buildIndex |
-| Unit — adapters | ~50 | 11 adapter test files (T/B/D/C/MX/PM/H/ME/CD/ST/SE) |
+| Unit — adapters | ~55 | 12 adapter test files (T/B/D/C/MX/PM/H/ME/CD/MT/ST/SE) |
 | Component — palette UI | ~30 | CommandPalette, PaletteInput, PaletteList, PaletteResultRow, CommandPaletteProvider |
 | Integration — apps/web | ~5 | apps/web/src/__tests__/cmdkIntegration.test.tsx |
 | Perf budget | 1 | perfBudget.test.ts (100-iteration p95 assertion) |
@@ -74,7 +74,7 @@
   - IB2 — barrel exports registerSearchAdapter / getRegisteredAdapters
   - IB3 — barrel exports escapeHtml / highlightMatch
 
-### P2 (12 files, ~58 cases)
+### P2 (13 files, ~63 cases)
 
 - `adapters/tasks.test.ts` — T1..T6
   - T1 — empty query returns single module-jump hit
@@ -131,6 +131,12 @@
   - CD3 — title `zh` match → entity
   - CD4 — null state → []
   - CD5 — malformed Countdown shape → defensive []
+- `adapters/metrics.test.ts` — MT1..MT5
+  - MT1 — empty query → module-jump
+  - MT2 — weight aliases match → module-jump
+  - MT3 — query matches a metric definition name → module-jump
+  - MT4 — query matches a record note → entity
+  - MT5 — malformed state returns module-jump only
 - `adapters/statistics.test.ts` — ST1..ST3
   - ST1 — empty query → module-jump
   - ST2 — "stats" / "统计" / "graph" / "chart" aliases match
@@ -164,7 +170,7 @@
   - CP7 — click on row jumps + emits + closes
   - CP8 — ↑ arrow moves highlight up; wraps at top
   - CP9 — ↓ arrow moves highlight down; wraps at bottom
-  - CP10 — empty query renders module-jump hits per adapter (11 rows)
+  - CP10 — empty query renders module-jump hits per adapter (12 rows)
   - CP11 — typing "tomato" renders pomodoro hits
   - CP12 — Cmd+Enter aliased to Enter (no-op + same-tab jump)
   - CP13 — opening when already open is no-op
@@ -231,7 +237,7 @@
 
 | Mock | Provided by | Used by |
 |---|---|---|
-| `localStorage` for 11 `xai_*` keys | per-test `beforeEach` JSON-blob setup + `localStorage.clear()` afterEach | adapter tests, perf-budget test |
+| `localStorage` for 12 `xai_*` keys | per-test `beforeEach` JSON-blob setup + `localStorage.clear()` afterEach | adapter tests, perf-budget test |
 | `useNavigate` from react-router | `vi.mock("react-router", ...)` returning mockNavigate | CommandPalette tests |
 | `emitWebEvent` from `@repo/xai-web-event-bus` | spy via `vi.spyOn` | eventEmit tests |
 | `useWebShell` from `@repo/xai-web-shell` | mock provider returning `{ lang: "en", railPos: "left", petOn: false, setPetOn: noop }` | CommandPalette tests |
@@ -298,7 +304,7 @@ unchanged.
 - `__tests__/fixtures/realisticState.ts` — exports a frozen
   `Record<WebModuleId, unknown>` representing a realistic populated state
   (20 tasks, 10 board cards across 2 boards, 8 dash widgets, 10 pomodoro
-  sessions, 5 habits, 10 countdowns, 12 settings panes). Used by buildIndex
+  sessions, 5 habits, 10 countdowns, 5 metric records, 12 settings panes). Used by buildIndex
   + perfBudget tests.
 - `__tests__/fixtures/xssPayloads.ts` — exports common XSS strings used to
   populate adapter state in `escapeHtml` + `highlightMatch` + adapter +
@@ -314,7 +320,7 @@ unchanged.
 ## §8 Open vs deferred test coverage
 
 **Covered in v1**:
-- Pure-helpers + 11 adapters + UI components + integration + perf + XSS.
+- Pure-helpers + 12 adapters + UI components + integration + perf + XSS.
 
 **Deferred**:
 - Real-keyboard E2E (Playwright) — out of scope for this row; deferred to a

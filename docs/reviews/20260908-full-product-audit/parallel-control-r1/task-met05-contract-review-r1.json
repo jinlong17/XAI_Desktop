@@ -1,0 +1,47 @@
+{
+  "id": "MET-05/CONTRACT-REVIEW",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full contract reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "a559b2b0eff8893d2813e41fe22e401ad9138253",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "ced574944f5defd14e9bf558cd9e8dbe55eb8ec6"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-met05-contract-review-r1/review.md",
+    "docs/reviews/audit-parallel-met05-contract-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Verify complete110 input identities and original MET05 obligation/full existing owner design/audit Planned boundary; seed shape vs actual implemented consumers and protected otherMET/REL scopes",
+    "Challenge fullM1-M9/12surface/8keyboard/actualhost/source/account/positiveWeight/failure controls and full qualified machinery/before/verification/vendor/finalAST/rootreconcile/inventory chain; no productwrite required by default, no fictitious before-red or weakening standards",
+    "Historical source parity notnativepass; frozen actualtrust/focus identity/realhost/data/oracles and sourceclosure required; retain all affected judgingcopies/regression/G1 row obligations proportional to actual claimed product delta",
+    "Independently examine permanent unit/source history mapping, distinguish genuinely new registered unit from renamed corresponding historical unit. Retain known old counters/unknown prior count when actual correspondence exists; do not invent generic caller-wide unknown or extra product decision simply from absent nativeMET05 receipt. Source-grounded accounting and unchangedcap3 necessary; if impossible preciseBLOCKED, no zero assumption/reset",
+    "Approve full exact source-bound contract or return coordinate-specific REVISE; report minimal realownerconditions only afterexistingrules, no repair/no implementationacceptance"
+  ],
+  "protected": [
+    "all nonallowed files",
+    "product/CSS/tests/runner/globalcontrols/ledgers/inventory",
+    "originalevidence/contracts/failures/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "contract_review_iteration": 1,
+    "contract_review_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "native": 0,
+    "browser": 0,
+    "tests": 0,
+    "probes": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope",
+    "unsupported product decision orregression waiver",
+    "cap/protected boundary",
+    "runtime need"
+  ],
+  "no_children": true
+}

@@ -1,0 +1,21 @@
+revision=99c36b0
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-eM1BXW
+
+ ✓ docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx (3 tests) 300ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  18:34:04
+   Duration  2.39s (transform 731ms, setup 293ms, collect 964ms, tests 300ms, environment 534ms, prepare 77ms)
+
+
+stderr | docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > checklist: rejected canonical write preserves editable draft and reports failure
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > attachment: rejected canonical write preserves editable draft and reports failure
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | docs/reviews/web-board-detail-save-diagnosis/detail-contract.test.tsx > activity: rejected canonical write preserves editable draft and reports failure
+[plugin-web-storage] quota exceeded for xai_boards_v2.

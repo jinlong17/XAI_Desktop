@@ -41,6 +41,11 @@
 | `src/__tests__/event-emit.test.tsx` | E1..E5 | All five emit sites fire the right payload; emit precedes navigate |
 | `apps/web/src/__tests__/shell.smoke.test.tsx` | A1..A4 | Cross-package: real App.tsx mounts, applies attributes, navigates, persists |
 | `apps/web/src/__tests__/shell.theme.test.tsx` | T1..T3 | Theme switch updates `<html data-theme>`; system → matchMedia reactive |
+| `src/__tests__/railOrderModel.test.ts` | RM-D, RM-V, RM-P1..P8 | CP-APPRAIL-01 pure model: the strict A5 domain table; the display reconcile D(S, R); the A2 index-slot merge properties P1–P7 (each toggleable module hidden, three hidden, unknown ids, `settings`, absent and `[]` bases) and non-permutations (no merge) |
+| `src/__tests__/AppRail.railorder.test.tsx` | RO-M, RO-T, RO-R, RO-S, RO-F | CP-APPRAIL-01 AppRail with the real engine, a local exclusive Web Lock fixture and an attempt-counting Storage injector: zero-write mounts; one write at the drop, zero during dragover, zero on cancel, external drops ignored, R changing mid-drag; R-1 end to end; source truth and crash safety for every contract §5 item 2 value; failure, Retry, Discard, held lock, latest wins, verified no-op, unmount |
+| `src/__tests__/RailOrderStatus.test.tsx` | RS-C, RS-P, RS-F, RS-E, RS-U, RS-T | CP-APPRAIL-01 Topbar status: A8 render conditions, panel states and EN/ZH wording, focus targets (success/Discard → `.topbar-pref-trigger`, failed Retry and Export keep focus, Escape, outside mousedown), memory-only export and its failure line, the unload warning and the sign-out step |
+| `src/__tests__/railOrderFixture.tsx` | — | Shared rail-order fixtures (Web Lock manager, Storage probe, harness, drag driver); not a test file |
+| `apps/web/src/__tests__/App.railorder.test.tsx` | APP-RO1..APP-RO9 | CP-APPRAIL-01 at App level: one controller, the Topbar slot after the Appearance status, crash safety at load, and the sign-out step before the Appearance step in both auth branches (alone, with an Appearance draft, with both, rail Cancel) |
 
 ## §3 Acceptance Criteria Grid
 
@@ -60,10 +65,12 @@
 | AC-RAIL-2 | `data-pos="left" / "right" / "top" / "bottom"` is set from `useWebShell().railPos` | AR2 |
 | AC-RAIL-3 | Clicking a button calls `onModuleClick(id)` | AR3, E1 |
 | AC-RAIL-4 | Active highlight matches `activeModuleId` | AR4 |
-| AC-RAIL-5 | Drag-reorder updates `xai_rail_order` via usePref | AR5, P1 |
+| AC-RAIL-5 | Drag-reorder updates `xai_rail_order` through the rail-order controller: exactly one write at the drop, zero during dragover, zero on a cancelled gesture (CP-APPRAIL-01) | AR5, P1, RO-T1..T7 |
 | AC-RAIL-6 | Drag-reorder during click — drag wins (click suppressed when dragId truthy) | AR6 |
 | AC-RAIL-7 | Rail items whose id is missing from `xai_rail_order` are appended | AR7, P3 |
-| AC-RAIL-8 | `xai_rail_order` entries not in the registry are filtered out, warn-once in DEV | AR8, P4 |
+| AC-RAIL-8 | `xai_rail_order` entries not in the registry are skipped for display and kept at their stored index by every drop (R-1) | AR8, P4, RO-R1, RO-R2, RM-P2 |
+| AC-RAIL-13 | Malformed or unreadable `xai_rail_order` never throws: default display, the Topbar source status with Reload, no rewrite (CP-APPRAIL-01) | RO-S1..S4, APP-RO2 |
+| AC-RAIL-14 | A failed rail write keeps the dropped order with the Topbar status (Retry, Discard, Export), the unload warning and the sign-out step; no route guard | RO-F1..F8, RS-C, RS-P, RS-F, RS-E, RS-U, APP-RO1, APP-RO4..RO9 |
 | AC-RAIL-9 | Pet button toggles `petOn` AND emits `web:shell:pet-toggle` | AR9, E2 |
 | AC-RAIL-10 | Sync / Notif / Help buttons are visible but no-op (no errors thrown) | AR10 |
 | AC-RAIL-11 | Tooltips (`data-tip`) use i18n labels from `useI18n(lang).t.nav` | AR11 |
@@ -79,6 +86,7 @@
 | AC-TOPBAR-4 | Settings gear icon click calls `onOpenSettings()` | TP4, E3 |
 | AC-TOPBAR-5 | Search input renders with placeholder (i18n: common.search_placeholder) | TP5 |
 | AC-TOPBAR-6 | `⌘K` kbd hint is rendered (decorative; no handler) | TP6 |
+| AC-TOPBAR-7 | `railOrderStatus` renders immediately after `appearanceStatus`, before `.topbar-pref`; an empty slot leaves `.topbar` `outerHTML` unchanged (CP-APPRAIL-01) | TP-RAIL-1, TP-RAIL-2, RS-T1 |
 
 ### AC-AVM (AvatarMenu)
 

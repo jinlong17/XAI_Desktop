@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "description": "Dashboard grid container module for XAI Web Console (W2 row #10) — 12-col responsive grid, FLIP DnD 380ms, xai_dash_order persistence, widget-registration slot.",
-  "sideEffects": ["./src/styles.css"],
+  "sideEffects": [
+    "./src/styles.css"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -21,8 +23,8 @@
   "dependencies": {
     "@repo/core": "workspace:*",
     "@repo/plugin-web-dashboard-widgets": "workspace:*",
-    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/xai-web-event-bus": "workspace:*",
     "@repo/xai-web-shell": "workspace:*"
   },
@@ -40,6 +42,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "typescript": "5.9.2",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.7"
   }
 }

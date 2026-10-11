@@ -1,0 +1,12 @@
+revision=2b666ed fixed_commit=2b666eda345268efe9e0697bfc1fc8dc4474dc63
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-0u2vZZ
+
+ ✓ docs/reviews/web-d2-pomo-device-astra/completion.test.tsx (2 tests) 929ms
+   ✓ real one-minute completion persists exactly one history/event despite next-preset fault and Retry cannot replay timer settlement  856ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  21:08:27
+   Duration  2.14s (transform 300ms, setup 0ms, collect 554ms, tests 929ms, environment 364ms, prepare 76ms)

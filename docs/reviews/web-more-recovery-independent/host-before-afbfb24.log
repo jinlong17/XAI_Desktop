@@ -1,0 +1,88 @@
+revision=afbfb24 fixed_commit=afbfb24d6f7311366b77852eda927d08467478c2
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-EBieJf
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx (8 tests | 7 failed) 441ms
+   × actual More retains failed latest 'win_type' 81ms
+     → expected 'window' to be 'tray' // Object.is equality
+   × actual More retains failed latest 'default_tag' 44ms
+     → expected 'none' to be 'work' // Object.is equality
+   × actual More retains failed latest 'default_list' 47ms
+     → expected 'inbox' to be 'today' // Object.is equality
+   × actual route holds failed More work at field 0 59ms
+     → expected '/app/settings/date_time' to be '/app/settings/more' // Object.is equality
+   × actual route holds failed More work at field 1 55ms
+     → expected '/app/settings/date_time' to be '/app/settings/more' // Object.is equality
+   × actual route holds failed More work at field 2 64ms
+     → expected '/app/settings/date_time' to be '/app/settings/more' // Object.is equality
+   × actual signout holds mixed device and private work 48ms
+     → expected true to be 'pending' // Object.is equality
+   ✓ clean More permits departure with zero seeded writes 43ms
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 1 passed (8)
+   Start at  06:00:11
+   Duration  4.27s (transform 2.05s, setup 0ms, collect 3.08s, tests 441ms, environment 435ms, prepare 112ms)
+
+
+stderr | docs/reviews/web-more-recovery-independent/host.test.tsx > actual More retains failed latest 'win_type'
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual More retains failed latest 'win_type'
+AssertionError: expected 'window' to be 'tray' // Object.is equality
+
+Expected: "tray"
+Received: "window"
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx:27:328
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual More retains failed latest 'default_tag'
+AssertionError: expected 'none' to be 'work' // Object.is equality
+
+Expected: "work"
+Received: "none"
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx:27:328
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual More retains failed latest 'default_list'
+AssertionError: expected 'inbox' to be 'today' // Object.is equality
+
+Expected: "today"
+Received: "inbox"
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx:27:328
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual route holds failed More work at field 0
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual route holds failed More work at field 1
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual route holds failed More work at field 2
+AssertionError: expected '/app/settings/date_time' to be '/app/settings/more' // Object.is equality
+
+Expected: "/app/settings/more"
+Received: "/app/settings/date_time"
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx:28:262
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  docs/reviews/web-more-recovery-independent/host.test.tsx > actual signout holds mixed device and private work
+AssertionError: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-more-recovery-independent/host.test.tsx:29:307
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯

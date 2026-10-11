@@ -30,15 +30,15 @@ export function computeStreak(
   if (habitCheckIns[todayKey] !== true) return 0;
 
   let streak = 1;
-  const cursor = new Date(Date.UTC(
-    today.getUTCFullYear(),
-    today.getUTCMonth(),
-    today.getUTCDate() - 1,
-  ));
+  const cursor = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() - 1,
+  );
 
   while (habitCheckIns[utcDateKey(cursor)] === true) {
     streak += 1;
-    cursor.setUTCDate(cursor.getUTCDate() - 1);
+    cursor.setDate(cursor.getDate() - 1);
     if (streak > 100_000) break; // safety guard against pathological state
   }
 

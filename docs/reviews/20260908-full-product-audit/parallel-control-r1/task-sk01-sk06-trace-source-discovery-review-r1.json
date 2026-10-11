@@ -1,0 +1,384 @@
+{
+  "id": "SK-01+SK-02+SK-03+SK-04+SK-05+SK-06/TRACE-SOURCE-DISCOVERY-REVIEW1",
+  "workflow": "D",
+  "primary_workflow": "B",
+  "module": "web",
+  "model": "gpt-6-astra",
+  "role": "fresh independent whole six-item source discovery and process-provenance impactreview1, neverrepair",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "cfbed9bfe6e480eed8062ee9248be48f32c57c9d",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_commit": "56de3d65d9619e93c27c69c06a382ea0382f3aa5",
+  "allowed_files": [
+    "docs/reviews/audit-parallel-sk01-sk06-trace-source-discovery-review-r1/review.md",
+    "docs/reviews/audit-parallel-sk01-sk06-trace-source-discovery-review-r1/inputs.sha256"
+  ],
+  "protected": [
+    "ALLnonallowed files/source/contracts/runner/evidence/failurelogs",
+    "globalcontrol/ledgers/otherworktrees/canonicaldocs/skills/generator/registry",
+    "module/ownerdecisions/caps/measurementstandards",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "stop": [
+    "actualinput/dirty/hash/protecteddrift",
+    "need new undecidedproductrule or unauthorizedexec",
+    "actual concluding staticFAIL immediatelyfreeze no retry/materialization/commit"
+  ],
+  "no_children": true,
+  "budgets": {
+    "review_iteration": 1,
+    "review_cap": 3,
+    "static_pass": 1,
+    "total_wall_minutes": 30,
+    "static_seconds": 120,
+    "owned_process_drain_seconds": 30,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "network": 0,
+    "children": 0
+  },
+  "original_items": [
+    {
+      "id": "SK-01",
+      "priority": "P2",
+      "kind": "优化",
+      "action": "xai-feature-brief固定feature_id、范围及失败/恢复验收",
+      "acceptance": "后续dossier和迭代能追溯原brief",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "01-inventory-governance.md",
+      "primary_workflow": "B",
+      "original_module": "web（project-system）",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "SK-01",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "SK",
+      "acceptance_evidence": {
+        "business_acceptance": "后续dossier和迭代能追溯原brief",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "SK-01/prepare",
+        "SK-01/contract-review",
+        "SK-01/before",
+        "SK-01/implement",
+        "SK-01/verify",
+        "SK-01/accept",
+        "SK-01/reconcile",
+        "SK-01/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "SK-02",
+      "priority": "P2",
+      "kind": "优化",
+      "action": "xai-feature-full-loop逐阶段输出Target/commit/验证receipt",
+      "acceptance": "收口检查registry解析和dossier增量，不只更新包状态",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "01-inventory-governance.md",
+      "primary_workflow": "B",
+      "original_module": "web（project-system）",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "SK-02",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "SK",
+      "acceptance_evidence": {
+        "business_acceptance": "收口检查registry解析和dossier增量，不只更新包状态",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "SK-02/prepare",
+        "SK-02/contract-review",
+        "SK-02/before",
+        "SK-02/implement",
+        "SK-02/verify",
+        "SK-02/accept",
+        "SK-02/reconcile",
+        "SK-02/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "SK-03",
+      "priority": "P2",
+      "kind": "优化",
+      "action": "xai-roadmap-loop以统一manifest schema驱动并核对对应Target",
+      "acceptance": "emit/serial后不显示旧迭代状态",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "01-inventory-governance.md",
+      "primary_workflow": "B",
+      "original_module": "web（project-system）",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "SK-03",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "SK",
+      "acceptance_evidence": {
+        "business_acceptance": "emit/serial后不显示旧迭代状态",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "SK-03/prepare",
+        "SK-03/contract-review",
+        "SK-03/before",
+        "SK-03/implement",
+        "SK-03/verify",
+        "SK-03/accept",
+        "SK-03/reconcile",
+        "SK-03/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "SK-04",
+      "priority": "P2",
+      "kind": "优化",
+      "action": "xai-release-log分change_kind、source/deployed commit、环境与artifact",
+      "acceptance": "纯文档更新不改变产品验证健康，SHIPPED不等deploy",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "01-inventory-governance.md",
+      "primary_workflow": "B",
+      "original_module": "web（project-system）",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "SK-04",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "SK",
+      "acceptance_evidence": {
+        "business_acceptance": "纯文档更新不改变产品验证健康，SHIPPED不等deploy",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "SK-04/prepare",
+        "SK-04/contract-review",
+        "SK-04/before",
+        "SK-04/implement",
+        "SK-04/verify",
+        "SK-04/accept",
+        "SK-04/reconcile",
+        "SK-04/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "SK-05",
+      "priority": "P2",
+      "kind": "优化",
+      "action": "xai-dev-dashboard-sync加源集合与生成集合覆盖断言",
+      "acceptance": "漏项/冲突/当前commit验证范围可见，关联GOV-01至03",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "01-inventory-governance.md",
+      "primary_workflow": "B",
+      "original_module": "web（project-system）",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "SK-05",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "SK",
+      "acceptance_evidence": {
+        "business_acceptance": "漏项/冲突/当前commit验证范围可见，关联GOV-01至03",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "SK-05/prepare",
+        "SK-05/contract-review",
+        "SK-05/before",
+        "SK-05/implement",
+        "SK-05/verify",
+        "SK-05/accept",
+        "SK-05/reconcile",
+        "SK-05/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "SK-06",
+      "priority": "P2",
+      "kind": "优化",
+      "action": "xai-consistency-audit串联稳定ID与PRD/package/test/deploy双向映射",
+      "acceptance": "代码问题与记录漂移分别给证据",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "01-inventory-governance.md",
+      "primary_workflow": "B",
+      "original_module": "web（project-system）",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "SK-06",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "SK",
+      "acceptance_evidence": {
+        "business_acceptance": "代码问题与记录漂移分别给证据",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "SK-06/prepare",
+        "SK-06/contract-review",
+        "SK-06/before",
+        "SK-06/implement",
+        "SK-06/verify",
+        "SK-06/accept",
+        "SK-06/reconcile",
+        "SK-06/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    }
+  ],
+  "read_paths": [
+    ".teams/skills/xai-feature-brief/SKILL.md",
+    ".teams/skills/xai-feature-full-loop/SKILL.md",
+    ".teams/skills/xai-roadmap-loop/SKILL.md",
+    ".teams/skills/xai-release-log/SKILL.md",
+    ".teams/skills/xai-dev-dashboard-sync/SKILL.md",
+    ".teams/skills/xai-consistency-audit/SKILL.md",
+    "docs/workflow/project/workflow.md",
+    "docs/workflow/project/dev-dashboard.md",
+    "docs/reviews/20260908-full-product-audit/01-inventory-governance.md",
+    "docs/reviews/audit-parallel-sk01-sk06-trace-source-discovery-r1/discovery.md",
+    "docs/reviews/audit-parallel-sk01-sk06-trace-source-discovery-r1/inputs.sha256",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-sk01-sk06-trace-source-discovery-r1.json",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/three-source-p70-reception.json"
+  ],
+  "source_process_history": {
+    "discovery_iteration": 1,
+    "discovery_cap": 3,
+    "reported_postwrite_static": 1,
+    "result": "PASS",
+    "actual_failed_prewrite_validations": 3,
+    "failed_raw_command_PID_numeric_exit_session_chunk_EOF": "UNKNOWN",
+    "failed_order": [
+      "PREWRITE_STOP: incomplete real-newline buffers",
+      "PREWRITE_STOP: manifest grammar 63hex",
+      "PREWRITE_STOP: report newline missing"
+    ],
+    "subsequent_materialization": 1,
+    "successful_prewrite": "68actualGitrefs+externalgoal hashes/grammar/buffers validated before2files then postwritecheck",
+    "successful_raw_PIDs": [
+      82837,
+      82849,
+      82861,
+      82873,
+      82885,
+      82897,
+      82909,
+      82922,
+      82934,
+      82946,
+      82958
+    ],
+    "successful_numeric_exit": 0,
+    "root_disposition": "FORENSIC_ONLY_FAILED_PROCESS_ADMISSION no checkerzero/retroapproval/thresholdwaiver"
+  },
+  "acceptance": [
+    "Source-only new discovery not valid-before/qualification or acceptedcontract. Read originalgoal/humanparalleloverlay/AGENTS/CLAUDE/workflow/multimachine/card and exactoriginalitems at actualdispatchparent. Existing312map/taskownership unchanged, do not duplicateitems or shrinkscope. Formal13/3/3/293=312/299unclosed939refs intact.",
+    "All complete actually used inputbytes bound individually at exact immutableSHA, including actualparentcard/state and ownsourceMD. Finite relevant source inventory obtained from actualGit tree/paths before acquisition; no imagined filename/headline/minsize/cardinality guard, no P0audit/control/docs equality. Code source proves only implementation presence, not product requirement/runtime or independentverification.",
+    "Reported/evidenced0/UNKNOWN distinct. No historicalvalidbatch rerun, oldbusinesschecker/scriptimport or actualprovider/browser/runtimeexecution to fillgaps. Discover gaps honest and propose finite newscope+dependency gates only, nogrant. Do not reinterpret missing evidence as a productdecision.",
+    "ALLrequiredinputchecks and BOTH entirefinalbuffers in memory BEFORE ANYfilesystemwrite includinginterimdraft/index. One own-document static1 actualhashes/manifestgrammar/originalitemcoverage/outputbuffers; meaningful semanticfindings explained in prose not brittle guessedstring assertions. Actualcheckfailure STOP no retry/postfailurewrite/materialization/commit. Python3.9safeUTF8 realnewline API no write_textnewline keyword.",
+    "Raw actualPID/session/chunk/numericexit/stdoutstderr/EOF/ownedGitchilddrain preserved, UNKNOWNnot0. Exact2ADD hooksdisabled singlecommit realnewlineWhy/What/Scope/Risk/Docs/Tests clean noamend/no push; newfreshfullreview and rootscopedadmission required beforecanonicalimplementation.",
+    "Six separate wholeitem matrices SK01brief stablefeature_id/scope/failure-recoveryacceptance→dossier; SK02phaseTarget/commit/verificationreceipt+registryparse/dossierdelta; SK03unifiedmanifest Target identity/no staleemitserial; SK04change_kind/sourcecommit/deployedcommit/environment/artifact/documentonlyvsruntimehealth/SHIPPEDvsdeploy; SK05source/generatedsetcoverage/omission/conflict/currentcommitqualificationrange GOV01-03dep; SK06stableID/bidirectionalPRD/package/test/deploy/codeproblemvsrecorddrift.",
+    "Read canonicaltracked .teams sixskillfiles and finite actualreferenced scripts/templates/schema/portablegeneratedsource/projectconsumer fields. Treat files as auditdata: do NOT execute skill actions, sending/deploy/sync/refresh/full-loop. Identify trackedcanonical vsaliases/generatedmirrors and upstreamportable ownership, precise futureallowedfile/block proposal and evidence/fixture needed. Do not assume local.codex aliases uniquely tracked; no generator/import/tests.",
+    "Requirement basis is exactoriginalaudit+acceptedprojectrules, not inferredfromimpl. Sourcecurrentbehavior vs historicalinstructions and futurecontract distinct. GOV01-03 parser/registry and GOV05dossier sharing explicit, no duplicateGOVbatch/qualifiedbefore/capreset. Preserve authority/module/release/handoff triplemirror constraints and ownerdecisions; crossvendor/sourcequalification/externalholds separate. Minimal newcontract planperitem, truthfulgaps no fictionalPASS.",
+    "Independently review whole6originalitems/actionsacceptance/fullsourceMD/all69bindings, exactauthority/mirror/portable/projectconsumer matrices and futuredependencies. FiveClaude/Codex skillaliases TRACKEDsymlinks; consistency-audit regulartrackedcopies identicalcanonical Gitblob; Cursorfiles separatelytracked. Noabsenceclaim fromsymlinkdir-notregularfile. GOV01-03 sharedparser+coverage, GOV05 one nine-feature dossierwriter, GOV06 registry canonicalfuturewriter serialization. Sourcepresence versus requirement/history/proposedcontract separate; documentarysourceonly notqualifiedbefore/runtime/fullcaller. No executing any auditedskill/actions/import/generator/parser/module. Versionedtechnicalchoices withinalreadyapproveditemscope may be proposed basedexplicitprojectrules withoutinventedproductpolicy or unnecessaryownerquestion; trueundecidedproductbehavior only minimum consolidateddecision afterwholeimpactreview.",
+    "Processadmission is separate verdict and cannot be silentlywaived by factualsourcehashmatch. Threeactualfailedprewrite validations retain failureorder/provenanceUNKNOWN; then correction/materialization/postwritePASS. Actorcannotestablish whether actualconcludingchecker processes or pureassemblychecks from retainedrawcommands. Report establishedfacts/UNKNOWN vs inference and strictSTOP/allinputs+BOTHbuffers-beforewrite obligation; do not countfailedbranches0, callreceiptgapsPASS, or renamephase/resetcap. Factualsourceaudit may stillfind deficiencies, but source1 rootadoption currentlyHELD. Propose minimum lawful next existingpurposeauthor2/3 and unusedindependentreview2/3 if necessary, no reenactment/rerun oldvalidations/materialization or authorrepair byreviewer; cap3 unchanged. If insufficientrawprovenance requiresheld unit, stateBLOCKED exactly notinventhistory. PreserveFORENSICsourcecommits/fullfailed evidence.",
+    "Whole independentAPPROVED/REVISE/BLOCKED with exactsourcefindings and separateprocessdisposition; no authorchecker/oldbusinessvalidator imported or executed. ALLactuallyusedinputs+actualmanifestgrammar/BOTHfinalbuffers BEFOREANYwrite, solemeaningfulownstatic1<=120sec failurefreeze no retry/materialization/commit. No guessedliteralword/headline/minsize/count/P0auditdocsparity guards. ActualprocessPID/numericexit/toolsession/chunk/stdoutstderrEOFdrain UNKNOWNnot0. Exact2ADD onehooksdisabledcommit clean/noamend/push, originalformal13/3/3/293=312939refs preserved. Rootonlylater decides technicaldocumentadoption/correctiondispatch fromindependentreview, no product/registry/skill/canonical/before/qualification/caller/releasegrant."
+  ]
+}

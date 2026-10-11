@@ -1,0 +1,4 @@
+Original command: node docs/reviews/web-d2-smart-lists-native/verify-native.mjs 115efb2 recovery
+Process exit: 13
+Warning: Detected unsettled top-level await at verify-native.mjs:129 (cleanup waiting for an exit that had already occurred).
+No final receipt JSON was produced. The old first-process delayed kill captured mutable browser and could target the successor; its timer was not cleared on first exit. The original run does not prove which earlier stage failed because cleanup masked the earlier error. Do not claim product failure or completed reopen. The repaired driver captures each child, clears its own deadline on exit, checks signalCode during cleanup, and preserves future infrastructure errors separately. Business assertions are unchanged.
